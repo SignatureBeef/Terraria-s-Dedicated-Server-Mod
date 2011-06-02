@@ -1,0 +1,1 @@
+﻿Terraria_Server.exe "C:\\Users\\Luke\\Documents\\My Games\\Terraria\\Worlds\\world1.wld"
