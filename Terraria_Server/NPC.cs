@@ -91,17 +91,17 @@ namespace Terraria_Server
             {
                 if (this.life > 0)
                 {
-                    //for (int i = 0; i < ((dmg / ((double)this.lifeMax)) * 100.0); i++)
-                    //{
-                    //    Dust.NewDust(this.position, world, this.width, this.height, 4, (float)hitDirection, -1f, this.alpha, this.color, 1f);
-                    //}
+                    for (int i = 0; i < ((dmg / ((double)this.lifeMax)) * 100.0); i++)
+                    {
+                        Dust.NewDust(this.position, world, this.width, this.height, 4, (float)hitDirection, -1f, this.alpha, this.color, 1f);
+                    }
                 }
                 else
                 {
-                    //for (int j = 0; j < 50; j++)
-                    //{
-                       // Dust.NewDust(this.position, world, this.width, this.height, 4, (float)(2 * hitDirection), -2f, this.alpha, this.color, 1f);
-                    //}
+                    for (int j = 0; j < 50; j++)
+                    {
+                        Dust.NewDust(this.position, world, this.width, this.height, 4, (float)(2 * hitDirection), -2f, this.alpha, this.color, 1f);
+                    }
                     if ((Statics.netMode != 1) && (this.type == 0x10))
                     {
                         int num3 = Statics.rand.Next(2) + 2;
@@ -3051,7 +3051,7 @@ namespace Terraria_Server
                 }
                 else if (Statics.netMode == 2)
                 {
-                    NetMessage.SendData(0x19, world, -1, -1, str + " has awoken!", 8, 175f, 75f, 255f);
+                    NetMessage.SendData(0x19, world, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
                 }
             }
             this.ai[3] = 1f;
@@ -5147,7 +5147,7 @@ namespace Terraria_Server
                 }
                 else if (Statics.netMode == 2)
                 {
-                    NetMessage.SendData(0x19, world, -1, -1, this.name + " has been defeated!", 8, 175f, 75f, 255f);
+                    NetMessage.SendData(0x19, world, -1, -1, this.name + " has been defeated!", 255, 175f, 75f, 255f);
                 }
             }
             if (Statics.rand.Next(7) == 0)
@@ -5278,7 +5278,7 @@ namespace Terraria_Server
             this.target = 8;
             this.oldTarget = this.target;
             this.targetRect = new Rectangle();
-            //this.timeLeft = activeTime;
+            this.timeLeft = activeTime;
             this.type = Type;
             this.value = 0f;
             for (int i = 0; i < maxAI; i++)
@@ -5342,7 +5342,7 @@ namespace Terraria_Server
                 this.knockBackResist = 0f;
                 this.noGravity = true;
                 this.noTileCollide = true;
-                //this.timeLeft = activeTime * 30;
+                this.timeLeft = activeTime * 30;
                 this.boss = true;
                 this.value = 30000f;
             }
@@ -6895,7 +6895,7 @@ namespace Terraria_Server
 
         public static void SpawnNPC(World world)
         {
-            if (!world.isNPCSpawning())
+            if (!world.isNPCSpawningStopped())
             {
                 bool flag = false;
                 int num = 0;
@@ -7736,7 +7736,7 @@ namespace Terraria_Server
                 }
                 this.velocity.X = (knockBack * hitDirection) * this.knockBackResist;
             }
-            //this.HitEffect(hitDirection, dmg);
+            this.HitEffect(world, hitDirection, dmg);
             ///if (this.soundHit > 0)
             //{
             //    Main.PlaySound(3, (int)this.position.X, (int)this.position.Y, this.soundHit);
@@ -7751,7 +7751,7 @@ namespace Terraria_Server
                     }
                     else if (Statics.netMode == 2)
                     {
-                        NetMessage.SendData(0x19, world, -1, -1, this.name + " was slain...", 8, 255f, 25f, 25f);
+                        NetMessage.SendData(0x19, world, -1, -1, this.name + " was slain...", 255, 255f, 25f, 25f);
                     }
                 }
                 if ((this.townNPC && (Statics.netMode != 1)) && (this.homeless && (WorldGen.spawnNPC == this.type)))
@@ -7941,7 +7941,7 @@ namespace Terraria_Server
                 }
                 else if (Statics.netMode == 2)
                 {
-                    NetMessage.SendData(0x19, world, -1, -1, name + " has awoken!", 8, 175f, 75f, 255f);
+                    NetMessage.SendData(0x19, world, -1, -1, name + " has awoken!", 255, 175f, 75f, 255f);
                 }
             }
         }

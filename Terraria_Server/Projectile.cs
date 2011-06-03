@@ -42,8 +42,8 @@ namespace Terraria_Server
         public byte wetCount;
         public int whoAmI;
         public int width;
-
-        /*public void AI()
+/*
+        public void AI(World world)
         {
             if (this.aiStyle == 1)
             {
@@ -1037,8 +1037,8 @@ namespace Terraria_Server
                     this.rotation += this.velocity.X * 0.1f;
                 }
             }
-        }*/
-
+        }
+        */
         /*public Color GetAlpha(Color newColor)
         {
             int r;
@@ -2189,38 +2189,38 @@ namespace Terraria_Server
                     {
                         if (!world.getPlayerList()[this.owner].dead)
                         {
-                            //float num53 = 4f;
-                            //Vector2 vector8 = new Vector2(this.position.X + (this.width * 0.5f), this.position.Y + (this.height * 0.5f));
-                            //float num54 = (world.getPlayerList()[this.owner].position.X + (world.getPlayerList()[this.owner].width / 2)) - vector8.X;
-                            //float num55 = (world.getPlayerList()[this.owner].position.Y + (world.getPlayerList()[this.owner].height / 2)) - vector8.Y;
-                            //float num56 = (float)Math.Sqrt((double)((num54 * num54) + (num55 * num55)));
-                            //num56 = (float)Math.Sqrt((double)((num54 * num54) + (num55 * num55)));
-                            //if (num56 > Main.screenWidth)
-                            //{
-                            //    this.position.X = (world.getPlayerList()[this.owner].position.X + (world.getPlayerList()[this.owner].width / 2)) - (this.width / 2);
-                            //    this.position.Y = (world.getPlayerList()[this.owner].position.Y + (world.getPlayerList()[this.owner].height / 2)) - (this.height / 2);
-                            //}
-                            //else if (num56 > 64f)
-                            //{
-                            //    num56 = num53 / num56;
-                            //    num54 *= num56;
-                            //    num55 *= num56;
-                            //    if ((num54 != this.velocity.X) || (num55 != this.velocity.Y))
-                            //    {
-                            //        this.netUpdate = true;
-                            //    }
-                            //    this.velocity.X = num54;
-                            //    this.velocity.Y = num55;
-                            //}
-                            //else
-                            //{
-                            //    if ((this.velocity.X != 0f) || (this.velocity.Y != 0f))
-                            //    {
-                            //        this.netUpdate = true;
-                            //    }
-                            //    this.velocity.X = 0f;
-                            //    this.velocity.Y = 0f;
-                            //}
+                            float num53 = 4f;
+                            Vector2 vector8 = new Vector2(this.position.X + (this.width * 0.5f), this.position.Y + (this.height * 0.5f));
+                            float num54 = (world.getPlayerList()[this.owner].position.X + (world.getPlayerList()[this.owner].width / 2)) - vector8.X;
+                            float num55 = (world.getPlayerList()[this.owner].position.Y + (world.getPlayerList()[this.owner].height / 2)) - vector8.Y;
+                            float num56 = (float)Math.Sqrt((double)((num54 * num54) + (num55 * num55)));
+                            num56 = (float)Math.Sqrt((double)((num54 * num54) + (num55 * num55)));
+                            if (num56 > Statics.screenWidth)
+                            {
+                                this.position.X = (world.getPlayerList()[this.owner].position.X + (world.getPlayerList()[this.owner].width / 2)) - (this.width / 2);
+                                this.position.Y = (world.getPlayerList()[this.owner].position.Y + (world.getPlayerList()[this.owner].height / 2)) - (this.height / 2);
+                            }
+                            else if (num56 > 64f)
+                            {
+                                num56 = num53 / num56;
+                                num54 *= num56;
+                                num55 *= num56;
+                                if ((num54 != this.velocity.X) || (num55 != this.velocity.Y))
+                                {
+                                    this.netUpdate = true;
+                                }
+                                this.velocity.X = num54;
+                                this.velocity.Y = num55;
+                            }
+                            else
+                            {
+                                if ((this.velocity.X != 0f) || (this.velocity.Y != 0f))
+                                {
+                                    this.netUpdate = true;
+                                }
+                                this.velocity.X = 0f;
+                                this.velocity.Y = 0f;
+                            }
                         }
                         else
                         {
@@ -2657,7 +2657,7 @@ namespace Terraria_Server
                 }
                 else if (((this.type == 14) || (this.type == 20)) || (this.type == 0x24))
                 {
-                    //Collision.HitTiles(this.position, this.velocity, this.width, this.height);
+                    Collision.HitTiles(this.position, this.velocity, world, this.width, this.height);
                     //Main.PlaySound(2, (int)this.position.X, (int)this.position.Y, 10);
                 }
                 else if ((this.type == 15) || (this.type == 0x22))
@@ -3088,7 +3088,7 @@ namespace Terraria_Server
                 world.getProjectile()[index].damage = Damage;
                 world.getProjectile()[index].knockBack = KnockBack;
                 world.getProjectile()[index].identity = index;
-                //world.getProjectile()[index].wet = Collision.WetCollision(world.getProjectile()[index].position, world.getProjectile()[index].width, world.getProjectile()[index].height);
+                world.getProjectile()[index].wet = Collision.WetCollision(world.getProjectile()[index].position, world.getProjectile()[index].width, world.getProjectile()[index].height, world);
                 if ((Statics.netMode != 0) && (Owner == Statics.myPlayer))
                 {
                     NetMessage.SendData(0x1b, world, -1, -1, "", index, 0f, 0f, 0f);

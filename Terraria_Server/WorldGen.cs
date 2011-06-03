@@ -17,6 +17,41 @@ namespace Terraria_Server
         public static int bestY = 0;
         public static int hiScore = 0;
 
+        public static Random genRand { get; set; }
+        public static int waterLine;
+        public static bool shadowOrbSmashed = false;
+        public static int spawnDelay = 0;
+        public static bool spawnEye = false;
+        public static bool spawnMeteor = false;
+        public static int spawnNPC = 0;
+        public static int numRoomTiles;
+        public static bool[] houseTile = new bool[80];
+        public static int maxRoomTiles = 0x76c;
+        public static int[] roomX = new int[maxRoomTiles];
+        public static int roomX1;
+        public static int roomX2;
+        public static int[] roomY = new int[maxRoomTiles];
+        public static int roomY1;
+        public static int roomY2;
+        public static bool canSpawn;
+        private static bool destroyObject = false;
+        private static bool mergeDown = false;
+        private static bool mergeLeft = false;
+        private static bool mergeRight = false;
+        private static bool mergeUp = false;
+        public static bool noLiquidCheck = false;
+        public static int shadowOrbCount = 0;
+        public static bool worldCleared = false;
+        private static bool stopDrops = false;
+        /*private static bool tempBloodMoon = Main.bloodMoon;
+        private static bool tempDayTime = Main.dayTime;
+        private static int tempMoonPhase = Main.moonPhase;
+        private static double tempTime = Main.time;*/
+
+
+
+
+
         public static bool EmptyTileCheck(int startX, int endX, int startY, int endY, World world, int ignoreStyle = -1)
         {
             if (startX < 0)
@@ -105,7 +140,7 @@ namespace Terraria_Server
                             {
                                 if (world.getPlayerList()[j].active)
                                 {
-                                    Rectangle rectangle2 = new Rectangle((int)world.getPlayerList()[j].position.X, 
+                                    Rectangle rectangle2 = new Rectangle((int)world.getPlayerList()[j].position.X,
                                         (int)world.getPlayerList()[j].position.Y, world.getPlayerList()[j].width, world.getPlayerList()[j].height);
                                     if (rectangle2.Intersects(rectangle))
                                     {
@@ -156,8 +191,8 @@ namespace Terraria_Server
                                                     {
                                                         if (world.getPlayerList()[num11].active)
                                                         {
-                                                            Rectangle rectangle4 = new Rectangle((int)world.getPlayerList()[num11].position.X, 
-                                                                (int)world.getPlayerList()[num11].position.Y, world.getPlayerList()[num11].width, 
+                                                            Rectangle rectangle4 = new Rectangle((int)world.getPlayerList()[num11].position.X,
+                                                                (int)world.getPlayerList()[num11].position.Y, world.getPlayerList()[num11].width,
                                                                 world.getPlayerList()[num11].height);
                                                             if (rectangle4.Intersects(rectangle3))
                                                             {
@@ -235,14 +270,14 @@ namespace Terraria_Server
             {
                 num++;
             }
-            if (((world.getTile()[i - 1, num - 1].liquid != 0) || (world.getTile()[i - 1, num - 1].liquid != 0)) || 
+            if (((world.getTile()[i - 1, num - 1].liquid != 0) || (world.getTile()[i - 1, num - 1].liquid != 0)) ||
                 (world.getTile()[i + 1, num - 1].liquid != 0))
             {
                 return;
             }
-            if (((!world.getTile()[i, num].active || (world.getTile()[i, num].type != 2)) || ((world.getTile()[i, num - 1].wall != 0) || 
-                !world.getTile()[i - 1, num].active)) || (((world.getTile()[i - 1, num].type != 2) || 
-                !world.getTile()[i + 1, num].active) || ((world.getTile()[i + 1, num].type != 2) || 
+            if (((!world.getTile()[i, num].active || (world.getTile()[i, num].type != 2)) || ((world.getTile()[i, num - 1].wall != 0) ||
+                !world.getTile()[i - 1, num].active)) || (((world.getTile()[i - 1, num].type != 2) ||
+                !world.getTile()[i + 1, num].active) || ((world.getTile()[i + 1, num].type != 2) ||
                 !EmptyTileCheck(i - 2, i + 2, num - 14, num - 1, world, 20))))
             {
                 return;
@@ -1178,9 +1213,9 @@ namespace Terraria_Server
                                         {
                                             for (int num51 = num48; num51 < num49; num51++)
                                             {
-                                                if ((((((Math.Abs((int)(num50 - num41)) * 2) + Math.Abs((int)(num51 - num42))) < 9) && 
-                                                    world.getTile()[num50, num51].active) && ((world.getTile()[num50, num51].type == 60) 
-                                                    && world.getTile()[num50, num51 - 1].active)) && ((world.getTile()[num50, num51 - 1].type == 0x45) 
+                                                if ((((((Math.Abs((int)(num50 - num41)) * 2) + Math.Abs((int)(num51 - num42))) < 9) &&
+                                                    world.getTile()[num50, num51].active) && ((world.getTile()[num50, num51].type == 60)
+                                                    && world.getTile()[num50, num51 - 1].active)) && ((world.getTile()[num50, num51 - 1].type == 0x45)
                                                     && (world.getTile()[num50, num51 - 1].liquid == 0)))
                                                 {
                                                     flag7 = true;
@@ -1356,7 +1391,7 @@ namespace Terraria_Server
                             continue;
                         }
                         num4 = num5;
-                        if (((Statics.tileSolid[world.getTile()[num13, num14].type] && !Statics.tileSolidTop[world.getTile()[num13, num14].type]) && 
+                        if (((Statics.tileSolid[world.getTile()[num13, num14].type] && !Statics.tileSolidTop[world.getTile()[num13, num14].type]) &&
                             (!Collision.SolidTiles(num13 - 1, num13 + 1, num14 - 3, num14 - 1, world) && world.getTile()[num13 - 1, num14].active)) &&
                             ((Statics.tileSolid[world.getTile()[num13 - 1, num14].type] && world.getTile()[num13 + 1, num14].active) &&
                             Statics.tileSolid[world.getTile()[num13 + 1, num14].type]))
@@ -1423,7 +1458,7 @@ namespace Terraria_Server
             return canSpawn;
 
         }
-        
+
         public static void QuickFindHome(int npc, World world)
         {
             if (((world.getNPCs()[npc].homeTileX > 10) && (world.getNPCs()[npc].homeTileY > 10)) && ((world.getNPCs()[npc].homeTileX <
@@ -1762,14 +1797,14 @@ namespace Terraria_Server
                 {
                     genRand.Next(3);
                     //Main.PlaySound(0, i * 0x10, j * 0x10, 1);
-                    //int num = 10;
-                    //if (fail)
-                    //{
-                    //    num = 3;
-                    //}
-                    /*for (int k = 0; k < num; k++)
+                    int num = 10;
+                    if (fail)
                     {
-                        //int type = 0;
+                        num = 3;
+                    }
+                    for (int k = 0; k < num; k++)
+                    {
+                        int type = 0;
                         if ((((world.getTile()[i, j].wall == 1) || (world.getTile()[i, j].wall == 5)) || ((world.getTile()[i, j].wall == 6) || (world.getTile()[i, j].wall == 7))) || ((world.getTile()[i, j].wall == 8) || (world.getTile()[i, j].wall == 9)))
                         {
                             type = 1;
@@ -1801,9 +1836,9 @@ namespace Terraria_Server
                         {
                             type = 11;
                         }
-                        //Color newColor = new Color();
-                        //Dust.NewDust(new Vector2((float)(i * 0x10), (float)(j * 0x10)), 0x10, 0x10, type, 0f, 0f, 0, newColor, 1f);
-                    }*/
+                        Color newColor = new Color();
+                        Dust.NewDust(new Vector2((float)(i * 0x10), (float)(j * 0x10)), world, 0x10, 0x10, type, 0f, 0f, 0, newColor, 1f);
+                    }
                     if (fail)
                     {
                         SquareWallFrame(i, j, world, true);
@@ -1892,7 +1927,7 @@ namespace Terraria_Server
                 }
             }
         }
-        
+
         public static void WallFrame(int i, int j, World world, bool resetFrame = false)
         {
             if ((((i >= 0) && (j >= 0)) && ((i < Statics.maxTilesX) && (j < Statics.maxTilesY))) && ((world.getTile()[i, j] != null) && (world.getTile()[i, j].wall > 0)))
@@ -2497,7 +2532,7 @@ namespace Terraria_Server
                 }
             }
         }
-       
+
         public static void PlantCheck(int i, int j, World world)
         {
             int num = -1;
@@ -3391,8 +3426,8 @@ namespace Terraria_Server
                     }
                     for (int k = 0; k < 3; k++)
                     {
-                        //Color newColor = new Color();
-                        //Dust.NewDust(new Vector2((float)(i * 0x10), (float)(j * 0x10)), 0x10, 0x10, 14, 0f, 0f, 0, newColor, 1f);
+                        Color newColor = new Color();
+                        Dust.NewDust(new Vector2((float)(i * 0x10), (float)(j * 0x10)), world, 0x10, 0x10, 14, 0f, 0f, 0, newColor, 1f);
                     }
                 }
             }
@@ -3572,16 +3607,16 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    //Gore.NewGore(new Vector2((float)(i * 0x10), (float)(j * 0x10)), new Vector2(), 0x33);
-                    //Gore.NewGore(new Vector2((float)(i * 0x10), (float)(j * 0x10)), new Vector2(), 0x34);
-                    //Gore.NewGore(new Vector2((float)(i * 0x10), (float)(j * 0x10)), new Vector2(), 0x35);
+                    Gore.NewGore(new Vector2((float)(i * 0x10), (float)(j * 0x10)), new Vector2(), 0x33, world);
+                    Gore.NewGore(new Vector2((float)(i * 0x10), (float)(j * 0x10)), new Vector2(), 0x34, world);
+                    Gore.NewGore(new Vector2((float)(i * 0x10), (float)(j * 0x10)), new Vector2(), 0x35, world);
                     if (Statics.rand == null)
                     {
                         Statics.rand = new Random();
                     }
                     int num8 = Statics.rand.Next(10);
                     int player = Player.FindClosest(new Vector2((float)(i * 0x10), (float)(j * 0x10)), 0x10, 0x10, world);
-                    //Player.FindClosest(new Vector2((float)(i * 0x10), (float)(j * 0x10)), 0x10, 0x10, world)
+                    Player.FindClosest(new Vector2((float)(i * 0x10), (float)(j * 0x10)), 0x10, 0x10, world);
                     if ((num8 == 0) && (world.getPlayerList()[player] != null) && (world.getPlayerList()[player].statLife < world.getPlayerList()[player].statLifeMax))
                     {
                         Item.NewItem(i * 0x10, j * 0x10, world, 0x10, 0x10, 0x3a, 1, false);
@@ -4347,7 +4382,7 @@ namespace Terraria_Server
                 }
             }
         }
-        
+
         public static void SquareTileFrame(int i, int j, World world, bool resetFrame = true)
         {
             TileFrame(i - 1, j - 1, world, false, false);
@@ -4629,8 +4664,8 @@ namespace Terraria_Server
                             }
                             if (type >= 0)
                             {
-                                //Color newColor = new Color();
-                                //Dust.NewDust(new Vector2((float)(i * 0x10), (float)(j * 0x10)), 0x10, 0x10, type, 0f, 0f, 0, newColor, 1f);
+                                Color newColor = new Color();
+                                Dust.NewDust(new Vector2((float)(i * 0x10), (float)(j * 0x10)), world, 0x10, 0x10, type, 0f, 0f, 0, newColor, 1f);
                             }
                         }
                         if (!effectOnly)
@@ -5178,14 +5213,14 @@ namespace Terraria_Server
                                                 }
                                                 //if (Main.netMode == 0)
                                                 //{
-                                                    //Main.NewText(text, 50, 255, 130);
-                                               // }
-                                               // else
-                                               // {
-                                                    if (Statics.netMode == 2)
-                                                    {
-                                                        NetMessage.SendData(25, world, -1, -1, text, 8, 50f, 255f, 130f);
-                                                    }
+                                                //Main.NewText(text, 50, 255, 130);
+                                                // }
+                                                // else
+                                                // {
+                                                if (Statics.netMode == 2)
+                                                {
+                                                    NetMessage.SendData(25, world, -1, -1, text, 8, 50f, 255f, 130f);
+                                                }
                                                 //}
                                             }
                                         }
@@ -9398,7 +9433,7 @@ namespace Terraria_Server
                 }
             }
         }
-        
+
         /*public static void EveryTileFrame(World world)
         {
             noLiquidCheck = true;
@@ -9456,8 +9491,6 @@ namespace Terraria_Server
                 }
             }
         }
-
-        public static Random genRand { get; set; }
 
         /*public static World loadWorld(String WorldPath, Server server)
         {
@@ -9703,6 +9736,7 @@ namespace Terraria_Server
         {
             World world = server.getWorld();
             world.setServer(server);
+            world.setSavePath(WorldPath);
 
             if (WorldGen.genRand == null)
             {
@@ -9714,238 +9748,241 @@ namespace Terraria_Server
                 {
                     //try
                     //{
-                        int num = binaryReader.ReadInt32();
-                        if (num > Statics.currentRelease)
-                        {
-                            //Main.menuMode = 15;
-                            //Main.statusText = "Incompatible world file!";
-                            //WorldGen.loadFailed = true;
-                            Console.WriteLine("Incompatible world file!");
-                            binaryReader.Close();
-                            return null;
-                        }
-
-
-                        Console.WriteLine("Compatible world file!");
-                        //Main.worldName = reader.ReadString();
-                        world.setName(binaryReader.ReadString());
-                        //Main.worldID = reader.ReadInt32();
-                        world.setId(binaryReader.ReadInt32());
-                        //Main.leftWorld = reader.ReadInt32();
-                        Statics.leftWorld = binaryReader.ReadInt32();
-                        //Main.rightWorld = reader.ReadInt32();
-                        Statics.rightWorld = binaryReader.ReadInt32();
-                        //Main.topWorld = reader.ReadInt32();
-                        Statics.topWorld = binaryReader.ReadInt32();
-                        //Main.bottomWorld = reader.ReadInt32();
-                        Statics.bottomWorld = binaryReader.ReadInt32();
-                        //Main.maxTilesY = reader.ReadInt32();
-                        Statics.maxTilesY = binaryReader.ReadInt32();
-                        //Main.maxTilesX = reader.ReadInt32();
-                        Statics.maxTilesX = binaryReader.ReadInt32();
-                        clearWorld(world);
-                        //Main.spawnTileX = reader.ReadInt32();
-                        Statics.spawnTileX = binaryReader.ReadInt32();
-                        //Main.spawnTileY = reader.ReadInt32();
-                        Statics.spawnTileY = binaryReader.ReadInt32();
-                        //Main.worldSurface = reader.ReadDouble();
-                        world.setWorldSurface(binaryReader.ReadDouble());
-                        //Main.rockLayer = reader.ReadDouble();
-                        world.setRockLayer(binaryReader.ReadDouble());
-                        //tempTime = reader.ReadDouble();
-                        world.setTime(binaryReader.ReadDouble());
-                        //tempDayTime = reader.ReadBoolean();
-                        world.setDayTime(binaryReader.ReadBoolean());
-                        //tempMoonPhase = reader.ReadInt32();
-                        world.setMoonPhase(binaryReader.ReadInt32());
-                        //tempBloodMoon = reader.(ReadBoolean);
-                        world.setBloodMoon(binaryReader.ReadBoolean());
-                        //Main.dungeonX = reader.ReadInt32();
-                        world.setDungeonX(binaryReader.ReadInt32());
-                        //Main.dungeonY = reader.ReadInt32();
-                        world.setDungeonX(binaryReader.ReadInt32());
-                        NPC.downedBoss1 = binaryReader.ReadBoolean();
-                        NPC.downedBoss2 = binaryReader.ReadBoolean();
-                        NPC.downedBoss3 = binaryReader.ReadBoolean();
-
-                        world.setShadowOrbSmashed(binaryReader.ReadBoolean());
-                        world.setSpawnMeteor(binaryReader.ReadBoolean());
-                        world.setShadowOrbCount(binaryReader.ReadByte());
-
-                        world.setInvasionDelay(binaryReader.ReadInt32());
-                        world.setInvasionSize(binaryReader.ReadInt32());
-                        world.setInvasionType(binaryReader.ReadInt32());
-                        world.setInvasionX(binaryReader.ReadDouble());
-
-                        for (int i = 0; i < Statics.maxTilesX; i++)
-                        {
-                            float num2 = (float)i / (float)Statics.maxTilesX;
-                            for (int i_ = 0; i_ < preserve; i_++)
-                            {
-                                Console.Write("\b");
-                            }
-                            string text = "Loading world data: " + ((int)((num2 * 100f) + 1f)) + "%";
-                            Console.Write(text);
-                            preserve = text.Length;
-
-                            for (int j = 0; j < Statics.maxTilesY; j++)
-                            {
-                                world.getTile()[i, j].active = binaryReader.ReadBoolean();
-                                if (world.getTile()[i, j].active)
-                                {
-                                    world.getTile()[i, j].type = binaryReader.ReadByte();
-                                    if (Statics.tileFrameImportant[(int)world.getTile()[i, j].type])
-                                    {
-                                        world.getTile()[i, j].frameX = binaryReader.ReadInt16();
-                                        world.getTile()[i, j].frameY = binaryReader.ReadInt16();
-                                    }
-                                    else
-                                    {
-                                        world.getTile()[i, j].frameX = -1;
-                                        world.getTile()[i, j].frameY = -1;
-                                    }
-                                }
-                                world.getTile()[i, j].lighted = binaryReader.ReadBoolean();
-                                if (binaryReader.ReadBoolean())
-                                {
-                                    world.getTile()[i, j].wall = binaryReader.ReadByte();
-                                }
-                                if (binaryReader.ReadBoolean())
-                                {
-                                    world.getTile()[i, j].liquid = binaryReader.ReadByte();
-                                    world.getTile()[i, j].lava = binaryReader.ReadBoolean();
-                                }
-                            }
-
-                        }
-                        for (int k = 0; k < 1000; k++)
-                        {
-                            if (binaryReader.ReadBoolean())
-                            {
-                                world.getChests()[k] = new Chest();
-                                world.getChests()[k].x = binaryReader.ReadInt32();
-                                world.getChests()[k].y = binaryReader.ReadInt32();
-                                for (int l = 0; l < Chest.maxItems; l++)
-                                {
-                                    world.getChests()[k].item[l] = new Item();
-                                    byte b = binaryReader.ReadByte();
-                                    if (b > 0)
-                                    {
-                                        string defaults = binaryReader.ReadString();
-                                        world.getChests()[k].item[l].SetDefaults(defaults);
-                                        world.getChests()[k].item[l].stack = (int)b;
-                                    }
-                                }
-                            }
-                        }
-                        for (int m = 0; m < 1000; m++)
-                        {
-                            if (binaryReader.ReadBoolean())
-                            {
-                                string text = binaryReader.ReadString();
-                                int num3 = binaryReader.ReadInt32();
-                                int num4 = binaryReader.ReadInt32();
-                                try
-                                {
-                                    if (world.getTile()[num3, num4].active && world.getTile()[num3, num4].type == 55)
-                                    {
-                                        world.getSigns()[m] = new Sign();
-                                        world.getSigns()[m].x = num3;
-                                        world.getSigns()[m].y = num4;
-                                        world.getSigns()[m].text = text;
-                                    }
-                                }
-                                catch { }
-                            }
-                        }
-                        bool flag = binaryReader.ReadBoolean();
-                        int num5 = 0;
-                        while (flag)
-                        {
-                            //i//f (world.getNPCs()[num5] == null)
-                            //{
-                                /*binaryReader.ReadString();
-                                binaryReader.ReadSingle();
-                                binaryReader.ReadSingle();
-                                binaryReader.ReadBoolean();
-                                binaryReader.ReadInt32();
-                                binaryReader.ReadInt32();*/
-                                world.getNPCs()[num5] = new NPC();
-                           // }
-                            //else
-                            //{
-                                world.getNPCs()[num5].SetDefaults(binaryReader.ReadString());
-                                world.getNPCs()[num5].position.X = binaryReader.ReadSingle();
-                                world.getNPCs()[num5].position.Y = binaryReader.ReadSingle();
-                                world.getNPCs()[num5].homeless = binaryReader.ReadBoolean();
-                                world.getNPCs()[num5].homeTileX = binaryReader.ReadInt32();
-                                world.getNPCs()[num5].homeTileY = binaryReader.ReadInt32();
-                            //}
-                            
-                            flag = binaryReader.ReadBoolean();
-                            num5++;
-                        }
+                    int num = binaryReader.ReadInt32();
+                    if (num > Statics.currentRelease)
+                    {
+                        //Main.menuMode = 15;
+                        //Main.statusText = "Incompatible world file!";
+                        //WorldGen.loadFailed = true;
+                        Console.WriteLine("Incompatible world file!");
                         binaryReader.Close();
-                        Console.WriteLine();
-                        WorldGen.gen = true;
-                        WorldGen.waterLine = Statics.maxTilesY;
-                        Liquid.QuickWater(world, 2, -1, -1);
-                        WorldGen.WaterCheck(world);
-                        int num6 = 0;
-                        Liquid.quickSettle = true;
-                        int num7 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-                        float num8 = 0f;
-                        while (Liquid.numLiquid > 0 && num6 < 100000)
+                        return null;
+                    }
+
+
+                    Console.WriteLine("Compatible world file!");
+                    //Main.worldName = reader.ReadString();
+                    world.setName(binaryReader.ReadString());
+                    //Main.worldID = reader.ReadInt32();
+                    world.setId(binaryReader.ReadInt32());
+                    //Main.leftWorld = reader.ReadInt32();
+                    Statics.leftWorld = binaryReader.ReadInt32();
+                    //Main.rightWorld = reader.ReadInt32();
+                    Statics.rightWorld = binaryReader.ReadInt32();
+                    //Main.topWorld = reader.ReadInt32();
+                    Statics.topWorld = binaryReader.ReadInt32();
+                    //Main.bottomWorld = reader.ReadInt32();
+                    Statics.bottomWorld = binaryReader.ReadInt32();
+                    //Main.maxTilesY = reader.ReadInt32();
+                    Statics.maxTilesY = binaryReader.ReadInt32();
+                    //Main.maxTilesX = reader.ReadInt32();
+                    Statics.maxTilesX = binaryReader.ReadInt32();
+                    clearWorld(world);
+                    //Main.spawnTileX = reader.ReadInt32();
+                    Statics.spawnTileX = binaryReader.ReadInt32();
+                    //Main.spawnTileY = reader.ReadInt32();
+                    Statics.spawnTileY = binaryReader.ReadInt32();
+                    //Main.worldSurface = reader.ReadDouble();
+                    world.setWorldSurface(binaryReader.ReadDouble());
+                    //Main.rockLayer = reader.ReadDouble();
+                    world.setRockLayer(binaryReader.ReadDouble());
+                    //tempTime = reader.ReadDouble();
+                    world.setTime(binaryReader.ReadDouble());
+                    //tempDayTime = reader.ReadBoolean();
+                    world.setDayTime(binaryReader.ReadBoolean());
+                    //tempMoonPhase = reader.ReadInt32();
+                    world.setMoonPhase(binaryReader.ReadInt32());
+                    //tempBloodMoon = reader.(ReadBoolean);
+                    world.setBloodMoon(binaryReader.ReadBoolean());
+                    //Main.dungeonX = reader.ReadInt32();
+                    world.setDungeonX(binaryReader.ReadInt32());
+                    //Main.dungeonY = reader.ReadInt32();
+                    world.setDungeonX(binaryReader.ReadInt32());
+                    NPC.downedBoss1 = binaryReader.ReadBoolean();
+                    NPC.downedBoss2 = binaryReader.ReadBoolean();
+                    NPC.downedBoss3 = binaryReader.ReadBoolean();
+
+                    world.setShadowOrbSmashed(binaryReader.ReadBoolean());
+                    world.setSpawnMeteor(binaryReader.ReadBoolean());
+                    world.setShadowOrbCount(binaryReader.ReadByte());
+
+                    world.setInvasionDelay(binaryReader.ReadInt32());
+                    world.setInvasionSize(binaryReader.ReadInt32());
+                    world.setInvasionType(binaryReader.ReadInt32());
+                    world.setInvasionX(binaryReader.ReadDouble());
+
+                    for (int i = 0; i < Statics.maxTilesX; i++)
+                    {
+                        float num2 = (float)i / (float)Statics.maxTilesX;
+                        for (int i_ = 0; i_ < preserve; i_++)
                         {
-                            num6++;
-                            float num9 = (float)(num7 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)num7;
-                            if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > num7)
-                            {
-                                num7 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-                            }
-                            if (num9 > num8)
-                            {
-                                num8 = num9;
-                            }
-                            else
-                            {
-                                num9 = num8;
-                            }
-                            //Main.statusText = "Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
-                            for (int i_ = 0; i_ < preserve; i_++)
-                            {
-                                Console.Write("\b");
-                            }
-                            string text = "Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
-                            Console.Write(text);
-                            preserve = text.Length;
-                            Liquid.UpdateLiquid(world);
+                            Console.Write("\b");
                         }
-                        Liquid.quickSettle = false;
-                        WorldGen.WaterCheck(world);
-                        WorldGen.gen = false;
-                        Console.WriteLine();
-                   // }
+                        string text = "Loading world data: " + ((int)((num2 * 100f) + 1f)) + "%";
+                        Console.Write(text);
+                        preserve = text.Length;
+
+                        for (int j = 0; j < Statics.maxTilesY; j++)
+                        {
+                            world.getTile()[i, j].active = binaryReader.ReadBoolean();
+                            if (world.getTile()[i, j].active)
+                            {
+                                world.getTile()[i, j].type = binaryReader.ReadByte();
+                                if (Statics.tileFrameImportant[(int)world.getTile()[i, j].type])
+                                {
+                                    world.getTile()[i, j].frameX = binaryReader.ReadInt16();
+                                    world.getTile()[i, j].frameY = binaryReader.ReadInt16();
+                                }
+                                else
+                                {
+                                    world.getTile()[i, j].frameX = -1;
+                                    world.getTile()[i, j].frameY = -1;
+                                }
+                            }
+                            world.getTile()[i, j].lighted = binaryReader.ReadBoolean();
+                            if (binaryReader.ReadBoolean())
+                            {
+                                world.getTile()[i, j].wall = binaryReader.ReadByte();
+                            }
+                            if (binaryReader.ReadBoolean())
+                            {
+                                world.getTile()[i, j].liquid = binaryReader.ReadByte();
+                                world.getTile()[i, j].lava = binaryReader.ReadBoolean();
+                            }
+                        }
+
+                    }
+                    for (int k = 0; k < 1000; k++)
+                    {
+                        if (binaryReader.ReadBoolean())
+                        {
+                            world.getChests()[k] = new Chest();
+                            world.getChests()[k].x = binaryReader.ReadInt32();
+                            world.getChests()[k].y = binaryReader.ReadInt32();
+                            for (int l = 0; l < Chest.maxItems; l++)
+                            {
+                                world.getChests()[k].item[l] = new Item();
+                                byte b = binaryReader.ReadByte();
+                                if (b > 0)
+                                {
+                                    string defaults = binaryReader.ReadString();
+                                    world.getChests()[k].item[l].SetDefaults(defaults);
+                                    world.getChests()[k].item[l].stack = (int)b;
+                                }
+                            }
+                        }
+                    }
+                    for (int m = 0; m < 1000; m++)
+                    {
+                        if (binaryReader.ReadBoolean())
+                        {
+                            string text = binaryReader.ReadString();
+                            int num3 = binaryReader.ReadInt32();
+                            int num4 = binaryReader.ReadInt32();
+                            try
+                            {
+                                if (world.getTile()[num3, num4].active && world.getTile()[num3, num4].type == 55)
+                                {
+                                    world.getSigns()[m] = new Sign();
+                                    world.getSigns()[m].x = num3;
+                                    world.getSigns()[m].y = num4;
+                                    world.getSigns()[m].text = text;
+                                }
+                            }
+                            catch { }
+                        }
+                    }
+                    bool flag = binaryReader.ReadBoolean();
+                    int num5 = 0;
+                    while (flag)
+                    {
+                        //i//f (world.getNPCs()[num5] == null)
+                        //{
+                        /*binaryReader.ReadString();
+                        binaryReader.ReadSingle();
+                        binaryReader.ReadSingle();
+                        binaryReader.ReadBoolean();
+                        binaryReader.ReadInt32();
+                        binaryReader.ReadInt32();*/
+                        world.getNPCs()[num5] = new NPC();
+                        // }
+                        //else
+                        //{
+                        world.getNPCs()[num5].SetDefaults(binaryReader.ReadString());
+                        world.getNPCs()[num5].position.X = binaryReader.ReadSingle();
+                        world.getNPCs()[num5].position.Y = binaryReader.ReadSingle();
+                        world.getNPCs()[num5].homeless = binaryReader.ReadBoolean();
+                        world.getNPCs()[num5].homeTileX = binaryReader.ReadInt32();
+                        world.getNPCs()[num5].homeTileY = binaryReader.ReadInt32();
+                        //}
+
+                        flag = binaryReader.ReadBoolean();
+                        num5++;
+                    }
+                    binaryReader.Close();
+                    Console.WriteLine();
+                    WorldGen.gen = true;
+                    WorldGen.waterLine = Statics.maxTilesY;
+                    Liquid.QuickWater(world, 2, -1, -1);
+                    WorldGen.WaterCheck(world);
+                    int num6 = 0;
+                    Liquid.quickSettle = true;
+                    int num7 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                    float num8 = 0f;
+                    while (Liquid.numLiquid > 0 && num6 < 100000)
+                    {
+                        num6++;
+                        float num9 = (float)(num7 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)num7;
+                        if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > num7)
+                        {
+                            num7 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                        }
+                        if (num9 > num8)
+                        {
+                            num8 = num9;
+                        }
+                        else
+                        {
+                            num9 = num8;
+                        }
+                        //Main.statusText = "Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
+                        for (int i_ = 0; i_ < preserve; i_++)
+                        {
+                            Console.Write("\b");
+                        }
+                        string text = "Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
+                        Console.Write(text);
+                        preserve = text.Length;
+                        Liquid.UpdateLiquid(world);
+                    }
+                    Liquid.quickSettle = false;
+                    WorldGen.WaterCheck(world);
+                    WorldGen.gen = false;
+                    Console.WriteLine();
+                    // }
                     //catch (Exception arg_617_0)
                     //{
-                     //   Exception exception = arg_617_0;
-                        ///Main.menuMode = 15;
-                        //Main.statusText = exception.ToString();
+                    //   Exception exception = arg_617_0;
+                    ///Main.menuMode = 15;
+                    //Main.statusText = exception.ToString();
                     //    Console.WriteLine(exception.ToString());
-                        //WorldGen.loadFailed = true;
-                        //try
-                       // {
-                        //    binaryReader.Close();
-                        //}
-                        //catch
-                       // {
-                       // }
-                     //   return null;
+                    //WorldGen.loadFailed = true;
+                    //try
+                    // {
+                    //    binaryReader.Close();
+                    //}
+                    //catch
+                    // {
+                    // }
+                    //   return null;
                     //}
                     //WorldGen.loadFailed = false;
-                    try {
+                    try
+                    {
                         binaryReader.Close();
-                    } catch {
+                    }
+                    catch
+                    {
                     }
                     return world;
                 }
@@ -10035,11 +10072,11 @@ namespace Terraria_Server
             }
             for (int i = 0; i < 0x7d0; i++)
             {
-                //world.getDust()[i] = new Dust();
+                world.getDust()[i] = new Dust();
             }
             for (int j = 0; j < 200; j++)
             {
-                //world.getGore()[j] = new Gore();
+                world.getGore()[j] = new Gore();
             }
             for (int k = 0; k < 200; k++)
             {
@@ -10047,7 +10084,7 @@ namespace Terraria_Server
             }
             for (int m = 0; m < 0x3e8; m++)
             {
-                //world.getNPCs()[m] = new NPC();
+                world.getNPCs()[m] = new NPC();
             }
             for (int n = 0; n < 0x3e8; n++)
             {
@@ -10070,7 +10107,7 @@ namespace Terraria_Server
                 world.getLiquidBuffer()[num15] = new LiquidBuffer();
             }
             setWorldSize();
-            //worldCleared = true;
+            worldCleared = true;
         }
 
         public static void setWorldSize()
@@ -10081,50 +10118,6 @@ namespace Terraria_Server
             Statics.maxSectionsY = Statics.maxTilesY / 150;
         }
 
-        public static bool noLiquidCheck { get; set; }
-
-        public static bool mergeUp { get; set; }
-
-        public static bool mergeDown { get; set; }
-
-        public static bool mergeLeft { get; set; }
-
-        public static bool mergeRight { get; set; }
-
-        public static bool destroyObject { get; set; }
-
-        public static bool spawnMeteor { get; set; }
-
-        public static bool shadowOrbSmashed { get; set; }
-
-        public static int shadowOrbCount { get; set; }
-
-        public static int roomX1 { get; set; }
-
-        public static int roomX2 { get; set; }
-
-        public static int roomY1 { get; set; }
-
-        public static int roomY2 { get; set; }
-
-        public static int numRoomTiles { get; set; }
-
-        public static bool canSpawn { get; set; }
-        
-        public static bool[] houseTile = new bool[80];
-
-        public static int maxRoomTiles = 0x76c;
-        public static int[] roomX = new int[maxRoomTiles];
-        public static int[] roomY = new int[maxRoomTiles];
-
-        public static int waterLine { get; set; }
-
-        public static bool spawnEye { get; set; }
-
-        public static int spawnNPC { get; set; }
-
-        public static int spawnDelay { get; set; }
-        
         public static void EveryTileFrame(World world)
         {
             noLiquidCheck = true;
@@ -10167,7 +10160,7 @@ namespace Terraria_Server
                 if (world.getPlayerList()[k].active)
                 {
                     Rectangle rectangle2 = new Rectangle(((((int)world.getPlayerList()[k].position.X) + (world.getPlayerList()[k].width / 2)) -
-                        (Statics.screenWidth / 2)) - NPC.safeRangeX, ((((int)world.getPlayerList()[k].position.Y) + 
+                        (Statics.screenWidth / 2)) - NPC.safeRangeX, ((((int)world.getPlayerList()[k].position.Y) +
                         (world.getPlayerList()[k].height / 2)) - (Statics.screenHeight / 2)) - NPC.safeRangeY,
                         Statics.screenWidth + (NPC.safeRangeX * 2), Statics.screenHeight + (NPC.safeRangeY * 2));
                     if (rectangle.Intersects(rectangle2))
@@ -10321,7 +10314,188 @@ namespace Terraria_Server
             }
         }
 
+        public static void saveWorld(World world, bool resetTime = false)
+        {
+            if (!Statics.saveLock)
+            {
+                Statics.saveLock = true;
+                //if (!Main.skipMenu)
+               // {
+                    bool dayTime = world.isDayTime();
+                    double tempTime = world.getTime();
+                    int tempMoonPhase = world.getMoonPhase();
+                    bool tempBloodMoon = world.isBloodMoon();
+                    if (resetTime)
+                    {
+                        dayTime = true;
+                        tempTime = 13500.0;
+                        tempMoonPhase = 0;
+                        tempBloodMoon = false;
+                    }
+                    if (world.getSavePath() != null)
+                    {
+                        string path = world.getSavePath() + ".sav";
+                        using (FileStream stream = new FileStream(path, FileMode.Create))
+                        {
+                            using (BinaryWriter writer = new BinaryWriter(stream))
+                            {
+                                writer.Write(Statics.currentRelease);
+                                writer.Write(world.getName());
+                                writer.Write(world.getId());
+                                writer.Write((int)Statics.leftWorld);
+                                writer.Write((int)Statics.rightWorld);
+                                writer.Write((int)Statics.topWorld);
+                                writer.Write((int)Statics.bottomWorld);
+                                writer.Write(Statics.maxTilesY);
+                                writer.Write(Statics.maxTilesX);
+                                writer.Write(Statics.spawnTileX);
+                                writer.Write(Statics.spawnTileY);
+                                writer.Write(world.getWorldSurface());
+                                writer.Write(world.getRockLayer());
+                                writer.Write(tempTime);
+                                writer.Write(dayTime);
+                                writer.Write(tempMoonPhase);
+                                writer.Write(tempBloodMoon);
+                                writer.Write(world.getDungeonX());
+                                writer.Write(world.getDungeonY());
+                                writer.Write(NPC.downedBoss1);
+                                writer.Write(NPC.downedBoss2);
+                                writer.Write(NPC.downedBoss3);
+                                writer.Write(shadowOrbSmashed);
+                                writer.Write(spawnMeteor);
+                                writer.Write((byte)shadowOrbCount);
+                                writer.Write(world.getInvasionDelay());
+                                writer.Write(world.getInvasionSize());
+                                writer.Write(world.getInvasionType());
+                                writer.Write(world.getInvasionX());
+                                for (int i = 0; i < Statics.maxTilesX; i++)
+                                {
+                                    float num2 = ((float)i) / ((float)Statics.maxTilesX);
+                                    //Main.statusText = "Saving world data: " + ((int)((num2 * 100f) + 1f)) + "%";
+                                    for (int i_ = 0; i_ < preserve; i_++)
+                                    {
+                                        Console.Write("\b");
+                                    }
+                                    string text = "Saving world data: " + ((int)((num2 * 100f) + 1f)) + "%";
+                                    Console.Write(text);
+                                    preserve = text.Length;
 
-        public static bool stopDrops { get; set; }
+                                    for (int n = 0; n < Statics.maxTilesY; n++)
+                                    {
+                                        writer.Write(world.getTile()[i, n].active);
+                                        if (world.getTile()[i, n].active)
+                                        {
+                                            writer.Write(world.getTile()[i, n].type);
+                                            if (Statics.tileFrameImportant[world.getTile()[i, n].type])
+                                            {
+                                                writer.Write(world.getTile()[i, n].frameX);
+                                                writer.Write(world.getTile()[i, n].frameY);
+                                            }
+                                        }
+                                        writer.Write(world.getTile()[i, n].lighted);
+                                        if (world.getTile()[i, n].wall > 0)
+                                        {
+                                            writer.Write(true);
+                                            writer.Write(world.getTile()[i, n].wall);
+                                        }
+                                        else
+                                        {
+                                            writer.Write(false);
+                                        }
+                                        if (world.getTile()[i, n].liquid > 0)
+                                        {
+                                            writer.Write(true);
+                                            writer.Write(world.getTile()[i, n].liquid);
+                                            writer.Write(world.getTile()[i, n].lava);
+                                        }
+                                        else
+                                        {
+                                            writer.Write(false);
+                                        }
+                                    }
+                                }
+                                for (int j = 0; j < 0x3e8; j++)
+                                {
+                                    if (world.getChests()[j] == null)
+                                    {
+                                        writer.Write(false);
+                                    }
+                                    else
+                                    {
+                                        writer.Write(true);
+                                        writer.Write(world.getChests()[j].x);
+                                        writer.Write(world.getChests()[j].y);
+                                        for (int num5 = 0; num5 < Chest.maxItems; num5++)
+                                        {
+                                            writer.Write((byte)world.getChests()[j].item[num5].stack);
+                                            if (world.getChests()[j].item[num5].stack > 0)
+                                            {
+                                                writer.Write(world.getChests()[j].item[num5].name);
+                                            }
+                                        }
+                                    }
+                                }
+                                for (int k = 0; k < 0x3e8; k++)
+                                {
+                                    if ((world.getSigns()[k] == null) || (world.getSigns()[k].text == null))
+                                    {
+                                        writer.Write(false);
+                                    }
+                                    else
+                                    {
+                                        writer.Write(true);
+                                        writer.Write(world.getSigns()[k].text);
+                                        writer.Write(world.getSigns()[k].x);
+                                        writer.Write(world.getSigns()[k].y);
+                                    }
+                                }
+                                for (int m = 0; m < 0x3e8; m++)
+                                {
+                                    lock (world.getNPCs()[m])
+                                    {
+                                        if (world.getNPCs()[m].active && world.getNPCs()[m].townNPC)
+                                        {
+                                            writer.Write(true);
+                                            writer.Write(world.getNPCs()[m].name);
+                                            writer.Write(world.getNPCs()[m].position.X);
+                                            writer.Write(world.getNPCs()[m].position.Y);
+                                            writer.Write(world.getNPCs()[m].homeless);
+                                            writer.Write(world.getNPCs()[m].homeTileX);
+                                            writer.Write(world.getNPCs()[m].homeTileY);
+                                        }
+                                    }
+                                }
+                                writer.Write(false);
+                                writer.Close();
+                                //Main.statusText = "Backing up world file...";
+                                Console.WriteLine();
+                                Console.WriteLine("Backing up world file...");
+                                string destFileName = world.getSavePath() + ".bak";
+                                if (File.Exists(world.getSavePath()))
+                                {
+                                    File.Copy(world.getSavePath(), destFileName, true);
+                                }
+                                File.Copy(path, world.getSavePath(), true);
+                                File.Delete(path);
+                            }
+                        }
+                        Statics.saveLock = false;
+                    }
+                //}
+            }
+        }
+
+        public static void saveAndPlay(World world)
+        {
+            ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.saveAndPlayCallBack), world);
+        }
+
+        public static void saveAndPlayCallBack(object threadContext)
+        {
+            if (threadContext is World)
+            {
+                saveWorld((World)threadContext, false);
+            }
+        }
     }
 }

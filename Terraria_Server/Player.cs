@@ -633,7 +633,7 @@ namespace Terraria_Server
                     this.legVelocity.X = this.legVelocity.X * 0.99f;
                     if (this.respawnTimer <= 0 && Statics.myPlayer == this.whoAmi)
                     {
-                        //this.Spawn();
+                        this.Spawn();
                         return;
                     }
                 }
@@ -642,30 +642,30 @@ namespace Terraria_Server
                     if (i == Statics.myPlayer)
                     {
                         this.zoneEvil = false;
-                        //if (Statics.evilTiles >= 500)
-                        //{
-                        //    this.zoneEvil = true;
-                        //}
-                        //this.zoneMeteor = false;
-                        //if (Statics.meteorTiles >= 50)
-                        //{
-                        //    this.zoneMeteor = true;
-                        //}
-                        //this.zoneDungeon = false;
-                        //if (Statics.dungeonTiles >= 250 && (double)this.position.Y > Main.worldSurface * 16.0 + (double)Main.screenHeight)
-                        //{
-                        //    int num7 = (int)this.position.X / 16;
-                        //    int num8 = (int)this.position.Y / 16;
-                        //    if (world.getTile()[num7, num8].wall > 0 && !Main.wallHouse[(int)world.getTile()[num7, num8].wall])
-                        //    {
-                        //        this.zoneDungeon = true;
-                        //    }
-                        //}
-                        //this.zoneJungle = false;
-                        //if (Main.jungleTiles >= 200)
-                        //{
-                        //    this.zoneJungle = true;
-                        //}
+                        if (Statics.evilTiles >= 500)
+                        {
+                            this.zoneEvil = true;
+                        }
+                        this.zoneMeteor = false;
+                        if (Statics.meteorTiles >= 50)
+                        {
+                            this.zoneMeteor = true;
+                        }
+                        this.zoneDungeon = false;
+                        if (Statics.dungeonTiles >= 250 && (double)this.position.Y > world.getWorldSurface() * 16.0 + (double)Statics.screenHeight)
+                        {
+                            int num7 = (int)this.position.X / 16;
+                            int num8 = (int)this.position.Y / 16;
+                            if (world.getTile()[num7, num8].wall > 0 && !Statics.wallHouse[(int)world.getTile()[num7, num8].wall])
+                            {
+                                this.zoneDungeon = true;
+                            }
+                        }
+                        this.zoneJungle = false;
+                        if (Statics.jungleTiles >= 200)
+                        {
+                            this.zoneJungle = true;
+                        }
                         this.controlUp = false;
                         this.controlLeft = false;
                         this.controlDown = false;
@@ -675,201 +675,202 @@ namespace Terraria_Server
                         this.controlUseTile = false;
                         this.controlThrow = false;
                         this.controlInv = false;
-                        
-                            
-                            if (this.controlInv)
+
+
+                        if (this.controlInv)
+                        {
+                            if (this.releaseInventory)
                             {
-                                if (this.releaseInventory)
+                                if (this.talkNPC >= 0)
                                 {
-                                    if (this.talkNPC >= 0)
+                                    this.talkNPC = -1;
+                                    //Main.npcChatText = "";
+                                    //Main.PlaySound(11, -1, -1, 1);
+                                }
+                                else
+                                {
+                                    if (this.sign >= 0)
                                     {
-                                        this.talkNPC = -1;
+                                        this.sign = -1;
+                                        //Main.editSign = false;
                                         //Main.npcChatText = "";
                                         //Main.PlaySound(11, -1, -1, 1);
                                     }
                                     else
                                     {
-                                        if (this.sign >= 0)
+                                        if (!Statics.playerInventory)
                                         {
-                                            this.sign = -1;
-                                            //Main.editSign = false;
-                                            //Main.npcChatText = "";
-                                            //Main.PlaySound(11, -1, -1, 1);
+                                            Recipe.FindRecipes(world);
+                                            Statics.playerInventory = true;
+                                            ////Main.PlaySound(10, -1, -1, 1);
                                         }
                                         else
                                         {
-                                            if (!Statics.playerInventory)
-                                            {
-                                                Recipe.FindRecipes(world);
-                                                Statics.playerInventory = true;
-                                                ////Main.PlaySound(10, -1, -1, 1);
-                                            }
-                                            else
-                                            {
-                                                Statics.playerInventory = false;
-                                                //Main.PlaySound(11, -1, -1, 1);
-                                            }
+                                            Statics.playerInventory = false;
+                                            //Main.PlaySound(11, -1, -1, 1);
                                         }
                                     }
                                 }
-                                this.releaseInventory = false;
                             }
-                            else
-                            {
-                                this.releaseInventory = true;
-                            }
-                            if (this.delayUseItem)
-                            {
-                                if (!this.controlUseItem)
-                                {
-                                    this.delayUseItem = false;
-                                }
-                                this.controlUseItem = false;
-                            }
-                            if (this.itemAnimation == 0 && this.itemTime == 0)
-                            {
-                                /*if ((this.controlThrow && this.inventory[this.selectedItem].type > 0) || (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface && Main.mouseLeftRelease) || !Main.playerInventory) && Main.mouseItem.type > 0))
-                                {
-                                    Item item = new Item();
-                                    bool flag = false;
-                                    //if (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface && Main.mouseLeftRelease) || !Main.playerInventory) && Main.mouseItem.type > 0)
-                                    //{
-                                    //    item = this.inventory[this.selectedItem];
-                                    //    this.inventory[this.selectedItem] = Main.mouseItem;
-                                    //    this.delayUseItem = true;
-                                    //    this.controlUseItem = false;
-                                    //    flag = true;
-                                    //}
-                                    int num9 = Item.NewItem((int)this.position.X, (int)this.position.Y, world, this.width, this.height, this.inventory[this.selectedItem].type, 1, false);
-                                    if (!flag && this.inventory[this.selectedItem].type == 8 && this.inventory[this.selectedItem].stack > 1)
-                                    {
-                                        this.inventory[this.selectedItem].stack--;
-                                    }
-                                    else
-                                    {
-                                        this.inventory[this.selectedItem].position = world.getItemList()[num9].position;
-                                        world.getItemList()[num9] = this.inventory[this.selectedItem];
-                                        this.inventory[this.selectedItem] = new Item();
-                                    }
-                                    if (Main.netMode == 0)
-                                    {
-                                        world.getItemList()[num9].noGrabDelay = 100;
-                                    }
-                                    world.getItemList()[num9].velocity.Y = -2f;
-                                    world.getItemList()[num9].velocity.X = (float)(4 * this.direction) + this.velocity.X;
-                                    if (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface) || !Main.playerInventory) && Main.mouseItem.type > 0)
-                                    {
-                                        this.inventory[this.selectedItem] = item;
-                                        Main.mouseItem = new Item();
-                                    }
-                                    else
-                                    {
-                                        this.itemAnimation = 10;
-                                        this.itemAnimationMax = 10;
-                                    }
-                                    Recipe.FindRecipes();
-                                    if (Main.netMode == 1)
-                                    {
-                                        NetMessage.SendData(21, -1, -1, "", num9, 0f, 0f, 0f);
-                                    }
-                                }*/
-                                if (!Statics.playerInventory)
-                                {
-                                    int num10 = this.selectedItem;
-                                    //if (!Main.chatMode)
-                                    //{
-                                    //    if (Main.keyState.IsKeyDown(Keys.D1))
-                                    //    {
-                                    //        this.selectedItem = 0;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D2))
-                                    //    {
-                                    //        this.selectedItem = 1;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D3))
-                                    //    {
-                                    //        this.selectedItem = 2;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D4))
-                                    //    {
-                                    //        this.selectedItem = 3;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D5))
-                                    //    {
-                                    //        this.selectedItem = 4;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D6))
-                                    //    {
-                                    //        this.selectedItem = 5;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D7))
-                                    //    {
-                                    //        this.selectedItem = 6;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D8))
-                                    //    {
-                                    //        this.selectedItem = 7;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D9))
-                                    //    {
-                                    //        this.selectedItem = 8;
-                                    //    }
-                                    //    if (Main.keyState.IsKeyDown(Keys.D0))
-                                    //    {
-                                    //        this.selectedItem = 9;
-                                    //    }
-                                    //}
-                                    //if (num10 != this.selectedItem)
-                                    //{
-                                    //    Main.PlaySound(12, -1, -1, 1);
-                                    //}
-                                    //int k;
-                                    //for (k = (Main.mouseState.ScrollWheelValue - Main.oldMouseState.ScrollWheelValue) / 120; k > 9; k -= 10)
-                                    //{
-                                    //}
-                                    //while (k < 0)
-                                    //{
-                                    //    k += 10;
-                                    //}
-                                    //this.selectedItem -= k;
-                                    //if (k != 0)
-                                    //{
-                                    //    Main.PlaySound(12, -1, -1, 1);
-                                    //}
-                                    if (this.changeItem >= 0)
-                                    {
-                                        //if (this.selectedItem != this.changeItem)
-                                        //{
-                                        //    Main.PlaySound(12, -1, -1, 1);
-                                        //}
-                                        this.selectedItem = this.changeItem;
-                                        this.changeItem = -1;
-                                    }
-                                    while (this.selectedItem > 9)
-                                    {
-                                        this.selectedItem -= 10;
-                                    }
-                                    while (this.selectedItem < 0)
-                                    {
-                                        this.selectedItem += 10;
-                                    }
-                                }
-                                else
-                                {
-                                    //int num11 = (Main.mouseState.ScrollWheelValue - Main.oldMouseState.ScrollWheelValue) / 120;
-                                    //Main.focusRecipe += num11;
-                                    //if (Main.focusRecipe > Main.numAvailableRecipes - 1)
-                                    //{
-                                    //    Main.focusRecipe = Main.numAvailableRecipes - 1;
-                                    //}
-                                    //if (Main.focusRecipe < 0)
-                                    //{
-                                    //    Main.focusRecipe = 0;
-                                    //}
-                                }
-                            }
+                            this.releaseInventory = false;
                         }
-                        
+                        else
+                        {
+                            this.releaseInventory = true;
+                        }
+                        if (this.delayUseItem)
+                        {
+                            if (!this.controlUseItem)
+                            {
+                                this.delayUseItem = false;
+                            }
+                            this.controlUseItem = false;
+                        }
+                        if (this.itemAnimation == 0 && this.itemTime == 0)
+                        {
+                            Recipe.FindRecipes(world);
+                            //if ((this.controlThrow && this.inventory[this.selectedItem].type > 0) || (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface && Main.mouseLeftRelease) || !Main.playerInventory) && Main.mouseItem.type > 0))
+                            //{
+                            //    Item item = new Item();
+                            //    bool flag = false;
+                            //    //if (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface && Main.mouseLeftRelease) || !Main.playerInventory) && Main.mouseItem.type > 0)
+                            //    //{
+                            //    //    item = this.inventory[this.selectedItem];
+                            //    //    this.inventory[this.selectedItem] = Main.mouseItem;
+                            //    //    this.delayUseItem = true;
+                            //    //    this.controlUseItem = false;
+                            //    //    flag = true;
+                            //    //}
+                            //    int num9 = Item.NewItem((int)this.position.X, (int)this.position.Y, world, this.width, this.height, this.inventory[this.selectedItem].type, 1, false);
+                            //    if (!flag && this.inventory[this.selectedItem].type == 8 && this.inventory[this.selectedItem].stack > 1)
+                            //    {
+                            //        this.inventory[this.selectedItem].stack--;
+                            //    }
+                            //    else
+                            //    {
+                            //        this.inventory[this.selectedItem].position = world.getItemList()[num9].position;
+                            //        world.getItemList()[num9] = this.inventory[this.selectedItem];
+                            //        this.inventory[this.selectedItem] = new Item();
+                            //    }
+                            //    if (Statics.netMode == 0)
+                            //    {
+                            //        world.getItemList()[num9].noGrabDelay = 100;
+                            //    }
+                            //    world.getItemList()[num9].velocity.Y = -2f;
+                            //    world.getItemList()[num9].velocity.X = (float)(4 * this.direction) + this.velocity.X;
+                            //    //if (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface) || !Main.playerInventory) && Main.mouseItem.type > 0)
+                            //    //{
+                            //    //    this.inventory[this.selectedItem] = item;
+                            //    //    Main.mouseItem = new Item();
+                            //    //}
+                            //    //else
+                            //    {
+                            //        this.itemAnimation = 10;
+                            //        this.itemAnimationMax = 10;
+                            //        //}
+                            //        Recipe.FindRecipes(world);
+                            //        if (Statics.netMode == 1)
+                            //        {
+                            //            NetMessage.SendData(21, world, -1, -1, "", num9, 0f, 0f, 0f);
+                            //        }
+                            //    }
+                            //    if (!Statics.playerInventory)
+                            //    {
+                            //        int num10 = this.selectedItem;
+                            //        //if (!Main.chatMode)
+                            //        //{
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D1))
+                            //        //    {
+                            //        //        this.selectedItem = 0;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D2))
+                            //        //    {
+                            //        //        this.selectedItem = 1;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D3))
+                            //        //    {
+                            //        //        this.selectedItem = 2;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D4))
+                            //        //    {
+                            //        //        this.selectedItem = 3;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D5))
+                            //        //    {
+                            //        //        this.selectedItem = 4;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D6))
+                            //        //    {
+                            //        //        this.selectedItem = 5;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D7))
+                            //        //    {
+                            //        //        this.selectedItem = 6;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D8))
+                            //        //    {
+                            //        //        this.selectedItem = 7;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D9))
+                            //        //    {
+                            //        //        this.selectedItem = 8;
+                            //        //    }
+                            //        //    if (Main.keyState.IsKeyDown(Keys.D0))
+                            //        //    {
+                            //        //        this.selectedItem = 9;
+                            //        //    }
+                            //        //}
+                            //        //if (num10 != this.selectedItem)
+                            //        //{
+                            //        //    Main.PlaySound(12, -1, -1, 1);
+                            //        //}
+                            //        //int k;
+                            //        //for (k = (Main.mouseState.ScrollWheelValue - Main.oldMouseState.ScrollWheelValue) / 120; k > 9; k -= 10)
+                            //        //{
+                            //        //}
+                            //        //while (k < 0)
+                            //        //{
+                            //        //    k += 10;
+                            //        //}
+                            //        //this.selectedItem -= k;
+                            //        //if (k != 0)
+                            //        //{
+                            //        //    Main.PlaySound(12, -1, -1, 1);
+                            //        //}
+                            //        if (this.changeItem >= 0)
+                            //        {
+                            //            //if (this.selectedItem != this.changeItem)
+                            //            //{
+                            //            //    Main.PlaySound(12, -1, -1, 1);
+                            //            //}
+                            //            this.selectedItem = this.changeItem;
+                            //            this.changeItem = -1;
+                            //        }
+                            //        while (this.selectedItem > 9)
+                            //        {
+                            //            this.selectedItem -= 10;
+                            //        }
+                            //        while (this.selectedItem < 0)
+                            //        {
+                            //            this.selectedItem += 10;
+                            //        }
+                            //    }
+                            //    else
+                            //    {
+                            //        //int num11 = (Statics.mouseState.ScrollWheelValue - Main.oldMouseState.ScrollWheelValue) / 120;
+                            //        //Statics.focusRecipe += num11;
+                            //        //if (Main.focusRecipe > Main.numAvailableRecipes - 1)
+                            //        //{
+                            //        //    Statics.focusRecipe = Statics.numAvailableRecipes - 1;
+                            //        //}
+                            //        //if (Statics.focusRecipe < 0)
+                            //        //{
+                            //        //    Main.focusRecipe = 0;
+                            //        //}
+                            //    }
+                            //}
+                        }
+
                         if (Statics.playerInventory)
                         {
                             this.AdjTiles(world);
@@ -899,7 +900,7 @@ namespace Terraria_Server
                             {
                                 int damage = (num14 - 25) * 10;
                                 this.immune = false;
-                                //this.Hurt(damage, -this.direction, false, false);
+                                this.Hurt(damage, -this.direction, false, false);
                             }
                             this.fallStart = (int)(this.position.Y / 16f);
                         }
@@ -1100,7 +1101,7 @@ namespace Terraria_Server
                             float arg_1429_5 = 0f;
                             int arg_1429_6 = 200;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_1429_0, arg_1429_1, arg_1429_2, arg_1429_3, arg_1429_4, arg_1429_5, arg_1429_6, newColor, 1.2f);
+                            Dust.NewDust(arg_1429_0, world, arg_1429_1, arg_1429_2, arg_1429_3, arg_1429_4, arg_1429_5, arg_1429_6, newColor, 1.2f);
                         }
                     }
                     if (this.head == 6 && this.body == 6 && this.legs == 6)
@@ -1119,12 +1120,12 @@ namespace Terraria_Server
                                 float arg_151B_5 = 0f;
                                 int arg_151B_6 = 100;
                                 Color newColor = default(Color);
-                                //int num15 = Dust.NewDust(arg_151B_0, arg_151B_1, arg_151B_2, arg_151B_3, arg_151B_4, arg_151B_5, arg_151B_6, newColor, 2f);
-                                //world.getDust()[num15].noGravity = true;
-                                //Dust expr_153D_cp_0 = world.getDust()[num15];
-                                //expr_153D_cp_0.velocity.X = expr_153D_cp_0.velocity.X - this.velocity.X * 0.5f;
-                                //Dust expr_1567_cp_0 = world.getDust()[num15];
-                                //expr_1567_cp_0.velocity.Y = expr_1567_cp_0.velocity.Y - this.velocity.Y * 0.5f;
+                                int num15 = Dust.NewDust(arg_151B_0, world, arg_151B_1, arg_151B_2, arg_151B_3, arg_151B_4, arg_151B_5, arg_151B_6, newColor, 2f);
+                                world.getDust()[num15].noGravity = true;
+                                Dust expr_153D_cp_0 = world.getDust()[num15];
+                                expr_153D_cp_0.velocity.X = expr_153D_cp_0.velocity.X - this.velocity.X * 0.5f;
+                                Dust expr_1567_cp_0 = world.getDust()[num15];
+                                expr_1567_cp_0.velocity.Y = expr_1567_cp_0.velocity.Y - this.velocity.Y * 0.5f;
                             }
                         }
                     }
@@ -1150,7 +1151,7 @@ namespace Terraria_Server
                             float arg_1677_5 = 0f;
                             int arg_1677_6 = 200;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_1677_0, arg_1677_1, arg_1677_2, arg_1677_3, arg_1677_4, arg_1677_5, arg_1677_6, newColor, 1.2f);
+                            Dust.NewDust(arg_1677_0, world, arg_1677_1, arg_1677_2, arg_1677_3, arg_1677_4, arg_1677_5, arg_1677_6, newColor, 1.2f);
                         }
                     }
                     if (this.head == 9 && this.body == 9 && this.legs == 9)
@@ -1168,12 +1169,12 @@ namespace Terraria_Server
                                 float arg_175A_5 = 0f;
                                 int arg_175A_6 = 100;
                                 Color newColor = default(Color);
-                                //int num17 = Dust.NewDust(arg_175A_0, arg_175A_1, arg_175A_2, arg_175A_3, arg_175A_4, arg_175A_5, arg_175A_6, newColor, 2f);
-                                //world.getDust()[num17].noGravity = true;
-                                //Dust expr_177C_cp_0 = world.getDust()[num17];
-                                //expr_177C_cp_0.velocity.X = expr_177C_cp_0.velocity.X - this.velocity.X * 0.5f;
-                                //Dust expr_17A6_cp_0 = world.getDust()[num17];
-                                //expr_17A6_cp_0.velocity.Y = expr_17A6_cp_0.velocity.Y - this.velocity.Y * 0.5f;
+                                int num17 = Dust.NewDust(arg_175A_0, world, arg_175A_1, arg_175A_2, arg_175A_3, arg_175A_4, arg_175A_5, arg_175A_6, newColor, 2f);
+                                world.getDust()[num17].noGravity = true;
+                                Dust expr_177C_cp_0 = world.getDust()[num17];
+                                expr_177C_cp_0.velocity.X = expr_177C_cp_0.velocity.X - this.velocity.X * 0.5f;
+                                Dust expr_17A6_cp_0 = world.getDust()[num17];
+                                expr_17A6_cp_0.velocity.Y = expr_17A6_cp_0.velocity.Y - this.velocity.Y * 0.5f;
                             }
                         }
                     }
@@ -1251,9 +1252,9 @@ namespace Terraria_Server
                                         float arg_1A7F_5 = this.velocity.Y * 0.5f;
                                         int arg_1A7F_6 = 50;
                                         Color newColor = default(Color);
-                                        //int num18 = Dust.NewDust(arg_1A7F_0, arg_1A7F_1, arg_1A7F_2, arg_1A7F_3, arg_1A7F_4, arg_1A7F_5, arg_1A7F_6, newColor, 1.5f);
-                                        //world.getDust()[num18].velocity.X = world.getDust()[num18].velocity.X * 0.2f;
-                                        //world.getDust()[num18].velocity.Y = world.getDust()[num18].velocity.Y * 0.2f;
+                                        int num18 = Dust.NewDust(arg_1A7F_0, world, arg_1A7F_1, arg_1A7F_2, arg_1A7F_3, arg_1A7F_4, arg_1A7F_5, arg_1A7F_6, newColor, 1.5f);
+                                        world.getDust()[num18].velocity.X = world.getDust()[num18].velocity.X * 0.2f;
+                                        world.getDust()[num18].velocity.Y = world.getDust()[num18].velocity.Y * 0.2f;
                                     }
                                 }
                                 else
@@ -1286,10 +1287,10 @@ namespace Terraria_Server
                                             float arg_1C47_4 = -this.velocity.X * 0.5f;
                                             float arg_1C47_5 = this.velocity.Y * 0.5f;
                                             int arg_1C47_6 = 50;
-                                            //Color newColor = default(Color);
-                                            //int num19 = Dust.NewDust(arg_1C47_0, arg_1C47_1, arg_1C47_2, arg_1C47_3, arg_1C47_4, arg_1C47_5, arg_1C47_6, newColor, 1.5f);
-                                            //world.getDust()[num19].velocity.X = world.getDust()[num19].velocity.X * 0.2f;
-                                            //world.getDust()[num19].velocity.Y = world.getDust()[num19].velocity.Y * 0.2f;
+                                            Color newColor = default(Color);
+                                            int num19 = Dust.NewDust(arg_1C47_0, world, arg_1C47_1, arg_1C47_2, arg_1C47_3, arg_1C47_4, arg_1C47_5, arg_1C47_6, newColor, 1.5f);
+                                            world.getDust()[num19].velocity.X = world.getDust()[num19].velocity.X * 0.2f;
+                                            world.getDust()[num19].velocity.Y = world.getDust()[num19].velocity.Y * 0.2f;
                                         }
                                     }
                                     else
@@ -1338,13 +1339,13 @@ namespace Terraria_Server
                         {
                             if (this.jump > 0)
                             {
-                                if (this.velocity.Y > - jumpSpeed + num2 * 2f)
+                                if (this.velocity.Y > -jumpSpeed + num2 * 2f)
                                 {
                                     this.jump = 0;
                                 }
                                 else
                                 {
-                                    this.velocity.Y = - jumpSpeed;
+                                    this.velocity.Y = -jumpSpeed;
                                     this.jump--;
                                 }
                             }
@@ -1388,19 +1389,19 @@ namespace Terraria_Server
                                             float arg_1F77_5 = this.velocity.Y * 0.5f;
                                             int arg_1F77_6 = 100;
                                             Color newColor = default(Color);
-                                            //int num21 = Dust.NewDust(arg_1F77_0, arg_1F77_1, arg_1F77_2, arg_1F77_3, arg_1F77_4, arg_1F77_5, arg_1F77_6, newColor, 1.5f);
-                                            //world.getDust()[num21].velocity.X = world.getDust()[num21].velocity.X * 0.5f - this.velocity.X * 0.1f;
-                                            //world.getDust()[num21].velocity.Y = world.getDust()[num21].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
+                                            int num21 = Dust.NewDust(arg_1F77_0, world, arg_1F77_1, arg_1F77_2, arg_1F77_3, arg_1F77_4, arg_1F77_5, arg_1F77_6, newColor, 1.5f);
+                                            world.getDust()[num21].velocity.X = world.getDust()[num21].velocity.X * 0.5f - this.velocity.X * 0.1f;
+                                            world.getDust()[num21].velocity.Y = world.getDust()[num21].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
                                         }
-                                        //int num22 = Gore.NewGore(new Vector2(this.position.X + (float)(this.width / 2) - 16f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
-                                        //world.getGore()[num22].velocity.X = world.getGore()[num22].velocity.X * 0.1f - this.velocity.X * 0.1f;
-                                        //world.getGore()[num22].velocity.Y = world.getGore()[num22].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
-                                        //num22 = Gore.NewGore(new Vector2(this.position.X - 36f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
-                                        //world.getGore()[num22].velocity.X = world.getGore()[num22].velocity.X * 0.1f - this.velocity.X * 0.1f;
-                                        //world.getGore()[num22].velocity.Y = world.getGore()[num22].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
-                                        //num22 = Gore.NewGore(new Vector2(this.position.X + (float)this.width + 4f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
-                                        //world.getGore()[num22].velocity.X = world.getGore()[num22].velocity.X * 0.1f - this.velocity.X * 0.1f;
-                                        //world.getGore()[num22].velocity.Y = world.getGore()[num22].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
+                                        int num22 = Gore.NewGore(new Vector2(this.position.X + (float)(this.width / 2) - 16f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Statics.rand.Next(11, 14), world);
+                                        world.getGore()[num22].velocity.X = world.getGore()[num22].velocity.X * 0.1f - this.velocity.X * 0.1f;
+                                        world.getGore()[num22].velocity.Y = world.getGore()[num22].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
+                                        num22 = Gore.NewGore(new Vector2(this.position.X - 36f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Statics.rand.Next(11, 14), world);
+                                        world.getGore()[num22].velocity.X = world.getGore()[num22].velocity.X * 0.1f - this.velocity.X * 0.1f;
+                                        world.getGore()[num22].velocity.Y = world.getGore()[num22].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
+                                        num22 = Gore.NewGore(new Vector2(this.position.X + (float)this.width + 4f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Statics.rand.Next(11, 14), world);
+                                        world.getGore()[num22].velocity.X = world.getGore()[num22].velocity.X * 0.1f - this.velocity.X * 0.1f;
+                                        world.getGore()[num22].velocity.Y = world.getGore()[num22].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
                                     }
                                 }
                             }
@@ -1422,11 +1423,11 @@ namespace Terraria_Server
                             float arg_2369_5 = this.velocity.Y * 0.5f;
                             int arg_2369_6 = 100;
                             Color newColor = default(Color);
-                            //int num23 = Dust.NewDust(arg_2369_0, arg_2369_1, arg_2369_2, arg_2369_3, arg_2369_4, arg_2369_5, arg_2369_6, newColor, 1.5f);
-                            //world.getDust()[num23].velocity.X = world.getDust()[num23].velocity.X * 0.5f - this.velocity.X * 0.1f;
-                            //world.getDust()[num23].velocity.Y = world.getDust()[num23].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
+                            int num23 = Dust.NewDust(arg_2369_0, world, arg_2369_1, arg_2369_2, arg_2369_3, arg_2369_4, arg_2369_5, arg_2369_6, newColor, 1.5f);
+                            world.getDust()[num23].velocity.X = world.getDust()[num23].velocity.X * 0.5f - this.velocity.X * 0.1f;
+                            world.getDust()[num23].velocity.Y = world.getDust()[num23].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
                         }
-                        if (this.velocity.Y > - jumpSpeed && this.velocity.Y != 0f)
+                        if (this.velocity.Y > -jumpSpeed && this.velocity.Y != 0f)
                         {
                             this.canRocket = true;
                         }
@@ -1472,10 +1473,10 @@ namespace Terraria_Server
                                     float arg_2563_5 = 0f;
                                     int arg_2563_6 = 100;
                                     Color newColor = default(Color);
-                                    //int num26 = Dust.NewDust(arg_2563_0, arg_2563_1, arg_2563_2, arg_2563_3, arg_2563_4, arg_2563_5, arg_2563_6, newColor, 2.5f);
-                                    //world.getDust()[num26].noGravity = true;
-                                    //world.getDust()[num26].velocity.X = world.getDust()[num26].velocity.X * 1f - 2f - this.velocity.X * 0.3f;
-                                    //world.getDust()[num26].velocity.Y = world.getDust()[num26].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
+                                    int num26 = Dust.NewDust(arg_2563_0, world, arg_2563_1, arg_2563_2, arg_2563_3, arg_2563_4, arg_2563_5, arg_2563_6, newColor, 2.5f);
+                                    world.getDust()[num26].noGravity = true;
+                                    world.getDust()[num26].velocity.X = world.getDust()[num26].velocity.X * 1f - 2f - this.velocity.X * 0.3f;
+                                    world.getDust()[num26].velocity.Y = world.getDust()[num26].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
                                 }
                                 else
                                 {
@@ -1487,10 +1488,10 @@ namespace Terraria_Server
                                     float arg_2656_5 = 0f;
                                     int arg_2656_6 = 100;
                                     Color newColor = default(Color);
-                                    //int num27 = Dust.NewDust(arg_2656_0, arg_2656_1, arg_2656_2, arg_2656_3, arg_2656_4, arg_2656_5, arg_2656_6, newColor, 2.5f);
-                                    //world.getDust()[num27].noGravity = true;
-                                    //world.getDust()[num27].velocity.X = world.getDust()[num27].velocity.X * 1f + 2f - this.velocity.X * 0.3f;
-                                    //world.getDust()[num27].velocity.Y = world.getDust()[num27].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
+                                    int num27 = Dust.NewDust(arg_2656_0, world, arg_2656_1, arg_2656_2, arg_2656_3, arg_2656_4, arg_2656_5, arg_2656_6, newColor, 2.5f);
+                                    world.getDust()[num27].noGravity = true;
+                                    world.getDust()[num27].velocity.X = world.getDust()[num27].velocity.X * 1f + 2f - this.velocity.X * 0.3f;
+                                    world.getDust()[num27].velocity.Y = world.getDust()[num27].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
                                 }
                             }
                             if (this.rocketDelay == 0)
@@ -1503,7 +1504,7 @@ namespace Terraria_Server
                             {
                                 this.velocity.Y = this.velocity.Y - 0.3f;
                             }
-                            if (this.velocity.Y < - jumpSpeed)
+                            if (this.velocity.Y < -jumpSpeed)
                             {
                                 this.velocity.Y = -jumpSpeed;
                             }
@@ -1532,7 +1533,7 @@ namespace Terraria_Server
                                         this.statLife += 20;
                                         if (Statics.myPlayer == this.whoAmi)
                                         {
-                                            //this.HealEffect(20);
+                                            this.HealEffect(20);
                                         }
                                         if (this.statLife > this.statLifeMax)
                                         {
@@ -1541,7 +1542,7 @@ namespace Terraria_Server
                                         world.getItemList()[num28] = new Item();
                                         if (Statics.netMode == 1)
                                         {
-                                            //NetMessage.SendData(21, -1, -1, "", num28, 0f, 0f, 0f);
+                                            NetMessage.SendData(21, world, -1, -1, "", num28, 0f, 0f, 0f);
                                         }
                                     }
                                     else
@@ -1552,7 +1553,7 @@ namespace Terraria_Server
                                             this.statMana += 20;
                                             if (Statics.myPlayer == this.whoAmi)
                                             {
-                                                //this.ManaEffect(20);
+                                                this.ManaEffect(20);
                                             }
                                             if (this.statMana > this.statManaMax)
                                             {
@@ -1561,7 +1562,7 @@ namespace Terraria_Server
                                             world.getItemList()[num28] = new Item();
                                             if (Statics.netMode == 1)
                                             {
-                                                //NetMessage.SendData(21, -1, -1, "", num28, 0f, 0f, 0f);
+                                                NetMessage.SendData(21, world, -1, -1, "", num28, 0f, 0f, 0f);
                                             }
                                         }
                                         else
@@ -1569,7 +1570,7 @@ namespace Terraria_Server
                                             world.getItemList()[num28] = this.GetItem(i, world.getItemList()[num28]);
                                             if (Statics.netMode == 1)
                                             {
-                                                //NetMessage.SendData(21, -1, -1, "", num28, 0f, 0f, 0f);
+                                                NetMessage.SendData(21, world, -1, -1, "", num28, 0f, 0f, 0f);
                                             }
                                         }
                                     }
@@ -1622,7 +1623,7 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (world.getItemList()[num28].velocity.Y > - itemGrabSpeedMax)
+                                        if (world.getItemList()[num28].velocity.Y > -itemGrabSpeedMax)
                                         {
                                             Item expr_2D33_cp_0 = world.getItemList()[num28];
                                             expr_2D33_cp_0.velocity.Y = expr_2D33_cp_0.velocity.Y - itemGrabSpeed;
@@ -1704,7 +1705,7 @@ namespace Terraria_Server
                             int num31 = tileTargetX - num29;
                             int num32 = tileTargetY - num30;
                             //main.signBubble = true;
-                           // Main.signX = num31 * 16 + 16;
+                            // Main.signX = num31 * 16 + 16;
                             //Main.signY = num32 * 16;
                         }
                         if (world.getTile()[tileTargetX, tileTargetY].type == 10 || world.getTile()[tileTargetX, tileTargetY].type == 11)
@@ -1780,18 +1781,18 @@ namespace Terraria_Server
                                                 //}
                                                 //else
                                                 //{
-                                                    int num37 = (int)(world.getTile()[tileTargetX, tileTargetY].frameX / 18);
-                                                    int num38 = (int)(world.getTile()[tileTargetX, tileTargetY].frameY / 18);
-                                                    while (num37 > 1)
-                                                    {
-                                                        num37 -= 2;
-                                                    }
-                                                    int num39 = tileTargetX - num37;
-                                                    int num40 = tileTargetY - num38;
-                                                    if (world.getTile()[num39, num40].type == 55)
-                                                    {
-                                                        NetMessage.SendData(46, world, -1, -1, "", num39, (float)num40, 0f, 0f);
-                                                    }
+                                                int num37 = (int)(world.getTile()[tileTargetX, tileTargetY].frameX / 18);
+                                                int num38 = (int)(world.getTile()[tileTargetX, tileTargetY].frameY / 18);
+                                                while (num37 > 1)
+                                                {
+                                                    num37 -= 2;
+                                                }
+                                                int num39 = tileTargetX - num37;
+                                                int num40 = tileTargetY - num38;
+                                                if (world.getTile()[num39, num40].type == 55)
+                                                {
+                                                    NetMessage.SendData(46, world, -1, -1, "", num39, (float)num40, 0f, 0f);
+                                                }
                                                 //}
                                             }
                                         }
@@ -2023,7 +2024,7 @@ namespace Terraria_Server
                                 {
                                     if (world.getProjectile()[num53].active && world.getProjectile()[num53].owner == i && world.getProjectile()[num53].aiStyle == 7)
                                     {
-                                        //world.getProjectile()[num53].Kill();
+                                        world.getProjectile()[num53].Kill(world);
                                     }
                                 }
                             }
@@ -2141,7 +2142,7 @@ namespace Terraria_Server
                             float arg_4117_5 = 0f;
                             int arg_4117_6 = 0;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_4117_0, arg_4117_1, arg_4117_2, arg_4117_3, arg_4117_4, arg_4117_5, arg_4117_6, newColor, 1.2f);
+                            Dust.NewDust(arg_4117_0, world, arg_4117_1, arg_4117_2, arg_4117_3, arg_4117_4, arg_4117_5, arg_4117_6, newColor, 1.2f);
                         }
                         else
                         {
@@ -2153,7 +2154,7 @@ namespace Terraria_Server
                             float arg_4170_5 = 0f;
                             int arg_4170_6 = 0;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_4170_0, arg_4170_1, arg_4170_2, arg_4170_3, arg_4170_4, arg_4170_5, arg_4170_6, newColor, 1.2f);
+                            Dust.NewDust(arg_4170_0, world, arg_4170_1, arg_4170_2, arg_4170_3, arg_4170_4, arg_4170_5, arg_4170_6, newColor, 1.2f);
                         }
                     }
                     bool flag7 = Collision.LavaCollision(this.position, world, this.width, this.height);
@@ -2185,14 +2186,14 @@ namespace Terraria_Server
                                         float arg_4253_5 = 0f;
                                         int arg_4253_6 = 0;
                                         Color newColor = default(Color);
-                                        //int num58 = Dust.NewDust(arg_4253_0, arg_4253_1, arg_4253_2, arg_4253_3, arg_4253_4, arg_4253_5, arg_4253_6, newColor, 1f);
-                                        //Dust expr_4267_cp_0 = world.getDust()[num58];
-                                        //expr_4267_cp_0.velocity.Y = expr_4267_cp_0.velocity.Y - 4f;
-                                        //Dust expr_4285_cp_0 = world.getDust()[num58];
-                                        //expr_4285_cp_0.velocity.X = expr_4285_cp_0.velocity.X * 2.5f;
-                                        //world.getDust()[num58].scale = 1.3f;
-                                        //world.getDust()[num58].alpha = 100;
-                                        //world.getDust()[num58].noGravity = true;
+                                        int num58 = Dust.NewDust(arg_4253_0, world, arg_4253_1, arg_4253_2, arg_4253_3, arg_4253_4, arg_4253_5, arg_4253_6, newColor, 1f);
+                                        Dust expr_4267_cp_0 = world.getDust()[num58];
+                                        expr_4267_cp_0.velocity.Y = expr_4267_cp_0.velocity.Y - 4f;
+                                        Dust expr_4285_cp_0 = world.getDust()[num58];
+                                        expr_4285_cp_0.velocity.X = expr_4285_cp_0.velocity.X * 2.5f;
+                                        world.getDust()[num58].scale = 1.3f;
+                                        world.getDust()[num58].alpha = 100;
+                                        world.getDust()[num58].noGravity = true;
                                     }
                                     //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 0);
                                 }
@@ -2208,14 +2209,14 @@ namespace Terraria_Server
                                         float arg_4359_5 = 0f;
                                         int arg_4359_6 = 0;
                                         Color newColor = default(Color);
-                                        //int num60 = Dust.NewDust(arg_4359_0, arg_4359_1, arg_4359_2, arg_4359_3, arg_4359_4, arg_4359_5, arg_4359_6, newColor, 1f);
-                                        //Dust expr_436D_cp_0 = world.getDust()[num60];
-                                        //expr_436D_cp_0.velocity.Y = expr_436D_cp_0.velocity.Y - 1.5f;
-                                        //Dust expr_438B_cp_0 = world.getDust()[num60];
-                                        //expr_438B_cp_0.velocity.X = expr_438B_cp_0.velocity.X * 2.5f;
-                                        //world.getDust()[num60].scale = 1.3f;
-                                        //world.getDust()[num60].alpha = 100;
-                                        //world.getDust()[num60].noGravity = true;
+                                        int num60 = Dust.NewDust(arg_4359_0, world, arg_4359_1, arg_4359_2, arg_4359_3, arg_4359_4, arg_4359_5, arg_4359_6, newColor, 1f);
+                                        Dust expr_436D_cp_0 = world.getDust()[num60];
+                                        expr_436D_cp_0.velocity.Y = expr_436D_cp_0.velocity.Y - 1.5f;
+                                        Dust expr_438B_cp_0 = world.getDust()[num60];
+                                        expr_438B_cp_0.velocity.X = expr_438B_cp_0.velocity.X * 2.5f;
+                                        world.getDust()[num60].scale = 1.3f;
+                                        world.getDust()[num60].alpha = 100;
+                                        world.getDust()[num60].noGravity = true;
                                     }
                                     //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
@@ -2247,14 +2248,14 @@ namespace Terraria_Server
                                         float arg_44AC_5 = 0f;
                                         int arg_44AC_6 = 0;
                                         Color newColor = default(Color);
-                                        //int num62 = Dust.NewDust(arg_44AC_0, arg_44AC_1, arg_44AC_2, arg_44AC_3, arg_44AC_4, arg_44AC_5, arg_44AC_6, newColor, 1f);
-                                        //Dust expr_44C0_cp_0 = world.getDust()[num62];
-                                        //expr_44C0_cp_0.velocity.Y = expr_44C0_cp_0.velocity.Y - 4f;
-                                        //Dust expr_44DE_cp_0 = world.getDust()[num62];
-                                        //expr_44DE_cp_0.velocity.X = expr_44DE_cp_0.velocity.X * 2.5f;
-                                        //world.getDust()[num62].scale = 1.3f;
-                                        //world.getDust()[num62].alpha = 100;
-                                        //world.getDust()[num62].noGravity = true;
+                                        int num62 = Dust.NewDust(arg_44AC_0, world, arg_44AC_1, arg_44AC_2, arg_44AC_3, arg_44AC_4, arg_44AC_5, arg_44AC_6, newColor, 1f);
+                                        Dust expr_44C0_cp_0 = world.getDust()[num62];
+                                        expr_44C0_cp_0.velocity.Y = expr_44C0_cp_0.velocity.Y - 4f;
+                                        Dust expr_44DE_cp_0 = world.getDust()[num62];
+                                        expr_44DE_cp_0.velocity.X = expr_44DE_cp_0.velocity.X * 2.5f;
+                                        world.getDust()[num62].scale = 1.3f;
+                                        world.getDust()[num62].alpha = 100;
+                                        world.getDust()[num62].noGravity = true;
                                     }
                                     //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 0);
                                 }
@@ -2270,14 +2271,14 @@ namespace Terraria_Server
                                         float arg_45B2_5 = 0f;
                                         int arg_45B2_6 = 0;
                                         Color newColor = default(Color);
-                                        //int num64 = Dust.NewDust(arg_45B2_0, arg_45B2_1, arg_45B2_2, arg_45B2_3, arg_45B2_4, arg_45B2_5, arg_45B2_6, newColor, 1f);
-                                        //Dust expr_45C6_cp_0 = world.getDust()[num64];
-                                        //expr_45C6_cp_0.velocity.Y = expr_45C6_cp_0.velocity.Y - 1.5f;
-                                        //Dust expr_45E4_cp_0 = world.getDust()[num64];
-                                        //expr_45E4_cp_0.velocity.X = expr_45E4_cp_0.velocity.X * 2.5f;
-                                        //world.getDust()[num64].scale = 1.3f;
-                                        //world.getDust()[num64].alpha = 100;
-                                        //world.getDust()[num64].noGravity = true;
+                                        int num64 = Dust.NewDust(arg_45B2_0, world, arg_45B2_1, arg_45B2_2, arg_45B2_3, arg_45B2_4, arg_45B2_5, arg_45B2_6, newColor, 1f);
+                                        Dust expr_45C6_cp_0 = world.getDust()[num64];
+                                        expr_45C6_cp_0.velocity.Y = expr_45C6_cp_0.velocity.Y - 1.5f;
+                                        Dust expr_45E4_cp_0 = world.getDust()[num64];
+                                        expr_45E4_cp_0.velocity.X = expr_45E4_cp_0.velocity.X * 2.5f;
+                                        world.getDust()[num64].scale = 1.3f;
+                                        world.getDust()[num64].alpha = 100;
+                                        world.getDust()[num64].noGravity = true;
                                     }
                                     //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
@@ -2344,6 +2345,7 @@ namespace Terraria_Server
                     this.grappling[0] = -1;
                     this.grapCount = 0;
                 }
+            }
         }
         
         public bool SellItem(int price)
@@ -3091,7 +3093,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            //this.wet = Collision.WetCollision(this.position, this.width, this.height);
+            this.wet = Collision.WetCollision(this.position, this.width, this.height, world);
             this.wetCount = 0;
             this.lavaWet = false;
             this.fallStart = (int)(this.position.Y / 16f);
@@ -3107,8 +3109,8 @@ namespace Terraria_Server
             if (this.whoAmi == Statics.myPlayer)
             {
                 //Lighting.lightCounter = Lighting.lightSkip + 1;
-                //Main.screenPosition.X = this.position.X + (float)(this.width / 2) - (float)(Main.screenWidth / 2);
-                //Main.screenPosition.Y = this.position.Y + (float)(this.height / 2) - (float)(Main.screenHeight / 2);
+                Statics.screenPosition.X = this.position.X + (float)(this.width / 2) - (float)(Statics.screenWidth / 2);
+                Statics.screenPosition.Y = this.position.Y + (float)(this.height / 2) - (float)(Statics.screenHeight / 2);
             }
         }
 
@@ -3116,7 +3118,7 @@ namespace Terraria_Server
         {
             //if config has god mode then else false
             //if player has god mode on return bool.
-            return true;
+            return false;
         }
 
         public static double CalculateDamage(int Damage, int Defense)
@@ -3187,11 +3189,11 @@ namespace Terraria_Server
                         {
                             if (this.boneArmor)
                             {
-                                //Dust.NewDust(this.position, world, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+                                Dust.NewDust(this.position, world, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
                             }
                             else
                             {
-                                ///Dust.NewDust(this.position, world, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+                                Dust.NewDust(this.position, world, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
                             }
                             num4++;
                         }
@@ -3238,14 +3240,14 @@ namespace Terraria_Server
             int num = 0;
             while ((double)num < 20.0 + dmg / (double)this.statLifeMax * 100.0)
             {
-                //if (this.boneArmor)
-                //{
-                //    Dust.NewDust(this.position, world, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
-                //}
-                //else
-                //{
-                //    Dust.NewDust(this.position, world, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
-                //}
+                if (this.boneArmor)
+                {
+                    Dust.NewDust(this.position, world, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+                }
+                else
+                {
+                    Dust.NewDust(this.position, world, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+                }
                 num++;
             }
             this.dead = true;
@@ -3253,7 +3255,7 @@ namespace Terraria_Server
             this.immuneAlpha = 0;
             if (Statics.netMode == 2)
             {
-                NetMessage.SendData(25, world, -1, -1, this.name + " was slain...", 8, 225f, 25f, 25f);
+                NetMessage.SendData(25, world, -1, -1, this.name + " was slain...", 255, 225f, 25f, 25f);
             }
             if (this.whoAmi == Statics.myPlayer)
             {
@@ -3442,30 +3444,30 @@ namespace Terraria_Server
                 {
                     flag = false;
                 }
-                //if (this.inventory[this.selectedItem].shoot == 17 && flag && i == Statics.myPlayer)
-                //{
-                //    int num = (int)((float)Main.mouseState.X + Main.screenPosition.X) / 16;
-                //    int num2 = (int)((float)Main.mouseState.Y + Main.screenPosition.Y) / 16;
-                //    if (world.getTile()[num, num2].active && (world.getTile()[num, num2].type == 0 || world.getTile()[num, num2].type == 2 || world.getTile()[num, num2].type == 23))
-                //    {
-                //        WorldGen.KillTile(num, num2, false, false, true);
-                //        if (!world.getTile()[num, num2].active)
-                //        {
-                //            if (Main.netMode == 1)
-                //            {
-                //                NetMessage.SendData(17, -1, -1, "", 4, (float)num, (float)num2, 0f);
-                //            }
-                //        }
-                //        else
-                //        {
-                //            flag = false;
-                //        }
-                //    }
-                //    else
-                //    {
-                //        flag = false;
-                //    }
-                //}
+                if (this.inventory[this.selectedItem].shoot == 17 && flag && i == Statics.myPlayer)
+                {
+                    //int num = (int)((float)Main.mouseState.X + Main.screenPosition.X) / 16;
+                    //int num2 = (int)((float)Main.mouseState.Y + Main.screenPosition.Y) / 16;
+                    //if (world.getTile()[num, num2].active && (world.getTile()[num, num2].type == 0 || world.getTile()[num, num2].type == 2 || world.getTile()[num, num2].type == 23))
+                    //{
+                    //    WorldGen.KillTile(num, num2, world, false, false, true);
+                    //    if (!world.getTile()[num, num2].active)
+                    //    {
+                    //       if (Statics.netMode == 1)
+                    //        {
+                    //            NetMessage.SendData(17, world, -1, -1, "", 4, (float)num, (float)num2, 0f);
+                    //        }
+                    //    }
+                    //    else
+                    //    {
+                    //        flag = false;
+                    //    }
+                    //}
+                    //else
+                    //{
+                    //    flag = false;
+                    //}
+                }
                 if (flag && this.inventory[this.selectedItem].useAmmo > 0)
                 {
                     flag = false;
@@ -3513,7 +3515,7 @@ namespace Terraria_Server
                     {
                         if (world.getProjectile()[l].active && world.getProjectile()[l].owner == i && world.getProjectile()[l].type == this.inventory[this.selectedItem].shoot)
                         {
-                            //world.getProjectile()[l].Kill();
+                            world.getProjectile()[l].Kill(world);
                         }
                     }
                 }
@@ -3678,7 +3680,7 @@ namespace Terraria_Server
                         float arg_E6B_5 = 0f;
                         int arg_E6B_6 = 100;
                         Color newColor = default(Color);
-                        //Dust.NewDust(arg_E6B_0, arg_E6B_1, arg_E6B_2, arg_E6B_3, arg_E6B_4, arg_E6B_5, arg_E6B_6, newColor, 1f);
+                        Dust.NewDust(arg_E6B_0, world, arg_E6B_1, arg_E6B_2, arg_E6B_3, arg_E6B_4, arg_E6B_5, arg_E6B_6, newColor, 1f);
                     }
                     //Lighting.addLight((int)((this.itemLocation.X - 16f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
                 }
@@ -3694,7 +3696,7 @@ namespace Terraria_Server
                         float arg_F0F_5 = 0f;
                         int arg_F0F_6 = 100;
                         Color newColor = default(Color);
-                        //Dust.NewDust(arg_F0F_0, arg_F0F_1, arg_F0F_2, arg_F0F_3, arg_F0F_4, arg_F0F_5, arg_F0F_6, newColor, 1f);
+                        Dust.NewDust(arg_F0F_0, world, arg_F0F_1, arg_F0F_2, arg_F0F_3, arg_F0F_4, arg_F0F_5, arg_F0F_6, newColor, 1f);
                     }
                     //Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
                 }
@@ -3720,7 +3722,7 @@ namespace Terraria_Server
                             float arg_FE8_5 = 0f;
                             int arg_FE8_6 = 100;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_FE8_0, arg_FE8_1, arg_FE8_2, arg_FE8_3, arg_FE8_4, arg_FE8_5, arg_FE8_6, newColor, 1f);
+                            Dust.NewDust(arg_FE8_0, world, arg_FE8_1, arg_FE8_2, arg_FE8_3, arg_FE8_4, arg_FE8_5, arg_FE8_6, newColor, 1f);
                         }
                         //Lighting.addLight((int)((this.itemLocation.X - 16f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
                     }
@@ -3736,7 +3738,7 @@ namespace Terraria_Server
                             float arg_108C_5 = 0f;
                             int arg_108C_6 = 100;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_108C_0, arg_108C_1, arg_108C_2, arg_108C_3, arg_108C_4, arg_108C_5, arg_108C_6, newColor, 1f);
+                            Dust.NewDust(arg_108C_0, world, arg_108C_1, arg_108C_2, arg_108C_3, arg_108C_4, arg_108C_5, arg_108C_6, newColor, 1f);
                         }
                         //Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
                     }
@@ -3762,7 +3764,7 @@ namespace Terraria_Server
                                 float arg_1169_5 = 0f;
                                 int arg_1169_6 = 100;
                                 Color newColor = default(Color);
-                                //Dust.NewDust(arg_1169_0, arg_1169_1, arg_1169_2, arg_1169_3, arg_1169_4, arg_1169_5, arg_1169_6, newColor, 1f);
+                                Dust.NewDust(arg_1169_0, world, arg_1169_1, arg_1169_2, arg_1169_3, arg_1169_4, arg_1169_5, arg_1169_6, newColor, 1f);
                             }
                             //Lighting.addLight((int)((this.itemLocation.X - 16f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
                         }
@@ -3778,7 +3780,7 @@ namespace Terraria_Server
                                 float arg_120E_5 = 0f;
                                 int arg_120E_6 = 100;
                                 Color newColor = default(Color);
-                                //Dust.NewDust(arg_120E_0, arg_120E_1, arg_120E_2, arg_120E_3, arg_120E_4, arg_120E_5, arg_120E_6, newColor, 1f);
+                                Dust.NewDust(arg_120E_0, world, arg_120E_1, arg_120E_2, arg_120E_3, arg_120E_4, arg_120E_5, arg_120E_6, newColor, 1f);
                             }
                             //Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
                         }
@@ -3814,7 +3816,7 @@ namespace Terraria_Server
                         {
                             if (world.getProjectile()[m].active && world.getProjectile()[m].owner == i && world.getProjectile()[m].type == 13)
                             {
-                                //world.getProjectile()[m].Kill();
+                                world.getProjectile()[m].Kill(world);
                             }
                         }
                     }
@@ -4249,7 +4251,7 @@ namespace Terraria_Server
                     this.statLife += 20;
                     if (Statics.myPlayer == this.whoAmi)
                     {
-                        //this.HealEffect(20);
+                        this.HealEffect(20);
                     }
                 }
                 if (this.inventory[this.selectedItem].type == 109 && this.itemAnimation > 0 && this.statManaMax < 200 && this.itemTime == 0)
@@ -4259,7 +4261,7 @@ namespace Terraria_Server
                     this.statMana += 20;
                     if (Statics.myPlayer == this.whoAmi)
                     {
-                        //this.ManaEffect(20);
+                        this.ManaEffect(20);
                     }
                 }
                 if (this.inventory[this.selectedItem].createTile >= 0 && this.position.X / 16f - (float)tileRangeX - (float)this.inventory[this.selectedItem].tileBoost <= (float)tileTargetX && (this.position.X + (float)this.width) / 16f + (float)tileRangeX + (float)this.inventory[this.selectedItem].tileBoost - 1f >= (float)tileTargetX && this.position.Y / 16f - (float)tileRangeY - (float)this.inventory[this.selectedItem].tileBoost <= (float)tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)tileRangeY + (float)this.inventory[this.selectedItem].tileBoost - 2f >= (float)tileTargetY)
@@ -4493,161 +4495,161 @@ namespace Terraria_Server
                 //}
                 if (!flag5)
                 {
-                    //if ((this.inventory[this.selectedItem].type == 44 || this.inventory[this.selectedItem].type == 45 || this.inventory[this.selectedItem].type == 46 || this.inventory[this.selectedItem].type == 103 || this.inventory[this.selectedItem].type == 104) && Statics.rand.Next(15) == 0)
-                    //{
-                    //    Vector2 arg_3F0E_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
-                    //    int arg_3F0E_1 = rectangle.Width;
-                    //    int arg_3F0E_2 = rectangle.Height;
-                    //    int arg_3F0E_3 = 14;
-                    //    float arg_3F0E_4 = (float)(this.direction * 2);
-                    //    float arg_3F0E_5 = 0f;
-                    //    int arg_3F0E_6 = 150;
-                    //    Color newColor = default(Color);
-                    //    //Dust.NewDust(arg_3F0E_0, arg_3F0E_1, arg_3F0E_2, arg_3F0E_3, arg_3F0E_4, arg_3F0E_5, arg_3F0E_6, newColor, 1.3f);
-                    //}
-                    //if (this.inventory[this.selectedItem].type == 65)
-                    //{
-                    //    if (Statics.rand.Next(5) == 0)
-                    //    {
-                    //        Vector2 arg_3F7D_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
-                    //        int arg_3F7D_1 = rectangle.Width;
-                    //        int arg_3F7D_2 = rectangle.Height;
-                    //        int arg_3F7D_3 = 15;
-                    //        float arg_3F7D_4 = 0f;
-                    //        float arg_3F7D_5 = 0f;
-                    //        int arg_3F7D_6 = 150;
-                    //        Color newColor = default(Color);
-                    //        //Dust.NewDust(arg_3F7D_0, arg_3F7D_1, arg_3F7D_2, arg_3F7D_3, arg_3F7D_4, arg_3F7D_5, arg_3F7D_6, newColor, 1.2f);
-                    //    }
-                    //    if (Statics.rand.Next(10) == 0)
-                    //    {
-                    //        //Gore.NewGore(new Vector2((float)rectangle.X, (float)rectangle.Y), new Vector2(), Main.rand.Next(16, 18));
-                    //    }
-                    //}
-                    //if (this.inventory[this.selectedItem].type == 190 || this.inventory[this.selectedItem].type == 213)
-                    //{
-                    //    Vector2 arg_4057_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
-                    //    int arg_4057_1 = rectangle.Width;
-                    //    int arg_4057_2 = rectangle.Height;
-                    //    int arg_4057_3 = 40;
-                    //    float arg_4057_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
-                    //    float arg_4057_5 = this.velocity.Y * 0.2f;
-                    //    int arg_4057_6 = 0;
-                    //    Color newColor = default(Color);
-                    //    //int num30 = Dust.NewDust(arg_4057_0, arg_4057_1, arg_4057_2, arg_4057_3, arg_4057_4, arg_4057_5, arg_4057_6, newColor, 1.2f);
-                    //    //world.getDust()[num30].noGravity = true;
-                    //}
-                    //if (this.inventory[this.selectedItem].type == 121)
-                    //{
-                    //    for (int num31 = 0; num31 < 2; num31++)
-                    //    {
-                    //        Vector2 arg_40EE_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
-                    //        int arg_40EE_1 = rectangle.Width;
-                    //        int arg_40EE_2 = rectangle.Height;
-                    //        int arg_40EE_3 = 6;
-                    //        float arg_40EE_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
-                    //        float arg_40EE_5 = this.velocity.Y * 0.2f;
-                    //        int arg_40EE_6 = 100;
-                    //        Color newColor = default(Color);
-                    //        //int num32 = Dust.NewDust(arg_40EE_0, arg_40EE_1, arg_40EE_2, arg_40EE_3, arg_40EE_4, arg_40EE_5, arg_40EE_6, newColor, 2.5f);
-                    //        //world.getDust()[num32].noGravity = true;
-                    //        //Dust expr_4110_cp_0 = world.getDust()[num32];
-                    //        //expr_4110_cp_0.velocity.X = expr_4110_cp_0.velocity.X * 2f;
-                    //        //Dust expr_412E_cp_0 = world.getDust()[num32];
-                    //        //expr_412E_cp_0.velocity.Y = expr_412E_cp_0.velocity.Y * 2f;
-                    //    }
-                    //}
-                    //if (this.inventory[this.selectedItem].type == 122 || this.inventory[this.selectedItem].type == 217)
-                    //{
-                    //    Vector2 arg_41DD_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
-                    //    int arg_41DD_1 = rectangle.Width;
-                    //    int arg_41DD_2 = rectangle.Height;
-                    //    int arg_41DD_3 = 6;
-                    //    float arg_41DD_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
-                    //    float arg_41DD_5 = this.velocity.Y * 0.2f;
-                    //    int arg_41DD_6 = 100;
-                    //    //Color newColor = default(Color);
-                    //    //int num33 = Dust.NewDust(arg_41DD_0, arg_41DD_1, arg_41DD_2, arg_41DD_3, arg_41DD_4, arg_41DD_5, arg_41DD_6, newColor, 1.9f);
-                    //    //world.getDust()[num33].noGravity = true;
-                    //}
-                    //if (this.inventory[this.selectedItem].type == 155)
-                    //{
-                    //    Vector2 arg_4270_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
-                    //    int arg_4270_1 = rectangle.Width;
-                    //    int arg_4270_2 = rectangle.Height;
-                    //    int arg_4270_3 = 29;
-                    //    float arg_4270_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
-                    //    float arg_4270_5 = this.velocity.Y * 0.2f;
-                    //    int arg_4270_6 = 100;
-                    //    //Color newColor = default(Color);
-                    //    //int num34 = Dust.NewDust(arg_4270_0, arg_4270_1, arg_4270_2, arg_4270_3, arg_4270_4, arg_4270_5, arg_4270_6, newColor, 2f);
-                    //    //world.getDust()[num34].noGravity = true;
-                    //    //Dust expr_4292_cp_0 = world.getDust()[num34];
-                    //    //expr_4292_cp_0.velocity.X = expr_4292_cp_0.velocity.X / 2f;
-                    //    //Dust expr_42B0_cp_0 = world.getDust()[num34];
-                    //    //expr_42B0_cp_0.velocity.Y = expr_42B0_cp_0.velocity.Y / 2f;
-                    //}
+                    /*if ((this.inventory[this.selectedItem].type == 44 || this.inventory[this.selectedItem].type == 45 || this.inventory[this.selectedItem].type == 46 || this.inventory[this.selectedItem].type == 103 || this.inventory[this.selectedItem].type == 104) && Statics.rand.Next(15) == 0)
+                    {
+                        Vector2 arg_3F0E_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
+                        int arg_3F0E_1 = rectangle.Width;
+                        int arg_3F0E_2 = rectangle.Height;
+                        int arg_3F0E_3 = 14;
+                        float arg_3F0E_4 = (float)(this.direction * 2);
+                        float arg_3F0E_5 = 0f;
+                        int arg_3F0E_6 = 150;
+                        Color newColor = default(Color);
+                        //Dust.NewDust(arg_3F0E_0, arg_3F0E_1, arg_3F0E_2, arg_3F0E_3, arg_3F0E_4, arg_3F0E_5, arg_3F0E_6, newColor, 1.3f);
+                    }
+                    if (this.inventory[this.selectedItem].type == 65)
+                    {
+                        if (Statics.rand.Next(5) == 0)
+                        {
+                            Vector2 arg_3F7D_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
+                            int arg_3F7D_1 = rectangle.Width;
+                            int arg_3F7D_2 = rectangle.Height;
+                            int arg_3F7D_3 = 15;
+                            float arg_3F7D_4 = 0f;
+                            float arg_3F7D_5 = 0f;
+                            int arg_3F7D_6 = 150;
+                            Color newColor = default(Color);
+                            //Dust.NewDust(arg_3F7D_0, arg_3F7D_1, arg_3F7D_2, arg_3F7D_3, arg_3F7D_4, arg_3F7D_5, arg_3F7D_6, newColor, 1.2f);
+                        }
+                        if (Statics.rand.Next(10) == 0)
+                        {
+                            //Gore.NewGore(new Vector2((float)rectangle.X, (float)rectangle.Y), new Vector2(), Main.rand.Next(16, 18));
+                        }
+                    }
+                    if (this.inventory[this.selectedItem].type == 190 || this.inventory[this.selectedItem].type == 213)
+                    {
+                        Vector2 arg_4057_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
+                        int arg_4057_1 = rectangle.Width;
+                        int arg_4057_2 = rectangle.Height;
+                        int arg_4057_3 = 40;
+                        float arg_4057_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
+                        float arg_4057_5 = this.velocity.Y * 0.2f;
+                        int arg_4057_6 = 0;
+                        Color newColor = default(Color);
+                        //int num30 = Dust.NewDust(arg_4057_0, arg_4057_1, arg_4057_2, arg_4057_3, arg_4057_4, arg_4057_5, arg_4057_6, newColor, 1.2f);
+                        //world.getDust()[num30].noGravity = true;
+                    }
+                    if (this.inventory[this.selectedItem].type == 121)
+                    {
+                        for (int num31 = 0; num31 < 2; num31++)
+                        {
+                            Vector2 arg_40EE_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
+                            int arg_40EE_1 = rectangle.Width;
+                            int arg_40EE_2 = rectangle.Height;
+                            int arg_40EE_3 = 6;
+                            float arg_40EE_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
+                            float arg_40EE_5 = this.velocity.Y * 0.2f;
+                            int arg_40EE_6 = 100;
+                            Color newColor = default(Color);
+                            //int num32 = Dust.NewDust(arg_40EE_0, arg_40EE_1, arg_40EE_2, arg_40EE_3, arg_40EE_4, arg_40EE_5, arg_40EE_6, newColor, 2.5f);
+                            //world.getDust()[num32].noGravity = true;
+                            //Dust expr_4110_cp_0 = world.getDust()[num32];
+                            //expr_4110_cp_0.velocity.X = expr_4110_cp_0.velocity.X * 2f;
+                            //Dust expr_412E_cp_0 = world.getDust()[num32];
+                            //expr_412E_cp_0.velocity.Y = expr_412E_cp_0.velocity.Y * 2f;
+                        }
+                    }
+                    if (this.inventory[this.selectedItem].type == 122 || this.inventory[this.selectedItem].type == 217)
+                    {
+                        Vector2 arg_41DD_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
+                        int arg_41DD_1 = rectangle.Width;
+                        int arg_41DD_2 = rectangle.Height;
+                        int arg_41DD_3 = 6;
+                        float arg_41DD_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
+                        float arg_41DD_5 = this.velocity.Y * 0.2f;
+                        int arg_41DD_6 = 100;
+                        //Color newColor = default(Color);
+                        //int num33 = Dust.NewDust(arg_41DD_0, arg_41DD_1, arg_41DD_2, arg_41DD_3, arg_41DD_4, arg_41DD_5, arg_41DD_6, newColor, 1.9f);
+                        //world.getDust()[num33].noGravity = true;
+                    }
+                    if (this.inventory[this.selectedItem].type == 155)
+                    {
+                        Vector2 arg_4270_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
+                        int arg_4270_1 = rectangle.Width;
+                        int arg_4270_2 = rectangle.Height;
+                        int arg_4270_3 = 29;
+                        float arg_4270_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
+                        float arg_4270_5 = this.velocity.Y * 0.2f;
+                        int arg_4270_6 = 100;
+                        //Color newColor = default(Color);
+                        //int num34 = Dust.NewDust(arg_4270_0, arg_4270_1, arg_4270_2, arg_4270_3, arg_4270_4, arg_4270_5, arg_4270_6, newColor, 2f);
+                        //world.getDust()[num34].noGravity = true;
+                        //Dust expr_4292_cp_0 = world.getDust()[num34];
+                        //expr_4292_cp_0.velocity.X = expr_4292_cp_0.velocity.X / 2f;
+                        //Dust expr_42B0_cp_0 = world.getDust()[num34];
+                        //expr_42B0_cp_0.velocity.Y = expr_42B0_cp_0.velocity.Y / 2f;
+                    }
                     if (this.inventory[this.selectedItem].type >= 198 && this.inventory[this.selectedItem].type <= 203)
                     {
-                        //Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 0.5f);
+                        Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 0.5f);
+                    }*/
+                    if (Statics.myPlayer == i)
+                    {
+                        /*int num35 = rectangle.X / 16;
+                        int num36 = (rectangle.X + rectangle.Width) / 16 + 1;
+                        int num37 = rectangle.Y / 16;
+                        int num38 = (rectangle.Y + rectangle.Height) / 16 + 1;
+                        for (int num39 = num35; num39 < num36; num39++)
+                        {
+                            for (int num40 = num37; num40 < num38; num40++)
+                            {
+                                if (world.getTile()[num39, num40].type == 3 || world.getTile()[num39, num40].type == 24 || world.getTile()[num39, num40].type == 28 || world.getTile()[num39, num40].type == 32 || world.getTile()[num39, num40].type == 51 || world.getTile()[num39, num40].type == 52 || world.getTile()[num39, num40].type == 61 || world.getTile()[num39, num40].type == 62 || world.getTile()[num39, num40].type == 69 || world.getTile()[num39, num40].type == 71 || world.getTile()[num39, num40].type == 73 || world.getTile()[num39, num40].type == 74)
+                                {
+                                    WorldGen.KillTile(num39, num40, world, false, false, false);
+                                    if (Statics.netMode == 1)
+                                    {
+                                        NetMessage.SendData(17, world, -1, -1, "", 0, (float)num39, (float)num40, 0f);
+                                    }
+                                }
+                            }
+                        }
+                        for (int num41 = 0; num41 < 1000; num41++)
+                        {
+                            if (world.getNPCs()[num41].active && world.getNPCs()[num41].immune[i] == 0 && this.attackCD == 0 && !world.getNPCs()[num41].friendly)
+                            {
+                                Rectangle value = new Rectangle((int)world.getNPCs()[num41].position.X, (int)world.getNPCs()[num41].position.Y, world.getNPCs()[num41].width, world.getNPCs()[num41].height);
+                                if (rectangle.Intersects(value) && (world.getNPCs()[num41].noTileCollide || Collision.CanHit(this.position, this.width, this.height, world.getNPCs()[num41].position, world.getNPCs()[num41].width, world.getNPCs()[num41].height)))
+                                {
+                                    world.getNPCs()[num41].StrikeNPC(this.inventory[this.selectedItem].damage, this.inventory[this.selectedItem].knockBack, this.direction);
+                                    if (Statics.netMode == 1)
+                                    {
+                                        NetMessage.SendData(24, world, -1, -1, "", num41, (float)i, 0f, 0f);
+                                    }
+                                    world.getNPCs()[num41].immune[i] = this.itemAnimation;
+                                    this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
+                                }
+                            }
+                        }
+                        if (this.hostile)
+                        {
+                            for (int num42 = 0; num42 < 8; num42++)
+                            {
+                                if (num42 != i && world.getPlayerList()[num42].active && world.getPlayerList()[num42].hostile && !world.getPlayerList()[num42].immune && !world.getPlayerList()[num42].dead && (world.getPlayerList()[i].team == 0 || world.getPlayerList()[i].team != world.getPlayerList()[num42].team))
+                                {
+                                    Rectangle value2 = new Rectangle((int)world.getPlayerList()[num42].position.X, (int)world.getPlayerList()[num42].position.Y, world.getPlayerList()[num42].width, world.getPlayerList()[num42].height);
+                                    if (rectangle.Intersects(value2) && Collision.CanHit(this.position, this.width, this.height, world.getPlayerList()[num42].position, world.getPlayerList()[num42].width, world.getPlayerList()[num42].height))
+                                    {
+                                        world.getPlayerList()[num42].Hurt(this.inventory[this.selectedItem].damage, this.direction, true, false);
+                                        if (Statics.netMode != 0)
+                                        {
+                                            NetMessage.SendData(26, world, -1, -1, "", num42, (float)this.direction, (float)this.inventory[this.selectedItem].damage, 1f);
+                                        }
+                                        this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
+                                    }
+                                }
+                            }
+                        }*/
                     }
-                    //if (Statics.myPlayer == i)
-                    //{
-                    //    int num35 = rectangle.X / 16;
-                    //    int num36 = (rectangle.X + rectangle.Width) / 16 + 1;
-                    //    int num37 = rectangle.Y / 16;
-                    //    int num38 = (rectangle.Y + rectangle.Height) / 16 + 1;
-                    //    for (int num39 = num35; num39 < num36; num39++)
-                    //    {
-                    //        for (int num40 = num37; num40 < num38; num40++)
-                    //        {
-                    //            if (world.getTile()[num39, num40].type == 3 || world.getTile()[num39, num40].type == 24 || world.getTile()[num39, num40].type == 28 || world.getTile()[num39, num40].type == 32 || world.getTile()[num39, num40].type == 51 || world.getTile()[num39, num40].type == 52 || world.getTile()[num39, num40].type == 61 || world.getTile()[num39, num40].type == 62 || world.getTile()[num39, num40].type == 69 || world.getTile()[num39, num40].type == 71 || world.getTile()[num39, num40].type == 73 || world.getTile()[num39, num40].type == 74)
-                    //            {
-                    //                WorldGen.KillTile(num39, num40, world, false, false, false);
-                    //                if (Statics.netMode == 1)
-                    //                {
-                    //                    NetMessage.SendData(17, world, -1, -1, "", 0, (float)num39, (float)num40, 0f);
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //    for (int num41 = 0; num41 < 1000; num41++)
-                    //    {
-                    //        if (world.getNPCs()[num41].active && world.getNPCs()[num41].immune[i] == 0 && this.attackCD == 0 && !world.getNPCs()[num41].friendly)
-                    //        {
-                    //            Rectangle value = new Rectangle((int)world.getNPCs()[num41].position.X, (int)world.getNPCs()[num41].position.Y, world.getNPCs()[num41].width, world.getNPCs()[num41].height);
-                    //            if (rectangle.Intersects(value) && (world.getNPCs()[num41].noTileCollide || Collision.CanHit(this.position, this.width, this.height, world.getNPCs()[num41].position, world.getNPCs()[num41].width, world.getNPCs()[num41].height)))
-                    //            {
-                    //                world.getNPCs()[num41].StrikeNPC(this.inventory[this.selectedItem].damage, this.inventory[this.selectedItem].knockBack, this.direction);
-                    //                if (Statics.netMode == 1)
-                    //                {
-                    //                    NetMessage.SendData(24, world, -1, -1, "", num41, (float)i, 0f, 0f);
-                    //                }
-                    //                world.getNPCs()[num41].immune[i] = this.itemAnimation;
-                    //                this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
-                    //            }
-                    //        }
-                    //    }
-                    //    if (this.hostile)
-                    //    {
-                    //        for (int num42 = 0; num42 < 8; num42++)
-                    //        {
-                    //            if (num42 != i && world.getPlayerList()[num42].active && world.getPlayerList()[num42].hostile && !world.getPlayerList()[num42].immune && !world.getPlayerList()[num42].dead && (world.getPlayerList()[i].team == 0 || world.getPlayerList()[i].team != world.getPlayerList()[num42].team))
-                    //            {
-                    //                Rectangle value2 = new Rectangle((int)world.getPlayerList()[num42].position.X, (int)world.getPlayerList()[num42].position.Y, world.getPlayerList()[num42].width, world.getPlayerList()[num42].height);
-                    //                if (rectangle.Intersects(value2) && Collision.CanHit(this.position, this.width, this.height, world.getPlayerList()[num42].position, world.getPlayerList()[num42].width, world.getPlayerList()[num42].height))
-                    //                {
-                    //                    world.getPlayerList()[num42].Hurt(this.inventory[this.selectedItem].damage, this.direction, true, false);
-                    //                    if (Statics.netMode != 0)
-                    //                    {
-                    //                        NetMessage.SendData(26, world, -1, -1, "", num42, (float)this.direction, (float)this.inventory[this.selectedItem].damage, 1f);
-                    //                    }
-                    //                    this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
-                    //                }
-                    //            }
-                    //        }
-                    //    }
-                    //}
                 }
             }
             if (this.itemTime == 0 && this.itemAnimation > 0)
@@ -4658,7 +4660,7 @@ namespace Terraria_Server
                     this.itemTime = this.inventory[this.selectedItem].useTime;
                     if (Statics.myPlayer == this.whoAmi)
                     {
-                        //this.HealEffect(this.inventory[this.selectedItem].healLife);
+                        this.HealEffect(this.inventory[this.selectedItem].healLife);
                     }
                 }
                 if (this.inventory[this.selectedItem].healMana > 0)
@@ -4667,7 +4669,7 @@ namespace Terraria_Server
                     this.itemTime = this.inventory[this.selectedItem].useTime;
                     if (Statics.myPlayer == this.whoAmi)
                     {
-                        //this.ManaEffect(this.inventory[this.selectedItem].healMana);
+                        this.ManaEffect(this.inventory[this.selectedItem].healMana);
                     }
                 }
             }
@@ -4740,7 +4742,7 @@ namespace Terraria_Server
                     float arg_4B43_5 = 0f;
                     int arg_4B43_6 = 150;
                     Color newColor = default(Color);
-                    //Dust.NewDust(arg_4B43_0, arg_4B43_1, arg_4B43_2, arg_4B43_3, arg_4B43_4, arg_4B43_5, arg_4B43_6, newColor, 1.1f);
+                    Dust.NewDust(arg_4B43_0, world, arg_4B43_1, arg_4B43_2, arg_4B43_3, arg_4B43_4, arg_4B43_5, arg_4B43_6, newColor, 1.1f);
                 }
                 if (this.itemTime == 0)
                 {
@@ -4760,7 +4762,7 @@ namespace Terraria_Server
                             float arg_4BDC_5 = this.velocity.Y * 0.5f;
                             int arg_4BDC_6 = 150;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_4BDC_0, arg_4BDC_1, arg_4BDC_2, arg_4BDC_3, arg_4BDC_4, arg_4BDC_5, arg_4BDC_6, newColor, 1.5f);
+                            Dust.NewDust(arg_4BDC_0, world, arg_4BDC_1, arg_4BDC_2, arg_4BDC_3, arg_4BDC_4, arg_4BDC_5, arg_4BDC_6, newColor, 1.5f);
                         }
                         this.grappling[0] = -1;
                         this.grapCount = 0;
@@ -4768,7 +4770,7 @@ namespace Terraria_Server
                         {
                             if (world.getProjectile()[num46].active && world.getProjectile()[num46].owner == i && world.getProjectile()[num46].aiStyle == 7)
                             {
-                                //world.getProjectile()[num46].Kill();
+                                world.getProjectile()[num46].Kill(world);
                             }
                         }
                         Spawn(world);
@@ -4782,7 +4784,7 @@ namespace Terraria_Server
                             float arg_4C8B_5 = 0f;
                             int arg_4C8B_6 = 150;
                             Color newColor = default(Color);
-                            //Dust.NewDust(arg_4C8B_0, arg_4C8B_1, arg_4C8B_2, arg_4C8B_3, arg_4C8B_4, arg_4C8B_5, arg_4C8B_6, newColor, 1.5f);
+                            Dust.NewDust(arg_4C8B_0, world, arg_4C8B_1, arg_4C8B_2, arg_4C8B_3, arg_4C8B_4, arg_4C8B_5, arg_4C8B_6, newColor, 1.5f);
                         }
                     }
                 }
@@ -5227,7 +5229,7 @@ namespace Terraria_Server
                             binaryReader.Close();
                         }
                     }
-                    //PlayerFrame();
+                    player.PlayerFrame();
                     File.Delete(text);
                     result = player;
                     return result;

@@ -1116,12 +1116,12 @@ namespace Terraria_Server
                                                                                                                         }
                                                                                                                     }
                                                                                                                 }
-                                                                                                                NetMessage.SendData(25, world, this.whoAmI, -1, "Current players: " + text2 + ".", 8, 255f, 240f, 20f);
+                                                                                                                NetMessage.SendData(25, world, this.whoAmI, -1, "Current players: " + text2 + ".", 255, 255f, 240f, 20f);
                                                                                                                 return;
                                                                                                             }
                                                                                                             if (text.Length >= 4 && text.Substring(0, 4) == "/me ")
                                                                                                             {
-                                                                                                                NetMessage.SendData(25, world, -1, -1, "*" + world.getPlayerList()[this.whoAmI].name + " " + string7.Substring(4), 8, 200f, 100f, 0f);
+                                                                                                                NetMessage.SendData(25, world, -1, -1, "*" + world.getPlayerList()[this.whoAmI].name + " " + string7.Substring(4), 255, 200f, 100f, 0f);
                                                                                                                 return;
                                                                                                             }
                                                                                                             if (text.Length >= 6 && text.Substring(0, 6) == "/give ")
@@ -1132,7 +1132,7 @@ namespace Terraria_Server
                                                                                                                     int item = Item.NewItem((int)player2.position.X, (int)player2.position.Y, world, player2.width, player2.height, 0, 1, false);
                                                                                                                     world.getItemList()[item].SetDefaults(string7.Substring(6));
                                                                                                                 //}
-                                                                                                                NetMessage.SendData(25, world, this.whoAmI, -1, "Given item " + string7.Substring(6) + "!", 8, (float)b12, (float)b13, (float)b14);
+                                                                                                                    NetMessage.SendData(25, world, this.whoAmI, -1, "Given item " + string7.Substring(6) + "!", 255, (float)b12, (float)b13, (float)b14);
                                                                                                                 return;
                                                                                                             }
                                                                                                             if (text.Length < 3 || !(text.Substring(0, 3) == "/p "))
@@ -1154,7 +1154,7 @@ namespace Terraria_Server
                                                                                                                 }
                                                                                                                 return;
                                                                                                             }
-                                                                                                            NetMessage.SendData(25, world, this.whoAmI, -1, "You are not in a party!", 8, 255f, 240f, 20f);
+                                                                                                            NetMessage.SendData(25, world, this.whoAmI, -1, "You are not in a party!", 255, 255f, 240f, 20f);
                                                                                                             return;
                                                                                                         }
                                                                                                     }
@@ -1324,7 +1324,7 @@ namespace Terraria_Server
                                                                                                                                 {
                                                                                                                                     str = " has disabled PvP!";
                                                                                                                                 }
-                                                                                                                                NetMessage.SendData(25, world, -1, -1, world.getPlayerList()[(int)b20].name + str, 8, 
+                                                                                                                                NetMessage.SendData(25, world, -1, -1, world.getPlayerList()[(int)b20].name + str, 255, 
                                                                                                                                     (float)Statics.teamColor[world.getPlayerList()[(int)b20].team].R,
                                                                                                                                     (float)Statics.teamColor[world.getPlayerList()[(int)b20].team].G,
                                                                                                                                     (float)Statics.teamColor[world.getPlayerList()[(int)b20].team].B);
@@ -1441,7 +1441,7 @@ namespace Terraria_Server
                                                                                                                                             num += 2;
                                                                                                                                             if (num70 != Statics.myPlayer)
                                                                                                                                             {
-                                                                                                                                                //world.getPlayerList()[num70].HealEffect(num71);
+                                                                                                                                                world.getPlayerList()[num70].HealEffect(num71);
                                                                                                                                             }
                                                                                                                                             if (Statics.netMode == 2)
                                                                                                                                             {
@@ -1674,7 +1674,7 @@ namespace Terraria_Server
                                                                                                                                                                                     {
                                                                                                                                                                                         if (num85 == this.whoAmI || (team > 0 && world.getPlayerList()[num85].team == team) || (num84 > 0 && world.getPlayerList()[num85].team == num84))
                                                                                                                                                                                         {
-                                                                                                                                                                                            NetMessage.SendData(25, world, num85, -1, world.getPlayerList()[num83].name + str2, 8,
+                                                                                                                                                                                            NetMessage.SendData(25, world, num85, -1, world.getPlayerList()[num83].name + str2, 255,
                                                                                                                                                                                                 (float)Statics.teamColor[num84].R, (float)Statics.teamColor[num84].G, (float)Statics.teamColor[num84].B);
                                                                                                                                                                                         }
                                                                                                                                                                                     }

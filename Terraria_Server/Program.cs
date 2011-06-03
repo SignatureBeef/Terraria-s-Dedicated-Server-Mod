@@ -24,8 +24,8 @@ namespace Terraria_Server
                 Statics.maxTilesX = 8400;
                 Statics.maxTilesY = 2400;
                 server.Initialize();
-
-                WorldGen.loadWorld("C:\\Users\\Luke\\Documents\\My Games\\Terraria\\Worlds\\world1.wld", server);
+                string path = "C:\\Users\\Luke\\Documents\\My Games\\Terraria\\Worlds\\world1.wld";
+                WorldGen.loadWorld(path, server);
                 /*if (args.Length <= 0)
                 {
                     Console.WriteLine("Cannot find directory!");

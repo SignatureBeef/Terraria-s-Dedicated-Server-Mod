@@ -316,7 +316,7 @@ namespace Terraria_Server
                 world.getNPCs()[l] = new NPC();
                 world.getNPCs()[l].whoAmI = l;
             }
-            for (int m = 0; m < 9; m++)
+            for (int m = 0; m < 256; m++)
             {
                 world.getPlayerList()[m] = new Player(world);
             }
@@ -379,7 +379,7 @@ namespace Terraria_Server
 
             netplay = new NetPlay(world);
             netplay.Init();
-            WorldGen.EveryTileFrame(world);
+            //WorldGen.EveryTileFrame(world);
            // if (Main.skipMenu)
             //{
                // WorldGen.clearWorld();
@@ -567,7 +567,7 @@ namespace Terraria_Server
                     if (Statics.netMode == 2)
                     {
                         NetMessage.SendData(7, world, -1, -1, "", 0, 0f, 0f, 0f);
-                        //WorldGen.saveAndPlay();
+                        WorldGen.saveAndPlay(world);
                     }
                     if (Statics.netMode != 1 && Statics.rand.Next(15) == 0)
                     {
@@ -617,7 +617,7 @@ namespace Terraria_Server
                                 WorldGen.spawnEye = true;
                                 if (Statics.netMode == 2)
                                 {
-                                    NetMessage.SendData(25, world, -1, -1, "You feel an evil presence watching you...", 8, 50f, 255f, 130f);
+                                    NetMessage.SendData(25, world, -1, -1, "You feel an evil presence watching you...", 255, 50f, 255f, 130f);
                                 }
                             }
                         }
@@ -636,7 +636,7 @@ namespace Terraria_Server
                         {
                             if (Statics.netMode == 2)
                             {
-                                NetMessage.SendData(25, world, -1, -1, "The Blood Moon is rising...", 8, 50f, 255f, 130f);
+                                NetMessage.SendData(25, world, -1, -1, "The Blood Moon is rising...", 255, 50f, 255f, 130f);
                             }
                         }
                     }
@@ -1334,7 +1334,7 @@ namespace Terraria_Server
             }
             if (Statics.netMode == 2)
             {
-                NetMessage.SendData(25, world, -1, -1, text, 8, 175f, 75f, 255f);
+                NetMessage.SendData(25, world, -1, -1, text, 255, 175f, 75f, 255f);
             }
         }
 
@@ -1393,7 +1393,7 @@ namespace Terraria_Server
 
         public void Update()
         {
-            bool flag = 1 == 0;
+            //bool flag = 1 == 0;
             //int arg_2C_0 = this.asdf;
             //DateTime now = DateTime.Now;
            // this.asdf = arg_2C_0 + now.Subtract(this.tmp).Milliseconds;
@@ -1655,10 +1655,10 @@ namespace Terraria_Server
                 {
                     try
                     {
-                        if (Statics.netMode == 2)
-                        {
+                        //if (Statics.netMode == 2)
+                        //{
                             UpdateServer();
-                        }
+                        //}
                     }
                     catch
                     {
@@ -1667,10 +1667,10 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (Statics.netMode == 2)
-                    {
+                    //if (Statics.netMode == 2)
+                    //{
                         UpdateServer();
-                    }
+                    //}
                 }
                 if (Statics.ignoreErrors)
                 {
@@ -1709,8 +1709,6 @@ namespace Terraria_Server
             //this.tmp = DateTime.Now;
         }
 
-
-
-        public static bool stopDrops { get; set; }
+         public static bool stopDrops { get; set; }
     }
 }

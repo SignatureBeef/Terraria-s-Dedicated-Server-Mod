@@ -4253,27 +4253,27 @@ namespace Terraria_Server
                     }
                 }
             }
-            Item item = new Item();
+            //Item item = new Item();
             world.getItemList()[i1] = new Item();
-            item.SetDefaults(Type);
-            item.position.X = (float)(X + (Width / 2) - (item.width / 2));
-            item.position.Y = (float)(Y + (Height / 2) - (item.height / 2));
-            item.wet = Collision.WetCollision(item.position, item.width, item.height, world);
-            item.velocity.X = (float)Statics.rand.Next(-20, 21) * 0.1F;
-            item.velocity.Y = (float)Statics.rand.Next(-30, -10) * 0.1F;
-            item.active = true;
-            item.spawnTime = 0;
-            item.stack = Stack;
+            world.getItemList()[i1].SetDefaults(Type);
+            world.getItemList()[i1].position.X = (float)(X + (Width / 2) - (world.getItemList()[i1].width / 2));
+            world.getItemList()[i1].position.Y = (float)(Y + (Height / 2) - (world.getItemList()[i1].height / 2));
+            world.getItemList()[i1].wet = Collision.WetCollision(world.getItemList()[i1].position, world.getItemList()[i1].width, world.getItemList()[i1].height, world);
+            world.getItemList()[i1].velocity.X = (float)Statics.rand.Next(-20, 21) * 0.1F;
+            world.getItemList()[i1].velocity.Y = (float)Statics.rand.Next(-30, -10) * 0.1F;
+            world.getItemList()[i1].active = true;
+            world.getItemList()[i1].spawnTime = 0;
+            world.getItemList()[i1].stack = Stack;
             if ((Statics.netMode == 2) && !noBroadcast)
             {
                 NetMessage.SendData(21, world, -1, -1, "", i1, 0.0F, 0.0F, 0.0F);
-                item.FindOwner(i1, world);
+                world.getItemList()[i1].FindOwner(i1, world);
             }
             else if (Statics.netMode == 0)
             {
-                item.owner = Statics.myPlayer;
+                world.getItemList()[i1].owner = Statics.myPlayer;
             }
-            world.setItem(i1, item);
+            //world.setItem(i1, item);
             return i1;
         }
 

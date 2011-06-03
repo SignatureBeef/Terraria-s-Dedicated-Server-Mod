@@ -356,10 +356,10 @@ namespace Terraria_Server
                         expr_B76.velocity *= 0.92f;
                         world.getDust()[i].scale -= 0.04f;
                     }
-                    //if (world.getDust()[i].position.Y > Main.screenPosition.Y + (float)Main.screenHeight)
-                    //{
-                    //    world.getDust()[i].active = false;
-                    //}
+                    if (world.getDust()[i].position.Y > Statics.screenPosition.Y + (float)Statics.screenHeight)
+                    {
+                        world.getDust()[i].active = false;
+                    }
                     if ((double)world.getDust()[i].scale < 0.1)
                     {
                         world.getDust()[i].active = false;
@@ -367,6 +367,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public Color GetAlpha(Color newColor)
         {
             int r;
@@ -395,6 +396,7 @@ namespace Terraria_Server
             }
             return new Color(r, g, b, num);
         }
+       
         public Color GetColor(Color newColor)
         {
             int num = (int)(this.color.R - (255 - newColor.R));

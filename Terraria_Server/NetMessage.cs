@@ -7,7 +7,7 @@ namespace Terraria_Server
 {
     public class NetMessage
     {
-        public static messageBuffer[] buffer = new messageBuffer[10];
+        public static messageBuffer[] buffer = new messageBuffer[257];
 
         public static void SendData(int msgType, World world, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
         {
@@ -1291,14 +1291,14 @@ namespace Terraria_Server
                     {
                         goto IL_339E;
                     }
-                    goto IL_3261;
+                    //goto IL_3261;
                 }
             IL_339E:
                 if (Statics.verboseNetplay)
                 {
-                    for (int n = 0; n < num2; n++)
-                    {
-                    }
+                    //for (int n = 0; n < num2; n++)
+                    //{
+                    //}
                     for (int num10 = 0; num10 < num2; num10++)
                     {
                         byte arg_33D5_0 = NetMessage.buffer[num].writeBuffer[num10];
@@ -1356,6 +1356,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static void RecieveBytes(byte[] bytes, int streamLength, World world, int i = 9)
         {
             lock (NetMessage.buffer[i])
@@ -1382,6 +1383,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static void CheckBytes(World world, int i = 9)
         {
             lock (NetMessage.buffer[i])
@@ -1435,11 +1437,13 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size, World world)
         {
             int num = (size - 1) / 2;
             NetMessage.SendData(20, world, whoAmi, -1, "", size, (float)(tileX - num), (float)(tileY - num), 0f);
         }
+        
         public static void SendSection(int whoAmi, int sectionX, int sectionY, World world)
         {
             world.getServer().getNetPlay().serverSock[whoAmi].tileSection[sectionX, sectionY] = true;
@@ -1450,11 +1454,12 @@ namespace Terraria_Server
                 NetMessage.SendData(10, world, whoAmi, -1, "", 200, (float)num, (float)i, 0f);
             }
         }
+        
         public static void greetPlayer(int plr, World world)
         {
-            NetMessage.SendData(25, world, plr, -1, "Welcome to " + world.getName() + "!", 8, 255f, 240f, 20f);
+            NetMessage.SendData(25, world, plr, -1, "Welcome to " + world.getName() + "!", 255, 255f, 240f, 20f);
             string text = "";
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 255; i++)
             {
                 if (world.getPlayerList()[i].active)
                 {
@@ -1468,8 +1473,9 @@ namespace Terraria_Server
                     }
                 }
             }
-            NetMessage.SendData(25, world, plr, -1, "Current players: " + text + ".", 8, 255f, 240f, 20f);
+            NetMessage.SendData(25, world, plr, -1, "Current players: " + text + ".", 255, 255f, 240f, 20f);
         }
+        
         public static void sendWater(int x, int y, World world)
         {
             if (Statics.netMode == 1)
@@ -1491,6 +1497,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static void syncPlayers(World world)
         {
             for (int i = 0; i < 8; i++)
@@ -1524,7 +1531,7 @@ namespace Terraria_Server
                     if (!world.getServer().getNetPlay().serverSock[i].announced)
                     {
                         world.getServer().getNetPlay().serverSock[i].announced = true;
-                        NetMessage.SendData(25, world, -1, i, world.getPlayerList()[i].name + " has joined.", 8, 255f, 240f, 20f);
+                        NetMessage.SendData(25, world, -1, i, world.getPlayerList()[i].name + " has joined.", 255, 255f, 240f, 20f);
                         Console.WriteLine(world.getServer().getNetPlay().serverSock[i].oldName + " has joined.");
                     }
                 }
@@ -1534,7 +1541,7 @@ namespace Terraria_Server
                     if (world.getServer().getNetPlay().serverSock[i].announced)
                     {
                         world.getServer().getNetPlay().serverSock[i].announced = false;
-                        NetMessage.SendData(25, world, -1, i, world.getServer().getNetPlay().serverSock[i].oldName + " has left.", 8, 255f, 240f, 20f);
+                        NetMessage.SendData(25, world, -1, i, world.getServer().getNetPlay().serverSock[i].oldName + " has left.", 255, 255f, 240f, 20f);
                         Console.WriteLine(world.getServer().getNetPlay().serverSock[i].oldName + " has left.");
                     }
                 }

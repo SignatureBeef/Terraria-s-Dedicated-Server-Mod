@@ -18,14 +18,16 @@ namespace Terraria_Server
         public const int bufferSize = 1024;
         public ClientSock clientSock = null;
         public bool disconnect = false;
-        public int maxConnections = 9;
         public string password = "";
         public IPAddress serverIP;
         public IPAddress serverListenIP;
         public int serverPort = 7777;
-        public ServerSock[] serverSock = new ServerSock[9];
         public bool stopListen = false;
         public TcpListener tcpListener;
+
+        public const int maxConnections = 256;
+        public ServerSock[] serverSock = new ServerSock[256];
+        public bool ServerUp = false;
         private bool cake = false;
 
         public World world = null;
@@ -196,7 +198,7 @@ namespace Terraria_Server
 
         public void Init()
         {
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 257; i++)
             {
                 if (i < 9)
                 {
@@ -267,7 +269,7 @@ namespace Terraria_Server
             Console.WriteLine("Starting server...");
             Statics.netMode = 2;
             world.getServer().getNetPlay().disconnect = false;
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 256; i++)
             {
                 world.getServer().getNetPlay().serverSock[i] = new ServerSock(world);
                 world.getServer().getNetPlay().serverSock[i].Reset();
@@ -299,7 +301,7 @@ namespace Terraria_Server
                 if (world.getServer().getNetPlay().stopListen)
                 {
                     int num = -1;
-                    for (int j = 0; j < 8; j++)
+                    for (int j = 0; j < 255; j++)
                     {
                         if (!world.getServer().getNetPlay().serverSock[j].tcpClient.Connected)
                         {
@@ -315,7 +317,7 @@ namespace Terraria_Server
                     }
                 }
                 int num2 = 0;
-                for (int k = 0; k < 9; k++)
+                for (int k = 0; k < 256; k++)
                 {
                     if (NetMessage.buffer[k].checkBytes)
                     {
@@ -475,7 +477,7 @@ namespace Terraria_Server
                 }
             }
             world.getServer().getNetPlay().tcpListener.Stop();
-            for (int l = 0; l < 9; l++)
+            for (int l = 0; l < 256; l++)
             {
                 world.getServer().getNetPlay().serverSock[l].Reset();
             }
@@ -483,18 +485,257 @@ namespace Terraria_Server
             //{
             //    Main.netMode = 0;
             //    Main.menuMode = 10;
-            //    WorldGen.saveWorld(false);
-            //    while (WorldGen.saveLock)
-            //    {
-            //    }
+                WorldGen.saveWorld(world, false);
+                while (Statics.saveLock)
+                {
+                }
             //    Main.menuMode = 0;
             //}
             //else
             //{
             //    Main.netMode = 0;
             //}
-            //Main.myPlayer = 0;
+            Statics.myPlayer = 0;
         }
+
+        /*void ServerLoop(object threadContext)
+        {
+            if (Statics.rand == null)
+            {
+                Statics.rand = new Random((int)DateTime.Now.Ticks);
+            }
+            if (WorldGen.genRand == null)
+            {
+                WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
+            }
+            Statics.myPlayer = 255;
+            serverIP = IPAddress.Any;
+            serverListenIP = serverIP;
+            //Main.menuMode = 14;
+            //Main.statusText = "Starting server...";
+            Console.WriteLine("Starting Server...");
+            Statics.netMode = 2;
+            disconnect = false;
+            for (int i = 0; i < 256; i++)
+            {
+                serverSock[i] = new ServerSock(world);
+                serverSock[i].Reset();
+                serverSock[i].whoAmI = i;
+                serverSock[i].tcpClient = new TcpClient();
+                serverSock[i].tcpClient.NoDelay = true;
+                serverSock[i].readBuffer = new byte[1024];
+                serverSock[i].writeBuffer = new byte[1024];
+            }
+            tcpListener = new TcpListener(serverListenIP, serverPort);
+            try
+            {
+                tcpListener.Start();
+            }
+            catch (Exception arg_11F_0)
+            {
+                Exception exception = arg_11F_0;
+                //Main.menuMode = 15;
+                //Main.statusText = exception.ToString();
+                Console.WriteLine(exception.ToString());
+                disconnect = true;
+            }
+            if (!disconnect)
+            {
+                ThreadPool.QueueUserWorkItem(new WaitCallback(ListenForClients), 1);
+                //Main.statusText = "Server started";
+                Console.WriteLine("Server Started.");
+            }
+            while (!disconnect)
+            {
+                if (stopListen)
+                {
+                    int num = -1;
+                    for (int j = 0; j < 255; j++)
+                    {
+                        if (!serverSock[j].tcpClient.Connected)
+                        {
+                            num = j;
+                            break;
+                        }
+                    }
+                    if (num >= 0)
+                    {
+                        tcpListener.Start();
+                        stopListen = false;
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(ListenForClients), 1);
+                    }
+                }
+                int num2 = 0;
+                for (int k = 0; k < 256; k++)
+                {
+                    if (NetMessage.buffer[k].checkBytes)
+                    {
+                        NetMessage.CheckBytes(world, k);
+                    }
+                    if (serverSock[k].kill)
+                    {
+                        serverSock[k].Reset();
+                        NetMessage.syncPlayers(world);
+                    }
+                    else
+                    {
+                        if (serverSock[k].tcpClient.Connected)
+                        {
+                            if (!serverSock[k].active)
+                            {
+                                serverSock[k].state = 0;
+                            }
+                            serverSock[k].active = true;
+                            num2++;
+                            if (!serverSock[k].locked)
+                            {
+                                try
+                                {
+                                    serverSock[k].networkStream = serverSock[k].tcpClient.GetStream();
+                                    if (serverSock[k].networkStream.DataAvailable)
+                                    {
+                                        serverSock[k].locked = true;
+                                        serverSock[k].networkStream.BeginRead(serverSock[k].readBuffer, 0, serverSock[k].readBuffer.Length, new AsyncCallback(serverSock[k].ServerReadCallBack), serverSock[k].networkStream);
+                                    }
+                                }
+                                catch
+                                {
+                                    serverSock[k].kill = true;
+                                }
+                            }
+                            if (serverSock[k].statusMax > 0 && serverSock[k].statusText2 != "")
+                            {
+                                if (serverSock[k].statusCount >= serverSock[k].statusMax)
+                                {
+                                    serverSock[k].statusText = string.Concat(new object[]
+							{
+								"(", 
+								serverSock[k].tcpClient.Client.RemoteEndPoint, 
+								") ", 
+								serverSock[k].name, 
+								" ", 
+								serverSock[k].statusText2, 
+								": Complete!"
+							});
+                                    serverSock[k].statusText2 = "";
+                                    serverSock[k].statusMax = 0;
+                                    serverSock[k].statusCount = 0;
+                                }
+                                else
+                                {
+                                    serverSock[k].statusText = string.Concat(new object[]
+							{
+								"(", 
+								serverSock[k].tcpClient.Client.RemoteEndPoint, 
+								") ", 
+								serverSock[k].name, 
+								" ", 
+								serverSock[k].statusText2, 
+								": ", 
+								(int)((float)serverSock[k].statusCount / (float)serverSock[k].statusMax * 100f), 
+								"%"
+							});
+                                }
+                            }
+                            else
+                            {
+                                if (serverSock[k].state == 0)
+                                {
+                                    serverSock[k].statusText = string.Concat(new object[]
+							{
+								"(", 
+								serverSock[k].tcpClient.Client.RemoteEndPoint, 
+								") ", 
+								serverSock[k].name, 
+								" is connecting..."
+							});
+                                }
+                                else
+                                {
+                                    if (serverSock[k].state == 1)
+                                    {
+                                        serverSock[k].statusText = string.Concat(new object[]
+								{
+									"(", 
+									serverSock[k].tcpClient.Client.RemoteEndPoint, 
+									") ", 
+									serverSock[k].name, 
+									" is sending player data..."
+								});
+                                    }
+                                    else
+                                    {
+                                        if (serverSock[k].state == 2)
+                                        {
+                                            serverSock[k].statusText = string.Concat(new object[]
+									{
+										"(", 
+										serverSock[k].tcpClient.Client.RemoteEndPoint, 
+										") ", 
+										serverSock[k].name, 
+										" requested world information"
+									});
+                                        }
+                                        else
+                                        {
+                                            if (serverSock[k].state != 3 && serverSock[k].state == 10)
+                                            {
+                                                serverSock[k].statusText = string.Concat(new object[]
+										{
+											"(", 
+											serverSock[k].tcpClient.Client.RemoteEndPoint, 
+											") ", 
+											serverSock[k].name, 
+											" is playing"
+										});
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (serverSock[k].active)
+                            {
+                                serverSock[k].kill = true;
+                            }
+                            else
+                            {
+                                serverSock[k].statusText2 = "";
+                                if (k < 255)
+                                {
+                                    world.getPlayerList()[k].active = false;
+                                }
+                            }
+                        }
+                    }
+                }
+                Thread.Sleep(1);
+                
+                //ServerUp = true;
+            }
+            tcpListener.Stop();
+            for (int l = 0; l < 256; l++)
+            {
+                serverSock[l].Reset();
+            }
+            //if (Main.menuMode != 15)
+            //{
+                //Statics.netMode = 0;
+                //Main.menuMode = 10;
+                WorldGen.saveWorld(world, false);
+                while (Statics.saveLock)
+                {
+                }
+                //Main.menuMode = 0;
+            //}
+            //else
+            //{
+            //    Main.netMode = 0;
+            //}
+                Statics.myPlayer = 0;
+        }*/
 
         public bool SetIP(string newIP)
         {

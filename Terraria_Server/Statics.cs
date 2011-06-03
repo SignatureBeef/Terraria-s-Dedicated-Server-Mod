@@ -7,8 +7,10 @@ namespace Terraria_Server
 {
     public class Statics
     {
-        public static int currentRelease = 3;
-        public static string versionNumber = "v1.0.2";
+        //public static int currentRelease = 3;
+        public static int currentRelease = 4;
+        //public static string versionNumber = "v1.0.2";
+        public static string versionNumber = "v1.0.3";
         /*
          * @netMode
          * 
@@ -79,6 +81,9 @@ namespace Terraria_Server
         public static int screenHeight = 800;
         public static int evilTiles;
 
+        public static Vector2 screenPosition = new Vector2();
+        public static Vector2 screenLastPosition = new Vector2();
+
         //public static string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria";
         public static string SavePath = Environment.CurrentDirectory;
         public static string WorldPath = Statics.SavePath + "\\Worlds";
@@ -94,5 +99,11 @@ namespace Terraria_Server
         public static bool webAuth { get; set; }
 
         public static bool editSign { get; set; }
+
+        public static int jungleTiles { get; set; }
+
+        public static int meteorTiles { get; set; }
+
+        public static int dungeonTiles { get; set; }
     }
 }

@@ -30,6 +30,7 @@ namespace Terraria_Server
 
 
         private string name = "";
+        private string savePath = "";
         private Server server = null;
         private int seed = -1; //default
         private int id = 0;
@@ -41,7 +42,7 @@ namespace Terraria_Server
         private double rockLayer;
         private short sunModY = 0;
         private short moonModY = 0;
-        private bool allowNPCSpawns = true;
+        private bool stopNPCSpawns = false;
         private int dungeonX;
         private int dungeonY;
         public Chest[] shop = null;
@@ -78,7 +79,7 @@ namespace Terraria_Server
         public World(int maxTilesX, int maxTilesY)
         {
             tile = new Tile[maxTilesX, maxTilesY];
-            player = new Player[9]; //use player cap?
+            player = new Player[256]; //use player cap?
             //item = new Item[201];
             projectile = new Projectile[1001];
             npc = new NPC[1001];
@@ -96,7 +97,7 @@ namespace Terraria_Server
         public World(Server Server, int maxTilesX, int maxTilesY)
         {
             tile = new Tile[maxTilesX, maxTilesY];
-            player = new Player[9]; //use player cap?
+            player = new Player[256]; //use player cap?
             //item = new Item[201];
             projectile = new Projectile[1001];
             npc = new NPC[1001];
@@ -306,14 +307,14 @@ namespace Terraria_Server
             sunModY = SunModY;
         }
 
-        public bool isNPCSpawning()
+        public bool isNPCSpawningStopped()
         {
-            return allowNPCSpawns;
+            return stopNPCSpawns;
         }
 
-        public void setNPCSpawning(bool AllowNPCSpawning)
+        public void setNPCSpawningStopped(bool NPCSpawning)
         {
-            allowNPCSpawns = AllowNPCSpawning;
+            stopNPCSpawns = NPCSpawning;
         }
 
         public int getDungeonX()
@@ -495,7 +496,7 @@ namespace Terraria_Server
         //{
         //    star = Stars;
         //}
-       
+
         public Gore[] getGore()
         {
             return gore;
@@ -504,6 +505,16 @@ namespace Terraria_Server
         public void setGore(Gore[] Gore)
         {
             gore = Gore;
+        }
+
+        public string getSavePath()
+        {
+            return savePath;
+        }
+
+        public void setSavePath(string SavePath)
+        {
+            savePath = SavePath;
         }
 
     }
