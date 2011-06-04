@@ -18,6 +18,7 @@ namespace Terraria_Server
             LARGE_Y = 2400
         }
 
+
         /*public static int[] getWorldSize(String size) {
             string nSize = size.ToLower().Trim();
             if (nSize.Equals("small"))

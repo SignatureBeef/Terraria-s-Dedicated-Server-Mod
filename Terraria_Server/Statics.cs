@@ -8,6 +8,46 @@ namespace Terraria_Server
     public static class Statics
     {
 
+        public static bool isLinux
+        {
+            get
+            {
+                int p = (int)Environment.OSVersion.Platform;
+                return (p == 4) || (p == 6) || (p == 128);
+            }
+        }
+
+        public static string getWorldPath
+        {
+            get
+            {
+                return Statics.SavePath + systemSeperator + "Worlds";
+            }
+        }
+
+        public static string getPlayerPath
+        {
+            get
+            {
+                return Statics.SavePath + systemSeperator + "Players";
+            }
+        }
+
+        public static string getPluginPath
+        {
+            get
+            {
+                return Statics.SavePath + systemSeperator + "Plugins";
+            }
+        }
+
+        //
+        //public static string WorldPath = Statics.SavePath + "\\Worlds";
+        //public static string PlayerPath = Statics.SavePath + "\\Players";
+
+        public static string systemSeperator = "\\";
+
+
         //public static int currentRelease = 3;
         public static int currentRelease = 4;
         //public static string versionNumber = "v1.0.2";
@@ -89,8 +129,9 @@ namespace Terraria_Server
 
         //public static string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria";
         public static string SavePath = Environment.CurrentDirectory;
-        public static string WorldPath = Statics.SavePath + "\\Worlds";
-        public static string PlayerPath = Statics.SavePath + "\\Players";
+
+        //public static string WorldPath = Statics.SavePath + "\\Worlds";
+        //public static string PlayerPath = Statics.SavePath + "\\Players";
 
         [ThreadStatic]
         //public static NetPlay Netplay;

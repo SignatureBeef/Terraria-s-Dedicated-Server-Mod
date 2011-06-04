@@ -5,6 +5,8 @@ using System.Text;
 using System.Net;
 using System.IO;
 
+using Terraria_Server.Plugin;
+
 namespace Terraria_Server
 {
     public class Server //: NetPlay
@@ -12,6 +14,8 @@ namespace Terraria_Server
         private int playerCap = 0;
         public static int processingPlayer = 0;
         private NetPlay netplay = null;
+
+        private PluginManager pluginManager = null;
         
         private World world = null;
 
@@ -20,7 +24,32 @@ namespace Terraria_Server
             playerCap = PlayerCap;
             world = World;
             world.setServer(this);
+            pluginManager = new PluginManager(Statics.getPluginPath, this);
             //this.setWorld(World);
+        }
+
+        public Player GetPlayerByName(string name)
+        {
+            Player player = null;
+            int num = 0;
+            Player[] player2 = world.getPlayerList();
+            Player result;
+            for (int i = 0; i < player2.Length; i++)
+            {
+                Player player3 = player2[i];
+                if (player3.name.ToLower() == name.ToLower())
+                {
+                    result = player3;
+                    return result;
+                }
+                if (player3.name.CompareTo(name) > num && player3.name.IndexOf(name) > -1)
+                {
+                    num = player3.name.CompareTo(name);
+                    player = player3;
+                }
+            }
+            result = player;
+            return result;
         }
 
         public World getWorld()
@@ -379,6 +408,7 @@ namespace Terraria_Server
             
 
             netplay = new NetPlay(world);
+            netplay.serverPort = Program.properties.getPort();
             netplay.Init();
             //WorldGen.EveryTileFrame(world);
            // if (Main.skipMenu)
@@ -489,6 +519,11 @@ namespace Terraria_Server
                     }
                 }
             }
+        }
+
+        internal void StopServer()
+        {
+            netplay.StopServer();
         }
 
         internal void StartServer()
@@ -1710,6 +1745,11 @@ namespace Terraria_Server
             //this.tmp = DateTime.Now;
         }
 
-         public static bool stopDrops { get; set; }
+        public PluginManager getPluginManager()
+        {
+            return pluginManager;
+        }
+        
+        public static bool stopDrops { get; set; }
     }
 }

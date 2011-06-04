@@ -2234,7 +2234,7 @@ namespace Terraria_Server
                     dMaxY = WorldGen.dungeonY;
                 }
                 num3--;
-                Console.WriteLine("Creating dungeon: " + ((int)(((num4 - num3) / num4) * 60f)) + "%");
+                Program.printData("Creating dungeon: " + ((int)(((num4 - num3) / num4) * 60f)) + "%");
                 if (num5 > 0)
                 {
                     num5--;
@@ -2300,7 +2300,7 @@ namespace Terraria_Server
                 DungeonStairs(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
             }
             DungeonEnt(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
-            Console.WriteLine("Creating dungeon: 65%");
+            Program.printData("Creating dungeon: 65%");
             for (int j = 0; j < numDRooms; j++)
             {
                 for (int num14 = dRoomL[j]; num14 <= dRoomR[j]; num14++)
@@ -2346,7 +2346,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Creating dungeon: 70%");
+            Program.printData("Creating dungeon: 70%");
             int num18 = 0;
             int num19 = 0x3e8;
             int num20 = 0;
@@ -2406,7 +2406,7 @@ namespace Terraria_Server
             num18 = 0;
             num19 = 0x3e8;
             num20 = 0;
-            Console.WriteLine("Creating dungeon: 75%");
+            Program.printData("Creating dungeon: 75%");
             while (num20 < (world.getMaxTilesX() / 0x7d))
             {
                 num18++;
@@ -2460,7 +2460,7 @@ namespace Terraria_Server
                     num20++;
                 }
             }
-            Console.WriteLine("Creating dungeon: 80%");
+            Program.printData("Creating dungeon: 80%");
             for (int k = 0; k < numDDoors; k++)
             {
                 int num32 = DDoorX[k] - 10;
@@ -2604,7 +2604,7 @@ namespace Terraria_Server
                     world.getTile()[num48 + 1, num49].type = (byte)tileType;
                 }
             }
-            Console.WriteLine("Creating dungeon: 85%");
+            Program.printData("Creating dungeon: 85%");
             for (int m = 0; m < numDPlats; m++)
             {
                 int num56 = DPlatX[m];
@@ -2694,7 +2694,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Creating dungeon: 90%");
+            Program.printData("Creating dungeon: 90%");
             num18 = 0;
             num19 = 0x3e8;
             num20 = 0;
@@ -2807,7 +2807,7 @@ namespace Terraria_Server
                     num20++;
                 }
             }
-            Console.WriteLine("Creating dungeon: 95%");
+            Program.printData("Creating dungeon: 95%");
             for (int n = 0; n < numDRooms; n++)
             {
                 int num83 = 0;
@@ -13041,28 +13041,6 @@ namespace Terraria_Server
             }
         }
 
-        /*public static void EveryTileFrame(World world)
-        {
-            noLiquidCheck = true;
-            for (int i = 0; i < world.getMaxTilesX(); i++)
-            {
-                float num2 = ((float)i) / ((float)world.getMaxTilesX());
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                for (int j = 0; j < world.getMaxTilesY(); j++)
-                {
-                    TileFrame(i, j, world, true, false);
-                    WallFrame(i, j, world, true);
-                }
-            }
-            noLiquidCheck = false;
-        }*/
-
         public static void SectionTileFrame(int startX, int startY, World world, int endX, int endY)
         {
             int num = startX * 200;
@@ -13098,246 +13076,6 @@ namespace Terraria_Server
                 }
             }
         }
-
-        /*public static World loadWorld(String WorldPath, Server server)
-        {
-            World world = new World(server, world.getMaxTilesX(), world.getMaxTilesY());
-
-            if (genRand == null)
-            {
-                genRand = new Random((int) DateTime.Now.Ticks);
-            }
-            using (FileStream stream = new FileStream(WorldPath, FileMode.Open))
-            {
-                using (BinaryReader reader = new BinaryReader(stream))
-                {
-                    //try
-                    //{
-                        if (reader.ReadInt32() > Statics.currentRelease)
-                        {
-                            //Main.menuMode = 15;
-                            ////Console.WriteLine("Incompatible world file!";
-                            Console.WriteLine("Incompatible world file!");
-                            //loadFailed = true;
-                            reader.Close();
-                            return null;
-                        }
-
-                        Console.WriteLine("Compatible world file!");
-                        //Main.worldName = reader.ReadString();
-                        world.setName(reader.ReadString());
-                        //Main.worldID = reader.ReadInt32();
-                        world.setId(reader.ReadInt32());
-                        //Main.leftWorld = reader.ReadInt32();
-                        world.getLeftWorld() = reader.ReadInt32();
-                        //Main.rightWorld = reader.ReadInt32();
-                        world.getRightWorld() = reader.ReadInt32();
-                        //Main.topWorld = reader.ReadInt32();
-                        world.getTopWorld() = reader.ReadInt32();
-                        //Main.bottomWorld = reader.ReadInt32();
-                        world.getBottomWorld() = reader.ReadInt32();
-                        //maxTilesY = reader.ReadInt32();
-                        world.getMaxTilesY() = reader.ReadInt32();
-                        //maxTilesX = reader.ReadInt32();
-                        world.getMaxTilesX() = reader.ReadInt32();
-                        clearWorld(world);
-                        //Main.spawnTileX = reader.ReadInt32();
-                        Statics.spawnTileX = reader.ReadInt32();
-                        //Main.spawnTileY = reader.ReadInt32();
-                        Statics.spawnTileY = reader.ReadInt32();
-                        //world.getWorldSurface() = reader.ReadDouble();
-                        world.setWorldSurface(reader.ReadDouble());
-                        //world.getRockLayer() = reader.ReadDouble();
-                        world.setRockLayer(reader.ReadDouble());
-                        //tempTime = reader.ReadDouble();
-                        world.setTime(reader.ReadDouble());
-                        //tempDayTime = reader.ReadBoolean();
-                        world.setDayTime(reader.ReadBoolean());
-                        //tempMoonPhase = reader.ReadInt32();
-                        world.setMoonPhase(reader.ReadInt32());
-                        //tempBloodMoon = reader.(ReadBoolean);
-                        world.setBloodMoon(reader.ReadBoolean());
-                        //world.getDungeonX() = reader.ReadInt32();
-                        world.setDungeonX(reader.ReadInt32());
-                        //world.getDungeonY() = reader.ReadInt32();
-                        world.setDungeonX(reader.ReadInt32());
-                        NPC.downedBoss1 = reader.ReadBoolean();
-                        NPC.downedBoss2 = reader.ReadBoolean();
-                        NPC.downedBoss3 = reader.ReadBoolean();
-
-                        world.setShadowOrbSmashed(reader.ReadBoolean());
-                        world.setSpawnMeteor(reader.ReadBoolean());
-                        world.setShadowOrbCount(reader.ReadByte());
-
-                        world.setInvasionDelay(reader.ReadInt32());
-                        world.setInvasionSize(reader.ReadInt32());
-                        world.setInvasionType(reader.ReadInt32());
-                        world.setInvasionX(reader.ReadDouble());
-                    
-                        for (int i = 0; i < world.getMaxTilesX(); i++)
-                        {
-                            float num3 = ((float) i) / ((float) world.getMaxTilesX());
-                            ////Console.WriteLine("Loading world data: " + ((int) ((num3 * 100f) + 1f)) + "%";
-                            for (int i_ = 0; i_ < preserve; i_++)
-                            {
-                                Console.Write("\b");
-                            }
-                            text ="Loading world data: " + ((int)((num3 * 100f) + 1f)) + "%";
-                            Console.Write(text);
-                            preserve = text.Length;
-
-                            for (int n = 0; n < world.getMaxTilesY(); n++)
-                            {
-                                Tile tilez = world.getTile()[i, n];
-                                tilez.active = reader.ReadBoolean();
-                                if (tilez.active)
-                                {
-                                    tilez.type = reader.ReadByte();
-                                    //Console.Write("{" + n.ToString() + "}");
-                                    if (Statics.tileFrameImportant[tilez.type])
-                                    {
-                                        tilez.frameX = reader.ReadInt16();
-                                        tilez.frameY = reader.ReadInt16();
-                                    }
-                                    else
-                                    {
-                                        tilez.frameX = -1;
-                                        tilez.frameY = -1;
-                                    }
-                                }
-                                tilez.lighted = reader.ReadBoolean();
-                                if (reader.ReadBoolean())
-                                {
-                                    tilez.wall = reader.ReadByte();
-                                }
-                                if (reader.ReadBoolean())
-                                {
-                                    tilez.liquid = reader.ReadByte();
-                                    tilez.lava = reader.ReadBoolean();
-                                }
-                                world.setTile(tilez, i, n);
-                            }
-                        }
-                        Console.WriteLine();
-                        for (int j = 0; j < 0x3e8; j++)
-                        {
-                            if (reader.ReadBoolean())
-                            {
-                                Chest[] chests = world.getChests();
-                                chests[j] = new Chest();
-                                chests[j].x = reader.ReadInt32();
-                                chests[j].y = reader.ReadInt32();
-                                for (int num6 = 0; num6 < Chest.maxItems; num6++)
-                                {
-                                    chests[j].item[num6] = new Item();
-                                    byte num7 = reader.ReadByte();
-                                    if (num7 > 0)
-                                    {
-                                        string itemName = reader.ReadString();
-                                        chests[j].item[num6].SetDefaults(itemName);
-                                        chests[j].item[num6].stack = num7;
-                                    }
-                                }
-                                world.setChests(chests);
-                            }
-                        }
-                        for (int k = 0; k < 1000; k++)
-                        {
-                            if (reader.ReadBoolean())
-                            {
-                                string str2 = reader.ReadString();
-                                int num9 = reader.ReadInt32();
-                                int num10 = reader.ReadInt32();
-                                if (world.getTile()[num9, num10].active && (world.getTile()[num9, num10].type == 0x37))
-                                {
-                                    Sign[] signs = world.getSigns();
-                                    signs[k] = new Sign();
-                                    signs[k].x = num9;
-                                    signs[k].y = num10;
-                                    signs[k].text = str2;
-                                    world.setSigns(signs);
-                                }
-                            }
-                        }
-                        bool flag = reader.ReadBoolean();
-                        for (int m = 0; flag; m++)
-                        {
-                            //world.getNPCs()[m].SetDefaults(reader.ReadString());
-                            reader.ReadString();
-                            NPC[] npcs = world.getNPCs();
-                            //npcs[m].position.X = reader.ReadSingle();
-                            //npcs[m].position.Y = reader.ReadSingle();
-                            //npcs[m].homeless = reader.ReadBoolean();
-                            //npcs[m].homeTileX = reader.ReadInt32();
-                            //npcs[m].homeTileY = reader.ReadInt32();
-                            reader.ReadSingle();
-                            reader.ReadSingle();
-                            reader.ReadBoolean();
-                            reader.ReadInt32();
-                            reader.ReadInt32();
-                            flag = reader.ReadBoolean();
-                            world.setNPCs(npcs);
-                        }
-                        reader.Close();
-                        gen = true;
-                        waterLine = world.getMaxTilesY();
-                        Liquid.QuickWater(world, 2, -1, -1);
-                        WaterCheck(world);
-                        int num12 = 0;
-                        Liquid.quickSettle = true;
-                        int num13 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-                        float num14 = 0f;
-                        while ((Liquid.numLiquid > 0) && (num12 < 0x186a0))
-                        {
-                            num12++;
-                            float num15 = ((float) (num13 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer))) / ((float) num13);
-                            if ((Liquid.numLiquid + LiquidBuffer.numLiquidBuffer) > num13)
-                            {
-                                num13 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-                            }
-                            if (num15 > num14)
-                            {
-                                num14 = num15;
-                            }
-                            else
-                            {
-                                num15 = num14;
-                            }
-                           // //Console.WriteLine("Settling liquids: " + ((int) (((num15 * 100f) / 2f) + 50f)) + "%";
-                            for (int i_ = 0; i_ < preserve; i_++)
-                            {
-                                Console.Write("\b");
-                            }
-                            text ="Settling liquids: " + ((int)(((num15 * 100f) / 2f) + 50f)) + "%";
-                            Console.Write(text);
-                            preserve = text.Length;
-                            Liquid.UpdateLiquid(world);
-                        }
-                        Liquid.quickSettle = false;
-                        WaterCheck(world);
-                        gen = false;
-                   // }
-                   // catch (Exception exception)
-                   // {
-                        //Main.menuMode = 15;
-                        ////Console.WriteLine(exception.ToString();
-                      //  Console.WriteLine(exception.ToString());
-                        //loadFailed = true;
-                      //  try
-                     //   {
-                     //       reader.Close();
-                     //   }
-                     //   catch
-                     //   {
-                     //   }
-                     //   return null;
-                    //}
-                    //loadFailed = false;
-                    //return null;
-                }
-            }
-            return world;
-        }*/
 
         public static World loadWorld(String WorldPath, Server server)
         {
@@ -13427,13 +13165,7 @@ namespace Terraria_Server
                     for (int i = 0; i < world.getMaxTilesX(); i++)
                     {
                         float num2 = (float)i / (float)world.getMaxTilesX();
-                        for (int i_ = 0; i_ < preserve; i_++)
-                        {
-                            Console.Write("\b");
-                        }
-                        string text = "Loading world data: " + ((int)((num2 * 100f) + 1f)) + "%";
-                        Console.Write(text);
-                        preserve = text.Length;
+                        Program.printData("Loading world data: " + ((int)((num2 * 100f) + 1f)) + "%");
 
                         for (int j = 0; j < world.getMaxTilesY(); j++)
                         {
@@ -13559,13 +13291,7 @@ namespace Terraria_Server
                             num9 = num8;
                         }
                         ////Console.WriteLine("Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
-                        for (int i_ = 0; i_ < preserve; i_++)
-                        {
-                            Console.Write("\b");
-                        }
-                        string text = "Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
-                        Console.Write(text);
-                        preserve = text.Length;
+                        Program.printData("Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%");
                         Liquid.UpdateLiquid(world);
                     }
                     Liquid.quickSettle = false;
@@ -13647,13 +13373,7 @@ namespace Terraria_Server
                     float num2 = ((float)num) / ((float)lastMaxTilesX);
                     ////Console.WriteLine("Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%";
                     //Console.WriteLine("Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%");
-                    for (int i_ = 0; i_ < preserve; i_++)
-                    {
-                        Console.Write("\b");
-                    }
-                    text ="Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%";
-                    Console.Write(text);
-                    preserve = text.Length;
+                    Program.printData("Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%");
                     for (int num3 = 0; num3 < lastMaxTilesY; num3++)
                     {
                         world.getTile()[num, num3] = null;
@@ -13670,13 +13390,7 @@ namespace Terraria_Server
                     float num5 = ((float)num4) / ((float)world.getMaxTilesX());
                     ////Console.WriteLine("Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%";
                     //Console.WriteLine("Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%");
-                    for (int i_ = 0; i_ < preserve; i_++)
-                    {
-                        Console.Write("\b");
-                    }
-                    text ="Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%";
-                    Console.Write(text);
-                    preserve = text.Length;
+                    Program.printData("Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%");
                     for (int num6 = 0; num6 < world.getMaxTilesY(); num6++)
                     {
                         world.getTile()[num4, num6] = new Tile();
@@ -13739,15 +13453,8 @@ namespace Terraria_Server
             for (int i = 0; i < world.getMaxTilesX(); i++)
             {
                 float num2 = ((float)i) / ((float)world.getMaxTilesX());
-                ////Console.WriteLine("Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
-
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                string text = "Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
-                Console.Write(text);
-                preserve = text.Length;
+                ////Console.WriteLine
+                Program.printData("Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%");
                 for (int j = 0; j < world.getMaxTilesY(); j++)
                 {
                     TileFrame(i, j, world, true, false);
@@ -13992,14 +13699,8 @@ namespace Terraria_Server
                                 for (int i = 0; i < world.getMaxTilesX(); i++)
                                 {
                                     float num2 = ((float)i) / ((float)world.getMaxTilesX());
-                                    ////Console.WriteLine("Saving world data: " + ((int)((num2 * 100f) + 1f)) + "%";
-                                    for (int i_ = 0; i_ < preserve; i_++)
-                                    {
-                                        Console.Write("\b");
-                                    }
-                                    string text = "Saving world data: " + ((int)((num2 * 100f) + 1f)) + "%";
-                                    Console.Write(text);
-                                    preserve = text.Length;
+                                    ////Console.WriteLine;
+                                    Program.printData("Saving world data: " + ((int)((num2 * 100f) + 1f)) + "%");
 
                                     for (int n = 0; n < world.getMaxTilesY(); n++)
                                     {
@@ -14355,2312 +14056,6 @@ namespace Terraria_Server
             WorldGen.numJChests = 0;
         }
         
-        /*
-        public static World generateWorld(int maxTilesX, int maxTilesY, int seed = -1, World world = null)
-        {
-            if (world == null)
-            {
-                world = new World(maxTilesX, maxTilesY);
-            }
-            WorldGen.gen = true;
-            WorldGen.resetGen();
-            if (seed > 0)
-            {
-                WorldGen.genRand = new Random(seed);
-            }
-            else
-            {
-                WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
-            }
-            world.setId(WorldGen.genRand.Next(2147483647));
-            int num = 0;
-            int num2 = 0;
-            double num3 = (double)maxTilesX * 0.3;
-            num3 *= (double)WorldGen.genRand.Next(90, 110) * 0.005;
-            double num4 = num3 + (double)maxTilesY * 0.2;
-            num4 *= (double)WorldGen.genRand.Next(90, 110) * 0.01;
-            double num5 = num3;
-            double num6 = num3;
-            double num7 = num4;
-            double num8 = num4;
-            string text = "";
-            int num9 = 0;
-            if (WorldGen.genRand.Next(2) == 0)
-            {
-                num9 = -1;
-            }
-            else
-            {
-                num9 = 1;
-            }
-            for (int i = 0; i < maxTilesX; i++)
-            {
-                float num10 = (float)i / (float)maxTilesX;
-                //Console.WriteLine("Generating world terrain: " + (int)(num10 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Generating world terrain: " + (int)(num10 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                if (num3 < num5)
-                {
-                    num5 = num3;
-                }
-                if (num3 > num6)
-                {
-                    num6 = num3;
-                }
-                if (num4 < num7)
-                {
-                    num7 = num4;
-                }
-                if (num4 > num8)
-                {
-                    num8 = num4;
-                }
-                if (num2 <= 0)
-                {
-                    num = WorldGen.genRand.Next(0, 5);
-                    num2 = WorldGen.genRand.Next(5, 40);
-                    if (num == 0)
-                    {
-                        num2 *= (int)((double)WorldGen.genRand.Next(5, 30) * 0.2);
-                    }
-                }
-                num2--;
-                if (num == 0)
-                {
-                    while (WorldGen.genRand.Next(0, 7) == 0)
-                    {
-                        num3 += (double)WorldGen.genRand.Next(-1, 2);
-                    }
-                }
-                else
-                {
-                    if (num == 1)
-                    {
-                        while (WorldGen.genRand.Next(0, 4) == 0)
-                        {
-                            num3 -= 1.0;
-                        }
-                        while (WorldGen.genRand.Next(0, 10) == 0)
-                        {
-                            num3 += 1.0;
-                        }
-                    }
-                    else
-                    {
-                        if (num == 2)
-                        {
-                            while (WorldGen.genRand.Next(0, 4) == 0)
-                            {
-                                num3 += 1.0;
-                            }
-                            while (WorldGen.genRand.Next(0, 10) == 0)
-                            {
-                                num3 -= 1.0;
-                            }
-                        }
-                        else
-                        {
-                            if (num == 3)
-                            {
-                                while (WorldGen.genRand.Next(0, 2) == 0)
-                                {
-                                    num3 -= 1.0;
-                                }
-                                while (WorldGen.genRand.Next(0, 6) == 0)
-                                {
-                                    num3 += 1.0;
-                                }
-                            }
-                            else
-                            {
-                                if (num == 4)
-                                {
-                                    while (WorldGen.genRand.Next(0, 2) == 0)
-                                    {
-                                        num3 += 1.0;
-                                    }
-                                    while (WorldGen.genRand.Next(0, 5) == 0)
-                                    {
-                                        num3 -= 1.0;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                if (num3 < (double)maxTilesY * 0.15)
-                {
-                    num3 = (double)maxTilesY * 0.15;
-                    num2 = 0;
-                }
-                else
-                {
-                    if (num3 > (double)maxTilesY * 0.3)
-                    {
-                        num3 = (double)maxTilesY * 0.3;
-                        num2 = 0;
-                    }
-                }
-                while (WorldGen.genRand.Next(0, 3) == 0)
-                {
-                    num4 += (double)WorldGen.genRand.Next(-2, 3);
-                }
-                if (num4 < num3 + (double)maxTilesY * 0.05)
-                {
-                    num4 += 1.0;
-                }
-                if (num4 > num3 + (double)maxTilesY * 0.35)
-                {
-                    num4 -= 1.0;
-                }
-                int num11 = 0;
-                while ((double)num11 < num3)
-                {
-                    world.getTile()[i, num11].active = false;
-                    world.getTile()[i, num11].lighted = true;
-                    world.getTile()[i, num11].frameX = -1;
-                    world.getTile()[i, num11].frameY = -1;
-                    num11++;
-                }
-                for (int j = (int)num3; j < maxTilesY; j++)
-                {
-                    if ((double)j < num4)
-                    {
-                        world.getTile()[i, j].active = true;
-                        world.getTile()[i, j].type = 0;
-                        world.getTile()[i, j].frameX = -1;
-                        world.getTile()[i, j].frameY = -1;
-                    }
-                    else
-                    {
-                        world.getTile()[i, j].active = true;
-                        world.getTile()[i, j].type = 1;
-                        world.getTile()[i, j].frameX = -1;
-                        world.getTile()[i, j].frameY = -1;
-                    }
-                }
-            }
-            world.setWorldSurface(num6 + 5.0);
-            world.setRockLayer(num8);
-            //world.getWorldSurface() = num6 + 5.0;
-            //world.getRockLayer() = num8;
-            double num12 = (double)((int)((world.getRockLayer() - world.getWorldSurface()) / 6.0) * 6);
-            world.setRockLayer(world.getWorldSurface() + num12);
-            WorldGen.waterLine = (int)(world.getRockLayer() + (double)maxTilesY) / 2;
-            WorldGen.waterLine += WorldGen.genRand.Next(-100, 20);
-            WorldGen.lavaLine = WorldGen.waterLine + WorldGen.genRand.Next(50, 80);
-            int num13 = 0;
-            //Console.WriteLine("Adding sand...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Adding sand...";
-            Console.Write(text);
-            preserve = text.Length;
-            int num14 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.0007), (int)((double)maxTilesX * 0.002));
-            num14 += 2;
-            for (int k = 0; k < num14; k++)
-            {
-                int num15 = WorldGen.genRand.Next(maxTilesX);
-                while ((float)num15 > (float)maxTilesX * 0.45f && (float)num15 < (float)maxTilesX * 0.55f)
-                {
-                    num15 = WorldGen.genRand.Next(maxTilesX);
-                }
-                int num16 = WorldGen.genRand.Next(15, 90);
-                if (WorldGen.genRand.Next(3) == 0)
-                {
-                    num16 *= 2;
-                }
-                int num17 = num15 - num16;
-                num16 = WorldGen.genRand.Next(15, 90);
-                if (WorldGen.genRand.Next(3) == 0)
-                {
-                    num16 *= 2;
-                }
-                int num18 = num15 + num16;
-                if (num17 < 0)
-                {
-                    num17 = 0;
-                }
-                if (num18 > maxTilesX)
-                {
-                    num18 = maxTilesX;
-                }
-                if (k == 0)
-                {
-                    num17 = 0;
-                    num18 = WorldGen.genRand.Next(250, 300);
-                }
-                else
-                {
-                    if (k == 2)
-                    {
-                        num17 = maxTilesX - WorldGen.genRand.Next(250, 300);
-                        num18 = maxTilesX;
-                    }
-                }
-                int num19 = WorldGen.genRand.Next(50, 100);
-                for (int l = num17; l < num18; l++)
-                {
-                    if (WorldGen.genRand.Next(2) == 0)
-                    {
-                        num19 += WorldGen.genRand.Next(-1, 2);
-                        if (num19 < 50)
-                        {
-                            num19 = 50;
-                        }
-                        if (num19 > 100)
-                        {
-                            num19 = 100;
-                        }
-                    }
-                    int num20 = 0;
-                    while ((double)num20 < world.getWorldSurface())
-                    {
-                        if (world.getTile()[l, num20].active)
-                        {
-                            int num21 = num19;
-                            if (l - num17 < num21)
-                            {
-                                num21 = l - num17;
-                            }
-                            if (num18 - l < num21)
-                            {
-                                num21 = num18 - l;
-                            }
-                            num21 += WorldGen.genRand.Next(5);
-                            for (int m = num20; m < num20 + num21; m++)
-                            {
-                                if (l > num17 + WorldGen.genRand.Next(5) && l < num18 - WorldGen.genRand.Next(5))
-                                {
-                                    world.getTile()[l, m].type = 53;
-                                }
-                            }
-                            break;
-                        }
-                        num20++;
-                    }
-                }
-            }
-            for (int n = 0; n < (int)((double)(maxTilesX * maxTilesY) * 8E-06); n++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)world.getWorldSurface(), 
-                    (int)world.getRockLayer()), world, (double)WorldGen.genRand.Next(15, 70), WorldGen.genRand.Next(20, 130), 53, false, 
-                    0f, 0f, false, true);
-            }
-            WorldGen.numMCaves = 0;
-            //Console.WriteLine("Adding sand...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Adding sand...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num22 = 0; num22 < (int)((double)maxTilesX * 0.0008); num22++)
-            {
-                int num23 = 0;
-                bool flag = false;
-                bool flag2 = false;
-                int num24 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.25), (int)((double)maxTilesX * 0.75));
-                while (!flag2)
-                {
-                    flag2 = true;
-                    while (num24 > maxTilesX / 2 - 100 && num24 < maxTilesX / 2 + 100)
-                    {
-                        num24 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.25), (int)((double)maxTilesX * 0.75));
-                    }
-                    for (int num25 = 0; num25 < WorldGen.numMCaves; num25++)
-                    {
-                        if (num24 > WorldGen.mCaveX[num25] - 50 && num24 < WorldGen.mCaveX[num25] + 50)
-                        {
-                            num23++;
-                            flag2 = false;
-                            break;
-                        }
-                    }
-                    if (num23 >= 200)
-                    {
-                        flag = true;
-                        break;
-                    }
-                }
-                if (!flag)
-                {
-                    int num26 = 0;
-                    while ((double)num26 < world.getWorldSurface())
-                    {
-                        if (world.getTile()[num24, num26].active)
-                        {
-                            WorldGen.Mountinater(num24, num26, world);
-                            WorldGen.mCaveX[WorldGen.numMCaves] = num24;
-                            WorldGen.mCaveY[WorldGen.numMCaves] = num26;
-                            WorldGen.numMCaves++;
-                            break;
-                        }
-                        num26++;
-                    }
-                }
-            }
-            for (int num27 = 1; num27 < maxTilesX - 1; num27++)
-            {
-                float num28 = (float)num27 / (float)maxTilesX;
-                //Console.WriteLine("Putting dirt behind dirt: " + (int)(num28 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text = "Putting dirt behind dirt: " + (int)(num28 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                bool flag3 = false;
-                num13 += WorldGen.genRand.Next(-1, 2);
-                if (num13 < 0)
-                {
-                    num13 = 0;
-                }
-                if (num13 > 10)
-                {
-                    num13 = 10;
-                }
-                int num29 = 0;
-                while ((double)num29 < world.getWorldSurface() + 10.0 && (double)num29 <= world.getWorldSurface() + (double)num13)
-                {
-                    if (flag3)
-                    {
-                        world.getTile()[num27, num29].wall = 2;
-                    }
-                    if (world.getTile()[num27, num29].active && world.getTile()[num27 - 1, num29].active && world.getTile()[num27 + 1, num29].active && world.getTile()[num27, num29 + 1].active && world.getTile()[num27 - 1, num29 + 1].active && world.getTile()[num27 + 1, num29 + 1].active)
-                    {
-                        flag3 = true;
-                    }
-                    num29++;
-                }
-            }
-            WorldGen.numIslandHouses = 0;
-            WorldGen.houseCount = 0;
-            //Console.WriteLine("Generating floating islands...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Generating floating islands...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num30 = 0; num30 < (int)((double)maxTilesX * 0.0008); num30++)
-            {
-                int num31 = 0;
-                bool flag4 = false;
-                int num32 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.1), (int)((double)maxTilesX * 0.9));
-                bool flag5 = false;
-                while (!flag5)
-                {
-                    flag5 = true;
-                    while (num32 > maxTilesX / 2 - 80 && num32 < maxTilesX / 2 + 80)
-                    {
-                        num32 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.1), (int)((double)maxTilesX * 0.9));
-                    }
-                    for (int num33 = 0; num33 < WorldGen.numIslandHouses; num33++)
-                    {
-                        if (num32 > WorldGen.fihX[num33] - 80 && num32 < WorldGen.fihX[num33] + 80)
-                        {
-                            num31++;
-                            flag5 = false;
-                            break;
-                        }
-                    }
-                    if (num31 >= 200)
-                    {
-                        flag4 = true;
-                        break;
-                    }
-                }
-                if (!flag4)
-                {
-                    int num34 = 200;
-                    while ((double)num34 < world.getWorldSurface())
-                    {
-                        if (world.getTile()[num32, num34].active)
-                        {
-                            int num35 = num32;
-                            int num36 = WorldGen.genRand.Next(100, num34 - 100);
-                            while ((double)num36 > num5 - 50.0)
-                            {
-                                num36--;
-                            }
-                            WorldGen.FloatingIsland(num35, num36, world);
-                            WorldGen.fihX[WorldGen.numIslandHouses] = num35;
-                            WorldGen.fihY[WorldGen.numIslandHouses] = num36;
-                            WorldGen.numIslandHouses++;
-                            break;
-                        }
-                        num34++;
-                    }
-                }
-            }
-            //Console.WriteLine("Placing rocks in the dirt...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Placing rocks in the dirt...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num37 = 0; num37 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num37++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5 + 1), world, 
-                    (double)WorldGen.genRand.Next(4, 15), WorldGen.genRand.Next(5, 40), 1, false, 0f, 0f, false, true);
-            }
-            for (int num38 = 0; num38 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num38++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6 + 1), world, 
-                    (double)WorldGen.genRand.Next(4, 10), WorldGen.genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
-            }
-            for (int num39 = 0; num39 < (int)((double)(maxTilesX * maxTilesY) * 0.0045); num39++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8 + 1), world, 
-                    (double)WorldGen.genRand.Next(2, 7), WorldGen.genRand.Next(2, 23), 1, false, 0f, 0f, false, true);
-            }
-            //Console.WriteLine("Placing dirt in the rocks...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Placing dirt in the rocks...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num40 = 0; num40 < (int)((double)(maxTilesX * maxTilesY) * 0.005); num40++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world,
-                    (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(2, 40), 0, false, 0f, 0f, false, true);
-            }
-            //Console.WriteLine("Adding clay...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Adding clay...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num41 = 0; num41 < (int)((double)(maxTilesX * maxTilesY) * 2E-05); num41++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5), world, 
-                    (double)WorldGen.genRand.Next(4, 14), WorldGen.genRand.Next(10, 50), 40, false, 0f, 0f, false, true);
-            }
-            for (int num42 = 0; num42 < (int)((double)(maxTilesX * maxTilesY) * 5E-05); num42++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6 + 1), world, 
-                    (double)WorldGen.genRand.Next(8, 14), WorldGen.genRand.Next(15, 45), 40, false, 0f, 0f, false, true);
-            }
-            for (int num43 = 0; num43 < (int)((double)(maxTilesX * maxTilesY) * 2E-05); num43++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8 + 1), world, 
-                    (double)WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(5, 50), 40, false, 0f, 0f, false, true);
-            }
-            for (int num44 = 5; num44 < maxTilesX - 5; num44++)
-            {
-                int num45 = 1;
-                while ((double)num45 < world.getWorldSurface() - 1.0)
-                {
-                    if (world.getTile()[num44, num45].active)
-                    {
-                        for (int num46 = num45; num46 < num45 + 5; num46++)
-                        {
-                            if (world.getTile()[num44, num46].type == 40)
-                            {
-                                world.getTile()[num44, num46].type = 0;
-                            }
-                        }
-                        break;
-                    }
-                    num45++;
-                }
-            }
-            for (int num47 = 0; num47 < (int)((double)(maxTilesX * maxTilesY) * 0.0015); num47++)
-            {
-                float num48 = (float)((double)num47 / ((double)(maxTilesX * maxTilesY) * 0.0015));
-                //Console.WriteLine("Making random holes: " + (int)(num48 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text = "Making random holes: " + (int)(num48 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                int type = -1;
-                if (WorldGen.genRand.Next(5) == 0)
-                {
-                    type = -2;
-                }
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, maxTilesY), world, 
-                    (double)WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 20), type, false, 0f, 0f, false, true);
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, maxTilesY), world, 
-                    (double)WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(7, 30), type, false, 0f, 0f, false, true);
-            }
-            for (int num49 = 0; num49 < (int)((double)(maxTilesX * maxTilesY) * 3E-05); num49++)
-            {
-                float num50 = (float)((double)num49 / ((double)(maxTilesX * maxTilesY) * 3E-05));
-                //Console.WriteLine("Generating small caves: " + (int)(num50 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text = "Generating small caves: " + (int)(num50 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                if (num8 <= (double)maxTilesY)
-                {
-                    int type2 = -1;
-                    if (WorldGen.genRand.Next(6) == 0)
-                    {
-                        type2 = -2;
-                    }
-                    WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num8 + 1), world, 
-                        (double)WorldGen.genRand.Next(5, 15), WorldGen.genRand.Next(30, 200), type2, false, 0f, 0f, false, true);
-                }
-            }
-            for (int num51 = 0; num51 < (int)((double)(maxTilesX * maxTilesY) * 0.00015); num51++)
-            {
-                float num52 = (float)((double)num51 / ((double)(maxTilesX * maxTilesY) * 0.00015));
-                //Console.WriteLine("Generating large caves: " + (int)(num52 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text = "Generating large caves: " + (int)(num52 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                if (num8 <= (double)maxTilesY)
-                {
-                    int type3 = -1;
-                    if (WorldGen.genRand.Next(10) == 0)
-                    {
-                        type3 = -2;
-                    }
-                    WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num8, maxTilesY), world, 
-                        (double)WorldGen.genRand.Next(6, 20), WorldGen.genRand.Next(50, 300), type3, false, 0f, 0f, false, true);
-                }
-            }
-            //Console.WriteLine("Generating surface caves...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Generating surface caves...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num53 = 0; num53 < (int)((double)maxTilesX * 0.0025); num53++)
-            {
-                int num54 = WorldGen.genRand.Next(0, maxTilesX);
-                int num55 = 0;
-                while ((double)num55 < num6)
-                {
-                    if (world.getTile()[num54, num55].active)
-                    {
-                        WorldGen.TileRunner(num54, num55, world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(5, 50)
-                            , -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 1f, false, true);
-                        break;
-                    }
-                    num55++;
-                }
-            }
-            for (int num56 = 0; num56 < (int)((double)maxTilesX * 0.0007); num56++)
-            {
-                int num54 = WorldGen.genRand.Next(0, maxTilesX);
-                int num57 = 0;
-                while ((double)num57 < num6)
-                {
-                    if (world.getTile()[num54, num57].active)
-                    {
-                        WorldGen.TileRunner(num54, num57, world, (double)WorldGen.genRand.Next(10, 15), 
-                            WorldGen.genRand.Next(50, 130), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
-                        break;
-                    }
-                    num57++;
-                }
-            }
-            for (int num58 = 0; num58 < (int)((double)maxTilesX * 0.0003); num58++)
-            {
-                int num54 = WorldGen.genRand.Next(0, maxTilesX);
-                int num59 = 0;
-                while ((double)num59 < num6)
-                {
-                    if (world.getTile()[num54, num59].active)
-                    {
-                        WorldGen.TileRunner(num54, num59, world, (double)WorldGen.genRand.Next(12, 25), 
-                            WorldGen.genRand.Next(150, 500), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 4f, false, true);
-                        WorldGen.TileRunner(num54, num59, world, (double)WorldGen.genRand.Next(8, 17), 
-                            WorldGen.genRand.Next(60, 200), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
-                        WorldGen.TileRunner(num54, num59, world, (double)WorldGen.genRand.Next(5, 13), 
-                            WorldGen.genRand.Next(40, 170), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
-                        break;
-                    }
-                    num59++;
-                }
-            }
-            for (int num60 = 0; num60 < (int)((double)maxTilesX * 0.0004); num60++)
-            {
-                int num54 = WorldGen.genRand.Next(0, maxTilesX);
-                int num61 = 0;
-                while ((double)num61 < num6)
-                {
-                    if (world.getTile()[num54, num61].active)
-                    {
-                        WorldGen.TileRunner(num54, num61, world, (double)WorldGen.genRand.Next(7, 12), 
-                            WorldGen.genRand.Next(150, 250), -1, false, 0f, 1f, true, true);
-                        break;
-                    }
-                    num61++;
-                }
-            }
-            for (int num62 = 0; num62 < (int)((double)(maxTilesX * maxTilesY) * 0.002); num62++)
-            {
-                int num63 = WorldGen.genRand.Next(1, maxTilesX - 1);
-                int num64 = WorldGen.genRand.Next((int)num5, (int)num6);
-                if (num64 >= maxTilesY)
-                {
-                    num64 = maxTilesY - 2;
-                }
-                if (world.getTile()[num63 - 1, num64].active && world.getTile()[num63 - 1, num64].type == 0 && world.getTile()[num63 + 1, num64].active && world.getTile()[num63 + 1, num64].type == 0 && world.getTile()[num63, num64 - 1].active && world.getTile()[num63, num64 - 1].type == 0 && world.getTile()[num63, num64 + 1].active && world.getTile()[num63, num64 + 1].type == 0)
-                {
-                    world.getTile()[num63, num64].active = true;
-                    world.getTile()[num63, num64].type = 2;
-                }
-                num63 = WorldGen.genRand.Next(1, maxTilesX - 1);
-                num64 = WorldGen.genRand.Next(0, (int)num5);
-                if (num64 >= maxTilesY)
-                {
-                    num64 = maxTilesY - 2;
-                }
-                if (world.getTile()[num63 - 1, num64].active && world.getTile()[num63 - 1, num64].type == 0 && world.getTile()[num63 + 1, num64].active && world.getTile()[num63 + 1, num64].type == 0 && world.getTile()[num63, num64 - 1].active && world.getTile()[num63, num64 - 1].type == 0 && world.getTile()[num63, num64 + 1].active && world.getTile()[num63, num64 + 1].type == 0)
-                {
-                    world.getTile()[num63, num64].active = true;
-                    world.getTile()[num63, num64].type = 2;
-                }
-            }
-            //Console.WriteLine("Generating underground jungle: 0%";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Generating underground jungle: 0%";
-            Console.Write(text);
-            preserve = text.Length;
-            float num65 = (float)(maxTilesX / 4200);
-            num65 *= 1.5f;
-            int num66 = 0;
-            if (num9 == -1)
-            {
-                num66 = (int)((float)maxTilesX * 0.8f);
-            }
-            else
-            {
-                num66 = (int)((float)maxTilesX * 0.2f);
-            }
-            int num67 = (int)((double)maxTilesY + world.getRockLayer()) / 2;
-            num66 += WorldGen.genRand.Next((int)(-100f * num65), (int)(101f * num65));
-            num67 += WorldGen.genRand.Next((int)(-100f * num65), (int)(101f * num65));
-            WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next((int)(250f * num65), (int)(500f * num65)), WorldGen.genRand.Next(50, 150), 59, false, (float)(num9 * 3), 0f, false, true);
-            //Console.WriteLine("Generating underground jungle: 0%";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Generating underground jungle: 0%";
-            Console.Write(text);
-            preserve = text.Length;
-            num66 += WorldGen.genRand.Next((int)(-250f * num65), (int)(251f * num65));
-            num67 += WorldGen.genRand.Next((int)(-150f * num65), (int)(151f * num65));
-            int num68 = num66;
-            int num69 = num67;
-            WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next((int)(250f * num65), (int)(500f * num65)), WorldGen.genRand.Next(50, 150), 59, false, 0f, 0f, false, true);
-            //Console.WriteLine("Generating underground jungle: 40%";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Generating underground jungle: 40%";
-            Console.Write(text);
-            preserve = text.Length;
-            num66 += WorldGen.genRand.Next((int)(-400f * num65), (int)(401f * num65));
-            num67 += WorldGen.genRand.Next((int)(-150f * num65), (int)(151f * num65));
-            WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next((int)(250f * num65), (int)(500f * num65)), WorldGen.genRand.Next(50, 150), 59, false, (float)(num9 * -3), 0f, false, true);
-            //Console.WriteLine("Generating underground jungle: 60%";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text = "Generating underground jungle: 60%";
-            Console.Write(text);
-            preserve = text.Length;
-            num66 = num68;
-            num67 = num69;
-            int num70 = 0;
-            while ((float)num70 <= 20f * num65)
-            {
-                //Console.WriteLine("Generating underground jungle: " + (int)(60f + (float)num70 / num65) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text = "Generating underground jungle: " + (int)(60f + (float)num70 / num65) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                num66 += WorldGen.genRand.Next((int)(-5f * num65), (int)(6f * num65));
-                num67 += WorldGen.genRand.Next((int)(-5f * num65), (int)(6f * num65));
-                WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next(40, 100), WorldGen.genRand.Next(300, 500), 59, false, 0f, 0f, false, true);
-                num70++;
-            }
-            int num71 = 0;
-            while ((float)num71 <= 10f * num65)
-            {
-                //Console.WriteLine("Generating underground jungle: " + (int)(80f + (float)num71 / num65 * 2f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Generating underground jungle: " + (int)(80f + (float)num71 / num65 * 2f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
-                num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
-                while (num66 < 1 || num66 >= maxTilesX - 1 || num67 < 1 || num67 >= maxTilesY - 1 || world.getTile()[num66, num67].type != 59)
-                {
-                    num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
-                    num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
-                }
-                int num72 = 0;
-                while ((float)num72 < 8f * num65)
-                {
-                    num66 += WorldGen.genRand.Next(-30, 31);
-                    num67 += WorldGen.genRand.Next(-30, 31);
-                    int type4 = -1;
-                    if (WorldGen.genRand.Next(7) == 0)
-                    {
-                        type4 = -2;
-                    }
-                    WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next(10, 20), WorldGen.genRand.Next(30, 70), type4, false, 0f, 0f, false, true);
-                    num72++;
-                }
-                num71++;
-            }
-            int num73 = 0;
-            while ((float)num73 <= 300f * num65)
-            {
-                num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
-                num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
-                while (num66 < 1 || num66 >= maxTilesX - 1 || num67 < 1 || num67 >= maxTilesY - 1 || world.getTile()[num66, num67].type != 59)
-                {
-                    num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
-                    num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
-                }
-                WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next(4, 10), WorldGen.genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
-                if (WorldGen.genRand.Next(4) == 0)
-                {
-                    int type5 = WorldGen.genRand.Next(63, 69);
-                    WorldGen.TileRunner(num66 + WorldGen.genRand.Next(-1, 2), num67 + WorldGen.genRand.Next(-1, 2), world, (double)WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(4, 8), type5, false, 0f, 0f, false, true);
-                }
-                num73++;
-            }
-            num66 = num68;
-            num67 = num69;
-            float num74 = (float)WorldGen.genRand.Next(6, 10);
-            float num75 = (float)(maxTilesX / 4200);
-            num74 *= num75;
-            int num76 = 0;
-            while ((float)num76 < num74)
-            {
-                bool flag6 = true;
-                while (flag6)
-                {
-                    num66 = WorldGen.genRand.Next(20, maxTilesX - 20);
-                    num67 = WorldGen.genRand.Next(20, maxTilesY - 300);
-                    if (world.getTile()[num66, num67].type == 59)
-                    {
-                        flag6 = false;
-                        int num77 = WorldGen.genRand.Next(2, 4);
-                        int num78 = WorldGen.genRand.Next(2, 4);
-                        for (int num79 = num66 - num77 - 1; num79 <= num66 + num77 + 1; num79++)
-                        {
-                            for (int num80 = num67 - num78 - 1; num80 <= num67 + num78 + 1; num80++)
-                            {
-                                world.getTile()[num79, num80].active = true;
-                                world.getTile()[num79, num80].type = 45;
-                                world.getTile()[num79, num80].liquid = 0;
-                                world.getTile()[num79, num80].lava = false;
-                            }
-                        }
-                        for (int num81 = num66 - num77; num81 <= num66 + num77; num81++)
-                        {
-                            for (int num82 = num67 - num78; num82 <= num67 + num78; num82++)
-                            {
-                                world.getTile()[num81, num82].active = false;
-                                world.getTile()[num81, num82].wall = 10;
-                            }
-                        }
-                        bool flag7 = false;
-                        int num83 = 0;
-                        while (!flag7 && num83 < 100)
-                        {
-                            num83++;
-                            int num84 = WorldGen.genRand.Next(num66 - num77, num66 + num77 + 1);
-                            int num85 = WorldGen.genRand.Next(num67 - num78, num67 + num78 - 2);
-                            WorldGen.PlaceTile(num84, num85, world, 4, true, false, -1);
-                            if (world.getTile()[num84, num85].type == 4)
-                            {
-                                flag7 = true;
-                            }
-                        }
-                        for (int num86 = num66 - num77 - 1; num86 <= num66 + num77 + 1; num86++)
-                        {
-                            for (int num87 = num67 + num78 - 2; num87 <= num67 + num78; num87++)
-                            {
-                                world.getTile()[num86, num87].active = false;
-                            }
-                        }
-                        for (int num88 = num66 - num77 - 1; num88 <= num66 + num77 + 1; num88++)
-                        {
-                            for (int num89 = num67 + num78 - 2; num89 <= num67 + num78 - 1; num89++)
-                            {
-                                world.getTile()[num88, num89].active = false;
-                            }
-                        }
-                        for (int num90 = num66 - num77 - 1; num90 <= num66 + num77 + 1; num90++)
-                        {
-                            int num91 = 4;
-                            int num92 = num67 + num78 + 2;
-                            while (!world.getTile()[num90, num92].active && num92 < maxTilesY && num91 > 0)
-                            {
-                                world.getTile()[num90, num92].active = true;
-                                world.getTile()[num90, num92].type = 59;
-                                num92++;
-                                num91--;
-                            }
-                        }
-                        num77 -= WorldGen.genRand.Next(1, 3);
-                        int num93 = num67 - num78 - 2;
-                        while (num77 > -1)
-                        {
-                            for (int num94 = num66 - num77 - 1; num94 <= num66 + num77 + 1; num94++)
-                            {
-                                world.getTile()[num94, num93].active = true;
-                                world.getTile()[num94, num93].type = 45;
-                            }
-                            num77 -= WorldGen.genRand.Next(1, 3);
-                            num93--;
-                        }
-                        WorldGen.JChestX[WorldGen.numJChests] = num66;
-                        WorldGen.JChestY[WorldGen.numJChests] = num67;
-                        WorldGen.numJChests++;
-                    }
-                }
-                num76++;
-            }
-            for (int num95 = 0; num95 < maxTilesX; num95++)
-            {
-                for (int num96 = (int)world.getWorldSurface(); num96 < maxTilesY; num96++)
-                {
-                    if (world.getTile()[num95, num96].active)
-                    {
-                        WorldGen.SpreadGrass(num95, num96, world, 59, 60, false);
-                    }
-                }
-            }
-            //Console.WriteLine("Adding mushroom patches...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Adding mushroom patches...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num97 = 0; num97 < maxTilesX / 300; num97++)
-            {
-                int i2 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.3), (int)((double)maxTilesX * 0.7));
-                int j2 = WorldGen.genRand.Next((int)world.getRockLayer(), maxTilesY - 300);
-                WorldGen.ShroomPatch(i2, j2, world);
-            }
-            for (int num98 = 0; num98 < maxTilesX; num98++)
-            {
-                for (int num99 = (int)world.getWorldSurface(); num99 < maxTilesY; num99++)
-                {
-                    if (world.getTile()[num98, num99].active)
-                    {
-                        WorldGen.SpreadGrass(num98, num99, world, 59, 70, false);
-                    }
-                }
-            }
-            //Console.WriteLine("Placing mud in the dirt...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Placing mud in the dirt...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num100 = 0; num100 < (int)((double)(maxTilesX * maxTilesY) * 0.001); num100++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(2, 40), 59, false, 0f, 0f, false, true);
-            }
-            //Console.WriteLine("Adding shinies...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Adding shinies...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num101 = 0; num101 < (int)((double)(maxTilesX * maxTilesY) * 6E-05); num101++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6), world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(2, 6), 7, false, 0f, 0f, false, true);
-            }
-            for (int num102 = 0; num102 < (int)((double)(maxTilesX * maxTilesY) * 8E-05); num102++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8), world, (double)WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(3, 7), 7, false, 0f, 0f, false, true);
-            }
-            for (int num103 = 0; num103 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num103++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 7, false, 0f, 0f, false, true);
-            }
-            for (int num104 = 0; num104 < (int)((double)(maxTilesX * maxTilesY) * 3E-05); num104++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6), world, (double)WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(2, 5), 6, false, 0f, 0f, false, true);
-            }
-            for (int num105 = 0; num105 < (int)((double)(maxTilesX * maxTilesY) * 8E-05); num105++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8), world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(3, 6), 6, false, 0f, 0f, false, true);
-            }
-            for (int num106 = 0; num106 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num106++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 6, false, 0f, 0f, false, true);
-            }
-            for (int num107 = 0; num107 < (int)((double)(maxTilesX * maxTilesY) * 3E-05); num107++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8), world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(3, 6), 9, false, 0f, 0f, false, true);
-            }
-            for (int num108 = 0; num108 < (int)((double)(maxTilesX * maxTilesY) * 0.00017); num108++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
-            }
-            for (int num109 = 0; num109 < (int)((double)(maxTilesX * maxTilesY) * 0.00017); num109++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
-            }
-            for (int num110 = 0; num110 < (int)((double)(maxTilesX * maxTilesY) * 0.00012); num110++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
-            }
-            for (int num111 = 0; num111 < (int)((double)(maxTilesX * maxTilesY) * 0.00012); num111++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5 - 20), world, (double)WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
-            }
-            //Console.WriteLine("Adding webs...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Adding webs...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num112 = 0; num112 < (int)((double)(maxTilesX * maxTilesY) * 0.001); num112++)
-            {
-                int num113 = WorldGen.genRand.Next(20, maxTilesX - 20);
-                int num114 = WorldGen.genRand.Next((int)num5, maxTilesY - 20);
-                if (num112 < WorldGen.numMCaves)
-                {
-                    num113 = WorldGen.mCaveX[num112];
-                    num114 = WorldGen.mCaveY[num112];
-                }
-                if (!world.getTile()[num113, num114].active)
-                {
-                    if ((double)num114 <= world.getWorldSurface())
-                    {
-                        if (world.getTile()[num113, num114].wall <= 0)
-                        {
-                            goto IL_2A58;
-                        }
-                    }
-                    while (!world.getTile()[num113, num114].active && num114 > (int)num5)
-                    {
-                        num114--;
-                    }
-                    num114++;
-                    int num115 = 1;
-                    if (WorldGen.genRand.Next(2) == 0)
-                    {
-                        num115 = -1;
-                    }
-                    while (!world.getTile()[num113, num114].active && num113 > 10 && num113 < maxTilesX - 10)
-                    {
-                        num113 += num115;
-                    }
-                    num113 -= num115;
-                    if ((double)num114 > world.getWorldSurface() || world.getTile()[num113, num114].wall > 0)
-                    {
-                        WorldGen.TileRunner(num113, num114, world, (double)WorldGen.genRand.Next(4, 13), WorldGen.genRand.Next(2, 5), 51, true, (float)num115, -1f, false, false);
-                    }
-                }
-            IL_2A58: ;
-            }
-            //Console.WriteLine("Creating underworld: 0%";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Creating underworld: 0%";
-            Console.Write(text);
-            preserve = text.Length;
-            int num116 = maxTilesY - WorldGen.genRand.Next(150, 190);
-            for (int num117 = 0; num117 < maxTilesX; num117++)
-            {
-                num116 += WorldGen.genRand.Next(-3, 4);
-                if (num116 < maxTilesY - 190)
-                {
-                    num116 = maxTilesY - 190;
-                }
-                if (num116 > maxTilesY - 160)
-                {
-                    num116 = maxTilesY - 160;
-                }
-                for (int num118 = num116 - 20 - WorldGen.genRand.Next(3); num118 < maxTilesY; num118++)
-                {
-                    if (num118 >= num116)
-                    {
-                        world.getTile()[num117, num118].active = false;
-                        world.getTile()[num117, num118].lava = false;
-                        world.getTile()[num117, num118].liquid = 0;
-                    }
-                    else
-                    {
-                        world.getTile()[num117, num118].type = 57;
-                    }
-                }
-            }
-            int num119 = maxTilesY - WorldGen.genRand.Next(40, 70);
-            for (int num120 = 10; num120 < maxTilesX - 10; num120++)
-            {
-                num119 += WorldGen.genRand.Next(-10, 11);
-                if (num119 > maxTilesY - 60)
-                {
-                    num119 = maxTilesY - 60;
-                }
-                if (num119 < maxTilesY - 100)
-                {
-                    num119 = maxTilesY - 120;
-                }
-                for (int num121 = num119; num121 < maxTilesY - 10; num121++)
-                {
-                    if (!world.getTile()[num120, num121].active)
-                    {
-                        world.getTile()[num120, num121].lava = true;
-                        world.getTile()[num120, num121].liquid = 255;
-                    }
-                }
-            }
-            for (int num122 = 0; num122 < maxTilesX; num122++)
-            {
-                if (WorldGen.genRand.Next(50) == 0)
-                {
-                    int num123 = maxTilesY - 65;
-                    while (!world.getTile()[num122, num123].active && num123 > maxTilesY - 135)
-                    {
-                        num123--;
-                    }
-                    WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), num123 + WorldGen.genRand.Next(20, 50), world, (double)WorldGen.genRand.Next(15, 20), 1000, 57, true, 0f, (float)WorldGen.genRand.Next(1, 3), true, true);
-                }
-            }
-            Liquid.QuickWater(world, -2, -1, -1);
-            for (int num124 = 0; num124 < maxTilesX; num124++)
-            {
-                float num125 = (float)num124 / (float)(maxTilesX - 1);
-                //Console.WriteLine("Creating underworld: " + (int)(num125 * 100f / 2f + 50f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Creating underworld: " + (int)(num125 * 100f / 2f + 50f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                if (WorldGen.genRand.Next(13) == 0)
-                {
-                    int num126 = maxTilesY - 65;
-                    while ((world.getTile()[num124, num126].liquid > 0 || world.getTile()[num124, num126].active) && num126 > maxTilesY - 140)
-                    {
-                        num126--;
-                    }
-                    WorldGen.TileRunner(num124, num126 - WorldGen.genRand.Next(2, 5), world, (double)WorldGen.genRand.Next(5, 30), 1000, 57, true, 0f, (float)WorldGen.genRand.Next(1, 3), true, true);
-                    float num127 = (float)WorldGen.genRand.Next(1, 3);
-                    if (WorldGen.genRand.Next(3) == 0)
-                    {
-                        num127 *= 0.5f;
-                    }
-                    if (WorldGen.genRand.Next(2) == 0)
-                    {
-                        WorldGen.TileRunner(num124, num126 - WorldGen.genRand.Next(2, 5), world, (double)((int)((float)WorldGen.genRand.Next(5, 15) * num127)), (int)((float)WorldGen.genRand.Next(10, 15) * num127), 57, true, 1f, 0.3f, false, true);
-                    }
-                    if (WorldGen.genRand.Next(2) == 0)
-                    {
-                        num127 = (float)WorldGen.genRand.Next(1, 3);
-                        WorldGen.TileRunner(num124, num126 - WorldGen.genRand.Next(2, 5), world, (double)((int)((float)WorldGen.genRand.Next(5, 15) * num127)), (int)((float)WorldGen.genRand.Next(10, 15) * num127), 57, true, -1f, 0.3f, false, true);
-                    }
-                    WorldGen.TileRunner(num124 + WorldGen.genRand.Next(-10, 10), num126 + WorldGen.genRand.Next(-10, 10), world, (double)WorldGen.genRand.Next(5, 15), WorldGen.genRand.Next(5, 10), -2, false, (float)WorldGen.genRand.Next(-1, 3), (float)WorldGen.genRand.Next(-1, 3), false, true);
-                    if (WorldGen.genRand.Next(3) == 0)
-                    {
-                        WorldGen.TileRunner(num124 + WorldGen.genRand.Next(-10, 10), num126 + WorldGen.genRand.Next(-10, 10), world, (double)WorldGen.genRand.Next(10, 30), WorldGen.genRand.Next(10, 20), -2, false, (float)WorldGen.genRand.Next(-1, 3), (float)WorldGen.genRand.Next(-1, 3), false, true);
-                    }
-                    if (WorldGen.genRand.Next(5) == 0)
-                    {
-                        WorldGen.TileRunner(num124 + WorldGen.genRand.Next(-15, 15), num126 + WorldGen.genRand.Next(-15, 10), world, (double)WorldGen.genRand.Next(15, 30), WorldGen.genRand.Next(5, 20), -2, false, (float)WorldGen.genRand.Next(-1, 3), (float)WorldGen.genRand.Next(-1, 3), false, true);
-                    }
-                }
-            }
-            for (int num128 = 0; num128 < maxTilesX; num128++)
-            {
-                if (!world.getTile()[num128, maxTilesY - 145].active)
-                {
-                    world.getTile()[num128, maxTilesY - 145].liquid = 255;
-                    world.getTile()[num128, maxTilesY - 145].lava = true;
-                }
-                if (!world.getTile()[num128, maxTilesY - 144].active)
-                {
-                    world.getTile()[num128, maxTilesY - 144].liquid = 255;
-                    world.getTile()[num128, maxTilesY - 144].lava = true;
-                }
-            }
-            for (int num129 = 0; num129 < (int)((double)(maxTilesX * maxTilesY) * 0.002); num129++)
-            {
-                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(maxTilesY - 140, maxTilesY), world, (double)WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(3, 8), 58, false, 0f, 0f, false, true);
-            }
-            WorldGen.AddHellHouses(world);
-            int num130 = WorldGen.genRand.Next(2, (int)((double)maxTilesX * 0.005));
-            for (int num131 = 0; num131 < num130; num131++)
-            {
-                float num132 = (float)num131 / (float)num130;
-                //Console.WriteLine("Adding water bodies: " + (int)(num132 * 100f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Adding water bodies: " + (int)(num132 * 100f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                int num133 = WorldGen.genRand.Next(300, maxTilesX - 300);
-                while (num133 > maxTilesX / 2 - 50 && num133 < maxTilesX / 2 + 50)
-                {
-                    num133 = WorldGen.genRand.Next(300, maxTilesX - 300);
-                }
-                int num134 = (int)num5 - 20;
-                while (!world.getTile()[num133, num134].active)
-                {
-                    num134++;
-                }
-                WorldGen.Lakinater(num133, num134, world);
-            }
-            int x = 0;
-            if (num9 == -1)
-            {
-                x = WorldGen.genRand.Next((int)((double)maxTilesX * 0.05), (int)((double)maxTilesX * 0.2));
-                num9 = -1;
-            }
-            else
-            {
-                x = WorldGen.genRand.Next((int)((double)maxTilesX * 0.8), (int)((double)maxTilesX * 0.95));
-                num9 = 1;
-            }
-            int y = (int)((world.getRockLayer() + (double)maxTilesY) / 2.0) + WorldGen.genRand.Next(-200, 200);
-            WorldGen.MakeDungeon(x, y, world, 41, 7);
-            int num135 = 0;
-            while ((double)num135 < (double)maxTilesX * 0.0004)
-            {
-                float num136 = (float)((double)num135 / ((double)maxTilesX * 0.0004));
-                //Console.WriteLine("Making the world evil: " + (int)(num136 * 100f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Making the world evil: " + (int)(num136 * 100f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                bool flag8 = false;
-                int num137 = 0;
-                int num138 = 0;
-                int num139 = 0;
-                while (!flag8)
-                {
-                    flag8 = true;
-                    int num140 = maxTilesX / 2;
-                    int num141 = 200;
-                    num137 = WorldGen.genRand.Next(maxTilesX);
-                    num138 = num137 - WorldGen.genRand.Next(150) - 175;
-                    num139 = num137 + WorldGen.genRand.Next(150) + 175;
-                    if (num138 < 0)
-                    {
-                        num138 = 0;
-                    }
-                    if (num139 > maxTilesX)
-                    {
-                        num139 = maxTilesX;
-                    }
-                    if (num137 > num140 - num141 && num137 < num140 + num141)
-                    {
-                        flag8 = false;
-                    }
-                    if (num138 > num140 - num141 && num138 < num140 + num141)
-                    {
-                        flag8 = false;
-                    }
-                    if (num139 > num140 - num141 && num139 < num140 + num141)
-                    {
-                        flag8 = false;
-                    }
-                    for (int num142 = num138; num142 < num139; num142++)
-                    {
-                        for (int num143 = 0; num143 < (int)world.getWorldSurface(); num143 += 5)
-                        {
-                            if (world.getTile()[num142, num143].active && Statics.tileDungeon[(int)world.getTile()[num142, num143].type])
-                            {
-                                flag8 = false;
-                                break;
-                            }
-                            if (!flag8)
-                            {
-                                break;
-                            }
-                        }
-                    }
-                }
-                int num144 = 0;
-                for (int num145 = num138; num145 < num139; num145++)
-                {
-                    if (num144 > 0)
-                    {
-                        num144--;
-                    }
-                    if (num145 == num137 || num144 == 0)
-                    {
-                        int num146 = (int)num5;
-                        while ((double)num146 < world.getWorldSurface() - 1.0)
-                        {
-                            if (world.getTile()[num145, num146].active || world.getTile()[num145, num146].wall > 0)
-                            {
-                                if (num145 == num137)
-                                {
-                                    num144 = 20;
-                                    WorldGen.ChasmRunner(num145, num146, WorldGen.genRand.Next(150) + 150, world, true);
-                                    break;
-                                }
-                                if (WorldGen.genRand.Next(30) == 0 && num144 == 0)
-                                {
-                                    num144 = 20;
-                                    bool makeOrb = false;
-                                    if (WorldGen.genRand.Next(2) == 0)
-                                    {
-                                        makeOrb = true;
-                                    }
-                                    WorldGen.ChasmRunner(num145, num146, WorldGen.genRand.Next(50) + 50, world, makeOrb);
-                                    break;
-                                }
-                                break;
-                            }
-                            else
-                            {
-                                num146++;
-                            }
-                        }
-                    }
-                }
-                double num147 = world.getWorldSurface() + 40.0;
-                for (int num148 = num138; num148 < num139; num148++)
-                {
-                    num147 += (double)WorldGen.genRand.Next(-2, 3);
-                    if (num147 < world.getWorldSurface() + 30.0)
-                    {
-                        num147 = world.getWorldSurface() + 30.0;
-                    }
-                    if (num147 > world.getWorldSurface() + 50.0)
-                    {
-                        num147 = world.getWorldSurface() + 50.0;
-                    }
-                    int num54 = num148;
-                    bool flag9 = false;
-                    int num149 = (int)num5;
-                    while ((double)num149 < num147)
-                    {
-                        if (world.getTile()[num54, num149].active)
-                        {
-                            if (world.getTile()[num54, num149].type == 0 && (double)num149 < world.getWorldSurface() - 1.0 && !flag9)
-                            {
-                                WorldGen.SpreadGrass(num54, num149, world, 0, 23, true);
-                            }
-                            flag9 = true;
-                            if (world.getTile()[num54, num149].type == 1 && num54 >= num138 + WorldGen.genRand.Next(5) && num54 <= num139 - WorldGen.genRand.Next(5))
-                            {
-                                world.getTile()[num54, num149].type = 25;
-                            }
-                            if (world.getTile()[num54, num149].type == 2)
-                            {
-                                world.getTile()[num54, num149].type = 23;
-                            }
-                        }
-                        num149++;
-                    }
-                }
-                for (int num150 = num138; num150 < num139; num150++)
-                {
-                    for (int num151 = 0; num151 < maxTilesY - 50; num151++)
-                    {
-                        if (world.getTile()[num150, num151].active && world.getTile()[num150, num151].type == 31)
-                        {
-                            int num152 = num150 - 13;
-                            int num153 = num150 + 13;
-                            int num154 = num151 - 13;
-                            int num155 = num151 + 13;
-                            for (int num156 = num152; num156 < num153; num156++)
-                            {
-                                if (num156 > 10 && num156 < maxTilesX - 10)
-                                {
-                                    for (int num157 = num154; num157 < num155; num157++)
-                                    {
-                                        if (Math.Abs(num156 - num150) + Math.Abs(num157 - num151) < 9 + WorldGen.genRand.Next(11) && WorldGen.genRand.Next(3) != 0 && world.getTile()[num156, num157].type != 31)
-                                        {
-                                            world.getTile()[num156, num157].active = true;
-                                            world.getTile()[num156, num157].type = 25;
-                                            if (Math.Abs(num156 - num150) <= 1 && Math.Abs(num157 - num151) <= 1)
-                                            {
-                                                world.getTile()[num156, num157].active = false;
-                                            }
-                                        }
-                                        if (world.getTile()[num156, num157].type != 31 && Math.Abs(num156 - num150) <= 2 + WorldGen.genRand.Next(3) && Math.Abs(num157 - num151) <= 2 + WorldGen.genRand.Next(3))
-                                        {
-                                            world.getTile()[num156, num157].active = false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                num135++;
-            }
-            //Console.WriteLine("Generating mountain caves...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Generating mountain caves...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num158 = 0; num158 < WorldGen.numMCaves; num158++)
-            {
-                int i3 = WorldGen.mCaveX[num158];
-                int j3 = WorldGen.mCaveY[num158];
-                WorldGen.CaveOpenater(i3, j3, world);
-                WorldGen.Cavinator(i3, j3, WorldGen.genRand.Next(40, 50), world);
-            }
-            //Console.WriteLine("Creating beaches...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Creating beaches...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num159 = 0; num159 < 2; num159++)
-            {
-                if (num159 == 0)
-                {
-                    int num160 = 0;
-                    int num161 = WorldGen.genRand.Next(125, 200);
-                    float num162 = 1f;
-                    int num163 = 0;
-                    while (!world.getTile()[num161 - 1, num163].active)
-                    {
-                        num163++;
-                    }
-                    for (int num164 = num161 - 1; num164 >= num160; num164--)
-                    {
-                        num162 += (float)WorldGen.genRand.Next(10, 20) * 0.05f;
-                        int num165 = 0;
-                        while ((float)num165 < (float)num163 + num162)
-                        {
-                            if ((float)num165 < (float)num163 + num162 * 0.75f - 3f)
-                            {
-                                world.getTile()[num164, num165].active = false;
-                                if (num165 > num163)
-                                {
-                                    world.getTile()[num164, num165].liquid = 255;
-                                }
-                                else
-                                {
-                                    if (num165 == num163)
-                                    {
-                                        world.getTile()[num164, num165].liquid = 127;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (num165 > num163)
-                                {
-                                    world.getTile()[num164, num165].type = 53;
-                                    world.getTile()[num164, num165].active = true;
-                                }
-                            }
-                            world.getTile()[num164, num165].wall = 0;
-                            num165++;
-                        }
-                    }
-                }
-                else
-                {
-                    int num160 = maxTilesX - WorldGen.genRand.Next(125, 200);
-                    int num161 = maxTilesX;
-                    float num166 = 1f;
-                    int num167 = 0;
-                    while (!world.getTile()[num160, num167].active)
-                    {
-                        num167++;
-                    }
-                    for (int num168 = num160; num168 < num161; num168++)
-                    {
-                        num166 += (float)WorldGen.genRand.Next(10, 20) * 0.05f;
-                        int num169 = 0;
-                        while ((float)num169 < (float)num167 + num166)
-                        {
-                            if ((float)num169 < (float)num167 + num166 * 0.75f - 3f)
-                            {
-                                world.getTile()[num168, num169].active = false;
-                                if (num169 > num167)
-                                {
-                                    world.getTile()[num168, num169].liquid = 255;
-                                }
-                                else
-                                {
-                                    if (num169 == num167)
-                                    {
-                                        world.getTile()[num168, num169].liquid = 127;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (num169 > num167)
-                                {
-                                    world.getTile()[num168, num169].type = 53;
-                                    world.getTile()[num168, num169].active = true;
-                                }
-                            }
-                            world.getTile()[num168, num169].wall = 0;
-                            num169++;
-                        }
-                    }
-                }
-            }
-            //Console.WriteLine("Adding gems...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Adding gems...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num170 = 63; num170 <= 68; num170++)
-            {
-                float num171 = 0f;
-                if (num170 == 67)
-                {
-                    num171 = (float)maxTilesX * 0.5f;
-                }
-                else
-                {
-                    if (num170 == 66)
-                    {
-                        num171 = (float)maxTilesX * 0.45f;
-                    }
-                    else
-                    {
-                        if (num170 == 63)
-                        {
-                            num171 = (float)maxTilesX * 0.3f;
-                        }
-                        else
-                        {
-                            if (num170 == 65)
-                            {
-                                num171 = (float)maxTilesX * 0.25f;
-                            }
-                            else
-                            {
-                                if (num170 == 64)
-                                {
-                                    num171 = (float)maxTilesX * 0.1f;
-                                }
-                                else
-                                {
-                                    if (num170 == 68)
-                                    {
-                                        num171 = (float)maxTilesX * 0.05f;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                num171 *= 0.2f;
-                int num172 = 0;
-                while ((float)num172 < num171)
-                {
-                    int num173 = WorldGen.genRand.Next(0, maxTilesX);
-                    int num174 = WorldGen.genRand.Next((int)world.getWorldSurface(), maxTilesY);
-                    while (world.getTile()[num173, num174].type != 1)
-                    {
-                        num173 = WorldGen.genRand.Next(0, maxTilesX);
-                        num174 = WorldGen.genRand.Next((int)world.getWorldSurface(), maxTilesY);
-                    }
-                    WorldGen.TileRunner(num173, num174, world, (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(3, 7), num170, false, 0f, 0f, false, true);
-                    num172++;
-                }
-            }
-            for (int num175 = 0; num175 < maxTilesX; num175++)
-            {
-                float num176 = (float)num175 / (float)(maxTilesX - 1);
-                //Console.WriteLine("Gravitating sand: " + (int)(num176 * 100f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Gravitating sand: " + (int)(num176 * 100f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                for (int num177 = maxTilesY - 5; num177 > 0; num177--)
-                {
-                    if (world.getTile()[num175, num177].active && world.getTile()[num175, num177].type == 53)
-                    {
-                        int num178 = num177;
-                        while (!world.getTile()[num175, num178 + 1].active && num178 < maxTilesY - 5)
-                        {
-                            world.getTile()[num175, num178 + 1].active = true;
-                            world.getTile()[num175, num178 + 1].type = 53;
-                            num178++;
-                        }
-                    }
-                }
-            }
-            for (int num179 = 3; num179 < maxTilesX - 3; num179++)
-            {
-                float num180 = (float)num179 / (float)maxTilesX;
-                //Console.WriteLine("Cleaning up dirt backgrounds: " + (int)(num180 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Cleaning up dirt backgrounds: " + (int)(num180 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                int num181 = 0;
-                while ((double)num181 < world.getWorldSurface())
-                {
-                    if (world.getTile()[num179, num181].wall == 2)
-                    {
-                        world.getTile()[num179, num181].wall = 0;
-                    }
-                    if (world.getTile()[num179, num181].type != 53)
-                    {
-                        if (world.getTile()[num179 - 1, num181].wall == 2)
-                        {
-                            world.getTile()[num179 - 1, num181].wall = 0;
-                        }
-                        if (world.getTile()[num179 - 2, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
-                        {
-                            world.getTile()[num179 - 2, num181].wall = 0;
-                        }
-                        if (world.getTile()[num179 - 3, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
-                        {
-                            world.getTile()[num179 - 3, num181].wall = 0;
-                        }
-                        if (world.getTile()[num179 + 1, num181].wall == 2)
-                        {
-                            world.getTile()[num179 + 1, num181].wall = 0;
-                        }
-                        if (world.getTile()[num179 + 2, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
-                        {
-                            world.getTile()[num179 + 2, num181].wall = 0;
-                        }
-                        if (world.getTile()[num179 + 3, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
-                        {
-                            world.getTile()[num179 + 3, num181].wall = 0;
-                        }
-                        if (world.getTile()[num179, num181].active)
-                        {
-                            break;
-                        }
-                    }
-                    num181++;
-                }
-            }
-            for (int num182 = 0; num182 < (int)((double)(maxTilesX * maxTilesY) * 2E-05); num182++)
-            {
-                float num183 = (float)((double)num182 / ((double)(maxTilesX * maxTilesY) * 2E-05));
-                //Console.WriteLine("Placing alters: " + (int)(num183 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Placing alters: " + (int)(num183 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                bool flag10 = false;
-                int num184 = 0;
-                while (!flag10)
-                {
-                    int num185 = WorldGen.genRand.Next(1, maxTilesX);
-                    int num186 = (int)(num6 + 20.0);
-                    WorldGen.Place3x2(num185, num186, 26, world);
-                    if (world.getTile()[num185, num186].type == 26)
-                    {
-                        flag10 = true;
-                    }
-                    else
-                    {
-                        num184++;
-                        if (num184 >= 10000)
-                        {
-                            flag10 = true;
-                        }
-                    }
-                }
-            }
-            Liquid.QuickWater(world, 3, -1, -1);
-            WorldGen.WaterCheck(world);
-            int num187 = 0;
-            Liquid.quickSettle = true;
-            while (num187 < 10)
-            {
-                int num188 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-                num187++;
-                float num189 = 0f;
-                while (Liquid.numLiquid > 0)
-                {
-                    float num190 = (float)(num188 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)num188;
-                    if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > num188)
-                    {
-                        num188 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-                    }
-                    if (num190 > num189)
-                    {
-                        num189 = num190;
-                    }
-                    else
-                    {
-                        num190 = num189;
-                    }
-                    if (num187 == 1)
-                    {
-                        //Console.WriteLine("Settling liquids: " + (int)(num190 * 100f / 3f + 33f) + "%";
-                        for (int i_ = 0; i_ < preserve; i_++)
-                        {
-                            Console.Write("\b");
-                        }
-                        text ="Settling liquids: " + (int)(num190 * 100f / 3f + 33f) + "%";
-                        Console.Write(text);
-                        preserve = text.Length;
-                    }
-                    int num191 = 10;
-                    if (num187 <= num191)
-                    {
-                        goto IL_41A9;
-                    }
-                IL_41A9:
-                    Liquid.UpdateLiquid(world);
-                }
-                WorldGen.WaterCheck(world);
-                //Console.WriteLine("Settling liquids: " + (int)((float)num187 * 10f / 3f + 66f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Settling liquids: " + (int)((float)num187 * 10f / 3f + 66f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-            }
-            Liquid.quickSettle = false;
-            for (int num192 = 0; num192 < (int)((double)(maxTilesX * maxTilesY) * 2.5E-05); num192++)
-            {
-                float num193 = (float)((double)num192 / ((double)(maxTilesX * maxTilesY) * 2.5E-05));
-                //Console.WriteLine("Placing life crystals: " + (int)(num193 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Placing life crystals: " + (int)(num193 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                bool flag11 = false;
-                int num194 = 0;
-                while (!flag11)
-                {
-                    if (WorldGen.AddLifeCrystal(WorldGen.genRand.Next(1, maxTilesX), WorldGen.genRand.Next((int)(num6 + 20.0), maxTilesY), world))
-                    {
-                        flag11 = true;
-                    }
-                    else
-                    {
-                        num194++;
-                        if (num194 >= 10000)
-                        {
-                            flag11 = true;
-                        }
-                    }
-                }
-            }
-            for (int num195 = 0; num195 < (int)((double)(maxTilesX * maxTilesY) * 1.8E-05); num195++)
-            {
-                float num196 = (float)((double)num195 / ((double)(maxTilesX * maxTilesY) * 1.8E-05));
-                //Console.WriteLine("Hiding treasure: " + (int)(num196 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Hiding treasure: " + (int)(num196 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                bool flag12 = false;
-                int num197 = 0;
-                while (!flag12)
-                {
-                    if (WorldGen.AddBuriedChest(WorldGen.genRand.Next(1, maxTilesX),
-                        WorldGen.genRand.Next((int)(num6 + 20.0), maxTilesY), world, 0))
-                    {
-                        flag12 = true;
-                    }
-                    else
-                    {
-                        num197++;
-                        if (num197 >= 10000)
-                        {
-                            flag12 = true;
-                        }
-                    }
-                }
-            }
-            int num198 = 0;
-            for (int num199 = 0; num199 < WorldGen.numJChests; num199++)
-            {
-                num198++;
-                int contain = 211;
-                if (num198 == 1)
-                {
-                    contain = 211;
-                }
-                else
-                {
-                    if (num198 == 2)
-                    {
-                        contain = 212;
-                    }
-                    else
-                    {
-                        if (num198 == 3)
-                        {
-                            contain = 213;
-                        }
-                    }
-                }
-                if (num198 > 3)
-                {
-                    num198 = 0;
-                }
-                if (!WorldGen.AddBuriedChest(WorldGen.JChestX[num199] + WorldGen.genRand.Next(2), WorldGen.JChestY[num199], world, contain))
-                {
-                    for (int num200 = WorldGen.JChestX[num199]; num200 <= WorldGen.JChestX[num199] + 1; num200++)
-                    {
-                        for (int num201 = WorldGen.JChestY[num199]; num201 <= WorldGen.JChestY[num199] + 1; num201++)
-                        {
-                            WorldGen.KillTile(num200, num201, world, false, false, false);
-                        }
-                    }
-                    WorldGen.AddBuriedChest(WorldGen.JChestX[num199], WorldGen.JChestY[num199], world, contain);
-                }
-            }
-            float num202 = (float)(maxTilesX / 4200);
-            int num203 = 0;
-            int num204 = 0;
-            while ((float)num204 < 10f * num202)
-            {
-                int contain2 = 0;
-                num203++;
-                if (num203 == 1)
-                {
-                    contain2 = 186;
-                }
-                else
-                {
-                    contain2 = 187;
-                    num203 = 0;
-                }
-                bool flag13 = false;
-                while (!flag13)
-                {
-                    int num205 = WorldGen.genRand.Next(1, maxTilesX);
-                    int num206 = WorldGen.genRand.Next(1, maxTilesY - 200);
-                    while (world.getTile()[num205, num206].liquid < 200 || world.getTile()[num205, num206].lava)
-                    {
-                        num205 = WorldGen.genRand.Next(1, maxTilesX);
-                        num206 = WorldGen.genRand.Next(1, maxTilesY - 200);
-                    }
-                    flag13 = WorldGen.AddBuriedChest(num205, num206, world, contain2);
-                }
-                num204++;
-            }
-            for (int num207 = 0; num207 < WorldGen.numIslandHouses; num207++)
-            {
-                WorldGen.IslandHouse(WorldGen.fihX[num207], WorldGen.fihY[num207], world);
-            }
-            for (int num208 = 0; num208 < (int)((double)(maxTilesX * maxTilesY) * 0.0008); num208++)
-            {
-                float num209 = (float)((double)num208 / ((double)(maxTilesX * maxTilesY) * 0.0008));
-                //Console.WriteLine("Placing breakables: " + (int)(num209 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Placing breakables: " + (int)(num209 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                bool flag14 = false;
-                int num210 = 0;
-                while (!flag14)
-                {
-                    int num211 = WorldGen.genRand.Next((int)num6, maxTilesY - 10);
-                    if ((double)num209 > 0.93)
-                    {
-                        num211 = maxTilesY - 150;
-                    }
-                    else
-                    {
-                        if ((double)num209 > 0.75)
-                        {
-                            num211 = (int)num5;
-                        }
-                    }
-                    int num212 = WorldGen.genRand.Next(1, maxTilesX);
-                    bool flag15 = false;
-                    for (int num213 = num211; num213 < maxTilesY; num213++)
-                    {
-                        if (!flag15)
-                        {
-                            if (world.getTile()[num212, num213].active && Statics.tileSolid[(int)world.getTile()[num212, num213].type] && !world.getTile()[num212, num213 - 1].lava)
-                            {
-                                flag15 = true;
-                            }
-                        }
-                        else
-                        {
-                            if (WorldGen.PlacePot(num212, num213, world, 28))
-                            {
-                                flag14 = true;
-                                break;
-                            }
-                            num210++;
-                            if (num210 >= 10000)
-                            {
-                                flag14 = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            for (int num214 = 0; num214 < (int)((double)(maxTilesX * maxTilesY) * 1E-05); num214++)
-            {
-                float num215 = (float)((double)num214 / ((double)(maxTilesX * maxTilesY) * 1E-05));
-                //Console.WriteLine("Placing hellforges: " + (int)(num215 * 100f + 1f) + "%";
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                text ="Placing hellforges: " + (int)(num215 * 100f + 1f) + "%";
-                Console.Write(text);
-                preserve = text.Length;
-                bool flag16 = false;
-                int num216 = 0;
-                while (!flag16)
-                {
-                    int num217 = WorldGen.genRand.Next(1, maxTilesX);
-                    int num218 = WorldGen.genRand.Next(maxTilesY - 250, maxTilesY - 5);
-                    try
-                    {
-                        if (world.getTile()[num217, num218].wall == 13)
-                        {
-                            while (!world.getTile()[num217, num218].active)
-                            {
-                                num218++;
-                            }
-                            num218--;
-                            WorldGen.PlaceTile(num217, num218, world, 77, false, false, -1);
-                            if (world.getTile()[num217, num218].type == 77)
-                            {
-                                flag16 = true;
-                            }
-                            else
-                            {
-                                num216++;
-                                if (num216 >= 10000)
-                                {
-                                    flag16 = true;
-                                }
-                            }
-                        }
-                    }
-                    catch
-                    {
-                    }
-                }
-            }
-            //Console.WriteLine("Spreading grass...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Spreading grass...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num219 = 0; num219 < maxTilesX; num219++)
-            {
-                int num54 = num219;
-                bool flag17 = true;
-                int num220 = 0;
-                while ((double)num220 < world.getWorldSurface() - 1.0)
-                {
-                    if (world.getTile()[num54, num220].active)
-                    {
-                        if (flag17 && world.getTile()[num54, num220].type == 0)
-                        {
-                            WorldGen.SpreadGrass(num54, num220, world, 0, 2, true);
-                        }
-                        if ((double)num220 > num6)
-                        {
-                            break;
-                        }
-                        flag17 = false;
-                    }
-                    else
-                    {
-                        if (world.getTile()[num54, num220].wall == 0)
-                        {
-                            flag17 = true;
-                        }
-                    }
-                    num220++;
-                }
-            }
-            int num221 = 5;
-            bool flag18 = true;
-            while (flag18)
-            {
-                int num222 = maxTilesX / 2 + WorldGen.genRand.Next(-num221, num221 + 1);
-                for (int num223 = 0; num223 < maxTilesY; num223++)
-                {
-                    if (world.getTile()[num222, num223].active)
-                    {
-                        Statics.spawnTileX = num222;
-                        Statics.spawnTileY = num223;
-                        world.getTile()[num222, num223 - 1].lighted = true;
-                        break;
-                    }
-                }
-                flag18 = false;
-                num221++;
-                if ((double)Statics.spawnTileY > world.getWorldSurface())
-                {
-                    flag18 = true;
-                }
-                if (world.getTile()[Statics.spawnTileX, Statics.spawnTileY - 1].liquid > 0)
-                {
-                    flag18 = true;
-                }
-            }
-            int num224 = 10;
-            while ((double)Statics.spawnTileY > world.getWorldSurface())
-            {
-                int num225 = WorldGen.genRand.Next(maxTilesX / 2 - num224, maxTilesX / 2 + num224);
-                for (int num226 = 0; num226 < maxTilesY; num226++)
-                {
-                    if (world.getTile()[num225, num226].active)
-                    {
-                        Statics.spawnTileX = num225;
-                        Statics.spawnTileY = num226;
-                        world.getTile()[num225, num226 - 1].lighted = true;
-                        break;
-                    }
-                }
-                num224++;
-            }
-            int num227 = NPC.NewNPC(Statics.spawnTileX * 16, Statics.spawnTileY * 16, world, 22, 0);
-            world.getNPCs()[num227].homeTileX = Statics.spawnTileX;
-            world.getNPCs()[num227].homeTileY = Statics.spawnTileY;
-            world.getNPCs()[num227].direction = 1;
-            world.getNPCs()[num227].homeless = true;
-            //Console.WriteLine("Planting sunflowers...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Planting sunflowers...";
-            Console.Write(text);
-            preserve = text.Length;
-            int num228 = 0;
-            while ((double)num228 < (double)maxTilesX * 0.002)
-            {
-                int num229 = 0;
-                int num230 = 0;
-                int arg_4AF8_0 = maxTilesX / 2;
-                int num231 = WorldGen.genRand.Next(maxTilesX);
-                num229 = num231 - WorldGen.genRand.Next(10) - 7;
-                num230 = num231 + WorldGen.genRand.Next(10) + 7;
-                if (num229 < 0)
-                {
-                    num229 = 0;
-                }
-                if (num230 > maxTilesX - 1)
-                {
-                    num230 = maxTilesX - 1;
-                }
-                for (int num232 = num229; num232 < num230; num232++)
-                {
-                    int num233 = 1;
-                    while ((double)num233 < world.getWorldSurface() - 1.0)
-                    {
-                        if (world.getTile()[num232, num233].type == 1 && world.getTile()[num232, num233].active)
-                        {
-                            world.getTile()[num232, num233].type = 2;
-                        }
-                        if (world.getTile()[num232 + 1, num233].type == 1 && world.getTile()[num232 + 1, num233].active)
-                        {
-                            world.getTile()[num232 + 1, num233].type = 2;
-                        }
-                        if (world.getTile()[num232, num233].type == 2 && world.getTile()[num232, num233].active && !world.getTile()[num232, num233 - 1].active)
-                        {
-                            WorldGen.PlaceTile(num232, num233 - 1, world, 27, true, false, -1);
-                        }
-                        if (world.getTile()[num232, num233].active)
-                        {
-                            break;
-                        }
-                        num233++;
-                    }
-                }
-                num228++;
-            }
-            //Console.WriteLine("Planting trees...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Planting trees...";
-            Console.Write(text);
-            preserve = text.Length;
-            int num234 = 0;
-            while ((double)num234 < (double)maxTilesX * 0.003)
-            {
-                int num235 = WorldGen.genRand.Next(50, maxTilesX - 50);
-                int num236 = WorldGen.genRand.Next(25, 50);
-                for (int num237 = num235 - num236; num237 < num235 + num236; num237++)
-                {
-                    int num238 = 20;
-                    while ((double)num238 < world.getWorldSurface())
-                    {
-                        if (world.getTile()[num237, num238].active)
-                        {
-                            if (world.getTile()[num237, num238].type == 1)
-                            {
-                                world.getTile()[num237, num238].type = 2;
-                            }
-                            if (world.getTile()[num237, num238 + 1].type == 1)
-                            {
-                                world.getTile()[num237, num238 + 1].type = 2;
-                                break;
-                            }
-                            break;
-                        }
-                        else
-                        {
-                            num238++;
-                        }
-                    }
-                }
-                for (int num239 = num235 - num236; num239 < num235 + num236; num239++)
-                {
-                    int num240 = 20;
-                    while ((double)num240 < world.getWorldSurface())
-                    {
-                        WorldGen.GrowEpicTree(num239, num240, world);
-                        num240++;
-                    }
-                }
-                num234++;
-            }
-            WorldGen.AddTrees(world);
-            //Console.WriteLine("Planting weeds...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Planting weeds...";
-            Console.Write(text);
-            preserve = text.Length;
-            WorldGen.AddPlants(world);
-            for (int num241 = 0; num241 < maxTilesX; num241++)
-            {
-                for (int num242 = (int)world.getWorldSurface(); num242 < maxTilesY; num242++)
-                {
-                    if (world.getTile()[num241, num242].active)
-                    {
-                        if (world.getTile()[num241, num242].type == 70 && !world.getTile()[num241, num242 - 1].active)
-                        {
-                            WorldGen.GrowShroom(num241, num242, world);
-                            if (!world.getTile()[num241, num242 - 1].active)
-                            {
-                                WorldGen.PlaceTile(num241, num242 - 1, world, 71, true, false, -1);
-                            }
-                        }
-                        if (world.getTile()[num241, num242].type == 60 && !world.getTile()[num241, num242 - 1].active)
-                        {
-                            WorldGen.PlaceTile(num241, num242 - 1, world, 61, true, false, -1);
-                        }
-                    }
-                }
-            }
-            //Console.WriteLine("Growing vines...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Growing vines...";
-            Console.Write(text);
-            preserve = text.Length;
-            for (int num243 = 0; num243 < maxTilesX; num243++)
-            {
-                int num244 = 0;
-                int num245 = 0;
-                while ((double)num245 < world.getWorldSurface())
-                {
-                    if (num244 > 0 && !world.getTile()[num243, num245].active)
-                    {
-                        world.getTile()[num243, num245].active = true;
-                        world.getTile()[num243, num245].type = 52;
-                        num244--;
-                    }
-                    else
-                    {
-                        num244 = 0;
-                    }
-                    if (world.getTile()[num243, num245].active && world.getTile()[num243, num245].type == 2 && WorldGen.genRand.Next(5) < 3)
-                    {
-                        num244 = WorldGen.genRand.Next(1, 10);
-                    }
-                    num245++;
-                }
-                num244 = 0;
-                for (int num246 = (int)world.getWorldSurface(); num246 < maxTilesY; num246++)
-                {
-                    if (num244 > 0 && !world.getTile()[num243, num246].active)
-                    {
-                        world.getTile()[num243, num246].active = true;
-                        world.getTile()[num243, num246].type = 62;
-                        num244--;
-                    }
-                    else
-                    {
-                        num244 = 0;
-                    }
-                    if (world.getTile()[num243, num246].active && world.getTile()[num243, num246].type == 60 && WorldGen.genRand.Next(5) < 3)
-                    {
-                        num244 = WorldGen.genRand.Next(1, 10);
-                    }
-                }
-            }
-            //Console.WriteLine("Planting flowers...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Planting flowers...";
-            Console.Write(text);
-            preserve = text.Length;
-            int num247 = 0;
-            while ((double)num247 < (double)maxTilesX * 0.005)
-            {
-                int num248 = WorldGen.genRand.Next(20, maxTilesX - 20);
-                int num249 = WorldGen.genRand.Next(5, 15);
-                int num250 = WorldGen.genRand.Next(15, 30);
-                int num251 = 1;
-                while ((double)num251 < world.getWorldSurface() - 1.0)
-                {
-                    if (world.getTile()[num248, num251].active)
-                    {
-                        for (int num252 = num248 - num249; num252 < num248 + num249; num252++)
-                        {
-                            for (int num253 = num251 - num250; num253 < num251 + num250; num253++)
-                            {
-                                if (world.getTile()[num252, num253].type == 3 || world.getTile()[num252, num253].type == 24)
-                                {
-                                    world.getTile()[num252, num253].frameX = (short)(WorldGen.genRand.Next(6, 8) * 18);
-                                }
-                            }
-                        }
-                        break;
-                    }
-                    num251++;
-                }
-                num247++;
-            }
-            //Console.WriteLine("Planting mushrooms...";
-            for (int i_ = 0; i_ < preserve; i_++)
-            {
-                Console.Write("\b");
-            }
-            text ="Planting mushrooms...";
-            Console.Write(text);
-            preserve = text.Length;
-            int num254 = 0;
-            while ((double)num254 < (double)maxTilesX * 0.002)
-            {
-                int num255 = WorldGen.genRand.Next(20, maxTilesX - 20);
-                int num256 = WorldGen.genRand.Next(4, 10);
-                int num257 = WorldGen.genRand.Next(15, 30);
-                int num258 = 1;
-                while ((double)num258 < world.getWorldSurface() - 1.0)
-                {
-                    if (world.getTile()[num255, num258].active)
-                    {
-                        for (int num259 = num255 - num256; num259 < num255 + num256; num259++)
-                        {
-                            for (int num260 = num258 - num257; num260 < num258 + num257; num260++)
-                            {
-                                if (world.getTile()[num259, num260].type == 3 || world.getTile()[num259, num260].type == 24)
-                                {
-                                    world.getTile()[num259, num260].frameX = 144;
-                                }
-                            }
-                        }
-                        break;
-                    }
-                    num258++;
-                }
-                num254++;
-            }
-            WorldGen.gen = false;
-            return world;
-        }
-        */
-
         public static World generateWorld(int MaxTilesX, int MaxTilesY, int seed = -1, World world = null)
         {
             if (world == null)
@@ -16700,8 +14095,8 @@ namespace Terraria_Server
             for (int i = 0; i < world.getMaxTilesX(); i++)
             {
                 float num11 = ((float)i) / ((float)world.getMaxTilesX());
-               // Console.WriteLine("Generating world terrain: " + ((int)((num11 * 100f) + 1f)) + "%";
-                Console.WriteLine("Generating world terrain: " + ((int)((num11 * 100f) + 1f)) + "%");
+                // Console.WriteLine("Generating world terrain: " + ((int)((num11 * 100f) + 1f)) + "%";
+                Program.printData("Generating world terrain: " + ((int)((num11 * 100f) + 1f)) + "%");
                 if (num < num2)
                 {
                     num2 = num;
@@ -16838,7 +14233,8 @@ namespace Terraria_Server
             waterLine += genRand.Next(-100, 20);
             lavaLine = waterLine + genRand.Next(50, 80);
             int num15 = 0;
-            Console.WriteLine("Adding sand...");
+            Console.WriteLine();
+            Program.printData("Adding sand...");
             int num16 = genRand.Next((int)(world.getMaxTilesX() * 0.0007), (int)(world.getMaxTilesX() * 0.002)) + 2;
             for (int j = 0; j < num16; j++)
             {
@@ -16925,7 +14321,8 @@ namespace Terraria_Server
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)world.getWorldSurface(), (int)world.getRockLayer()), world, (double)genRand.Next(15, 70), genRand.Next(20, 130), 0x35, false, 0f, 0f, false, true);
             }
             numMCaves = 0;
-            Console.WriteLine("Generating hills...");
+            Console.WriteLine(); 
+            Program.printData("Generating hills...");
             for (int m = 0; m < ((int)(world.getMaxTilesX() * 0.0008)); m++)
             {
                 int num29 = 0;
@@ -16969,10 +14366,11 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine();
             for (int n = 1; n < (world.getMaxTilesX() - 1); n++)
             {
                 float num34 = ((float)n) / ((float)world.getMaxTilesX());
-                Console.WriteLine("Puttin dirt behind dirt: " + ((int)((num34 * 100f) + 1f)) + "%");
+                Program.printData("Putting dirt behind dirt: " + ((int)((num34 * 100f) + 1f)) + "%");
                 bool flag3 = false;
                 num15 += genRand.Next(-1, 2);
                 if (num15 < 0)
@@ -17001,7 +14399,8 @@ namespace Terraria_Server
             }
             numIslandHouses = 0;
             houseCount = 0;
-            Console.WriteLine("Generating floating islands...");
+            Console.WriteLine();
+            Program.printData("Generating floating islands...");
             for (int num36 = 0; num36 < ((int)(world.getMaxTilesX() * 0.0008)); num36++)
             {
                 int num37 = 0;
@@ -17051,7 +14450,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Placing rocks in the dirt...");
+            Console.WriteLine();
+            Program.printData("Placing rocks in the dirt...");
             for (int num43 = 0; num43 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0002)); num43++)
             {
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(0, ((int)num2) + 1), world, (double)genRand.Next(4, 15), genRand.Next(5, 40), 1, false, 0f, 0f, false, true);
@@ -17064,12 +14464,14 @@ namespace Terraria_Server
             {
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, ((int)num6) + 1), world, (double)genRand.Next(2, 7), genRand.Next(2, 0x17), 1, false, 0f, 0f, false, true);
             }
-            Console.WriteLine("Placing dirt in the rocks...");
+            Console.WriteLine();
+            Program.printData("Placing dirt in the rocks...");
             for (int num46 = 0; num46 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.005)); num46++)
             {
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(2, 6), genRand.Next(2, 40), 0, false, 0f, 0f, false, true);
             }
-            Console.WriteLine("Adding clay...");
+            Console.WriteLine();
+            Program.printData("Adding clay...");
             for (int num47 = 0; num47 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 2E-05)); num47++)
             {
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(0, (int)num2), world, (double)genRand.Next(4, 14), genRand.Next(10, 50), 40, false, 0f, 0f, false, true);
@@ -17099,10 +14501,11 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine();
             for (int num53 = 0; num53 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0015)); num53++)
             {
                 float num54 = (float)(((double)num53) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0015));
-                Console.WriteLine("Making random holes: " + ((int)((num54 * 100f) + 1f)) + "%");
+                Program.printData("Making random holes: " + ((int)((num54 * 100f) + 1f)) + "%");
                 int type = -1;
                 if (genRand.Next(5) == 0)
                 {
@@ -17111,10 +14514,11 @@ namespace Terraria_Server
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, world.getMaxTilesY()), world, (double)genRand.Next(2, 5), genRand.Next(2, 20), type, false, 0f, 0f, false, true);
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, world.getMaxTilesY()), world, (double)genRand.Next(8, 15), genRand.Next(7, 30), type, false, 0f, 0f, false, true);
             }
+            Console.WriteLine();
             for (int num56 = 0; num56 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 3E-05)); num56++)
             {
                 float num57 = (float)(((double)num56) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 3E-05));
-                Console.WriteLine("Generating small caves: " + ((int)((num57 * 100f) + 1f)) + "%");
+                Program.printData("Generating small caves: " + ((int)((num57 * 100f) + 1f)) + "%");
                 if (num6 <= world.getMaxTilesY())
                 {
                     int num58 = -1;
@@ -17125,10 +14529,11 @@ namespace Terraria_Server
                     TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num2, ((int)num6) + 1), world, (double)genRand.Next(5, 15), genRand.Next(30, 200), num58, false, 0f, 0f, false, true);
                 }
             }
+            Console.WriteLine();
             for (int num59 = 0; num59 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00015)); num59++)
             {
                 float num60 = (float)(((double)num59) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00015));
-                Console.WriteLine("Generating large caves: " + ((int)((num60 * 100f) + 1f)) + "%");
+                Program.printData("Generating large caves: " + ((int)((num60 * 100f) + 1f)) + "%");
                 if (num6 <= world.getMaxTilesY())
                 {
                     int num61 = -1;
@@ -17140,7 +14545,8 @@ namespace Terraria_Server
                 }
             }
             int num62 = 0;
-            Console.WriteLine("Generating surface caves...");
+            Console.WriteLine();
+            Program.printData("Generating surface caves...");
             for (int num63 = 0; num63 < ((int)(world.getMaxTilesX() * 0.0025)); num63++)
             {
                 num62 = genRand.Next(0, world.getMaxTilesX());
@@ -17216,7 +14622,8 @@ namespace Terraria_Server
                     world.getTile()[num71, num72].type = 2;
                 }
             }
-            Console.WriteLine("Generating underground jungle: 0%");
+            Console.WriteLine();
+            Program.printData("Generating underground jungle: 0%");
             float num74 = world.getMaxTilesX() / 0x1068;
             num74 *= 1.5f;
             int num75 = 0;
@@ -17232,29 +14639,29 @@ namespace Terraria_Server
             num75 += genRand.Next((int)(-100f * num74), (int)(101f * num74));
             num76 += genRand.Next((int)(-100f * num74), (int)(101f * num74));
             TileRunner(num75, num76, world, (double)genRand.Next((int)(250f * num74), (int)(500f * num74)), genRand.Next(50, 150), 0x3b, false, (float)(num9 * 3), 0f, false, true);
-            Console.WriteLine("Generating underground jungle: 20%");
+            Program.printData("Generating underground jungle: 20%");
             num75 += genRand.Next((int)(-250f * num74), (int)(251f * num74));
             num76 += genRand.Next((int)(-150f * num74), (int)(151f * num74));
             int num77 = num75;
             int num78 = num76;
             TileRunner(num75, num76, world, (double)genRand.Next((int)(250f * num74), (int)(500f * num74)), genRand.Next(50, 150), 0x3b, false, 0f, 0f, false, true);
-            Console.WriteLine("Generating underground jungle: 40%");
+            Program.printData("Generating underground jungle: 40%");
             num75 += genRand.Next((int)(-400f * num74), (int)(401f * num74));
             num76 += genRand.Next((int)(-150f * num74), (int)(151f * num74));
             TileRunner(num75, num76, world, (double)genRand.Next((int)(250f * num74), (int)(500f * num74)), genRand.Next(50, 150), 0x3b, false, (float)(num9 * -3), 0f, false, true);
-            Console.WriteLine("Generating underground jungle: 60%");
+            Program.printData("Generating underground jungle: 60%");
             num75 = num77;
             num76 = num78;
             for (int num79 = 0; num79 <= (20f * num74); num79++)
             {
-                Console.WriteLine("Generating underground jungle: " + ((int)(60f + (((float)num79) / num74))) + "%");
+                Program.printData("Generating underground jungle: " + ((int)(60f + (((float)num79) / num74))) + "%");
                 num75 += genRand.Next((int)(-5f * num74), (int)(6f * num74));
                 num76 += genRand.Next((int)(-5f * num74), (int)(6f * num74));
                 TileRunner(num75, num76, world, (double)genRand.Next(40, 100), genRand.Next(300, 500), 0x3b, false, 0f, 0f, false, true);
             }
             for (int num80 = 0; num80 <= (10f * num74); num80++)
             {
-                Console.WriteLine("Generating underground jungle: " + ((int)(80f + ((((float)num80) / num74) * 2f))) + "%");
+                Program.printData("Generating underground jungle: " + ((int)(80f + ((((float)num80) / num74) * 2f))) + "%");
                 num75 = num77 + genRand.Next((int)(-600f * num74), (int)(600f * num74));
                 num76 = num78 + genRand.Next((int)(-200f * num74), (int)(200f * num74));
                 while ((((num75 < 1) || (num75 >= (world.getMaxTilesX() - 1))) || ((num76 < 1) || (num76 >= (world.getMaxTilesY() - 1)))) || (world.getTile()[num75, num76].type != 0x3b))
@@ -17390,7 +14797,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Adding mushroom patches...");
+            Console.WriteLine();
+            Program.printData("Adding mushroom patches...");
             for (int num108 = 0; num108 < (world.getMaxTilesX() / 300); num108++)
             {
                 int num109 = genRand.Next((int)(world.getMaxTilesX() * 0.3), (int)(world.getMaxTilesX() * 0.7));
@@ -17407,12 +14815,14 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Placing mud in the dirt...");
+            Console.WriteLine();
+            Program.printData("Placing mud in the dirt...");
             for (int num113 = 0; num113 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.001)); num113++)
             {
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(2, 6), genRand.Next(2, 40), 0x3b, false, 0f, 0f, false, true);
             }
-            Console.WriteLine("Adding shinies...");
+            Console.WriteLine();
+            Program.printData("Adding shinies...");
             for (int num114 = 0; num114 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 6E-05)); num114++)
             {
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num2, (int)num3), world, (double)genRand.Next(3, 6), genRand.Next(2, 6), 7, false, 0f, 0f, false, true);
@@ -17457,7 +14867,8 @@ namespace Terraria_Server
             {
                 TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(0, ((int)num2) - 20), world, (double)genRand.Next(4, 8), genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
             }
-            Console.WriteLine("Adding webs...");
+            Console.WriteLine();
+            Program.printData("Adding webs...");
             for (int num125 = 0; num125 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.001)); num125++)
             {
                 int num126 = genRand.Next(20, world.getMaxTilesX() - 20);
@@ -17490,7 +14901,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Creating underworld: 0%");
+            Console.WriteLine();
+            Program.printData("Creating underworld: 0%");
             int num129 = world.getMaxTilesY() - genRand.Next(150, 190);
             for (int num130 = 0; num130 < world.getMaxTilesX(); num130++)
             {
@@ -17554,7 +14966,7 @@ namespace Terraria_Server
             for (int num137 = 0; num137 < world.getMaxTilesX(); num137++)
             {
                 float num138 = ((float)num137) / ((float)(world.getMaxTilesX() - 1));
-                Console.WriteLine("Creating underworld: " + ((int)(((num138 * 100f) / 2f) + 50f)) + "%");
+                Program.printData("Creating underworld: " + ((int)(((num138 * 100f) / 2f) + 50f)) + "%");
                 if (genRand.Next(13) == 0)
                 {
                     int num139 = world.getMaxTilesY() - 0x41;
@@ -17607,10 +15019,11 @@ namespace Terraria_Server
             }
             AddHellHouses(world);
             int num143 = genRand.Next(2, (int)(world.getMaxTilesX() * 0.005));
+            Console.WriteLine();
             for (int num144 = 0; num144 < num143; num144++)
             {
                 float num145 = ((float)num144) / ((float)num143);
-                Console.WriteLine("Adding water bodies: " + ((int)(num145 * 100f)) + "%");
+                Program.printData("Adding water bodies: " + ((int)(num145 * 100f)) + "%");
                 int num146 = genRand.Next(300, world.getMaxTilesX() - 300);
                 while ((num146 > ((world.getMaxTilesX() / 2) - 50)) && (num146 < ((world.getMaxTilesX() / 2) + 50)))
                 {
@@ -17635,11 +15048,14 @@ namespace Terraria_Server
                 num9 = 1;
             }
             int y = ((int)((world.getRockLayer() + world.getMaxTilesY()) / 2.0)) + genRand.Next(-200, 200);
+            Console.WriteLine();
             MakeDungeon(x, y, world, 0x29, 7);
+
+            Console.WriteLine();
             for (int num150 = 0; num150 < (world.getMaxTilesX() * 0.0004); num150++)
             {
                 float num151 = (float)(((double)num150) / (world.getMaxTilesX() * 0.0004));
-                Console.WriteLine("Making the world evil: " + ((int)(num151 * 100f)) + "%");
+                Program.printData("Making the world evil: " + ((int)(num151 * 100f)) + "%");
                 bool flag8 = false;
                 int num152 = 0;
                 int num153 = 0;
@@ -17791,7 +15207,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Generating mountain caves...");
+            Console.WriteLine();
+            Program.printData("Generating mountain caves...");
             for (int num173 = 0; num173 < numMCaves; num173++)
             {
                 int num174 = mCaveX[num173];
@@ -17799,7 +15216,8 @@ namespace Terraria_Server
                 CaveOpenater(num174, num175, world);
                 Cavinator(num174, num175, genRand.Next(40, 50), world);
             }
-            Console.WriteLine("Creating beaches...");
+            Console.WriteLine();
+            Program.printData("Creating beaches...");
             for (int num176 = 0; num176 < 2; num176++)
             {
                 int num177 = 0;
@@ -17877,7 +15295,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Adding gems...");
+            Console.WriteLine();
+            Program.printData("Adding gems...");
             for (int num187 = 0x3f; num187 <= 0x44; num187++)
             {
                 float num188 = 0f;
@@ -17920,10 +15339,11 @@ namespace Terraria_Server
                     TileRunner(num190, num191, world, (double)genRand.Next(2, 6), genRand.Next(3, 7), num187, false, 0f, 0f, false, true);
                 }
             }
+            Console.WriteLine();
             for (int num192 = 0; num192 < world.getMaxTilesX(); num192++)
             {
                 float num193 = ((float)num192) / ((float)(world.getMaxTilesX() - 1));
-                Console.WriteLine("Gravitating sand: " + ((int)(num193 * 100f)) + "%");
+                Program.printData("Gravitating sand: " + ((int)(num193 * 100f)) + "%");
                 for (int num194 = world.getMaxTilesY() - 5; num194 > 0; num194--)
                 {
                     if (world.getTile()[num192, num194].active && (world.getTile()[num192, num194].type == 0x35))
@@ -17936,10 +15356,11 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine();
             for (int num196 = 3; num196 < (world.getMaxTilesX() - 3); num196++)
             {
                 float num197 = ((float)num196) / ((float)world.getMaxTilesX());
-                Console.WriteLine("Cleaning up dirt backgrounds: " + ((int)((num197 * 100f) + 1f)) + "%");
+                Program.printData("Cleaning up dirt backgrounds: " + ((int)((num197 * 100f) + 1f)) + "%");
                 for (int num198 = 0; num198 < world.getWorldSurface(); num198++)
                 {
                     if (world.getTile()[num196, num198].wall == 2)
@@ -17979,10 +15400,11 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine();
             for (int num199 = 0; num199 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 2E-05)); num199++)
             {
                 float num200 = (float)(((double)num199) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 2E-05));
-                Console.WriteLine("Placing alters: " + ((int)((num200 * 100f) + 1f)) + "%");
+                Program.printData("Placing alters: " + ((int)((num200 * 100f) + 1f)) + "%");
                 bool flag11 = false;
                 int num201 = 0;
                 while (!flag11)
@@ -18008,6 +15430,7 @@ namespace Terraria_Server
             WaterCheck(world);
             int num204 = 0;
             Liquid.quickSettle = true;
+            //Console.WriteLine();
             while (num204 < 10)
             {
                 int num205 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
@@ -18030,7 +15453,7 @@ namespace Terraria_Server
                     }
                     if (num204 == 1)
                     {
-                        Console.WriteLine("Settling liquids: " + ((int)(((num207 * 100f) / 3f) + 33f)) + "%");
+                        Program.printData("Settling liquids: " + ((int)(((num207 * 100f) / 3f) + 33f)) + "%");
                     }
                     int num208 = 10;
                     if (num204 > num208)
@@ -18040,13 +15463,14 @@ namespace Terraria_Server
                     Liquid.UpdateLiquid(world);
                 }
                 WaterCheck(world);
-                Console.WriteLine("Settling liquids: " + ((int)(((num204 * 10f) / 3f) + 66f)) + "%");
+                Program.printData("Settling liquids: " + ((int)(((num204 * 10f) / 3f) + 66f)) + "%");
             }
             Liquid.quickSettle = false;
+            Console.WriteLine();
             for (int num209 = 0; num209 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 2.5E-05)); num209++)
             {
                 float num210 = (float)(((double)num209) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 2.5E-05));
-                Console.WriteLine("Placing life crystals: " + ((int)((num210 * 100f) + 1f)) + "%");
+                Program.printData("Placing life crystals: " + ((int)((num210 * 100f) + 1f)) + "%");
                 bool flag12 = false;
                 int num211 = 0;
                 while (!flag12)
@@ -18065,10 +15489,11 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine();
             for (int num212 = 0; num212 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 1.8E-05)); num212++)
             {
                 float num213 = (float)(((double)num212) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 1.8E-05));
-                Console.WriteLine("Hiding treasure: " + ((int)((num213 * 100f) + 1f)) + "%");
+                Program.printData("Hiding treasure: " + ((int)((num213 * 100f) + 1f)) + "%");
                 bool flag13 = false;
                 int num214 = 0;
                 while (!flag13)
@@ -18152,10 +15577,11 @@ namespace Terraria_Server
             {
                 IslandHouse(fihX[num226], fihY[num226], world);
             }
+            Console.WriteLine();
             for (int num227 = 0; num227 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0008)); num227++)
             {
                 float num228 = (float)(((double)num227) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0008));
-                Console.WriteLine("Placing breakables: " + ((int)((num228 * 100f) + 1f)) + "%");
+                Program.printData("Placing breakables: " + ((int)((num228 * 100f) + 1f)) + "%");
                 bool flag15 = false;
                 int num229 = 0;
             Label_46C1:
@@ -18199,10 +15625,11 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine();
             for (int num233 = 0; num233 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 1E-05)); num233++)
             {
                 float num234 = (float)(((double)num233) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 1E-05));
-                Console.WriteLine("Placing hellforges: " + ((int)((num234 * 100f) + 1f)) + "%");
+                Program.printData("Placing hellforges: " + ((int)((num234 * 100f) + 1f)) + "%");
                 bool flag17 = false;
                 int num235 = 0;
                 while (!flag17)
@@ -18232,7 +15659,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Spreading grass...");
+            Console.WriteLine();
+            Program.printData("Spreading grass...");
             for (int num238 = 0; num238 < world.getMaxTilesX(); num238++)
             {
                 num62 = num238;
@@ -18302,7 +15730,8 @@ namespace Terraria_Server
             world.getNPCs()[index].homeTileY = Statics.spawnTileY;
             world.getNPCs()[index].direction = 1;
             world.getNPCs()[index].homeless = true;
-            Console.WriteLine("Planting sunflowers...");
+            Console.WriteLine();
+            Program.printData("Planting sunflowers...");
             for (int num247 = 0; num247 < (world.getMaxTilesX() * 0.002); num247++)
             {
                 int num248 = 0;
@@ -18343,7 +15772,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Planting trees...");
+            Console.WriteLine();
+            Program.printData("Planting trees...");
             for (int num253 = 0; num253 < (world.getMaxTilesX() * 0.003); num253++)
             {
                 int num254 = genRand.Next(50, world.getMaxTilesX() - 50);
@@ -18375,7 +15805,8 @@ namespace Terraria_Server
                 }
             }
             AddTrees(world);
-            Console.WriteLine("Planting weeds...");
+            Console.WriteLine();
+            Program.printData("Planting weeds...");
             AddPlants(world);
             for (int num260 = 0; num260 < world.getMaxTilesX(); num260++)
             {
@@ -18398,7 +15829,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Growing vines...");
+            Console.WriteLine();
+            Program.printData("Growing vines...");
             for (int num262 = 0; num262 < world.getMaxTilesX(); num262++)
             {
                 int num263 = 0;
@@ -18438,7 +15870,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Planting flowers...");
+            Console.WriteLine();
+            Program.printData("Planting flowers...");
             for (int num266 = 0; num266 < (world.getMaxTilesX() * 0.005); num266++)
             {
                 int num267 = genRand.Next(20, world.getMaxTilesX() - 20);
@@ -18462,7 +15895,8 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine("Planting mushrooms...");
+            Console.WriteLine();
+            Program.printData("Planting mushrooms...");
             for (int num273 = 0; num273 < (world.getMaxTilesX() * 0.002); num273++)
             {
                 int num274 = genRand.Next(20, world.getMaxTilesX() - 20);

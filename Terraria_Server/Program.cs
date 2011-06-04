@@ -5,23 +5,22 @@ namespace Terraria_Server
     using System;
     using System.Threading;
     using System.IO;
+    using Terraria_Server.Commands;
 
-    internal static class Program
+    internal class Program
     {
 
         public static Thread updateThread = null;
+        public static Properties properties = null;
+        public static CommandParser commandParser = null;
 
-
-        void setupPaths()
+        static void setupPaths()
         {
-            FileInfo file = new FileInfo(Statics.WorldPath);
-
-            if (!file.Exists)
+            if (!System.IO.Directory.Exists(Statics.getWorldPath))
             {
                 try
                 {
-                    file.Directory.Create();
-
+                    System.IO.Directory.CreateDirectory(Statics.getWorldPath);
                 }
                 catch (Exception exception)
                 {
@@ -31,13 +30,25 @@ namespace Terraria_Server
                     return;
                 }
             }
-            file = new FileInfo(Statics.PlayerPath);
-            if (!file.Exists)
+            if (!System.IO.Directory.Exists(Statics.getPlayerPath))
             {
                 try
                 {
-                    file.Directory.Create();
-
+                    System.IO.Directory.CreateDirectory(Statics.getPlayerPath);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.ToString());
+                    Console.WriteLine("Press any key to continue . . . ");
+                    Console.ReadKey(true);
+                    return;
+                }
+            }
+            if (!System.IO.Directory.Exists(Statics.getPluginPath))
+            {
+                try
+                {
+                    System.IO.Directory.CreateDirectory(Statics.getPluginPath);
                 }
                 catch (Exception exception)
                 {
@@ -49,15 +60,47 @@ namespace Terraria_Server
             }
         }
 
+        static void setupProperties()
+        {
+            properties = new Properties("server.properties");
+            properties.Load();
+            properties.pushData();
+            properties.Save();
+        }
+
+        static int preserve = 0;
+        public static void printData(string dataText)
+        {
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            Console.Write(dataText);
+            preserve = dataText.Length;
+        }
+
         static void Main(string[] args)
         {
+
+            if(Statics.isLinux)
+            {
+                Console.WriteLine("Detected Linux OS.");
+                Statics.systemSeperator = "/";
+            } //if mac...erm i've never used it, Goolge later?
+
+            Console.WriteLine("Setting up Paths.");
+            setupPaths();
+            Console.WriteLine("Setting up Properties.");
+            setupProperties();
+
+
             //[port] [pass] [player cap] [seed]
             //config for world [name] [size] (and/or above)
 
             //Generate World
             //try
             //{
-            string worldFile = Statics.WorldPath + "\\World1.wld";
+            string worldFile = properties.getInitialWorldPath(); //Statics.WorldPath + "World1.wld";
             FileInfo file = new FileInfo(worldFile);
 
             if (!file.Exists)
@@ -83,32 +126,32 @@ namespace Terraria_Server
                 wor2.setSavePath(worldFile);
                 WorldGen.saveWorld(wor2, true);
             }
+            
+            Console.WriteLine("Preparing Server Data...");
+            World world = new World(8400, 2400);
+            Server server = new Server(40, world);
+            
+            server.Initialize();
+            server.setWorld(WorldGen.loadWorld(worldFile, server));
+            server.StartServer();
+            
+            updateThread = new Thread(Program.Updater);
+            
+            Statics.IsActive = true;
+            while (!Statics.serverStarted) { }
 
-                Console.WriteLine("Preparing...");
-                World world = new World(8400, 2400);
-                Server server = new Server(40, world);
-                server.Initialize();
-
-                server.setWorld(WorldGen.loadWorld(worldFile, server));
-
-                server.StartServer();
-
-                //server.Update();
-                updateThread = new Thread(Program.Updater);
-
-                Statics.IsActive = true;
-                while (!Statics.serverStarted) { }
-
-                Console.WriteLine("You can now insert Commands.");
-                while (Statics.IsActive)
+            commandParser = new CommandParser(server);
+            Console.WriteLine("You can now insert Commands.");
+            while (Statics.IsActive)
+            {
+                string line = Console.ReadLine().Trim().ToLower();
+                if (line.Length > 0)
                 {
-                    string line = Console.ReadLine().Trim().ToLower();
-                    if (line.Equals("stop") || line.Equals("exit"))
-                    {
-                        break;
-                    }
-                    Console.WriteLine(line);
+                    commandParser.parseConsoleCommand(line, server);
                 }
+
+            }
+            while (Statics.serverStarted) { }
             Console.WriteLine("Press any key to continue . . . ");
             Console.ReadKey(true);
         }
@@ -128,7 +171,7 @@ namespace Terraria_Server
 
             TimeSpan timeSpan = TimeSpan.FromMilliseconds(16.666666666666668);
             DateTime d = DateTime.Now;
-            while (true)
+            while (Statics.IsActive)
             {
                 DateTime now = DateTime.Now;
                 TimeSpan timeSpan2 = DateTime.Now - d;
@@ -142,6 +185,7 @@ namespace Terraria_Server
                     Thread.Sleep(timeSpan - timeSpan2);
                 }
             }
+            Console.WriteLine("Exited updater thread!");
         }
     }
 }

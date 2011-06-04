@@ -1457,7 +1457,19 @@ namespace Terraria_Server
         
         public static void greetPlayer(int plr, World world)
         {
-            NetMessage.SendData(25, world, plr, -1, "Welcome to " + world.getName() + "!", 255, 255f, 240f, 20f);
+            string[] motd = Program.properties.getGreeting().Split('@');
+            for (int i = 0; i < motd.Length; i++)
+            {
+                if (motd != null && motd.Length > 0)
+                {
+                    if (motd[i] != null && motd[i].Trim().Length > 0)
+                    {
+                        NetMessage.SendData(25, world, plr, -1, motd[i], 255, 255f, 240f, 20f);
+                    }
+                }
+            }
+
+            //NetMessage.SendData(25, world, plr, -1, "Welcome to " + world.getName() + "!", 255, 255f, 240f, 20f);
             string text = "";
             for (int i = 0; i < 255; i++)
             {

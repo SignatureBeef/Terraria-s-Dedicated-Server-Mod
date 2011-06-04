@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using Terraria_Server.Commands;
 
 namespace Terraria_Server
 {
-    public class Player
+    public class Player : Sender
     {
 		private int tileTargetX;
 		private int tileTargetY;
@@ -5050,10 +5051,10 @@ namespace Terraria_Server
 
         public static void SavePlayer(Player newPlayer)
         {
-            string playerPath = Statics.PlayerPath + "\\" + newPlayer.name;
+            string playerPath = Statics.getPlayerPath + "\\" + newPlayer.name;
             try
             {
-                Directory.CreateDirectory(Statics.PlayerPath);
+                Directory.CreateDirectory(Statics.getPlayerPath);
             }
             catch
             {
@@ -5254,12 +5255,13 @@ namespace Terraria_Server
         }
        
         public string getPlayerSavePath() {
-            return Statics.PlayerPath + "\\" + name;
+            return Statics.getPlayerPath + "\\" + name;
         }
 
         public Player(World World)
         {
             world = World;
+            setServer(world.getServer());
             for (int i = 0; i < 44; i++)
             {
                 if (i < 8)

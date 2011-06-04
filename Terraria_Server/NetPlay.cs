@@ -266,7 +266,7 @@ namespace Terraria_Server
             world.getServer().getNetPlay().serverIP = IPAddress.Any;
             world.getServer().getNetPlay().serverListenIP = world.getServer().getNetPlay().serverIP;
             //Main.menuMode = 14;
-            Console.WriteLine("Starting server...");
+            Console.WriteLine("Starting server on " + serverListenIP + ":" + serverPort.ToString());
             Statics.netMode = 2;
             world.getServer().getNetPlay().disconnect = false;
             for (int i = 0; i < 256; i++)
@@ -294,7 +294,8 @@ namespace Terraria_Server
             if (!world.getServer().getNetPlay().disconnect)
             {
                 ThreadPool.QueueUserWorkItem(new WaitCallback(world.getServer().getNetPlay().ListenForClients), 1);
-                Console.WriteLine("Server started");
+                Console.WriteLine("Server started\nLoading Plugins.");
+                world.getServer().getPluginManager().ReloadPlugins();
             }
             while (!world.getServer().getNetPlay().disconnect)
             {
@@ -487,6 +488,7 @@ namespace Terraria_Server
                 while (Statics.saveLock)
                 {
                 }
+                Statics.serverStarted = false;
             //    Main.menuMode = 0;
             //}
             //else
@@ -785,29 +787,29 @@ namespace Terraria_Server
             ThreadPool.QueueUserWorkItem(new WaitCallback(world.getServer().getNetPlay().ServerLoop), 1);
         }
 
-        public Player GetPlayerByName(string name)
+        public void StopServer()
         {
-            Player player = null;
-            int num = 0;
-            Player[] player2 = world.getPlayerList();
-            Player result;
-            for (int i = 0; i < player2.Length; i++)
+            Statics.IsActive = false;
+            Console.WriteLine("Disabling Plugins");
+            world.getServer().getPluginManager().DisablePlugins();
+            Console.WriteLine("Closing Connections...");
+            this.disconnect = true;
+            /*for (int i = 0; i < this.serverSock.Length; i++)
             {
-                Player player3 = player2[i];
-                if (player3.name.ToLower() == name.ToLower())
+                if (serverSock[i] != null)
                 {
-                    result = player3;
-                    return result;
-                }
-                if (player3.name.CompareTo(name) > num && player3.name.IndexOf(name) > -1)
-                {
-                    num = player3.name.CompareTo(name);
-                    player = player3;
+                    serverSock[i].Reset();
                 }
             }
-            result = player;
-            return result;
+            this.tcpListener.Stop();
+            Statics.saveLock = false;
+            Console.WriteLine("Saving World...");
+            WorldGen.saveWorld(world, false);
+            while (Statics.saveLock)
+            {
+            }*/
         }
+  
     }
 
 }
