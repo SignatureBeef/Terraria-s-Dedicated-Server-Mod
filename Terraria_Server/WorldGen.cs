@@ -26,10 +26,15 @@ namespace Terraria_Server
         public static int spawnNPC = 0;
         public static int numRoomTiles;
         public static bool[] houseTile = new bool[80];
+        private static int[] JChestX = new int[100];
+        private static int[] JChestY = new int[100];
         public static int maxRoomTiles = 0x76c;
+        public static int maxDRooms = 100;
         public static int[] roomX = new int[maxRoomTiles];
         public static int roomX1;
         public static int roomX2;
+		private static int[] fihX = new int[300];
+		private static int[] fihY = new int[300];
         public static int[] roomY = new int[maxRoomTiles];
         public static int roomY1;
         public static int roomY2;
@@ -43,14 +48,3616 @@ namespace Terraria_Server
         public static int shadowOrbCount = 0;
         public static bool worldCleared = false;
         private static bool stopDrops = false;
+        private static int[] mCaveX = new int[300];
+        private static int[] mCaveY = new int[300];
+
+
+        private static int dMaxX;
+        private static int dMaxY;
+        private static int dMinX;
+        private static int dMinY;
+        private static double dxStrength1;
+        private static double dxStrength2;
+        private static double dyStrength1;
+        private static double dyStrength2;
+        private static int[] DPlatX = new int[300];
+        private static int[] DPlatY = new int[300];
+        private static int[] dRoomB = new int[maxDRooms];
+        private static int[] dRoomL = new int[maxDRooms];
+        private static int[] dRoomR = new int[maxDRooms];
+        public static int[] dRoomSize = new int[maxDRooms];
+        private static int[] dRoomT = new int[maxDRooms];
+        private static bool[] dRoomTreasure = new bool[maxDRooms];
+        public static int[] dRoomX = new int[maxDRooms];
+        public static int[] dRoomY = new int[maxDRooms];
+        private static int[] DDoorPos = new int[300];
+        private static int[] DDoorX = new int[300];
+        private static int[] DDoorY = new int[300];
+        public static bool dSurface = false;
+
+
         /*private static bool tempBloodMoon = Main.bloodMoon;
         private static bool tempDayTime = Main.dayTime;
         private static int tempMoonPhase = Main.moonPhase;
         private static double tempTime = Main.time;*/
 
+        public static void IslandHouse(int i, int j, World world)
+        {
+            byte num = (byte)genRand.Next(0x2d, 0x30);
+            byte num2 = (byte)genRand.Next(10, 13);
+            Vector2 vector = new Vector2((float)i, (float)j);
+            int num7 = 1;
+            if (genRand.Next(2) == 0)
+            {
+                num7 = -1;
+            }
+            int num8 = genRand.Next(7, 12);
+            int num9 = genRand.Next(5, 7);
+            vector.X = i + ((num8 + 2) * num7);
+            for (int k = j - 15; k < (j + 30); k++)
+            {
+                if (world.getTile()[(int)vector.X, k].active)
+                {
+                    vector.Y = k - 1;
+                    break;
+                }
+            }
+            vector.X = i;
+            int num3 = (int)((vector.X - num8) - 2f);
+            int maxTilesX = (int)((vector.X + num8) + 2f);
+            int num4 = (int)((vector.Y - num9) - 2f);
+            int maxTilesY = ((int)(vector.Y + 2f)) + genRand.Next(3, 5);
+            if (num3 < 0)
+            {
+                num3 = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num4 < 0)
+            {
+                num4 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int m = num3; m <= maxTilesX; m++)
+            {
+                for (int num12 = num4; num12 < maxTilesY; num12++)
+                {
+                    world.getTile()[m, num12].active = true;
+                    world.getTile()[m, num12].type = num;
+                    world.getTile()[m, num12].wall = 0;
+                }
+            }
+            num3 = ((int)vector.X) - num8;
+            maxTilesX = ((int)vector.X) + num8;
+            num4 = ((int)vector.Y) - num9;
+            maxTilesY = (int)(vector.Y + 1f);
+            if (num3 < 0)
+            {
+                num3 = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num4 < 0)
+            {
+                num4 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int n = num3; n <= maxTilesX; n++)
+            {
+                for (int num14 = num4; num14 < maxTilesY; num14++)
+                {
+                    if (world.getTile()[n, num14].wall == 0)
+                    {
+                        world.getTile()[n, num14].active = false;
+                        world.getTile()[n, num14].wall = num2;
+                    }
+                }
+            }
+            int num15 = i + ((num8 + 1) * num7);
+            int y = (int)vector.Y;
+            for (int num17 = num15 - 2; num17 <= (num15 + 2); num17++)
+            {
+                world.getTile()[num17, y].active = false;
+                world.getTile()[num17, y - 1].active = false;
+                world.getTile()[num17, y - 2].active = false;
+            }
+            PlaceTile(num15, y, world, 10, true, false, -1);
+            int contain = 0;
+            int houseCount = WorldGen.houseCount;
+            if (houseCount > 2)
+            {
+                houseCount = genRand.Next(3);
+            }
+            switch (houseCount)
+            {
+                case 0:
+                    contain = 0x9f;
+                    break;
 
+                case 1:
+                    contain = 0x41;
+                    break;
 
+                case 2:
+                    contain = 0x9e;
+                    break;
+            }
+            AddBuriedChest(i, y - 3, world, contain);
+            WorldGen.houseCount++;
+        }
 
+        public static void GrowEpicTree(int i, int y, World world)
+        {
+            int num2;
+            int num = y;
+            while (world.getTile()[i, num].type == 20)
+            {
+                num++;
+            }
+            if ((((!world.getTile()[i, num].active || (world.getTile()[i, num].type != 2)) || 
+                ((world.getTile()[i, num - 1].wall != 0) || (world.getTile()[i, num - 1].liquid != 0))) || 
+                ((!world.getTile()[i - 1, num].active || (world.getTile()[i - 1, num].type != 2)) || 
+                (!world.getTile()[i + 1, num].active || (world.getTile()[i + 1, num].type != 2)))) || 
+                !EmptyTileCheck(i - 2, i + 2, num - 0x37, num - 1, world, 20))
+            {
+                return;
+            }
+            bool flag = false;
+            bool flag2 = false;
+            int num4 = genRand.Next(20, 30);
+            for (int j = num - num4; j < num; j++)
+            {
+                world.getTile()[i, j].frameNumber = (byte)genRand.Next(3);
+                world.getTile()[i, j].active = true;
+                world.getTile()[i, j].type = 5;
+                num2 = genRand.Next(3);
+                int num3 = genRand.Next(10);
+                if ((j == (num - 1)) || (j == (num - num4)))
+                {
+                    num3 = 0;
+                }
+                while ((((num3 == 5) || (num3 == 7)) && flag) || (((num3 == 6) || (num3 == 7)) && flag2))
+                {
+                    num3 = genRand.Next(10);
+                }
+                flag = false;
+                flag2 = false;
+                if ((num3 == 5) || (num3 == 7))
+                {
+                    flag = true;
+                }
+                if ((num3 == 6) || (num3 == 7))
+                {
+                    flag2 = true;
+                }
+                if (num3 == 1)
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0x42;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0x58;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 110;
+                            break;
+                    }
+                }
+                else if (num3 == 2)
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0x16;
+                            world.getTile()[i, j].frameY = 0;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0x16;
+                            world.getTile()[i, j].frameY = 0x16;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0x16;
+                            world.getTile()[i, j].frameY = 0x2c;
+                            break;
+                    }
+                }
+                else if (num3 == 3)
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0x2c;
+                            world.getTile()[i, j].frameY = 0x42;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0x2c;
+                            world.getTile()[i, j].frameY = 0x58;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0x2c;
+                            world.getTile()[i, j].frameY = 110;
+                            break;
+                    }
+                }
+                else if (num3 == 4)
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0x16;
+                            world.getTile()[i, j].frameY = 0x42;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0x16;
+                            world.getTile()[i, j].frameY = 0x58;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0x16;
+                            world.getTile()[i, j].frameY = 110;
+                            break;
+                    }
+                }
+                else if (num3 == 5)
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0x58;
+                            world.getTile()[i, j].frameY = 0;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0x58;
+                            world.getTile()[i, j].frameY = 0x16;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0x58;
+                            world.getTile()[i, j].frameY = 0x2c;
+                            break;
+                    }
+                }
+                else if (num3 == 6)
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0x42;
+                            world.getTile()[i, j].frameY = 0x42;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0x42;
+                            world.getTile()[i, j].frameY = 0x58;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0x42;
+                            world.getTile()[i, j].frameY = 110;
+                            break;
+                    }
+                }
+                else if (num3 == 7)
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 110;
+                            world.getTile()[i, j].frameY = 0x42;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 110;
+                            world.getTile()[i, j].frameY = 0x58;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 110;
+                            world.getTile()[i, j].frameY = 110;
+                            break;
+                    }
+                }
+                else
+                {
+                    switch (num2)
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0x16;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0x2c;
+                            break;
+                    }
+                }
+                if ((num3 == 5) || (num3 == 7))
+                {
+                    world.getTile()[i - 1, j].active = true;
+                    world.getTile()[i - 1, j].type = 5;
+                    num2 = genRand.Next(3);
+                    if (genRand.Next(3) < 2)
+                    {
+                        switch (num2)
+                        {
+                            case 0:
+                                world.getTile()[i - 1, j].frameX = 0x2c;
+                                world.getTile()[i - 1, j].frameY = 0xc6;
+                                break;
+
+                            case 1:
+                                world.getTile()[i - 1, j].frameX = 0x2c;
+                                world.getTile()[i - 1, j].frameY = 220;
+                                break;
+
+                            case 2:
+                                world.getTile()[i - 1, j].frameX = 0x2c;
+                                world.getTile()[i - 1, j].frameY = 0xf2;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (num2)
+                        {
+                            case 0:
+                                world.getTile()[i - 1, j].frameX = 0x42;
+                                world.getTile()[i - 1, j].frameY = 0;
+                                break;
+
+                            case 1:
+                                world.getTile()[i - 1, j].frameX = 0x42;
+                                world.getTile()[i - 1, j].frameY = 0x16;
+                                break;
+
+                            case 2:
+                                world.getTile()[i - 1, j].frameX = 0x42;
+                                world.getTile()[i - 1, j].frameY = 0x2c;
+                                break;
+                        }
+                    }
+                }
+                if ((num3 == 6) || (num3 == 7))
+                {
+                    world.getTile()[i + 1, j].active = true;
+                    world.getTile()[i + 1, j].type = 5;
+                    num2 = genRand.Next(3);
+                    if (genRand.Next(3) < 2)
+                    {
+                        switch (num2)
+                        {
+                            case 0:
+                                world.getTile()[i + 1, j].frameX = 0x42;
+                                world.getTile()[i + 1, j].frameY = 0xc6;
+                                break;
+
+                            case 1:
+                                world.getTile()[i + 1, j].frameX = 0x42;
+                                world.getTile()[i + 1, j].frameY = 220;
+                                break;
+
+                            case 2:
+                                world.getTile()[i + 1, j].frameX = 0x42;
+                                world.getTile()[i + 1, j].frameY = 0xf2;
+                                break;
+                        }
+                    }
+                    else
+                    {
+                        switch (num2)
+                        {
+                            case 0:
+                                world.getTile()[i + 1, j].frameX = 0x58;
+                                world.getTile()[i + 1, j].frameY = 0x42;
+                                break;
+
+                            case 1:
+                                world.getTile()[i + 1, j].frameX = 0x58;
+                                world.getTile()[i + 1, j].frameY = 0x58;
+                                break;
+
+                            case 2:
+                                world.getTile()[i + 1, j].frameX = 0x58;
+                                world.getTile()[i + 1, j].frameY = 110;
+                                break;
+                        }
+                    }
+                }
+            }
+            int num6 = genRand.Next(3);
+            if ((num6 == 0) || (num6 == 1))
+            {
+                world.getTile()[i + 1, num - 1].active = true;
+                world.getTile()[i + 1, num - 1].type = 5;
+                switch (genRand.Next(3))
+                {
+                    case 0:
+                        world.getTile()[i + 1, num - 1].frameX = 0x16;
+                        world.getTile()[i + 1, num - 1].frameY = 0x84;
+                        break;
+
+                    case 1:
+                        world.getTile()[i + 1, num - 1].frameX = 0x16;
+                        world.getTile()[i + 1, num - 1].frameY = 0x9a;
+                        break;
+
+                    case 2:
+                        world.getTile()[i + 1, num - 1].frameX = 0x16;
+                        world.getTile()[i + 1, num - 1].frameY = 0xb0;
+                        goto Label_0A36;
+                }
+            }
+        Label_0A36:
+            if ((num6 == 0) || (num6 == 2))
+            {
+                world.getTile()[i - 1, num - 1].active = true;
+                world.getTile()[i - 1, num - 1].type = 5;
+                switch (genRand.Next(3))
+                {
+                    case 0:
+                        world.getTile()[i - 1, num - 1].frameX = 0x2c;
+                        world.getTile()[i - 1, num - 1].frameY = 0x84;
+                        break;
+
+                    case 1:
+                        world.getTile()[i - 1, num - 1].frameX = 0x2c;
+                        world.getTile()[i - 1, num - 1].frameY = 0x9a;
+                        break;
+
+                    case 2:
+                        world.getTile()[i - 1, num - 1].frameX = 0x2c;
+                        world.getTile()[i - 1, num - 1].frameY = 0xb0;
+                        break;
+                }
+            }
+            num2 = genRand.Next(3);
+            if (num6 == 0)
+            {
+                switch (num2)
+                {
+                    case 0:
+                        world.getTile()[i, num - 1].frameX = 0x58;
+                        world.getTile()[i, num - 1].frameY = 0x84;
+                        break;
+
+                    case 1:
+                        world.getTile()[i, num - 1].frameX = 0x58;
+                        world.getTile()[i, num - 1].frameY = 0x9a;
+                        break;
+
+                    case 2:
+                        world.getTile()[i, num - 1].frameX = 0x58;
+                        world.getTile()[i, num - 1].frameY = 0xb0;
+                        break;
+                }
+            }
+            else if (num6 == 1)
+            {
+                switch (num2)
+                {
+                    case 0:
+                        world.getTile()[i, num - 1].frameX = 0;
+                        world.getTile()[i, num - 1].frameY = 0x84;
+                        break;
+
+                    case 1:
+                        world.getTile()[i, num - 1].frameX = 0;
+                        world.getTile()[i, num - 1].frameY = 0x9a;
+                        break;
+
+                    case 2:
+                        world.getTile()[i, num - 1].frameX = 0;
+                        world.getTile()[i, num - 1].frameY = 0xb0;
+                        break;
+                }
+            }
+            else if (num6 == 2)
+            {
+                switch (num2)
+                {
+                    case 0:
+                        world.getTile()[i, num - 1].frameX = 0x42;
+                        world.getTile()[i, num - 1].frameY = 0x84;
+                        break;
+
+                    case 1:
+                        world.getTile()[i, num - 1].frameX = 0x42;
+                        world.getTile()[i, num - 1].frameY = 0x9a;
+                        break;
+
+                    case 2:
+                        world.getTile()[i, num - 1].frameX = 0x42;
+                        world.getTile()[i, num - 1].frameY = 0xb0;
+                        break;
+                }
+            }
+            if (genRand.Next(3) < 2)
+            {
+                switch (genRand.Next(3))
+                {
+                    case 0:
+                        world.getTile()[i, num - num4].frameX = 0x16;
+                        world.getTile()[i, num - num4].frameY = 0xc6;
+                        break;
+
+                    case 1:
+                        world.getTile()[i, num - num4].frameX = 0x16;
+                        world.getTile()[i, num - num4].frameY = 220;
+                        break;
+
+                    case 2:
+                        world.getTile()[i, num - num4].frameX = 0x16;
+                        world.getTile()[i, num - num4].frameY = 0xf2;
+                        break;
+                }
+            }
+            else
+            {
+                switch (genRand.Next(3))
+                {
+                    case 0:
+                        world.getTile()[i, num - num4].frameX = 0;
+                        world.getTile()[i, num - num4].frameY = 0xc6;
+                        break;
+
+                    case 1:
+                        world.getTile()[i, num - num4].frameX = 0;
+                        world.getTile()[i, num - num4].frameY = 220;
+                        break;
+
+                    case 2:
+                        world.getTile()[i, num - num4].frameX = 0;
+                        world.getTile()[i, num - num4].frameY = 0xf2;
+                        break;
+                }
+            }
+            RangeFrame(i - 2, (num - num4) - 1, i + 2, num + 1, world);
+            if (Statics.netMode == 2)
+            {
+                NetMessage.SendTileSquare(-1, i, num - ((int)(num4 * 0.5)), num4 + 1, world);
+            }
+        }
+
+        public static void GrowShroom(int i, int y, World world)
+        {
+            int num = y;
+            if (((!world.getTile()[i - 1, num - 1].lava && !world.getTile()[i - 1, num - 1].lava) && 
+                !world.getTile()[i + 1, num - 1].lava) && (((world.getTile()[i, num].active && 
+                (world.getTile()[i, num].type == 70)) && ((world.getTile()[i, num - 1].wall == 0) 
+                && world.getTile()[i - 1, num].active)) && (((world.getTile()[i - 1, num].type == 70) 
+                && world.getTile()[i + 1, num].active) && ((world.getTile()[i + 1, num].type == 70) && 
+                EmptyTileCheck(i - 2, i + 2, num - 13, num - 1, world, 0x47)))))
+            {
+                int num3 = genRand.Next(4, 11);
+                for (int j = num - num3; j < num; j++)
+                {
+                    world.getTile()[i, j].frameNumber = (byte)genRand.Next(3);
+                    world.getTile()[i, j].active = true;
+                    world.getTile()[i, j].type = 0x48;
+                    switch (genRand.Next(3))
+                    {
+                        case 0:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0;
+                            break;
+
+                        case 1:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0x12;
+                            break;
+
+                        case 2:
+                            world.getTile()[i, j].frameX = 0;
+                            world.getTile()[i, j].frameY = 0x24;
+                            break;
+                    }
+                }
+                switch (genRand.Next(3))
+                {
+                    case 0:
+                        world.getTile()[i, num - num3].frameX = 0x24;
+                        world.getTile()[i, num - num3].frameY = 0;
+                        break;
+
+                    case 1:
+                        world.getTile()[i, num - num3].frameX = 0x24;
+                        world.getTile()[i, num - num3].frameY = 0x12;
+                        break;
+
+                    case 2:
+                        world.getTile()[i, num - num3].frameX = 0x24;
+                        world.getTile()[i, num - num3].frameY = 0x24;
+                        break;
+                }
+                RangeFrame(i - 2, (num - num3) - 1, i + 2, num + 1, world);
+                if (Statics.netMode == 2)
+                {
+                    NetMessage.SendTileSquare(-1, i, num - ((int)(num3 * 0.5)), num3 + 1, world);
+                }
+            }
+        }
+
+        public static void AddTrees(World world)
+        {
+            for (int i = 1; i < (world.getMaxTilesX() - 1); i++)
+            {
+                for (int j = 20; j < world.getWorldSurface(); j++)
+                {
+                    GrowTree(i, j, world);
+                }
+            }
+        }
+
+        public static void CaveOpenater(int i, int j, World world)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            double num5 = genRand.Next(7, 12);
+            double num6 = num5;
+            int num7 = 1;
+            if (genRand.Next(2) == 0)
+            {
+                num7 = -1;
+            }
+            vector.X = i;
+            vector.Y = j;
+            int num8 = 100;
+            vector2.Y = 0f;
+            vector2.X = num7;
+            while (num8 > 0)
+            {
+                if (world.getTile()[(int)vector.X, (int)vector.Y].wall == 0)
+                {
+                    num8 = 0;
+                }
+                num8--;
+                int num = (int)(vector.X - (num5 * 0.5));
+                int maxTilesX = (int)(vector.X + (num5 * 0.5));
+                int num2 = (int)(vector.Y - (num5 * 0.5));
+                int maxTilesY = (int)(vector.Y + (num5 * 0.5));
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                num6 = (num5 * genRand.Next(80, 120)) * 0.01;
+                for (int k = num; k < maxTilesX; k++)
+                {
+                    for (int m = num2; m < maxTilesY; m++)
+                    {
+                        float num11 = Math.Abs((float)(k - vector.X));
+                        float num12 = Math.Abs((float)(m - vector.Y));
+                        if (Math.Sqrt((double)((num11 * num11) + (num12 * num12))) < (num6 * 0.4))
+                        {
+                            world.getTile()[k, m].active = false;
+                        }
+                    }
+                }
+                vector += vector2;
+                vector2.X += genRand.Next(-10, 11) * 0.05f;
+                vector2.Y += genRand.Next(-10, 11) * 0.05f;
+                if (vector2.X > (num7 + 0.5f))
+                {
+                    vector2.X = num7 + 0.5f;
+                }
+                if (vector2.X < (num7 - 0.5f))
+                {
+                    vector2.X = num7 - 0.5f;
+                }
+                if (vector2.Y > 0f)
+                {
+                    vector2.Y = 0f;
+                }
+                if (vector2.Y < -0.5)
+                {
+                    vector2.Y = -0.5f;
+                }
+            }
+        }
+
+        public static void Cavinator(int i, int j, int steps, World world)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            double num5 = genRand.Next(7, 15);
+            double num6 = num5;
+            int num7 = 1;
+            if (genRand.Next(2) == 0)
+            {
+                num7 = -1;
+            }
+            vector.X = i;
+            vector.Y = j;
+            int num8 = genRand.Next(20, 40);
+            vector2.Y = genRand.Next(10, 20) * 0.01f;
+            vector2.X = num7;
+            while (num8 > 0)
+            {
+                num8--;
+                int num = (int)(vector.X - (num5 * 0.5));
+                int maxTilesX = (int)(vector.X + (num5 * 0.5));
+                int num2 = (int)(vector.Y - (num5 * 0.5));
+                int maxTilesY = (int)(vector.Y + (num5 * 0.5));
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                num6 = (num5 * genRand.Next(80, 120)) * 0.01;
+                for (int k = num; k < maxTilesX; k++)
+                {
+                    for (int m = num2; m < maxTilesY; m++)
+                    {
+                        float num11 = Math.Abs((float)(k - vector.X));
+                        float num12 = Math.Abs((float)(m - vector.Y));
+                        if (Math.Sqrt((double)((num11 * num11) + (num12 * num12))) < (num6 * 0.4))
+                        {
+                            world.getTile()[k, m].active = false;
+                        }
+                    }
+                }
+                vector += vector2;
+                vector2.X += genRand.Next(-10, 11) * 0.05f;
+                vector2.Y += genRand.Next(-10, 11) * 0.05f;
+                if (vector2.X > (num7 + 0.5f))
+                {
+                    vector2.X = num7 + 0.5f;
+                }
+                if (vector2.X < (num7 - 0.5f))
+                {
+                    vector2.X = num7 - 0.5f;
+                }
+                if (vector2.Y > 2f)
+                {
+                    vector2.Y = 2f;
+                }
+                if (vector2.Y < 0f)
+                {
+                    vector2.Y = 0f;
+                }
+            }
+            if ((steps > 0) && (((int)vector.Y) < (world.getRockLayer() + 50.0)))
+            {
+                Cavinator((int)vector.X, (int)vector.Y, steps - 1, world);
+            }
+        }
+
+        public static void AddShadowOrb(int x, int y, World world)
+        {
+            if (((x >= 10) && (x <= (world.getMaxTilesX() - 10))) && ((y >= 10) && (y <= (world.getMaxTilesY() - 10))))
+            {
+                world.getTile()[x - 1, y - 1].active = true;
+                world.getTile()[x - 1, y - 1].type = 0x1f;
+                world.getTile()[x - 1, y - 1].frameX = 0;
+                world.getTile()[x - 1, y - 1].frameY = 0;
+                world.getTile()[x, y - 1].active = true;
+                world.getTile()[x, y - 1].type = 0x1f;
+                world.getTile()[x, y - 1].frameX = 0x12;
+                world.getTile()[x, y - 1].frameY = 0;
+                world.getTile()[x - 1, y].active = true;
+                world.getTile()[x - 1, y].type = 0x1f;
+                world.getTile()[x - 1, y].frameX = 0;
+                world.getTile()[x - 1, y].frameY = 0x12;
+                world.getTile()[x, y].active = true;
+                world.getTile()[x, y].type = 0x1f;
+                world.getTile()[x, y].frameX = 0x12;
+                world.getTile()[x, y].frameY = 0x12;
+            }
+
+        }
+        
+        public static void ChasmRunner(int i, int j, int steps, World world, bool makeOrb = false)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            bool flag = false;
+            bool flag2 = false;
+            if (!makeOrb)
+            {
+                flag = true;
+            }
+            float num5 = steps;
+            vector.X = i;
+            vector.Y = j;
+            vector2.X = genRand.Next(-10, 11) * 0.1f;
+            vector2.Y = (genRand.Next(11) * 0.2f) + 0.5f;
+            int num6 = 5;
+            double num7 = genRand.Next(5) + 7;
+            while (num7 > 0.0)
+            {
+                int num;
+                int num2;
+                int num3;
+                int maxTilesY;
+                if (num5 > 0f)
+                {
+                    num7 += genRand.Next(3);
+                    num7 -= genRand.Next(3);
+                    if (num7 < 7.0)
+                    {
+                        num7 = 7.0;
+                    }
+                    if (num7 > 20.0)
+                    {
+                        num7 = 20.0;
+                    }
+                    if ((num5 == 1f) && (num7 < 10.0))
+                    {
+                        num7 = 10.0;
+                    }
+                }
+                else
+                {
+                    num7 -= genRand.Next(4);
+                }
+                if ((vector.Y > world.getRockLayer()) && (num5 > 0f))
+                {
+                    num5 = 0f;
+                }
+                num5--;
+                if (num5 > num6)
+                {
+                    num = (int)(vector.X - (num7 * 0.5));
+                    num3 = (int)(vector.X + (num7 * 0.5));
+                    num2 = (int)(vector.Y - (num7 * 0.5));
+                    maxTilesY = (int)(vector.Y + (num7 * 0.5));
+                    if (num < 0)
+                    {
+                        num = 0;
+                    }
+                    if (num3 > (world.getMaxTilesX() - 1))
+                    {
+                        num3 = world.getMaxTilesX() - 1;
+                    }
+                    if (num2 < 0)
+                    {
+                        num2 = 0;
+                    }
+                    if (maxTilesY > world.getMaxTilesY())
+                    {
+                        maxTilesY = world.getMaxTilesY();
+                    }
+                    for (int n = num; n < num3; n++)
+                    {
+                        for (int num9 = num2; num9 < maxTilesY; num9++)
+                        {
+                            if ((Math.Abs((float)(n - vector.X)) + Math.Abs((float)(num9 - vector.Y))) < ((num7 * 0.5) * (1.0 + (genRand.Next(-10, 11) * 0.015))))
+                            {
+                                world.getTile()[n, num9].active = false;
+                            }
+                        }
+                    }
+                }
+                if (num5 <= 0f)
+                {
+                    if (!flag)
+                    {
+                        flag = true;
+                        AddShadowOrb((int)vector.X, (int)vector.Y, world);
+                    }
+                    else if (!flag2)
+                    {
+                        flag2 = false;
+                        bool flag3 = false;
+                        int num10 = 0;
+                        while (!flag3)
+                        {
+                            int x = genRand.Next(((int)vector.X) - 0x19, ((int)vector.X) + 0x19);
+                            int y = genRand.Next(((int)vector.Y) - 50, (int)vector.Y);
+                            if (x < 5)
+                            {
+                                x = 5;
+                            }
+                            if (x > (world.getMaxTilesX() - 5))
+                            {
+                                x = world.getMaxTilesX() - 5;
+                            }
+                            if (y < 5)
+                            {
+                                y = 5;
+                            }
+                            if (y > (world.getMaxTilesY() - 5))
+                            {
+                                y = world.getMaxTilesY() - 5;
+                            }
+                            if (y > world.getWorldSurface())
+                            {
+                                Place3x2(x, y, 0x1a, world);
+                                if (world.getTile()[x, y].type == 0x1a)
+                                {
+                                    flag3 = true;
+                                }
+                                else
+                                {
+                                    num10++;
+                                    if (num10 >= 0x2710)
+                                    {
+                                        flag3 = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                flag3 = true;
+                            }
+                        }
+                    }
+                }
+                vector += vector2;
+                vector2.X += genRand.Next(-10, 11) * 0.01f;
+                if (vector2.X > 0.3)
+                {
+                    vector2.X = 0.3f;
+                }
+                if (vector2.X < -0.3)
+                {
+                    vector2.X = -0.3f;
+                }
+                num = (int)(vector.X - (num7 * 1.1));
+                num3 = (int)(vector.X + (num7 * 1.1));
+                num2 = (int)(vector.Y - (num7 * 1.1));
+                maxTilesY = (int)(vector.Y + (num7 * 1.1));
+                if (num < 1)
+                {
+                    num = 1;
+                }
+                if (num3 > (world.getMaxTilesX() - 1))
+                {
+                    num3 = world.getMaxTilesX() - 1;
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                for (int k = num; k < num3; k++)
+                {
+                    for (int num14 = num2; num14 < maxTilesY; num14++)
+                    {
+                        if ((Math.Abs((float)(k - vector.X)) + Math.Abs((float)(num14 - vector.Y))) < ((num7 * 1.1) * (1.0 + (genRand.Next(-10, 11) * 0.015))))
+                        {
+                            if ((world.getTile()[k, num14].type != 0x19) && (num14 > (j + genRand.Next(3, 20))))
+                            {
+                                world.getTile()[k, num14].active = true;
+                            }
+                            if (steps <= num6)
+                            {
+                                world.getTile()[k, num14].active = true;
+                            }
+                            if (world.getTile()[k, num14].type != 0x1f)
+                            {
+                                world.getTile()[k, num14].type = 0x19;
+                            }
+                            if (world.getTile()[k, num14].wall == 2)
+                            {
+                                world.getTile()[k, num14].wall = 0;
+                            }
+                        }
+                    }
+                }
+                for (int m = num; m < num3; m++)
+                {
+                    for (int num16 = num2; num16 < maxTilesY; num16++)
+                    {
+                        if ((Math.Abs((float)(m - vector.X)) + Math.Abs((float)(num16 - vector.Y))) < ((num7 * 1.1) * (1.0 + (genRand.Next(-10, 11) * 0.015))))
+                        {
+                            if (world.getTile()[m, num16].type != 0x1f)
+                            {
+                                world.getTile()[m, num16].type = 0x19;
+                            }
+                            if (steps <= num6)
+                            {
+                                world.getTile()[m, num16].active = true;
+                            }
+                            if (num16 > (j + genRand.Next(3, 20)))
+                            {
+                                PlaceWall(m, num16, 3, world, true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void DungeonEnt(int i, int j, int tileType, int wallType, World world)
+        {
+            Vector2 vector = new Vector2();
+            double num5 = dxStrength1;
+            double num6 = dyStrength1;
+            vector.X = i;
+            vector.Y = j - (((float)num6) / 2f);
+            dMinY = (int)vector.Y;
+            int num7 = 1;
+            if (i > (world.getMaxTilesX() / 2))
+            {
+                num7 = -1;
+            }
+            int num = ((int)(vector.X - (num5 * 0.60000002384185791))) - genRand.Next(2, 5);
+            int maxTilesX = ((int)(vector.X + (num5 * 0.60000002384185791))) + genRand.Next(2, 5);
+            int num2 = ((int)(vector.Y - (num6 * 0.60000002384185791))) - genRand.Next(2, 5);
+            int maxTilesY = ((int)(vector.Y + (num6 * 0.60000002384185791))) + genRand.Next(8, 0x10);
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int k = num; k < maxTilesX; k++)
+            {
+                for (int num9 = num2; num9 < maxTilesY; num9++)
+                {
+                    world.getTile()[k, num9].liquid = 0;
+                    if (world.getTile()[k, num9].wall != wallType)
+                    {
+                        world.getTile()[k, num9].wall = 0;
+                        if (((k > (num + 1)) && (k < (maxTilesX - 2))) && ((num9 > (num2 + 1)) && (num9 < (maxTilesY - 2))))
+                        {
+                            PlaceWall(k, num9, wallType, world, true);
+                        }
+                        world.getTile()[k, num9].active = true;
+                        world.getTile()[k, num9].type = (byte)tileType;
+                    }
+                }
+            }
+            int num10 = num;
+            int num11 = (num + 5) + genRand.Next(4);
+            int num12 = (num2 - 3) - genRand.Next(3);
+            int num13 = num2;
+            for (int m = num10; m < num11; m++)
+            {
+                for (int num15 = num12; num15 < num13; num15++)
+                {
+                    if (world.getTile()[m, num15].wall != wallType)
+                    {
+                        world.getTile()[m, num15].active = true;
+                        world.getTile()[m, num15].type = (byte)tileType;
+                    }
+                }
+            }
+            num10 = (maxTilesX - 5) - genRand.Next(4);
+            num11 = maxTilesX;
+            num12 = (num2 - 3) - genRand.Next(3);
+            num13 = num2;
+            for (int n = num10; n < num11; n++)
+            {
+                for (int num17 = num12; num17 < num13; num17++)
+                {
+                    if (world.getTile()[n, num17].wall != wallType)
+                    {
+                        world.getTile()[n, num17].active = true;
+                        world.getTile()[n, num17].type = (byte)tileType;
+                    }
+                }
+            }
+            int num18 = 1 + genRand.Next(2);
+            int num19 = 2 + genRand.Next(4);
+            int num20 = 0;
+            for (int num21 = num; num21 < maxTilesX; num21++)
+            {
+                for (int num22 = num2 - num18; num22 < num2; num22++)
+                {
+                    if (world.getTile()[num21, num22].wall != wallType)
+                    {
+                        world.getTile()[num21, num22].active = true;
+                        world.getTile()[num21, num22].type = (byte)tileType;
+                    }
+                }
+                num20++;
+                if (num20 >= num19)
+                {
+                    num21 += num19;
+                    num20 = 0;
+                }
+            }
+            for (int num23 = num; num23 < maxTilesX; num23++)
+            {
+                for (int num24 = maxTilesY; num24 < (maxTilesY + 100); num24++)
+                {
+                    PlaceWall(num23, num24, 2, world, true);
+                }
+            }
+            num = (int)(vector.X - (num5 * 0.60000002384185791));
+            maxTilesX = (int)(vector.X + (num5 * 0.60000002384185791));
+            num2 = (int)(vector.Y - (num6 * 0.60000002384185791));
+            maxTilesY = (int)(vector.Y + (num6 * 0.60000002384185791));
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int num25 = num; num25 < maxTilesX; num25++)
+            {
+                for (int num26 = num2; num26 < maxTilesY; num26++)
+                {
+                    PlaceWall(num25, num26, wallType, world, true);
+                }
+            }
+            num = (int)((vector.X - (num5 * 0.6)) - 1.0);
+            maxTilesX = (int)((vector.X + (num5 * 0.6)) + 1.0);
+            num2 = (int)((vector.Y - (num6 * 0.6)) - 1.0);
+            maxTilesY = (int)((vector.Y + (num6 * 0.6)) + 1.0);
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int num27 = num; num27 < maxTilesX; num27++)
+            {
+                for (int num28 = num2; num28 < maxTilesY; num28++)
+                {
+                    world.getTile()[num27, num28].wall = (byte)wallType;
+                }
+            }
+            num = (int)(vector.X - (num5 * 0.5));
+            maxTilesX = (int)(vector.X + (num5 * 0.5));
+            num2 = (int)(vector.Y - (num6 * 0.5));
+            maxTilesY = (int)(vector.Y + (num6 * 0.5));
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int num29 = num; num29 < maxTilesX; num29++)
+            {
+                for (int num30 = num2; num30 < maxTilesY; num30++)
+                {
+                    world.getTile()[num29, num30].active = false;
+                    world.getTile()[num29, num30].wall = (byte)wallType;
+                }
+            }
+            DPlatX[numDPlats] = (int)vector.X;
+            DPlatY[numDPlats] = maxTilesY;
+            numDPlats++;
+            vector.X += (((float)num5) * 0.6f) * num7;
+            vector.Y += ((float)num6) * 0.5f;
+            num5 = dxStrength2;
+            num6 = dyStrength2;
+            vector.X += (((float)num5) * 0.55f) * num7;
+            vector.Y -= ((float)num6) * 0.5f;
+            num = ((int)(vector.X - (num5 * 0.60000002384185791))) - genRand.Next(1, 3);
+            maxTilesX = ((int)(vector.X + (num5 * 0.60000002384185791))) + genRand.Next(1, 3);
+            num2 = ((int)(vector.Y - (num6 * 0.60000002384185791))) - genRand.Next(1, 3);
+            maxTilesY = ((int)(vector.Y + (num6 * 0.60000002384185791))) + genRand.Next(6, 0x10);
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int num31 = num; num31 < maxTilesX; num31++)
+            {
+                for (int num32 = num2; num32 < maxTilesY; num32++)
+                {
+                    if (world.getTile()[num31, num32].wall != wallType)
+                    {
+                        bool flag = true;
+                        if (num7 < 0)
+                        {
+                            if (num31 < (vector.X - (num5 * 0.5)))
+                            {
+                                flag = false;
+                            }
+                        }
+                        else if (num31 > ((vector.X + (num5 * 0.5)) - 1.0))
+                        {
+                            flag = false;
+                        }
+                        if (flag)
+                        {
+                            world.getTile()[num31, num32].wall = 0;
+                            world.getTile()[num31, num32].active = true;
+                            world.getTile()[num31, num32].type = (byte)tileType;
+                        }
+                    }
+                }
+            }
+            for (int num33 = num; num33 < maxTilesX; num33++)
+            {
+                for (int num34 = maxTilesY; num34 < (maxTilesY + 100); num34++)
+                {
+                    PlaceWall(num33, num34, 2, world, true);
+                }
+            }
+            num = (int)(vector.X - (num5 * 0.5));
+            maxTilesX = (int)(vector.X + (num5 * 0.5));
+            num10 = num;
+            if (num7 < 0)
+            {
+                num10++;
+            }
+            num11 = (num10 + 5) + genRand.Next(4);
+            num12 = (num2 - 3) - genRand.Next(3);
+            num13 = num2;
+            for (int num35 = num10; num35 < num11; num35++)
+            {
+                for (int num36 = num12; num36 < num13; num36++)
+                {
+                    if (world.getTile()[num35, num36].wall != wallType)
+                    {
+                        world.getTile()[num35, num36].active = true;
+                        world.getTile()[num35, num36].type = (byte)tileType;
+                    }
+                }
+            }
+            num10 = (maxTilesX - 5) - genRand.Next(4);
+            num11 = maxTilesX;
+            num12 = (num2 - 3) - genRand.Next(3);
+            num13 = num2;
+            for (int num37 = num10; num37 < num11; num37++)
+            {
+                for (int num38 = num12; num38 < num13; num38++)
+                {
+                    if (world.getTile()[num37, num38].wall != wallType)
+                    {
+                        world.getTile()[num37, num38].active = true;
+                        world.getTile()[num37, num38].type = (byte)tileType;
+                    }
+                }
+            }
+            num18 = 1 + genRand.Next(2);
+            num19 = 2 + genRand.Next(4);
+            num20 = 0;
+            if (num7 < 0)
+            {
+                maxTilesX++;
+            }
+            for (int num39 = num + 1; num39 < (maxTilesX - 1); num39++)
+            {
+                for (int num40 = num2 - num18; num40 < num2; num40++)
+                {
+                    if (world.getTile()[num39, num40].wall != wallType)
+                    {
+                        world.getTile()[num39, num40].active = true;
+                        world.getTile()[num39, num40].type = (byte)tileType;
+                    }
+                }
+                num20++;
+                if (num20 >= num19)
+                {
+                    num39 += num19;
+                    num20 = 0;
+                }
+            }
+            num = (int)(vector.X - (num5 * 0.6));
+            maxTilesX = (int)(vector.X + (num5 * 0.6));
+            num2 = (int)(vector.Y - (num6 * 0.6));
+            maxTilesY = (int)(vector.Y + (num6 * 0.6));
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int num41 = num; num41 < maxTilesX; num41++)
+            {
+                for (int num42 = num2; num42 < maxTilesY; num42++)
+                {
+                    world.getTile()[num41, num42].wall = 0;
+                }
+            }
+            num = (int)(vector.X - (num5 * 0.5));
+            maxTilesX = (int)(vector.X + (num5 * 0.5));
+            num2 = (int)(vector.Y - (num6 * 0.5));
+            maxTilesY = (int)(vector.Y + (num6 * 0.5));
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int num43 = num; num43 < maxTilesX; num43++)
+            {
+                for (int num44 = num2; num44 < maxTilesY; num44++)
+                {
+                    world.getTile()[num43, num44].active = false;
+                    world.getTile()[num43, num44].wall = 0;
+                }
+            }
+            for (int num45 = num; num45 < maxTilesX; num45++)
+            {
+                if (!world.getTile()[num45, maxTilesY].active)
+                {
+                    world.getTile()[num45, maxTilesY].active = true;
+                    world.getTile()[num45, maxTilesY].type = 0x13;
+                }
+            }
+            world.setDungeonX((int)vector.X);
+            world.setDungeonY(maxTilesY);
+            int index = NPC.NewNPC((dungeonX * 0x10) + 8, dungeonY * 0x10, world, 0x25, 0);
+            world.getNPCs()[index].homeless = false;
+            world.getNPCs()[index].homeTileX = world.getDungeonX();
+            world.getNPCs()[index].homeTileY = world.getDungeonY();
+            if (num7 == 1)
+            {
+                int num47 = 0;
+                for (int num48 = maxTilesX; num48 < (maxTilesX + 0x19); num48++)
+                {
+                    num47++;
+                    for (int num49 = maxTilesY + num47; num49 < (maxTilesY + 0x19); num49++)
+                    {
+                        world.getTile()[num48, num49].active = true;
+                        world.getTile()[num48, num49].type = (byte)tileType;
+                    }
+                }
+            }
+            else
+            {
+                int num50 = 0;
+                for (int num51 = num; num51 > (num - 0x19); num51--)
+                {
+                    num50++;
+                    for (int num52 = maxTilesY + num50; num52 < (maxTilesY + 0x19); num52++)
+                    {
+                        world.getTile()[num51, num52].active = true;
+                        world.getTile()[num51, num52].type = (byte)tileType;
+                    }
+                }
+            }
+            num18 = 1 + genRand.Next(2);
+            num19 = 2 + genRand.Next(4);
+            num20 = 0;
+            num = (int)(vector.X - (num5 * 0.5));
+            maxTilesX = (int)(vector.X + (num5 * 0.5));
+            num += 2;
+            maxTilesX -= 2;
+            for (int num53 = num; num53 < maxTilesX; num53++)
+            {
+                for (int num54 = num2; num54 < maxTilesY; num54++)
+                {
+                    PlaceWall(num53, num54, wallType, world, true);
+                }
+                num20++;
+                if (num20 >= num19)
+                {
+                    num53 += num19 * 2;
+                    num20 = 0;
+                }
+            }
+            vector.X -= (((float)num5) * 0.6f) * num7;
+            vector.Y += ((float)num6) * 0.5f;
+            num5 = 15.0;
+            num6 = 3.0;
+            vector.Y -= ((float)num6) * 0.5f;
+            num = (int)(vector.X - (num5 * 0.5));
+            maxTilesX = (int)(vector.X + (num5 * 0.5));
+            num2 = (int)(vector.Y - (num6 * 0.5));
+            maxTilesY = (int)(vector.Y + (num6 * 0.5));
+            if (num < 0)
+            {
+                num = 0;
+            }
+            if (maxTilesX > world.getMaxTilesX())
+            {
+                maxTilesX = world.getMaxTilesX();
+            }
+            if (num2 < 0)
+            {
+                num2 = 0;
+            }
+            if (maxTilesY > world.getMaxTilesY())
+            {
+                maxTilesY = world.getMaxTilesY();
+            }
+            for (int num55 = num; num55 < maxTilesX; num55++)
+            {
+                for (int num56 = num2; num56 < maxTilesY; num56++)
+                {
+                    world.getTile()[num55, num56].active = false;
+                }
+            }
+            if (num7 < 0)
+            {
+                vector.X--;
+            }
+            PlaceTile((int)vector.X, ((int)vector.Y) + 1, world, 10, false, false, -1);
+        }
+
+        public static void DungeonHalls(int i, int j, int tileType, int wallType, World world, bool forceX = false)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            double num5 = genRand.Next(4, 6);
+            Vector2 vector3 = new Vector2();
+            Vector2 vector4 = new Vector2();
+            int num6 = 1;
+            vector.X = i;
+            vector.Y = j;
+            int num7 = genRand.Next(0x23, 80);
+            if (forceX)
+            {
+                num7 += 20;
+                lastDungeonHall = new Vector2();
+            }
+            else if (genRand.Next(5) == 0)
+            {
+                num5 *= 2.0;
+                num7 /= 2;
+            }
+            bool flag = false;
+            while (!flag)
+            {
+                if (genRand.Next(2) == 0)
+                {
+                    num6 = -1;
+                }
+                else
+                {
+                    num6 = 1;
+                }
+                bool flag2 = false;
+                if (genRand.Next(2) == 0)
+                {
+                    flag2 = true;
+                }
+                if (forceX)
+                {
+                    flag2 = true;
+                }
+                if (flag2)
+                {
+                    vector3.Y = 0f;
+                    vector3.X = num6;
+                    vector4.Y = 0f;
+                    vector4.X = -num6;
+                    vector2.Y = 0f;
+                    vector2.X = num6;
+                    if (genRand.Next(3) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.Y = -0.2f;
+                        }
+                        else
+                        {
+                            vector2.Y = 0.2f;
+                        }
+                    }
+                }
+                else
+                {
+                    num5++;
+                    vector2.Y = num6;
+                    vector2.X = 0f;
+                    vector3.X = 0f;
+                    vector3.Y = num6;
+                    vector4.X = 0f;
+                    vector4.Y = -num6;
+                    if (genRand.Next(2) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.X = 0.3f;
+                        }
+                        else
+                        {
+                            vector2.X = -0.3f;
+                        }
+                    }
+                    else
+                    {
+                        num7 /= 2;
+                    }
+                }
+                if (lastDungeonHall != vector4)
+                {
+                    flag = true;
+                }
+            }
+            if (!forceX)
+            {
+                if (vector.X > (lastMaxTilesX - 200))
+                {
+                    num6 = -1;
+                    vector3.Y = 0f;
+                    vector3.X = num6;
+                    vector2.Y = 0f;
+                    vector2.X = num6;
+                    if (genRand.Next(3) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.Y = -0.2f;
+                        }
+                        else
+                        {
+                            vector2.Y = 0.2f;
+                        }
+                    }
+                }
+                else if (vector.X < 200f)
+                {
+                    num6 = 1;
+                    vector3.Y = 0f;
+                    vector3.X = num6;
+                    vector2.Y = 0f;
+                    vector2.X = num6;
+                    if (genRand.Next(3) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.Y = -0.2f;
+                        }
+                        else
+                        {
+                            vector2.Y = 0.2f;
+                        }
+                    }
+                }
+                else if (vector.Y > (lastMaxTilesY + 200))
+                {
+                    num6 = -1;
+                    num5++;
+                    vector2.Y = num6;
+                    vector2.X = 0f;
+                    vector3.X = 0f;
+                    vector3.Y = num6;
+                    if (genRand.Next(2) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.X = 0.3f;
+                        }
+                        else
+                        {
+                            vector2.X = -0.3f;
+                        }
+                    }
+                }
+                else if (vector.Y < world.getRockLayer())
+                {
+                    num6 = 1;
+                    num5++;
+                    vector2.Y = num6;
+                    vector2.X = 0f;
+                    vector3.X = 0f;
+                    vector3.Y = num6;
+                    if (genRand.Next(2) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.X = 0.3f;
+                        }
+                        else
+                        {
+                            vector2.X = -0.3f;
+                        }
+                    }
+                }
+                else if ((vector.X < (world.getMaxTilesX() / 2)) && (vector.X > (world.getMaxTilesX() * 0.25)))
+                {
+                    num6 = -1;
+                    vector3.Y = 0f;
+                    vector3.X = num6;
+                    vector2.Y = 0f;
+                    vector2.X = num6;
+                    if (genRand.Next(3) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.Y = -0.2f;
+                        }
+                        else
+                        {
+                            vector2.Y = 0.2f;
+                        }
+                    }
+                }
+                else if ((vector.X > (world.getMaxTilesX() / 2)) && (vector.X < (world.getMaxTilesX() * 0.75)))
+                {
+                    num6 = 1;
+                    vector3.Y = 0f;
+                    vector3.X = num6;
+                    vector2.Y = 0f;
+                    vector2.X = num6;
+                    if (genRand.Next(3) == 0)
+                    {
+                        if (genRand.Next(2) == 0)
+                        {
+                            vector2.Y = -0.2f;
+                        }
+                        else
+                        {
+                            vector2.Y = 0.2f;
+                        }
+                    }
+                }
+            }
+            if (vector3.Y == 0f)
+            {
+                DDoorX[numDDoors] = (int)vector.X;
+                DDoorY[numDDoors] = (int)vector.Y;
+                DDoorPos[numDDoors] = 0;
+                numDDoors++;
+            }
+            else
+            {
+                DPlatX[numDPlats] = (int)vector.X;
+                DPlatY[numDPlats] = (int)vector.Y;
+                numDPlats++;
+            }
+            lastDungeonHall = vector3;
+            while (num7 > 0)
+            {
+                if ((vector3.X > 0f) && (vector.X > (world.getMaxTilesX() - 100)))
+                {
+                    num7 = 0;
+                }
+                else if ((vector3.X < 0f) && (vector.X < 100f))
+                {
+                    num7 = 0;
+                }
+                else if ((vector3.Y > 0f) && (vector.Y > (world.getMaxTilesY() - 100)))
+                {
+                    num7 = 0;
+                }
+                else if ((vector3.Y < 0f) && (vector.Y < (world.getRockLayer() + 50.0)))
+                {
+                    num7 = 0;
+                }
+                num7--;
+                int num = ((int)((vector.X - num5) - 4.0)) - genRand.Next(6);
+                int maxTilesX = ((int)((vector.X + num5) + 4.0)) + genRand.Next(6);
+                int num2 = ((int)((vector.Y - num5) - 4.0)) - genRand.Next(6);
+                int maxTilesY = ((int)((vector.Y + num5) + 4.0)) + genRand.Next(6);
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                for (int k = num; k < maxTilesX; k++)
+                {
+                    for (int num9 = num2; num9 < maxTilesY; num9++)
+                    {
+                        world.getTile()[k, num9].liquid = 0;
+                        if (world.getTile()[k, num9].wall == 0)
+                        {
+                            world.getTile()[k, num9].active = true;
+                            world.getTile()[k, num9].type = (byte)tileType;
+                        }
+                    }
+                }
+                for (int m = num + 1; m < (maxTilesX - 1); m++)
+                {
+                    for (int num11 = num2 + 1; num11 < (maxTilesY - 1); num11++)
+                    {
+                        PlaceWall(m, num11, wallType, world, true);
+                    }
+                }
+                int num12 = 0;
+                if ((vector2.Y == 0f) && (genRand.Next(((int)num5) + 1) == 0))
+                {
+                    num12 = genRand.Next(1, 3);
+                }
+                else if ((vector2.X == 0f) && (genRand.Next(((int)num5) - 1) == 0))
+                {
+                    num12 = genRand.Next(1, 3);
+                }
+                else if (genRand.Next(((int)num5) * 3) == 0)
+                {
+                    num12 = genRand.Next(1, 3);
+                }
+                num = ((int)(vector.X - (num5 * 0.5))) - num12;
+                maxTilesX = ((int)(vector.X + (num5 * 0.5))) + num12;
+                num2 = ((int)(vector.Y - (num5 * 0.5))) - num12;
+                maxTilesY = ((int)(vector.Y + (num5 * 0.5))) + num12;
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                for (int n = num; n < maxTilesX; n++)
+                {
+                    for (int num14 = num2; num14 < maxTilesY; num14++)
+                    {
+                        world.getTile()[n, num14].active = false;
+                        world.getTile()[n, num14].wall = (byte)wallType;
+                    }
+                }
+                vector += vector2;
+            }
+            dungeonX = (int)vector.X;
+            dungeonY = (int)vector.Y;
+            if (vector3.Y == 0f)
+            {
+                DDoorX[numDDoors] = (int)vector.X;
+                DDoorY[numDDoors] = (int)vector.Y;
+                DDoorPos[numDDoors] = 0;
+                numDDoors++;
+            }
+            else
+            {
+                DPlatX[numDPlats] = (int)vector.X;
+                DPlatY[numDPlats] = (int)vector.Y;
+                numDPlats++;
+            }
+        }
+
+        public static void DungeonRoom(int i, int j, int tileType, int wallType, World world)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            double num5 = genRand.Next(15, 30);
+            vector2.X = genRand.Next(-10, 11) * 0.1f;
+            vector2.Y = genRand.Next(-10, 11) * 0.1f;
+            vector.X = i;
+            vector.Y = j - (((float)num5) / 2f);
+            int num6 = genRand.Next(10, 20);
+            double x = vector.X;
+            double num8 = vector.X;
+            double y = vector.Y;
+            double num10 = vector.Y;
+            while (num6 > 0)
+            {
+                num6--;
+                int num = (int)((vector.X - (num5 * 0.800000011920929)) - 5.0);
+                int maxTilesX = (int)((vector.X + (num5 * 0.800000011920929)) + 5.0);
+                int num2 = (int)((vector.Y - (num5 * 0.800000011920929)) - 5.0);
+                int maxTilesY = (int)((vector.Y + (num5 * 0.800000011920929)) + 5.0);
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                for (int k = num; k < maxTilesX; k++)
+                {
+                    for (int num12 = num2; num12 < maxTilesY; num12++)
+                    {
+                        world.getTile()[k, num12].liquid = 0;
+                        if (world.getTile()[k, num12].wall == 0)
+                        {
+                            world.getTile()[k, num12].active = true;
+                            world.getTile()[k, num12].type = (byte)tileType;
+                        }
+                    }
+                }
+                for (int m = num + 1; m < (maxTilesX - 1); m++)
+                {
+                    for (int num14 = num2 + 1; num14 < (maxTilesY - 1); num14++)
+                    {
+                        PlaceWall(m, num14, wallType, world, true);
+                    }
+                }
+                num = (int)(vector.X - (num5 * 0.5));
+                maxTilesX = (int)(vector.X + (num5 * 0.5));
+                num2 = (int)(vector.Y - (num5 * 0.5));
+                maxTilesY = (int)(vector.Y + (num5 * 0.5));
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                if (num < x)
+                {
+                    x = num;
+                }
+                if (maxTilesX > num8)
+                {
+                    num8 = maxTilesX;
+                }
+                if (num2 < y)
+                {
+                    y = num2;
+                }
+                if (maxTilesY > num10)
+                {
+                    num10 = maxTilesY;
+                }
+                for (int n = num; n < maxTilesX; n++)
+                {
+                    for (int num16 = num2; num16 < maxTilesY; num16++)
+                    {
+                        world.getTile()[n, num16].active = false;
+                        world.getTile()[n, num16].wall = (byte)wallType;
+                    }
+                }
+                vector += vector2;
+                vector2.X += genRand.Next(-10, 11) * 0.05f;
+                vector2.Y += genRand.Next(-10, 11) * 0.05f;
+                if (vector2.X > 1f)
+                {
+                    vector2.X = 1f;
+                }
+                if (vector2.X < -1f)
+                {
+                    vector2.X = -1f;
+                }
+                if (vector2.Y > 1f)
+                {
+                    vector2.Y = 1f;
+                }
+                if (vector2.Y < -1f)
+                {
+                    vector2.Y = -1f;
+                }
+            }
+            dRoomX[numDRooms] = (int)vector.X;
+            dRoomY[numDRooms] = (int)vector.Y;
+            dRoomSize[numDRooms] = (int)num5;
+            dRoomL[numDRooms] = (int)x;
+            dRoomR[numDRooms] = (int)num8;
+            dRoomT[numDRooms] = (int)y;
+            dRoomB[numDRooms] = (int)num10;
+            dRoomTreasure[numDRooms] = false;
+            numDRooms++;
+        }
+
+        public static void DungeonStairs(int i, int j, int tileType, int wallType, World world)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            double num5 = genRand.Next(5, 9);
+            int num6 = 1;
+            vector.X = i;
+            vector.Y = j;
+            int num7 = genRand.Next(10, 30);
+            if (i > dEnteranceX)
+            {
+                num6 = -1;
+            }
+            else
+            {
+                num6 = 1;
+            }
+            vector2.Y = -1f;
+            vector2.X = num6;
+            if (genRand.Next(3) == 0)
+            {
+                vector2.X *= 0.5f;
+            }
+            else if (genRand.Next(3) == 0)
+            {
+                vector2.Y *= 2f;
+            }
+            while (num7 > 0)
+            {
+                num7--;
+                int num = ((int)((vector.X - num5) - 4.0)) - genRand.Next(6);
+                int maxTilesX = ((int)((vector.X + num5) + 4.0)) + genRand.Next(6);
+                int num2 = (int)((vector.Y - num5) - 4.0);
+                int maxTilesY = ((int)((vector.Y + num5) + 4.0)) + genRand.Next(6);
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                int num8 = 1;
+                if (vector.X > (world.getMaxTilesX() / 2))
+                {
+                    num8 = -1;
+                }
+                int num9 = (int)((vector.X + ((((float)dxStrength1) * 0.6f) * num8)) + (((float)dxStrength2) * num8));
+                int num10 = (int)(dyStrength2 * 0.5);
+                if (((vector.Y < (world.getWorldSurface() - 5.0)) && (world.getTile()[num9, ((int)((vector.Y - num5) - 6.0)) + num10].wall == 0)) && ((world.getTile()[num9, ((int)((vector.Y - num5) - 7.0)) + num10].wall == 0) && (world.getTile()[num9, ((int)((vector.Y - num5) - 8.0)) + num10].wall == 0)))
+                {
+                    dSurface = true;
+                    TileRunner(num9, ((int)((vector.Y - num5) - 6.0)) + num10, world, (double)genRand.Next(0x19, 0x23), genRand.Next(10, 20), -1, false, 0f, -1f, false, true);
+                }
+                for (int k = num; k < maxTilesX; k++)
+                {
+                    for (int num12 = num2; num12 < maxTilesY; num12++)
+                    {
+                        world.getTile()[k, num12].liquid = 0;
+                        if (world.getTile()[k, num12].wall != wallType)
+                        {
+                            world.getTile()[k, num12].wall = 0;
+                            world.getTile()[k, num12].active = true;
+                            world.getTile()[k, num12].type = (byte)tileType;
+                        }
+                    }
+                }
+                for (int m = num + 1; m < (maxTilesX - 1); m++)
+                {
+                    for (int num14 = num2 + 1; num14 < (maxTilesY - 1); num14++)
+                    {
+                        PlaceWall(m, num14, wallType, world, true);
+                    }
+                }
+                int num15 = 0;
+                if (genRand.Next((int)num5) == 0)
+                {
+                    num15 = genRand.Next(1, 3);
+                }
+                num = ((int)(vector.X - (num5 * 0.5))) - num15;
+                maxTilesX = ((int)(vector.X + (num5 * 0.5))) + num15;
+                num2 = ((int)(vector.Y - (num5 * 0.5))) - num15;
+                maxTilesY = ((int)(vector.Y + (num5 * 0.5))) + num15;
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                for (int n = num; n < maxTilesX; n++)
+                {
+                    for (int num17 = num2; num17 < maxTilesY; num17++)
+                    {
+                        world.getTile()[n, num17].active = false;
+                        PlaceWall(n, num17, wallType, world, true);
+                    }
+                }
+                if (dSurface)
+                {
+                    num7 = 0;
+                }
+                vector += vector2;
+            }
+            dungeonX = (int)vector.X;
+            dungeonY = (int)vector.Y;
+        }
+
+        public static void MakeDungeon(int x, int y, World world, int tileType = 0x29, int wallType = 7)
+        {
+            int num = genRand.Next(3);
+            int num2 = genRand.Next(3);
+            switch (num)
+            {
+                case 1:
+                    tileType = 0x2b;
+                    break;
+
+                case 2:
+                    tileType = 0x2c;
+                    break;
+            }
+            switch (num2)
+            {
+                case 1:
+                    wallType = 8;
+                    break;
+
+                case 2:
+                    wallType = 9;
+                    break;
+            }
+            numDDoors = 0;
+            numDPlats = 0;
+            numDRooms = 0;
+            WorldGen.dungeonX = x;
+            WorldGen.dungeonY = y;
+            dMinX = x;
+            dMaxX = x;
+            dMinY = y;
+            dMaxY = y;
+            dxStrength1 = genRand.Next(0x19, 30);
+            dyStrength1 = genRand.Next(20, 0x19);
+            dxStrength2 = genRand.Next(0x23, 50);
+            dyStrength2 = genRand.Next(10, 15);
+            float num3 = world.getMaxTilesX() / 60;
+            num3 += genRand.Next(0, (int)(num3 / 3f));
+            float num4 = num3;
+            int num5 = 5;
+            DungeonRoom(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
+            while (num3 > 0f)
+            {
+                if (WorldGen.dungeonX < dMinX)
+                {
+                    dMinX = WorldGen.dungeonX;
+                }
+                if (WorldGen.dungeonX > dMaxX)
+                {
+                    dMaxX = WorldGen.dungeonX;
+                }
+                if (WorldGen.dungeonY > dMaxY)
+                {
+                    dMaxY = WorldGen.dungeonY;
+                }
+                num3--;
+                Console.WriteLine("Creating dungeon: " + ((int)(((num4 - num3) / num4) * 60f)) + "%");
+                if (num5 > 0)
+                {
+                    num5--;
+                }
+                if ((num5 == 0) & (genRand.Next(3) == 0))
+                {
+                    num5 = 5;
+                    if (genRand.Next(2) == 0)
+                    {
+                        int dungeonX = WorldGen.dungeonX;
+                        int dungeonY = WorldGen.dungeonY;
+                        DungeonHalls(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world, false);
+                        if (genRand.Next(2) == 0)
+                        {
+                            DungeonHalls(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world, false);
+                        }
+                        DungeonRoom(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
+                        WorldGen.dungeonX = dungeonX;
+                        WorldGen.dungeonY = dungeonY;
+                    }
+                    else
+                    {
+                        DungeonRoom(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
+                    }
+                }
+                else
+                {
+                    DungeonHalls(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world, false);
+                }
+            }
+            DungeonRoom(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
+            int num8 = dRoomX[0];
+            int num9 = dRoomY[0];
+            for (int i = 0; i < numDRooms; i++)
+            {
+                if (dRoomY[i] < num9)
+                {
+                    num8 = dRoomX[i];
+                    num9 = dRoomY[i];
+                }
+            }
+            WorldGen.dungeonX = num8;
+            WorldGen.dungeonY = num9;
+            dEnteranceX = num8;
+            dSurface = false;
+            num5 = 5;
+            while (!dSurface)
+            {
+                if (num5 > 0)
+                {
+                    num5--;
+                }
+                if (((num5 == 0) & (genRand.Next(5) == 0)) && (WorldGen.dungeonY > (world.getWorldSurface() + 50.0)))
+                {
+                    num5 = 10;
+                    int num11 = WorldGen.dungeonX;
+                    int num12 = WorldGen.dungeonY;
+                    DungeonHalls(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world, true);
+                    DungeonRoom(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
+                    WorldGen.dungeonX = num11;
+                    WorldGen.dungeonY = num12;
+                }
+                DungeonStairs(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
+            }
+            DungeonEnt(WorldGen.dungeonX, WorldGen.dungeonY, tileType, wallType, world);
+            Console.WriteLine("Creating dungeon: 65%");
+            for (int j = 0; j < numDRooms; j++)
+            {
+                for (int num14 = dRoomL[j]; num14 <= dRoomR[j]; num14++)
+                {
+                    if (!world.getTile()[num14, dRoomT[j] - 1].active)
+                    {
+                        DPlatX[numDPlats] = num14;
+                        DPlatY[numDPlats] = dRoomT[j] - 1;
+                        numDPlats++;
+                        break;
+                    }
+                }
+                for (int num15 = dRoomL[j]; num15 <= dRoomR[j]; num15++)
+                {
+                    if (!world.getTile()[num15, dRoomB[j] + 1].active)
+                    {
+                        DPlatX[numDPlats] = num15;
+                        DPlatY[numDPlats] = dRoomB[j] + 1;
+                        numDPlats++;
+                        break;
+                    }
+                }
+                for (int num16 = dRoomT[j]; num16 <= dRoomB[j]; num16++)
+                {
+                    if (!world.getTile()[dRoomL[j] - 1, num16].active)
+                    {
+                        DDoorX[numDDoors] = dRoomL[j] - 1;
+                        DDoorY[numDDoors] = num16;
+                        DDoorPos[numDDoors] = -1;
+                        numDDoors++;
+                        break;
+                    }
+                }
+                for (int num17 = dRoomT[j]; num17 <= dRoomB[j]; num17++)
+                {
+                    if (!world.getTile()[dRoomR[j] + 1, num17].active)
+                    {
+                        DDoorX[numDDoors] = dRoomR[j] + 1;
+                        DDoorY[numDDoors] = num17;
+                        DDoorPos[numDDoors] = 1;
+                        numDDoors++;
+                        break;
+                    }
+                }
+            }
+            Console.WriteLine("Creating dungeon: 70%");
+            int num18 = 0;
+            int num19 = 0x3e8;
+            int num20 = 0;
+            while (num20 < (world.getMaxTilesX() / 0x7d))
+            {
+                num18++;
+                int num21 = genRand.Next(dMinX, dMaxX);
+                int num22 = genRand.Next(((int)world.getWorldSurface()) + 0x19, dMaxY);
+                int num23 = num21;
+                if ((world.getTile()[num21, num22].wall == wallType) && !world.getTile()[num21, num22].active)
+                {
+                    int num24 = 1;
+                    if (genRand.Next(2) == 0)
+                    {
+                        num24 = -1;
+                    }
+                    while (!world.getTile()[num21, num22].active)
+                    {
+                        num22 += num24;
+                    }
+                    if ((world.getTile()[num21 - 1, num22].active && world.getTile()[num21 + 1, num22].active) && (!world.getTile()[num21 - 1, num22 - num24].active && !world.getTile()[num21 + 1, num22 - num24].active))
+                    {
+                        num20++;
+                        int num25 = genRand.Next(5, 10);
+                        while ((world.getTile()[num21 - 1, num22].active && world.getTile()[num21, num22 + num24].active) && ((world.getTile()[num21, num22].active && !world.getTile()[num21, num22 - num24].active) && (num25 > 0)))
+                        {
+                            world.getTile()[num21, num22].type = 0x30;
+                            if (!world.getTile()[num21 - 1, num22 - num24].active && !world.getTile()[num21 + 1, num22 - num24].active)
+                            {
+                                world.getTile()[num21, num22 - num24].type = 0x30;
+                                world.getTile()[num21, num22 - num24].active = true;
+                            }
+                            num21--;
+                            num25--;
+                        }
+                        num25 = genRand.Next(5, 10);
+                        num21 = num23 + 1;
+                        while ((world.getTile()[num21 + 1, num22].active && world.getTile()[num21, num22 + num24].active) && ((world.getTile()[num21, num22].active && !world.getTile()[num21, num22 - num24].active) && (num25 > 0)))
+                        {
+                            world.getTile()[num21, num22].type = 0x30;
+                            if (!world.getTile()[num21 - 1, num22 - num24].active && !world.getTile()[num21 + 1, num22 - num24].active)
+                            {
+                                world.getTile()[num21, num22 - num24].type = 0x30;
+                                world.getTile()[num21, num22 - num24].active = true;
+                            }
+                            num21++;
+                            num25--;
+                        }
+                    }
+                }
+                if (num18 > num19)
+                {
+                    num18 = 0;
+                    num20++;
+                }
+            }
+            num18 = 0;
+            num19 = 0x3e8;
+            num20 = 0;
+            Console.WriteLine("Creating dungeon: 75%");
+            while (num20 < (world.getMaxTilesX() / 0x7d))
+            {
+                num18++;
+                int num26 = genRand.Next(dMinX, dMaxX);
+                int num27 = genRand.Next(((int)world.getWorldSurface()) + 0x19, dMaxY);
+                int num28 = num27;
+                if ((world.getTile()[num26, num27].wall == wallType) && !world.getTile()[num26, num27].active)
+                {
+                    int num29 = 1;
+                    if (genRand.Next(2) == 0)
+                    {
+                        num29 = -1;
+                    }
+                    while (((num26 > 5) && (num26 < (world.getMaxTilesX() - 5))) && !world.getTile()[num26, num27].active)
+                    {
+                        num26 += num29;
+                    }
+                    if ((world.getTile()[num26, num27 - 1].active && world.getTile()[num26, num27 + 1].active) && (!world.getTile()[num26 - num29, num27 - 1].active && !world.getTile()[num26 - num29, num27 + 1].active))
+                    {
+                        num20++;
+                        int num30 = genRand.Next(5, 10);
+                        while ((world.getTile()[num26, num27 - 1].active && world.getTile()[num26 + num29, num27].active) && ((world.getTile()[num26, num27].active && !world.getTile()[num26 - num29, num27].active) && (num30 > 0)))
+                        {
+                            world.getTile()[num26, num27].type = 0x30;
+                            if (!world.getTile()[num26 - num29, num27 - 1].active && !world.getTile()[num26 - num29, num27 + 1].active)
+                            {
+                                world.getTile()[num26 - num29, num27].type = 0x30;
+                                world.getTile()[num26 - num29, num27].active = true;
+                            }
+                            num27--;
+                            num30--;
+                        }
+                        num30 = genRand.Next(5, 10);
+                        num27 = num28 + 1;
+                        while ((world.getTile()[num26, num27 + 1].active && world.getTile()[num26 + num29, num27].active) && ((world.getTile()[num26, num27].active && !world.getTile()[num26 - num29, num27].active) && (num30 > 0)))
+                        {
+                            world.getTile()[num26, num27].type = 0x30;
+                            if (!world.getTile()[num26 - num29, num27 - 1].active && !world.getTile()[num26 - num29, num27 + 1].active)
+                            {
+                                world.getTile()[num26 - num29, num27].type = 0x30;
+                                world.getTile()[num26 - num29, num27].active = true;
+                            }
+                            num27++;
+                            num30--;
+                        }
+                    }
+                }
+                if (num18 > num19)
+                {
+                    num18 = 0;
+                    num20++;
+                }
+            }
+            Console.WriteLine("Creating dungeon: 80%");
+            for (int k = 0; k < numDDoors; k++)
+            {
+                int num32 = DDoorX[k] - 10;
+                int num33 = DDoorX[k] + 10;
+                int num34 = 100;
+                int num35 = 0;
+                int num36 = 0;
+                int num37 = 0;
+                for (int num38 = num32; num38 < num33; num38++)
+                {
+                    bool flag = true;
+                    int num39 = DDoorY[k];
+                    while (!world.getTile()[num38, num39].active)
+                    {
+                        num39--;
+                    }
+                    if (!Statics.tileDungeon[world.getTile()[num38, num39].type])
+                    {
+                        flag = false;
+                    }
+                    num36 = num39;
+                    num39 = DDoorY[k];
+                    while (!world.getTile()[num38, num39].active)
+                    {
+                        num39++;
+                    }
+                    if (!Statics.tileDungeon[world.getTile()[num38, num39].type])
+                    {
+                        flag = false;
+                    }
+                    num37 = num39;
+                    if ((num37 - num36) >= 3)
+                    {
+                        int num40 = num38 - 20;
+                        int num41 = num38 + 20;
+                        int num42 = num37 - 10;
+                        int num43 = num37 + 10;
+                        for (int num44 = num40; num44 < num41; num44++)
+                        {
+                            for (int num45 = num42; num45 < num43; num45++)
+                            {
+                                if (world.getTile()[num44, num45].active && (world.getTile()[num44, num45].type == 10))
+                                {
+                                    flag = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (flag)
+                        {
+                            for (int num46 = num37 - 3; num46 < num37; num46++)
+                            {
+                                for (int num47 = num38 - 3; num47 <= (num38 + 3); num47++)
+                                {
+                                    if (world.getTile()[num47, num46].active)
+                                    {
+                                        flag = false;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        if (flag && ((num37 - num36) < 20))
+                        {
+                            bool flag2 = false;
+                            if ((DDoorPos[k] == 0) && ((num37 - num36) < num34))
+                            {
+                                flag2 = true;
+                            }
+                            if ((DDoorPos[k] == -1) && (num38 > num35))
+                            {
+                                flag2 = true;
+                            }
+                            if ((DDoorPos[k] == 1) && ((num38 < num35) || (num35 == 0)))
+                            {
+                                flag2 = true;
+                            }
+                            if (flag2)
+                            {
+                                num35 = num38;
+                                num34 = num37 - num36;
+                            }
+                        }
+                    }
+                }
+                if (num34 < 20)
+                {
+                    int num48 = num35;
+                    int num49 = DDoorY[k];
+                    int num50 = num49;
+                    while (!world.getTile()[num48, num49].active)
+                    {
+                        world.getTile()[num48, num49].active = false;
+                        num49++;
+                    }
+                    while (!world.getTile()[num48, num50].active)
+                    {
+                        num50--;
+                    }
+                    num49--;
+                    num50++;
+                    for (int num51 = num50; num51 < (num49 - 2); num51++)
+                    {
+                        world.getTile()[num48, num51].active = true;
+                        world.getTile()[num48, num51].type = (byte)tileType;
+                    }
+                    PlaceTile(num48, num49, world, 10, true, false, -1);
+                    num48--;
+                    int num52 = num49 - 3;
+                    while (!world.getTile()[num48, num52].active)
+                    {
+                        num52--;
+                    }
+                    if (((num49 - num52) < ((num49 - num50) + 5)) && Statics.tileDungeon[world.getTile()[num48, num52].type])
+                    {
+                        for (int num53 = (num49 - 4) - genRand.Next(3); num53 > num52; num53--)
+                        {
+                            world.getTile()[num48, num53].active = true;
+                            world.getTile()[num48, num53].type = (byte)tileType;
+                        }
+                    }
+                    num48 += 2;
+                    num52 = num49 - 3;
+                    while (!world.getTile()[num48, num52].active)
+                    {
+                        num52--;
+                    }
+                    if (((num49 - num52) < ((num49 - num50) + 5)) && Statics.tileDungeon[world.getTile()[num48, num52].type])
+                    {
+                        for (int num54 = (num49 - 4) - genRand.Next(3); num54 > num52; num54--)
+                        {
+                            world.getTile()[num48, num54].active = true;
+                            world.getTile()[num48, num54].type = (byte)tileType;
+                        }
+                    }
+                    num49++;
+                    num48--;
+                    world.getTile()[num48 - 1, num49].active = true;
+                    world.getTile()[num48 - 1, num49].type = (byte)tileType;
+                    world.getTile()[num48 + 1, num49].active = true;
+                    world.getTile()[num48 + 1, num49].type = (byte)tileType;
+                }
+            }
+            Console.WriteLine("Creating dungeon: 85%");
+            for (int m = 0; m < numDPlats; m++)
+            {
+                int num56 = DPlatX[m];
+                int num57 = DPlatY[m];
+                int maxTilesX = world.getMaxTilesX();
+                int num59 = 10;
+                for (int num60 = num57 - 5; num60 <= (num57 + 5); num60++)
+                {
+                    int num61 = num56;
+                    int num62 = num56;
+                    bool flag3 = false;
+                    if (!world.getTile()[num61, num60].active)
+                    {
+                        goto Label_10D8;
+                    }
+                    flag3 = true;
+                    goto Label_1128;
+                Label_10B4:
+                    num61--;
+                    if (!Statics.tileDungeon[world.getTile()[num61, num60].type])
+                    {
+                        flag3 = true;
+                    }
+                Label_10D8:
+                    if (!world.getTile()[num61, num60].active)
+                    {
+                        goto Label_10B4;
+                    }
+                    while (!world.getTile()[num62, num60].active)
+                    {
+                        num62++;
+                        if (!Statics.tileDungeon[world.getTile()[num62, num60].type])
+                        {
+                            flag3 = true;
+                        }
+                    }
+                Label_1128:
+                    if (!flag3 && ((num62 - num61) <= num59))
+                    {
+                        bool flag4 = true;
+                        int num63 = (num56 - (num59 / 2)) - 2;
+                        int num64 = (num56 + (num59 / 2)) + 2;
+                        int num65 = num60 - 5;
+                        int num66 = num60 + 5;
+                        for (int num67 = num63; num67 <= num64; num67++)
+                        {
+                            for (int num68 = num65; num68 <= num66; num68++)
+                            {
+                                if (world.getTile()[num67, num68].active && (world.getTile()[num67, num68].type == 0x13))
+                                {
+                                    flag4 = false;
+                                    break;
+                                }
+                            }
+                        }
+                        for (int num69 = num60 + 3; num69 >= (num60 - 5); num69--)
+                        {
+                            if (world.getTile()[num56, num69].active)
+                            {
+                                flag4 = false;
+                                break;
+                            }
+                        }
+                        if (flag4)
+                        {
+                            maxTilesX = num60;
+                            break;
+                        }
+                    }
+                }
+                if ((maxTilesX > (num57 - 10)) && (maxTilesX < (num57 + 10)))
+                {
+                    int num70 = num56;
+                    int num71 = maxTilesX;
+                    int num72 = num56 + 1;
+                    while (!world.getTile()[num70, num71].active)
+                    {
+                        world.getTile()[num70, num71].active = true;
+                        world.getTile()[num70, num71].type = 0x13;
+                        num70--;
+                    }
+                    while (!world.getTile()[num72, num71].active)
+                    {
+                        world.getTile()[num72, num71].active = true;
+                        world.getTile()[num72, num71].type = 0x13;
+                        num72++;
+                    }
+                }
+            }
+            Console.WriteLine("Creating dungeon: 90%");
+            num18 = 0;
+            num19 = 0x3e8;
+            num20 = 0;
+            while (num20 < (world.getMaxTilesX() / 20))
+            {
+                num18++;
+                int num73 = genRand.Next(dMinX, dMaxX);
+                int num74 = genRand.Next(dMinY, dMaxY);
+                bool flag5 = true;
+                if ((world.getTile()[num73, num74].wall == wallType) && !world.getTile()[num73, num74].active)
+                {
+                    int num75 = 1;
+                    if (genRand.Next(2) == 0)
+                    {
+                        num75 = -1;
+                    }
+                    while (flag5 && !world.getTile()[num73, num74].active)
+                    {
+                        num73 -= num75;
+                        if ((num73 < 5) || (num73 > (world.getMaxTilesX() - 5)))
+                        {
+                            flag5 = false;
+                        }
+                        else if (world.getTile()[num73, num74].active && !Statics.tileDungeon[world.getTile()[num73, num74].type])
+                        {
+                            flag5 = false;
+                        }
+                    }
+                    if (((flag5 && world.getTile()[num73, num74].active) && (Statics.tileDungeon[world.getTile()[num73, num74].type] && world.getTile()[num73, num74 - 1].active)) && ((Statics.tileDungeon[world.getTile()[num73, num74 - 1].type] && world.getTile()[num73, num74 + 1].active) && Statics.tileDungeon[world.getTile()[num73, num74 + 1].type]))
+                    {
+                        num73 += num75;
+                        for (int num76 = num73 - 3; num76 <= (num73 + 3); num76++)
+                        {
+                            for (int num77 = num74 - 3; num77 <= (num74 + 3); num77++)
+                            {
+                                if (world.getTile()[num76, num77].active && (world.getTile()[num76, num77].type == 0x13))
+                                {
+                                    flag5 = false;
+                                    break;
+                                }
+                            }
+                        }
+                        if (flag5 && ((!world.getTile()[num73, num74 - 1].active & !world.getTile()[num73, num74 - 2].active) & !world.getTile()[num73, num74 - 3].active))
+                        {
+                            int num78 = num73;
+                            int num79 = num73;
+                            while (((num78 > dMinX) && (num78 < dMaxX)) && ((!world.getTile()[num78, num74].active && !world.getTile()[num78, num74 - 1].active) && !world.getTile()[num78, num74 + 1].active))
+                            {
+                                num78 += num75;
+                            }
+                            num78 = Math.Abs((int)(num73 - num78));
+                            bool flag6 = false;
+                            if (genRand.Next(2) == 0)
+                            {
+                                flag6 = true;
+                            }
+                            if (num78 > 5)
+                            {
+                                for (int num80 = genRand.Next(1, 4); num80 > 0; num80--)
+                                {
+                                    world.getTile()[num73, num74].active = true;
+                                    world.getTile()[num73, num74].type = 0x13;
+                                    if (flag6)
+                                    {
+                                        PlaceTile(num73, num74 - 1, world, 50, true, false, -1);
+                                        if ((genRand.Next(50) == 0) && (world.getTile()[num73, num74 - 1].type == 50))
+                                        {
+                                            world.getTile()[num73, num74 - 1].frameX = 90;
+                                        }
+                                    }
+                                    num73 += num75;
+                                }
+                                num18 = 0;
+                                num20++;
+                                if (!flag6 && (genRand.Next(2) == 0))
+                                {
+                                    num73 = num79;
+                                    num74--;
+                                    int type = genRand.Next(2);
+                                    switch (type)
+                                    {
+                                        case 0:
+                                            type = 13;
+                                            break;
+
+                                        case 1:
+                                            type = 0x31;
+                                            break;
+                                    }
+                                    PlaceTile(num73, num74, world, type, true, false, -1);
+                                    if (world.getTile()[num73, num74].type == 13)
+                                    {
+                                        if (genRand.Next(2) == 0)
+                                        {
+                                            world.getTile()[num73, num74].frameX = 0x12;
+                                        }
+                                        else
+                                        {
+                                            world.getTile()[num73, num74].frameX = 0x24;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (num18 > num19)
+                {
+                    num18 = 0;
+                    num20++;
+                }
+            }
+            Console.WriteLine("Creating dungeon: 95%");
+            for (int n = 0; n < numDRooms; n++)
+            {
+                int num83 = 0;
+                while (num83 < 0x3e8)
+                {
+                    int num84 = (int)(dRoomSize[n] * 0.4);
+                    int num85 = dRoomX[n] + genRand.Next(-num84, num84 + 1);
+                    int num86 = dRoomY[n] + genRand.Next(-num84, num84 + 1);
+                    int contain = 0;
+                    switch (n)
+                    {
+                        case 0:
+                            contain = 0x71;
+                            break;
+
+                        case 1:
+                            contain = 0x9b;
+                            break;
+
+                        case 2:
+                            contain = 0x9c;
+                            break;
+
+                        case 3:
+                            contain = 0x9d;
+                            break;
+
+                        case 4:
+                            contain = 0xa3;
+                            break;
+
+                        case 5:
+                            contain = 0xa4;
+                            break;
+                    }
+                    if ((contain == 0) && (genRand.Next(2) == 0))
+                    {
+                        num83 = 0x3e8;
+                    }
+                    else
+                    {
+                        if (AddBuriedChest(num85, num86, world, contain))
+                        {
+                            num83 += 0x3e8;
+                        }
+                        num83++;
+                    }
+                }
+            }
+            dMinX -= 0x19;
+            dMaxX += 0x19;
+            dMinY -= 0x19;
+            dMaxY += 0x19;
+            if (dMinX < 0)
+            {
+                dMinX = 0;
+            }
+            if (dMaxX > world.getMaxTilesX())
+            {
+                dMaxX = world.getMaxTilesX();
+            }
+            if (dMinY < 0)
+            {
+                dMinY = 0;
+            }
+            if (dMaxY > world.getMaxTilesY())
+            {
+                dMaxY = world.getMaxTilesY();
+            }
+            num18 = 0;
+            num19 = 0x3e8;
+            num20 = 0;
+            while (num20 < (world.getMaxTilesX() / 20))
+            {
+                num18++;
+                int num89 = genRand.Next(dMinX, dMaxX);
+                int num90 = genRand.Next(dMinY, dMaxY);
+                if (world.getTile()[num89, num90].wall == wallType)
+                {
+                    for (int num91 = num90; num91 > dMinY; num91--)
+                    {
+                        if (world.getTile()[num89, num91 - 1].active && (world.getTile()[num89, num91 - 1].type == tileType))
+                        {
+                            bool flag7 = false;
+                            for (int num92 = num89 - 15; num92 < (num89 + 15); num92++)
+                            {
+                                for (int num93 = num91 - 15; num93 < (num91 + 15); num93++)
+                                {
+                                    if ((((num92 > 0) && (num92 < world.getMaxTilesX())) && ((num93 > 0) && (num93 < world.getMaxTilesY()))) && (world.getTile()[num92, num93].type == 0x2a))
+                                    {
+                                        flag7 = true;
+                                        break;
+                                    }
+                                }
+                            }
+                            if ((world.getTile()[num89 - 1, num91].active || world.getTile()[num89 + 1, num91].active) || ((world.getTile()[num89 - 1, num91 + 1].active || world.getTile()[num89 + 1, num91 + 1].active) || world.getTile()[num89, num91 + 2].active))
+                            {
+                                flag7 = true;
+                            }
+                            if (!flag7)
+                            {
+                                Place1x2Top(num89, num91, 0x2a, world);
+                                if (world.getTile()[num89, num91].type == 0x2a)
+                                {
+                                    num18 = 0;
+                                    num20++;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+                if (num18 > num19)
+                {
+                    num20++;
+                    num18 = 0;
+                }
+            }
+        }
+
+        public static bool AddBuriedChest(int i, int j, World world, int contain = 0)
+        {
+            if (genRand == null)
+            {
+                genRand = new Random((int)DateTime.Now.Ticks);
+            }
+            for (int k = j; k < world.getMaxTilesY(); k++)
+            {
+                if (world.getTile()[i, k].active && Statics.tileSolid[world.getTile()[i, k].type])
+                {
+                    int num2 = i;
+                    int num3 = k;
+                    int index = PlaceChest(num2 - 1, num3 - 1, world, 0x15);
+                    if (index < 0)
+                    {
+                        return false;
+                    }
+                    int num5 = 0;
+                    while (num5 == 0)
+                    {
+                        if (contain > 0)
+                        {
+                            world.getChests()[index].item[num5].SetDefaults(contain);
+                            num5++;
+                        }
+                        else
+                        {
+                            switch (genRand.Next(7))
+                            {
+                                case 0:
+                                    world.getChests()[index].item[num5].SetDefaults(0x31);
+                                    break;
+
+                                case 1:
+                                    world.getChests()[index].item[num5].SetDefaults(50);
+                                    break;
+
+                                case 2:
+                                    world.getChests()[index].item[num5].SetDefaults(0x34);
+                                    break;
+
+                                case 3:
+                                    world.getChests()[index].item[num5].SetDefaults(0x35);
+                                    break;
+
+                                case 4:
+                                    world.getChests()[index].item[num5].SetDefaults(0x36);
+                                    break;
+
+                                case 5:
+                                    world.getChests()[index].item[num5].SetDefaults(0x37);
+                                    break;
+
+                                case 6:
+                                    world.getChests()[index].item[num5].SetDefaults(0x33);
+                                    world.getChests()[index].item[num5].stack = genRand.Next(0x1a) + 0x19;
+                                    break;
+                            }
+                            num5++;
+                        }
+                        if (genRand.Next(3) == 0)
+                        {
+                            world.getChests()[index].item[num5].SetDefaults(0xa7);
+                            num5++;
+                        }
+                        if (genRand.Next(2) == 0)
+                        {
+                            int num7 = genRand.Next(4);
+                            int num8 = genRand.Next(8) + 3;
+                            switch (num7)
+                            {
+                                case 0:
+                                    world.getChests()[index].item[num5].SetDefaults(0x13);
+                                    break;
+
+                                case 1:
+                                    world.getChests()[index].item[num5].SetDefaults(20);
+                                    break;
+
+                                case 2:
+                                    world.getChests()[index].item[num5].SetDefaults(0x15);
+                                    break;
+
+                                case 3:
+                                    world.getChests()[index].item[num5].SetDefaults(0x16);
+                                    break;
+                            }
+                            world.getChests()[index].item[num5].stack = num8;
+                            num5++;
+                        }
+                        if (genRand.Next(2) == 0)
+                        {
+                            int num9 = genRand.Next(2);
+                            int num10 = genRand.Next(0x1a) + 0x19;
+                            switch (num9)
+                            {
+                                case 0:
+                                    world.getChests()[index].item[num5].SetDefaults(40);
+                                    break;
+
+                                case 1:
+                                    world.getChests()[index].item[num5].SetDefaults(0x2a);
+                                    break;
+                            }
+                            world.getChests()[index].item[num5].stack = num10;
+                            num5++;
+                        }
+                        if (genRand.Next(2) == 0)
+                        {
+                            int num11 = genRand.Next(1);
+                            int num12 = genRand.Next(3) + 3;
+                            if (num11 == 0)
+                            {
+                                world.getChests()[index].item[num5].SetDefaults(0x1c);
+                            }
+                            world.getChests()[index].item[num5].stack = num12;
+                            num5++;
+                        }
+                        if (genRand.Next(2) == 0)
+                        {
+                            int num13 = genRand.Next(2);
+                            int num14 = genRand.Next(11) + 10;
+                            switch (num13)
+                            {
+                                case 0:
+                                    world.getChests()[index].item[num5].SetDefaults(8);
+                                    break;
+
+                                case 1:
+                                    world.getChests()[index].item[num5].SetDefaults(0x1f);
+                                    break;
+                            }
+                            world.getChests()[index].item[num5].stack = num14;
+                            num5++;
+                        }
+                        if (genRand.Next(2) == 0)
+                        {
+                            world.getChests()[index].item[num5].SetDefaults(0x49);
+                            world.getChests()[index].item[num5].stack = genRand.Next(1, 3);
+                            num5++;
+                        }
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+                
+        public static void ShroomPatch(int i, int j, World world)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            double num5 = genRand.Next(40, 70);
+            double num6 = num5;
+            float num7 = genRand.Next(10, 20);
+            if (genRand.Next(5) == 0)
+            {
+                num5 *= 1.5;
+                num6 *= 1.5;
+                num7 *= 1.2f;
+            }
+            vector.X = i;
+            vector.Y = j - (num7 * 0.3f);
+            vector2.X = genRand.Next(-10, 11) * 0.1f;
+            vector2.Y = genRand.Next(-20, -10) * 0.1f;
+            while ((num5 > 0.0) && (num7 > 0f))
+            {
+                num5 -= genRand.Next(3);
+                num7--;
+                int num = (int)(vector.X - (num5 * 0.5));
+                int maxTilesX = (int)(vector.X + (num5 * 0.5));
+                int num2 = (int)(vector.Y - (num5 * 0.5));
+                int maxTilesY = (int)(vector.Y + (num5 * 0.5));
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                num6 = (num5 * genRand.Next(80, 120)) * 0.01;
+                for (int k = num; k < maxTilesX; k++)
+                {
+                    for (int m = num2; m < maxTilesY; m++)
+                    {
+                        float num10 = Math.Abs((float)(k - vector.X));
+                        float num11 = Math.Abs((float)((m - vector.Y) * 2.3f));
+                        if (Math.Sqrt((double)((num10 * num10) + (num11 * num11))) < (num6 * 0.4))
+                        {
+                            if (m < (vector.Y + (num6 * 0.05)))
+                            {
+                                if (world.getTile()[k, m].type != 0x3b)
+                                {
+                                    world.getTile()[k, m].active = false;
+                                }
+                            }
+                            else
+                            {
+                                world.getTile()[k, m].type = 0x3b;
+                            }
+                            world.getTile()[k, m].liquid = 0;
+                            world.getTile()[k, m].lava = false;
+                        }
+                    }
+                }
+                vector += vector2;
+                vector2.X += genRand.Next(-10, 11) * 0.05f;
+                vector2.Y += genRand.Next(-10, 11) * 0.05f;
+                if (vector2.X > 1f)
+                {
+                    vector2.X = 0.1f;
+                }
+                if (vector2.X < -1f)
+                {
+                    vector2.X = -1f;
+                }
+                if (vector2.Y > 1f)
+                {
+                    vector2.Y = 1f;
+                }
+                if (vector2.Y < -1f)
+                {
+                    vector2.Y = -1f;
+                }
+            }
+        }
+
+        public static void HellHouse(int i, int j, World world)
+        {
+            int width = genRand.Next(8, 20);
+            int num2 = genRand.Next(3);
+            int num3 = genRand.Next(7);
+            int num4 = i;
+            int num5 = j;
+            for (int k = 0; k < num2; k++)
+            {
+                int height = genRand.Next(5, 9);
+                HellRoom(num4, num5, width, height, world);
+                num5 -= height;
+            }
+            num5 = j;
+            for (int m = 0; m < num3; m++)
+            {
+                int num9 = genRand.Next(5, 9);
+                num5 += num9;
+                HellRoom(num4, num5, width, num9, world);
+            }
+            for (int n = i - (width / 2); n <= (i + (width / 2)); n++)
+            {
+                num5 = j;
+                while ((num5 < world.getMaxTilesY()) && ((world.getTile()[n, num5].active && (world.getTile()[n, num5].type == 0x4c)) || (world.getTile()[n, num5].wall == 13)))
+                {
+                    num5++;
+                }
+                int num11 = 6 + genRand.Next(3);
+                while ((num5 < world.getMaxTilesY()) && !world.getTile()[n, num5].active)
+                {
+                    num11--;
+                    world.getTile()[n, num5].active = true;
+                    world.getTile()[n, num5].type = 0x39;
+                    num5++;
+                    if (num11 <= 0)
+                    {
+                        break;
+                    }
+                }
+            }
+            int minValue = 0;
+            int maxValue = 0;
+            num5 = j;
+            while ((num5 < world.getMaxTilesY()) && ((world.getTile()[i, num5].active && (world.getTile()[i, num5].type == 0x4c)) || (world.getTile()[i, num5].wall == 13)))
+            {
+                num5++;
+            }
+            num5--;
+            maxValue = num5;
+            while ((world.getTile()[i, num5].active && (world.getTile()[i, num5].type == 0x4c)) || (world.getTile()[i, num5].wall == 13))
+            {
+                num5--;
+                if (world.getTile()[i, num5].active && (world.getTile()[i, num5].type == 0x4c))
+                {
+                    int num14 = genRand.Next((i - (width / 2)) + 1, (i + (width / 2)) - 1);
+                    int num15 = genRand.Next((i - (width / 2)) + 1, (i + (width / 2)) - 1);
+                    if (num14 > num15)
+                    {
+                        int num16 = num14;
+                        num14 = num15;
+                        num15 = num16;
+                    }
+                    if (num14 == num15)
+                    {
+                        if (num14 < i)
+                        {
+                            num15++;
+                        }
+                        else
+                        {
+                            num14--;
+                        }
+                    }
+                    for (int num17 = num14; num17 <= num15; num17++)
+                    {
+                        if (world.getTile()[num17, num5 - 1].wall == 13)
+                        {
+                            world.getTile()[num17, num5].wall = 13;
+                        }
+                        world.getTile()[num17, num5].type = 0x13;
+                        world.getTile()[num17, num5].active = true;
+                    }
+                    num5--;
+                }
+            }
+            minValue = num5;
+            float num18 = (maxValue - minValue) * width;
+            float num19 = num18 * 0.02f;
+            for (int num20 = 0; num20 < num19; num20++)
+            {
+                int num21 = genRand.Next(i - (width / 2), (i + (width / 2)) + 1);
+                int num22 = genRand.Next(minValue, maxValue);
+                int num23 = genRand.Next(3, 8);
+                for (int num24 = num21 - num23; num24 <= (num21 + num23); num24++)
+                {
+                    for (int num25 = num22 - num23; num25 <= (num22 + num23); num25++)
+                    {
+                        float num26 = Math.Abs((int)(num24 - num21));
+                        float num27 = Math.Abs((int)(num25 - num22));
+                        if (Math.Sqrt((double)((num26 * num26) + (num27 * num27))) < (num23 * 0.4))
+                        {
+                            if ((world.getTile()[num24, num25].type == 0x4c) || (world.getTile()[num24, num25].type == 0x13))
+                            {
+                                world.getTile()[num24, num25].active = false;
+                            }
+                            world.getTile()[num24, num25].wall = 0;
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void HellRoom(int i, int j, int width, int height, World world)
+        {
+            for (int k = i - (width / 2); k <= (i + (width / 2)); k++)
+            {
+                for (int n = j - height; n <= j; n++)
+                {
+                    world.getTile()[k, n].active = true;
+                    world.getTile()[k, n].type = 0x4c;
+                    world.getTile()[k, n].liquid = 0;
+                    world.getTile()[k, n].lava = false;
+                }
+            }
+            for (int m = (i - (width / 2)) + 1; m <= ((i + (width / 2)) - 1); m++)
+            {
+                for (int num4 = (j - height) + 1; num4 <= (j - 1); num4++)
+                {
+                    world.getTile()[m, num4].active = false;
+                    world.getTile()[m, num4].wall = 13;
+                    world.getTile()[m, num4].liquid = 0;
+                    world.getTile()[m, num4].lava = false;
+                }
+            }
+        }
+
+        public static void AddHellHouses(World world)
+        {
+            int num = (int)(world.getMaxTilesX() * 0.25);
+            for (int i = num; i < (world.getMaxTilesX() - num); i++)
+            {
+                int j = world.getMaxTilesY() - 40;
+                while (world.getTile()[i, j].active || (world.getTile()[i, j].liquid > 0))
+                {
+                    j--;
+                }
+                if (world.getTile()[i, j + 1].active)
+                {
+                    HellHouse(i, j, world);
+                    i += genRand.Next(15, 80);
+                }
+            }
+        }
+
+        public static bool AddLifeCrystal(int i, int j, World world)
+        {
+            for (int k = j; k < world.getMaxTilesY(); k++)
+            {
+                if (world.getTile()[i, k].active && Statics.tileSolid[world.getTile()[i, k].type])
+                {
+                    int endX = i;
+                    int endY = k - 1;
+                    if (world.getTile()[endX, endY - 1].lava || world.getTile()[endX - 1, endY - 1].lava)
+                    {
+                        return false;
+                    }
+                    if (!EmptyTileCheck(endX - 1, endX, endY - 1, endY, world, -1))
+                    {
+                        return false;
+                    }
+                    world.getTile()[endX - 1, endY - 1].active = true;
+                    world.getTile()[endX - 1, endY - 1].type = 12;
+                    world.getTile()[endX - 1, endY - 1].frameX = 0;
+                    world.getTile()[endX - 1, endY - 1].frameY = 0;
+                    world.getTile()[endX, endY - 1].active = true;
+                    world.getTile()[endX, endY - 1].type = 12;
+                    world.getTile()[endX, endY - 1].frameX = 0x12;
+                    world.getTile()[endX, endY - 1].frameY = 0;
+                    world.getTile()[endX - 1, endY].active = true;
+                    world.getTile()[endX - 1, endY].type = 12;
+                    world.getTile()[endX - 1, endY].frameX = 0;
+                    world.getTile()[endX - 1, endY].frameY = 0x12;
+                    world.getTile()[endX, endY].active = true;
+                    world.getTile()[endX, endY].type = 12;
+                    world.getTile()[endX, endY].frameX = 0x12;
+                    world.getTile()[endX, endY].frameY = 0x12;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void Lakinater(int i, int j, World world)
+        {
+            Vector2 vector = new Vector2();
+            Vector2 vector2 = new Vector2();
+            double num5 = genRand.Next(0x19, 50);
+            double num6 = num5;
+            float num7 = genRand.Next(30, 80);
+            if (genRand.Next(5) == 0)
+            {
+                num5 *= 1.5;
+                num6 *= 1.5;
+                num7 *= 1.2f;
+            }
+            vector.X = i;
+            vector.Y = j - (num7 * 0.3f);
+            vector2.X = genRand.Next(-10, 11) * 0.1f;
+            vector2.Y = genRand.Next(-20, -10) * 0.1f;
+            while ((num5 > 0.0) && (num7 > 0f))
+            {
+                if ((vector.Y + (num6 * 0.5)) > world.getWorldSurface())
+                {
+                    num7 = 0f;
+                }
+                num5 -= genRand.Next(3);
+                num7--;
+                int num = (int)(vector.X - (num5 * 0.5));
+                int maxTilesX = (int)(vector.X + (num5 * 0.5));
+                int num2 = (int)(vector.Y - (num5 * 0.5));
+                int maxTilesY = (int)(vector.Y + (num5 * 0.5));
+                if (num < 0)
+                {
+                    num = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                if (num2 < 0)
+                {
+                    num2 = 0;
+                }
+                if (maxTilesY > world.getMaxTilesY())
+                {
+                    maxTilesY = world.getMaxTilesY();
+                }
+                num6 = (num5 * genRand.Next(80, 120)) * 0.01;
+                for (int k = num; k < maxTilesX; k++)
+                {
+                    for (int m = num2; m < maxTilesY; m++)
+                    {
+                        float num10 = Math.Abs((float)(k - vector.X));
+                        float num11 = Math.Abs((float)(m - vector.Y));
+                        if (Math.Sqrt((double)((num10 * num10) + (num11 * num11))) < (num6 * 0.4))
+                        {
+                            if (world.getTile()[k, m].active)
+                            {
+                                world.getTile()[k, m].liquid = 0xff;
+                            }
+                            world.getTile()[k, m].active = false;
+                        }
+                    }
+                }
+                vector += vector2;
+                vector2.X += genRand.Next(-10, 11) * 0.05f;
+                vector2.Y += genRand.Next(-10, 11) * 0.05f;
+                if (vector2.X > 0.5)
+                {
+                    vector2.X = 0.5f;
+                }
+                if (vector2.X < -0.5)
+                {
+                    vector2.X = -0.5f;
+                }
+                if (vector2.Y > 1.5)
+                {
+                    vector2.Y = 1.5f;
+                }
+                if (vector2.Y < 0.5)
+                {
+                    vector2.Y = 0.5f;
+                }
+            }
+        }
+
+        public static void AddPlants(World world)
+        {
+            for (int i = 0; i < world.getMaxTilesX(); i++)
+            {
+                for (int j = 1; j < world.getMaxTilesY(); j++)
+                {
+                    if ((world.getTile()[i, j].type == 2) && world.getTile()[i, j].active)
+                    {
+                        if (!world.getTile()[i, j - 1].active)
+                        {
+                            PlaceTile(i, j - 1, world, 3, true, false, -1);
+                        }
+                    }
+                    else if (((world.getTile()[i, j].type == 0x17) && world.getTile()[i, j].active) && !world.getTile()[i, j - 1].active)
+                    {
+                        PlaceTile(i, j - 1, world, 0x18, true, false, -1);
+                    }
+                }
+            }
+        }
+
+        public static void FloatingIsland(int i, int j, World world)
+        {
+            double num = (double)WorldGen.genRand.Next(80, 120);
+            float num2 = (float)WorldGen.genRand.Next(20, 25);
+            Vector2 value = new Vector2();
+            value.X = (float)i;
+            value.Y = (float)j;
+            Vector2 value2 = new Vector2();
+            value2.X = (float)WorldGen.genRand.Next(-20, 21) * 0.2f;
+            while (value2.X > -2f && value2.X < 2f)
+            {
+                value2.X = (float)WorldGen.genRand.Next(-20, 21) * 0.2f;
+            }
+            value2.Y = (float)WorldGen.genRand.Next(-20, -10) * 0.02f;
+            while (num > 0.0 && num2 > 0f)
+            {
+                num -= (double)WorldGen.genRand.Next(4);
+                num2 -= 1f;
+                int num3 = (int)((double)value.X - num * 0.5);
+                int num4 = (int)((double)value.X + num * 0.5);
+                int num5 = (int)((double)value.Y - num * 0.5);
+                int num6 = (int)((double)value.Y + num * 0.5);
+                if (num3 < 0)
+                {
+                    num3 = 0;
+                }
+                if (num4 > world.getMaxTilesX())
+                {
+                    num4 = world.getMaxTilesX();
+                }
+                if (num5 < 0)
+                {
+                    num5 = 0;
+                }
+                if (num6 > world.getMaxTilesX())
+                {
+                    num6 = world.getMaxTilesX();
+                }
+                double num7 = num * (double)WorldGen.genRand.Next(80, 120) * 0.01;
+                float num8 = value.Y + 1f;
+                for (int k = num3; k < num4; k++)
+                {
+                    if (WorldGen.genRand.Next(2) == 0)
+                    {
+                        num8 += (float)WorldGen.genRand.Next(-1, 2);
+                    }
+                    if (num8 < value.Y)
+                    {
+                        num8 = value.Y;
+                    }
+                    if (num8 > value.Y + 2f)
+                    {
+                        num8 = value.Y + 2f;
+                    }
+                    for (int l = num5; l < num6; l++)
+                    {
+                        if ((float)l > num8)
+                        {
+                            float num9 = Math.Abs((float)k - value.X);
+                            float num10 = Math.Abs((float)l - value.Y) * 2f;
+                            double num11 = Math.Sqrt((double)(num9 * num9 + num10 * num10));
+                            if (num11 < num7 * 0.4)
+                            {
+                                world.getTile()[k, l].active = true;
+                            }
+                        }
+                    }
+                }
+                WorldGen.TileRunner(WorldGen.genRand.Next(num3 + 10, num4 - 10), (int)((double)value.Y + num7 * 0.1 + 5.0), world, (double)WorldGen.genRand.Next(5, 10), WorldGen.genRand.Next(10, 15), 0, true, 0f, 2f, true, true);
+                num3 = (int)((double)value.X - num * 0.4);
+                num4 = (int)((double)value.X + num * 0.4);
+                num5 = (int)((double)value.Y - num * 0.4);
+                num6 = (int)((double)value.Y + num * 0.4);
+                if (num3 < 0)
+                {
+                    num3 = 0;
+                }
+                if (num4 > world.getMaxTilesX())
+                {
+                    num4 = world.getMaxTilesX();
+                }
+                if (num5 < 0)
+                {
+                    num5 = 0;
+                }
+                if (num6 > world.getMaxTilesX())
+                {
+                    num6 = world.getMaxTilesX();
+                }
+                num7 = num * (double)WorldGen.genRand.Next(80, 120) * 0.01;
+                for (int m = num3; m < num4; m++)
+                {
+                    for (int n = num5; n < num6; n++)
+                    {
+                        if ((float)n > value.Y + 2f)
+                        {
+                            float num12 = Math.Abs((float)m - value.X);
+                            float num13 = Math.Abs((float)n - value.Y) * 2f;
+                            double num14 = Math.Sqrt((double)(num12 * num12 + num13 * num13));
+                            if (num14 < num7 * 0.4)
+                            {
+                                world.getTile()[m, n].wall = 2;
+                            }
+                        }
+                    }
+                }
+                value += value2;
+                value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                if (value2.X > 1f)
+                {
+                    value2.X = 1f;
+                }
+                if (value2.X < -1f)
+                {
+                    value2.X = -1f;
+                }
+                if ((double)value2.Y > 0.2)
+                {
+                    value2.Y = -0.2f;
+                }
+                if ((double)value2.Y < -0.2)
+                {
+                    value2.Y = -0.2f;
+                }
+            }
+        }
+
+        public static void Mountinater(int i, int j, World world)
+        {
+            double num = (double)WorldGen.genRand.Next(80, 120);
+            float num2 = (float)WorldGen.genRand.Next(40, 55);
+            Vector2 value = new Vector2();
+            value.X = (float)i;
+            value.Y = (float)j + num2 / 2f;
+            Vector2 value2 = new Vector2();
+            value2.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
+            value2.Y = (float)WorldGen.genRand.Next(-20, -10) * 0.1f;
+            while (num > 0.0 && num2 > 0f)
+            {
+                num -= (double)WorldGen.genRand.Next(4);
+                num2 -= 1f;
+                int num3 = (int)((double)value.X - num * 0.5);
+                int num4 = (int)((double)value.X + num * 0.5);
+                int num5 = (int)((double)value.Y - num * 0.5);
+                int num6 = (int)((double)value.Y + num * 0.5);
+                if (num3 < 0)
+                {
+                    num3 = 0;
+                }
+                if (num4 > world.getMaxTilesX())
+                {
+                    num4 = world.getMaxTilesX();
+                }
+                if (num5 < 0)
+                {
+                    num5 = 0;
+                }
+                if (num6 > world.getMaxTilesX())
+                {
+                    num6 = world.getMaxTilesX();
+                }
+                double num7 = num * (double)WorldGen.genRand.Next(80, 120) * 0.01;
+                for (int k = num3; k < num4; k++)
+                {
+                    for (int l = num5; l < num6; l++)
+                    {
+                        float num8 = Math.Abs((float)k - value.X);
+                        float num9 = Math.Abs((float)l - value.Y);
+                        double num10 = Math.Sqrt((double)(num8 * num8 + num9 * num9));
+                        if (num10 < num7 * 0.4 && !world.getTile()[k, l].active)
+                        {
+                            world.getTile()[k, l].active = true;
+                            world.getTile()[k, l].type = 0;
+                        }
+                    }
+                }
+                value += value2;
+                value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                if ((double)value2.X > 0.5)
+                {
+                    value2.X = 0.5f;
+                }
+                if ((double)value2.X < -0.5)
+                {
+                    value2.X = -0.5f;
+                }
+                if ((double)value2.Y > -0.5)
+                {
+                    value2.Y = -0.5f;
+                }
+                if ((double)value2.Y < -1.5)
+                {
+                    value2.Y = -1.5f;
+                }
+            }
+        }
 
         public static bool EmptyTileCheck(int startX, int endX, int startY, int endY, World world, int ignoreStyle = -1)
         {
@@ -58,7 +3665,7 @@ namespace Terraria_Server
             {
                 return false;
             }
-            if (endX >= Statics.maxTilesX)
+            if (endX >= world.getMaxTilesX())
             {
                 return false;
             }
@@ -66,7 +3673,7 @@ namespace Terraria_Server
             {
                 return false;
             }
-            if (endY >= Statics.maxTilesY)
+            if (endY >= world.getMaxTilesY())
             {
                 return false;
             }
@@ -164,7 +3771,7 @@ namespace Terraria_Server
                                     {
                                         bestX = WorldGen.bestX - k;
                                     }
-                                    if ((bestX > 10) && (bestX < (Statics.maxTilesX - 10)))
+                                    if ((bestX > 10) && (bestX < (world.getMaxTilesX() - 10)))
                                     {
                                         int num8 = WorldGen.bestY - k;
                                         double worldSurface = WorldGen.bestY + k;
@@ -729,17 +4336,17 @@ namespace Terraria_Server
                 {
                     num = 0;
                 }
-                if (maxTilesX > Statics.maxTilesX)
+                if (maxTilesX > world.getMaxTilesX())
                 {
-                    maxTilesX = Statics.maxTilesX;
+                    maxTilesX = world.getMaxTilesX();
                 }
                 if (num3 < 0)
                 {
                     num3 = 0;
                 }
-                if (maxTilesY > Statics.maxTilesY)
+                if (maxTilesY > world.getMaxTilesY())
                 {
-                    maxTilesY = Statics.maxTilesY;
+                    maxTilesY = world.getMaxTilesY();
                 }
                 bool flag = true;
                 for (int k = num; k < maxTilesX; k++)
@@ -800,9 +4407,9 @@ namespace Terraria_Server
                     }
                 }
             }
-            for (int i = 0; i < ((Statics.maxTilesX * Statics.maxTilesY) * num); i++)
+            for (int i = 0; i < ((world.getMaxTilesX() * world.getMaxTilesY()) * num); i++)
             {
-                int num5 = genRand.Next(10, Statics.maxTilesX - 10);
+                int num5 = genRand.Next(10, world.getMaxTilesX() - 10);
                 int num6 = genRand.Next(10, ((int)world.getWorldSurface()) - 1);
                 int num7 = num5 - 1;
                 int num8 = num5 + 2;
@@ -812,17 +4419,17 @@ namespace Terraria_Server
                 {
                     num7 = 10;
                 }
-                if (num8 > (Statics.maxTilesX - 10))
+                if (num8 > (world.getMaxTilesX() - 10))
                 {
-                    num8 = Statics.maxTilesX - 10;
+                    num8 = world.getMaxTilesX() - 10;
                 }
                 if (num9 < 10)
                 {
                     num9 = 10;
                 }
-                if (num10 > (Statics.maxTilesY - 10))
+                if (num10 > (world.getMaxTilesY() - 10))
                 {
-                    num10 = Statics.maxTilesY - 10;
+                    num10 = world.getMaxTilesY() - 10;
                 }
                 if (world.getTile()[num5, num6] != null)
                 {
@@ -1037,10 +4644,10 @@ namespace Terraria_Server
                     }
                 }
             }
-            for (int j = 0; j < ((Statics.maxTilesX * Statics.maxTilesY) * num2); j++)
+            for (int j = 0; j < ((world.getMaxTilesX() * world.getMaxTilesY()) * num2); j++)
             {
-                int num29 = genRand.Next(10, Statics.maxTilesX - 10);
-                int num30 = genRand.Next(((int)world.getWorldSurface()) + 2, Statics.maxTilesY - 200);
+                int num29 = genRand.Next(10, world.getMaxTilesX() - 10);
+                int num30 = genRand.Next(((int)world.getWorldSurface()) + 2, world.getMaxTilesY() - 200);
                 int num31 = num29 - 1;
                 int num32 = num29 + 2;
                 int num33 = num30 - 1;
@@ -1049,17 +4656,17 @@ namespace Terraria_Server
                 {
                     num31 = 10;
                 }
-                if (num32 > (Statics.maxTilesX - 10))
+                if (num32 > (world.getMaxTilesX() - 10))
                 {
-                    num32 = Statics.maxTilesX - 10;
+                    num32 = world.getMaxTilesX() - 10;
                 }
                 if (num33 < 10)
                 {
                     num33 = 10;
                 }
-                if (num34 > (Statics.maxTilesY - 10))
+                if (num34 > (world.getMaxTilesY() - 10))
                 {
-                    num34 = Statics.maxTilesY - 10;
+                    num34 = world.getMaxTilesY() - 10;
                 }
                 if (world.getTile()[num29, num30] != null)
                 {
@@ -1279,13 +4886,13 @@ namespace Terraria_Server
             }
             if (!world.isDayTime())
             {
-                float num55 = Statics.maxTilesX / 0x1068;
+                float num55 = world.getMaxTilesX() / 0x1068;
                 if (Statics.rand.Next(0x1f40) < (10f * num55))
                 {
                     int num56 = 12;
-                    int num57 = Statics.rand.Next(Statics.maxTilesX - 50) + 100;
+                    int num57 = Statics.rand.Next(world.getMaxTilesX() - 50) + 100;
                     num57 *= 0x10;
-                    int num58 = Statics.rand.Next((int)(Statics.maxTilesY * 0.05)) * 0x10;
+                    int num58 = Statics.rand.Next((int)(world.getMaxTilesY() * 0.05)) * 0x10;
                     Vector2 vector = new Vector2((float)num57, (float)num58);
                     float speedX = Statics.rand.Next(-100, 0x65);
                     float speedY = Statics.rand.Next(200) + 100;
@@ -1338,17 +4945,17 @@ namespace Terraria_Server
             {
                 num7 = 0;
             }
-            if (num8 >= Statics.maxTilesX)
+            if (num8 >= world.getMaxTilesX())
             {
-                num8 = Statics.maxTilesX - 1;
+                num8 = world.getMaxTilesX() - 1;
             }
             if (num9 < 0)
             {
                 num9 = 0;
             }
-            if (maxTilesX > Statics.maxTilesX)
+            if (maxTilesX > world.getMaxTilesX())
             {
-                maxTilesX = Statics.maxTilesX;
+                maxTilesX = world.getMaxTilesX();
             }
             for (int j = num7 + 1; j < num8; j++)
             {
@@ -1462,7 +5069,7 @@ namespace Terraria_Server
         public static void QuickFindHome(int npc, World world)
         {
             if (((world.getNPCs()[npc].homeTileX > 10) && (world.getNPCs()[npc].homeTileY > 10)) && ((world.getNPCs()[npc].homeTileX <
-                (Statics.maxTilesX - 10)) && (world.getNPCs()[npc].homeTileY < Statics.maxTilesY)))
+                (world.getMaxTilesX() - 10)) && (world.getNPCs()[npc].homeTileY < world.getMaxTilesY())))
             {
                 canSpawn = false;
                 StartRoomCheck(world.getNPCs()[npc].homeTileX, world.getNPCs()[npc].homeTileY - 1, world);
@@ -1787,7 +5394,7 @@ namespace Terraria_Server
 
         public static void KillWall(int i, int j, World world, bool fail = false)
         {
-            if (((i >= 0) && (j >= 0)) && ((i < Statics.maxTilesX) && (j < Statics.maxTilesY)))
+            if (((i >= 0) && (j >= 0)) && ((i < world.getMaxTilesX()) && (j < world.getMaxTilesY())))
             {
                 if (world.getTile()[i, j] == null)
                 {
@@ -1930,7 +5537,7 @@ namespace Terraria_Server
 
         public static void WallFrame(int i, int j, World world, bool resetFrame = false)
         {
-            if ((((i >= 0) && (j >= 0)) && ((i < Statics.maxTilesX) && (j < Statics.maxTilesY))) && ((world.getTile()[i, j] != null) && (world.getTile()[i, j].wall > 0)))
+            if ((((i >= 0) && (j >= 0)) && ((i < world.getMaxTilesX()) && (j < world.getMaxTilesY()))) && ((world.getTile()[i, j] != null) && (world.getTile()[i, j].wall > 0)))
             {
                 int num = -1;
                 int num2 = -1;
@@ -1954,7 +5561,7 @@ namespace Terraria_Server
                         num4 = wall;
                         num6 = wall;
                     }
-                    if ((i + 1) >= Statics.maxTilesX)
+                    if ((i + 1) >= world.getMaxTilesX())
                     {
                         num3 = wall;
                         num5 = wall;
@@ -1966,7 +5573,7 @@ namespace Terraria_Server
                         num2 = wall;
                         num3 = wall;
                     }
-                    if ((j + 1) >= Statics.maxTilesY)
+                    if ((j + 1) >= world.getMaxTilesY())
                     {
                         num6 = wall;
                         num7 = wall;
@@ -1976,7 +5583,7 @@ namespace Terraria_Server
                     {
                         num4 = world.getTile()[i - 1, j].wall;
                     }
-                    if (((i + 1) < Statics.maxTilesX) && (world.getTile()[i + 1, j] != null))
+                    if (((i + 1) < world.getMaxTilesX()) && (world.getTile()[i + 1, j] != null))
                     {
                         num5 = world.getTile()[i + 1, j].wall;
                     }
@@ -1984,7 +5591,7 @@ namespace Terraria_Server
                     {
                         num2 = world.getTile()[i, j - 1].wall;
                     }
-                    if (((j + 1) < Statics.maxTilesY) && (world.getTile()[i, j + 1] != null))
+                    if (((j + 1) < world.getMaxTilesY()) && (world.getTile()[i, j + 1] != null))
                     {
                         num7 = world.getTile()[i, j + 1].wall;
                     }
@@ -1992,15 +5599,15 @@ namespace Terraria_Server
                     {
                         num = world.getTile()[i - 1, j - 1].wall;
                     }
-                    if ((((i + 1) < Statics.maxTilesX) && ((j - 1) >= 0)) && (world.getTile()[i + 1, j - 1] != null))
+                    if ((((i + 1) < world.getMaxTilesX()) && ((j - 1) >= 0)) && (world.getTile()[i + 1, j - 1] != null))
                     {
                         num3 = world.getTile()[i + 1, j - 1].wall;
                     }
-                    if ((((i - 1) >= 0) && ((j + 1) < Statics.maxTilesY)) && (world.getTile()[i - 1, j + 1] != null))
+                    if ((((i - 1) >= 0) && ((j + 1) < world.getMaxTilesY())) && (world.getTile()[i - 1, j + 1] != null))
                     {
                         num6 = world.getTile()[i - 1, j + 1].wall;
                     }
-                    if ((((i + 1) < Statics.maxTilesX) && ((j + 1) < Statics.maxTilesY)) && (world.getTile()[i + 1, j + 1] != null))
+                    if ((((i + 1) < world.getMaxTilesX()) && ((j + 1) < world.getMaxTilesY())) && (world.getTile()[i + 1, j + 1] != null))
                     {
                         num8 = world.getTile()[i + 1, j + 1].wall;
                     }
@@ -2468,9 +6075,9 @@ namespace Terraria_Server
         {
             Liquid.numLiquid = 0;
             LiquidBuffer.numLiquidBuffer = 0;
-            for (int i = 1; i < (Statics.maxTilesX - 1); i++)
+            for (int i = 1; i < (world.getMaxTilesX() - 1); i++)
             {
-                for (int j = Statics.maxTilesY - 2; j > 0; j--)
+                for (int j = world.getMaxTilesY() - 2; j > 0; j--)
                 {
                     world.getTile()[i, j].checkingLiquid = false;
                     if (((world.getTile()[i, j].liquid > 0) && world.getTile()[i, j].active) && (Statics.tileSolid[world.getTile()[i, j].type] && !Statics.tileSolidTop[world.getTile()[i, j].type]))
@@ -2538,10 +6145,10 @@ namespace Terraria_Server
             int num = -1;
             int type = world.getTile()[i, j].type;
             int num1 = i - 1;
-            int maxTilesX = Statics.maxTilesX;
+            int maxTilesX = world.getMaxTilesX();
             int num4 = i + 1;
             int num5 = j - 1;
-            if ((j + 1) >= Statics.maxTilesY)
+            if ((j + 1) >= world.getMaxTilesY())
             {
                 num = type;
             }
@@ -2549,7 +6156,7 @@ namespace Terraria_Server
             {
                 byte num6 = world.getTile()[i - 1, j].type;
             }
-            if ((((i + 1) < Statics.maxTilesX) && (world.getTile()[i + 1, j] != null)) && world.getTile()[i + 1, j].active)
+            if ((((i + 1) < world.getMaxTilesX()) && (world.getTile()[i + 1, j] != null)) && world.getTile()[i + 1, j].active)
             {
                 byte num7 = world.getTile()[i + 1, j].type;
             }
@@ -2557,7 +6164,7 @@ namespace Terraria_Server
             {
                 byte num8 = world.getTile()[i, j - 1].type;
             }
-            if ((((j + 1) < Statics.maxTilesY) && (world.getTile()[i, j + 1] != null)) && world.getTile()[i, j + 1].active)
+            if ((((j + 1) < world.getMaxTilesY()) && (world.getTile()[i, j + 1] != null)) && world.getTile()[i, j + 1].active)
             {
                 num = world.getTile()[i, j + 1].type;
             }
@@ -2565,15 +6172,15 @@ namespace Terraria_Server
             {
                 byte num9 = world.getTile()[i - 1, j - 1].type;
             }
-            if ((((i + 1) < Statics.maxTilesX) && ((j - 1) >= 0)) && ((world.getTile()[i + 1, j - 1] != null) && world.getTile()[i + 1, j - 1].active))
+            if ((((i + 1) < world.getMaxTilesX()) && ((j - 1) >= 0)) && ((world.getTile()[i + 1, j - 1] != null) && world.getTile()[i + 1, j - 1].active))
             {
                 byte num10 = world.getTile()[i + 1, j - 1].type;
             }
-            if ((((i - 1) >= 0) && ((j + 1) < Statics.maxTilesY)) && ((world.getTile()[i - 1, j + 1] != null) && world.getTile()[i - 1, j + 1].active))
+            if ((((i - 1) >= 0) && ((j + 1) < world.getMaxTilesY())) && ((world.getTile()[i - 1, j + 1] != null) && world.getTile()[i - 1, j + 1].active))
             {
                 byte num11 = world.getTile()[i - 1, j + 1].type;
             }
-            if ((((i + 1) < Statics.maxTilesX) && ((j + 1) < Statics.maxTilesY)) && ((world.getTile()[i + 1, j + 1] != null) && world.getTile()[i + 1, j + 1].active))
+            if ((((i + 1) < world.getMaxTilesX()) && ((j + 1) < world.getMaxTilesY())) && ((world.getTile()[i + 1, j + 1] != null) && world.getTile()[i + 1, j + 1].active))
             {
                 byte num12 = world.getTile()[i + 1, j + 1].type;
             }
@@ -2677,7 +6284,7 @@ namespace Terraria_Server
 
         public static void Place3x2(int x, int y, int type, World world)
         {
-            if (((x >= 5) && (x <= (Statics.maxTilesX - 5))) && ((y >= 5) && (y <= (Statics.maxTilesY - 5))))
+            if (((x >= 5) && (x <= (world.getMaxTilesX() - 5))) && ((y >= 5) && (y <= (world.getMaxTilesY() - 5))))
             {
                 bool flag = true;
                 for (int i = x - 1; i < (x + 2); i++)
@@ -2847,7 +6454,7 @@ namespace Terraria_Server
             int num4 = y + 3;
             if (num >= 0)
             {
-                if (num2 > Statics.maxTilesX)
+                if (num2 > world.getMaxTilesX())
                 {
                     return false;
                 }
@@ -2855,7 +6462,7 @@ namespace Terraria_Server
                 {
                     return false;
                 }
-                if (num4 > Statics.maxTilesY)
+                if (num4 > world.getMaxTilesY())
                 {
                     return false;
                 }
@@ -3060,7 +6667,7 @@ namespace Terraria_Server
 
         public static void Place4x2(int x, int y, int type, World world, int direction = -1)
         {
-            if (((x >= 5) && (x <= (Statics.maxTilesX - 5))) && ((y >= 5) && (y <= (Statics.maxTilesY - 5))))
+            if (((x >= 5) && (x <= (world.getMaxTilesX() - 5))) && ((y >= 5) && (y <= (world.getMaxTilesY() - 5))))
             {
                 bool flag = true;
                 for (int i = x - 1; i < (x + 3); i++)
@@ -3159,7 +6766,7 @@ namespace Terraria_Server
         public static bool PlaceTile(int i, int j, World world, int type, bool mute = false, bool forced = false, int plr = -1)
         {
             bool flag = false;
-            if (((i >= 0) && (j >= 0)) && ((i < Statics.maxTilesX) && (j < Statics.maxTilesY)))
+            if (((i >= 0) && (j >= 0)) && ((i < world.getMaxTilesX()) && (j < world.getMaxTilesY())))
             {
                 if (world.getTile()[i, j] == null)
                 {
@@ -3189,7 +6796,7 @@ namespace Terraria_Server
                 world.getTile()[i, j].frameX = 0;
                 if ((type == 3) || (type == 0x18))
                 {
-                    if ((((j + 1) < Statics.maxTilesY) && world.getTile()[i, j + 1].active) && ((((world.getTile()[i, j + 1].type == 2) && (type == 3)) || ((world.getTile()[i, j + 1].type == 0x17) && (type == 0x18))) || ((world.getTile()[i, j + 1].type == 0x4e) && (type == 3))))
+                    if ((((j + 1) < world.getMaxTilesY()) && world.getTile()[i, j + 1].active) && ((((world.getTile()[i, j + 1].type == 2) && (type == 3)) || ((world.getTile()[i, j + 1].type == 0x17) && (type == 0x18))) || ((world.getTile()[i, j + 1].type == 0x4e) && (type == 3))))
                     {
                         if ((type == 0x18) && (genRand.Next(13) == 0))
                         {
@@ -3228,7 +6835,7 @@ namespace Terraria_Server
                 }
                 else if (type == 0x3d)
                 {
-                    if ((((j + 1) < Statics.maxTilesY) && world.getTile()[i, j + 1].active) && (world.getTile()[i, j + 1].type == 60))
+                    if ((((j + 1) < world.getMaxTilesY()) && world.getTile()[i, j + 1].active) && (world.getTile()[i, j + 1].type == 60))
                     {
                         if (genRand.Next(10) == 0)
                         {
@@ -3258,7 +6865,7 @@ namespace Terraria_Server
                 }
                 else if (type == 0x47)
                 {
-                    if ((((j + 1) < Statics.maxTilesY) && world.getTile()[i, j + 1].active) && (world.getTile()[i, j + 1].type == 70))
+                    if ((((j + 1) < world.getMaxTilesY()) && world.getTile()[i, j + 1].active) && (world.getTile()[i, j + 1].type == 70))
                     {
                         world.getTile()[i, j].active = true;
                         world.getTile()[i, j].type = (byte)type;
@@ -3462,7 +7069,7 @@ namespace Terraria_Server
         {
             if (canSpawn)
             {
-                if (((x < 10) || (y < 10)) || ((x >= (Statics.maxTilesX - 10)) || (y >= (lastMaxTilesY - 10))))
+                if (((x < 10) || (y < 10)) || ((x >= (world.getMaxTilesX() - 10)) || (y >= (lastMaxTilesY - 10))))
                 {
                     canSpawn = false;
                 }
@@ -3747,7 +7354,7 @@ namespace Terraria_Server
                 int num2 = x + 3;
                 int num3 = y - 2;
                 int num4 = y + 3;
-                if ((((num >= 0) && (num2 <= Statics.maxTilesX)) && (num3 >= 0)) && (num4 <= Statics.maxTilesY))
+                if ((((num >= 0) && (num2 <= world.getMaxTilesX())) && (num3 >= 0)) && (num4 <= world.getMaxTilesY()))
                 {
                     bool flag = false;
                     for (int i = num; i < num2; i++)
@@ -4398,7 +8005,7 @@ namespace Terraria_Server
 
         public static void KillTile(int i, int j, World world, bool fail = false, bool effectOnly = false, bool noItem = false)
         {
-            if (((i >= 0) && (j >= 0)) && ((i < Statics.maxTilesX) && (j < Statics.maxTilesY)))
+            if (((i >= 0) && (j >= 0)) && ((i < world.getMaxTilesX()) && (j < world.getMaxTilesY())))
             {
                 if (world.getTile()[i, j] == null)
                 {
@@ -4943,7 +8550,7 @@ namespace Terraria_Server
 
         public static void TileFrame(int i, int j, World world, bool resetFrame = false, bool noBreak = false)
         {
-            if (i >= 0 && j >= 0 && i < Statics.maxTilesX && j < Statics.maxTilesY && world.getTile()[i, j] != null)
+            if (i >= 0 && j >= 0 && i < world.getMaxTilesX() && j < world.getMaxTilesY() && world.getTile()[i, j] != null)
             {
                 if (world.getTile()[i, j].liquid > 0 && Statics.netMode != 1 && !WorldGen.noLiquidCheck)
                 {
@@ -4988,7 +8595,7 @@ namespace Terraria_Server
                         num4 = num9;
                         num6 = num9;
                     }
-                    if (i + 1 >= Statics.maxTilesX)
+                    if (i + 1 >= world.getMaxTilesX())
                     {
                         num3 = num9;
                         num5 = num9;
@@ -5000,7 +8607,7 @@ namespace Terraria_Server
                         num2 = num9;
                         num3 = num9;
                     }
-                    if (j + 1 >= Statics.maxTilesY)
+                    if (j + 1 >= world.getMaxTilesY())
                     {
                         num6 = num9;
                         num7 = num9;
@@ -5010,7 +8617,7 @@ namespace Terraria_Server
                     {
                         num4 = (int)world.getTile()[i - 1, j].type;
                     }
-                    if (i + 1 < Statics.maxTilesX && world.getTile()[i + 1, j] != null && world.getTile()[i + 1, j].active)
+                    if (i + 1 < world.getMaxTilesX() && world.getTile()[i + 1, j] != null && world.getTile()[i + 1, j].active)
                     {
                         num5 = (int)world.getTile()[i + 1, j].type;
                     }
@@ -5018,7 +8625,7 @@ namespace Terraria_Server
                     {
                         num2 = (int)world.getTile()[i, j - 1].type;
                     }
-                    if (j + 1 < Statics.maxTilesY && world.getTile()[i, j + 1] != null && world.getTile()[i, j + 1].active)
+                    if (j + 1 < world.getMaxTilesY() && world.getTile()[i, j + 1] != null && world.getTile()[i, j + 1].active)
                     {
                         num7 = (int)world.getTile()[i, j + 1].type;
                     }
@@ -5026,15 +8633,15 @@ namespace Terraria_Server
                     {
                         num = (int)world.getTile()[i - 1, j - 1].type;
                     }
-                    if (i + 1 < Statics.maxTilesX && j - 1 >= 0 && world.getTile()[i + 1, j - 1] != null && world.getTile()[i + 1, j - 1].active)
+                    if (i + 1 < world.getMaxTilesX() && j - 1 >= 0 && world.getTile()[i + 1, j - 1] != null && world.getTile()[i + 1, j - 1].active)
                     {
                         num3 = (int)world.getTile()[i + 1, j - 1].type;
                     }
-                    if (i - 1 >= 0 && j + 1 < Statics.maxTilesY && world.getTile()[i - 1, j + 1] != null && world.getTile()[i - 1, j + 1].active)
+                    if (i - 1 >= 0 && j + 1 < world.getMaxTilesY() && world.getTile()[i - 1, j + 1] != null && world.getTile()[i - 1, j + 1].active)
                     {
                         num6 = (int)world.getTile()[i - 1, j + 1].type;
                     }
-                    if (i + 1 < Statics.maxTilesX && j + 1 < Statics.maxTilesY && world.getTile()[i + 1, j + 1] != null && world.getTile()[i + 1, j + 1].active)
+                    if (i + 1 < world.getMaxTilesX() && j + 1 < world.getMaxTilesY() && world.getTile()[i + 1, j + 1] != null && world.getTile()[i + 1, j + 1].active)
                     {
                         num8 = (int)world.getTile()[i + 1, j + 1].type;
                     }
@@ -9437,17 +13044,17 @@ namespace Terraria_Server
         /*public static void EveryTileFrame(World world)
         {
             noLiquidCheck = true;
-            for (int i = 0; i < Statics.maxTilesX; i++)
+            for (int i = 0; i < world.getMaxTilesX(); i++)
             {
-                float num2 = ((float)i) / ((float)Statics.maxTilesX);
+                float num2 = ((float)i) / ((float)world.getMaxTilesX());
                 for (int i_ = 0; i_ < preserve; i_++)
                 {
                     Console.Write("\b");
                 }
-                string text = "Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
+                text ="Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
                 Console.Write(text);
                 preserve = text.Length;
-                for (int j = 0; j < Statics.maxTilesY; j++)
+                for (int j = 0; j < world.getMaxTilesY(); j++)
                 {
                     TileFrame(i, j, world, true, false);
                     WallFrame(i, j, world, true);
@@ -9470,13 +13077,13 @@ namespace Terraria_Server
             {
                 num3 = 1;
             }
-            if (num > (Statics.maxTilesX - 2))
+            if (num > (world.getMaxTilesX() - 2))
             {
-                num = Statics.maxTilesX - 2;
+                num = world.getMaxTilesX() - 2;
             }
-            if (num3 > (Statics.maxTilesY - 2))
+            if (num3 > (world.getMaxTilesY() - 2))
             {
-                num3 = Statics.maxTilesY - 2;
+                num3 = world.getMaxTilesY() - 2;
             }
             for (int i = num - 1; i < (num2 + 1); i++)
             {
@@ -9494,7 +13101,7 @@ namespace Terraria_Server
 
         /*public static World loadWorld(String WorldPath, Server server)
         {
-            World world = new World(server, Statics.maxTilesX, Statics.maxTilesY);
+            World world = new World(server, world.getMaxTilesX(), world.getMaxTilesY());
 
             if (genRand == null)
             {
@@ -9509,7 +13116,7 @@ namespace Terraria_Server
                         if (reader.ReadInt32() > Statics.currentRelease)
                         {
                             //Main.menuMode = 15;
-                            //Main.statusText = "Incompatible world file!";
+                            ////Console.WriteLine("Incompatible world file!";
                             Console.WriteLine("Incompatible world file!");
                             //loadFailed = true;
                             reader.Close();
@@ -9522,25 +13129,25 @@ namespace Terraria_Server
                         //Main.worldID = reader.ReadInt32();
                         world.setId(reader.ReadInt32());
                         //Main.leftWorld = reader.ReadInt32();
-                        Statics.leftWorld = reader.ReadInt32();
+                        world.getLeftWorld() = reader.ReadInt32();
                         //Main.rightWorld = reader.ReadInt32();
-                        Statics.rightWorld = reader.ReadInt32();
+                        world.getRightWorld() = reader.ReadInt32();
                         //Main.topWorld = reader.ReadInt32();
-                        Statics.topWorld = reader.ReadInt32();
+                        world.getTopWorld() = reader.ReadInt32();
                         //Main.bottomWorld = reader.ReadInt32();
-                        Statics.bottomWorld = reader.ReadInt32();
-                        //Main.maxTilesY = reader.ReadInt32();
-                        Statics.maxTilesY = reader.ReadInt32();
-                        //Main.maxTilesX = reader.ReadInt32();
-                        Statics.maxTilesX = reader.ReadInt32();
+                        world.getBottomWorld() = reader.ReadInt32();
+                        //maxTilesY = reader.ReadInt32();
+                        world.getMaxTilesY() = reader.ReadInt32();
+                        //maxTilesX = reader.ReadInt32();
+                        world.getMaxTilesX() = reader.ReadInt32();
                         clearWorld(world);
                         //Main.spawnTileX = reader.ReadInt32();
                         Statics.spawnTileX = reader.ReadInt32();
                         //Main.spawnTileY = reader.ReadInt32();
                         Statics.spawnTileY = reader.ReadInt32();
-                        //Main.worldSurface = reader.ReadDouble();
+                        //world.getWorldSurface() = reader.ReadDouble();
                         world.setWorldSurface(reader.ReadDouble());
-                        //Main.rockLayer = reader.ReadDouble();
+                        //world.getRockLayer() = reader.ReadDouble();
                         world.setRockLayer(reader.ReadDouble());
                         //tempTime = reader.ReadDouble();
                         world.setTime(reader.ReadDouble());
@@ -9550,9 +13157,9 @@ namespace Terraria_Server
                         world.setMoonPhase(reader.ReadInt32());
                         //tempBloodMoon = reader.(ReadBoolean);
                         world.setBloodMoon(reader.ReadBoolean());
-                        //Main.dungeonX = reader.ReadInt32();
+                        //world.getDungeonX() = reader.ReadInt32();
                         world.setDungeonX(reader.ReadInt32());
-                        //Main.dungeonY = reader.ReadInt32();
+                        //world.getDungeonY() = reader.ReadInt32();
                         world.setDungeonX(reader.ReadInt32());
                         NPC.downedBoss1 = reader.ReadBoolean();
                         NPC.downedBoss2 = reader.ReadBoolean();
@@ -9567,19 +13174,19 @@ namespace Terraria_Server
                         world.setInvasionType(reader.ReadInt32());
                         world.setInvasionX(reader.ReadDouble());
                     
-                        for (int i = 0; i < Statics.maxTilesX; i++)
+                        for (int i = 0; i < world.getMaxTilesX(); i++)
                         {
-                            float num3 = ((float) i) / ((float) Statics.maxTilesX);
-                            //Main.statusText = "Loading world data: " + ((int) ((num3 * 100f) + 1f)) + "%";
+                            float num3 = ((float) i) / ((float) world.getMaxTilesX());
+                            ////Console.WriteLine("Loading world data: " + ((int) ((num3 * 100f) + 1f)) + "%";
                             for (int i_ = 0; i_ < preserve; i_++)
                             {
                                 Console.Write("\b");
                             }
-                            string text = "Loading world data: " + ((int)((num3 * 100f) + 1f)) + "%";
+                            text ="Loading world data: " + ((int)((num3 * 100f) + 1f)) + "%";
                             Console.Write(text);
                             preserve = text.Length;
 
-                            for (int n = 0; n < Statics.maxTilesY; n++)
+                            for (int n = 0; n < world.getMaxTilesY(); n++)
                             {
                                 Tile tilez = world.getTile()[i, n];
                                 tilez.active = reader.ReadBoolean();
@@ -9673,7 +13280,7 @@ namespace Terraria_Server
                         }
                         reader.Close();
                         gen = true;
-                        waterLine = Statics.maxTilesY;
+                        waterLine = world.getMaxTilesY();
                         Liquid.QuickWater(world, 2, -1, -1);
                         WaterCheck(world);
                         int num12 = 0;
@@ -9696,12 +13303,12 @@ namespace Terraria_Server
                             {
                                 num15 = num14;
                             }
-                           // Main.statusText = "Settling liquids: " + ((int) (((num15 * 100f) / 2f) + 50f)) + "%";
+                           // //Console.WriteLine("Settling liquids: " + ((int) (((num15 * 100f) / 2f) + 50f)) + "%";
                             for (int i_ = 0; i_ < preserve; i_++)
                             {
                                 Console.Write("\b");
                             }
-                            string text = "Settling liquids: " + ((int)(((num15 * 100f) / 2f) + 50f)) + "%";
+                            text ="Settling liquids: " + ((int)(((num15 * 100f) / 2f) + 50f)) + "%";
                             Console.Write(text);
                             preserve = text.Length;
                             Liquid.UpdateLiquid(world);
@@ -9713,7 +13320,7 @@ namespace Terraria_Server
                    // catch (Exception exception)
                    // {
                         //Main.menuMode = 15;
-                        //Main.statusText = exception.ToString();
+                        ////Console.WriteLine(exception.ToString();
                       //  Console.WriteLine(exception.ToString());
                         //loadFailed = true;
                       //  try
@@ -9737,6 +13344,12 @@ namespace Terraria_Server
             World world = server.getWorld();
             world.setServer(server);
             world.setSavePath(WorldPath);
+            /*string name = new FileInfo(WorldPath).Name;
+            if (name.Contains("."))
+            {
+                name = name.Split('.')[0];
+            }
+            world.setName(name);*/
 
             if (WorldGen.genRand == null)
             {
@@ -9752,7 +13365,7 @@ namespace Terraria_Server
                     if (num > Statics.currentRelease)
                     {
                         //Main.menuMode = 15;
-                        //Main.statusText = "Incompatible world file!";
+                        ////Console.WriteLine("Incompatible world file!";
                         //WorldGen.loadFailed = true;
                         Console.WriteLine("Incompatible world file!");
                         binaryReader.Close();
@@ -9766,25 +13379,25 @@ namespace Terraria_Server
                     //Main.worldID = reader.ReadInt32();
                     world.setId(binaryReader.ReadInt32());
                     //Main.leftWorld = reader.ReadInt32();
-                    Statics.leftWorld = binaryReader.ReadInt32();
+                    world.setLeftWorld(binaryReader.ReadInt32());
                     //Main.rightWorld = reader.ReadInt32();
-                    Statics.rightWorld = binaryReader.ReadInt32();
+                    world.setRightWorld(binaryReader.ReadInt32());
                     //Main.topWorld = reader.ReadInt32();
-                    Statics.topWorld = binaryReader.ReadInt32();
+                    world.setTopWorld(binaryReader.ReadInt32());
                     //Main.bottomWorld = reader.ReadInt32();
-                    Statics.bottomWorld = binaryReader.ReadInt32();
-                    //Main.maxTilesY = reader.ReadInt32();
-                    Statics.maxTilesY = binaryReader.ReadInt32();
-                    //Main.maxTilesX = reader.ReadInt32();
-                    Statics.maxTilesX = binaryReader.ReadInt32();
+                    world.setBottomWorld(binaryReader.ReadInt32());
+                    //maxTilesY = reader.ReadInt32();
+                    world.setMaxTilesY(binaryReader.ReadInt32());
+                    //maxTilesX = reader.ReadInt32();
+                    world.setMaxTilesX(binaryReader.ReadInt32());
                     clearWorld(world);
                     //Main.spawnTileX = reader.ReadInt32();
                     Statics.spawnTileX = binaryReader.ReadInt32();
                     //Main.spawnTileY = reader.ReadInt32();
                     Statics.spawnTileY = binaryReader.ReadInt32();
-                    //Main.worldSurface = reader.ReadDouble();
+                    //world.getWorldSurface() = reader.ReadDouble();
                     world.setWorldSurface(binaryReader.ReadDouble());
-                    //Main.rockLayer = reader.ReadDouble();
+                    //world.getRockLayer() = reader.ReadDouble();
                     world.setRockLayer(binaryReader.ReadDouble());
                     //tempTime = reader.ReadDouble();
                     world.setTime(binaryReader.ReadDouble());
@@ -9794,10 +13407,10 @@ namespace Terraria_Server
                     world.setMoonPhase(binaryReader.ReadInt32());
                     //tempBloodMoon = reader.(ReadBoolean);
                     world.setBloodMoon(binaryReader.ReadBoolean());
-                    //Main.dungeonX = reader.ReadInt32();
+                    //world.getDungeonX() = reader.ReadInt32();
                     world.setDungeonX(binaryReader.ReadInt32());
-                    //Main.dungeonY = reader.ReadInt32();
-                    world.setDungeonX(binaryReader.ReadInt32());
+                    //world.getDungeonY() = reader.ReadInt32();
+                    world.setDungeonY(binaryReader.ReadInt32());
                     NPC.downedBoss1 = binaryReader.ReadBoolean();
                     NPC.downedBoss2 = binaryReader.ReadBoolean();
                     NPC.downedBoss3 = binaryReader.ReadBoolean();
@@ -9811,9 +13424,9 @@ namespace Terraria_Server
                     world.setInvasionType(binaryReader.ReadInt32());
                     world.setInvasionX(binaryReader.ReadDouble());
 
-                    for (int i = 0; i < Statics.maxTilesX; i++)
+                    for (int i = 0; i < world.getMaxTilesX(); i++)
                     {
-                        float num2 = (float)i / (float)Statics.maxTilesX;
+                        float num2 = (float)i / (float)world.getMaxTilesX();
                         for (int i_ = 0; i_ < preserve; i_++)
                         {
                             Console.Write("\b");
@@ -9822,7 +13435,7 @@ namespace Terraria_Server
                         Console.Write(text);
                         preserve = text.Length;
 
-                        for (int j = 0; j < Statics.maxTilesY; j++)
+                        for (int j = 0; j < world.getMaxTilesY(); j++)
                         {
                             world.getTile()[i, j].active = binaryReader.ReadBoolean();
                             if (world.getTile()[i, j].active)
@@ -9922,7 +13535,7 @@ namespace Terraria_Server
                     binaryReader.Close();
                     Console.WriteLine();
                     WorldGen.gen = true;
-                    WorldGen.waterLine = Statics.maxTilesY;
+                    WorldGen.waterLine = world.getMaxTilesY();
                     Liquid.QuickWater(world, 2, -1, -1);
                     WorldGen.WaterCheck(world);
                     int num6 = 0;
@@ -9945,7 +13558,7 @@ namespace Terraria_Server
                         {
                             num9 = num8;
                         }
-                        //Main.statusText = "Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
+                        ////Console.WriteLine("Settling liquids: " + (int)(num9 * 100f / 2f + 50f) + "%";
                         for (int i_ = 0; i_ < preserve; i_++)
                         {
                             Console.Write("\b");
@@ -9964,7 +13577,7 @@ namespace Terraria_Server
                     //{
                     //   Exception exception = arg_617_0;
                     ///Main.menuMode = 15;
-                    //Main.statusText = exception.ToString();
+                    ////Console.WriteLine(exception.ToString();
                     //    Console.WriteLine(exception.ToString());
                     //WorldGen.loadFailed = true;
                     //try
@@ -9999,9 +13612,9 @@ namespace Terraria_Server
             world.setShadowOrbCount(0);
             //Main.helpText = 0;
             world.setSpawnEye(false);
-            //Main.dungeonX = 0;
+            //world.getDungeonX() = 0;
             world.setDungeonX(0);
-            //Main.dungeonY = 0;
+            //world.getDungeonY() = 0;
             world.setDungeonY(0);
             NPC.downedBoss1 = false;
             NPC.downedBoss2 = false;
@@ -10023,20 +13636,22 @@ namespace Terraria_Server
             //Main.invasionX = 0.0;
             world.setInvasionX(0);
             noLiquidCheck = false;
+            
             Liquid.numLiquid = 0;
             LiquidBuffer.numLiquidBuffer = 0;
-            if (((Statics.netMode == 1) || (lastMaxTilesX > Statics.maxTilesX)) || (lastMaxTilesY > Statics.maxTilesY))
+            string text = "";
+            if (((Statics.netMode == 1) || (lastMaxTilesX > world.getMaxTilesX())) || (lastMaxTilesY > world.getMaxTilesY()))
             {
                 for (int num = 0; num < lastMaxTilesX; num++)
                 {
                     float num2 = ((float)num) / ((float)lastMaxTilesX);
-                    //Main.statusText = "Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%";
+                    ////Console.WriteLine("Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%";
                     //Console.WriteLine("Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%");
                     for (int i_ = 0; i_ < preserve; i_++)
                     {
                         Console.Write("\b");
                     }
-                    string text = "Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%";
+                    text ="Freeing unused resources: " + ((int)((num2 * 100f) + 1f)) + "%";
                     Console.Write(text);
                     preserve = text.Length;
                     for (int num3 = 0; num3 < lastMaxTilesY; num3++)
@@ -10046,23 +13661,23 @@ namespace Terraria_Server
                 }
                 Console.WriteLine();
             }
-            lastMaxTilesX = Statics.maxTilesX;
-            lastMaxTilesY = Statics.maxTilesY;
+            lastMaxTilesX = world.getMaxTilesX();
+            lastMaxTilesY = world.getMaxTilesY();
             if (Statics.netMode != 1)
             {
-                for (int num4 = 0; num4 < Statics.maxTilesX; num4++)
+                for (int num4 = 0; num4 < world.getMaxTilesX(); num4++)
                 {
-                    float num5 = ((float)num4) / ((float)Statics.maxTilesX);
-                    //Main.statusText = "Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%";
+                    float num5 = ((float)num4) / ((float)world.getMaxTilesX());
+                    ////Console.WriteLine("Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%";
                     //Console.WriteLine("Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%");
                     for (int i_ = 0; i_ < preserve; i_++)
                     {
                         Console.Write("\b");
                     }
-                    string text = "Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%";
+                    text ="Resetting game objects: " + ((int)((num5 * 100f) + 1f)) + "%";
                     Console.Write(text);
                     preserve = text.Length;
-                    for (int num6 = 0; num6 < Statics.maxTilesY; num6++)
+                    for (int num6 = 0; num6 < world.getMaxTilesY(); num6++)
                     {
                         world.getTile()[num4, num6] = new Tile();
 
@@ -10106,25 +13721,25 @@ namespace Terraria_Server
             {
                 world.getLiquidBuffer()[num15] = new LiquidBuffer();
             }
-            setWorldSize();
+            setWorldSize(world);
             worldCleared = true;
         }
 
-        public static void setWorldSize()
+        public static void setWorldSize(World world)
         {
-            Statics.bottomWorld = Statics.maxTilesY * 0x10;
-            Statics.rightWorld = Statics.maxTilesX * 0x10;
-            Statics.maxSectionsX = Statics.maxTilesX / 200;
-            Statics.maxSectionsY = Statics.maxTilesY / 150;
+            world.setBottomWorld(world.getMaxTilesY() * 0x10);
+            world.setRightWorld(world.getMaxTilesX() * 0x10);
+            world.setMaxSectionsX(world.getMaxTilesX() / 200);
+            world.setMaxSectionsY(world.getMaxTilesY() / 150);
         }
 
         public static void EveryTileFrame(World world)
         {
             noLiquidCheck = true;
-            for (int i = 0; i < Statics.maxTilesX; i++)
+            for (int i = 0; i < world.getMaxTilesX(); i++)
             {
-                float num2 = ((float)i) / ((float)Statics.maxTilesX);
-                //Main.statusText = "Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
+                float num2 = ((float)i) / ((float)world.getMaxTilesX());
+                ////Console.WriteLine("Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
 
                 for (int i_ = 0; i_ < preserve; i_++)
                 {
@@ -10133,7 +13748,7 @@ namespace Terraria_Server
                 string text = "Finding tile frames: " + ((int)((num2 * 100f) + 1f)) + "%";
                 Console.Write(text);
                 preserve = text.Length;
-                for (int j = 0; j < Statics.maxTilesY; j++)
+                for (int j = 0; j < world.getMaxTilesY(); j++)
                 {
                     TileFrame(i, j, world, true, false);
                     WallFrame(i, j, world, true);
@@ -10145,11 +13760,11 @@ namespace Terraria_Server
 
         public static bool meteor(int i, int j, World world)
         {
-            if ((i < 50) || (i > (Statics.maxTilesX - 50)))
+            if ((i < 50) || (i > (world.getMaxTilesX() - 50)))
             {
                 return false;
             }
-            if ((j < 50) || (j > (Statics.maxTilesY - 50)))
+            if ((j < 50) || (j > (world.getMaxTilesY() - 50)))
             {
                 return false;
             }
@@ -10273,9 +13888,9 @@ namespace Terraria_Server
                     }
                 }
                 int num3 = 0;
-                float num4 = Statics.maxTilesX / 0x1068;
+                float num4 = world.getMaxTilesX() / 0x1068;
                 int num5 = (int)(400f * num4);
-                for (int j = 5; j < (Statics.maxTilesX - 5); j++)
+                for (int j = 5; j < (world.getMaxTilesX() - 5); j++)
                 {
                     for (int k = 5; k < world.getWorldSurface(); k++)
                     {
@@ -10291,13 +13906,13 @@ namespace Terraria_Server
                 }
                 while (!flag)
                 {
-                    float num8 = Statics.maxTilesX * 0.08f;
-                    int num9 = Statics.rand.Next(50, Statics.maxTilesX - 50);
+                    float num8 = world.getMaxTilesX() * 0.08f;
+                    int num9 = Statics.rand.Next(50, world.getMaxTilesX() - 50);
                     while ((num9 > (Statics.spawnTileX - num8)) && (num9 < (Statics.spawnTileX + num8)))
                     {
-                        num9 = Statics.rand.Next(50, Statics.maxTilesX - 50);
+                        num9 = Statics.rand.Next(50, world.getMaxTilesX() - 50);
                     }
-                    for (int m = Statics.rand.Next(100); m < Statics.maxTilesY; m++)
+                    for (int m = Statics.rand.Next(100); m < world.getMaxTilesY(); m++)
                     {
                         if (world.getTile()[num9, m].active && Statics.tileSolid[world.getTile()[num9, m].type])
                         {
@@ -10335,6 +13950,12 @@ namespace Terraria_Server
                     if (world.getSavePath() != null)
                     {
                         string path = world.getSavePath() + ".sav";
+                        string name = new FileInfo(world.getSavePath()).Name;
+                        if (name.Contains("."))
+                        {
+                            name = name.Split('.')[0];
+                        }
+                        world.setName(name);
                         using (FileStream stream = new FileStream(path, FileMode.Create))
                         {
                             using (BinaryWriter writer = new BinaryWriter(stream))
@@ -10342,12 +13963,12 @@ namespace Terraria_Server
                                 writer.Write(Statics.currentRelease);
                                 writer.Write(world.getName());
                                 writer.Write(world.getId());
-                                writer.Write((int)Statics.leftWorld);
-                                writer.Write((int)Statics.rightWorld);
-                                writer.Write((int)Statics.topWorld);
-                                writer.Write((int)Statics.bottomWorld);
-                                writer.Write(Statics.maxTilesY);
-                                writer.Write(Statics.maxTilesX);
+                                writer.Write((int)world.getLeftWorld());
+                                writer.Write((int)world.getRightWorld());
+                                writer.Write((int)world.getTopWorld());
+                                writer.Write((int)world.getBottomWorld());
+                                writer.Write(world.getMaxTilesY());
+                                writer.Write(world.getMaxTilesX());
                                 writer.Write(Statics.spawnTileX);
                                 writer.Write(Statics.spawnTileY);
                                 writer.Write(world.getWorldSurface());
@@ -10368,10 +13989,10 @@ namespace Terraria_Server
                                 writer.Write(world.getInvasionSize());
                                 writer.Write(world.getInvasionType());
                                 writer.Write(world.getInvasionX());
-                                for (int i = 0; i < Statics.maxTilesX; i++)
+                                for (int i = 0; i < world.getMaxTilesX(); i++)
                                 {
-                                    float num2 = ((float)i) / ((float)Statics.maxTilesX);
-                                    //Main.statusText = "Saving world data: " + ((int)((num2 * 100f) + 1f)) + "%";
+                                    float num2 = ((float)i) / ((float)world.getMaxTilesX());
+                                    ////Console.WriteLine("Saving world data: " + ((int)((num2 * 100f) + 1f)) + "%";
                                     for (int i_ = 0; i_ < preserve; i_++)
                                     {
                                         Console.Write("\b");
@@ -10380,7 +14001,7 @@ namespace Terraria_Server
                                     Console.Write(text);
                                     preserve = text.Length;
 
-                                    for (int n = 0; n < Statics.maxTilesY; n++)
+                                    for (int n = 0; n < world.getMaxTilesY(); n++)
                                     {
                                         writer.Write(world.getTile()[i, n].active);
                                         if (world.getTile()[i, n].active)
@@ -10467,7 +14088,7 @@ namespace Terraria_Server
                                 }
                                 writer.Write(false);
                                 writer.Close();
-                                //Main.statusText = "Backing up world file...";
+                                ////Console.WriteLine("Backing up world file...";
                                 Console.WriteLine();
                                 Console.WriteLine("Backing up world file...");
                                 string destFileName = world.getSavePath() + ".bak";
@@ -10497,5 +14118,4400 @@ namespace Terraria_Server
                 saveWorld((World)threadContext, false);
             }
         }
+
+        public static void TileRunner(int i, int j, World world, double strength, int steps, int type, bool addTile = false, float speedX = 0f, float speedY = 0f, bool noYChange = false, bool overRide = true)
+        {
+            double num = strength;
+            float num2 = (float)steps;
+            Vector2 value = new Vector2();
+            value.X = (float)i;
+            value.Y = (float)j;
+            Vector2 value2 = new Vector2();
+            value2.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
+            value2.Y = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
+            if (speedX != 0f || speedY != 0f)
+            {
+                value2.X = speedX;
+                value2.Y = speedY;
+            }
+            while (num > 0.0 && num2 > 0f)
+            {
+                num = strength * (double)(num2 / (float)steps);
+                num2 -= 1f;
+                int num3 = (int)((double)value.X - num * 0.5);
+                int num4 = (int)((double)value.X + num * 0.5);
+                int num5 = (int)((double)value.Y - num * 0.5);
+                int num6 = (int)((double)value.Y + num * 0.5);
+                if (num3 < 0)
+                {
+                    num3 = 0;
+                }
+                if (num4 > world.getMaxTilesX())
+                {
+                    num4 = world.getMaxTilesX();
+                }
+                if (num5 < 0)
+                {
+                    num5 = 0;
+                }
+                if (num6 > world.getMaxTilesY())
+                {
+                    num6 = world.getMaxTilesY();
+                }
+                for (int k = num3; k < num4; k++)
+                {
+                    for (int l = num5; l < num6; l++)
+                    {
+                        if ((double)(Math.Abs((float)k - value.X) + Math.Abs((float)l - value.Y)) < strength * 0.5 * (1.0 + (double)WorldGen.genRand.Next(-10, 11) * 0.015))
+                        {
+                            if (type < 0)
+                            {
+                                if (type == -2 && world.getTile()[k, l].active && (l < WorldGen.waterLine || l > WorldGen.lavaLine))
+                                {
+                                    world.getTile()[k, l].liquid = 255;
+                                    if (l > WorldGen.lavaLine)
+                                    {
+                                        world.getTile()[k, l].lava = true;
+                                    }
+                                }
+                                world.getTile()[k, l].active = false;
+                            }
+                            else
+                            {
+                                if ((overRide || !world.getTile()[k, l].active) && (type != 40 || world.getTile()[k, l].type != 53) && (!Statics.tileStone[type] || world.getTile()[k, l].type == 1) && world.getTile()[k, l].type != 45)
+                                {
+                                    world.getTile()[k, l].type = (byte)type;
+                                }
+                                if (addTile)
+                                {
+                                    world.getTile()[k, l].active = true;
+                                    world.getTile()[k, l].liquid = 0;
+                                    world.getTile()[k, l].lava = false;
+                                }
+                                if (noYChange && (double)l < world.getWorldSurface())
+                                {
+                                    world.getTile()[k, l].wall = 2;
+                                }
+                                if (type == 59 && l > WorldGen.waterLine && world.getTile()[k, l].liquid > 0)
+                                {
+                                    world.getTile()[k, l].lava = false;
+                                    world.getTile()[k, l].liquid = 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                value += value2;
+                if (num > 50.0)
+                {
+                    value += value2;
+                    num2 -= 1f;
+                    value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                    value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                    if (num > 100.0)
+                    {
+                        value += value2;
+                        num2 -= 1f;
+                        value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                        value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                        if (num > 150.0)
+                        {
+                            value += value2;
+                            num2 -= 1f;
+                            value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                            value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                            if (num > 200.0)
+                            {
+                                value += value2;
+                                num2 -= 1f;
+                                value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                if (num > 250.0)
+                                {
+                                    value += value2;
+                                    num2 -= 1f;
+                                    value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                    value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                    if (num > 300.0)
+                                    {
+                                        value += value2;
+                                        num2 -= 1f;
+                                        value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                        value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                        if (num > 400.0)
+                                        {
+                                            value += value2;
+                                            num2 -= 1f;
+                                            value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                            value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                            if (num > 500.0)
+                                            {
+                                                value += value2;
+                                                num2 -= 1f;
+                                                value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                if (num > 600.0)
+                                                {
+                                                    value += value2;
+                                                    num2 -= 1f;
+                                                    value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                    value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                    if (num > 700.0)
+                                                    {
+                                                        value += value2;
+                                                        num2 -= 1f;
+                                                        value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                        value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                        if (num > 800.0)
+                                                        {
+                                                            value += value2;
+                                                            num2 -= 1f;
+                                                            value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                            value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                            if (num > 900.0)
+                                                            {
+                                                                value += value2;
+                                                                num2 -= 1f;
+                                                                value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                                value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                value2.X += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                if (value2.X > 1f)
+                {
+                    value2.X = 1f;
+                }
+                if (value2.X < -1f)
+                {
+                    value2.X = -1f;
+                }
+                if (!noYChange)
+                {
+                    value2.Y += (float)WorldGen.genRand.Next(-10, 11) * 0.05f;
+                    if (value2.Y > 1f)
+                    {
+                        value2.Y = 1f;
+                    }
+                    if (value2.Y < -1f)
+                    {
+                        value2.Y = -1f;
+                    }
+                }
+                else
+                {
+                    if (num < 3.0)
+                    {
+                        if (value2.Y > 1f)
+                        {
+                            value2.Y = 1f;
+                        }
+                        if (value2.Y < -1f)
+                        {
+                            value2.Y = -1f;
+                        }
+                    }
+                }
+                if (type == 59)
+                {
+                    if ((double)value2.Y > 0.5)
+                    {
+                        value2.Y = 0.5f;
+                    }
+                    if ((double)value2.Y < -0.5)
+                    {
+                        value2.Y = -0.5f;
+                    }
+                    if ((double)value.Y < world.getRockLayer() + 100.0)
+                    {
+                        value2.Y = 1f;
+                    }
+                    if (value.Y > (float)(world.getMaxTilesX() - 300))
+                    {
+                        value2.Y = -1f;
+                    }
+                }
+            }
+        }
+
+        private static void resetGen()
+        {
+            WorldGen.numMCaves = 0;
+            WorldGen.numIslandHouses = 0;
+            WorldGen.houseCount = 0;
+            WorldGen.dEnteranceX = 0;
+            WorldGen.numDRooms = 0;
+            WorldGen.numDDoors = 0;
+            WorldGen.numDPlats = 0;
+            WorldGen.numJChests = 0;
+        }
+        
+        /*
+        public static World generateWorld(int maxTilesX, int maxTilesY, int seed = -1, World world = null)
+        {
+            if (world == null)
+            {
+                world = new World(maxTilesX, maxTilesY);
+            }
+            WorldGen.gen = true;
+            WorldGen.resetGen();
+            if (seed > 0)
+            {
+                WorldGen.genRand = new Random(seed);
+            }
+            else
+            {
+                WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
+            }
+            world.setId(WorldGen.genRand.Next(2147483647));
+            int num = 0;
+            int num2 = 0;
+            double num3 = (double)maxTilesX * 0.3;
+            num3 *= (double)WorldGen.genRand.Next(90, 110) * 0.005;
+            double num4 = num3 + (double)maxTilesY * 0.2;
+            num4 *= (double)WorldGen.genRand.Next(90, 110) * 0.01;
+            double num5 = num3;
+            double num6 = num3;
+            double num7 = num4;
+            double num8 = num4;
+            string text = "";
+            int num9 = 0;
+            if (WorldGen.genRand.Next(2) == 0)
+            {
+                num9 = -1;
+            }
+            else
+            {
+                num9 = 1;
+            }
+            for (int i = 0; i < maxTilesX; i++)
+            {
+                float num10 = (float)i / (float)maxTilesX;
+                //Console.WriteLine("Generating world terrain: " + (int)(num10 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Generating world terrain: " + (int)(num10 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                if (num3 < num5)
+                {
+                    num5 = num3;
+                }
+                if (num3 > num6)
+                {
+                    num6 = num3;
+                }
+                if (num4 < num7)
+                {
+                    num7 = num4;
+                }
+                if (num4 > num8)
+                {
+                    num8 = num4;
+                }
+                if (num2 <= 0)
+                {
+                    num = WorldGen.genRand.Next(0, 5);
+                    num2 = WorldGen.genRand.Next(5, 40);
+                    if (num == 0)
+                    {
+                        num2 *= (int)((double)WorldGen.genRand.Next(5, 30) * 0.2);
+                    }
+                }
+                num2--;
+                if (num == 0)
+                {
+                    while (WorldGen.genRand.Next(0, 7) == 0)
+                    {
+                        num3 += (double)WorldGen.genRand.Next(-1, 2);
+                    }
+                }
+                else
+                {
+                    if (num == 1)
+                    {
+                        while (WorldGen.genRand.Next(0, 4) == 0)
+                        {
+                            num3 -= 1.0;
+                        }
+                        while (WorldGen.genRand.Next(0, 10) == 0)
+                        {
+                            num3 += 1.0;
+                        }
+                    }
+                    else
+                    {
+                        if (num == 2)
+                        {
+                            while (WorldGen.genRand.Next(0, 4) == 0)
+                            {
+                                num3 += 1.0;
+                            }
+                            while (WorldGen.genRand.Next(0, 10) == 0)
+                            {
+                                num3 -= 1.0;
+                            }
+                        }
+                        else
+                        {
+                            if (num == 3)
+                            {
+                                while (WorldGen.genRand.Next(0, 2) == 0)
+                                {
+                                    num3 -= 1.0;
+                                }
+                                while (WorldGen.genRand.Next(0, 6) == 0)
+                                {
+                                    num3 += 1.0;
+                                }
+                            }
+                            else
+                            {
+                                if (num == 4)
+                                {
+                                    while (WorldGen.genRand.Next(0, 2) == 0)
+                                    {
+                                        num3 += 1.0;
+                                    }
+                                    while (WorldGen.genRand.Next(0, 5) == 0)
+                                    {
+                                        num3 -= 1.0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (num3 < (double)maxTilesY * 0.15)
+                {
+                    num3 = (double)maxTilesY * 0.15;
+                    num2 = 0;
+                }
+                else
+                {
+                    if (num3 > (double)maxTilesY * 0.3)
+                    {
+                        num3 = (double)maxTilesY * 0.3;
+                        num2 = 0;
+                    }
+                }
+                while (WorldGen.genRand.Next(0, 3) == 0)
+                {
+                    num4 += (double)WorldGen.genRand.Next(-2, 3);
+                }
+                if (num4 < num3 + (double)maxTilesY * 0.05)
+                {
+                    num4 += 1.0;
+                }
+                if (num4 > num3 + (double)maxTilesY * 0.35)
+                {
+                    num4 -= 1.0;
+                }
+                int num11 = 0;
+                while ((double)num11 < num3)
+                {
+                    world.getTile()[i, num11].active = false;
+                    world.getTile()[i, num11].lighted = true;
+                    world.getTile()[i, num11].frameX = -1;
+                    world.getTile()[i, num11].frameY = -1;
+                    num11++;
+                }
+                for (int j = (int)num3; j < maxTilesY; j++)
+                {
+                    if ((double)j < num4)
+                    {
+                        world.getTile()[i, j].active = true;
+                        world.getTile()[i, j].type = 0;
+                        world.getTile()[i, j].frameX = -1;
+                        world.getTile()[i, j].frameY = -1;
+                    }
+                    else
+                    {
+                        world.getTile()[i, j].active = true;
+                        world.getTile()[i, j].type = 1;
+                        world.getTile()[i, j].frameX = -1;
+                        world.getTile()[i, j].frameY = -1;
+                    }
+                }
+            }
+            world.setWorldSurface(num6 + 5.0);
+            world.setRockLayer(num8);
+            //world.getWorldSurface() = num6 + 5.0;
+            //world.getRockLayer() = num8;
+            double num12 = (double)((int)((world.getRockLayer() - world.getWorldSurface()) / 6.0) * 6);
+            world.setRockLayer(world.getWorldSurface() + num12);
+            WorldGen.waterLine = (int)(world.getRockLayer() + (double)maxTilesY) / 2;
+            WorldGen.waterLine += WorldGen.genRand.Next(-100, 20);
+            WorldGen.lavaLine = WorldGen.waterLine + WorldGen.genRand.Next(50, 80);
+            int num13 = 0;
+            //Console.WriteLine("Adding sand...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Adding sand...";
+            Console.Write(text);
+            preserve = text.Length;
+            int num14 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.0007), (int)((double)maxTilesX * 0.002));
+            num14 += 2;
+            for (int k = 0; k < num14; k++)
+            {
+                int num15 = WorldGen.genRand.Next(maxTilesX);
+                while ((float)num15 > (float)maxTilesX * 0.45f && (float)num15 < (float)maxTilesX * 0.55f)
+                {
+                    num15 = WorldGen.genRand.Next(maxTilesX);
+                }
+                int num16 = WorldGen.genRand.Next(15, 90);
+                if (WorldGen.genRand.Next(3) == 0)
+                {
+                    num16 *= 2;
+                }
+                int num17 = num15 - num16;
+                num16 = WorldGen.genRand.Next(15, 90);
+                if (WorldGen.genRand.Next(3) == 0)
+                {
+                    num16 *= 2;
+                }
+                int num18 = num15 + num16;
+                if (num17 < 0)
+                {
+                    num17 = 0;
+                }
+                if (num18 > maxTilesX)
+                {
+                    num18 = maxTilesX;
+                }
+                if (k == 0)
+                {
+                    num17 = 0;
+                    num18 = WorldGen.genRand.Next(250, 300);
+                }
+                else
+                {
+                    if (k == 2)
+                    {
+                        num17 = maxTilesX - WorldGen.genRand.Next(250, 300);
+                        num18 = maxTilesX;
+                    }
+                }
+                int num19 = WorldGen.genRand.Next(50, 100);
+                for (int l = num17; l < num18; l++)
+                {
+                    if (WorldGen.genRand.Next(2) == 0)
+                    {
+                        num19 += WorldGen.genRand.Next(-1, 2);
+                        if (num19 < 50)
+                        {
+                            num19 = 50;
+                        }
+                        if (num19 > 100)
+                        {
+                            num19 = 100;
+                        }
+                    }
+                    int num20 = 0;
+                    while ((double)num20 < world.getWorldSurface())
+                    {
+                        if (world.getTile()[l, num20].active)
+                        {
+                            int num21 = num19;
+                            if (l - num17 < num21)
+                            {
+                                num21 = l - num17;
+                            }
+                            if (num18 - l < num21)
+                            {
+                                num21 = num18 - l;
+                            }
+                            num21 += WorldGen.genRand.Next(5);
+                            for (int m = num20; m < num20 + num21; m++)
+                            {
+                                if (l > num17 + WorldGen.genRand.Next(5) && l < num18 - WorldGen.genRand.Next(5))
+                                {
+                                    world.getTile()[l, m].type = 53;
+                                }
+                            }
+                            break;
+                        }
+                        num20++;
+                    }
+                }
+            }
+            for (int n = 0; n < (int)((double)(maxTilesX * maxTilesY) * 8E-06); n++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)world.getWorldSurface(), 
+                    (int)world.getRockLayer()), world, (double)WorldGen.genRand.Next(15, 70), WorldGen.genRand.Next(20, 130), 53, false, 
+                    0f, 0f, false, true);
+            }
+            WorldGen.numMCaves = 0;
+            //Console.WriteLine("Adding sand...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Adding sand...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num22 = 0; num22 < (int)((double)maxTilesX * 0.0008); num22++)
+            {
+                int num23 = 0;
+                bool flag = false;
+                bool flag2 = false;
+                int num24 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.25), (int)((double)maxTilesX * 0.75));
+                while (!flag2)
+                {
+                    flag2 = true;
+                    while (num24 > maxTilesX / 2 - 100 && num24 < maxTilesX / 2 + 100)
+                    {
+                        num24 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.25), (int)((double)maxTilesX * 0.75));
+                    }
+                    for (int num25 = 0; num25 < WorldGen.numMCaves; num25++)
+                    {
+                        if (num24 > WorldGen.mCaveX[num25] - 50 && num24 < WorldGen.mCaveX[num25] + 50)
+                        {
+                            num23++;
+                            flag2 = false;
+                            break;
+                        }
+                    }
+                    if (num23 >= 200)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    int num26 = 0;
+                    while ((double)num26 < world.getWorldSurface())
+                    {
+                        if (world.getTile()[num24, num26].active)
+                        {
+                            WorldGen.Mountinater(num24, num26, world);
+                            WorldGen.mCaveX[WorldGen.numMCaves] = num24;
+                            WorldGen.mCaveY[WorldGen.numMCaves] = num26;
+                            WorldGen.numMCaves++;
+                            break;
+                        }
+                        num26++;
+                    }
+                }
+            }
+            for (int num27 = 1; num27 < maxTilesX - 1; num27++)
+            {
+                float num28 = (float)num27 / (float)maxTilesX;
+                //Console.WriteLine("Putting dirt behind dirt: " + (int)(num28 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text = "Putting dirt behind dirt: " + (int)(num28 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                bool flag3 = false;
+                num13 += WorldGen.genRand.Next(-1, 2);
+                if (num13 < 0)
+                {
+                    num13 = 0;
+                }
+                if (num13 > 10)
+                {
+                    num13 = 10;
+                }
+                int num29 = 0;
+                while ((double)num29 < world.getWorldSurface() + 10.0 && (double)num29 <= world.getWorldSurface() + (double)num13)
+                {
+                    if (flag3)
+                    {
+                        world.getTile()[num27, num29].wall = 2;
+                    }
+                    if (world.getTile()[num27, num29].active && world.getTile()[num27 - 1, num29].active && world.getTile()[num27 + 1, num29].active && world.getTile()[num27, num29 + 1].active && world.getTile()[num27 - 1, num29 + 1].active && world.getTile()[num27 + 1, num29 + 1].active)
+                    {
+                        flag3 = true;
+                    }
+                    num29++;
+                }
+            }
+            WorldGen.numIslandHouses = 0;
+            WorldGen.houseCount = 0;
+            //Console.WriteLine("Generating floating islands...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Generating floating islands...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num30 = 0; num30 < (int)((double)maxTilesX * 0.0008); num30++)
+            {
+                int num31 = 0;
+                bool flag4 = false;
+                int num32 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.1), (int)((double)maxTilesX * 0.9));
+                bool flag5 = false;
+                while (!flag5)
+                {
+                    flag5 = true;
+                    while (num32 > maxTilesX / 2 - 80 && num32 < maxTilesX / 2 + 80)
+                    {
+                        num32 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.1), (int)((double)maxTilesX * 0.9));
+                    }
+                    for (int num33 = 0; num33 < WorldGen.numIslandHouses; num33++)
+                    {
+                        if (num32 > WorldGen.fihX[num33] - 80 && num32 < WorldGen.fihX[num33] + 80)
+                        {
+                            num31++;
+                            flag5 = false;
+                            break;
+                        }
+                    }
+                    if (num31 >= 200)
+                    {
+                        flag4 = true;
+                        break;
+                    }
+                }
+                if (!flag4)
+                {
+                    int num34 = 200;
+                    while ((double)num34 < world.getWorldSurface())
+                    {
+                        if (world.getTile()[num32, num34].active)
+                        {
+                            int num35 = num32;
+                            int num36 = WorldGen.genRand.Next(100, num34 - 100);
+                            while ((double)num36 > num5 - 50.0)
+                            {
+                                num36--;
+                            }
+                            WorldGen.FloatingIsland(num35, num36, world);
+                            WorldGen.fihX[WorldGen.numIslandHouses] = num35;
+                            WorldGen.fihY[WorldGen.numIslandHouses] = num36;
+                            WorldGen.numIslandHouses++;
+                            break;
+                        }
+                        num34++;
+                    }
+                }
+            }
+            //Console.WriteLine("Placing rocks in the dirt...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Placing rocks in the dirt...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num37 = 0; num37 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num37++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5 + 1), world, 
+                    (double)WorldGen.genRand.Next(4, 15), WorldGen.genRand.Next(5, 40), 1, false, 0f, 0f, false, true);
+            }
+            for (int num38 = 0; num38 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num38++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6 + 1), world, 
+                    (double)WorldGen.genRand.Next(4, 10), WorldGen.genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
+            }
+            for (int num39 = 0; num39 < (int)((double)(maxTilesX * maxTilesY) * 0.0045); num39++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8 + 1), world, 
+                    (double)WorldGen.genRand.Next(2, 7), WorldGen.genRand.Next(2, 23), 1, false, 0f, 0f, false, true);
+            }
+            //Console.WriteLine("Placing dirt in the rocks...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Placing dirt in the rocks...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num40 = 0; num40 < (int)((double)(maxTilesX * maxTilesY) * 0.005); num40++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world,
+                    (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(2, 40), 0, false, 0f, 0f, false, true);
+            }
+            //Console.WriteLine("Adding clay...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Adding clay...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num41 = 0; num41 < (int)((double)(maxTilesX * maxTilesY) * 2E-05); num41++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5), world, 
+                    (double)WorldGen.genRand.Next(4, 14), WorldGen.genRand.Next(10, 50), 40, false, 0f, 0f, false, true);
+            }
+            for (int num42 = 0; num42 < (int)((double)(maxTilesX * maxTilesY) * 5E-05); num42++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6 + 1), world, 
+                    (double)WorldGen.genRand.Next(8, 14), WorldGen.genRand.Next(15, 45), 40, false, 0f, 0f, false, true);
+            }
+            for (int num43 = 0; num43 < (int)((double)(maxTilesX * maxTilesY) * 2E-05); num43++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8 + 1), world, 
+                    (double)WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(5, 50), 40, false, 0f, 0f, false, true);
+            }
+            for (int num44 = 5; num44 < maxTilesX - 5; num44++)
+            {
+                int num45 = 1;
+                while ((double)num45 < world.getWorldSurface() - 1.0)
+                {
+                    if (world.getTile()[num44, num45].active)
+                    {
+                        for (int num46 = num45; num46 < num45 + 5; num46++)
+                        {
+                            if (world.getTile()[num44, num46].type == 40)
+                            {
+                                world.getTile()[num44, num46].type = 0;
+                            }
+                        }
+                        break;
+                    }
+                    num45++;
+                }
+            }
+            for (int num47 = 0; num47 < (int)((double)(maxTilesX * maxTilesY) * 0.0015); num47++)
+            {
+                float num48 = (float)((double)num47 / ((double)(maxTilesX * maxTilesY) * 0.0015));
+                //Console.WriteLine("Making random holes: " + (int)(num48 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text = "Making random holes: " + (int)(num48 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                int type = -1;
+                if (WorldGen.genRand.Next(5) == 0)
+                {
+                    type = -2;
+                }
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, maxTilesY), world, 
+                    (double)WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 20), type, false, 0f, 0f, false, true);
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, maxTilesY), world, 
+                    (double)WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(7, 30), type, false, 0f, 0f, false, true);
+            }
+            for (int num49 = 0; num49 < (int)((double)(maxTilesX * maxTilesY) * 3E-05); num49++)
+            {
+                float num50 = (float)((double)num49 / ((double)(maxTilesX * maxTilesY) * 3E-05));
+                //Console.WriteLine("Generating small caves: " + (int)(num50 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text = "Generating small caves: " + (int)(num50 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                if (num8 <= (double)maxTilesY)
+                {
+                    int type2 = -1;
+                    if (WorldGen.genRand.Next(6) == 0)
+                    {
+                        type2 = -2;
+                    }
+                    WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num8 + 1), world, 
+                        (double)WorldGen.genRand.Next(5, 15), WorldGen.genRand.Next(30, 200), type2, false, 0f, 0f, false, true);
+                }
+            }
+            for (int num51 = 0; num51 < (int)((double)(maxTilesX * maxTilesY) * 0.00015); num51++)
+            {
+                float num52 = (float)((double)num51 / ((double)(maxTilesX * maxTilesY) * 0.00015));
+                //Console.WriteLine("Generating large caves: " + (int)(num52 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text = "Generating large caves: " + (int)(num52 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                if (num8 <= (double)maxTilesY)
+                {
+                    int type3 = -1;
+                    if (WorldGen.genRand.Next(10) == 0)
+                    {
+                        type3 = -2;
+                    }
+                    WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num8, maxTilesY), world, 
+                        (double)WorldGen.genRand.Next(6, 20), WorldGen.genRand.Next(50, 300), type3, false, 0f, 0f, false, true);
+                }
+            }
+            //Console.WriteLine("Generating surface caves...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Generating surface caves...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num53 = 0; num53 < (int)((double)maxTilesX * 0.0025); num53++)
+            {
+                int num54 = WorldGen.genRand.Next(0, maxTilesX);
+                int num55 = 0;
+                while ((double)num55 < num6)
+                {
+                    if (world.getTile()[num54, num55].active)
+                    {
+                        WorldGen.TileRunner(num54, num55, world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(5, 50)
+                            , -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 1f, false, true);
+                        break;
+                    }
+                    num55++;
+                }
+            }
+            for (int num56 = 0; num56 < (int)((double)maxTilesX * 0.0007); num56++)
+            {
+                int num54 = WorldGen.genRand.Next(0, maxTilesX);
+                int num57 = 0;
+                while ((double)num57 < num6)
+                {
+                    if (world.getTile()[num54, num57].active)
+                    {
+                        WorldGen.TileRunner(num54, num57, world, (double)WorldGen.genRand.Next(10, 15), 
+                            WorldGen.genRand.Next(50, 130), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
+                        break;
+                    }
+                    num57++;
+                }
+            }
+            for (int num58 = 0; num58 < (int)((double)maxTilesX * 0.0003); num58++)
+            {
+                int num54 = WorldGen.genRand.Next(0, maxTilesX);
+                int num59 = 0;
+                while ((double)num59 < num6)
+                {
+                    if (world.getTile()[num54, num59].active)
+                    {
+                        WorldGen.TileRunner(num54, num59, world, (double)WorldGen.genRand.Next(12, 25), 
+                            WorldGen.genRand.Next(150, 500), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 4f, false, true);
+                        WorldGen.TileRunner(num54, num59, world, (double)WorldGen.genRand.Next(8, 17), 
+                            WorldGen.genRand.Next(60, 200), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
+                        WorldGen.TileRunner(num54, num59, world, (double)WorldGen.genRand.Next(5, 13), 
+                            WorldGen.genRand.Next(40, 170), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
+                        break;
+                    }
+                    num59++;
+                }
+            }
+            for (int num60 = 0; num60 < (int)((double)maxTilesX * 0.0004); num60++)
+            {
+                int num54 = WorldGen.genRand.Next(0, maxTilesX);
+                int num61 = 0;
+                while ((double)num61 < num6)
+                {
+                    if (world.getTile()[num54, num61].active)
+                    {
+                        WorldGen.TileRunner(num54, num61, world, (double)WorldGen.genRand.Next(7, 12), 
+                            WorldGen.genRand.Next(150, 250), -1, false, 0f, 1f, true, true);
+                        break;
+                    }
+                    num61++;
+                }
+            }
+            for (int num62 = 0; num62 < (int)((double)(maxTilesX * maxTilesY) * 0.002); num62++)
+            {
+                int num63 = WorldGen.genRand.Next(1, maxTilesX - 1);
+                int num64 = WorldGen.genRand.Next((int)num5, (int)num6);
+                if (num64 >= maxTilesY)
+                {
+                    num64 = maxTilesY - 2;
+                }
+                if (world.getTile()[num63 - 1, num64].active && world.getTile()[num63 - 1, num64].type == 0 && world.getTile()[num63 + 1, num64].active && world.getTile()[num63 + 1, num64].type == 0 && world.getTile()[num63, num64 - 1].active && world.getTile()[num63, num64 - 1].type == 0 && world.getTile()[num63, num64 + 1].active && world.getTile()[num63, num64 + 1].type == 0)
+                {
+                    world.getTile()[num63, num64].active = true;
+                    world.getTile()[num63, num64].type = 2;
+                }
+                num63 = WorldGen.genRand.Next(1, maxTilesX - 1);
+                num64 = WorldGen.genRand.Next(0, (int)num5);
+                if (num64 >= maxTilesY)
+                {
+                    num64 = maxTilesY - 2;
+                }
+                if (world.getTile()[num63 - 1, num64].active && world.getTile()[num63 - 1, num64].type == 0 && world.getTile()[num63 + 1, num64].active && world.getTile()[num63 + 1, num64].type == 0 && world.getTile()[num63, num64 - 1].active && world.getTile()[num63, num64 - 1].type == 0 && world.getTile()[num63, num64 + 1].active && world.getTile()[num63, num64 + 1].type == 0)
+                {
+                    world.getTile()[num63, num64].active = true;
+                    world.getTile()[num63, num64].type = 2;
+                }
+            }
+            //Console.WriteLine("Generating underground jungle: 0%";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Generating underground jungle: 0%";
+            Console.Write(text);
+            preserve = text.Length;
+            float num65 = (float)(maxTilesX / 4200);
+            num65 *= 1.5f;
+            int num66 = 0;
+            if (num9 == -1)
+            {
+                num66 = (int)((float)maxTilesX * 0.8f);
+            }
+            else
+            {
+                num66 = (int)((float)maxTilesX * 0.2f);
+            }
+            int num67 = (int)((double)maxTilesY + world.getRockLayer()) / 2;
+            num66 += WorldGen.genRand.Next((int)(-100f * num65), (int)(101f * num65));
+            num67 += WorldGen.genRand.Next((int)(-100f * num65), (int)(101f * num65));
+            WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next((int)(250f * num65), (int)(500f * num65)), WorldGen.genRand.Next(50, 150), 59, false, (float)(num9 * 3), 0f, false, true);
+            //Console.WriteLine("Generating underground jungle: 0%";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Generating underground jungle: 0%";
+            Console.Write(text);
+            preserve = text.Length;
+            num66 += WorldGen.genRand.Next((int)(-250f * num65), (int)(251f * num65));
+            num67 += WorldGen.genRand.Next((int)(-150f * num65), (int)(151f * num65));
+            int num68 = num66;
+            int num69 = num67;
+            WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next((int)(250f * num65), (int)(500f * num65)), WorldGen.genRand.Next(50, 150), 59, false, 0f, 0f, false, true);
+            //Console.WriteLine("Generating underground jungle: 40%";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Generating underground jungle: 40%";
+            Console.Write(text);
+            preserve = text.Length;
+            num66 += WorldGen.genRand.Next((int)(-400f * num65), (int)(401f * num65));
+            num67 += WorldGen.genRand.Next((int)(-150f * num65), (int)(151f * num65));
+            WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next((int)(250f * num65), (int)(500f * num65)), WorldGen.genRand.Next(50, 150), 59, false, (float)(num9 * -3), 0f, false, true);
+            //Console.WriteLine("Generating underground jungle: 60%";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text = "Generating underground jungle: 60%";
+            Console.Write(text);
+            preserve = text.Length;
+            num66 = num68;
+            num67 = num69;
+            int num70 = 0;
+            while ((float)num70 <= 20f * num65)
+            {
+                //Console.WriteLine("Generating underground jungle: " + (int)(60f + (float)num70 / num65) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text = "Generating underground jungle: " + (int)(60f + (float)num70 / num65) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                num66 += WorldGen.genRand.Next((int)(-5f * num65), (int)(6f * num65));
+                num67 += WorldGen.genRand.Next((int)(-5f * num65), (int)(6f * num65));
+                WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next(40, 100), WorldGen.genRand.Next(300, 500), 59, false, 0f, 0f, false, true);
+                num70++;
+            }
+            int num71 = 0;
+            while ((float)num71 <= 10f * num65)
+            {
+                //Console.WriteLine("Generating underground jungle: " + (int)(80f + (float)num71 / num65 * 2f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Generating underground jungle: " + (int)(80f + (float)num71 / num65 * 2f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
+                num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
+                while (num66 < 1 || num66 >= maxTilesX - 1 || num67 < 1 || num67 >= maxTilesY - 1 || world.getTile()[num66, num67].type != 59)
+                {
+                    num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
+                    num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
+                }
+                int num72 = 0;
+                while ((float)num72 < 8f * num65)
+                {
+                    num66 += WorldGen.genRand.Next(-30, 31);
+                    num67 += WorldGen.genRand.Next(-30, 31);
+                    int type4 = -1;
+                    if (WorldGen.genRand.Next(7) == 0)
+                    {
+                        type4 = -2;
+                    }
+                    WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next(10, 20), WorldGen.genRand.Next(30, 70), type4, false, 0f, 0f, false, true);
+                    num72++;
+                }
+                num71++;
+            }
+            int num73 = 0;
+            while ((float)num73 <= 300f * num65)
+            {
+                num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
+                num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
+                while (num66 < 1 || num66 >= maxTilesX - 1 || num67 < 1 || num67 >= maxTilesY - 1 || world.getTile()[num66, num67].type != 59)
+                {
+                    num66 = num68 + WorldGen.genRand.Next((int)(-600f * num65), (int)(600f * num65));
+                    num67 = num69 + WorldGen.genRand.Next((int)(-200f * num65), (int)(200f * num65));
+                }
+                WorldGen.TileRunner(num66, num67, world, (double)WorldGen.genRand.Next(4, 10), WorldGen.genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
+                if (WorldGen.genRand.Next(4) == 0)
+                {
+                    int type5 = WorldGen.genRand.Next(63, 69);
+                    WorldGen.TileRunner(num66 + WorldGen.genRand.Next(-1, 2), num67 + WorldGen.genRand.Next(-1, 2), world, (double)WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(4, 8), type5, false, 0f, 0f, false, true);
+                }
+                num73++;
+            }
+            num66 = num68;
+            num67 = num69;
+            float num74 = (float)WorldGen.genRand.Next(6, 10);
+            float num75 = (float)(maxTilesX / 4200);
+            num74 *= num75;
+            int num76 = 0;
+            while ((float)num76 < num74)
+            {
+                bool flag6 = true;
+                while (flag6)
+                {
+                    num66 = WorldGen.genRand.Next(20, maxTilesX - 20);
+                    num67 = WorldGen.genRand.Next(20, maxTilesY - 300);
+                    if (world.getTile()[num66, num67].type == 59)
+                    {
+                        flag6 = false;
+                        int num77 = WorldGen.genRand.Next(2, 4);
+                        int num78 = WorldGen.genRand.Next(2, 4);
+                        for (int num79 = num66 - num77 - 1; num79 <= num66 + num77 + 1; num79++)
+                        {
+                            for (int num80 = num67 - num78 - 1; num80 <= num67 + num78 + 1; num80++)
+                            {
+                                world.getTile()[num79, num80].active = true;
+                                world.getTile()[num79, num80].type = 45;
+                                world.getTile()[num79, num80].liquid = 0;
+                                world.getTile()[num79, num80].lava = false;
+                            }
+                        }
+                        for (int num81 = num66 - num77; num81 <= num66 + num77; num81++)
+                        {
+                            for (int num82 = num67 - num78; num82 <= num67 + num78; num82++)
+                            {
+                                world.getTile()[num81, num82].active = false;
+                                world.getTile()[num81, num82].wall = 10;
+                            }
+                        }
+                        bool flag7 = false;
+                        int num83 = 0;
+                        while (!flag7 && num83 < 100)
+                        {
+                            num83++;
+                            int num84 = WorldGen.genRand.Next(num66 - num77, num66 + num77 + 1);
+                            int num85 = WorldGen.genRand.Next(num67 - num78, num67 + num78 - 2);
+                            WorldGen.PlaceTile(num84, num85, world, 4, true, false, -1);
+                            if (world.getTile()[num84, num85].type == 4)
+                            {
+                                flag7 = true;
+                            }
+                        }
+                        for (int num86 = num66 - num77 - 1; num86 <= num66 + num77 + 1; num86++)
+                        {
+                            for (int num87 = num67 + num78 - 2; num87 <= num67 + num78; num87++)
+                            {
+                                world.getTile()[num86, num87].active = false;
+                            }
+                        }
+                        for (int num88 = num66 - num77 - 1; num88 <= num66 + num77 + 1; num88++)
+                        {
+                            for (int num89 = num67 + num78 - 2; num89 <= num67 + num78 - 1; num89++)
+                            {
+                                world.getTile()[num88, num89].active = false;
+                            }
+                        }
+                        for (int num90 = num66 - num77 - 1; num90 <= num66 + num77 + 1; num90++)
+                        {
+                            int num91 = 4;
+                            int num92 = num67 + num78 + 2;
+                            while (!world.getTile()[num90, num92].active && num92 < maxTilesY && num91 > 0)
+                            {
+                                world.getTile()[num90, num92].active = true;
+                                world.getTile()[num90, num92].type = 59;
+                                num92++;
+                                num91--;
+                            }
+                        }
+                        num77 -= WorldGen.genRand.Next(1, 3);
+                        int num93 = num67 - num78 - 2;
+                        while (num77 > -1)
+                        {
+                            for (int num94 = num66 - num77 - 1; num94 <= num66 + num77 + 1; num94++)
+                            {
+                                world.getTile()[num94, num93].active = true;
+                                world.getTile()[num94, num93].type = 45;
+                            }
+                            num77 -= WorldGen.genRand.Next(1, 3);
+                            num93--;
+                        }
+                        WorldGen.JChestX[WorldGen.numJChests] = num66;
+                        WorldGen.JChestY[WorldGen.numJChests] = num67;
+                        WorldGen.numJChests++;
+                    }
+                }
+                num76++;
+            }
+            for (int num95 = 0; num95 < maxTilesX; num95++)
+            {
+                for (int num96 = (int)world.getWorldSurface(); num96 < maxTilesY; num96++)
+                {
+                    if (world.getTile()[num95, num96].active)
+                    {
+                        WorldGen.SpreadGrass(num95, num96, world, 59, 60, false);
+                    }
+                }
+            }
+            //Console.WriteLine("Adding mushroom patches...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Adding mushroom patches...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num97 = 0; num97 < maxTilesX / 300; num97++)
+            {
+                int i2 = WorldGen.genRand.Next((int)((double)maxTilesX * 0.3), (int)((double)maxTilesX * 0.7));
+                int j2 = WorldGen.genRand.Next((int)world.getRockLayer(), maxTilesY - 300);
+                WorldGen.ShroomPatch(i2, j2, world);
+            }
+            for (int num98 = 0; num98 < maxTilesX; num98++)
+            {
+                for (int num99 = (int)world.getWorldSurface(); num99 < maxTilesY; num99++)
+                {
+                    if (world.getTile()[num98, num99].active)
+                    {
+                        WorldGen.SpreadGrass(num98, num99, world, 59, 70, false);
+                    }
+                }
+            }
+            //Console.WriteLine("Placing mud in the dirt...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Placing mud in the dirt...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num100 = 0; num100 < (int)((double)(maxTilesX * maxTilesY) * 0.001); num100++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(2, 40), 59, false, 0f, 0f, false, true);
+            }
+            //Console.WriteLine("Adding shinies...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Adding shinies...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num101 = 0; num101 < (int)((double)(maxTilesX * maxTilesY) * 6E-05); num101++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6), world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(2, 6), 7, false, 0f, 0f, false, true);
+            }
+            for (int num102 = 0; num102 < (int)((double)(maxTilesX * maxTilesY) * 8E-05); num102++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8), world, (double)WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(3, 7), 7, false, 0f, 0f, false, true);
+            }
+            for (int num103 = 0; num103 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num103++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 7, false, 0f, 0f, false, true);
+            }
+            for (int num104 = 0; num104 < (int)((double)(maxTilesX * maxTilesY) * 3E-05); num104++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num5, (int)num6), world, (double)WorldGen.genRand.Next(3, 7), WorldGen.genRand.Next(2, 5), 6, false, 0f, 0f, false, true);
+            }
+            for (int num105 = 0; num105 < (int)((double)(maxTilesX * maxTilesY) * 8E-05); num105++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8), world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(3, 6), 6, false, 0f, 0f, false, true);
+            }
+            for (int num106 = 0; num106 < (int)((double)(maxTilesX * maxTilesY) * 0.0002); num106++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 6, false, 0f, 0f, false, true);
+            }
+            for (int num107 = 0; num107 < (int)((double)(maxTilesX * maxTilesY) * 3E-05); num107++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8), world, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(3, 6), 9, false, 0f, 0f, false, true);
+            }
+            for (int num108 = 0; num108 < (int)((double)(maxTilesX * maxTilesY) * 0.00017); num108++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
+            }
+            for (int num109 = 0; num109 < (int)((double)(maxTilesX * maxTilesY) * 0.00017); num109++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5), world, (double)WorldGen.genRand.Next(4, 9), WorldGen.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
+            }
+            for (int num110 = 0; num110 < (int)((double)(maxTilesX * maxTilesY) * 0.00012); num110++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next((int)num7, maxTilesY), world, (double)WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
+            }
+            for (int num111 = 0; num111 < (int)((double)(maxTilesX * maxTilesY) * 0.00012); num111++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(0, (int)num5 - 20), world, (double)WorldGen.genRand.Next(4, 8), WorldGen.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
+            }
+            //Console.WriteLine("Adding webs...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Adding webs...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num112 = 0; num112 < (int)((double)(maxTilesX * maxTilesY) * 0.001); num112++)
+            {
+                int num113 = WorldGen.genRand.Next(20, maxTilesX - 20);
+                int num114 = WorldGen.genRand.Next((int)num5, maxTilesY - 20);
+                if (num112 < WorldGen.numMCaves)
+                {
+                    num113 = WorldGen.mCaveX[num112];
+                    num114 = WorldGen.mCaveY[num112];
+                }
+                if (!world.getTile()[num113, num114].active)
+                {
+                    if ((double)num114 <= world.getWorldSurface())
+                    {
+                        if (world.getTile()[num113, num114].wall <= 0)
+                        {
+                            goto IL_2A58;
+                        }
+                    }
+                    while (!world.getTile()[num113, num114].active && num114 > (int)num5)
+                    {
+                        num114--;
+                    }
+                    num114++;
+                    int num115 = 1;
+                    if (WorldGen.genRand.Next(2) == 0)
+                    {
+                        num115 = -1;
+                    }
+                    while (!world.getTile()[num113, num114].active && num113 > 10 && num113 < maxTilesX - 10)
+                    {
+                        num113 += num115;
+                    }
+                    num113 -= num115;
+                    if ((double)num114 > world.getWorldSurface() || world.getTile()[num113, num114].wall > 0)
+                    {
+                        WorldGen.TileRunner(num113, num114, world, (double)WorldGen.genRand.Next(4, 13), WorldGen.genRand.Next(2, 5), 51, true, (float)num115, -1f, false, false);
+                    }
+                }
+            IL_2A58: ;
+            }
+            //Console.WriteLine("Creating underworld: 0%";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Creating underworld: 0%";
+            Console.Write(text);
+            preserve = text.Length;
+            int num116 = maxTilesY - WorldGen.genRand.Next(150, 190);
+            for (int num117 = 0; num117 < maxTilesX; num117++)
+            {
+                num116 += WorldGen.genRand.Next(-3, 4);
+                if (num116 < maxTilesY - 190)
+                {
+                    num116 = maxTilesY - 190;
+                }
+                if (num116 > maxTilesY - 160)
+                {
+                    num116 = maxTilesY - 160;
+                }
+                for (int num118 = num116 - 20 - WorldGen.genRand.Next(3); num118 < maxTilesY; num118++)
+                {
+                    if (num118 >= num116)
+                    {
+                        world.getTile()[num117, num118].active = false;
+                        world.getTile()[num117, num118].lava = false;
+                        world.getTile()[num117, num118].liquid = 0;
+                    }
+                    else
+                    {
+                        world.getTile()[num117, num118].type = 57;
+                    }
+                }
+            }
+            int num119 = maxTilesY - WorldGen.genRand.Next(40, 70);
+            for (int num120 = 10; num120 < maxTilesX - 10; num120++)
+            {
+                num119 += WorldGen.genRand.Next(-10, 11);
+                if (num119 > maxTilesY - 60)
+                {
+                    num119 = maxTilesY - 60;
+                }
+                if (num119 < maxTilesY - 100)
+                {
+                    num119 = maxTilesY - 120;
+                }
+                for (int num121 = num119; num121 < maxTilesY - 10; num121++)
+                {
+                    if (!world.getTile()[num120, num121].active)
+                    {
+                        world.getTile()[num120, num121].lava = true;
+                        world.getTile()[num120, num121].liquid = 255;
+                    }
+                }
+            }
+            for (int num122 = 0; num122 < maxTilesX; num122++)
+            {
+                if (WorldGen.genRand.Next(50) == 0)
+                {
+                    int num123 = maxTilesY - 65;
+                    while (!world.getTile()[num122, num123].active && num123 > maxTilesY - 135)
+                    {
+                        num123--;
+                    }
+                    WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), num123 + WorldGen.genRand.Next(20, 50), world, (double)WorldGen.genRand.Next(15, 20), 1000, 57, true, 0f, (float)WorldGen.genRand.Next(1, 3), true, true);
+                }
+            }
+            Liquid.QuickWater(world, -2, -1, -1);
+            for (int num124 = 0; num124 < maxTilesX; num124++)
+            {
+                float num125 = (float)num124 / (float)(maxTilesX - 1);
+                //Console.WriteLine("Creating underworld: " + (int)(num125 * 100f / 2f + 50f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Creating underworld: " + (int)(num125 * 100f / 2f + 50f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                if (WorldGen.genRand.Next(13) == 0)
+                {
+                    int num126 = maxTilesY - 65;
+                    while ((world.getTile()[num124, num126].liquid > 0 || world.getTile()[num124, num126].active) && num126 > maxTilesY - 140)
+                    {
+                        num126--;
+                    }
+                    WorldGen.TileRunner(num124, num126 - WorldGen.genRand.Next(2, 5), world, (double)WorldGen.genRand.Next(5, 30), 1000, 57, true, 0f, (float)WorldGen.genRand.Next(1, 3), true, true);
+                    float num127 = (float)WorldGen.genRand.Next(1, 3);
+                    if (WorldGen.genRand.Next(3) == 0)
+                    {
+                        num127 *= 0.5f;
+                    }
+                    if (WorldGen.genRand.Next(2) == 0)
+                    {
+                        WorldGen.TileRunner(num124, num126 - WorldGen.genRand.Next(2, 5), world, (double)((int)((float)WorldGen.genRand.Next(5, 15) * num127)), (int)((float)WorldGen.genRand.Next(10, 15) * num127), 57, true, 1f, 0.3f, false, true);
+                    }
+                    if (WorldGen.genRand.Next(2) == 0)
+                    {
+                        num127 = (float)WorldGen.genRand.Next(1, 3);
+                        WorldGen.TileRunner(num124, num126 - WorldGen.genRand.Next(2, 5), world, (double)((int)((float)WorldGen.genRand.Next(5, 15) * num127)), (int)((float)WorldGen.genRand.Next(10, 15) * num127), 57, true, -1f, 0.3f, false, true);
+                    }
+                    WorldGen.TileRunner(num124 + WorldGen.genRand.Next(-10, 10), num126 + WorldGen.genRand.Next(-10, 10), world, (double)WorldGen.genRand.Next(5, 15), WorldGen.genRand.Next(5, 10), -2, false, (float)WorldGen.genRand.Next(-1, 3), (float)WorldGen.genRand.Next(-1, 3), false, true);
+                    if (WorldGen.genRand.Next(3) == 0)
+                    {
+                        WorldGen.TileRunner(num124 + WorldGen.genRand.Next(-10, 10), num126 + WorldGen.genRand.Next(-10, 10), world, (double)WorldGen.genRand.Next(10, 30), WorldGen.genRand.Next(10, 20), -2, false, (float)WorldGen.genRand.Next(-1, 3), (float)WorldGen.genRand.Next(-1, 3), false, true);
+                    }
+                    if (WorldGen.genRand.Next(5) == 0)
+                    {
+                        WorldGen.TileRunner(num124 + WorldGen.genRand.Next(-15, 15), num126 + WorldGen.genRand.Next(-15, 10), world, (double)WorldGen.genRand.Next(15, 30), WorldGen.genRand.Next(5, 20), -2, false, (float)WorldGen.genRand.Next(-1, 3), (float)WorldGen.genRand.Next(-1, 3), false, true);
+                    }
+                }
+            }
+            for (int num128 = 0; num128 < maxTilesX; num128++)
+            {
+                if (!world.getTile()[num128, maxTilesY - 145].active)
+                {
+                    world.getTile()[num128, maxTilesY - 145].liquid = 255;
+                    world.getTile()[num128, maxTilesY - 145].lava = true;
+                }
+                if (!world.getTile()[num128, maxTilesY - 144].active)
+                {
+                    world.getTile()[num128, maxTilesY - 144].liquid = 255;
+                    world.getTile()[num128, maxTilesY - 144].lava = true;
+                }
+            }
+            for (int num129 = 0; num129 < (int)((double)(maxTilesX * maxTilesY) * 0.002); num129++)
+            {
+                WorldGen.TileRunner(WorldGen.genRand.Next(0, maxTilesX), WorldGen.genRand.Next(maxTilesY - 140, maxTilesY), world, (double)WorldGen.genRand.Next(3, 8), WorldGen.genRand.Next(3, 8), 58, false, 0f, 0f, false, true);
+            }
+            WorldGen.AddHellHouses(world);
+            int num130 = WorldGen.genRand.Next(2, (int)((double)maxTilesX * 0.005));
+            for (int num131 = 0; num131 < num130; num131++)
+            {
+                float num132 = (float)num131 / (float)num130;
+                //Console.WriteLine("Adding water bodies: " + (int)(num132 * 100f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Adding water bodies: " + (int)(num132 * 100f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                int num133 = WorldGen.genRand.Next(300, maxTilesX - 300);
+                while (num133 > maxTilesX / 2 - 50 && num133 < maxTilesX / 2 + 50)
+                {
+                    num133 = WorldGen.genRand.Next(300, maxTilesX - 300);
+                }
+                int num134 = (int)num5 - 20;
+                while (!world.getTile()[num133, num134].active)
+                {
+                    num134++;
+                }
+                WorldGen.Lakinater(num133, num134, world);
+            }
+            int x = 0;
+            if (num9 == -1)
+            {
+                x = WorldGen.genRand.Next((int)((double)maxTilesX * 0.05), (int)((double)maxTilesX * 0.2));
+                num9 = -1;
+            }
+            else
+            {
+                x = WorldGen.genRand.Next((int)((double)maxTilesX * 0.8), (int)((double)maxTilesX * 0.95));
+                num9 = 1;
+            }
+            int y = (int)((world.getRockLayer() + (double)maxTilesY) / 2.0) + WorldGen.genRand.Next(-200, 200);
+            WorldGen.MakeDungeon(x, y, world, 41, 7);
+            int num135 = 0;
+            while ((double)num135 < (double)maxTilesX * 0.0004)
+            {
+                float num136 = (float)((double)num135 / ((double)maxTilesX * 0.0004));
+                //Console.WriteLine("Making the world evil: " + (int)(num136 * 100f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Making the world evil: " + (int)(num136 * 100f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                bool flag8 = false;
+                int num137 = 0;
+                int num138 = 0;
+                int num139 = 0;
+                while (!flag8)
+                {
+                    flag8 = true;
+                    int num140 = maxTilesX / 2;
+                    int num141 = 200;
+                    num137 = WorldGen.genRand.Next(maxTilesX);
+                    num138 = num137 - WorldGen.genRand.Next(150) - 175;
+                    num139 = num137 + WorldGen.genRand.Next(150) + 175;
+                    if (num138 < 0)
+                    {
+                        num138 = 0;
+                    }
+                    if (num139 > maxTilesX)
+                    {
+                        num139 = maxTilesX;
+                    }
+                    if (num137 > num140 - num141 && num137 < num140 + num141)
+                    {
+                        flag8 = false;
+                    }
+                    if (num138 > num140 - num141 && num138 < num140 + num141)
+                    {
+                        flag8 = false;
+                    }
+                    if (num139 > num140 - num141 && num139 < num140 + num141)
+                    {
+                        flag8 = false;
+                    }
+                    for (int num142 = num138; num142 < num139; num142++)
+                    {
+                        for (int num143 = 0; num143 < (int)world.getWorldSurface(); num143 += 5)
+                        {
+                            if (world.getTile()[num142, num143].active && Statics.tileDungeon[(int)world.getTile()[num142, num143].type])
+                            {
+                                flag8 = false;
+                                break;
+                            }
+                            if (!flag8)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                int num144 = 0;
+                for (int num145 = num138; num145 < num139; num145++)
+                {
+                    if (num144 > 0)
+                    {
+                        num144--;
+                    }
+                    if (num145 == num137 || num144 == 0)
+                    {
+                        int num146 = (int)num5;
+                        while ((double)num146 < world.getWorldSurface() - 1.0)
+                        {
+                            if (world.getTile()[num145, num146].active || world.getTile()[num145, num146].wall > 0)
+                            {
+                                if (num145 == num137)
+                                {
+                                    num144 = 20;
+                                    WorldGen.ChasmRunner(num145, num146, WorldGen.genRand.Next(150) + 150, world, true);
+                                    break;
+                                }
+                                if (WorldGen.genRand.Next(30) == 0 && num144 == 0)
+                                {
+                                    num144 = 20;
+                                    bool makeOrb = false;
+                                    if (WorldGen.genRand.Next(2) == 0)
+                                    {
+                                        makeOrb = true;
+                                    }
+                                    WorldGen.ChasmRunner(num145, num146, WorldGen.genRand.Next(50) + 50, world, makeOrb);
+                                    break;
+                                }
+                                break;
+                            }
+                            else
+                            {
+                                num146++;
+                            }
+                        }
+                    }
+                }
+                double num147 = world.getWorldSurface() + 40.0;
+                for (int num148 = num138; num148 < num139; num148++)
+                {
+                    num147 += (double)WorldGen.genRand.Next(-2, 3);
+                    if (num147 < world.getWorldSurface() + 30.0)
+                    {
+                        num147 = world.getWorldSurface() + 30.0;
+                    }
+                    if (num147 > world.getWorldSurface() + 50.0)
+                    {
+                        num147 = world.getWorldSurface() + 50.0;
+                    }
+                    int num54 = num148;
+                    bool flag9 = false;
+                    int num149 = (int)num5;
+                    while ((double)num149 < num147)
+                    {
+                        if (world.getTile()[num54, num149].active)
+                        {
+                            if (world.getTile()[num54, num149].type == 0 && (double)num149 < world.getWorldSurface() - 1.0 && !flag9)
+                            {
+                                WorldGen.SpreadGrass(num54, num149, world, 0, 23, true);
+                            }
+                            flag9 = true;
+                            if (world.getTile()[num54, num149].type == 1 && num54 >= num138 + WorldGen.genRand.Next(5) && num54 <= num139 - WorldGen.genRand.Next(5))
+                            {
+                                world.getTile()[num54, num149].type = 25;
+                            }
+                            if (world.getTile()[num54, num149].type == 2)
+                            {
+                                world.getTile()[num54, num149].type = 23;
+                            }
+                        }
+                        num149++;
+                    }
+                }
+                for (int num150 = num138; num150 < num139; num150++)
+                {
+                    for (int num151 = 0; num151 < maxTilesY - 50; num151++)
+                    {
+                        if (world.getTile()[num150, num151].active && world.getTile()[num150, num151].type == 31)
+                        {
+                            int num152 = num150 - 13;
+                            int num153 = num150 + 13;
+                            int num154 = num151 - 13;
+                            int num155 = num151 + 13;
+                            for (int num156 = num152; num156 < num153; num156++)
+                            {
+                                if (num156 > 10 && num156 < maxTilesX - 10)
+                                {
+                                    for (int num157 = num154; num157 < num155; num157++)
+                                    {
+                                        if (Math.Abs(num156 - num150) + Math.Abs(num157 - num151) < 9 + WorldGen.genRand.Next(11) && WorldGen.genRand.Next(3) != 0 && world.getTile()[num156, num157].type != 31)
+                                        {
+                                            world.getTile()[num156, num157].active = true;
+                                            world.getTile()[num156, num157].type = 25;
+                                            if (Math.Abs(num156 - num150) <= 1 && Math.Abs(num157 - num151) <= 1)
+                                            {
+                                                world.getTile()[num156, num157].active = false;
+                                            }
+                                        }
+                                        if (world.getTile()[num156, num157].type != 31 && Math.Abs(num156 - num150) <= 2 + WorldGen.genRand.Next(3) && Math.Abs(num157 - num151) <= 2 + WorldGen.genRand.Next(3))
+                                        {
+                                            world.getTile()[num156, num157].active = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                num135++;
+            }
+            //Console.WriteLine("Generating mountain caves...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Generating mountain caves...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num158 = 0; num158 < WorldGen.numMCaves; num158++)
+            {
+                int i3 = WorldGen.mCaveX[num158];
+                int j3 = WorldGen.mCaveY[num158];
+                WorldGen.CaveOpenater(i3, j3, world);
+                WorldGen.Cavinator(i3, j3, WorldGen.genRand.Next(40, 50), world);
+            }
+            //Console.WriteLine("Creating beaches...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Creating beaches...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num159 = 0; num159 < 2; num159++)
+            {
+                if (num159 == 0)
+                {
+                    int num160 = 0;
+                    int num161 = WorldGen.genRand.Next(125, 200);
+                    float num162 = 1f;
+                    int num163 = 0;
+                    while (!world.getTile()[num161 - 1, num163].active)
+                    {
+                        num163++;
+                    }
+                    for (int num164 = num161 - 1; num164 >= num160; num164--)
+                    {
+                        num162 += (float)WorldGen.genRand.Next(10, 20) * 0.05f;
+                        int num165 = 0;
+                        while ((float)num165 < (float)num163 + num162)
+                        {
+                            if ((float)num165 < (float)num163 + num162 * 0.75f - 3f)
+                            {
+                                world.getTile()[num164, num165].active = false;
+                                if (num165 > num163)
+                                {
+                                    world.getTile()[num164, num165].liquid = 255;
+                                }
+                                else
+                                {
+                                    if (num165 == num163)
+                                    {
+                                        world.getTile()[num164, num165].liquid = 127;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (num165 > num163)
+                                {
+                                    world.getTile()[num164, num165].type = 53;
+                                    world.getTile()[num164, num165].active = true;
+                                }
+                            }
+                            world.getTile()[num164, num165].wall = 0;
+                            num165++;
+                        }
+                    }
+                }
+                else
+                {
+                    int num160 = maxTilesX - WorldGen.genRand.Next(125, 200);
+                    int num161 = maxTilesX;
+                    float num166 = 1f;
+                    int num167 = 0;
+                    while (!world.getTile()[num160, num167].active)
+                    {
+                        num167++;
+                    }
+                    for (int num168 = num160; num168 < num161; num168++)
+                    {
+                        num166 += (float)WorldGen.genRand.Next(10, 20) * 0.05f;
+                        int num169 = 0;
+                        while ((float)num169 < (float)num167 + num166)
+                        {
+                            if ((float)num169 < (float)num167 + num166 * 0.75f - 3f)
+                            {
+                                world.getTile()[num168, num169].active = false;
+                                if (num169 > num167)
+                                {
+                                    world.getTile()[num168, num169].liquid = 255;
+                                }
+                                else
+                                {
+                                    if (num169 == num167)
+                                    {
+                                        world.getTile()[num168, num169].liquid = 127;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (num169 > num167)
+                                {
+                                    world.getTile()[num168, num169].type = 53;
+                                    world.getTile()[num168, num169].active = true;
+                                }
+                            }
+                            world.getTile()[num168, num169].wall = 0;
+                            num169++;
+                        }
+                    }
+                }
+            }
+            //Console.WriteLine("Adding gems...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Adding gems...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num170 = 63; num170 <= 68; num170++)
+            {
+                float num171 = 0f;
+                if (num170 == 67)
+                {
+                    num171 = (float)maxTilesX * 0.5f;
+                }
+                else
+                {
+                    if (num170 == 66)
+                    {
+                        num171 = (float)maxTilesX * 0.45f;
+                    }
+                    else
+                    {
+                        if (num170 == 63)
+                        {
+                            num171 = (float)maxTilesX * 0.3f;
+                        }
+                        else
+                        {
+                            if (num170 == 65)
+                            {
+                                num171 = (float)maxTilesX * 0.25f;
+                            }
+                            else
+                            {
+                                if (num170 == 64)
+                                {
+                                    num171 = (float)maxTilesX * 0.1f;
+                                }
+                                else
+                                {
+                                    if (num170 == 68)
+                                    {
+                                        num171 = (float)maxTilesX * 0.05f;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                num171 *= 0.2f;
+                int num172 = 0;
+                while ((float)num172 < num171)
+                {
+                    int num173 = WorldGen.genRand.Next(0, maxTilesX);
+                    int num174 = WorldGen.genRand.Next((int)world.getWorldSurface(), maxTilesY);
+                    while (world.getTile()[num173, num174].type != 1)
+                    {
+                        num173 = WorldGen.genRand.Next(0, maxTilesX);
+                        num174 = WorldGen.genRand.Next((int)world.getWorldSurface(), maxTilesY);
+                    }
+                    WorldGen.TileRunner(num173, num174, world, (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(3, 7), num170, false, 0f, 0f, false, true);
+                    num172++;
+                }
+            }
+            for (int num175 = 0; num175 < maxTilesX; num175++)
+            {
+                float num176 = (float)num175 / (float)(maxTilesX - 1);
+                //Console.WriteLine("Gravitating sand: " + (int)(num176 * 100f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Gravitating sand: " + (int)(num176 * 100f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                for (int num177 = maxTilesY - 5; num177 > 0; num177--)
+                {
+                    if (world.getTile()[num175, num177].active && world.getTile()[num175, num177].type == 53)
+                    {
+                        int num178 = num177;
+                        while (!world.getTile()[num175, num178 + 1].active && num178 < maxTilesY - 5)
+                        {
+                            world.getTile()[num175, num178 + 1].active = true;
+                            world.getTile()[num175, num178 + 1].type = 53;
+                            num178++;
+                        }
+                    }
+                }
+            }
+            for (int num179 = 3; num179 < maxTilesX - 3; num179++)
+            {
+                float num180 = (float)num179 / (float)maxTilesX;
+                //Console.WriteLine("Cleaning up dirt backgrounds: " + (int)(num180 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Cleaning up dirt backgrounds: " + (int)(num180 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                int num181 = 0;
+                while ((double)num181 < world.getWorldSurface())
+                {
+                    if (world.getTile()[num179, num181].wall == 2)
+                    {
+                        world.getTile()[num179, num181].wall = 0;
+                    }
+                    if (world.getTile()[num179, num181].type != 53)
+                    {
+                        if (world.getTile()[num179 - 1, num181].wall == 2)
+                        {
+                            world.getTile()[num179 - 1, num181].wall = 0;
+                        }
+                        if (world.getTile()[num179 - 2, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
+                        {
+                            world.getTile()[num179 - 2, num181].wall = 0;
+                        }
+                        if (world.getTile()[num179 - 3, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
+                        {
+                            world.getTile()[num179 - 3, num181].wall = 0;
+                        }
+                        if (world.getTile()[num179 + 1, num181].wall == 2)
+                        {
+                            world.getTile()[num179 + 1, num181].wall = 0;
+                        }
+                        if (world.getTile()[num179 + 2, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
+                        {
+                            world.getTile()[num179 + 2, num181].wall = 0;
+                        }
+                        if (world.getTile()[num179 + 3, num181].wall == 2 && WorldGen.genRand.Next(2) == 0)
+                        {
+                            world.getTile()[num179 + 3, num181].wall = 0;
+                        }
+                        if (world.getTile()[num179, num181].active)
+                        {
+                            break;
+                        }
+                    }
+                    num181++;
+                }
+            }
+            for (int num182 = 0; num182 < (int)((double)(maxTilesX * maxTilesY) * 2E-05); num182++)
+            {
+                float num183 = (float)((double)num182 / ((double)(maxTilesX * maxTilesY) * 2E-05));
+                //Console.WriteLine("Placing alters: " + (int)(num183 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Placing alters: " + (int)(num183 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                bool flag10 = false;
+                int num184 = 0;
+                while (!flag10)
+                {
+                    int num185 = WorldGen.genRand.Next(1, maxTilesX);
+                    int num186 = (int)(num6 + 20.0);
+                    WorldGen.Place3x2(num185, num186, 26, world);
+                    if (world.getTile()[num185, num186].type == 26)
+                    {
+                        flag10 = true;
+                    }
+                    else
+                    {
+                        num184++;
+                        if (num184 >= 10000)
+                        {
+                            flag10 = true;
+                        }
+                    }
+                }
+            }
+            Liquid.QuickWater(world, 3, -1, -1);
+            WorldGen.WaterCheck(world);
+            int num187 = 0;
+            Liquid.quickSettle = true;
+            while (num187 < 10)
+            {
+                int num188 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                num187++;
+                float num189 = 0f;
+                while (Liquid.numLiquid > 0)
+                {
+                    float num190 = (float)(num188 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)num188;
+                    if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > num188)
+                    {
+                        num188 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                    }
+                    if (num190 > num189)
+                    {
+                        num189 = num190;
+                    }
+                    else
+                    {
+                        num190 = num189;
+                    }
+                    if (num187 == 1)
+                    {
+                        //Console.WriteLine("Settling liquids: " + (int)(num190 * 100f / 3f + 33f) + "%";
+                        for (int i_ = 0; i_ < preserve; i_++)
+                        {
+                            Console.Write("\b");
+                        }
+                        text ="Settling liquids: " + (int)(num190 * 100f / 3f + 33f) + "%";
+                        Console.Write(text);
+                        preserve = text.Length;
+                    }
+                    int num191 = 10;
+                    if (num187 <= num191)
+                    {
+                        goto IL_41A9;
+                    }
+                IL_41A9:
+                    Liquid.UpdateLiquid(world);
+                }
+                WorldGen.WaterCheck(world);
+                //Console.WriteLine("Settling liquids: " + (int)((float)num187 * 10f / 3f + 66f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Settling liquids: " + (int)((float)num187 * 10f / 3f + 66f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+            }
+            Liquid.quickSettle = false;
+            for (int num192 = 0; num192 < (int)((double)(maxTilesX * maxTilesY) * 2.5E-05); num192++)
+            {
+                float num193 = (float)((double)num192 / ((double)(maxTilesX * maxTilesY) * 2.5E-05));
+                //Console.WriteLine("Placing life crystals: " + (int)(num193 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Placing life crystals: " + (int)(num193 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                bool flag11 = false;
+                int num194 = 0;
+                while (!flag11)
+                {
+                    if (WorldGen.AddLifeCrystal(WorldGen.genRand.Next(1, maxTilesX), WorldGen.genRand.Next((int)(num6 + 20.0), maxTilesY), world))
+                    {
+                        flag11 = true;
+                    }
+                    else
+                    {
+                        num194++;
+                        if (num194 >= 10000)
+                        {
+                            flag11 = true;
+                        }
+                    }
+                }
+            }
+            for (int num195 = 0; num195 < (int)((double)(maxTilesX * maxTilesY) * 1.8E-05); num195++)
+            {
+                float num196 = (float)((double)num195 / ((double)(maxTilesX * maxTilesY) * 1.8E-05));
+                //Console.WriteLine("Hiding treasure: " + (int)(num196 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Hiding treasure: " + (int)(num196 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                bool flag12 = false;
+                int num197 = 0;
+                while (!flag12)
+                {
+                    if (WorldGen.AddBuriedChest(WorldGen.genRand.Next(1, maxTilesX),
+                        WorldGen.genRand.Next((int)(num6 + 20.0), maxTilesY), world, 0))
+                    {
+                        flag12 = true;
+                    }
+                    else
+                    {
+                        num197++;
+                        if (num197 >= 10000)
+                        {
+                            flag12 = true;
+                        }
+                    }
+                }
+            }
+            int num198 = 0;
+            for (int num199 = 0; num199 < WorldGen.numJChests; num199++)
+            {
+                num198++;
+                int contain = 211;
+                if (num198 == 1)
+                {
+                    contain = 211;
+                }
+                else
+                {
+                    if (num198 == 2)
+                    {
+                        contain = 212;
+                    }
+                    else
+                    {
+                        if (num198 == 3)
+                        {
+                            contain = 213;
+                        }
+                    }
+                }
+                if (num198 > 3)
+                {
+                    num198 = 0;
+                }
+                if (!WorldGen.AddBuriedChest(WorldGen.JChestX[num199] + WorldGen.genRand.Next(2), WorldGen.JChestY[num199], world, contain))
+                {
+                    for (int num200 = WorldGen.JChestX[num199]; num200 <= WorldGen.JChestX[num199] + 1; num200++)
+                    {
+                        for (int num201 = WorldGen.JChestY[num199]; num201 <= WorldGen.JChestY[num199] + 1; num201++)
+                        {
+                            WorldGen.KillTile(num200, num201, world, false, false, false);
+                        }
+                    }
+                    WorldGen.AddBuriedChest(WorldGen.JChestX[num199], WorldGen.JChestY[num199], world, contain);
+                }
+            }
+            float num202 = (float)(maxTilesX / 4200);
+            int num203 = 0;
+            int num204 = 0;
+            while ((float)num204 < 10f * num202)
+            {
+                int contain2 = 0;
+                num203++;
+                if (num203 == 1)
+                {
+                    contain2 = 186;
+                }
+                else
+                {
+                    contain2 = 187;
+                    num203 = 0;
+                }
+                bool flag13 = false;
+                while (!flag13)
+                {
+                    int num205 = WorldGen.genRand.Next(1, maxTilesX);
+                    int num206 = WorldGen.genRand.Next(1, maxTilesY - 200);
+                    while (world.getTile()[num205, num206].liquid < 200 || world.getTile()[num205, num206].lava)
+                    {
+                        num205 = WorldGen.genRand.Next(1, maxTilesX);
+                        num206 = WorldGen.genRand.Next(1, maxTilesY - 200);
+                    }
+                    flag13 = WorldGen.AddBuriedChest(num205, num206, world, contain2);
+                }
+                num204++;
+            }
+            for (int num207 = 0; num207 < WorldGen.numIslandHouses; num207++)
+            {
+                WorldGen.IslandHouse(WorldGen.fihX[num207], WorldGen.fihY[num207], world);
+            }
+            for (int num208 = 0; num208 < (int)((double)(maxTilesX * maxTilesY) * 0.0008); num208++)
+            {
+                float num209 = (float)((double)num208 / ((double)(maxTilesX * maxTilesY) * 0.0008));
+                //Console.WriteLine("Placing breakables: " + (int)(num209 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Placing breakables: " + (int)(num209 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                bool flag14 = false;
+                int num210 = 0;
+                while (!flag14)
+                {
+                    int num211 = WorldGen.genRand.Next((int)num6, maxTilesY - 10);
+                    if ((double)num209 > 0.93)
+                    {
+                        num211 = maxTilesY - 150;
+                    }
+                    else
+                    {
+                        if ((double)num209 > 0.75)
+                        {
+                            num211 = (int)num5;
+                        }
+                    }
+                    int num212 = WorldGen.genRand.Next(1, maxTilesX);
+                    bool flag15 = false;
+                    for (int num213 = num211; num213 < maxTilesY; num213++)
+                    {
+                        if (!flag15)
+                        {
+                            if (world.getTile()[num212, num213].active && Statics.tileSolid[(int)world.getTile()[num212, num213].type] && !world.getTile()[num212, num213 - 1].lava)
+                            {
+                                flag15 = true;
+                            }
+                        }
+                        else
+                        {
+                            if (WorldGen.PlacePot(num212, num213, world, 28))
+                            {
+                                flag14 = true;
+                                break;
+                            }
+                            num210++;
+                            if (num210 >= 10000)
+                            {
+                                flag14 = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            for (int num214 = 0; num214 < (int)((double)(maxTilesX * maxTilesY) * 1E-05); num214++)
+            {
+                float num215 = (float)((double)num214 / ((double)(maxTilesX * maxTilesY) * 1E-05));
+                //Console.WriteLine("Placing hellforges: " + (int)(num215 * 100f + 1f) + "%";
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                text ="Placing hellforges: " + (int)(num215 * 100f + 1f) + "%";
+                Console.Write(text);
+                preserve = text.Length;
+                bool flag16 = false;
+                int num216 = 0;
+                while (!flag16)
+                {
+                    int num217 = WorldGen.genRand.Next(1, maxTilesX);
+                    int num218 = WorldGen.genRand.Next(maxTilesY - 250, maxTilesY - 5);
+                    try
+                    {
+                        if (world.getTile()[num217, num218].wall == 13)
+                        {
+                            while (!world.getTile()[num217, num218].active)
+                            {
+                                num218++;
+                            }
+                            num218--;
+                            WorldGen.PlaceTile(num217, num218, world, 77, false, false, -1);
+                            if (world.getTile()[num217, num218].type == 77)
+                            {
+                                flag16 = true;
+                            }
+                            else
+                            {
+                                num216++;
+                                if (num216 >= 10000)
+                                {
+                                    flag16 = true;
+                                }
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+            }
+            //Console.WriteLine("Spreading grass...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Spreading grass...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num219 = 0; num219 < maxTilesX; num219++)
+            {
+                int num54 = num219;
+                bool flag17 = true;
+                int num220 = 0;
+                while ((double)num220 < world.getWorldSurface() - 1.0)
+                {
+                    if (world.getTile()[num54, num220].active)
+                    {
+                        if (flag17 && world.getTile()[num54, num220].type == 0)
+                        {
+                            WorldGen.SpreadGrass(num54, num220, world, 0, 2, true);
+                        }
+                        if ((double)num220 > num6)
+                        {
+                            break;
+                        }
+                        flag17 = false;
+                    }
+                    else
+                    {
+                        if (world.getTile()[num54, num220].wall == 0)
+                        {
+                            flag17 = true;
+                        }
+                    }
+                    num220++;
+                }
+            }
+            int num221 = 5;
+            bool flag18 = true;
+            while (flag18)
+            {
+                int num222 = maxTilesX / 2 + WorldGen.genRand.Next(-num221, num221 + 1);
+                for (int num223 = 0; num223 < maxTilesY; num223++)
+                {
+                    if (world.getTile()[num222, num223].active)
+                    {
+                        Statics.spawnTileX = num222;
+                        Statics.spawnTileY = num223;
+                        world.getTile()[num222, num223 - 1].lighted = true;
+                        break;
+                    }
+                }
+                flag18 = false;
+                num221++;
+                if ((double)Statics.spawnTileY > world.getWorldSurface())
+                {
+                    flag18 = true;
+                }
+                if (world.getTile()[Statics.spawnTileX, Statics.spawnTileY - 1].liquid > 0)
+                {
+                    flag18 = true;
+                }
+            }
+            int num224 = 10;
+            while ((double)Statics.spawnTileY > world.getWorldSurface())
+            {
+                int num225 = WorldGen.genRand.Next(maxTilesX / 2 - num224, maxTilesX / 2 + num224);
+                for (int num226 = 0; num226 < maxTilesY; num226++)
+                {
+                    if (world.getTile()[num225, num226].active)
+                    {
+                        Statics.spawnTileX = num225;
+                        Statics.spawnTileY = num226;
+                        world.getTile()[num225, num226 - 1].lighted = true;
+                        break;
+                    }
+                }
+                num224++;
+            }
+            int num227 = NPC.NewNPC(Statics.spawnTileX * 16, Statics.spawnTileY * 16, world, 22, 0);
+            world.getNPCs()[num227].homeTileX = Statics.spawnTileX;
+            world.getNPCs()[num227].homeTileY = Statics.spawnTileY;
+            world.getNPCs()[num227].direction = 1;
+            world.getNPCs()[num227].homeless = true;
+            //Console.WriteLine("Planting sunflowers...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Planting sunflowers...";
+            Console.Write(text);
+            preserve = text.Length;
+            int num228 = 0;
+            while ((double)num228 < (double)maxTilesX * 0.002)
+            {
+                int num229 = 0;
+                int num230 = 0;
+                int arg_4AF8_0 = maxTilesX / 2;
+                int num231 = WorldGen.genRand.Next(maxTilesX);
+                num229 = num231 - WorldGen.genRand.Next(10) - 7;
+                num230 = num231 + WorldGen.genRand.Next(10) + 7;
+                if (num229 < 0)
+                {
+                    num229 = 0;
+                }
+                if (num230 > maxTilesX - 1)
+                {
+                    num230 = maxTilesX - 1;
+                }
+                for (int num232 = num229; num232 < num230; num232++)
+                {
+                    int num233 = 1;
+                    while ((double)num233 < world.getWorldSurface() - 1.0)
+                    {
+                        if (world.getTile()[num232, num233].type == 1 && world.getTile()[num232, num233].active)
+                        {
+                            world.getTile()[num232, num233].type = 2;
+                        }
+                        if (world.getTile()[num232 + 1, num233].type == 1 && world.getTile()[num232 + 1, num233].active)
+                        {
+                            world.getTile()[num232 + 1, num233].type = 2;
+                        }
+                        if (world.getTile()[num232, num233].type == 2 && world.getTile()[num232, num233].active && !world.getTile()[num232, num233 - 1].active)
+                        {
+                            WorldGen.PlaceTile(num232, num233 - 1, world, 27, true, false, -1);
+                        }
+                        if (world.getTile()[num232, num233].active)
+                        {
+                            break;
+                        }
+                        num233++;
+                    }
+                }
+                num228++;
+            }
+            //Console.WriteLine("Planting trees...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Planting trees...";
+            Console.Write(text);
+            preserve = text.Length;
+            int num234 = 0;
+            while ((double)num234 < (double)maxTilesX * 0.003)
+            {
+                int num235 = WorldGen.genRand.Next(50, maxTilesX - 50);
+                int num236 = WorldGen.genRand.Next(25, 50);
+                for (int num237 = num235 - num236; num237 < num235 + num236; num237++)
+                {
+                    int num238 = 20;
+                    while ((double)num238 < world.getWorldSurface())
+                    {
+                        if (world.getTile()[num237, num238].active)
+                        {
+                            if (world.getTile()[num237, num238].type == 1)
+                            {
+                                world.getTile()[num237, num238].type = 2;
+                            }
+                            if (world.getTile()[num237, num238 + 1].type == 1)
+                            {
+                                world.getTile()[num237, num238 + 1].type = 2;
+                                break;
+                            }
+                            break;
+                        }
+                        else
+                        {
+                            num238++;
+                        }
+                    }
+                }
+                for (int num239 = num235 - num236; num239 < num235 + num236; num239++)
+                {
+                    int num240 = 20;
+                    while ((double)num240 < world.getWorldSurface())
+                    {
+                        WorldGen.GrowEpicTree(num239, num240, world);
+                        num240++;
+                    }
+                }
+                num234++;
+            }
+            WorldGen.AddTrees(world);
+            //Console.WriteLine("Planting weeds...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Planting weeds...";
+            Console.Write(text);
+            preserve = text.Length;
+            WorldGen.AddPlants(world);
+            for (int num241 = 0; num241 < maxTilesX; num241++)
+            {
+                for (int num242 = (int)world.getWorldSurface(); num242 < maxTilesY; num242++)
+                {
+                    if (world.getTile()[num241, num242].active)
+                    {
+                        if (world.getTile()[num241, num242].type == 70 && !world.getTile()[num241, num242 - 1].active)
+                        {
+                            WorldGen.GrowShroom(num241, num242, world);
+                            if (!world.getTile()[num241, num242 - 1].active)
+                            {
+                                WorldGen.PlaceTile(num241, num242 - 1, world, 71, true, false, -1);
+                            }
+                        }
+                        if (world.getTile()[num241, num242].type == 60 && !world.getTile()[num241, num242 - 1].active)
+                        {
+                            WorldGen.PlaceTile(num241, num242 - 1, world, 61, true, false, -1);
+                        }
+                    }
+                }
+            }
+            //Console.WriteLine("Growing vines...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Growing vines...";
+            Console.Write(text);
+            preserve = text.Length;
+            for (int num243 = 0; num243 < maxTilesX; num243++)
+            {
+                int num244 = 0;
+                int num245 = 0;
+                while ((double)num245 < world.getWorldSurface())
+                {
+                    if (num244 > 0 && !world.getTile()[num243, num245].active)
+                    {
+                        world.getTile()[num243, num245].active = true;
+                        world.getTile()[num243, num245].type = 52;
+                        num244--;
+                    }
+                    else
+                    {
+                        num244 = 0;
+                    }
+                    if (world.getTile()[num243, num245].active && world.getTile()[num243, num245].type == 2 && WorldGen.genRand.Next(5) < 3)
+                    {
+                        num244 = WorldGen.genRand.Next(1, 10);
+                    }
+                    num245++;
+                }
+                num244 = 0;
+                for (int num246 = (int)world.getWorldSurface(); num246 < maxTilesY; num246++)
+                {
+                    if (num244 > 0 && !world.getTile()[num243, num246].active)
+                    {
+                        world.getTile()[num243, num246].active = true;
+                        world.getTile()[num243, num246].type = 62;
+                        num244--;
+                    }
+                    else
+                    {
+                        num244 = 0;
+                    }
+                    if (world.getTile()[num243, num246].active && world.getTile()[num243, num246].type == 60 && WorldGen.genRand.Next(5) < 3)
+                    {
+                        num244 = WorldGen.genRand.Next(1, 10);
+                    }
+                }
+            }
+            //Console.WriteLine("Planting flowers...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Planting flowers...";
+            Console.Write(text);
+            preserve = text.Length;
+            int num247 = 0;
+            while ((double)num247 < (double)maxTilesX * 0.005)
+            {
+                int num248 = WorldGen.genRand.Next(20, maxTilesX - 20);
+                int num249 = WorldGen.genRand.Next(5, 15);
+                int num250 = WorldGen.genRand.Next(15, 30);
+                int num251 = 1;
+                while ((double)num251 < world.getWorldSurface() - 1.0)
+                {
+                    if (world.getTile()[num248, num251].active)
+                    {
+                        for (int num252 = num248 - num249; num252 < num248 + num249; num252++)
+                        {
+                            for (int num253 = num251 - num250; num253 < num251 + num250; num253++)
+                            {
+                                if (world.getTile()[num252, num253].type == 3 || world.getTile()[num252, num253].type == 24)
+                                {
+                                    world.getTile()[num252, num253].frameX = (short)(WorldGen.genRand.Next(6, 8) * 18);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    num251++;
+                }
+                num247++;
+            }
+            //Console.WriteLine("Planting mushrooms...";
+            for (int i_ = 0; i_ < preserve; i_++)
+            {
+                Console.Write("\b");
+            }
+            text ="Planting mushrooms...";
+            Console.Write(text);
+            preserve = text.Length;
+            int num254 = 0;
+            while ((double)num254 < (double)maxTilesX * 0.002)
+            {
+                int num255 = WorldGen.genRand.Next(20, maxTilesX - 20);
+                int num256 = WorldGen.genRand.Next(4, 10);
+                int num257 = WorldGen.genRand.Next(15, 30);
+                int num258 = 1;
+                while ((double)num258 < world.getWorldSurface() - 1.0)
+                {
+                    if (world.getTile()[num255, num258].active)
+                    {
+                        for (int num259 = num255 - num256; num259 < num255 + num256; num259++)
+                        {
+                            for (int num260 = num258 - num257; num260 < num258 + num257; num260++)
+                            {
+                                if (world.getTile()[num259, num260].type == 3 || world.getTile()[num259, num260].type == 24)
+                                {
+                                    world.getTile()[num259, num260].frameX = 144;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    num258++;
+                }
+                num254++;
+            }
+            WorldGen.gen = false;
+            return world;
+        }
+        */
+
+        public static World generateWorld(int MaxTilesX, int MaxTilesY, int seed = -1, World world = null)
+        {
+            if (world == null)
+            {
+                world = new World(MaxTilesX, MaxTilesY);
+            }
+            gen = true;
+            if (seed > 0)
+            {
+                genRand = new Random(seed);
+            }
+            else
+            {
+                genRand = new Random((int)DateTime.Now.Ticks);
+            }
+            world.setId(genRand.Next(0x7fffffff));
+            //Main.worldID = genRand.Next(0x7fffffff);
+            int num7 = 0;
+            int num8 = 0;
+            double num = world.getMaxTilesY() * 0.3;
+            num *= genRand.Next(90, 110) * 0.005;
+            double num4 = num + (world.getMaxTilesY() * 0.2);
+            num4 *= genRand.Next(90, 110) * 0.01;
+            double num2 = num;
+            double num3 = num;
+            double num5 = num4;
+            double num6 = num4;
+            int num9 = 0;
+            if (genRand.Next(2) == 0)
+            {
+                num9 = -1;
+            }
+            else
+            {
+                num9 = 1;
+            }
+            for (int i = 0; i < world.getMaxTilesX(); i++)
+            {
+                float num11 = ((float)i) / ((float)world.getMaxTilesX());
+               // Console.WriteLine("Generating world terrain: " + ((int)((num11 * 100f) + 1f)) + "%";
+                Console.WriteLine("Generating world terrain: " + ((int)((num11 * 100f) + 1f)) + "%");
+                if (num < num2)
+                {
+                    num2 = num;
+                }
+                if (num > num3)
+                {
+                    num3 = num;
+                }
+                if (num4 < num5)
+                {
+                    num5 = num4;
+                }
+                if (num4 > num6)
+                {
+                    num6 = num4;
+                }
+                if (num8 <= 0)
+                {
+                    num7 = genRand.Next(0, 5);
+                    num8 = genRand.Next(5, 40);
+                    if (num7 == 0)
+                    {
+                        num8 *= (int)(genRand.Next(5, 30) * 0.2);
+                    }
+                }
+                num8--;
+                switch (num7)
+                {
+                    case 0:
+                        while (genRand.Next(0, 7) == 0)
+                        {
+                            num += genRand.Next(-1, 2);
+                        }
+                        break;
+
+                    case 1:
+                        while (genRand.Next(0, 4) == 0)
+                        {
+                            num--;
+                        }
+                        while (genRand.Next(0, 10) == 0)
+                        {
+                            num++;
+                        }
+                        break;
+
+                    case 2:
+                        while (genRand.Next(0, 4) == 0)
+                        {
+                            num++;
+                        }
+                        while (genRand.Next(0, 10) == 0)
+                        {
+                            num--;
+                        }
+                        break;
+
+                    case 3:
+                        while (genRand.Next(0, 2) == 0)
+                        {
+                            num--;
+                        }
+                        while (genRand.Next(0, 6) == 0)
+                        {
+                            num++;
+                        }
+                        break;
+
+                    case 4:
+                        while (genRand.Next(0, 2) == 0)
+                        {
+                            num++;
+                        }
+                        while (genRand.Next(0, 5) == 0)
+                        {
+                            num--;
+                        }
+                        break;
+                }
+                if (num < (world.getMaxTilesY() * 0.15))
+                {
+                    num = world.getMaxTilesY() * 0.15;
+                    num8 = 0;
+                }
+                else if (num > (world.getMaxTilesY() * 0.3))
+                {
+                    num = world.getMaxTilesY() * 0.3;
+                    num8 = 0;
+                }
+                while (genRand.Next(0, 3) == 0)
+                {
+                    num4 += genRand.Next(-2, 3);
+                }
+                if (num4 < (num + (world.getMaxTilesY() * 0.05)))
+                {
+                    num4++;
+                }
+                if (num4 > (num + (world.getMaxTilesY() * 0.35)))
+                {
+                    num4--;
+                }
+                for (int num12 = 0; num12 < num; num12++)
+                {
+                    world.getTile()[i, num12].active = false;
+                    world.getTile()[i, num12].lighted = true;
+                    world.getTile()[i, num12].frameX = -1;
+                    world.getTile()[i, num12].frameY = -1;
+                }
+                for (int num13 = (int)num; num13 < world.getMaxTilesY(); num13++)
+                {
+                    if (num13 < num4)
+                    {
+                        world.getTile()[i, num13].active = true;
+                        world.getTile()[i, num13].type = 0;
+                        world.getTile()[i, num13].frameX = -1;
+                        world.getTile()[i, num13].frameY = -1;
+                    }
+                    else
+                    {
+                        world.getTile()[i, num13].active = true;
+                        world.getTile()[i, num13].type = 1;
+                        world.getTile()[i, num13].frameX = -1;
+                        world.getTile()[i, num13].frameY = -1;
+                    }
+                }
+            }
+            world.setWorldSurface(num3 + 5.0);
+            //world.getWorldSurface() = num3 + 5.0;
+            world.setRockLayer(num6);
+            //world.getRockLayer() = num6;
+            double num14 = ((int)((world.getRockLayer() - world.getWorldSurface()) / 6.0)) * 6;
+            world.setRockLayer(world.getWorldSurface() + num14);
+            waterLine = (((int)world.getRockLayer()) + world.getMaxTilesY()) / 2;
+            waterLine += genRand.Next(-100, 20);
+            lavaLine = waterLine + genRand.Next(50, 80);
+            int num15 = 0;
+            Console.WriteLine("Adding sand...");
+            int num16 = genRand.Next((int)(world.getMaxTilesX() * 0.0007), (int)(world.getMaxTilesX() * 0.002)) + 2;
+            for (int j = 0; j < num16; j++)
+            {
+                int num18 = genRand.Next(world.getMaxTilesX());
+                while ((num18 > (world.getMaxTilesX() * 0.45f)) && (num18 < (world.getMaxTilesX() * 0.55f)))
+                {
+                    num18 = genRand.Next(world.getMaxTilesX());
+                }
+                int num19 = genRand.Next(15, 90);
+                if (genRand.Next(3) == 0)
+                {
+                    num19 *= 2;
+                }
+                int num20 = num18 - num19;
+                num19 = genRand.Next(15, 90);
+                if (genRand.Next(3) == 0)
+                {
+                    num19 *= 2;
+                }
+                int maxTilesX = num18 + num19;
+                if (num20 < 0)
+                {
+                    num20 = 0;
+                }
+                if (maxTilesX > world.getMaxTilesX())
+                {
+                    maxTilesX = world.getMaxTilesX();
+                }
+                switch (j)
+                {
+                    case 0:
+                        num20 = 0;
+                        maxTilesX = genRand.Next(250, 300);
+                        break;
+
+                    case 2:
+                        num20 = world.getMaxTilesX() - genRand.Next(250, 300);
+                        maxTilesX = world.getMaxTilesX();
+                        break;
+                }
+                int num22 = genRand.Next(50, 100);
+                for (int num23 = num20; num23 < maxTilesX; num23++)
+                {
+                    if (genRand.Next(2) == 0)
+                    {
+                        num22 += genRand.Next(-1, 2);
+                        if (num22 < 50)
+                        {
+                            num22 = 50;
+                        }
+                        if (num22 > 100)
+                        {
+                            num22 = 100;
+                        }
+                    }
+                    for (int num24 = 0; num24 < world.getWorldSurface(); num24++)
+                    {
+                        if (world.getTile()[num23, num24].active)
+                        {
+                            int num25 = num22;
+                            if ((num23 - num20) < num25)
+                            {
+                                num25 = num23 - num20;
+                            }
+                            if ((maxTilesX - num23) < num25)
+                            {
+                                num25 = maxTilesX - num23;
+                            }
+                            num25 += genRand.Next(5);
+                            for (int num26 = num24; num26 < (num24 + num25); num26++)
+                            {
+                                if ((num23 > (num20 + genRand.Next(5))) && (num23 < (maxTilesX - genRand.Next(5))))
+                                {
+                                    world.getTile()[num23, num26].type = 0x35;
+                                }
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+            for (int k = 0; k < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 8E-06)); k++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)world.getWorldSurface(), (int)world.getRockLayer()), world, (double)genRand.Next(15, 70), genRand.Next(20, 130), 0x35, false, 0f, 0f, false, true);
+            }
+            numMCaves = 0;
+            Console.WriteLine("Generating hills...");
+            for (int m = 0; m < ((int)(world.getMaxTilesX() * 0.0008)); m++)
+            {
+                int num29 = 0;
+                bool flag = false;
+                bool flag2 = false;
+                int num30 = genRand.Next((int)(world.getMaxTilesX() * 0.25), (int)(world.getMaxTilesX() * 0.75));
+                while (!flag2)
+                {
+                    flag2 = true;
+                    while ((num30 > ((world.getMaxTilesX() / 2) - 100)) && (num30 < ((world.getMaxTilesX() / 2) + 100)))
+                    {
+                        num30 = genRand.Next((int)(world.getMaxTilesX() * 0.25), (int)(world.getMaxTilesX() * 0.75));
+                    }
+                    for (int num31 = 0; num31 < numMCaves; num31++)
+                    {
+                        if ((num30 > (mCaveX[num31] - 50)) && (num30 < (mCaveX[num31] + 50)))
+                        {
+                            num29++;
+                            flag2 = false;
+                            break;
+                        }
+                    }
+                    if (num29 >= 200)
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (!flag)
+                {
+                    for (int num32 = 0; num32 < world.getWorldSurface(); num32++)
+                    {
+                        if (world.getTile()[num30, num32].active)
+                        {
+                            Mountinater(num30, num32, world);
+                            mCaveX[numMCaves] = num30;
+                            mCaveY[numMCaves] = num32;
+                            numMCaves++;
+                            break;
+                        }
+                    }
+                }
+            }
+            for (int n = 1; n < (world.getMaxTilesX() - 1); n++)
+            {
+                float num34 = ((float)n) / ((float)world.getMaxTilesX());
+                Console.WriteLine("Puttin dirt behind dirt: " + ((int)((num34 * 100f) + 1f)) + "%");
+                bool flag3 = false;
+                num15 += genRand.Next(-1, 2);
+                if (num15 < 0)
+                {
+                    num15 = 0;
+                }
+                if (num15 > 10)
+                {
+                    num15 = 10;
+                }
+                for (int num35 = 0; num35 < (world.getWorldSurface() + 10.0); num35++)
+                {
+                    if (num35 > (world.getWorldSurface() + num15))
+                    {
+                        break;
+                    }
+                    if (flag3)
+                    {
+                        world.getTile()[n, num35].wall = 2;
+                    }
+                    if (((world.getTile()[n, num35].active && world.getTile()[n - 1, num35].active) && (world.getTile()[n + 1, num35].active && world.getTile()[n, num35 + 1].active)) && (world.getTile()[n - 1, num35 + 1].active && world.getTile()[n + 1, num35 + 1].active))
+                    {
+                        flag3 = true;
+                    }
+                }
+            }
+            numIslandHouses = 0;
+            houseCount = 0;
+            Console.WriteLine("Generating floating islands...");
+            for (int num36 = 0; num36 < ((int)(world.getMaxTilesX() * 0.0008)); num36++)
+            {
+                int num37 = 0;
+                bool flag4 = false;
+                int num38 = genRand.Next((int)(world.getMaxTilesX() * 0.1), (int)(world.getMaxTilesX() * 0.9));
+                bool flag5 = false;
+                while (!flag5)
+                {
+                    flag5 = true;
+                    while ((num38 > ((world.getMaxTilesX() / 2) - 80)) && (num38 < ((world.getMaxTilesX() / 2) + 80)))
+                    {
+                        num38 = genRand.Next((int)(world.getMaxTilesX() * 0.1), (int)(world.getMaxTilesX() * 0.9));
+                    }
+                    for (int num39 = 0; num39 < numIslandHouses; num39++)
+                    {
+                        if ((num38 > (fihX[num39] - 80)) && (num38 < (fihX[num39] + 80)))
+                        {
+                            num37++;
+                            flag5 = false;
+                            break;
+                        }
+                    }
+                    if (num37 >= 200)
+                    {
+                        flag4 = true;
+                        break;
+                    }
+                }
+                if (!flag4)
+                {
+                    for (int num40 = 200; num40 < world.getWorldSurface(); num40++)
+                    {
+                        if (world.getTile()[num38, num40].active)
+                        {
+                            int num41 = num38;
+                            int num42 = genRand.Next(100, num40 - 100);
+                            while (num42 > (num2 - 50.0))
+                            {
+                                num42--;
+                            }
+                            FloatingIsland(num41, num42, world);
+                            fihX[numIslandHouses] = num41;
+                            fihY[numIslandHouses] = num42;
+                            numIslandHouses++;
+                            break;
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Placing rocks in the dirt...");
+            for (int num43 = 0; num43 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0002)); num43++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(0, ((int)num2) + 1), world, (double)genRand.Next(4, 15), genRand.Next(5, 40), 1, false, 0f, 0f, false, true);
+            }
+            for (int num44 = 0; num44 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0002)); num44++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num2, ((int)num3) + 1), world, (double)genRand.Next(4, 10), genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
+            }
+            for (int num45 = 0; num45 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0045)); num45++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, ((int)num6) + 1), world, (double)genRand.Next(2, 7), genRand.Next(2, 0x17), 1, false, 0f, 0f, false, true);
+            }
+            Console.WriteLine("Placing dirt in the rocks...");
+            for (int num46 = 0; num46 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.005)); num46++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(2, 6), genRand.Next(2, 40), 0, false, 0f, 0f, false, true);
+            }
+            Console.WriteLine("Adding clay...");
+            for (int num47 = 0; num47 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 2E-05)); num47++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(0, (int)num2), world, (double)genRand.Next(4, 14), genRand.Next(10, 50), 40, false, 0f, 0f, false, true);
+            }
+            for (int num48 = 0; num48 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 5E-05)); num48++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num2, ((int)num3) + 1), world, (double)genRand.Next(8, 14), genRand.Next(15, 0x2d), 40, false, 0f, 0f, false, true);
+            }
+            for (int num49 = 0; num49 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 2E-05)); num49++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, ((int)num6) + 1), world, (double)genRand.Next(8, 15), genRand.Next(5, 50), 40, false, 0f, 0f, false, true);
+            }
+            for (int num50 = 5; num50 < (world.getMaxTilesX() - 5); num50++)
+            {
+                for (int num51 = 1; num51 < (world.getWorldSurface() - 1.0); num51++)
+                {
+                    if (world.getTile()[num50, num51].active)
+                    {
+                        for (int num52 = num51; num52 < (num51 + 5); num52++)
+                        {
+                            if (world.getTile()[num50, num52].type == 40)
+                            {
+                                world.getTile()[num50, num52].type = 0;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            for (int num53 = 0; num53 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0015)); num53++)
+            {
+                float num54 = (float)(((double)num53) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0015));
+                Console.WriteLine("Making random holes: " + ((int)((num54 * 100f) + 1f)) + "%");
+                int type = -1;
+                if (genRand.Next(5) == 0)
+                {
+                    type = -2;
+                }
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, world.getMaxTilesY()), world, (double)genRand.Next(2, 5), genRand.Next(2, 20), type, false, 0f, 0f, false, true);
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, world.getMaxTilesY()), world, (double)genRand.Next(8, 15), genRand.Next(7, 30), type, false, 0f, 0f, false, true);
+            }
+            for (int num56 = 0; num56 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 3E-05)); num56++)
+            {
+                float num57 = (float)(((double)num56) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 3E-05));
+                Console.WriteLine("Generating small caves: " + ((int)((num57 * 100f) + 1f)) + "%");
+                if (num6 <= world.getMaxTilesY())
+                {
+                    int num58 = -1;
+                    if (genRand.Next(6) == 0)
+                    {
+                        num58 = -2;
+                    }
+                    TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num2, ((int)num6) + 1), world, (double)genRand.Next(5, 15), genRand.Next(30, 200), num58, false, 0f, 0f, false, true);
+                }
+            }
+            for (int num59 = 0; num59 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00015)); num59++)
+            {
+                float num60 = (float)(((double)num59) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00015));
+                Console.WriteLine("Generating large caves: " + ((int)((num60 * 100f) + 1f)) + "%");
+                if (num6 <= world.getMaxTilesY())
+                {
+                    int num61 = -1;
+                    if (genRand.Next(10) == 0)
+                    {
+                        num61 = -2;
+                    }
+                    TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num6, world.getMaxTilesY()), world, (double)genRand.Next(6, 20), genRand.Next(50, 300), num61, false, 0f, 0f, false, true);
+                }
+            }
+            int num62 = 0;
+            Console.WriteLine("Generating surface caves...");
+            for (int num63 = 0; num63 < ((int)(world.getMaxTilesX() * 0.0025)); num63++)
+            {
+                num62 = genRand.Next(0, world.getMaxTilesX());
+                for (int num64 = 0; num64 < num3; num64++)
+                {
+                    if (world.getTile()[num62, num64].active)
+                    {
+                        TileRunner(num62, num64, world, (double)genRand.Next(3, 6), genRand.Next(5, 50), -1, false, genRand.Next(-10, 11) * 0.1f, 1f, false, true);
+                        break;
+                    }
+                }
+            }
+            for (int num65 = 0; num65 < ((int)(world.getMaxTilesX() * 0.0007)); num65++)
+            {
+                num62 = genRand.Next(0, world.getMaxTilesX());
+                for (int num66 = 0; num66 < num3; num66++)
+                {
+                    if (world.getTile()[num62, num66].active)
+                    {
+                        TileRunner(num62, num66, world, (double)genRand.Next(10, 15), genRand.Next(50, 130), -1, false, genRand.Next(-10, 11) * 0.1f, 2f, false, true);
+                        break;
+                    }
+                }
+            }
+            for (int num67 = 0; num67 < ((int)(world.getMaxTilesX() * 0.0003)); num67++)
+            {
+                num62 = genRand.Next(0, world.getMaxTilesX());
+                for (int num68 = 0; num68 < num3; num68++)
+                {
+                    if (world.getTile()[num62, num68].active)
+                    {
+                        TileRunner(num62, num68, world, (double)genRand.Next(12, 0x19), genRand.Next(150, 500), -1, false, genRand.Next(-10, 11) * 0.1f, 4f, false, true);
+                        TileRunner(num62, num68, world, (double)genRand.Next(8, 0x11), genRand.Next(60, 200), -1, false, genRand.Next(-10, 11) * 0.1f, 2f, false, true);
+                        TileRunner(num62, num68, world, (double)genRand.Next(5, 13), genRand.Next(40, 170), -1, false, genRand.Next(-10, 11) * 0.1f, 2f, false, true);
+                        break;
+                    }
+                }
+            }
+            for (int num69 = 0; num69 < ((int)(world.getMaxTilesX() * 0.0004)); num69++)
+            {
+                num62 = genRand.Next(0, world.getMaxTilesX());
+                for (int num70 = 0; num70 < num3; num70++)
+                {
+                    if (world.getTile()[num62, num70].active)
+                    {
+                        TileRunner(num62, num70, world, (double)genRand.Next(7, 12), genRand.Next(150, 250), -1, false, 0f, 1f, true, true);
+                        break;
+                    }
+                }
+            }
+            for (int num73 = 0; num73 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.002)); num73++)
+            {
+                int num71 = genRand.Next(1, world.getMaxTilesX() - 1);
+                int num72 = genRand.Next((int)num2, (int)num3);
+                if (num72 >= world.getMaxTilesY())
+                {
+                    num72 = world.getMaxTilesY() - 2;
+                }
+                if (((world.getTile()[num71 - 1, num72].active && (world.getTile()[num71 - 1, num72].type == 0)) && (world.getTile()[num71 + 1, num72].active && (world.getTile()[num71 + 1, num72].type == 0))) && ((world.getTile()[num71, num72 - 1].active && (world.getTile()[num71, num72 - 1].type == 0)) && (world.getTile()[num71, num72 + 1].active && (world.getTile()[num71, num72 + 1].type == 0))))
+                {
+                    world.getTile()[num71, num72].active = true;
+                    world.getTile()[num71, num72].type = 2;
+                }
+                num71 = genRand.Next(1, world.getMaxTilesX() - 1);
+                num72 = genRand.Next(0, (int)num2);
+                if (num72 >= world.getMaxTilesY())
+                {
+                    num72 = world.getMaxTilesY() - 2;
+                }
+                if (((world.getTile()[num71 - 1, num72].active && (world.getTile()[num71 - 1, num72].type == 0)) && (world.getTile()[num71 + 1, num72].active && (world.getTile()[num71 + 1, num72].type == 0))) && ((world.getTile()[num71, num72 - 1].active && (world.getTile()[num71, num72 - 1].type == 0)) && (world.getTile()[num71, num72 + 1].active && (world.getTile()[num71, num72 + 1].type == 0))))
+                {
+                    world.getTile()[num71, num72].active = true;
+                    world.getTile()[num71, num72].type = 2;
+                }
+            }
+            Console.WriteLine("Generating underground jungle: 0%");
+            float num74 = world.getMaxTilesX() / 0x1068;
+            num74 *= 1.5f;
+            int num75 = 0;
+            if (num9 == -1)
+            {
+                num75 = (int)(world.getMaxTilesX() * 0.8f);
+            }
+            else
+            {
+                num75 = (int)(world.getMaxTilesX() * 0.2f);
+            }
+            int num76 = (world.getMaxTilesY() + ((int)world.getRockLayer())) / 2;
+            num75 += genRand.Next((int)(-100f * num74), (int)(101f * num74));
+            num76 += genRand.Next((int)(-100f * num74), (int)(101f * num74));
+            TileRunner(num75, num76, world, (double)genRand.Next((int)(250f * num74), (int)(500f * num74)), genRand.Next(50, 150), 0x3b, false, (float)(num9 * 3), 0f, false, true);
+            Console.WriteLine("Generating underground jungle: 20%");
+            num75 += genRand.Next((int)(-250f * num74), (int)(251f * num74));
+            num76 += genRand.Next((int)(-150f * num74), (int)(151f * num74));
+            int num77 = num75;
+            int num78 = num76;
+            TileRunner(num75, num76, world, (double)genRand.Next((int)(250f * num74), (int)(500f * num74)), genRand.Next(50, 150), 0x3b, false, 0f, 0f, false, true);
+            Console.WriteLine("Generating underground jungle: 40%");
+            num75 += genRand.Next((int)(-400f * num74), (int)(401f * num74));
+            num76 += genRand.Next((int)(-150f * num74), (int)(151f * num74));
+            TileRunner(num75, num76, world, (double)genRand.Next((int)(250f * num74), (int)(500f * num74)), genRand.Next(50, 150), 0x3b, false, (float)(num9 * -3), 0f, false, true);
+            Console.WriteLine("Generating underground jungle: 60%");
+            num75 = num77;
+            num76 = num78;
+            for (int num79 = 0; num79 <= (20f * num74); num79++)
+            {
+                Console.WriteLine("Generating underground jungle: " + ((int)(60f + (((float)num79) / num74))) + "%");
+                num75 += genRand.Next((int)(-5f * num74), (int)(6f * num74));
+                num76 += genRand.Next((int)(-5f * num74), (int)(6f * num74));
+                TileRunner(num75, num76, world, (double)genRand.Next(40, 100), genRand.Next(300, 500), 0x3b, false, 0f, 0f, false, true);
+            }
+            for (int num80 = 0; num80 <= (10f * num74); num80++)
+            {
+                Console.WriteLine("Generating underground jungle: " + ((int)(80f + ((((float)num80) / num74) * 2f))) + "%");
+                num75 = num77 + genRand.Next((int)(-600f * num74), (int)(600f * num74));
+                num76 = num78 + genRand.Next((int)(-200f * num74), (int)(200f * num74));
+                while ((((num75 < 1) || (num75 >= (world.getMaxTilesX() - 1))) || ((num76 < 1) || (num76 >= (world.getMaxTilesY() - 1)))) || (world.getTile()[num75, num76].type != 0x3b))
+                {
+                    num75 = num77 + genRand.Next((int)(-600f * num74), (int)(600f * num74));
+                    num76 = num78 + genRand.Next((int)(-200f * num74), (int)(200f * num74));
+                }
+                for (int num81 = 0; num81 < (8f * num74); num81++)
+                {
+                    num75 += genRand.Next(-30, 0x1f);
+                    num76 += genRand.Next(-30, 0x1f);
+                    int num82 = -1;
+                    if (genRand.Next(7) == 0)
+                    {
+                        num82 = -2;
+                    }
+                    TileRunner(num75, num76, world, (double)genRand.Next(10, 20), genRand.Next(30, 70), num82, false, 0f, 0f, false, true);
+                }
+            }
+            for (int num83 = 0; num83 <= (300f * num74); num83++)
+            {
+                num75 = num77 + genRand.Next((int)(-600f * num74), (int)(600f * num74));
+                num76 = num78 + genRand.Next((int)(-200f * num74), (int)(200f * num74));
+                while ((((num75 < 1) || (num75 >= (world.getMaxTilesX() - 1))) || ((num76 < 1) || (num76 >= (world.getMaxTilesY() - 1)))) || (world.getTile()[num75, num76].type != 0x3b))
+                {
+                    num75 = num77 + genRand.Next((int)(-600f * num74), (int)(600f * num74));
+                    num76 = num78 + genRand.Next((int)(-200f * num74), (int)(200f * num74));
+                }
+                TileRunner(num75, num76, world, (double)genRand.Next(4, 10), genRand.Next(5, 30), 1, false, 0f, 0f, false, true);
+                if (genRand.Next(4) == 0)
+                {
+                    int num84 = genRand.Next(0x3f, 0x45);
+                    TileRunner(num75 + genRand.Next(-1, 2), num76 + genRand.Next(-1, 2), world, (double)genRand.Next(3, 7), genRand.Next(4, 8), num84, false, 0f, 0f, false, true);
+                }
+            }
+            num75 = num77;
+            num76 = num78;
+            float num85 = genRand.Next(6, 10);
+            float num86 = world.getMaxTilesX() / 0x1068;
+            num85 *= num86;
+            for (int num87 = 0; num87 < num85; num87++)
+            {
+                bool flag6 = true;
+                while (flag6)
+                {
+                    num75 = genRand.Next(20, world.getMaxTilesX() - 20);
+                    num76 = genRand.Next(20, world.getMaxTilesY() - 300);
+                    if (world.getTile()[num75, num76].type == 0x3b)
+                    {
+                        flag6 = false;
+                        int num88 = genRand.Next(2, 4);
+                        int num89 = genRand.Next(2, 4);
+                        for (int num90 = (num75 - num88) - 1; num90 <= ((num75 + num88) + 1); num90++)
+                        {
+                            for (int num91 = (num76 - num89) - 1; num91 <= ((num76 + num89) + 1); num91++)
+                            {
+                                world.getTile()[num90, num91].active = true;
+                                world.getTile()[num90, num91].type = 0x2d;
+                                world.getTile()[num90, num91].liquid = 0;
+                                world.getTile()[num90, num91].lava = false;
+                            }
+                        }
+                        for (int num92 = num75 - num88; num92 <= (num75 + num88); num92++)
+                        {
+                            for (int num93 = num76 - num89; num93 <= (num76 + num89); num93++)
+                            {
+                                world.getTile()[num92, num93].active = false;
+                                world.getTile()[num92, num93].wall = 10;
+                            }
+                        }
+                        bool flag7 = false;
+                        int num94 = 0;
+                        while (!flag7 && (num94 < 100))
+                        {
+                            num94++;
+                            int num95 = genRand.Next(num75 - num88, (num75 + num88) + 1);
+                            int num96 = genRand.Next(num76 - num89, (num76 + num89) - 2);
+                            PlaceTile(num95, num96, world, 4, true, false, -1);
+                            if (world.getTile()[num95, num96].type == 4)
+                            {
+                                flag7 = true;
+                            }
+                        }
+                        for (int num97 = (num75 - num88) - 1; num97 <= ((num75 + num88) + 1); num97++)
+                        {
+                            for (int num98 = (num76 + num89) - 2; num98 <= (num76 + num89); num98++)
+                            {
+                                world.getTile()[num97, num98].active = false;
+                            }
+                        }
+                        for (int num99 = (num75 - num88) - 1; num99 <= ((num75 + num88) + 1); num99++)
+                        {
+                            for (int num100 = (num76 + num89) - 2; num100 <= ((num76 + num89) - 1); num100++)
+                            {
+                                world.getTile()[num99, num100].active = false;
+                            }
+                        }
+                        for (int num101 = (num75 - num88) - 1; num101 <= ((num75 + num88) + 1); num101++)
+                        {
+                            int num102 = 4;
+                            int num103 = (num76 + num89) + 2;
+                            while ((!world.getTile()[num101, num103].active && (num103 < world.getMaxTilesY())) && (num102 > 0))
+                            {
+                                world.getTile()[num101, num103].active = true;
+                                world.getTile()[num101, num103].type = 0x3b;
+                                num103++;
+                                num102--;
+                            }
+                        }
+                        num88 -= genRand.Next(1, 3);
+                        for (int num104 = (num76 - num89) - 2; num88 > -1; num104--)
+                        {
+                            for (int num105 = (num75 - num88) - 1; num105 <= ((num75 + num88) + 1); num105++)
+                            {
+                                world.getTile()[num105, num104].active = true;
+                                world.getTile()[num105, num104].type = 0x2d;
+                            }
+                            num88 -= genRand.Next(1, 3);
+                        }
+                        JChestX[numJChests] = num75;
+                        JChestY[numJChests] = num76;
+                        numJChests++;
+                    }
+                }
+            }
+            for (int num106 = 0; num106 < world.getMaxTilesX(); num106++)
+            {
+                for (int num107 = (int)world.getWorldSurface(); num107 < world.getMaxTilesY(); num107++)
+                {
+                    if (world.getTile()[num106, num107].active)
+                    {
+                        SpreadGrass(num106, num107, world, 0x3b, 60, false);
+                    }
+                }
+            }
+            Console.WriteLine("Adding mushroom patches...");
+            for (int num108 = 0; num108 < (world.getMaxTilesX() / 300); num108++)
+            {
+                int num109 = genRand.Next((int)(world.getMaxTilesX() * 0.3), (int)(world.getMaxTilesX() * 0.7));
+                int num110 = genRand.Next((int)world.getRockLayer(), world.getMaxTilesY() - 300);
+                ShroomPatch(num109, num110, world);
+            }
+            for (int num111 = 0; num111 < world.getMaxTilesX(); num111++)
+            {
+                for (int num112 = (int)world.getWorldSurface(); num112 < world.getMaxTilesY(); num112++)
+                {
+                    if (world.getTile()[num111, num112].active)
+                    {
+                        SpreadGrass(num111, num112, world, 0x3b, 70, false);
+                    }
+                }
+            }
+            Console.WriteLine("Placing mud in the dirt...");
+            for (int num113 = 0; num113 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.001)); num113++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(2, 6), genRand.Next(2, 40), 0x3b, false, 0f, 0f, false, true);
+            }
+            Console.WriteLine("Adding shinies...");
+            for (int num114 = 0; num114 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 6E-05)); num114++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num2, (int)num3), world, (double)genRand.Next(3, 6), genRand.Next(2, 6), 7, false, 0f, 0f, false, true);
+            }
+            for (int num115 = 0; num115 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 8E-05)); num115++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, (int)num6), world, (double)genRand.Next(3, 7), genRand.Next(3, 7), 7, false, 0f, 0f, false, true);
+            }
+            for (int num116 = 0; num116 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0002)); num116++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(4, 9), genRand.Next(4, 8), 7, false, 0f, 0f, false, true);
+            }
+            for (int num117 = 0; num117 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 3E-05)); num117++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num2, (int)num3), world, (double)genRand.Next(3, 7), genRand.Next(2, 5), 6, false, 0f, 0f, false, true);
+            }
+            for (int num118 = 0; num118 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 8E-05)); num118++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, (int)num6), world, (double)genRand.Next(3, 6), genRand.Next(3, 6), 6, false, 0f, 0f, false, true);
+            }
+            for (int num119 = 0; num119 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0002)); num119++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(4, 9), genRand.Next(4, 8), 6, false, 0f, 0f, false, true);
+            }
+            for (int num120 = 0; num120 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 3E-05)); num120++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num3, (int)num6), world, (double)genRand.Next(3, 6), genRand.Next(3, 6), 9, false, 0f, 0f, false, true);
+            }
+            for (int num121 = 0; num121 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00017)); num121++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(4, 9), genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
+            }
+            for (int num122 = 0; num122 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00017)); num122++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(0, (int)num2), world, (double)genRand.Next(4, 9), genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
+            }
+            for (int num123 = 0; num123 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00012)); num123++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next((int)num5, world.getMaxTilesY()), world, (double)genRand.Next(4, 8), genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
+            }
+            for (int num124 = 0; num124 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.00012)); num124++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(0, ((int)num2) - 20), world, (double)genRand.Next(4, 8), genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
+            }
+            Console.WriteLine("Adding webs...");
+            for (int num125 = 0; num125 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.001)); num125++)
+            {
+                int num126 = genRand.Next(20, world.getMaxTilesX() - 20);
+                int num127 = genRand.Next((int)num2, world.getMaxTilesY() - 20);
+                if (num125 < numMCaves)
+                {
+                    num126 = mCaveX[num125];
+                    num127 = mCaveY[num125];
+                }
+                if (!world.getTile()[num126, num127].active && ((num127 > world.getWorldSurface()) || (world.getTile()[num126, num127].wall > 0)))
+                {
+                    while (!world.getTile()[num126, num127].active && (num127 > ((int)num2)))
+                    {
+                        num127--;
+                    }
+                    num127++;
+                    int num128 = 1;
+                    if (genRand.Next(2) == 0)
+                    {
+                        num128 = -1;
+                    }
+                    while ((!world.getTile()[num126, num127].active && (num126 > 10)) && (num126 < (world.getMaxTilesX() - 10)))
+                    {
+                        num126 += num128;
+                    }
+                    num126 -= num128;
+                    if ((num127 > world.getWorldSurface()) || (world.getTile()[num126, num127].wall > 0))
+                    {
+                        TileRunner(num126, num127, world, (double)genRand.Next(4, 13), genRand.Next(2, 5), 0x33, true, (float)num128, -1f, false, false);
+                    }
+                }
+            }
+            Console.WriteLine("Creating underworld: 0%");
+            int num129 = world.getMaxTilesY() - genRand.Next(150, 190);
+            for (int num130 = 0; num130 < world.getMaxTilesX(); num130++)
+            {
+                num129 += genRand.Next(-3, 4);
+                if (num129 < (world.getMaxTilesY() - 190))
+                {
+                    num129 = world.getMaxTilesY() - 190;
+                }
+                if (num129 > (world.getMaxTilesY() - 160))
+                {
+                    num129 = world.getMaxTilesY() - 160;
+                }
+                for (int num131 = (num129 - 20) - genRand.Next(3); num131 < world.getMaxTilesY(); num131++)
+                {
+                    if (num131 >= num129)
+                    {
+                        world.getTile()[num130, num131].active = false;
+                        world.getTile()[num130, num131].lava = false;
+                        world.getTile()[num130, num131].liquid = 0;
+                    }
+                    else
+                    {
+                        world.getTile()[num130, num131].type = 0x39;
+                    }
+                }
+            }
+            int num132 = world.getMaxTilesY() - genRand.Next(40, 70);
+            for (int num133 = 10; num133 < (world.getMaxTilesX() - 10); num133++)
+            {
+                num132 += genRand.Next(-10, 11);
+                if (num132 > (world.getMaxTilesY() - 60))
+                {
+                    num132 = world.getMaxTilesY() - 60;
+                }
+                if (num132 < (world.getMaxTilesY() - 100))
+                {
+                    num132 = world.getMaxTilesY() - 120;
+                }
+                for (int num134 = num132; num134 < (world.getMaxTilesY() - 10); num134++)
+                {
+                    if (!world.getTile()[num133, num134].active)
+                    {
+                        world.getTile()[num133, num134].lava = true;
+                        world.getTile()[num133, num134].liquid = 0xff;
+                    }
+                }
+            }
+            for (int num135 = 0; num135 < world.getMaxTilesX(); num135++)
+            {
+                if (genRand.Next(50) == 0)
+                {
+                    int num136 = world.getMaxTilesY() - 0x41;
+                    while (!world.getTile()[num135, num136].active && (num136 > (world.getMaxTilesY() - 0x87)))
+                    {
+                        num136--;
+                    }
+                    TileRunner(genRand.Next(0, world.getMaxTilesX()), num136 + genRand.Next(20, 50), world, (double)genRand.Next(15, 20), 0x3e8, 0x39, true, 0f, (float)genRand.Next(1, 3), true, true);
+                }
+            }
+            Liquid.QuickWater(world, -2, -1, -1);
+            for (int num137 = 0; num137 < world.getMaxTilesX(); num137++)
+            {
+                float num138 = ((float)num137) / ((float)(world.getMaxTilesX() - 1));
+                Console.WriteLine("Creating underworld: " + ((int)(((num138 * 100f) / 2f) + 50f)) + "%");
+                if (genRand.Next(13) == 0)
+                {
+                    int num139 = world.getMaxTilesY() - 0x41;
+                    while (((world.getTile()[num137, num139].liquid > 0) || world.getTile()[num137, num139].active) && (num139 > (world.getMaxTilesY() - 140)))
+                    {
+                        num139--;
+                    }
+                    TileRunner(num137, num139 - genRand.Next(2, 5), world, (double)genRand.Next(5, 30), 0x3e8, 0x39, true, 0f, (float)genRand.Next(1, 3), true, true);
+                    float num140 = genRand.Next(1, 3);
+                    if (genRand.Next(3) == 0)
+                    {
+                        num140 *= 0.5f;
+                    }
+                    if (genRand.Next(2) == 0)
+                    {
+                        TileRunner(num137, num139 - genRand.Next(2, 5), world, (double)((int)(genRand.Next(5, 15) * num140)), (int)(genRand.Next(10, 15) * num140), 0x39, true, 1f, 0.3f, false, true);
+                    }
+                    if (genRand.Next(2) == 0)
+                    {
+                        num140 = genRand.Next(1, 3);
+                        TileRunner(num137, num139 - genRand.Next(2, 5), world, (double)((int)(genRand.Next(5, 15) * num140)), (int)(genRand.Next(10, 15) * num140), 0x39, true, -1f, 0.3f, false, true);
+                    }
+                    TileRunner(num137 + genRand.Next(-10, 10), num139 + genRand.Next(-10, 10), world, (double)genRand.Next(5, 15), genRand.Next(5, 10), -2, false, (float)genRand.Next(-1, 3), (float)genRand.Next(-1, 3), false, true);
+                    if (genRand.Next(3) == 0)
+                    {
+                        TileRunner(num137 + genRand.Next(-10, 10), num139 + genRand.Next(-10, 10), world, (double)genRand.Next(10, 30), genRand.Next(10, 20), -2, false, (float)genRand.Next(-1, 3), (float)genRand.Next(-1, 3), false, true);
+                    }
+                    if (genRand.Next(5) == 0)
+                    {
+                        TileRunner(num137 + genRand.Next(-15, 15), num139 + genRand.Next(-15, 10), world, (double)genRand.Next(15, 30), genRand.Next(5, 20), -2, false, (float)genRand.Next(-1, 3), (float)genRand.Next(-1, 3), false, true);
+                    }
+                }
+            }
+            for (int num141 = 0; num141 < world.getMaxTilesX(); num141++)
+            {
+                if (!world.getTile()[num141, world.getMaxTilesY() - 0x91].active)
+                {
+                    world.getTile()[num141, world.getMaxTilesY() - 0x91].liquid = 0xff;
+                    world.getTile()[num141, world.getMaxTilesY() - 0x91].lava = true;
+                }
+                if (!world.getTile()[num141, world.getMaxTilesY() - 0x90].active)
+                {
+                    world.getTile()[num141, world.getMaxTilesY() - 0x90].liquid = 0xff;
+                    world.getTile()[num141, world.getMaxTilesY() - 0x90].lava = true;
+                }
+            }
+            for (int num142 = 0; num142 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.002)); num142++)
+            {
+                TileRunner(genRand.Next(0, world.getMaxTilesX()), genRand.Next(world.getMaxTilesY() - 140, world.getMaxTilesY()), world, (double)genRand.Next(3, 8), genRand.Next(3, 8), 0x3a, false, 0f, 0f, false, true);
+            }
+            AddHellHouses(world);
+            int num143 = genRand.Next(2, (int)(world.getMaxTilesX() * 0.005));
+            for (int num144 = 0; num144 < num143; num144++)
+            {
+                float num145 = ((float)num144) / ((float)num143);
+                Console.WriteLine("Adding water bodies: " + ((int)(num145 * 100f)) + "%");
+                int num146 = genRand.Next(300, world.getMaxTilesX() - 300);
+                while ((num146 > ((world.getMaxTilesX() / 2) - 50)) && (num146 < ((world.getMaxTilesX() / 2) + 50)))
+                {
+                    num146 = genRand.Next(300, world.getMaxTilesX() - 300);
+                }
+                int num147 = ((int)num2) - 20;
+                while (!world.getTile()[num146, num147].active)
+                {
+                    num147++;
+                }
+                Lakinater(num146, num147, world);
+            }
+            int x = 0;
+            if (num9 == -1)
+            {
+                x = genRand.Next((int)(world.getMaxTilesX() * 0.05), (int)(world.getMaxTilesX() * 0.2));
+                num9 = -1;
+            }
+            else
+            {
+                x = genRand.Next((int)(world.getMaxTilesX() * 0.8), (int)(world.getMaxTilesX() * 0.95));
+                num9 = 1;
+            }
+            int y = ((int)((world.getRockLayer() + world.getMaxTilesY()) / 2.0)) + genRand.Next(-200, 200);
+            MakeDungeon(x, y, world, 0x29, 7);
+            for (int num150 = 0; num150 < (world.getMaxTilesX() * 0.0004); num150++)
+            {
+                float num151 = (float)(((double)num150) / (world.getMaxTilesX() * 0.0004));
+                Console.WriteLine("Making the world evil: " + ((int)(num151 * 100f)) + "%");
+                bool flag8 = false;
+                int num152 = 0;
+                int num153 = 0;
+                int num154 = 0;
+                while (!flag8)
+                {
+                    flag8 = true;
+                    int num155 = world.getMaxTilesX() / 2;
+                    int num156 = 200;
+                    num152 = genRand.Next(world.getMaxTilesX());
+                    num153 = (num152 - genRand.Next(150)) - 0xaf;
+                    num154 = (num152 + genRand.Next(150)) + 0xaf;
+                    if (num153 < 0)
+                    {
+                        num153 = 0;
+                    }
+                    if (num154 > world.getMaxTilesX())
+                    {
+                        num154 = world.getMaxTilesX();
+                    }
+                    if ((num152 > (num155 - num156)) && (num152 < (num155 + num156)))
+                    {
+                        flag8 = false;
+                    }
+                    if ((num153 > (num155 - num156)) && (num153 < (num155 + num156)))
+                    {
+                        flag8 = false;
+                    }
+                    if ((num154 > (num155 - num156)) && (num154 < (num155 + num156)))
+                    {
+                        flag8 = false;
+                    }
+                    for (int num157 = num153; num157 < num154; num157++)
+                    {
+                        for (int num158 = 0; num158 < ((int)world.getWorldSurface()); num158 += 5)
+                        {
+                            if (world.getTile()[num157, num158].active && Statics.tileDungeon[world.getTile()[num157, num158].type])
+                            {
+                                flag8 = false;
+                                break;
+                            }
+                            if (!flag8)
+                            {
+                                break;
+                            }
+                        }
+                    }
+                }
+                int num159 = 0;
+                for (int num160 = num153; num160 < num154; num160++)
+                {
+                    if (num159 > 0)
+                    {
+                        num159--;
+                    }
+                    if ((num160 == num152) || (num159 == 0))
+                    {
+                        for (int num161 = (int)num2; num161 < (world.getWorldSurface() - 1.0); num161++)
+                        {
+                            if (world.getTile()[num160, num161].active || (world.getTile()[num160, num161].wall > 0))
+                            {
+                                if (num160 == num152)
+                                {
+                                    num159 = 20;
+                                    ChasmRunner(num160, num161, genRand.Next(150) + 150, world, true);
+                                }
+                                else if ((genRand.Next(30) == 0) && (num159 == 0))
+                                {
+                                    num159 = 20;
+                                    bool makeOrb = false;
+                                    if (genRand.Next(2) == 0)
+                                    {
+                                        makeOrb = true;
+                                    }
+                                    ChasmRunner(num160, num161, genRand.Next(50) + 50, world, makeOrb);
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+                double num162 = world.getWorldSurface() + 40.0;
+                for (int num163 = num153; num163 < num154; num163++)
+                {
+                    num162 += genRand.Next(-2, 3);
+                    if (num162 < (world.getWorldSurface() + 30.0))
+                    {
+                        num162 = world.getWorldSurface() + 30.0;
+                    }
+                    if (num162 > (world.getWorldSurface() + 50.0))
+                    {
+                        num162 = world.getWorldSurface() + 50.0;
+                    }
+                    num62 = num163;
+                    bool flag10 = false;
+                    for (int num164 = (int)num2; num164 < num162; num164++)
+                    {
+                        if (world.getTile()[num62, num164].active)
+                        {
+                            if (((world.getTile()[num62, num164].type == 0) && (num164 < (world.getWorldSurface() - 1.0))) && !flag10)
+                            {
+                                SpreadGrass(num62, num164, world, 0, 0x17, true);
+                            }
+                            flag10 = true;
+                            if (((world.getTile()[num62, num164].type == 1) && (num62 >= (num153 + genRand.Next(5)))) && (num62 <= (num154 - genRand.Next(5))))
+                            {
+                                world.getTile()[num62, num164].type = 0x19;
+                            }
+                            if (world.getTile()[num62, num164].type == 2)
+                            {
+                                world.getTile()[num62, num164].type = 0x17;
+                            }
+                        }
+                    }
+                }
+                for (int num165 = num153; num165 < num154; num165++)
+                {
+                    for (int num166 = 0; num166 < (world.getMaxTilesY() - 50); num166++)
+                    {
+                        if (world.getTile()[num165, num166].active && (world.getTile()[num165, num166].type == 0x1f))
+                        {
+                            int num167 = num165 - 13;
+                            int num168 = num165 + 13;
+                            int num169 = num166 - 13;
+                            int num170 = num166 + 13;
+                            for (int num171 = num167; num171 < num168; num171++)
+                            {
+                                if ((num171 > 10) && (num171 < (world.getMaxTilesX() - 10)))
+                                {
+                                    for (int num172 = num169; num172 < num170; num172++)
+                                    {
+                                        if ((((Math.Abs((int)(num171 - num165)) + Math.Abs((int)(num172 - num166))) < (9 + genRand.Next(11))) && (genRand.Next(3) != 0)) && (world.getTile()[num171, num172].type != 0x1f))
+                                        {
+                                            world.getTile()[num171, num172].active = true;
+                                            world.getTile()[num171, num172].type = 0x19;
+                                            if ((Math.Abs((int)(num171 - num165)) <= 1) && (Math.Abs((int)(num172 - num166)) <= 1))
+                                            {
+                                                world.getTile()[num171, num172].active = false;
+                                            }
+                                        }
+                                        if (((world.getTile()[num171, num172].type != 0x1f) && (Math.Abs((int)(num171 - num165)) <= (2 + genRand.Next(3)))) && (Math.Abs((int)(num172 - num166)) <= (2 + genRand.Next(3))))
+                                        {
+                                            world.getTile()[num171, num172].active = false;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Generating mountain caves...");
+            for (int num173 = 0; num173 < numMCaves; num173++)
+            {
+                int num174 = mCaveX[num173];
+                int num175 = mCaveY[num173];
+                CaveOpenater(num174, num175, world);
+                Cavinator(num174, num175, genRand.Next(40, 50), world);
+            }
+            Console.WriteLine("Creating beaches...");
+            for (int num176 = 0; num176 < 2; num176++)
+            {
+                int num177 = 0;
+                int num178 = 0;
+                if (num176 == 0)
+                {
+                    num177 = 0;
+                    num178 = genRand.Next(0x7d, 200);
+                    float num179 = 1f;
+                    int num180 = 0;
+                    while (!world.getTile()[num178 - 1, num180].active)
+                    {
+                        num180++;
+                    }
+                    for (int num181 = num178 - 1; num181 >= num177; num181--)
+                    {
+                        num179 += genRand.Next(10, 20) * 0.05f;
+                        for (int num182 = 0; num182 < (num180 + num179); num182++)
+                        {
+                            if (num182 < ((num180 + (num179 * 0.75f)) - 3f))
+                            {
+                                world.getTile()[num181, num182].active = false;
+                                if (num182 > num180)
+                                {
+                                    world.getTile()[num181, num182].liquid = 0xff;
+                                }
+                                else if (num182 == num180)
+                                {
+                                    world.getTile()[num181, num182].liquid = 0x7f;
+                                }
+                            }
+                            else if (num182 > num180)
+                            {
+                                world.getTile()[num181, num182].type = 0x35;
+                                world.getTile()[num181, num182].active = true;
+                            }
+                            world.getTile()[num181, num182].wall = 0;
+                        }
+                    }
+                }
+                else
+                {
+                    num177 = world.getMaxTilesX() - genRand.Next(0x7d, 200);
+                    num178 = world.getMaxTilesX();
+                    float num183 = 1f;
+                    int num184 = 0;
+                    while (!world.getTile()[num177, num184].active)
+                    {
+                        num184++;
+                    }
+                    for (int num185 = num177; num185 < num178; num185++)
+                    {
+                        num183 += genRand.Next(10, 20) * 0.05f;
+                        for (int num186 = 0; num186 < (num184 + num183); num186++)
+                        {
+                            if (num186 < ((num184 + (num183 * 0.75f)) - 3f))
+                            {
+                                world.getTile()[num185, num186].active = false;
+                                if (num186 > num184)
+                                {
+                                    world.getTile()[num185, num186].liquid = 0xff;
+                                }
+                                else if (num186 == num184)
+                                {
+                                    world.getTile()[num185, num186].liquid = 0x7f;
+                                }
+                            }
+                            else if (num186 > num184)
+                            {
+                                world.getTile()[num185, num186].type = 0x35;
+                                world.getTile()[num185, num186].active = true;
+                            }
+                            world.getTile()[num185, num186].wall = 0;
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Adding gems...");
+            for (int num187 = 0x3f; num187 <= 0x44; num187++)
+            {
+                float num188 = 0f;
+                switch (num187)
+                {
+                    case 0x43:
+                        num188 = world.getMaxTilesX() * 0.5f;
+                        break;
+
+                    case 0x42:
+                        num188 = world.getMaxTilesX() * 0.45f;
+                        break;
+
+                    case 0x3f:
+                        num188 = world.getMaxTilesX() * 0.3f;
+                        break;
+
+                    case 0x41:
+                        num188 = world.getMaxTilesX() * 0.25f;
+                        break;
+
+                    case 0x40:
+                        num188 = world.getMaxTilesX() * 0.1f;
+                        break;
+
+                    case 0x44:
+                        num188 = world.getMaxTilesX() * 0.05f;
+                        break;
+                }
+                num188 *= 0.2f;
+                for (int num189 = 0; num189 < num188; num189++)
+                {
+                    int num190 = genRand.Next(0, world.getMaxTilesX());
+                    int num191 = genRand.Next((int)world.getWorldSurface(), world.getMaxTilesY());
+                    while (world.getTile()[num190, num191].type != 1)
+                    {
+                        num190 = genRand.Next(0, world.getMaxTilesX());
+                        num191 = genRand.Next((int)world.getWorldSurface(), world.getMaxTilesY());
+                    }
+                    TileRunner(num190, num191, world, (double)genRand.Next(2, 6), genRand.Next(3, 7), num187, false, 0f, 0f, false, true);
+                }
+            }
+            for (int num192 = 0; num192 < world.getMaxTilesX(); num192++)
+            {
+                float num193 = ((float)num192) / ((float)(world.getMaxTilesX() - 1));
+                Console.WriteLine("Gravitating sand: " + ((int)(num193 * 100f)) + "%");
+                for (int num194 = world.getMaxTilesY() - 5; num194 > 0; num194--)
+                {
+                    if (world.getTile()[num192, num194].active && (world.getTile()[num192, num194].type == 0x35))
+                    {
+                        for (int num195 = num194; !world.getTile()[num192, num195 + 1].active && (num195 < (world.getMaxTilesY() - 5)); num195++)
+                        {
+                            world.getTile()[num192, num195 + 1].active = true;
+                            world.getTile()[num192, num195 + 1].type = 0x35;
+                        }
+                    }
+                }
+            }
+            for (int num196 = 3; num196 < (world.getMaxTilesX() - 3); num196++)
+            {
+                float num197 = ((float)num196) / ((float)world.getMaxTilesX());
+                Console.WriteLine("Cleaning up dirt backgrounds: " + ((int)((num197 * 100f) + 1f)) + "%");
+                for (int num198 = 0; num198 < world.getWorldSurface(); num198++)
+                {
+                    if (world.getTile()[num196, num198].wall == 2)
+                    {
+                        world.getTile()[num196, num198].wall = 0;
+                    }
+                    if (world.getTile()[num196, num198].type != 0x35)
+                    {
+                        if (world.getTile()[num196 - 1, num198].wall == 2)
+                        {
+                            world.getTile()[num196 - 1, num198].wall = 0;
+                        }
+                        if ((world.getTile()[num196 - 2, num198].wall == 2) && (genRand.Next(2) == 0))
+                        {
+                            world.getTile()[num196 - 2, num198].wall = 0;
+                        }
+                        if ((world.getTile()[num196 - 3, num198].wall == 2) && (genRand.Next(2) == 0))
+                        {
+                            world.getTile()[num196 - 3, num198].wall = 0;
+                        }
+                        if (world.getTile()[num196 + 1, num198].wall == 2)
+                        {
+                            world.getTile()[num196 + 1, num198].wall = 0;
+                        }
+                        if ((world.getTile()[num196 + 2, num198].wall == 2) && (genRand.Next(2) == 0))
+                        {
+                            world.getTile()[num196 + 2, num198].wall = 0;
+                        }
+                        if ((world.getTile()[num196 + 3, num198].wall == 2) && (genRand.Next(2) == 0))
+                        {
+                            world.getTile()[num196 + 3, num198].wall = 0;
+                        }
+                        if (world.getTile()[num196, num198].active)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            for (int num199 = 0; num199 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 2E-05)); num199++)
+            {
+                float num200 = (float)(((double)num199) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 2E-05));
+                Console.WriteLine("Placing alters: " + ((int)((num200 * 100f) + 1f)) + "%");
+                bool flag11 = false;
+                int num201 = 0;
+                while (!flag11)
+                {
+                    int num202 = genRand.Next(1, world.getMaxTilesX());
+                    int num203 = (int)(num3 + 20.0);
+                    Place3x2(num202, num203, 0x1a, world);
+                    if (world.getTile()[num202, num203].type == 0x1a)
+                    {
+                        flag11 = true;
+                    }
+                    else
+                    {
+                        num201++;
+                        if (num201 >= 0x2710)
+                        {
+                            flag11 = true;
+                        }
+                    }
+                }
+            }
+            Liquid.QuickWater(world, 3, -1, -1);
+            WaterCheck(world);
+            int num204 = 0;
+            Liquid.quickSettle = true;
+            while (num204 < 10)
+            {
+                int num205 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                num204++;
+                float num206 = 0f;
+                while (Liquid.numLiquid > 0)
+                {
+                    float num207 = ((float)(num205 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer))) / ((float)num205);
+                    if ((Liquid.numLiquid + LiquidBuffer.numLiquidBuffer) > num205)
+                    {
+                        num205 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                    }
+                    if (num207 > num206)
+                    {
+                        num206 = num207;
+                    }
+                    else
+                    {
+                        num207 = num206;
+                    }
+                    if (num204 == 1)
+                    {
+                        Console.WriteLine("Settling liquids: " + ((int)(((num207 * 100f) / 3f) + 33f)) + "%");
+                    }
+                    int num208 = 10;
+                    if (num204 > num208)
+                    {
+                        num208 = num204;
+                    }
+                    Liquid.UpdateLiquid(world);
+                }
+                WaterCheck(world);
+                Console.WriteLine("Settling liquids: " + ((int)(((num204 * 10f) / 3f) + 66f)) + "%");
+            }
+            Liquid.quickSettle = false;
+            for (int num209 = 0; num209 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 2.5E-05)); num209++)
+            {
+                float num210 = (float)(((double)num209) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 2.5E-05));
+                Console.WriteLine("Placing life crystals: " + ((int)((num210 * 100f) + 1f)) + "%");
+                bool flag12 = false;
+                int num211 = 0;
+                while (!flag12)
+                {
+                    if (AddLifeCrystal(genRand.Next(1, world.getMaxTilesX()), genRand.Next((int)(num3 + 20.0), world.getMaxTilesY()), world))
+                    {
+                        flag12 = true;
+                    }
+                    else
+                    {
+                        num211++;
+                        if (num211 >= 0x2710)
+                        {
+                            flag12 = true;
+                        }
+                    }
+                }
+            }
+            for (int num212 = 0; num212 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 1.8E-05)); num212++)
+            {
+                float num213 = (float)(((double)num212) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 1.8E-05));
+                Console.WriteLine("Hiding treasure: " + ((int)((num213 * 100f) + 1f)) + "%");
+                bool flag13 = false;
+                int num214 = 0;
+                while (!flag13)
+                {
+                    if (AddBuriedChest(genRand.Next(1, world.getMaxTilesX()), genRand.Next((int)(num3 + 20.0), world.getMaxTilesY()), world, 0))
+                    {
+                        flag13 = true;
+                    }
+                    else
+                    {
+                        num214++;
+                        if (num214 >= 0x2710)
+                        {
+                            flag13 = true;
+                        }
+                    }
+                }
+            }
+            int num215 = 0;
+            for (int num216 = 0; num216 < numJChests; num216++)
+            {
+                num215++;
+                int contain = 0xd3;
+                switch (num215)
+                {
+                    case 1:
+                        contain = 0xd3;
+                        break;
+
+                    case 2:
+                        contain = 0xd4;
+                        break;
+
+                    case 3:
+                        contain = 0xd5;
+                        break;
+                }
+                if (num215 > 3)
+                {
+                    num215 = 0;
+                }
+                if (!AddBuriedChest(JChestX[num216] + genRand.Next(2), JChestY[num216], world, contain))
+                {
+                    for (int num218 = JChestX[num216]; num218 <= (JChestX[num216] + 1); num218++)
+                    {
+                        for (int num219 = JChestY[num216]; num219 <= (JChestY[num216] + 1); num219++)
+                        {
+                            KillTile(num218, num219, world, false, false, false);
+                        }
+                    }
+                    AddBuriedChest(JChestX[num216], JChestY[num216], world, contain);
+                }
+            }
+            float num220 = world.getMaxTilesX() / 0x1068;
+            int num221 = 0;
+            for (int num222 = 0; num222 < (10f * num220); num222++)
+            {
+                int num224;
+                int num225;
+                int num223 = 0;
+                num221++;
+                if (num221 == 1)
+                {
+                    num223 = 0xba;
+                }
+                else
+                {
+                    num223 = 0xbb;
+                    num221 = 0;
+                }
+                for (bool flag14 = false; !flag14; flag14 = AddBuriedChest(num224, num225, world, num223))
+                {
+                    num224 = genRand.Next(1, world.getMaxTilesX());
+                    for (num225 = genRand.Next(1, world.getMaxTilesY() - 200); (world.getTile()[num224, num225].liquid < 200) || world.getTile()[num224, num225].lava; num225 = genRand.Next(1, world.getMaxTilesY() - 200))
+                    {
+                        num224 = genRand.Next(1, world.getMaxTilesX());
+                    }
+                }
+            }
+            for (int num226 = 0; num226 < numIslandHouses; num226++)
+            {
+                IslandHouse(fihX[num226], fihY[num226], world);
+            }
+            for (int num227 = 0; num227 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0008)); num227++)
+            {
+                float num228 = (float)(((double)num227) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 0.0008));
+                Console.WriteLine("Placing breakables: " + ((int)((num228 * 100f) + 1f)) + "%");
+                bool flag15 = false;
+                int num229 = 0;
+            Label_46C1:
+                while (!flag15)
+                {
+                    int num230 = genRand.Next((int)num3, world.getMaxTilesY() - 10);
+                    if (num228 > 0.93)
+                    {
+                        num230 = world.getMaxTilesY() - 150;
+                    }
+                    else if (num228 > 0.75)
+                    {
+                        num230 = (int)num2;
+                    }
+                    int num231 = genRand.Next(1, world.getMaxTilesX());
+                    bool flag16 = false;
+                    for (int num232 = num230; num232 < world.getMaxTilesY(); num232++)
+                    {
+                        if (!flag16)
+                        {
+                            if ((world.getTile()[num231, num232].active && Statics.tileSolid[world.getTile()[num231, num232].type])
+                                && !world.getTile()[num231, num232 - 1].lava)
+                            {
+                                flag16 = true;
+                            }
+                        }
+                        else
+                        {
+                            if (PlacePot(num231, num232, world, 0x1c))
+                            {
+                                flag15 = true;
+                                goto Label_46C1;
+                            }
+                            num229++;
+                            if (num229 >= 0x2710)
+                            {
+                                flag15 = true;
+                                goto Label_46C1;
+                            }
+                        }
+                    }
+                }
+            }
+            for (int num233 = 0; num233 < ((int)((world.getMaxTilesX() * world.getMaxTilesY()) * 1E-05)); num233++)
+            {
+                float num234 = (float)(((double)num233) / ((world.getMaxTilesX() * world.getMaxTilesY()) * 1E-05));
+                Console.WriteLine("Placing hellforges: " + ((int)((num234 * 100f) + 1f)) + "%");
+                bool flag17 = false;
+                int num235 = 0;
+                while (!flag17)
+                {
+                    int num236 = genRand.Next(1, world.getMaxTilesX());
+                    int num237 = genRand.Next(world.getMaxTilesY() - 250, world.getMaxTilesY() - 5);
+                    if (world.getTile()[num236, num237].wall == 13)
+                    {
+                        while (!world.getTile()[num236, num237].active)
+                        {
+                            num237++;
+                        }
+                        num237--;
+                        PlaceTile(num236, num237, world, 0x4d, false, false, -1);
+                        if (world.getTile()[num236, num237].type == 0x4d)
+                        {
+                            flag17 = true;
+                        }
+                        else
+                        {
+                            num235++;
+                            if (num235 >= 0x2710)
+                            {
+                                flag17 = true;
+                            }
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Spreading grass...");
+            for (int num238 = 0; num238 < world.getMaxTilesX(); num238++)
+            {
+                num62 = num238;
+                bool flag18 = true;
+                for (int num239 = 0; num239 < (world.getWorldSurface() - 1.0); num239++)
+                {
+                    if (world.getTile()[num62, num239].active)
+                    {
+                        if (flag18 && (world.getTile()[num62, num239].type == 0))
+                        {
+                            SpreadGrass(num62, num239, world, 0, 2, true);
+                        }
+                        if (num239 > num3)
+                        {
+                            break;
+                        }
+                        flag18 = false;
+                    }
+                    else if (world.getTile()[num62, num239].wall == 0)
+                    {
+                        flag18 = true;
+                    }
+                }
+            }
+            int num240 = 5;
+            bool flag19 = true;
+            while (flag19)
+            {
+                int num241 = (world.getMaxTilesX() / 2) + genRand.Next(-num240, num240 + 1);
+                for (int num242 = 0; num242 < world.getMaxTilesY(); num242++)
+                {
+                    if (world.getTile()[num241, num242].active)
+                    {
+                        Statics.spawnTileX = num241;
+                        Statics.spawnTileY = num242;
+                        world.getTile()[num241, num242 - 1].lighted = true;
+                        break;
+                    }
+                }
+                flag19 = false;
+                num240++;
+                if (Statics.spawnTileY > world.getWorldSurface())
+                {
+                    flag19 = true;
+                }
+                if (world.getTile()[Statics.spawnTileX, Statics.spawnTileY - 1].liquid > 0)
+                {
+                    flag19 = true;
+                }
+            }
+            for (int num243 = 10; Statics.spawnTileY > world.getWorldSurface(); num243++)
+            {
+                int num244 = genRand.Next((world.getMaxTilesX() / 2) - num243, (world.getMaxTilesX() / 2) + num243);
+                for (int num245 = 0; num245 < world.getMaxTilesY(); num245++)
+                {
+                    if (world.getTile()[num244, num245].active)
+                    {
+                        Statics.spawnTileX = num244;
+                        Statics.spawnTileY = num245;
+                        world.getTile()[num244, num245 - 1].lighted = true;
+                        break;
+                    }
+                }
+            }
+            int index = NPC.NewNPC(Statics.spawnTileX * 0x10, Statics.spawnTileY * 0x10, world, 0x16, 0);
+            world.getNPCs()[index].homeTileX = Statics.spawnTileX;
+            world.getNPCs()[index].homeTileY = Statics.spawnTileY;
+            world.getNPCs()[index].direction = 1;
+            world.getNPCs()[index].homeless = true;
+            Console.WriteLine("Planting sunflowers...");
+            for (int num247 = 0; num247 < (world.getMaxTilesX() * 0.002); num247++)
+            {
+                int num248 = 0;
+                int num249 = 0;
+                int num250 = 0;
+                int num1 = world.getMaxTilesX() / 2;
+                num248 = genRand.Next(world.getMaxTilesX());
+                num249 = (num248 - genRand.Next(10)) - 7;
+                num250 = (num248 + genRand.Next(10)) + 7;
+                if (num249 < 0)
+                {
+                    num249 = 0;
+                }
+                if (num250 > (world.getMaxTilesX() - 1))
+                {
+                    num250 = world.getMaxTilesX() - 1;
+                }
+                for (int num251 = num249; num251 < num250; num251++)
+                {
+                    for (int num252 = 1; num252 < (world.getWorldSurface() - 1.0); num252++)
+                    {
+                        if ((world.getTile()[num251, num252].type == 1) && world.getTile()[num251, num252].active)
+                        {
+                            world.getTile()[num251, num252].type = 2;
+                        }
+                        if ((world.getTile()[num251 + 1, num252].type == 1) && world.getTile()[num251 + 1, num252].active)
+                        {
+                            world.getTile()[num251 + 1, num252].type = 2;
+                        }
+                        if (((world.getTile()[num251, num252].type == 2) && world.getTile()[num251, num252].active) && !world.getTile()[num251, num252 - 1].active)
+                        {
+                            PlaceTile(num251, num252 - 1, world, 0x1b, true, false, -1);
+                        }
+                        if (world.getTile()[num251, num252].active)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Planting trees...");
+            for (int num253 = 0; num253 < (world.getMaxTilesX() * 0.003); num253++)
+            {
+                int num254 = genRand.Next(50, world.getMaxTilesX() - 50);
+                int num255 = genRand.Next(0x19, 50);
+                for (int num256 = num254 - num255; num256 < (num254 + num255); num256++)
+                {
+                    for (int num257 = 20; num257 < world.getWorldSurface(); num257++)
+                    {
+                        if (world.getTile()[num256, num257].active)
+                        {
+                            if (world.getTile()[num256, num257].type == 1)
+                            {
+                                world.getTile()[num256, num257].type = 2;
+                            }
+                            if (world.getTile()[num256, num257 + 1].type == 1)
+                            {
+                                world.getTile()[num256, num257 + 1].type = 2;
+                            }
+                            break;
+                        }
+                    }
+                }
+                for (int num258 = num254 - num255; num258 < (num254 + num255); num258++)
+                {
+                    for (int num259 = 20; num259 < world.getWorldSurface(); num259++)
+                    {
+                        GrowEpicTree(num258, num259, world);
+                    }
+                }
+            }
+            AddTrees(world);
+            Console.WriteLine("Planting weeds...");
+            AddPlants(world);
+            for (int num260 = 0; num260 < world.getMaxTilesX(); num260++)
+            {
+                for (int num261 = (int)world.getWorldSurface(); num261 < world.getMaxTilesY(); num261++)
+                {
+                    if (world.getTile()[num260, num261].active)
+                    {
+                        if ((world.getTile()[num260, num261].type == 70) && !world.getTile()[num260, num261 - 1].active)
+                        {
+                            GrowShroom(num260, num261, world);
+                            if (!world.getTile()[num260, num261 - 1].active)
+                            {
+                                PlaceTile(num260, num261 - 1, world, 0x47, true, false, -1);
+                            }
+                        }
+                        if ((world.getTile()[num260, num261].type == 60) && !world.getTile()[num260, num261 - 1].active)
+                        {
+                            PlaceTile(num260, num261 - 1, world, 0x3d, true, false, -1);
+                        }
+                    }
+                }
+            }
+            Console.WriteLine("Growing vines...");
+            for (int num262 = 0; num262 < world.getMaxTilesX(); num262++)
+            {
+                int num263 = 0;
+                for (int num264 = 0; num264 < world.getWorldSurface(); num264++)
+                {
+                    if ((num263 > 0) && !world.getTile()[num262, num264].active)
+                    {
+                        world.getTile()[num262, num264].active = true;
+                        world.getTile()[num262, num264].type = 0x34;
+                        num263--;
+                    }
+                    else
+                    {
+                        num263 = 0;
+                    }
+                    if ((world.getTile()[num262, num264].active && (world.getTile()[num262, num264].type == 2)) && (genRand.Next(5) < 3))
+                    {
+                        num263 = genRand.Next(1, 10);
+                    }
+                }
+                num263 = 0;
+                for (int num265 = (int)world.getWorldSurface(); num265 < world.getMaxTilesY(); num265++)
+                {
+                    if ((num263 > 0) && !world.getTile()[num262, num265].active)
+                    {
+                        world.getTile()[num262, num265].active = true;
+                        world.getTile()[num262, num265].type = 0x3e;
+                        num263--;
+                    }
+                    else
+                    {
+                        num263 = 0;
+                    }
+                    if ((world.getTile()[num262, num265].active && (world.getTile()[num262, num265].type == 60)) && (genRand.Next(5) < 3))
+                    {
+                        num263 = genRand.Next(1, 10);
+                    }
+                }
+            }
+            Console.WriteLine("Planting flowers...");
+            for (int num266 = 0; num266 < (world.getMaxTilesX() * 0.005); num266++)
+            {
+                int num267 = genRand.Next(20, world.getMaxTilesX() - 20);
+                int num268 = genRand.Next(5, 15);
+                int num269 = genRand.Next(15, 30);
+                for (int num270 = 1; num270 < (world.getWorldSurface() - 1.0); num270++)
+                {
+                    if (world.getTile()[num267, num270].active)
+                    {
+                        for (int num271 = num267 - num268; num271 < (num267 + num268); num271++)
+                        {
+                            for (int num272 = num270 - num269; num272 < (num270 + num269); num272++)
+                            {
+                                if ((world.getTile()[num271, num272].type == 3) || (world.getTile()[num271, num272].type == 0x18))
+                                {
+                                    world.getTile()[num271, num272].frameX = (short)(genRand.Next(6, 8) * 0x12);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            Console.WriteLine("Planting mushrooms...");
+            for (int num273 = 0; num273 < (world.getMaxTilesX() * 0.002); num273++)
+            {
+                int num274 = genRand.Next(20, world.getMaxTilesX() - 20);
+                int num275 = genRand.Next(4, 10);
+                int num276 = genRand.Next(15, 30);
+                for (int num277 = 1; num277 < (world.getWorldSurface() - 1.0); num277++)
+                {
+                    if (world.getTile()[num274, num277].active)
+                    {
+                        for (int num278 = num274 - num275; num278 < (num274 + num275); num278++)
+                        {
+                            for (int num279 = num277 - num276; num279 < (num277 + num276); num279++)
+                            {
+                                if ((world.getTile()[num278, num279].type == 3) || (world.getTile()[num278, num279].type == 0x18))
+                                {
+                                    world.getTile()[num278, num279].frameX = 0x90;
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            gen = false;
+            return world;
+        }
+        
+        public static int numMCaves { get; set; }
+
+        public static int numIslandHouses { get; set; }
+
+        public static int houseCount { get; set; }
+
+        public static int dEnteranceX { get; set; }
+
+        public static int numDRooms { get; set; }
+
+        public static int numDDoors { get; set; }
+
+        public static int numDPlats { get; set; }
+
+        public static int numJChests { get; set; }
+
+        public static int lavaLine { get; set; }
+
+        public static Vector2 lastDungeonHall { get; set; }
+
+        public static int dungeonY { get; set; }
+
+        public static int dungeonX { get; set; }
     }
 }

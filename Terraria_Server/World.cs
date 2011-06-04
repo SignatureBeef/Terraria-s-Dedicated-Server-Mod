@@ -7,11 +7,22 @@ namespace Terraria_Server
 {
     public class World
     {
+
+        public enum MAP_SIZE
+        {
+            SMALL_X = 4200,
+            MEDIUM_X = 6300,
+            LARGE_X = 8400,
+            SMALL_Y = 1200,
+            MEDIUM_Y = 1800,
+            LARGE_Y = 2400
+        }
+
         /*public static int[] getWorldSize(String size) {
             string nSize = size.ToLower().Trim();
             if (nSize.Equals("small"))
             {
-                return new int[] { 4200, 1200};
+                return new int[] { 4200, };
             }
             else if (nSize.Equals("medium"))
             {
@@ -45,6 +56,16 @@ namespace Terraria_Server
         private bool stopNPCSpawns = false;
         private int dungeonX;
         private int dungeonY;
+
+        public float leftWorld = 0.0f;
+        public float rightWorld = 134400f;
+        public float topWorld = 0.0f;
+        public float bottomWorld = 38400f;
+        public int maxTilesX;
+        public int maxTilesY;
+        public int maxSectionsX;
+        public int maxSectionsY;
+
         public Chest[] shop = null;
 
         private Tile[,] tile = null;
@@ -60,9 +81,7 @@ namespace Terraria_Server
         private Sign[] sign = null; //new Sign[1000];
         public Liquid[] liquid = null; //new Liquid[Liquid.resLiquid];
         public LiquidBuffer[] liquidBuffer = null; //new LiquidBuffer[10000];
-
-
-
+        
         private int shadowOrbCount = 0;
         private bool shadowOrbSmashed = false;
         private bool spawnMeteor = false;
@@ -74,29 +93,36 @@ namespace Terraria_Server
         private bool spawnEye = false;
         private bool stopDrops = false;
         private int spawnNPC = 0;
-
-
-        public World(int maxTilesX, int maxTilesY)
+        
+        public World(int MaxTilesX, int MaxTilesY)
         {
-            tile = new Tile[maxTilesX, maxTilesY];
+            maxTilesY = MaxTilesY;
+            maxTilesX = MaxTilesX;
+
+            tile = new Tile[maxTilesX + 1, maxTilesY + 1];
             player = new Player[256]; //use player cap?
             //item = new Item[201];
             projectile = new Projectile[1001];
             npc = new NPC[1001];
             item = new Item[201];
-            shop = new Chest[5];
             chest = new Chest[1000];
             sign = new Sign[1000];
+            shop = new Chest[5];
             liquid = new Liquid[Liquid.resLiquid];
             liquidBuffer = new LiquidBuffer[10000];
             dust = new Dust[2000];
             //star = new Star[130];
             gore = new Gore[201];
+
+            UpdateWorldCoords(false);
         }
 
-        public World(Server Server, int maxTilesX, int maxTilesY)
+        public World(Server Server, int MaxTilesX, int MaxTilesY)
         {
-            tile = new Tile[maxTilesX, maxTilesY];
+            maxTilesY = MaxTilesY;
+            maxTilesX = MaxTilesX;
+
+            tile = new Tile[maxTilesX + 1, maxTilesY + 1];
             player = new Player[256]; //use player cap?
             //item = new Item[201];
             projectile = new Projectile[1001];
@@ -111,6 +137,18 @@ namespace Terraria_Server
             //star = new Star[130];
             gore = new Gore[201];
             server = Server;
+
+            UpdateWorldCoords(false);
+        }
+
+        public void UpdateWorldCoords(bool useWorld) {
+            if (useWorld)
+            {
+                maxTilesX = (int)rightWorld / 16 + 1;
+                maxTilesY = (int)bottomWorld / 16 + 1;
+            }
+            maxSectionsX = maxTilesX / 200;
+            maxSectionsY = maxTilesY / 150;
         }
 
         public string getName()
@@ -515,6 +553,94 @@ namespace Terraria_Server
         public void setSavePath(string SavePath)
         {
             savePath = SavePath;
+        }
+
+        public int getMaxSectionsY()
+        {
+            return maxSectionsY;
+        }
+
+        public void setMaxSectionsY(int MaxSectionsY)
+        {
+            maxSectionsY = MaxSectionsY;
+        }
+
+        public int getMaxSectionsX()
+        {
+            return maxSectionsX;
+        }
+
+        public void setMaxSectionsX(int MaxSectionsX)
+        {
+            maxSectionsX = MaxSectionsX;
+        }
+
+        public int getMaxTilesY()
+        {
+            return maxTilesY;
+        }
+
+        public void setMaxTilesY(int MaxTilesY, bool updateSection = true)
+        {
+            maxTilesY = MaxTilesY;
+            if (updateSection)
+            {
+                UpdateWorldCoords(false);
+            }
+        }
+
+        public int getMaxTilesX()
+        {
+            return maxTilesX;
+        }
+
+        public void setMaxTilesX(int MaxTilesX, bool updateSection = true)
+        {
+            maxTilesX = MaxTilesX;
+            if (updateSection)
+            {
+                UpdateWorldCoords(false);
+            }
+        }
+
+        public float getBottomWorld()
+        {
+            return bottomWorld;
+        }
+
+        public void setBottomWorld(float BottomWorld)
+        {
+            bottomWorld = BottomWorld;
+        }
+
+        public float getTopWorld()
+        {
+            return topWorld;
+        }
+
+        public void setTopWorld(float TopWorld)
+        {
+            topWorld = TopWorld;
+        }
+
+        public float getRightWorld()
+        {
+            return rightWorld;
+        }
+
+        public void setRightWorld(float RightWorld)
+        {
+            rightWorld = RightWorld;
+        }
+
+        public float getLeftWorld()
+        {
+            return leftWorld;
+        }
+
+        public void setLeftWorld(float LeftWorld)
+        {
+            leftWorld = LeftWorld;
         }
 
     }

@@ -2316,24 +2316,24 @@ namespace Terraria_Server
                         this.velocity = Collision.TileCollision(this.position, this.velocity, world, this.width, this.height, this.controlDown, false);
                         this.position += this.velocity;
                     }
-                    if (this.position.X < Statics.leftWorld + 336f + 16f)
+                    if (this.position.X < world.getLeftWorld() + 336f + 16f)
                     {
-                        this.position.X = Statics.leftWorld + 336f + 16f;
+                        this.position.X = world.getLeftWorld() + 336f + 16f;
                         this.velocity.X = 0f;
                     }
-                    if (this.position.X + (float)this.width > Statics.rightWorld - 336f - 32f)
+                    if (this.position.X + (float)this.width > world.getRightWorld() - 336f - 32f)
                     {
-                        this.position.X = Statics.rightWorld - 336f - 32f - (float)this.width;
+                        this.position.X = world.getRightWorld() - 336f - 32f - (float)this.width;
                         this.velocity.X = 0f;
                     }
-                    if (this.position.Y < Statics.topWorld + 336f + 16f)
+                    if (this.position.Y < world.getTopWorld() + 336f + 16f)
                     {
-                        this.position.Y = Statics.topWorld + 336f + 16f;
+                        this.position.Y = world.getTopWorld() + 336f + 16f;
                         this.velocity.Y = 0f;
                     }
-                    if (this.position.Y > Statics.bottomWorld - 336f - 32f - (float)this.height)
+                    if (this.position.Y > world.getBottomWorld() - 336f - 32f - (float)this.height)
                     {
-                        this.position.Y = Statics.bottomWorld - 336f - 32f - (float)this.height;
+                        this.position.Y = world.getBottomWorld() - 336f - 32f - (float)this.height;
                         this.velocity.Y = 0f;
                     }
                     this.ItemCheck(i, world);
@@ -4962,7 +4962,7 @@ namespace Terraria_Server
         
         public static bool CheckSpawn(int x, int y, World world)
         {
-            if (x < 10 || x > Statics.maxTilesX - 10 || y < 10 || y > Statics.maxTilesX - 10)
+            if (x < 10 || x > world.getMaxTilesX() - 10 || y < 10 || y > world.getMaxTilesX() - 10)
             {
                 return false;
             }

@@ -25,7 +25,7 @@ namespace Terraria_Server
         public string statusText = "";
         public string statusText2;
         public TcpClient tcpClient = new TcpClient();
-        public bool[,] tileSection = new bool[Statics.maxTilesX / 200, Statics.maxTilesY / 150];
+        public bool[,] tileSection = null;
         public int timeOut;
         public int whoAmI;
         public byte[] writeBuffer;
@@ -35,13 +35,14 @@ namespace Terraria_Server
         public ServerSock(World World)
         {
             world = World;
+            tileSection = new bool[world.getMaxTilesX() / 200, world.getMaxTilesY() / 150];
         }
         
         public void Reset()
         {
-            for (int i = 0; i < Statics.maxSectionsX; i++)
+            for (int i = 0; i < world.getMaxSectionsX(); i++)
             {
-                for (int j = 0; j < Statics.maxSectionsY; j++)
+                for (int j = 0; j < world.getMaxSectionsY(); j++)
                 {
                     this.tileSection[i, j] = false;
                 }

@@ -71,12 +71,12 @@ namespace Terraria_Server
             }
         }
 
-        public static void setWorldSize()
+        public void setWorldSize()
         {
-            Statics.bottomWorld = Statics.maxTilesY * 0x10;
-            Statics.rightWorld = Statics.maxTilesX * 0x10;
-            Statics.maxSectionsX = Statics.maxTilesX / 200;
-            Statics.maxSectionsY = Statics.maxTilesY / 150;
+            world.setBottomWorld(world.getMaxTilesY() * 0x10);
+            world.setRightWorld(world.getMaxTilesX() * 0x10);
+            world.setMaxSectionsX(world.getMaxTilesX() / 200);
+            world.setMaxSectionsY(world.getMaxTilesY() / 150);
         }
 
         public void Initialize()
@@ -88,9 +88,9 @@ namespace Terraria_Server
                 this.getAuth();
                 while (!Statics.webAuth)
                 {
-                    Console.WriteLine("Not Authenticated");
+                    Console.WriteLine("Not Authenticated"); //Yet to bother looking into the purpose of this.
                 }
-                    //this.Exit();
+                //this.Exit();
             }
             if (Statics.rand == null)
                 Statics.rand = new Random((int)DateTime.Now.Ticks);
@@ -336,6 +336,7 @@ namespace Terraria_Server
             //{
             //    Main.combatText[num4] = new CombatText();
             //}
+            Recipe.numRecipes = 0;
             for (int num5 = 0; num5 < Recipe.maxRecipes; num5++)
             {
                 Statics.recipe[num5] = new Recipe();
@@ -462,7 +463,7 @@ namespace Terraria_Server
                     {
                         for (int l = sectionY - 1; l < sectionY + 2; l++)
                         {
-                            if (k >= 0 && k < Statics.maxSectionsX && l >= 0 && l < Statics.maxSectionsY && !netplay.serverSock[j].tileSection[k, l])
+                            if (k >= 0 && k < world.getMaxSectionsX() && l >= 0 && l < world.getMaxSectionsY() && !netplay.serverSock[j].tileSection[k, l])
                             {
                                 num3++;
                             }
@@ -478,7 +479,7 @@ namespace Terraria_Server
                         {
                             for (int n = sectionY - 1; n < sectionY + 2; n++)
                             {
-                                if (m >= 0 && m < Statics.maxSectionsX && n >= 0 && n < Statics.maxSectionsY && !netplay.serverSock[j].tileSection[m, n])
+                                if (m >= 0 && m < world.getMaxSectionsX() && n >= 0 && n < world.getMaxSectionsY() && !netplay.serverSock[j].tileSection[m, n])
                                 {
                                     NetMessage.SendSection(j, m, n, world);
                                     NetMessage.SendData(11, world, j, -1, "", m, (float)n, (float)m, (float)n);
@@ -525,8 +526,8 @@ namespace Terraria_Server
                         //Main.invasionX = 0.0;
                         return;
                     }
-                    //world.getInvasionX() = (double)Statics.maxTilesX;
-                    world.setInvasionX((double)Statics.maxTilesX);// = (double)Statics.maxTilesX;
+                    //world.getInvasionX() = (double)world.getMaxTilesX();
+                    world.setInvasionX((double)world.getMaxTilesX());// = (double)world.getMaxTilesX();
                 }
             }
         }

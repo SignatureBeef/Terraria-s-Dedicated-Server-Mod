@@ -172,7 +172,7 @@ namespace Terraria_Server
                 //Main.menuMode = 14;
             //}
             NetMessage.buffer[9].Reset();
-            //if (Main.menuMode == 15 && Main.statusText == "Lost connection")
+            //if (Main.menuMode == 15 && //Main.statusText == "Lost connection")
             //{
                 //Main.menuMode = 14;
             //}
@@ -472,6 +472,8 @@ namespace Terraria_Server
                             world.getServer().getNetPlay().cake = true;
                             Program.updateThread.Start(world.getServer());
                             Console.WriteLine("Started update thread!");
+
+                            Statics.serverStarted = true;
                         }
                     }
                 }
@@ -481,10 +483,6 @@ namespace Terraria_Server
             {
                 world.getServer().getNetPlay().serverSock[l].Reset();
             }
-            //if (Main.menuMode != 15)
-            //{
-            //    Main.netMode = 0;
-            //    Main.menuMode = 10;
                 WorldGen.saveWorld(world, false);
                 while (Statics.saveLock)
                 {
@@ -512,7 +510,7 @@ namespace Terraria_Server
             serverIP = IPAddress.Any;
             serverListenIP = serverIP;
             //Main.menuMode = 14;
-            //Main.statusText = "Starting server...";
+            ////Console.WriteLine("Starting server...";
             Console.WriteLine("Starting Server...");
             Statics.netMode = 2;
             disconnect = false;
@@ -535,14 +533,14 @@ namespace Terraria_Server
             {
                 Exception exception = arg_11F_0;
                 //Main.menuMode = 15;
-                //Main.statusText = exception.ToString();
+                ////Console.WriteLine(exception.ToString();
                 Console.WriteLine(exception.ToString());
                 disconnect = true;
             }
             if (!disconnect)
             {
                 ThreadPool.QueueUserWorkItem(new WaitCallback(ListenForClients), 1);
-                //Main.statusText = "Server started";
+                ////Console.WriteLine("Server started";
                 Console.WriteLine("Server Started.");
             }
             while (!disconnect)

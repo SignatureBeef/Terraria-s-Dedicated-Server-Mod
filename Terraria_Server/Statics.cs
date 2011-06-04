@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Terraria_Server
 {
-    public class Statics
+    public static class Statics
     {
+
         //public static int currentRelease = 3;
         public static int currentRelease = 4;
         //public static string versionNumber = "v1.0.2";
@@ -22,14 +23,14 @@ namespace Terraria_Server
         public static int netMode = 2; //server mode
         public static int myPlayer = 0; //current selected player
         public static bool ignoreErrors = false;
-        public static float leftWorld = 0.0f;
-        public static float rightWorld = 134400f;
-        public static float topWorld = 0.0f;
-        public static float bottomWorld = 38400f;
-        public static int maxTilesX = (int)Statics.rightWorld / 16 + 1;
-        public static int maxTilesY = (int)Statics.bottomWorld / 16 + 1;
-        public static int maxSectionsX = Statics.maxTilesX / 200;
-        public static int maxSectionsY = Statics.maxTilesY / 150;
+        //public static float leftWorld = 0.0f;
+        //public static float rightWorld = 134400f;
+        //public static float topWorld = 0.0f;
+        //public static float bottomWorld = 38400f;
+        //public static int maxTilesX = (int)world.getRightWorld() / 16 + 1;
+        //public static int maxTilesY = (int)world.getBottomWorld() / 16 + 1;
+        //public static int maxSectionsX = world.getMaxTilesX() / 200;
+        //public static int maxSectionsY = world.getMaxTilesY() / 150;
         public static bool verboseNetplay = false;
         public static bool[] wallHouse = new bool[14];
         public static bool[] tileStone = new bool[80];
@@ -80,6 +81,8 @@ namespace Terraria_Server
         public static int screenWidth = 600;
         public static int screenHeight = 800;
         public static int evilTiles;
+
+        public static bool serverStarted = false;
 
         public static Vector2 screenPosition = new Vector2();
         public static Vector2 screenLastPosition = new Vector2();

@@ -28,7 +28,7 @@ namespace Terraria_Server
 
         public static void AddWater(int x, int y, World world)
         {
-            if ((((!world.getTile()[x, y].checkingLiquid && ((x < (Statics.maxTilesX - 5)) && (y < (Statics.maxTilesY - 5)))) && ((x >= 5) && (y >= 5))) && (world.getTile()[x, y] != null)) && (world.getTile()[x, y].liquid != 0))
+            if ((((!world.getTile()[x, y].checkingLiquid && ((x < (world.getMaxTilesX() - 5)) && (y < (world.getMaxTilesY() - 5)))) && ((x >= 5) && (y >= 5))) && (world.getTile()[x, y] != null)) && (world.getTile()[x, y].liquid != 0))
             {
                 if (numLiquid >= (maxLiquid - 1))
                 {
@@ -152,7 +152,7 @@ namespace Terraria_Server
 
         public static void NetAddWater(int x, int y, World world)
         {
-            if (((((x < (Statics.maxTilesX - 5)) && (y < (Statics.maxTilesY - 5))) && ((x >= 5) && (y >= 5))) && (world.getTile()[x, y] != null)) && (world.getTile()[x, y].liquid != 0))
+            if (((((x < (world.getMaxTilesX() - 5)) && (y < (world.getMaxTilesY() - 5))) && ((x >= 5) && (y >= 5))) && (world.getTile()[x, y] != null)) && (world.getTile()[x, y].liquid != 0))
             {
                 for (int i = 0; i < numLiquid; i++)
                 {
@@ -200,8 +200,9 @@ namespace Terraria_Server
             }
             if (maxY == -1)
             {
-                maxY = Statics.maxTilesY - 3;
+                maxY = world.getMaxTilesY() - 3;
             }
+            string text = "";
             int preserve = 0;
             for (int i = maxY; i >= minY; i--)
             {
@@ -209,13 +210,13 @@ namespace Terraria_Server
                 {
                     float num3 = ((float)(maxY - i)) / ((float)((maxY - minY) + 1));
                     num3 /= (float)verbose;
-                    //Main.statusText = "Settling liquids: " + ((int)((num3 * 100f) + 1f)) + "%";
+                    ////Console.WriteLine("Settling liquids: " + ((int)((num3 * 100f) + 1f)) + "%";
 
                     for (int i_ = 0; i_ < preserve; i_++)
                     {
                         Console.Write("\b");
                     }
-                    string text = "Settling liquids: " + ((int)((num3 * 100f) + 1f)) + "%";
+                    text = "Settling liquids: " + ((int)((num3 * 100f) + 1f)) + "%";
                     Console.Write(text);
                     preserve = text.Length;
                 }
@@ -223,23 +224,23 @@ namespace Terraria_Server
                 {
                     float num4 = ((float)(maxY - i)) / ((float)((maxY - minY) + 1));
                     num4 /= (float)-verbose;
-                    //Main.statusText = "Creating underworld: " + ((int)((num4 * 100f) + 1f)) + "%";
+                    ////Console.WriteLine("Creating underworld: " + ((int)((num4 * 100f) + 1f)) + "%";
                     for (int i_ = 0; i_ < preserve; i_++)
                     {
                         Console.Write("\b");
                     }
-                    string text = "Creating underworld: " + ((int)((num4 * 100f) + 1f)) + "%";
+                    text ="Creating underworld: " + ((int)((num4 * 100f) + 1f)) + "%";
                     Console.Write(text);
                     preserve = text.Length;
                 }
                 for (int j = 0; j < 2; j++)
                 {
                     int num6 = 2;
-                    int num7 = Statics.maxTilesX - 2;
+                    int num7 = world.getMaxTilesX() - 2;
                     int num8 = 1;
                     if (j == 1)
                     {
-                        num6 = Statics.maxTilesX - 2;
+                        num6 = world.getMaxTilesX() - 2;
                         num7 = 2;
                         num8 = -1;
                     }
@@ -258,10 +259,10 @@ namespace Terraria_Server
                         world.getTile()[k, i].liquid = 0;
                         bool flag3 = true;
                         int num14 = 0;
-                        while ((flag3 && (x > 3)) && ((x < (Statics.maxTilesX - 3)) && (y < (Statics.maxTilesY - 3))))
+                        while ((flag3 && (x > 3)) && ((x < (world.getMaxTilesX() - 3)) && (y < (world.getMaxTilesY() - 3))))
                         {
                             flag3 = false;
-                            while (((world.getTile()[x, y + 1].liquid == 0) && (y < (Statics.maxTilesY - 5))) && ((!world.getTile()[x, y + 1].active || !Statics.tileSolid[world.getTile()[x, y + 1].type]) || Statics.tileSolidTop[world.getTile()[x, y + 1].type]))
+                            while (((world.getTile()[x, y + 1].liquid == 0) && (y < (world.getMaxTilesY() - 5))) && ((!world.getTile()[x, y + 1].active || !Statics.tileSolid[world.getTile()[x, y + 1].type]) || Statics.tileSolidTop[world.getTile()[x, y + 1].type]))
                             {
                                 flag = true;
                                 num10 = num8;
@@ -830,12 +831,12 @@ namespace Terraria_Server
                         Liquid.panicCounter++;
                         if (Liquid.panicCounter > 1800 || Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > 13500)
                         {
-                            WorldGen.waterLine = Statics.maxTilesY;
+                            WorldGen.waterLine = world.getMaxTilesY();
                             Liquid.numLiquid = 0;
                             LiquidBuffer.numLiquidBuffer = 0;
                             Liquid.panicCounter = 0;
                             Liquid.panicMode = true;
-                            Liquid.panicY = Statics.maxTilesY - 3;
+                            Liquid.panicY = world.getMaxTilesY() - 3;
                         }
                     }
                     else
@@ -860,9 +861,9 @@ namespace Terraria_Server
                             {
                                 for (int i = 0; i < 8; i++)
                                 {
-                                    for (int j = 0; j < Statics.maxSectionsX; j++)
+                                    for (int j = 0; j < world.getMaxSectionsX(); j++)
                                     {
-                                        for (int k = 0; k < Statics.maxSectionsY; k++)
+                                        for (int k = 0; k < world.getMaxSectionsY(); k++)
                                         {
                                             world.getServer().getNetPlay().serverSock[i].tileSection[j, k] = false;
                                         }

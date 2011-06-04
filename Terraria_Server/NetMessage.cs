@@ -9,7 +9,7 @@ namespace Terraria_Server
     {
         public static messageBuffer[] buffer = new messageBuffer[257];
 
-        public static void SendData(int msgType, World world, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
+        public static void SendData(int msgType, World world, int remoteClient = -1, int ignoreClient = -1, string text ="", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
         {
             int num = 9;
             if (Statics.netMode == 2 && remoteClient >= 0)
@@ -182,8 +182,8 @@ namespace Terraria_Server
                                             {
                                                 b8 = 1;
                                             }
-                                            byte[] bytes20 = BitConverter.GetBytes(Statics.maxTilesX);
-                                            byte[] bytes21 = BitConverter.GetBytes(Statics.maxTilesY);
+                                            byte[] bytes20 = BitConverter.GetBytes(world.getMaxTilesX());
+                                            byte[] bytes21 = BitConverter.GetBytes(world.getMaxTilesY());
                                             byte[] bytes22 = BitConverter.GetBytes(Statics.spawnTileX);
                                             byte[] bytes23 = BitConverter.GetBytes(Statics.spawnTileY);
                                             byte[] bytes24 = BitConverter.GetBytes((int)world.getWorldSurface());
@@ -1372,7 +1372,7 @@ namespace Terraria_Server
                     if (Statics.netMode == 1)
                     {
                         //Main.menuMode = 15;
-                        //Main.statusText = "Bad header lead to a read buffer overflow.";
+                        ////Console.WriteLine("Bad header lead to a read buffer overflow.";
                         Console.WriteLine("Bad header lead to a read buffer overflow.");
                         world.getServer().getNetPlay().disconnect = true;
                     }

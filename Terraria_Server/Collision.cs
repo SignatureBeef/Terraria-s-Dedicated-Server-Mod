@@ -131,17 +131,17 @@ namespace Terraria_Server
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesX)
+            if (num4 > maxTilesX)
             {
-                num4 = Main.maxTilesX;
+                num4 = maxTilesX;
             }
             if (num5 < 0)
             {
                 num5 = 0;
             }
-            if (num6 > Main.maxTilesY)
+            if (num6 > maxTilesY)
             {
-                num6 = Main.maxTilesY;
+                num6 = maxTilesY;
             }
             for (int i = num3; i < num4; i++)
             {
@@ -188,17 +188,17 @@ namespace Terraria_Server
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesX)
+            if (num4 > maxTilesX)
             {
-                num4 = Main.maxTilesX;
+                num4 = maxTilesX;
             }
             if (num5 < 0)
             {
                 num5 = 0;
             }
-            if (num6 > Main.maxTilesY)
+            if (num6 > maxTilesY)
             {
-                num6 = Main.maxTilesY;
+                num6 = maxTilesY;
             }
             for (int i = num3; i < num4; i++)
             {
@@ -233,17 +233,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Main.maxTilesX)
+            if (num2 > maxTilesX)
             {
-                num2 = Main.maxTilesX;
+                num2 = maxTilesX;
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesY)
+            if (num4 > maxTilesY)
             {
-                num4 = Main.maxTilesY;
+                num4 = maxTilesY;
             }
             for (int i = num; i < num2; i++)
             {
@@ -286,17 +286,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Main.maxTilesX)
+            if (num2 > maxTilesX)
             {
-                num2 = Main.maxTilesX;
+                num2 = maxTilesX;
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesY)
+            if (num4 > maxTilesY)
             {
-                num4 = Main.maxTilesY;
+                num4 = maxTilesY;
             }
             for (int i = num; i < num2; i++)
             {
@@ -390,17 +390,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Main.maxTilesX)
+            if (num2 > maxTilesX)
             {
-                num2 = Main.maxTilesX;
+                num2 = maxTilesX;
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesY)
+            if (num4 > maxTilesY)
             {
-                num4 = Main.maxTilesY;
+                num4 = maxTilesY;
             }
             for (int i = num; i < num2; i++)
             {
@@ -484,17 +484,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Main.maxTilesX)
+            if (num2 > maxTilesX)
             {
-                num2 = Main.maxTilesX;
+                num2 = maxTilesX;
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesY)
+            if (num4 > maxTilesY)
             {
-                num4 = Main.maxTilesY;
+                num4 = maxTilesY;
             }
             for (int i = num; i < num2; i++)
             {
@@ -524,17 +524,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Main.maxTilesX)
+            if (num2 > maxTilesX)
             {
-                num2 = Main.maxTilesX;
+                num2 = maxTilesX;
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesY)
+            if (num4 > maxTilesY)
             {
-                num4 = Main.maxTilesY;
+                num4 = maxTilesY;
             }
             for (int i = num; i < num2; i++)
             {
@@ -620,17 +620,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Main.maxTilesX)
+            if (num2 > maxTilesX)
             {
-                num2 = Main.maxTilesX;
+                num2 = maxTilesX;
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesY)
+            if (num4 > maxTilesY)
             {
-                num4 = Main.maxTilesY;
+                num4 = maxTilesY;
             }
             for (int i = num; i < num2; i++)
             {
@@ -660,7 +660,7 @@ namespace Terraria_Server
             {
                 return true;
             }
-            if (endX >= Main.maxTilesX)
+            if (endX >= maxTilesX)
             {
                 return true;
             }
@@ -668,7 +668,7 @@ namespace Terraria_Server
             {
                 return true;
             }
-            if (endY >= Main.maxTilesY)
+            if (endY >= maxTilesY)
             {
                 return true;
             }
@@ -700,17 +700,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Statics.maxTilesX)
+            if (num2 > world.getMaxTilesX())
             {
-                num2 = Statics.maxTilesX;
+                num2 = world.getMaxTilesX();
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesY)
+            if (num4 > world.getMaxTilesY())
             {
-                num4 = Statics.maxTilesY;
+                num4 = world.getMaxTilesY();
             }
             for (int i = num; i < num2; i++)
             {
@@ -749,17 +749,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Statics.maxTilesX)
+            if (num2 > world.getMaxTilesX())
             {
-                num2 = Statics.maxTilesX;
+                num2 = world.getMaxTilesX();
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesY)
+            if (num4 > world.getMaxTilesY())
             {
-                num4 = Statics.maxTilesY;
+                num4 = world.getMaxTilesY();
             }
             for (int i = num; i < num2; i++)
             {
@@ -887,17 +887,17 @@ namespace Terraria_Server
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesX)
+            if (num4 > world.getMaxTilesX())
             {
-                num4 = Statics.maxTilesX;
+                num4 = world.getMaxTilesX();
             }
             if (num5 < 0)
             {
                 num5 = 0;
             }
-            if (num6 > Statics.maxTilesY)
+            if (num6 > world.getMaxTilesY())
             {
-                num6 = Statics.maxTilesY;
+                num6 = world.getMaxTilesY();
             }
             for (int i = num3; i < num4; i++)
             {
@@ -945,17 +945,17 @@ namespace Terraria_Server
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesX)
+            if (num4 > world.getMaxTilesX())
             {
-                num4 = Statics.maxTilesX;
+                num4 = world.getMaxTilesX();
             }
             if (num5 < 0)
             {
                 num5 = 0;
             }
-            if (num6 > Statics.maxTilesY)
+            if (num6 > world.getMaxTilesY())
             {
-                num6 = Statics.maxTilesY;
+                num6 = world.getMaxTilesY();
             }
             for (int i = num3; i < num4; i++)
             {
@@ -992,17 +992,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Statics.maxTilesX)
+            if (num2 > world.getMaxTilesX())
             {
-                num2 = Statics.maxTilesX;
+                num2 = world.getMaxTilesX();
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesY)
+            if (num4 > world.getMaxTilesY())
             {
-                num4 = Statics.maxTilesY;
+                num4 = world.getMaxTilesY();
             }
             for (int i = num; i < num2; i++)
             {
@@ -1095,17 +1095,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Statics.maxTilesX)
+            if (num2 > world.getMaxTilesX())
             {
-                num2 = Statics.maxTilesX;
+                num2 = world.getMaxTilesX();
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesY)
+            if (num4 > world.getMaxTilesY())
             {
-                num4 = Statics.maxTilesY;
+                num4 = world.getMaxTilesY();
             }
             for (int i = num; i < num2; i++)
             {
@@ -1192,17 +1192,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Statics.maxTilesX)
+            if (num2 > world.getMaxTilesX())
             {
-                num2 = Statics.maxTilesX;
+                num2 = world.getMaxTilesX();
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesY)
+            if (num4 > world.getMaxTilesY())
             {
-                num4 = Statics.maxTilesY;
+                num4 = world.getMaxTilesY();
             }
             for (int i = num; i < num2; i++)
             {
@@ -1240,17 +1240,17 @@ namespace Terraria_Server
             {
                 num = 0;
             }
-            if (num2 > Statics.maxTilesX)
+            if (num2 > world.getMaxTilesX())
             {
-                num2 = Statics.maxTilesX;
+                num2 = world.getMaxTilesX();
             }
             if (num3 < 0)
             {
                 num3 = 0;
             }
-            if (num4 > Statics.maxTilesY)
+            if (num4 > world.getMaxTilesY())
             {
-                num4 = Statics.maxTilesY;
+                num4 = world.getMaxTilesY();
             }
             for (int i = num; i < num2; i++)
             {
@@ -1281,7 +1281,7 @@ namespace Terraria_Server
 			{
 				return true;
 			}
-			if (endX >= Statics.maxTilesX)
+			if (endX >= world.getMaxTilesX())
 			{
 				return true;
 			}
@@ -1289,7 +1289,7 @@ namespace Terraria_Server
 			{
 				return true;
 			}
-			if (endY >= Statics.maxTilesY)
+			if (endY >= world.getMaxTilesY())
 			{
 				return true;
 			}

@@ -2841,17 +2841,17 @@ namespace Terraria_Server
                 {
                     num52 = 0;
                 }
-                if (maxTilesX > Statics.maxTilesX)
+                if (maxTilesX > world.getMaxTilesX())
                 {
-                    maxTilesX = Statics.maxTilesX;
+                    maxTilesX = world.getMaxTilesX();
                 }
                 if (num54 < 0)
                 {
                     num54 = 0;
                 }
-                if (maxTilesY > Statics.maxTilesY)
+                if (maxTilesY > world.getMaxTilesY())
                 {
-                    maxTilesY = Statics.maxTilesY;
+                    maxTilesY = world.getMaxTilesY();
                 }
                 bool flag6 = false;
                 for (int num56 = num52; num56 < maxTilesX; num56++)
@@ -6925,7 +6925,7 @@ namespace Terraria_Server
                     flag = false;
                     spawnRate = defaultSpawnRate;
                     maxSpawns = defaultMaxSpawns;
-                    if (world.getPlayerList()[j].position.Y > ((Statics.maxTilesY - 200) * 0x10))
+                    if (world.getPlayerList()[j].position.Y > ((world.getMaxTilesY() - 200) * 0x10))
                     {
                         spawnRate = (int)(spawnRate * 1.5f);
                         maxSpawns = (int)(maxSpawns * 0.5f);
@@ -7021,17 +7021,17 @@ namespace Terraria_Server
                         {
                             minValue = 0;
                         }
-                        if (maxValue > Statics.maxTilesX)
+                        if (maxValue > world.getMaxTilesX())
                         {
-                            maxValue = Statics.maxTilesX;
+                            maxValue = world.getMaxTilesX();
                         }
                         if (num9 < 0)
                         {
                             num9 = 0;
                         }
-                        if (maxTilesY > Statics.maxTilesY)
+                        if (maxTilesY > world.getMaxTilesY())
                         {
-                            maxTilesY = Statics.maxTilesY;
+                            maxTilesY = world.getMaxTilesY();
                         }
                         for (int k = 0; k < 50; k++)
                         {
@@ -7043,7 +7043,7 @@ namespace Terraria_Server
                                 {
                                     goto Label_0846;
                                 }
-                                for (int m = num17; m < Statics.maxTilesY; m++)
+                                for (int m = num17; m < world.getMaxTilesY(); m++)
                                 {
                                     if (world.getTile()[num16, m].active && Statics.tileSolid[world.getTile()[num16, m].type])
                                     {
@@ -7067,7 +7067,7 @@ namespace Terraria_Server
                                     {
                                         flag = false;
                                     }
-                                    if (num20 > Statics.maxTilesX)
+                                    if (num20 > world.getMaxTilesX())
                                     {
                                         flag = false;
                                     }
@@ -7075,7 +7075,7 @@ namespace Terraria_Server
                                     {
                                         flag = false;
                                     }
-                                    if (num22 > Statics.maxTilesY)
+                                    if (num22 > world.getMaxTilesY())
                                     {
                                         flag = false;
                                     }
@@ -7090,7 +7090,7 @@ namespace Terraria_Server
                                                     flag = false;
                                                     break;
                                                 }
-                                                if (world.getTile()[n, num24].lava && (num24 < (Statics.maxTilesY - 200)))
+                                                if (world.getTile()[n, num24].lava && (num24 < (world.getMaxTilesY() - 200)))
                                                 {
                                                     flag = false;
                                                     break;
@@ -7254,7 +7254,7 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    else if (num2 > (Statics.maxTilesY - 190))
+                    else if (num2 > (world.getMaxTilesY() - 190))
                     {
                         if (Statics.rand.Next(5) == 0)
                         {
@@ -7315,7 +7315,7 @@ namespace Terraria_Server
                 for (int j = 0; j < 8; j++)
                 {
                     bool flag2 = false;
-                    if (((world.getPlayerList()[j].active && (Main.invasionType > 0)) && ((Main.invasionDelay == 0) && (Main.invasionSize > 0))) && (world.getPlayerList()[j].position.Y < ((Main.worldSurface * 16.0) + Main.screenHeight)))
+                    if (((world.getPlayerList()[j].active && (Main.invasionType > 0)) && ((Main.invasionDelay == 0) && (Main.invasionSize > 0))) && (world.getPlayerList()[j].position.Y < ((world.getWorldSurface() * 16.0) + Main.screenHeight)))
                     {
                         int num6 = 0xbb8;
                         if ((world.getPlayerList()[j].position.X > ((Main.invasionX * 16.0) - num6)) && (world.getPlayerList()[j].position.X < ((Main.invasionX * 16.0) + num6)))
@@ -7326,17 +7326,17 @@ namespace Terraria_Server
                     flag = false;
                     spawnRate = defaultSpawnRate;
                     maxSpawns = defaultMaxSpawns;
-                    if (world.getPlayerList()[j].position.Y > ((Main.maxTilesY - 200) * 0x10))
+                    if (world.getPlayerList()[j].position.Y > ((maxTilesY - 200) * 0x10))
                     {
                         spawnRate = (int)(spawnRate * 1.5f);
                         maxSpawns = (int)(maxSpawns * 0.5f);
                     }
-                    else if (world.getPlayerList()[j].position.Y > ((Main.rockLayer * 16.0) + Main.screenHeight))
+                    else if (world.getPlayerList()[j].position.Y > ((world.getRockLayer() * 16.0) + Main.screenHeight))
                     {
                         spawnRate = (int)(spawnRate * 0.7);
                         maxSpawns = (int)(maxSpawns * 1.35f);
                     }
-                    else if (world.getPlayerList()[j].position.Y > ((Main.worldSurface * 16.0) + Main.screenHeight))
+                    else if (world.getPlayerList()[j].position.Y > ((world.getWorldSurface() * 16.0) + Main.screenHeight))
                     {
                         spawnRate = (int)(spawnRate * 0.8);
                         maxSpawns = (int)(maxSpawns * 1.1f);
@@ -7420,17 +7420,17 @@ namespace Terraria_Server
                         {
                             minValue = 0;
                         }
-                        if (maxValue > Main.maxTilesX)
+                        if (maxValue > maxTilesX)
                         {
-                            maxValue = Main.maxTilesX;
+                            maxValue = maxTilesX;
                         }
                         if (num9 < 0)
                         {
                             num9 = 0;
                         }
-                        if (maxTilesY > Main.maxTilesY)
+                        if (maxTilesY > maxTilesY)
                         {
-                            maxTilesY = Main.maxTilesY;
+                            maxTilesY = maxTilesY;
                         }
                         for (int k = 0; k < 50; k++)
                         {
@@ -7442,7 +7442,7 @@ namespace Terraria_Server
                                 {
                                     goto Label_0846;
                                 }
-                                for (int m = num17; m < Main.maxTilesY; m++)
+                                for (int m = num17; m < maxTilesY; m++)
                                 {
                                     if (world.getTile()[num16, m].active && Main.tileSolid[world.getTile()[num16, m].type])
                                     {
@@ -7466,7 +7466,7 @@ namespace Terraria_Server
                                     {
                                         flag = false;
                                     }
-                                    if (num20 > Main.maxTilesX)
+                                    if (num20 > maxTilesX)
                                     {
                                         flag = false;
                                     }
@@ -7474,7 +7474,7 @@ namespace Terraria_Server
                                     {
                                         flag = false;
                                     }
-                                    if (num22 > Main.maxTilesY)
+                                    if (num22 > maxTilesY)
                                     {
                                         flag = false;
                                     }
@@ -7489,7 +7489,7 @@ namespace Terraria_Server
                                                     flag = false;
                                                     break;
                                                 }
-                                                if (world.getTile()[n, num24].lava && (num24 < (Main.maxTilesY - 200)))
+                                                if (world.getTile()[n, num24].lava && (num24 < (maxTilesY - 200)))
                                                 {
                                                     flag = false;
                                                     break;
@@ -7521,7 +7521,7 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if ((flag && world.getPlayerList()[j].zoneDungeon) && (!Main.tileDungeon[world.getTile()[num, num2].type] || (world.getTile()[num, num2 - 1].wall == 0)))
+                    if ((flag && world.getPlayerList()[j].zoneDungeon) && (!Statics.tileDungeon[world.getTile()[num, num2].type] || (world.getTile()[num, num2 - 1].wall == 0)))
                     {
                         flag = false;
                     }
@@ -7594,7 +7594,7 @@ namespace Terraria_Server
                             index = NewNPC((num * 0x10) + 8, num2 * 0x10, 0x2a, 0);
                         }
                     }
-                    else if (num2 <= Main.worldSurface)
+                    else if (num2 <= world.getWorldSurface())
                     {
                         switch (type)
                         {
@@ -7625,7 +7625,7 @@ namespace Terraria_Server
                             NewNPC((num * 0x10) + 8, num2 * 0x10, 3, 0);
                         }
                     }
-                    else if (num2 <= Main.rockLayer)
+                    else if (num2 <= world.getRockLayer())
                     {
                         if (Main.rand.Next(30) == 0)
                         {
@@ -7648,7 +7648,7 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    else if (num2 > (Main.maxTilesY - 190))
+                    else if (num2 > (maxTilesY - 190))
                     {
                         if (Main.rand.Next(5) == 0)
                         {
@@ -7816,17 +7816,17 @@ namespace Terraria_Server
             {
                 minValue = 0;
             }
-            if (maxValue > Statics.maxTilesX)
+            if (maxValue > world.getMaxTilesX())
             {
-                maxValue = Statics.maxTilesX;
+                maxValue = world.getMaxTilesX();
             }
             if (num5 < 0)
             {
                 num5 = 0;
             }
-            if (maxTilesY > Statics.maxTilesY)
+            if (maxTilesY > world.getMaxTilesY())
             {
-                maxTilesY = Statics.maxTilesY;
+                maxTilesY = world.getMaxTilesY();
             }
             for (int i = 0; i < 0x3e8; i++)
             {
@@ -7840,7 +7840,7 @@ namespace Terraria_Server
                         {
                             continue;
                         }
-                        for (int k = num14; k < Statics.maxTilesY; k++)
+                        for (int k = num14; k < world.getMaxTilesY(); k++)
                         {
                             if (world.getTile()[num13, k].active && Statics.tileSolid[world.getTile()[num13, k].type])
                             {
@@ -7864,7 +7864,7 @@ namespace Terraria_Server
                             {
                                 flag = false;
                             }
-                            if (num17 > Statics.maxTilesX)
+                            if (num17 > world.getMaxTilesX())
                             {
                                 flag = false;
                             }
@@ -7872,7 +7872,7 @@ namespace Terraria_Server
                             {
                                 flag = false;
                             }
-                            if (num19 > Statics.maxTilesY)
+                            if (num19 > world.getMaxTilesY())
                             {
                                 flag = false;
                             }

@@ -89,7 +89,7 @@ namespace Terraria_Server
                 if (b == 2 && Statics.netMode == 1)
                 {
                     world.getServer().getNetPlay().disconnect = true;
-                    //Main.statusText = Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
+                    ////Console.WriteLine(Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
                     return;
                 }
                 if (b == 3 && Statics.netMode == 1)
@@ -285,19 +285,19 @@ namespace Terraria_Server
                                             world.setBloodMoon(false);
                                             //Main.bloodMoon = false;
                                         }
-                                        Statics.maxTilesX = BitConverter.ToInt32(this.readBuffer, num);
+                                        world.setMaxTilesX(BitConverter.ToInt32(this.readBuffer, num));
                                         num += 4;
-                                        Statics.maxTilesY = BitConverter.ToInt32(this.readBuffer, num);
+                                        world.setMaxTilesY(BitConverter.ToInt32(this.readBuffer, num));
                                         num += 4;
                                         Statics.spawnTileX = BitConverter.ToInt32(this.readBuffer, num);
                                         num += 4;
                                         Statics.spawnTileY = BitConverter.ToInt32(this.readBuffer, num);
                                         num += 4;
                                         world.setWorldSurface(BitConverter.ToDouble(this.readBuffer, num));
-                                        //Main.worldSurface = (double)BitConverter.ToInt32(this.readBuffer, num);
+                                        //world.getWorldSurface() = (double)BitConverter.ToInt32(this.readBuffer, num);
                                         num += 4;
                                         world.setRockLayer(BitConverter.ToDouble(this.readBuffer, num));
-                                        //Main.rockLayer = (double)BitConverter.ToInt32(this.readBuffer, num);
+                                        //world.getRockLayer() = (double)BitConverter.ToInt32(this.readBuffer, num);
                                         num += 4;
                                         world.setId(BitConverter.ToInt32(this.readBuffer, num));
                                         //Main.worldID = BitConverter.ToInt32(this.readBuffer, num);
@@ -328,13 +328,13 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if (num7 < 10 || num7 > Statics.maxTilesX - 10)
+                                                if (num7 < 10 || num7 > world.getMaxTilesX() - 10)
                                                 {
                                                     flag2 = false;
                                                 }
                                                 else
                                                 {
-                                                    if (num8 < 10 || num8 > Statics.maxTilesY - 10)
+                                                    if (num8 < 10 || num8 > world.getMaxTilesY() - 10)
                                                     {
                                                         flag2 = false;
                                                     }

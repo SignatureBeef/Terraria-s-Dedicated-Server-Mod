@@ -4,11 +4,50 @@ namespace Terraria_Server
 {
     using System;
     using System.Threading;
+    using System.IO;
 
     internal static class Program
     {
 
         public static Thread updateThread = null;
+
+
+        void setupPaths()
+        {
+            FileInfo file = new FileInfo(Statics.WorldPath);
+
+            if (!file.Exists)
+            {
+                try
+                {
+                    file.Directory.Create();
+
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.ToString());
+                    Console.WriteLine("Press any key to continue . . . ");
+                    Console.ReadKey(true);
+                    return;
+                }
+            }
+            file = new FileInfo(Statics.PlayerPath);
+            if (!file.Exists)
+            {
+                try
+                {
+                    file.Directory.Create();
+
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.ToString());
+                    Console.WriteLine("Press any key to continue . . . ");
+                    Console.ReadKey(true);
+                    return;
+                }
+            }
+        }
 
         static void Main(string[] args)
         {
@@ -18,56 +57,63 @@ namespace Terraria_Server
             //Generate World
             //try
             //{
-                Console.WriteLine("Preparing...");
-                World world = new World(8400, 2400);
-                Server server = new Server(40, world);
-                Statics.maxTilesX = 8400;
-                Statics.maxTilesY = 2400;
-                server.Initialize();
-                string path = "C:\\Users\\Luke\\Documents\\My Games\\Terraria\\Worlds\\world1.wld";
-                WorldGen.loadWorld(path, server);
-                /*if (args.Length <= 0)
+            string worldFile = Statics.WorldPath + "\\World1.wld";
+            FileInfo file = new FileInfo(worldFile);
+
+            if (!file.Exists)
+            {
+                try
                 {
-                    Console.WriteLine("Cannot find directory!");
-                    Console.WriteLine("use: *.exe <worldpath>");
+                    file.Directory.Create();
+
+                }
+                catch (Exception exception) {
+                    Console.WriteLine(exception.ToString());
                     Console.WriteLine("Press any key to continue . . . ");
                     Console.ReadKey(true);
                     return;
-                }*/
-                //WorldGen.loadWorld(args[0], server);
-                //world.setServer(server);
+                }
+                Console.WriteLine("Generating World '" + worldFile + "'");
+                int seed = new Random().Next(100);
+                World wor2 = new World((int)World.MAP_SIZE.SMALL_X, (int)World.MAP_SIZE.SMALL_Y);
+                Server server2 = new Server(40, wor2);
+                WorldGen.clearWorld(wor2);
+                server2.Initialize();
+                wor2 = WorldGen.generateWorld((int)World.MAP_SIZE.SMALL_X, (int)World.MAP_SIZE.SMALL_Y, seed, wor2);
+                wor2.setSavePath(worldFile);
+                WorldGen.saveWorld(wor2, true);
+            }
+
+                Console.WriteLine("Preparing...");
+                World world = new World(8400, 2400);
+                Server server = new Server(40, world);
+                server.Initialize();
+
+                server.setWorld(WorldGen.loadWorld(worldFile, server));
+
                 server.StartServer();
 
                 //server.Update();
-                updateThread = new Thread(Program.doUpdate);
-
-                //Statics.maxTilesX = 6300;
-                //Statics.maxTilesY = 1800;
-                //Statics.maxTilesX = 8400;
-                //Statics.maxTilesY = 2400;
-
-                //Statics.isRunning = true;
+                updateThread = new Thread(Program.Updater);
 
                 Statics.IsActive = true;
+                while (!Statics.serverStarted) { }
+
+                Console.WriteLine("You can now insert Commands.");
                 while (Statics.IsActive)
                 {
-
+                    string line = Console.ReadLine().Trim().ToLower();
+                    if (line.Equals("stop") || line.Equals("exit"))
+                    {
+                        break;
+                    }
+                    Console.WriteLine(line);
                 }
-                //while (Statics.isRunning)
-                //{
-
-                //}
-            //}
-            //catch (Exception exception)
-            //{
-            //    Console.WriteLine(exception.ToString());
-            //}
-
             Console.WriteLine("Press any key to continue . . . ");
             Console.ReadKey(true);
         }
 
-        public static void doUpdate(object dataObject)
+        public static void Updater(object dataObject)
         {
             Server server = null;
             if (dataObject is Server)
