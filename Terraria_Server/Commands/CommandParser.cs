@@ -91,6 +91,19 @@ namespace Terraria_Server.Commands
                         Commands.Exit(sender.getServer());
                         break;
                     }
+                case (int)Commands.Command.COMMAND_RELOAD:
+                    {
+                        if (sender is Player)
+                        {
+                            //((Player)sender).sendMessage("Reloading Plugins.");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Reloading Plugins");
+                        }
+                        Commands.Reload(sender.getServer());
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("Uknown Command Issue.");

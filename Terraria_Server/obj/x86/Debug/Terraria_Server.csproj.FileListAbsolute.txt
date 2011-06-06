@@ -4,3 +4,9 @@ D:\Media\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.pdb
 D:\Media\Terraria_Server\Terraria_Server\obj\x86\Debug\Terraria_Server.exe
 D:\Media\Terraria_Server\Terraria_Server\obj\x86\Debug\Terraria_Server.pdb
 D:\Media\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.exe.config
+D:\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.exe.config
+D:\Terraria_Server\Terraria_Server\obj\x86\Debug\Terraria_Server.exe
+D:\Terraria_Server\Terraria_Server\obj\x86\Debug\Terraria_Server.pdb
+D:\Terraria_Server\Terraria_Server\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.exe
+D:\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.pdb

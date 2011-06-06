@@ -20,6 +20,14 @@ namespace Terraria_Server
 
         public static Vector2 operator +(Vector2 value1, Vector2 value2)
         {
+            if (value1 == null)
+            {
+                value1 = new Vector2();
+            }
+            if (value2 == null)
+            {
+                value2 = new Vector2();
+            }
             Vector2 result = new Vector2();
             result.X = value1.X + value2.X;
             result.Y = value1.Y + value2.Y;

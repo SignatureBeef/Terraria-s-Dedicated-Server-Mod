@@ -114,7 +114,32 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.PLAYER_COMMAND:
                                 {
-                                    plugin.onPlayerChat((PlayerCommand)Event);
+                                    plugin.onPlayerCommand((PlayerCommand)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_CHAT:
+                                {
+                                    plugin.onPlayerChat((PlayerChatEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_PRELOGIN:
+                                {
+                                    plugin.onPlayerPreLogin((LoginEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_LOGIN:
+                                {
+                                    plugin.onPlayerJoin((LoginEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_LOGOUT:
+                                {
+                                    plugin.onPlayerLogout((LogoutEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_PARTYCHANGE:
+                                {
+                                    plugin.onPlayerPartyChange((PartyChangeEvent)Event);
                                     break;
                                 }
 						}

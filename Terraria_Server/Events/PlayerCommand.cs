@@ -9,16 +9,14 @@ namespace Terraria_Server
 {
     public class PlayerCommand : ConsoleCommand
     {
-        Player player = null;
-
         public Player getPlayer()
         {
-            return player;
+            return (Player)base.getSender();
         }
 
         public void setPlayer(Player Player)
         {
-            player = Player;
+            base.setSender(Player);
         }
 
     }

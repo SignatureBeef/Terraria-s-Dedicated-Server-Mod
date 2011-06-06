@@ -1,20 +1,19 @@
-﻿
+﻿using System;
+using System.Threading;
+using System.IO;
+using System.Diagnostics;
+
+using Terraria_Server.Commands;
 
 namespace Terraria_Server
 {
-    using System;
-    using System.Threading;
-    using System.IO;
-    using Terraria_Server.Commands;
-
-    internal class Program
+    public class Program
     {
-
         public static Thread updateThread = null;
         public static Properties properties = null;
         public static CommandParser commandParser = null;
 
-        static void setupPaths()
+        static bool setupPaths()
         {
             if (!System.IO.Directory.Exists(Statics.getWorldPath))
             {
@@ -25,9 +24,9 @@ namespace Terraria_Server
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue . . . ");
+                    Console.WriteLine("Press any key to continue...");
                     Console.ReadKey(true);
-                    return;
+                    return false;
                 }
             }
             if (!System.IO.Directory.Exists(Statics.getPlayerPath))
@@ -39,9 +38,9 @@ namespace Terraria_Server
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue . . . ");
+                    Console.WriteLine("Press any key to continue...");
                     Console.ReadKey(true);
-                    return;
+                    return false;
                 }
             }
             if (!System.IO.Directory.Exists(Statics.getPluginPath))
@@ -53,11 +52,12 @@ namespace Terraria_Server
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue . . . ");
+                    Console.WriteLine("Press any key to continue...");
                     Console.ReadKey(true);
-                    return;
+                    return false;
                 }
             }
+            return true;
         }
 
         static void setupProperties()
@@ -79,6 +79,8 @@ namespace Terraria_Server
             preserve = dataText.Length;
         }
 
+        public static Server server;
+
         static void Main(string[] args)
         {
 
@@ -86,21 +88,20 @@ namespace Terraria_Server
             {
                 Console.WriteLine("Detected Linux OS.");
                 Statics.systemSeperator = "/";
-            } //if mac...erm i've never used it, Goolge later?
+            } //if mac...erm i've never used it, Google later?
 
             Console.WriteLine("Setting up Paths.");
-            setupPaths();
+            if (!setupPaths())
+            {
+                return;
+            }
             Console.WriteLine("Setting up Properties.");
             setupProperties();
 
 
-            //[port] [pass] [player cap] [seed]
-            //config for world [name] [size] (and/or above)
+            Console.WriteLine("Preparing Server Data...");
 
-            //Generate World
-            //try
-            //{
-            string worldFile = properties.getInitialWorldPath(); //Statics.WorldPath + "World1.wld";
+            string worldFile = properties.getInitialWorldPath();
             FileInfo file = new FileInfo(worldFile);
 
             if (!file.Exists)
@@ -112,27 +113,68 @@ namespace Terraria_Server
                 }
                 catch (Exception exception) {
                     Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue . . . ");
+                    Console.WriteLine("Press any key to continue...");
                     Console.ReadKey(true);
                     return;
                 }
                 Console.WriteLine("Generating World '" + worldFile + "'");
-                int seed = new Random().Next(100);
-                World wor2 = new World((int)World.MAP_SIZE.SMALL_X, (int)World.MAP_SIZE.SMALL_Y);
-                Server server2 = new Server(40, wor2);
-                WorldGen.clearWorld(wor2);
-                server2.Initialize();
-                wor2 = WorldGen.generateWorld((int)World.MAP_SIZE.SMALL_X, (int)World.MAP_SIZE.SMALL_Y, seed, wor2);
-                wor2.setSavePath(worldFile);
-                WorldGen.saveWorld(wor2, true);
+
+                int seed = properties.getSeed();
+                if (seed == -1)
+                {
+                    Console.Write("Generating Seed...");
+                    seed = new Random().Next(100);
+                    Console.Write(seed.ToString() + "\n");
+                }
+
+                int worldX = properties.getMapSizes()[0];
+                int worldY = properties.getMapSizes()[1];
+                if (properties.isUsingCutomTiles())
+                {
+                    Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
+                        ", " + worldY.ToString() + " }");
+                    int X = properties.getMaxTilesX();
+                    int Y = properties.getMaxTilesY();
+                    if (X > 0 && Y > 0)
+                    {
+                        worldX = X;
+                        worldY = Y;
+                    }
+                }
+
+                Terraria_Server.Main.maxTilesX = worldX;
+                Terraria_Server.Main.maxTilesY = worldY;
+
+                WorldGen.clearWorld();
+                (new Server()).Initialize();
+                WorldGen.generateWorld(seed);
+                WorldGen.saveWorld(worldFile, true);
             }
             
-            Console.WriteLine("Preparing Server Data...");
-            World world = new World(8400, 2400);
-            Server server = new Server(40, world);
-            
+            int worldXtiles = properties.getMapSizes()[0];
+            int worldYtiles = properties.getMapSizes()[1];
+            if (properties.isUsingCutomTiles())
+            {
+                Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
+                    ", " + worldYtiles.ToString() + " }");
+                int X = properties.getMaxTilesX();
+                int Y = properties.getMaxTilesY();
+                if (X > 0 && Y > 0)
+                {
+                    worldXtiles = X;
+                    worldYtiles = Y;
+                }
+            }
+
+
+            World world = new World(worldXtiles, worldYtiles);
+            world.setSavePath(worldFile);
+
+            server = new Server(properties.getMaxPlayers(), world);
+            server.setOpPassword(properties.getOpPassword());
             server.Initialize();
-            server.setWorld(WorldGen.loadWorld(worldFile, server));
+
+            WorldGen.loadWorld();
             server.StartServer();
             
             updateThread = new Thread(Program.Updater);
@@ -152,40 +194,45 @@ namespace Terraria_Server
 
             }
             while (Statics.serverStarted) { }
-            Console.WriteLine("Press any key to continue . . . ");
-            Console.ReadKey(true);
+            Console.WriteLine("Exiting...");
+            //Console.ReadKey(true);
         }
 
-        public static void Updater(object dataObject)
+        public static void Updater()
         {
-            Server server = null;
-            if (dataObject is Server)
-            {
-                server = (Server)dataObject;
-            }
             if (server == null)
             {
                 Console.WriteLine("Issue in updater thread!");
                 return;
             }
 
-            TimeSpan timeSpan = TimeSpan.FromMilliseconds(16.666666666666668);
-            DateTime d = DateTime.Now;
-            while (Statics.IsActive)
-            {
-                DateTime now = DateTime.Now;
-                TimeSpan timeSpan2 = DateTime.Now - d;
-                if (timeSpan2 > timeSpan)
-                {
-                    server.Update();
-                    d = now;
-                }
-                else
-                {
-                    Thread.Sleep(timeSpan - timeSpan2);
-                }
-            }
-            Console.WriteLine("Exited updater thread!");
+	        Stopwatch stopwatch = new Stopwatch();
+            double num6 = 16.666666666666668;
+	        stopwatch.Start();
+	        double num7 = 0.0;
+
+	        while (Statics.IsActive)
+	        {
+		        double num8 = (double)stopwatch.ElapsedMilliseconds + num7;
+		        if (num8 >= num6)
+		        {
+			        num7 = num8 - num6;
+			        stopwatch.Reset();
+			        stopwatch.Start();
+
+			        server.Update();
+
+			        float num9 = (float)stopwatch.ElapsedMilliseconds;
+			        if ((double)num9 < num6)
+			        {
+				        int num10 = (int)(num6 - (double)num9) - 1;
+				        if (num10 > 1)
+				        {
+					        Thread.Sleep(num10);
+				        }
+			        }
+		        }
+	        }
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Terraria_Server
         public void pushData()
         {
             setMaxPlayers(getMaxPlayers());
+            setServerIP(getServerIP());
             setPort(getPort());
             setGreeting(getGreeting());
             setInitialWorldPath(getInitialWorldPath());
@@ -99,6 +100,24 @@ namespace Terraria_Server
         public void setGreeting(string Greeting)
         {
             base.setValue("greeting", Greeting);
+        }
+
+        public string getServerIP()
+        {
+            string IP = base.getValue("serverip");
+            if (IP == null || IP.Trim().Length < 0)
+            {
+                return "0.0.0.0";
+            }
+            else
+            {
+                return IP;
+            }
+        }
+
+        public void setServerIP(string Greeting)
+        {
+            base.setValue("serverip", Greeting);
         }
 
         public string getInitialWorldPath()

@@ -1,955 +1,1041 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+using System;
 namespace Terraria_Server
 {
-    public class Liquid
-    {
-        public static int cycles = 10;
-        public int delay;
-        public int kill;
-        public static int maxLiquid = 0x1388;
-        public static int numLiquid;
-        public static int panicCounter = 0;
-        public static bool panicMode = false;
-        public static int panicY = 0;
-        public static bool quickFall = false;
-        public static bool quickSettle = false;
-        public static int resLiquid = 0x1388;
-        public static int skipCount = 0;
-        public static bool stuck = false;
-        public static int stuckAmount = 0;
-        public static int stuckCount = 0;
-        private static int wetCounter;
-        public int x;
-        public int y;
-
-        public static void AddWater(int x, int y, World world)
-        {
-            if ((((!world.getTile()[x, y].checkingLiquid && ((x < (world.getMaxTilesX() - 5)) && (y < (world.getMaxTilesY() - 5)))) && ((x >= 5) && (y >= 5))) && (world.getTile()[x, y] != null)) && (world.getTile()[x, y].liquid != 0))
-            {
-                if (numLiquid >= (maxLiquid - 1))
-                {
-                    LiquidBuffer.AddBuffer(x, y, world);
-                }
-                else
-                {
-                    world.getTile()[x, y].checkingLiquid = true;
-                    world.getLiquid()[numLiquid].kill = 0;
-                    world.getLiquid()[numLiquid].x = x;
-                    world.getLiquid()[numLiquid].y = y;
-                    world.getLiquid()[numLiquid].delay = 0;
-                    world.getTile()[x, y].skipLiquid = false;
-                    numLiquid++;
-                    if (Statics.netMode == 2)
-                    {
-                        NetMessage.sendWater(x, y, world);
-                    }
-                    if (world.getTile()[x, y].active && (Statics.tileWaterDeath[world.getTile()[x, y].type] || (world.getTile()[x, y].lava && Statics.tileLavaDeath[world.getTile()[x, y].type])))
-                    {
-                        if (WorldGen.gen)
-                        {
-                            world.getTile()[x, y].active = false;
-                        }
-                        else
-                        {
-                            WorldGen.KillTile(x, y, world, false, false, false);
-                            if (Statics.netMode == 2)
-                            {
-                                NetMessage.SendData(0x11, world, -1, -1, "", 0, (float)x, (float)y, 0f);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        public static void DelWater(int l, World world)
-        {
-            int x = world.getLiquid()[l].x;
-            int y = world.getLiquid()[l].y;
-            if (world.getTile()[x, y].liquid < 2)
-            {
-                world.getTile()[x, y].liquid = 0;
-            }
-            else if (world.getTile()[x, y].liquid < 20)
-            {
-                if ((((world.getTile()[x - 1, y].liquid < world.getTile()[x, y].liquid) && ((!world.getTile()[x - 1, y].active || !Statics.tileSolid[world.getTile()[x - 1, y].type]) || Statics.tileSolidTop[world.getTile()[x - 1, y].type])) || ((world.getTile()[x + 1, y].liquid < world.getTile()[x, y].liquid) && ((!world.getTile()[x + 1, y].active || !Statics.tileSolid[world.getTile()[x + 1, y].type]) || Statics.tileSolidTop[world.getTile()[x + 1, y].type]))) || ((world.getTile()[x, y + 1].liquid < 0xff) && ((!world.getTile()[x, y + 1].active || !Statics.tileSolid[world.getTile()[x, y + 1].type]) || Statics.tileSolidTop[world.getTile()[x, y + 1].type])))
-                {
-                    world.getTile()[x, y].liquid = 0;
-                }
-            }
-            else if (((world.getTile()[x, y + 1].liquid < 0xff) && ((!world.getTile()[x, y + 1].active || !Statics.tileSolid[world.getTile()[x, y + 1].type]) || Statics.tileSolidTop[world.getTile()[x, y + 1].type])) && !stuck)
-            {
-                world.getLiquid()[l].kill = 0;
-                return;
-            }
-            if (world.getTile()[x, y].liquid == 0)
-            {
-                world.getTile()[x, y].lava = false;
-            }
-            else if (world.getTile()[x, y].lava)
-            {
-                LavaCheck(x, y, world);
-            }
-            if (Statics.netMode == 2)
-            {
-                NetMessage.sendWater(x, y, world);
-            }
-            numLiquid--;
-            world.getTile()[world.getLiquid()[l].x, world.getLiquid()[l].y].checkingLiquid = false;
-            world.getLiquid()[l].x = world.getLiquid()[numLiquid].x;
-            world.getLiquid()[l].y = world.getLiquid()[numLiquid].y;
-            world.getLiquid()[l].kill = world.getLiquid()[numLiquid].kill;
-        }
-
-        public static void LavaCheck(int x, int y, World world)
-        {
-            if ((((world.getTile()[x - 1, y].liquid > 0) && !world.getTile()[x - 1, y].lava) || ((world.getTile()[x + 1, y].liquid > 0) && !world.getTile()[x + 1, y].lava)) || ((world.getTile()[x, y - 1].liquid > 0) && !world.getTile()[x, y - 1].lava))
-            {
-                int num = 0;
-                if (!world.getTile()[x - 1, y].lava)
-                {
-                    num += world.getTile()[x - 1, y].liquid;
-                    world.getTile()[x - 1, y].liquid = 0;
-                }
-                if (!world.getTile()[x + 1, y].lava)
-                {
-                    num += world.getTile()[x + 1, y].liquid;
-                    world.getTile()[x + 1, y].liquid = 0;
-                }
-                if (!world.getTile()[x, y - 1].lava)
-                {
-                    num += world.getTile()[x, y - 1].liquid;
-                    world.getTile()[x, y - 1].liquid = 0;
-                }
-                if (num >= 0x80)
-                {
-                    world.getTile()[x, y].liquid = 0;
-                    world.getTile()[x, y].lava = false;
-                    WorldGen.PlaceTile(x, y, world, 0x38, true, true, -1);
-                    WorldGen.SquareTileFrame(x, y, world, true);
-                    if (Statics.netMode == 2)
-                    {
-                        NetMessage.SendTileSquare(-1, x - 1, y - 1, 3, world);
-                    }
-                }
-            }
-            else if ((world.getTile()[x, y + 1].liquid > 0) && !world.getTile()[x, y + 1].lava)
-            {
-                world.getTile()[x, y].liquid = 0;
-                world.getTile()[x, y].lava = false;
-                WorldGen.PlaceTile(x, y + 1, world, 0x38, true, true, -1);
-                WorldGen.SquareTileFrame(x, y, world, true);
-                if (Statics.netMode == 2)
-                {
-                    NetMessage.SendTileSquare(-1, x - 1, y, 3, world);
-                }
-            }
-        }
-
-        public static void NetAddWater(int x, int y, World world)
-        {
-            if (((((x < (world.getMaxTilesX() - 5)) && (y < (world.getMaxTilesY() - 5))) && ((x >= 5) && (y >= 5))) && (world.getTile()[x, y] != null)) && (world.getTile()[x, y].liquid != 0))
-            {
-                for (int i = 0; i < numLiquid; i++)
-                {
-                    if ((world.getLiquid()[i].x == x) && (world.getLiquid()[i].y == y))
-                    {
-                        world.getLiquid()[i].kill = 0;
-                        world.getTile()[x, y].skipLiquid = true;
-                        return;
-                    }
-                }
-                if (numLiquid >= (maxLiquid - 1))
-                {
-                    LiquidBuffer.AddBuffer(x, y, world);
-                }
-                else
-                {
-                    world.getTile()[x, y].checkingLiquid = true;
-                    world.getTile()[x, y].skipLiquid = true;
-                    world.getLiquid()[numLiquid].kill = 0;
-                    world.getLiquid()[numLiquid].x = x;
-                    world.getLiquid()[numLiquid].y = y;
-                    numLiquid++;
-                    if (Statics.netMode == 2)
-                    {
-                        NetMessage.sendWater(x, y, world);
-                    }
-                    if (world.getTile()[x, y].active && (Statics.tileWaterDeath[world.getTile()[x, y].type] || (world.getTile()[x, y].lava && Statics.tileLavaDeath[world.getTile()[x, y].type])))
-                    {
-                        WorldGen.KillTile(x, y, world, false, false, false);
-                        if (Statics.netMode == 2)
-                        {
-                            NetMessage.SendData(0x11, world, -1, -1, "", 0, (float)x, (float)y, 0f);
-                        }
-                    }
-                }
-            }
-        }
-
-        public static double QuickWater(World world, int verbose = 0, int minY = -1, int maxY = -1)
-        {
-            int num = 0;
-            if (minY == -1)
-            {
-                minY = 3;
-            }
-            if (maxY == -1)
-            {
-                maxY = world.getMaxTilesY() - 3;
-            }
-            string text = "";
-            int preserve = 0;
-            for (int i = maxY; i >= minY; i--)
-            {
-                if (verbose > 0)
-                {
-                    float num3 = ((float)(maxY - i)) / ((float)((maxY - minY) + 1));
-                    num3 /= (float)verbose;
-                    ////Console.WriteLine("Settling liquids: " + ((int)((num3 * 100f) + 1f)) + "%";
-                    Program.printData("Settling liquids: " + ((int)((num3 * 100f) + 1f)) + "%");
-                }
-                else if (verbose < 0)
-                {
-                    float num4 = ((float)(maxY - i)) / ((float)((maxY - minY) + 1));
-                    num4 /= (float)-verbose;
-                    ////Console.WriteLine("Creating underworld: " + ((int)((num4 * 100f) + 1f)) + "%";
-                    Program.printData("Creating underworld: " + ((int)((num4 * 100f) + 1f)) + "%");
-                }
-                for (int j = 0; j < 2; j++)
-                {
-                    int num6 = 2;
-                    int num7 = world.getMaxTilesX() - 2;
-                    int num8 = 1;
-                    if (j == 1)
-                    {
-                        num6 = world.getMaxTilesX() - 2;
-                        num7 = 2;
-                        num8 = -1;
-                    }
-                    for (int k = num6; k != num7; k += num8)
-                    {
-                        if (world.getTile()[k, i].liquid <= 0)
-                        {
-                            continue;
-                        }
-                        int num10 = -num8;
-                        bool flag = false;
-                        int x = k;
-                        int y = i;
-                        bool lava = world.getTile()[k, i].lava;
-                        byte liquid = world.getTile()[k, i].liquid;
-                        world.getTile()[k, i].liquid = 0;
-                        bool flag3 = true;
-                        int num14 = 0;
-                        while ((flag3 && (x > 3)) && ((x < (world.getMaxTilesX() - 3)) && (y < (world.getMaxTilesY() - 3))))
-                        {
-                            flag3 = false;
-                            while (((world.getTile()[x, y + 1].liquid == 0) && (y < (world.getMaxTilesY() - 5))) && ((!world.getTile()[x, y + 1].active || !Statics.tileSolid[world.getTile()[x, y + 1].type]) || Statics.tileSolidTop[world.getTile()[x, y + 1].type]))
-                            {
-                                flag = true;
-                                num10 = num8;
-                                num14 = 0;
-                                flag3 = true;
-                                y++;
-                                if (y > WorldGen.waterLine)
-                                {
-                                    lava = true;
-                                }
-                            }
-                            if (((world.getTile()[x, y + 1].liquid > 0) && (world.getTile()[x, y + 1].liquid < 0xff)) && (world.getTile()[x, y + 1].lava == lava))
-                            {
-                                int num15 = 0xff - world.getTile()[x, y + 1].liquid;
-                                if (num15 > liquid)
-                                {
-                                    num15 = liquid;
-                                }
-                                Tile tile1 = world.getTile()[x, y + 1];
-                                tile1.liquid = (byte)(tile1.liquid + ((byte)num15));
-                                liquid = (byte)(liquid - ((byte)num15));
-                                if (liquid <= 0)
-                                {
-                                    num++;
-                                    break;
-                                }
-                            }
-                            if (num14 == 0)
-                            {
-                                if ((world.getTile()[x + num10, y].liquid == 0) && ((!world.getTile()[x + num10, y].active || !Statics.tileSolid[world.getTile()[x + num10, y].type]) || Statics.tileSolidTop[world.getTile()[x + num10, y].type]))
-                                {
-                                    num14 = num10;
-                                }
-                                else if ((world.getTile()[x - num10, y].liquid == 0) && ((!world.getTile()[x - num10, y].active || !Statics.tileSolid[world.getTile()[x - num10, y].type]) || Statics.tileSolidTop[world.getTile()[x - num10, y].type]))
-                                {
-                                    num14 = -num10;
-                                }
-                            }
-                            if (((num14 != 0) && (world.getTile()[x + num14, y].liquid == 0)) && ((!world.getTile()[x + num14, y].active || !Statics.tileSolid[world.getTile()[x + num14, y].type]) || Statics.tileSolidTop[world.getTile()[x + num14, y].type]))
-                            {
-                                flag3 = true;
-                                x += num14;
-                            }
-                            if (flag && !flag3)
-                            {
-                                flag = false;
-                                flag3 = true;
-                                num10 = -num8;
-                                num14 = 0;
-                            }
-                        }
-                        if ((k != x) && (i != y))
-                        {
-                            num++;
-                        }
-                        world.getTile()[x, y].liquid = liquid;
-                        world.getTile()[x, y].lava = lava;
-                        if ((world.getTile()[x - 1, y].liquid > 0) && (world.getTile()[x - 1, y].lava != lava))
-                        {
-                            if (lava)
-                            {
-                                LavaCheck(x, y, world);
-                            }
-                            else
-                            {
-                                LavaCheck(x - 1, y, world);
-                            }
-                        }
-                        else if ((world.getTile()[x + 1, y].liquid > 0) && (world.getTile()[x + 1, y].lava != lava))
-                        {
-                            if (lava)
-                            {
-                                LavaCheck(x, y, world);
-                            }
-                            else
-                            {
-                                LavaCheck(x + 1, y, world);
-                            }
-                        }
-                        else if ((world.getTile()[x, y - 1].liquid > 0) && (world.getTile()[x, y - 1].lava != lava))
-                        {
-                            if (lava)
-                            {
-                                LavaCheck(x, y, world);
-                            }
-                            else
-                            {
-                                LavaCheck(x, y - 1, world);
-                            }
-                        }
-                        else if ((world.getTile()[x, y + 1].liquid > 0) && (world.getTile()[x, y + 1].lava != lava))
-                        {
-                            if (lava)
-                            {
-                                LavaCheck(x, y, world);
-                            }
-                            else
-                            {
-                                LavaCheck(x, y + 1, world);
-                            }
-                        }
-                    }
-                }
-            }
-            return (double)num;
-        }
-
-        public void Update(World world)
-        {
-            if ((world.getTile()[this.x, this.y].active && Statics.tileSolid[world.getTile()[this.x, this.y].type]) && !Statics.tileSolidTop[world.getTile()[this.x, this.y].type])
-            {
-                if (world.getTile()[this.x, this.y].type != 10)
-                {
-                    world.getTile()[this.x, this.y].liquid = 0;
-                }
-                this.kill = 9;
-            }
-            else
-            {
-                byte liquid = world.getTile()[this.x, this.y].liquid;
-                float num2 = 0f;
-                if (world.getTile()[this.x, this.y].liquid == 0)
-                {
-                    this.kill = 9;
-                }
-                else
-                {
-                    if (world.getTile()[this.x, this.y].lava)
-                    {
-                        LavaCheck(this.x, this.y, world);
-                        if (!quickFall)
-                        {
-                            if (this.delay < 5)
-                            {
-                                this.delay++;
-                                return;
-                            }
-                            this.delay = 0;
-                        }
-                    }
-                    else
-                    {
-                        if (world.getTile()[this.x - 1, this.y].lava)
-                        {
-                            AddWater(this.x - 1, this.y, world);
-                        }
-                        if (world.getTile()[this.x + 1, this.y].lava)
-                        {
-                            AddWater(this.x + 1, this.y, world);
-                        }
-                        if (world.getTile()[this.x, this.y - 1].lava)
-                        {
-                            AddWater(this.x, this.y - 1, world);
-                        }
-                        if (world.getTile()[this.x, this.y + 1].lava)
-                        {
-                            AddWater(this.x, this.y + 1, world);
-                        }
-                    }
-                    if ((((!world.getTile()[this.x, this.y + 1].active || !Statics.tileSolid[world.getTile()[this.x, this.y + 1].type]) || Statics.tileSolidTop[world.getTile()[this.x, this.y + 1].type]) && ((world.getTile()[this.x, this.y + 1].liquid <= 0) || (world.getTile()[this.x, this.y + 1].lava == world.getTile()[this.x, this.y].lava))) && (world.getTile()[this.x, this.y + 1].liquid < 0xff))
-                    {
-                        num2 = 0xff - world.getTile()[this.x, this.y + 1].liquid;
-                        if (num2 > world.getTile()[this.x, this.y].liquid)
-                        {
-                            num2 = world.getTile()[this.x, this.y].liquid;
-                        }
-                        Tile tile1 = world.getTile()[this.x, this.y];
-                        tile1.liquid = (byte)(tile1.liquid - ((byte)num2));
-                        Tile tile2 = world.getTile()[this.x, this.y + 1];
-                        tile2.liquid = (byte)(tile2.liquid + ((byte)num2));
-                        world.getTile()[this.x, this.y + 1].lava = world.getTile()[this.x, this.y].lava;
-                        AddWater(this.x, this.y + 1, world);
-                        world.getTile()[this.x, this.y + 1].skipLiquid = true;
-                        world.getTile()[this.x, this.y].skipLiquid = true;
-                        if (world.getTile()[this.x, this.y].liquid > 250)
-                        {
-                            world.getTile()[this.x, this.y].liquid = 0xff;
-                        }
-                        else
-                        {
-                            AddWater(this.x - 1, this.y, world);
-                            AddWater(this.x + 1, this.y, world);
-                        }
-                    }
-                    if (world.getTile()[this.x, this.y].liquid > 0)
-                    {
-                        bool flag = true;
-                        bool flag2 = true;
-                        bool flag3 = true;
-                        bool flag4 = true;
-                        if ((world.getTile()[this.x - 1, this.y].active && Statics.tileSolid[world.getTile()[this.x - 1, this.y].type]) && !Statics.tileSolidTop[world.getTile()[this.x - 1, this.y].type])
-                        {
-                            flag = false;
-                        }
-                        else if ((world.getTile()[this.x - 1, this.y].liquid > 0) && (world.getTile()[this.x - 1, this.y].lava != world.getTile()[this.x, this.y].lava))
-                        {
-                            flag = false;
-                        }
-                        else if ((world.getTile()[this.x - 2, this.y].active && Statics.tileSolid[world.getTile()[this.x - 2, this.y].type]) && !Statics.tileSolidTop[world.getTile()[this.x - 2, this.y].type])
-                        {
-                            flag3 = false;
-                        }
-                        else if (world.getTile()[this.x - 2, this.y].liquid == 0)
-                        {
-                            flag3 = false;
-                        }
-                        else if ((world.getTile()[this.x - 2, this.y].liquid > 0) && (world.getTile()[this.x - 2, this.y].lava != world.getTile()[this.x, this.y].lava))
-                        {
-                            flag3 = false;
-                        }
-                        if ((world.getTile()[this.x + 1, this.y].active && Statics.tileSolid[world.getTile()[this.x + 1, this.y].type]) && !Statics.tileSolidTop[world.getTile()[this.x + 1, this.y].type])
-                        {
-                            flag2 = false;
-                        }
-                        else if ((world.getTile()[this.x + 1, this.y].liquid > 0) && (world.getTile()[this.x + 1, this.y].lava != world.getTile()[this.x, this.y].lava))
-                        {
-                            flag2 = false;
-                        }
-                        else if ((world.getTile()[this.x + 2, this.y].active && Statics.tileSolid[world.getTile()[this.x + 2, this.y].type]) && !Statics.tileSolidTop[world.getTile()[this.x + 2, this.y].type])
-                        {
-                            flag4 = false;
-                        }
-                        else if (world.getTile()[this.x + 2, this.y].liquid == 0)
-                        {
-                            flag4 = false;
-                        }
-                        else if ((world.getTile()[this.x + 2, this.y].liquid > 0) && (world.getTile()[this.x + 2, this.y].lava != world.getTile()[this.x, this.y].lava))
-                        {
-                            flag4 = false;
-                        }
-                        int num3 = 0;
-                        if (world.getTile()[this.x, this.y].liquid < 3)
-                        {
-                            num3 = -1;
-                        }
-                        if (flag && flag2)
-                        {
-                            if (flag3 && flag4)
-                            {
-                                bool flag5 = true;
-                                bool flag6 = true;
-                                if ((world.getTile()[this.x - 3, this.y].active && Statics.tileSolid[world.getTile()[this.x - 3, this.y].type]) && !Statics.tileSolidTop[world.getTile()[this.x - 3, this.y].type])
-                                {
-                                    flag5 = false;
-                                }
-                                else if (world.getTile()[this.x - 3, this.y].liquid == 0)
-                                {
-                                    flag5 = false;
-                                }
-                                else if (world.getTile()[this.x - 3, this.y].lava != world.getTile()[this.x, this.y].lava)
-                                {
-                                    flag5 = false;
-                                }
-                                if ((world.getTile()[this.x + 3, this.y].active && Statics.tileSolid[world.getTile()[this.x + 3, this.y].type]) && !Statics.tileSolidTop[world.getTile()[this.x + 3, this.y].type])
-                                {
-                                    flag6 = false;
-                                }
-                                else if (world.getTile()[this.x + 3, this.y].liquid == 0)
-                                {
-                                    flag6 = false;
-                                }
-                                else if (world.getTile()[this.x + 3, this.y].lava != world.getTile()[this.x, this.y].lava)
-                                {
-                                    flag6 = false;
-                                }
-                                if (flag5 && flag6)
-                                {
-                                    num2 = ((((((world.getTile()[this.x - 1, this.y].liquid + world.getTile()[this.x + 1, this.y].liquid) + world.getTile()[this.x - 2, this.y].liquid) + world.getTile()[this.x + 2, this.y].liquid) + world.getTile()[this.x - 3, this.y].liquid) + world.getTile()[this.x + 3, this.y].liquid) + world.getTile()[this.x, this.y].liquid) + num3;
-                                    num2 = (float)Math.Round((double)(num2 / 7f));
-                                    int num4 = 0;
-                                    if (world.getTile()[this.x - 1, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x - 1, this.y, world);
-                                        world.getTile()[this.x - 1, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num4++;
-                                    }
-                                    world.getTile()[this.x - 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x + 1, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x + 1, this.y, world);
-                                        world.getTile()[this.x + 1, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num4++;
-                                    }
-                                    world.getTile()[this.x + 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x - 2, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x - 2, this.y, world);
-                                        world.getTile()[this.x - 2, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num4++;
-                                    }
-                                    world.getTile()[this.x - 2, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x + 2, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x + 2, this.y, world);
-                                        world.getTile()[this.x + 2, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num4++;
-                                    }
-                                    world.getTile()[this.x + 2, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x - 3, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x - 3, this.y, world);
-                                        world.getTile()[this.x - 3, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num4++;
-                                    }
-                                    world.getTile()[this.x - 3, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x + 3, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x + 3, this.y, world);
-                                        world.getTile()[this.x + 3, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num4++;
-                                    }
-                                    world.getTile()[this.x + 3, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if ((world.getTile()[this.x - 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x - 1, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x + 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x + 1, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x - 2, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x - 2, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x + 2, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x + 2, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x - 3, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x - 3, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x + 3, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x + 3, this.y, world);
-                                    }
-                                    if ((num4 != 6) || (world.getTile()[this.x, this.y - 1].liquid <= 0))
-                                    {
-                                        world.getTile()[this.x, this.y].liquid = (byte)num2;
-                                    }
-                                }
-                                else
-                                {
-                                    int num5 = 0;
-                                    num2 = ((((world.getTile()[this.x - 1, this.y].liquid + world.getTile()[this.x + 1, this.y].liquid) + world.getTile()[this.x - 2, this.y].liquid) + world.getTile()[this.x + 2, this.y].liquid) + world.getTile()[this.x, this.y].liquid) + num3;
-                                    num2 = (float)Math.Round((double)(num2 / 5f));
-                                    if (world.getTile()[this.x - 1, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x - 1, this.y, world);
-                                        world.getTile()[this.x - 1, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num5++;
-                                    }
-                                    world.getTile()[this.x - 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x + 1, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x + 1, this.y, world);
-                                        world.getTile()[this.x + 1, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num5++;
-                                    }
-                                    world.getTile()[this.x + 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x - 2, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x - 2, this.y, world);
-                                        world.getTile()[this.x - 2, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num5++;
-                                    }
-                                    world.getTile()[this.x - 2, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if (world.getTile()[this.x + 2, this.y].liquid != ((byte)num2))
-                                    {
-                                        AddWater(this.x + 2, this.y, world);
-                                        world.getTile()[this.x + 2, this.y].liquid = (byte)num2;
-                                    }
-                                    else
-                                    {
-                                        num5++;
-                                    }
-                                    if ((world.getTile()[this.x - 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x - 1, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x + 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x + 1, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x - 2, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x - 2, this.y, world);
-                                    }
-                                    if ((world.getTile()[this.x + 2, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                    {
-                                        AddWater(this.x + 2, this.y, world);
-                                    }
-                                    world.getTile()[this.x + 2, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                    if ((num5 != 4) || (world.getTile()[this.x, this.y - 1].liquid <= 0))
-                                    {
-                                        world.getTile()[this.x, this.y].liquid = (byte)num2;
-                                    }
-                                }
-                            }
-                            else if (flag3)
-                            {
-                                num2 = (((world.getTile()[this.x - 1, this.y].liquid + world.getTile()[this.x + 1, this.y].liquid) + world.getTile()[this.x - 2, this.y].liquid) + world.getTile()[this.x, this.y].liquid) + num3;
-                                num2 = (float)Math.Round((double)((num2 / 4f) + 0.001));
-                                if ((world.getTile()[this.x - 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                {
-                                    AddWater(this.x - 1, this.y, world);
-                                    world.getTile()[this.x - 1, this.y].liquid = (byte)num2;
-                                }
-                                world.getTile()[this.x - 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                if ((world.getTile()[this.x + 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                {
-                                    AddWater(this.x + 1, this.y, world);
-                                    world.getTile()[this.x + 1, this.y].liquid = (byte)num2;
-                                }
-                                world.getTile()[this.x + 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                if ((world.getTile()[this.x - 2, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                {
-                                    world.getTile()[this.x - 2, this.y].liquid = (byte)num2;
-                                    AddWater(this.x - 2, this.y, world);
-                                }
-                                world.getTile()[this.x - 2, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                world.getTile()[this.x, this.y].liquid = (byte)num2;
-                            }
-                            else if (flag4)
-                            {
-                                num2 = (((world.getTile()[this.x - 1, this.y].liquid + world.getTile()[this.x + 1, this.y].liquid) + world.getTile()[this.x + 2, this.y].liquid) + world.getTile()[this.x, this.y].liquid) + num3;
-                                num2 = (float)Math.Round((double)((num2 / 4f) + 0.001));
-                                if ((world.getTile()[this.x - 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                {
-                                    AddWater(this.x - 1, this.y, world);
-                                    world.getTile()[this.x - 1, this.y].liquid = (byte)num2;
-                                }
-                                world.getTile()[this.x - 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                if ((world.getTile()[this.x + 1, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                {
-                                    AddWater(this.x + 1, this.y, world);
-                                    world.getTile()[this.x + 1, this.y].liquid = (byte)num2;
-                                }
-                                world.getTile()[this.x + 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                if ((world.getTile()[this.x + 2, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x, this.y].liquid != ((byte)num2)))
-                                {
-                                    world.getTile()[this.x + 2, this.y].liquid = (byte)num2;
-                                    AddWater(this.x + 2, this.y, world);
-                                }
-                                world.getTile()[this.x + 2, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                world.getTile()[this.x, this.y].liquid = (byte)num2;
-                            }
-                            else
-                            {
-                                num2 = ((world.getTile()[this.x - 1, this.y].liquid + world.getTile()[this.x + 1, this.y].liquid) + world.getTile()[this.x, this.y].liquid) + num3;
-                                num2 = (float)Math.Round((double)((num2 / 3f) + 0.001));
-                                if (world.getTile()[this.x - 1, this.y].liquid != ((byte)num2))
-                                {
-                                    world.getTile()[this.x - 1, this.y].liquid = (byte)num2;
-                                }
-                                if ((world.getTile()[this.x, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x - 1, this.y].liquid != ((byte)num2)))
-                                {
-                                    AddWater(this.x - 1, this.y, world);
-                                }
-                                world.getTile()[this.x - 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                if (world.getTile()[this.x + 1, this.y].liquid != ((byte)num2))
-                                {
-                                    world.getTile()[this.x + 1, this.y].liquid = (byte)num2;
-                                }
-                                if ((world.getTile()[this.x, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x + 1, this.y].liquid != ((byte)num2)))
-                                {
-                                    AddWater(this.x + 1, this.y, world);
-                                }
-                                world.getTile()[this.x + 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                                world.getTile()[this.x, this.y].liquid = (byte)num2;
-                            }
-                        }
-                        else if (flag)
-                        {
-                            num2 = (world.getTile()[this.x - 1, this.y].liquid + world.getTile()[this.x, this.y].liquid) + num3;
-                            num2 = (float)Math.Round((double)((num2 / 2f) + 0.001));
-                            if (world.getTile()[this.x - 1, this.y].liquid != ((byte)num2))
-                            {
-                                world.getTile()[this.x - 1, this.y].liquid = (byte)num2;
-                            }
-                            if ((world.getTile()[this.x, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x - 1, this.y].liquid != ((byte)num2)))
-                            {
-                                AddWater(this.x - 1, this.y, world);
-                            }
-                            world.getTile()[this.x - 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                            world.getTile()[this.x, this.y].liquid = (byte)num2;
-                        }
-                        else if (flag2)
-                        {
-                            num2 = (world.getTile()[this.x + 1, this.y].liquid + world.getTile()[this.x, this.y].liquid) + num3;
-                            num2 = (float)Math.Round((double)((num2 / 2f) + 0.001));
-                            if (world.getTile()[this.x + 1, this.y].liquid != ((byte)num2))
-                            {
-                                world.getTile()[this.x + 1, this.y].liquid = (byte)num2;
-                            }
-                            if ((world.getTile()[this.x, this.y].liquid != ((byte)num2)) || (world.getTile()[this.x + 1, this.y].liquid != ((byte)num2)))
-                            {
-                                AddWater(this.x + 1, this.y, world);
-                            }
-                            world.getTile()[this.x + 1, this.y].lava = world.getTile()[this.x, this.y].lava;
-                            world.getTile()[this.x, this.y].liquid = (byte)num2;
-                        }
-                    }
-                    if (world.getTile()[this.x, this.y].liquid != liquid)
-                    {
-                        if ((world.getTile()[this.x, this.y].liquid == 0xfe) && (liquid == 0xff))
-                        {
-                            world.getTile()[this.x, this.y].liquid = 0xff;
-                            this.kill++;
-                        }
-                        else
-                        {
-                            AddWater(this.x, this.y - 1, world);
-                            this.kill = 0;
-                        }
-                    }
-                    else
-                    {
-                        this.kill++;
-                    }
-                }
-            }
-        }
-
-        // Terraria.Liquid
-        public static void UpdateLiquid(World world)
-        {
-            if (Statics.netMode == 2)
-            {
-                Liquid.cycles = 25;
-                Liquid.maxLiquid = 5000;
-            }
-            if (!WorldGen.gen)
-            {
-                if (!Liquid.panicMode)
-                {
-                    if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > 4000)
-                    {
-                        Liquid.panicCounter++;
-                        if (Liquid.panicCounter > 1800 || Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > 13500)
-                        {
-                            WorldGen.waterLine = world.getMaxTilesY();
-                            Liquid.numLiquid = 0;
-                            LiquidBuffer.numLiquidBuffer = 0;
-                            Liquid.panicCounter = 0;
-                            Liquid.panicMode = true;
-                            Liquid.panicY = world.getMaxTilesY() - 3;
-                        }
-                    }
-                    else
-                    {
-                        Liquid.panicCounter = 0;
-                    }
-                }
-                if (Liquid.panicMode)
-                {
-                    int num = 0;
-                    while (Liquid.panicY >= 3 && num < 5)
-                    {
-                        num++;
-                        Liquid.QuickWater(world, 0, Liquid.panicY, Liquid.panicY);
-                        Liquid.panicY--;
-                        if (Liquid.panicY < 3)
-                        {
-                            Liquid.panicCounter = 0;
-                            Liquid.panicMode = false;
-                            WorldGen.WaterCheck(world);
-                            if (Statics.netMode == 2)
-                            {
-                                for (int i = 0; i < 8; i++)
-                                {
-                                    for (int j = 0; j < world.getMaxSectionsX(); j++)
-                                    {
-                                        for (int k = 0; k < world.getMaxSectionsY(); k++)
-                                        {
-                                            world.getServer().getNetPlay().serverSock[i].tileSection[j, k] = false;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return;
-                }
-            }
-            if (Liquid.quickSettle || Liquid.numLiquid > 2000)
-            {
-                Liquid.quickFall = true;
-            }
-            else
-            {
-                Liquid.quickFall = false;
-            }
-            Liquid.wetCounter++;
-            int num2 = Liquid.maxLiquid / Liquid.cycles;
-            int num3 = num2 * (Liquid.wetCounter - 1);
-            int num4 = num2 * Liquid.wetCounter;
-            if (Liquid.wetCounter == Liquid.cycles)
-            {
-                num4 = Liquid.numLiquid;
-            }
-            if (num4 > Liquid.numLiquid)
-            {
-                num4 = Liquid.numLiquid;
-                int arg_1B7_0 = Statics.netMode;
-                Liquid.wetCounter = Liquid.cycles;
-            }
-            if (Liquid.quickFall)
-            {
-                for (int l = num3; l < num4; l++)
-                {
-                    world.getLiquid()[l].delay = 10;
-                    world.getLiquid()[l].Update(world);
-                    world.getTile()[world.getLiquid()[l].x, world.getLiquid()[l].y].skipLiquid = false;
-                }
-            }
-            else
-            {
-                for (int m = num3; m < num4; m++)
-                {
-                    if (!world.getTile()[world.getLiquid()[m].x, world.getLiquid()[m].y].skipLiquid)
-                    {
-                        world.getLiquid()[m].Update(world);
-                    }
-                    else
-                    {
-                        world.getTile()[world.getLiquid()[m].x, world.getLiquid()[m].y].skipLiquid = false;
-                    }
-                }
-            }
-            if (Liquid.wetCounter >= Liquid.cycles)
-            {
-                Liquid.wetCounter = 0;
-                for (int n = Liquid.numLiquid - 1; n >= 0; n--)
-                {
-                    if (world.getLiquid()[n].kill > 3)
-                    {
-                        Liquid.DelWater(n, world);
-                    }
-                }
-                int num5 = Liquid.maxLiquid - (Liquid.maxLiquid - Liquid.numLiquid);
-                if (num5 > LiquidBuffer.numLiquidBuffer)
-                {
-                    num5 = LiquidBuffer.numLiquidBuffer;
-                }
-                for (int num6 = 0; num6 < num5; num6++)
-                {
-                    world.getTile()[world.getLiquidBuffer()[0].x, world.getLiquidBuffer()[0].y].checkingLiquid = false;
-                    Liquid.AddWater(world.getLiquidBuffer()[0].x, world.getLiquidBuffer()[0].y, world);
-                    LiquidBuffer.DelBuffer(0, world);
-                }
-                if (Liquid.numLiquid > 0 && Liquid.numLiquid > Liquid.stuckAmount - 50 && Liquid.numLiquid < Liquid.stuckAmount + 50)
-                {
-                    Liquid.stuckCount++;
-                    if (Liquid.stuckCount >= 10000)
-                    {
-                        Liquid.stuck = true;
-                        for (int num7 = Liquid.numLiquid - 1; num7 >= 0; num7--)
-                        {
-                            Liquid.DelWater(num7, world);
-                        }
-                        Liquid.stuck = false;
-                        Liquid.stuckCount = 0;
-                        return;
-                    }
-                }
-                else
-                {
-                    Liquid.stuckCount = 0;
-                    Liquid.stuckAmount = Liquid.numLiquid;
-                }
-            }
-        }
-
-    }
+	public class Liquid
+	{
+		public static int skipCount = 0;
+		public static int stuckCount = 0;
+		public static int stuckAmount = 0;
+		public static int cycles = 10;
+		public static int resLiquid = 5000;
+		public static int maxLiquid = 5000;
+		public static int numLiquid;
+		public static bool stuck = false;
+		public static bool quickFall = false;
+		public static bool quickSettle = false;
+		private static int wetCounter;
+		public static int panicCounter = 0;
+		public static bool panicMode = false;
+		public static int panicY = 0;
+		public int x;
+		public int y;
+		public int kill;
+		public int delay;
+		public static double QuickWater(int verbose = 0, int minY = -1, int maxY = -1)
+		{
+			int num = 0;
+			if (minY == -1)
+			{
+				minY = 3;
+			}
+			if (maxY == -1)
+			{
+				maxY = Main.maxTilesY - 3;
+			}
+			for (int i = maxY; i >= minY; i--)
+			{
+				if (verbose > 0)
+				{
+					float num2 = (float)(maxY - i) / (float)(maxY - minY + 1);
+					num2 /= (float)verbose;
+					Program.printData("Settling liquids: " + (int)(num2 * 100f + 1f) + "%");
+				}
+				else
+				{
+					if (verbose < 0)
+					{
+						float num3 = (float)(maxY - i) / (float)(maxY - minY + 1);
+						num3 /= (float)(-(float)verbose);
+                        Program.printData("Creating underworld: " + (int)(num3 * 100f + 1f) + "%");
+					}
+				}
+				for (int j = 0; j < 2; j++)
+				{
+					int num4 = 2;
+					int num5 = Main.maxTilesX - 2;
+					int num6 = 1;
+					if (j == 1)
+					{
+						num4 = Main.maxTilesX - 2;
+						num5 = 2;
+						num6 = -1;
+					}
+					for (int num7 = num4; num7 != num5; num7 += num6)
+					{
+						if (Main.tile[num7, i].liquid > 0)
+						{
+							int num8 = -num6;
+							bool flag = false;
+							int num9 = num7;
+							int num10 = i;
+							bool flag2 = Main.tile[num7, i].lava;
+							byte b = Main.tile[num7, i].liquid;
+							Main.tile[num7, i].liquid = 0;
+							bool flag3 = true;
+							int num11 = 0;
+							while (flag3 && num9 > 3 && num9 < Main.maxTilesX - 3 && num10 < Main.maxTilesY - 3)
+							{
+								flag3 = false;
+								while (Main.tile[num9, num10 + 1].liquid == 0 && num10 < Main.maxTilesY - 5 && (!Main.tile[num9, num10 + 1].active || !Main.tileSolid[(int)Main.tile[num9, num10 + 1].type] || Main.tileSolidTop[(int)Main.tile[num9, num10 + 1].type]))
+								{
+									flag = true;
+									num8 = num6;
+									num11 = 0;
+									flag3 = true;
+									num10++;
+									if (num10 > WorldGen.waterLine)
+									{
+										flag2 = true;
+									}
+								}
+								if (Main.tile[num9, num10 + 1].liquid > 0 && Main.tile[num9, num10 + 1].liquid < 255 && Main.tile[num9, num10 + 1].lava == flag2)
+								{
+									int num12 = (int)(255 - Main.tile[num9, num10 + 1].liquid);
+									if (num12 > (int)b)
+									{
+										num12 = (int)b;
+									}
+									Tile expr_25A = Main.tile[num9, num10 + 1];
+									expr_25A.liquid += (byte)num12;
+									b -= (byte)num12;
+									if (b <= 0)
+									{
+										num++;
+										break;
+									}
+								}
+								if (num11 == 0)
+								{
+									if (Main.tile[num9 + num8, num10].liquid == 0 && (!Main.tile[num9 + num8, num10].active || !Main.tileSolid[(int)Main.tile[num9 + num8, num10].type] || Main.tileSolidTop[(int)Main.tile[num9 + num8, num10].type]))
+									{
+										num11 = num8;
+									}
+									else
+									{
+										if (Main.tile[num9 - num8, num10].liquid == 0 && (!Main.tile[num9 - num8, num10].active || !Main.tileSolid[(int)Main.tile[num9 - num8, num10].type] || Main.tileSolidTop[(int)Main.tile[num9 - num8, num10].type]))
+										{
+											num11 = -num8;
+										}
+									}
+								}
+								if (num11 != 0 && Main.tile[num9 + num11, num10].liquid == 0 && (!Main.tile[num9 + num11, num10].active || !Main.tileSolid[(int)Main.tile[num9 + num11, num10].type] || Main.tileSolidTop[(int)Main.tile[num9 + num11, num10].type]))
+								{
+									flag3 = true;
+									num9 += num11;
+								}
+								if (flag && !flag3)
+								{
+									flag = false;
+									flag3 = true;
+									num8 = -num6;
+									num11 = 0;
+								}
+							}
+							if (num7 != num9 && i != num10)
+							{
+								num++;
+							}
+							Main.tile[num9, num10].liquid = b;
+							Main.tile[num9, num10].lava = flag2;
+							if (Main.tile[num9 - 1, num10].liquid > 0 && Main.tile[num9 - 1, num10].lava != flag2)
+							{
+								if (flag2)
+								{
+									Liquid.LavaCheck(num9, num10);
+								}
+								else
+								{
+									Liquid.LavaCheck(num9 - 1, num10);
+								}
+							}
+							else
+							{
+								if (Main.tile[num9 + 1, num10].liquid > 0 && Main.tile[num9 + 1, num10].lava != flag2)
+								{
+									if (flag2)
+									{
+										Liquid.LavaCheck(num9, num10);
+									}
+									else
+									{
+										Liquid.LavaCheck(num9 + 1, num10);
+									}
+								}
+								else
+								{
+									if (Main.tile[num9, num10 - 1].liquid > 0 && Main.tile[num9, num10 - 1].lava != flag2)
+									{
+										if (flag2)
+										{
+											Liquid.LavaCheck(num9, num10);
+										}
+										else
+										{
+											Liquid.LavaCheck(num9, num10 - 1);
+										}
+									}
+									else
+									{
+										if (Main.tile[num9, num10 + 1].liquid > 0 && Main.tile[num9, num10 + 1].lava != flag2)
+										{
+											if (flag2)
+											{
+												Liquid.LavaCheck(num9, num10);
+											}
+											else
+											{
+												Liquid.LavaCheck(num9, num10 + 1);
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return (double)num;
+		}
+		public void Update()
+		{
+			if (Main.tile[this.x, this.y].active && Main.tileSolid[(int)Main.tile[this.x, this.y].type] && !Main.tileSolidTop[(int)Main.tile[this.x, this.y].type])
+			{
+				if (Main.tile[this.x, this.y].type != 10)
+				{
+					Main.tile[this.x, this.y].liquid = 0;
+				}
+				this.kill = 9;
+				return;
+			}
+			byte liquid = Main.tile[this.x, this.y].liquid;
+			float num = 0f;
+			if (Main.tile[this.x, this.y].liquid == 0)
+			{
+				this.kill = 9;
+				return;
+			}
+			if (Main.tile[this.x, this.y].lava)
+			{
+				Liquid.LavaCheck(this.x, this.y);
+				if (!Liquid.quickFall)
+				{
+					if (this.delay < 5)
+					{
+						this.delay++;
+						return;
+					}
+					this.delay = 0;
+				}
+			}
+			else
+			{
+				if (Main.tile[this.x - 1, this.y].lava)
+				{
+					Liquid.AddWater(this.x - 1, this.y);
+				}
+				if (Main.tile[this.x + 1, this.y].lava)
+				{
+					Liquid.AddWater(this.x + 1, this.y);
+				}
+				if (Main.tile[this.x, this.y - 1].lava)
+				{
+					Liquid.AddWater(this.x, this.y - 1);
+				}
+				if (Main.tile[this.x, this.y + 1].lava)
+				{
+					Liquid.AddWater(this.x, this.y + 1);
+				}
+			}
+			if ((!Main.tile[this.x, this.y + 1].active || !Main.tileSolid[(int)Main.tile[this.x, this.y + 1].type] || Main.tileSolidTop[(int)Main.tile[this.x, this.y + 1].type]) && (Main.tile[this.x, this.y + 1].liquid <= 0 || Main.tile[this.x, this.y + 1].lava == Main.tile[this.x, this.y].lava) && Main.tile[this.x, this.y + 1].liquid < 255)
+			{
+				num = (float)(255 - Main.tile[this.x, this.y + 1].liquid);
+				if (num > (float)Main.tile[this.x, this.y].liquid)
+				{
+					num = (float)Main.tile[this.x, this.y].liquid;
+				}
+				Tile expr_37D = Main.tile[this.x, this.y];
+				expr_37D.liquid -= (byte)num;
+				Tile expr_3A4 = Main.tile[this.x, this.y + 1];
+				expr_3A4.liquid += (byte)num;
+				Main.tile[this.x, this.y + 1].lava = Main.tile[this.x, this.y].lava;
+				Liquid.AddWater(this.x, this.y + 1);
+				Main.tile[this.x, this.y + 1].skipLiquid = true;
+				Main.tile[this.x, this.y].skipLiquid = true;
+				if (Main.tile[this.x, this.y].liquid > 250)
+				{
+					Main.tile[this.x, this.y].liquid = 255;
+				}
+				else
+				{
+					Liquid.AddWater(this.x - 1, this.y);
+					Liquid.AddWater(this.x + 1, this.y);
+				}
+			}
+			if (Main.tile[this.x, this.y].liquid > 0)
+			{
+				bool flag = true;
+				bool flag2 = true;
+				bool flag3 = true;
+				bool flag4 = true;
+				if (Main.tile[this.x - 1, this.y].active && Main.tileSolid[(int)Main.tile[this.x - 1, this.y].type] && !Main.tileSolidTop[(int)Main.tile[this.x - 1, this.y].type])
+				{
+					flag = false;
+				}
+				else
+				{
+					if (Main.tile[this.x - 1, this.y].liquid > 0 && Main.tile[this.x - 1, this.y].lava != Main.tile[this.x, this.y].lava)
+					{
+						flag = false;
+					}
+					else
+					{
+						if (Main.tile[this.x - 2, this.y].active && Main.tileSolid[(int)Main.tile[this.x - 2, this.y].type] && !Main.tileSolidTop[(int)Main.tile[this.x - 2, this.y].type])
+						{
+							flag3 = false;
+						}
+						else
+						{
+							if (Main.tile[this.x - 2, this.y].liquid == 0)
+							{
+								flag3 = false;
+							}
+							else
+							{
+								if (Main.tile[this.x - 2, this.y].liquid > 0 && Main.tile[this.x - 2, this.y].lava != Main.tile[this.x, this.y].lava)
+								{
+									flag3 = false;
+								}
+							}
+						}
+					}
+				}
+				if (Main.tile[this.x + 1, this.y].active && Main.tileSolid[(int)Main.tile[this.x + 1, this.y].type] && !Main.tileSolidTop[(int)Main.tile[this.x + 1, this.y].type])
+				{
+					flag2 = false;
+				}
+				else
+				{
+					if (Main.tile[this.x + 1, this.y].liquid > 0 && Main.tile[this.x + 1, this.y].lava != Main.tile[this.x, this.y].lava)
+					{
+						flag2 = false;
+					}
+					else
+					{
+						if (Main.tile[this.x + 2, this.y].active && Main.tileSolid[(int)Main.tile[this.x + 2, this.y].type] && !Main.tileSolidTop[(int)Main.tile[this.x + 2, this.y].type])
+						{
+							flag4 = false;
+						}
+						else
+						{
+							if (Main.tile[this.x + 2, this.y].liquid == 0)
+							{
+								flag4 = false;
+							}
+							else
+							{
+								if (Main.tile[this.x + 2, this.y].liquid > 0 && Main.tile[this.x + 2, this.y].lava != Main.tile[this.x, this.y].lava)
+								{
+									flag4 = false;
+								}
+							}
+						}
+					}
+				}
+				int num2 = 0;
+				if (Main.tile[this.x, this.y].liquid < 3)
+				{
+					num2 = -1;
+				}
+				if (flag && flag2)
+				{
+					if (flag3 && flag4)
+					{
+						bool flag5 = true;
+						bool flag6 = true;
+						if (Main.tile[this.x - 3, this.y].active && Main.tileSolid[(int)Main.tile[this.x - 3, this.y].type] && !Main.tileSolidTop[(int)Main.tile[this.x - 3, this.y].type])
+						{
+							flag5 = false;
+						}
+						else
+						{
+							if (Main.tile[this.x - 3, this.y].liquid == 0)
+							{
+								flag5 = false;
+							}
+							else
+							{
+								if (Main.tile[this.x - 3, this.y].lava != Main.tile[this.x, this.y].lava)
+								{
+									flag5 = false;
+								}
+							}
+						}
+						if (Main.tile[this.x + 3, this.y].active && Main.tileSolid[(int)Main.tile[this.x + 3, this.y].type] && !Main.tileSolidTop[(int)Main.tile[this.x + 3, this.y].type])
+						{
+							flag6 = false;
+						}
+						else
+						{
+							if (Main.tile[this.x + 3, this.y].liquid == 0)
+							{
+								flag6 = false;
+							}
+							else
+							{
+								if (Main.tile[this.x + 3, this.y].lava != Main.tile[this.x, this.y].lava)
+								{
+									flag6 = false;
+								}
+							}
+						}
+						if (flag5 && flag6)
+						{
+							num = (float)((int)(Main.tile[this.x - 1, this.y].liquid + Main.tile[this.x + 1, this.y].liquid + Main.tile[this.x - 2, this.y].liquid + Main.tile[this.x + 2, this.y].liquid + Main.tile[this.x - 3, this.y].liquid + Main.tile[this.x + 3, this.y].liquid + Main.tile[this.x, this.y].liquid) + num2);
+							num = (float)Math.Round((double)(num / 7f));
+							int num3 = 0;
+							Main.tile[this.x - 1, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x - 1, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 1, this.y);
+								Main.tile[this.x - 1, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num3++;
+							}
+							Main.tile[this.x + 1, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x + 1, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 1, this.y);
+								Main.tile[this.x + 1, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num3++;
+							}
+							Main.tile[this.x - 2, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x - 2, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 2, this.y);
+								Main.tile[this.x - 2, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num3++;
+							}
+							Main.tile[this.x + 2, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x + 2, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 2, this.y);
+								Main.tile[this.x + 2, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num3++;
+							}
+							Main.tile[this.x - 3, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x - 3, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 3, this.y);
+								Main.tile[this.x - 3, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num3++;
+							}
+							Main.tile[this.x + 3, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x + 3, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 3, this.y);
+								Main.tile[this.x + 3, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num3++;
+							}
+							if (Main.tile[this.x - 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 1, this.y);
+							}
+							if (Main.tile[this.x + 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 1, this.y);
+							}
+							if (Main.tile[this.x - 2, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 2, this.y);
+							}
+							if (Main.tile[this.x + 2, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 2, this.y);
+							}
+							if (Main.tile[this.x - 3, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 3, this.y);
+							}
+							if (Main.tile[this.x + 3, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 3, this.y);
+							}
+							if (num3 != 6 || Main.tile[this.x, this.y - 1].liquid <= 0)
+							{
+								Main.tile[this.x, this.y].liquid = (byte)num;
+							}
+						}
+						else
+						{
+							int num4 = 0;
+							num = (float)((int)(Main.tile[this.x - 1, this.y].liquid + Main.tile[this.x + 1, this.y].liquid + Main.tile[this.x - 2, this.y].liquid + Main.tile[this.x + 2, this.y].liquid + Main.tile[this.x, this.y].liquid) + num2);
+							num = (float)Math.Round((double)(num / 5f));
+							Main.tile[this.x - 1, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x - 1, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 1, this.y);
+								Main.tile[this.x - 1, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num4++;
+							}
+							Main.tile[this.x + 1, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x + 1, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 1, this.y);
+								Main.tile[this.x + 1, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num4++;
+							}
+							Main.tile[this.x - 2, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x - 2, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 2, this.y);
+								Main.tile[this.x - 2, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num4++;
+							}
+							Main.tile[this.x + 2, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x + 2, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 2, this.y);
+								Main.tile[this.x + 2, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num4++;
+							}
+							if (Main.tile[this.x - 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 1, this.y);
+							}
+							if (Main.tile[this.x + 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 1, this.y);
+							}
+							if (Main.tile[this.x - 2, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 2, this.y);
+							}
+							if (Main.tile[this.x + 2, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 2, this.y);
+							}
+							if (num4 != 4 || Main.tile[this.x, this.y - 1].liquid <= 0)
+							{
+								Main.tile[this.x, this.y].liquid = (byte)num;
+							}
+						}
+					}
+					else
+					{
+						if (flag3)
+						{
+							num = (float)((int)(Main.tile[this.x - 1, this.y].liquid + Main.tile[this.x + 1, this.y].liquid + Main.tile[this.x - 2, this.y].liquid + Main.tile[this.x, this.y].liquid) + num2);
+							num = (float)Math.Round((double)(num / 4f) + 0.001);
+							Main.tile[this.x - 1, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x - 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x - 1, this.y);
+								Main.tile[this.x - 1, this.y].liquid = (byte)num;
+							}
+							Main.tile[this.x + 1, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x + 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 1, this.y);
+								Main.tile[this.x + 1, this.y].liquid = (byte)num;
+							}
+							Main.tile[this.x - 2, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x - 2, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+							{
+								Main.tile[this.x - 2, this.y].liquid = (byte)num;
+								Liquid.AddWater(this.x - 2, this.y);
+							}
+							Main.tile[this.x, this.y].liquid = (byte)num;
+						}
+						else
+						{
+							if (flag4)
+							{
+								num = (float)((int)(Main.tile[this.x - 1, this.y].liquid + Main.tile[this.x + 1, this.y].liquid + Main.tile[this.x + 2, this.y].liquid + Main.tile[this.x, this.y].liquid) + num2);
+								num = (float)Math.Round((double)(num / 4f) + 0.001);
+								Main.tile[this.x - 1, this.y].lava = Main.tile[this.x, this.y].lava;
+								if (Main.tile[this.x - 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+								{
+									Liquid.AddWater(this.x - 1, this.y);
+									Main.tile[this.x - 1, this.y].liquid = (byte)num;
+								}
+								Main.tile[this.x + 1, this.y].lava = Main.tile[this.x, this.y].lava;
+								if (Main.tile[this.x + 1, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+								{
+									Liquid.AddWater(this.x + 1, this.y);
+									Main.tile[this.x + 1, this.y].liquid = (byte)num;
+								}
+								Main.tile[this.x + 2, this.y].lava = Main.tile[this.x, this.y].lava;
+								if (Main.tile[this.x + 2, this.y].liquid != (byte)num || Main.tile[this.x, this.y].liquid != (byte)num)
+								{
+									Main.tile[this.x + 2, this.y].liquid = (byte)num;
+									Liquid.AddWater(this.x + 2, this.y);
+								}
+								Main.tile[this.x, this.y].liquid = (byte)num;
+							}
+							else
+							{
+								num = (float)((int)(Main.tile[this.x - 1, this.y].liquid + Main.tile[this.x + 1, this.y].liquid + Main.tile[this.x, this.y].liquid) + num2);
+								num = (float)Math.Round((double)(num / 3f) + 0.001);
+								Main.tile[this.x - 1, this.y].lava = Main.tile[this.x, this.y].lava;
+								if (Main.tile[this.x - 1, this.y].liquid != (byte)num)
+								{
+									Main.tile[this.x - 1, this.y].liquid = (byte)num;
+								}
+								if (Main.tile[this.x, this.y].liquid != (byte)num || Main.tile[this.x - 1, this.y].liquid != (byte)num)
+								{
+									Liquid.AddWater(this.x - 1, this.y);
+								}
+								Main.tile[this.x + 1, this.y].lava = Main.tile[this.x, this.y].lava;
+								if (Main.tile[this.x + 1, this.y].liquid != (byte)num)
+								{
+									Main.tile[this.x + 1, this.y].liquid = (byte)num;
+								}
+								if (Main.tile[this.x, this.y].liquid != (byte)num || Main.tile[this.x + 1, this.y].liquid != (byte)num)
+								{
+									Liquid.AddWater(this.x + 1, this.y);
+								}
+								Main.tile[this.x, this.y].liquid = (byte)num;
+							}
+						}
+					}
+				}
+				else
+				{
+					if (flag)
+					{
+						num = (float)((int)(Main.tile[this.x - 1, this.y].liquid + Main.tile[this.x, this.y].liquid) + num2);
+						num = (float)Math.Round((double)(num / 2f) + 0.001);
+						if (Main.tile[this.x - 1, this.y].liquid != (byte)num)
+						{
+							Main.tile[this.x - 1, this.y].liquid = (byte)num;
+						}
+						Main.tile[this.x - 1, this.y].lava = Main.tile[this.x, this.y].lava;
+						if (Main.tile[this.x, this.y].liquid != (byte)num || Main.tile[this.x - 1, this.y].liquid != (byte)num)
+						{
+							Liquid.AddWater(this.x - 1, this.y);
+						}
+						Main.tile[this.x, this.y].liquid = (byte)num;
+					}
+					else
+					{
+						if (flag2)
+						{
+							num = (float)((int)(Main.tile[this.x + 1, this.y].liquid + Main.tile[this.x, this.y].liquid) + num2);
+							num = (float)Math.Round((double)(num / 2f) + 0.001);
+							if (Main.tile[this.x + 1, this.y].liquid != (byte)num)
+							{
+								Main.tile[this.x + 1, this.y].liquid = (byte)num;
+							}
+							Main.tile[this.x + 1, this.y].lava = Main.tile[this.x, this.y].lava;
+							if (Main.tile[this.x, this.y].liquid != (byte)num || Main.tile[this.x + 1, this.y].liquid != (byte)num)
+							{
+								Liquid.AddWater(this.x + 1, this.y);
+							}
+							Main.tile[this.x, this.y].liquid = (byte)num;
+						}
+					}
+				}
+			}
+			if (Main.tile[this.x, this.y].liquid == liquid)
+			{
+				this.kill++;
+				return;
+			}
+			if (Main.tile[this.x, this.y].liquid == 254 && liquid == 255)
+			{
+				Main.tile[this.x, this.y].liquid = 255;
+				this.kill++;
+				return;
+			}
+			Liquid.AddWater(this.x, this.y - 1);
+			this.kill = 0;
+		}
+		public static void StartPanic()
+		{
+			if (!Liquid.panicMode)
+			{
+				WorldGen.waterLine = Main.maxTilesY;
+				Liquid.numLiquid = 0;
+				LiquidBuffer.numLiquidBuffer = 0;
+				Liquid.panicCounter = 0;
+				Liquid.panicMode = true;
+				Liquid.panicY = Main.maxTilesY - 3;
+				if (Main.dedServ)
+				{
+					Console.WriteLine("Forcing water to settle.");
+				}
+			}
+		}
+		public static void UpdateLiquid()
+		{
+			if (Main.netMode == 2)
+			{
+				Liquid.cycles = 25;
+				Liquid.maxLiquid = 5000;
+			}
+			if (!WorldGen.gen)
+			{
+				if (!Liquid.panicMode)
+				{
+					if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > 4000)
+					{
+						Liquid.panicCounter++;
+						if (Liquid.panicCounter > 1800 || Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > 13500)
+						{
+							Liquid.StartPanic();
+						}
+					}
+					else
+					{
+						Liquid.panicCounter = 0;
+					}
+				}
+				if (Liquid.panicMode)
+				{
+					int num = 0;
+					while (Liquid.panicY >= 3 && num < 5)
+					{
+						num++;
+						Liquid.QuickWater(0, Liquid.panicY, Liquid.panicY);
+						Liquid.panicY--;
+						if (Liquid.panicY < 3)
+						{
+							Console.WriteLine("Water has been settled.");
+							Liquid.panicCounter = 0;
+							Liquid.panicMode = false;
+							WorldGen.WaterCheck();
+							if (Main.netMode == 2)
+							{
+								for (int i = 0; i < 255; i++)
+								{
+									for (int j = 0; j < Main.maxSectionsX; j++)
+									{
+										for (int k = 0; k < Main.maxSectionsY; k++)
+										{
+											NetPlay.serverSock[i].tileSection[j, k] = false;
+										}
+									}
+								}
+							}
+						}
+					}
+					return;
+				}
+			}
+			if (Liquid.quickSettle || Liquid.numLiquid > 2000)
+			{
+				Liquid.quickFall = true;
+			}
+			else
+			{
+				Liquid.quickFall = false;
+			}
+			Liquid.wetCounter++;
+			int num2 = Liquid.maxLiquid / Liquid.cycles;
+			int num3 = num2 * (Liquid.wetCounter - 1);
+			int num4 = num2 * Liquid.wetCounter;
+			if (Liquid.wetCounter == Liquid.cycles)
+			{
+				num4 = Liquid.numLiquid;
+			}
+			if (num4 > Liquid.numLiquid)
+			{
+				num4 = Liquid.numLiquid;
+				int arg_19C_0 = Main.netMode;
+				Liquid.wetCounter = Liquid.cycles;
+			}
+			if (Liquid.quickFall)
+			{
+				for (int l = num3; l < num4; l++)
+				{
+					Main.liquid[l].delay = 10;
+					Main.liquid[l].Update();
+					Main.tile[Main.liquid[l].x, Main.liquid[l].y].skipLiquid = false;
+				}
+			}
+			else
+			{
+				for (int m = num3; m < num4; m++)
+				{
+					if (!Main.tile[Main.liquid[m].x, Main.liquid[m].y].skipLiquid)
+					{
+						Main.liquid[m].Update();
+					}
+					else
+					{
+						Main.tile[Main.liquid[m].x, Main.liquid[m].y].skipLiquid = false;
+					}
+				}
+			}
+			if (Liquid.wetCounter >= Liquid.cycles)
+			{
+				Liquid.wetCounter = 0;
+				for (int n = Liquid.numLiquid - 1; n >= 0; n--)
+				{
+					if (Main.liquid[n].kill > 3)
+					{
+						Liquid.DelWater(n);
+					}
+				}
+				int num5 = Liquid.maxLiquid - (Liquid.maxLiquid - Liquid.numLiquid);
+				if (num5 > LiquidBuffer.numLiquidBuffer)
+				{
+					num5 = LiquidBuffer.numLiquidBuffer;
+				}
+				for (int num6 = 0; num6 < num5; num6++)
+				{
+					Main.tile[Main.liquidBuffer[0].x, Main.liquidBuffer[0].y].checkingLiquid = false;
+					Liquid.AddWater(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y);
+					LiquidBuffer.DelBuffer(0);
+				}
+				if (Liquid.numLiquid > 0 && Liquid.numLiquid > Liquid.stuckAmount - 50 && Liquid.numLiquid < Liquid.stuckAmount + 50)
+				{
+					Liquid.stuckCount++;
+					if (Liquid.stuckCount >= 10000)
+					{
+						Liquid.stuck = true;
+						for (int num7 = Liquid.numLiquid - 1; num7 >= 0; num7--)
+						{
+							Liquid.DelWater(num7);
+						}
+						Liquid.stuck = false;
+						Liquid.stuckCount = 0;
+						return;
+					}
+				}
+				else
+				{
+					Liquid.stuckCount = 0;
+					Liquid.stuckAmount = Liquid.numLiquid;
+				}
+			}
+		}
+		public static void AddWater(int x, int y)
+		{
+			if (Main.tile[x, y].checkingLiquid)
+			{
+				return;
+			}
+			if (x >= Main.maxTilesX - 5 || y >= Main.maxTilesY - 5)
+			{
+				return;
+			}
+			if (x < 5 || y < 5)
+			{
+				return;
+			}
+			if (Main.tile[x, y] == null)
+			{
+				return;
+			}
+			if (Main.tile[x, y].liquid == 0)
+			{
+				return;
+			}
+			if (Liquid.numLiquid >= Liquid.maxLiquid - 1)
+			{
+				LiquidBuffer.AddBuffer(x, y);
+				return;
+			}
+			Main.tile[x, y].checkingLiquid = true;
+			Main.liquid[Liquid.numLiquid].kill = 0;
+			Main.liquid[Liquid.numLiquid].x = x;
+			Main.liquid[Liquid.numLiquid].y = y;
+			Main.liquid[Liquid.numLiquid].delay = 0;
+			Main.tile[x, y].skipLiquid = false;
+			Liquid.numLiquid++;
+			if (Main.netMode == 2)
+			{
+				NetMessage.sendWater(x, y);
+			}
+			if (Main.tile[x, y].active && (Main.tileWaterDeath[(int)Main.tile[x, y].type] || (Main.tile[x, y].lava && Main.tileLavaDeath[(int)Main.tile[x, y].type])))
+			{
+				if (WorldGen.gen)
+				{
+					Main.tile[x, y].active = false;
+					return;
+				}
+				WorldGen.KillTile(x, y, false, false, false);
+				if (Main.netMode == 2)
+				{
+					NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y, 0f);
+				}
+			}
+		}
+		public static void LavaCheck(int x, int y)
+		{
+			if ((Main.tile[x - 1, y].liquid > 0 && !Main.tile[x - 1, y].lava) || (Main.tile[x + 1, y].liquid > 0 && !Main.tile[x + 1, y].lava) || (Main.tile[x, y - 1].liquid > 0 && !Main.tile[x, y - 1].lava))
+			{
+				int num = 0;
+				if (!Main.tile[x - 1, y].lava)
+				{
+					num += (int)Main.tile[x - 1, y].liquid;
+					Main.tile[x - 1, y].liquid = 0;
+				}
+				if (!Main.tile[x + 1, y].lava)
+				{
+					num += (int)Main.tile[x + 1, y].liquid;
+					Main.tile[x + 1, y].liquid = 0;
+				}
+				if (!Main.tile[x, y - 1].lava)
+				{
+					num += (int)Main.tile[x, y - 1].liquid;
+					Main.tile[x, y - 1].liquid = 0;
+				}
+				if (num >= 128 && !Main.tile[x, y].active)
+				{
+					Main.tile[x, y].liquid = 0;
+					Main.tile[x, y].lava = false;
+					WorldGen.PlaceTile(x, y, 56, true, true, -1);
+					WorldGen.SquareTileFrame(x, y, true);
+					if (Main.netMode == 2)
+					{
+						NetMessage.SendTileSquare(-1, x - 1, y - 1, 3);
+						return;
+					}
+				}
+			}
+			else
+			{
+				if (Main.tile[x, y + 1].liquid > 0 && !Main.tile[x, y + 1].lava && !Main.tile[x, y + 1].active)
+				{
+					Main.tile[x, y].liquid = 0;
+					Main.tile[x, y].lava = false;
+					WorldGen.PlaceTile(x, y + 1, 56, true, true, -1);
+					WorldGen.SquareTileFrame(x, y + 1, true);
+					if (Main.netMode == 2)
+					{
+						NetMessage.SendTileSquare(-1, x - 1, y, 3);
+					}
+				}
+			}
+		}
+		public static void NetAddWater(int x, int y)
+		{
+			if (x >= Main.maxTilesX - 5 || y >= Main.maxTilesY - 5)
+			{
+				return;
+			}
+			if (x < 5 || y < 5)
+			{
+				return;
+			}
+			if (Main.tile[x, y] == null)
+			{
+				return;
+			}
+			if (Main.tile[x, y].liquid == 0)
+			{
+				return;
+			}
+			for (int i = 0; i < Liquid.numLiquid; i++)
+			{
+				if (Main.liquid[i].x == x && Main.liquid[i].y == y)
+				{
+					Main.liquid[i].kill = 0;
+					Main.tile[x, y].skipLiquid = true;
+					return;
+				}
+			}
+			if (Liquid.numLiquid >= Liquid.maxLiquid - 1)
+			{
+				LiquidBuffer.AddBuffer(x, y);
+				return;
+			}
+			Main.tile[x, y].checkingLiquid = true;
+			Main.tile[x, y].skipLiquid = true;
+			Main.liquid[Liquid.numLiquid].kill = 0;
+			Main.liquid[Liquid.numLiquid].x = x;
+			Main.liquid[Liquid.numLiquid].y = y;
+			Liquid.numLiquid++;
+			if (Main.netMode == 2)
+			{
+				NetMessage.sendWater(x, y);
+			}
+			if (Main.tile[x, y].active && (Main.tileWaterDeath[(int)Main.tile[x, y].type] || (Main.tile[x, y].lava && Main.tileLavaDeath[(int)Main.tile[x, y].type])))
+			{
+				WorldGen.KillTile(x, y, false, false, false);
+				if (Main.netMode == 2)
+				{
+					NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y, 0f);
+				}
+			}
+		}
+		public static void DelWater(int l)
+		{
+			int num = Main.liquid[l].x;
+			int num2 = Main.liquid[l].y;
+			if (Main.tile[num, num2].liquid < 2)
+			{
+				Main.tile[num, num2].liquid = 0;
+			}
+			else
+			{
+				if (Main.tile[num, num2].liquid < 20)
+				{
+					if ((Main.tile[num - 1, num2].liquid < Main.tile[num, num2].liquid && (!Main.tile[num - 1, num2].active || !Main.tileSolid[(int)Main.tile[num - 1, num2].type] || Main.tileSolidTop[(int)Main.tile[num - 1, num2].type])) || (Main.tile[num + 1, num2].liquid < Main.tile[num, num2].liquid && (!Main.tile[num + 1, num2].active || !Main.tileSolid[(int)Main.tile[num + 1, num2].type] || Main.tileSolidTop[(int)Main.tile[num + 1, num2].type])) || (Main.tile[num, num2 + 1].liquid < 255 && (!Main.tile[num, num2 + 1].active || !Main.tileSolid[(int)Main.tile[num, num2 + 1].type] || Main.tileSolidTop[(int)Main.tile[num, num2 + 1].type])))
+					{
+						Main.tile[num, num2].liquid = 0;
+					}
+				}
+				else
+				{
+					if (Main.tile[num, num2 + 1].liquid < 255 && (!Main.tile[num, num2 + 1].active || !Main.tileSolid[(int)Main.tile[num, num2 + 1].type] || Main.tileSolidTop[(int)Main.tile[num, num2 + 1].type]) && !Liquid.stuck)
+					{
+						Main.liquid[l].kill = 0;
+						return;
+					}
+				}
+			}
+			if (Main.tile[num, num2].liquid == 0)
+			{
+				Main.tile[num, num2].lava = false;
+			}
+			else
+			{
+				if (Main.tile[num, num2].lava)
+				{
+					Liquid.LavaCheck(num, num2);
+				}
+			}
+			if (Main.netMode == 2)
+			{
+				NetMessage.sendWater(num, num2);
+			}
+			Liquid.numLiquid--;
+			Main.tile[Main.liquid[l].x, Main.liquid[l].y].checkingLiquid = false;
+			Main.liquid[l].x = Main.liquid[Liquid.numLiquid].x;
+			Main.liquid[l].y = Main.liquid[Liquid.numLiquid].y;
+			Main.liquid[l].kill = Main.liquid[Liquid.numLiquid].kill;
+		}
+	}
 }

@@ -48,6 +48,10 @@
   <ItemGroup>
     <Compile Include="Commands\ConsoleSender.cs" />
     <Compile Include="Commands\Sender.cs" />
+    <Compile Include="Events\LoginEvent.cs" />
+    <Compile Include="Events\LogoutEvent.cs" />
+    <Compile Include="Events\PartyChangeEvent.cs" />
+    <Compile Include="Events\PlayerChatEvent.cs" />
     <Compile Include="Events\PlayerCommand.cs" />
     <Compile Include="Chest.cs" />
     <Compile Include="ClientSock.cs" />
@@ -62,12 +66,14 @@
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />
+    <Compile Include="Main.cs" />
     <Compile Include="messageBuffer.cs" />
     <Compile Include="NetMessage.cs" />
     <Compile Include="NetPlay.cs" />
     <Compile Include="NPC.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Plugin\Hooks.cs" />
+    <Compile Include="Plugin\Party.cs" />
     <Compile Include="Plugin\Plugin.cs" />
     <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Program.cs" />

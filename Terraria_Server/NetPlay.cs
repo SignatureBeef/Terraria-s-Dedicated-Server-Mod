@@ -1,815 +1,593 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 
 namespace Terraria_Server
 {
-    using System;
-    using System.Net;
-    using System.Net.Sockets;
-    using System.Threading;
-
     public class NetPlay
-    {
-        public const int bufferSize = 1024;
-        public ClientSock clientSock = null;
-        public bool disconnect = false;
-        public string password = "";
-        public IPAddress serverIP;
-        public IPAddress serverListenIP;
-        public int serverPort = 7777;
-        public bool stopListen = false;
-        public TcpListener tcpListener;
-
-        public const int maxConnections = 256;
-        public ServerSock[] serverSock = new ServerSock[256];
-        public bool ServerUp = false;
-        private bool cake = false;
-
-        public World world = null;
-
-        public NetPlay() {
-            clientSock = new ClientSock(world);
-        }
-        
-        public NetPlay(World World) {
-            clientSock = new ClientSock(world);
-            world = World;
-        }
-
-        public void ClientLoop(object threadContext)
-        {
-            if (Statics.rand == null)
-            {
-                DateTime now = DateTime.Now;
-                Statics.rand = new Random((int)now.Ticks);
-            }
-            if (WorldGen.genRand == null)
-            {
-                DateTime now = DateTime.Now;
-                WorldGen.genRand = new Random((int)now.Ticks);
-            }
-            world.getPlayerList()[Statics.myPlayer].hostile = false;
-            //Main.clientPlayer = (Player)world.getPlayerList()[Statics.myPlayer].clientClone();
-            //Main.menuMode = 10;
-            //Main.menuMode = 14;
-            Console.WriteLine("Connecting to " + world.getServer().getNetPlay().serverIP);
-            //Statics.netMode = 1;
-            world.getServer().getNetPlay().disconnect = false;
-            world.getServer().getNetPlay().clientSock = new ClientSock(world);
-            world.getServer().getNetPlay().clientSock.tcpClient.NoDelay = true;
-            world.getServer().getNetPlay().clientSock.readBuffer = new byte[1024];
-            world.getServer().getNetPlay().clientSock.writeBuffer = new byte[1024];
-            try
-            {
-                world.getServer().getNetPlay().clientSock.tcpClient.Connect(world.getServer().getNetPlay().serverIP, world.getServer().getNetPlay().serverPort);
-                world.getServer().getNetPlay().clientSock.networkStream = world.getServer().getNetPlay().clientSock.tcpClient.GetStream();
-            }
-            catch (Exception arg_127_0)
-            {
-                Exception exception = arg_127_0;
-                if (!world.getServer().getNetPlay().disconnect)
-                {
-                    Console.WriteLine(exception.ToString());
-                    world.getServer().getNetPlay().disconnect = true;
-                }
-            }
-            NetMessage.buffer[9].Reset();
-            int num = -1;
-            while (!world.getServer().getNetPlay().disconnect)
-            {
-                if (world.getServer().getNetPlay().clientSock.tcpClient.Connected)
-                {
-                    if (NetMessage.buffer[9].checkBytes)
-                    {
-                        NetMessage.CheckBytes(world, 9);
-                    }
-                    world.getServer().getNetPlay().clientSock.active = true;
-                    if (world.getServer().getNetPlay().clientSock.state == 0)
-                    {
-                        Console.WriteLine("Found server");
-                        world.getServer().getNetPlay().clientSock.state = 1;
-                        NetMessage.SendData(1, world, -1, -1, "", 0, 0f, 0f, 0f);
-                    }
-                    if (world.getServer().getNetPlay().clientSock.state == 2 && num != world.getServer().getNetPlay().clientSock.state)
-                    {
-                        Console.WriteLine("Sending player data...");
-                    }
-                    if (world.getServer().getNetPlay().clientSock.state == 3 && num != world.getServer().getNetPlay().clientSock.state)
-                    {
-                        Console.WriteLine("Requesting world information");
-                    }
-                    if (world.getServer().getNetPlay().clientSock.state == 4)
-                    {
-                        //WorldGen.worldCleared = false;
-                        world.getServer().getNetPlay().clientSock.state = 5;
-                        WorldGen.clearWorld(world);
-                    }
-                    if (world.getServer().getNetPlay().clientSock.state == 5) // && WorldGen.worldCleared)
-                    {
-                        world.getServer().getNetPlay().clientSock.state = 6;
-                        world.getPlayerList()[Statics.myPlayer].FindSpawn(world);
-                        NetMessage.SendData(8, world, -1, -1, "", world.getPlayerList()[Statics.myPlayer].SpawnX, (float)world.getPlayerList()[Statics.myPlayer].SpawnY, 0f, 0f);
-                    }
-                    if (world.getServer().getNetPlay().clientSock.state == 6 && num != world.getServer().getNetPlay().clientSock.state)
-                    {
-                        Console.WriteLine("Requesting tile data");
-                    }
-                    if (!world.getServer().getNetPlay().clientSock.locked && !world.getServer().getNetPlay().disconnect && world.getServer().getNetPlay().clientSock.networkStream.DataAvailable)
-                    {
-                        world.getServer().getNetPlay().clientSock.locked = true;
-                        world.getServer().getNetPlay().clientSock.networkStream.BeginRead(world.getServer().getNetPlay().clientSock.readBuffer, 0, world.getServer().getNetPlay().clientSock.readBuffer.Length, new AsyncCallback(world.getServer().getNetPlay().clientSock.ClientReadCallBack), world.getServer().getNetPlay().clientSock.networkStream);
-                    }
-                    if (world.getServer().getNetPlay().clientSock.statusMax > 0 && world.getServer().getNetPlay().clientSock.statusText != "")
-                    {
-                        if (world.getServer().getNetPlay().clientSock.statusCount >= world.getServer().getNetPlay().clientSock.statusMax)
-                        {
-                            Console.WriteLine(world.getServer().getNetPlay().clientSock.statusText + ": Complete!");
-                            world.getServer().getNetPlay().clientSock.statusText = "";
-                            world.getServer().getNetPlay().clientSock.statusMax = 0;
-                            world.getServer().getNetPlay().clientSock.statusCount = 0;
-                        }
-                        else
-                        {
-                            Console.WriteLine(string.Concat(new object[]
+	{
+		public const int bufferSize = 1024;
+		public const int maxConnections = 256;
+		public static bool stopListen = false;
+		public static ServerSock[] serverSock = new ServerSock[256];
+		public static ClientSock clientSock = new ClientSock();
+		public static TcpListener tcpListener;
+		public static IPAddress serverListenIP;
+		public static IPAddress serverIP;
+		public static int serverPort = 7777;
+		public static bool disconnect = false;
+		public static string password = "";
+		public static bool ServerUp = false;
+		
+        public static void AddBan(int plr)
+		{
+			string text = NetPlay.serverSock[plr].tcpClient.Client.RemoteEndPoint.ToString();
+			string value = text;
+			for (int i = 0; i < text.Length; i++)
+			{
+				if (text.Substring(i, 1) == ":")
+				{
+					value = text.Substring(0, i);
+				}
+			}
+			using (StreamWriter streamWriter = new StreamWriter("banlist.txt", true))
+			{
+				streamWriter.WriteLine("//" + Main.player[plr].name);
+				streamWriter.WriteLine(value);
+			}
+		}
+		
+        public static bool CheckBan(string ip)
+		{
+			try
+			{
+				string b = ip;
+				for (int i = 0; i < ip.Length; i++)
+				{
+					if (ip.Substring(i, 1) == ":")
+					{
+						b = ip.Substring(0, i);
+					}
+				}
+				if (File.Exists("banlist.txt"))
+				{
+					using (StreamReader streamReader = new StreamReader("banlist.txt"))
+					{
+						string a;
+						while ((a = streamReader.ReadLine()) != null)
+						{
+							if (a == b)
 							{
-								world.getServer().getNetPlay().clientSock.statusText, 
+								return true;
+							}
+						}
+					}
+				}
+			}
+			catch
+			{
+			}
+			return false;
+		}
+		
+        public static void ClientLoop(object threadContext)
+		{
+			if (Main.rand == null)
+			{
+				Main.rand = new Random((int)DateTime.Now.Ticks);
+			}
+			if (WorldGen.genRand == null)
+			{
+				WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
+			}
+			Main.player[Main.myPlayer].hostile = false;
+			Main.clientPlayer = (Player)Main.player[Main.myPlayer].clientClone();
+			Main.menuMode = 10;
+			Main.menuMode = 14;
+			if (!Main.autoPass)
+			{
+				Main.statusText = "Connecting to " + NetPlay.serverIP;
+			}
+			Main.netMode = 1;
+			NetPlay.disconnect = false;
+			NetPlay.clientSock = new ClientSock();
+			NetPlay.clientSock.tcpClient.NoDelay = true;
+			NetPlay.clientSock.readBuffer = new byte[1024];
+			NetPlay.clientSock.writeBuffer = new byte[1024];
+			bool flag = true;
+			while (flag)
+			{
+				flag = false;
+				try
+				{
+					NetPlay.clientSock.tcpClient.Connect(NetPlay.serverIP, NetPlay.serverPort);
+					NetPlay.clientSock.networkStream = NetPlay.clientSock.tcpClient.GetStream();
+					flag = false;
+				}
+				catch
+				{
+					if (!NetPlay.disconnect && Main.gameMenu)
+					{
+						flag = true;
+					}
+				}
+			}
+			NetMessage.buffer[256].Reset();
+			int num = -1;
+			while (!NetPlay.disconnect)
+			{
+				if (NetPlay.clientSock.tcpClient.Connected)
+				{
+					if (NetMessage.buffer[256].checkBytes)
+					{
+						NetMessage.CheckBytes(256);
+					}
+					NetPlay.clientSock.active = true;
+					if (NetPlay.clientSock.state == 0)
+					{
+						Main.statusText = "Found server";
+						NetPlay.clientSock.state = 1;
+						NetMessage.SendData(1, -1, -1, "", 0, 0f, 0f, 0f);
+					}
+					if (NetPlay.clientSock.state == 2 && num != NetPlay.clientSock.state)
+					{
+						Main.statusText = "Sending player data...";
+					}
+					if (NetPlay.clientSock.state == 3 && num != NetPlay.clientSock.state)
+					{
+						Main.statusText = "Requesting world information";
+					}
+					if (NetPlay.clientSock.state == 4)
+					{
+						WorldGen.worldCleared = false;
+						NetPlay.clientSock.state = 5;
+						WorldGen.clearWorld();
+					}
+					if (NetPlay.clientSock.state == 5 && WorldGen.worldCleared)
+					{
+						NetPlay.clientSock.state = 6;
+						Main.player[Main.myPlayer].FindSpawn();
+						NetMessage.SendData(8, -1, -1, "", Main.player[Main.myPlayer].SpawnX, (float)Main.player[Main.myPlayer].SpawnY, 0f, 0f);
+					}
+					if (NetPlay.clientSock.state == 6 && num != NetPlay.clientSock.state)
+					{
+						Main.statusText = "Requesting tile data";
+					}
+					if (!NetPlay.clientSock.locked && !NetPlay.disconnect && NetPlay.clientSock.networkStream.DataAvailable)
+					{
+						NetPlay.clientSock.locked = true;
+						NetPlay.clientSock.networkStream.BeginRead(NetPlay.clientSock.readBuffer, 0, NetPlay.clientSock.readBuffer.Length, new AsyncCallback(NetPlay.clientSock.ClientReadCallBack), NetPlay.clientSock.networkStream);
+					}
+					if (NetPlay.clientSock.statusMax > 0 && NetPlay.clientSock.statusText != "")
+					{
+						if (NetPlay.clientSock.statusCount >= NetPlay.clientSock.statusMax)
+						{
+							Main.statusText = NetPlay.clientSock.statusText + ": Complete!";
+							NetPlay.clientSock.statusText = "";
+							NetPlay.clientSock.statusMax = 0;
+							NetPlay.clientSock.statusCount = 0;
+						}
+						else
+						{
+							Main.statusText = string.Concat(new object[]
+							{
+								NetPlay.clientSock.statusText, 
 								": ", 
-								(int)((float)world.getServer().getNetPlay().clientSock.statusCount / (float)world.getServer().getNetPlay().clientSock.statusMax * 100f), 
+								(int)((float)NetPlay.clientSock.statusCount / (float)NetPlay.clientSock.statusMax * 100f), 
 								"%"
-							}));
-                        }
-                    }
-                    Thread.Sleep(1);
-                }
-                else
-                {
-                    if (world.getServer().getNetPlay().clientSock.active)
-                    {
-                        Console.WriteLine("Lost connection");
-                        world.getServer().getNetPlay().disconnect = true;
-                    }
-                }
-                num = world.getServer().getNetPlay().clientSock.state;
-            }
-            try
-            {
-                world.getServer().getNetPlay().clientSock.networkStream.Close();
-                world.getServer().getNetPlay().clientSock.networkStream = world.getServer().getNetPlay().clientSock.tcpClient.GetStream();
-            }
-            catch
-            {
-            }
-            //if (!Main.gameMenu)
-            //{
-                //Main.netMode = 0;
-                Player.SavePlayer(world.getPlayerList()[Statics.myPlayer]);
-                //Main.gameMenu = true;
-                //Main.menuMode = 14;
-            //}
-            NetMessage.buffer[9].Reset();
-            //if (Main.menuMode == 15 && //Main.statusText == "Lost connection")
-            //{
-                //Main.menuMode = 14;
-            //}
-            if (world.getServer().getNetPlay().clientSock.statusText != "" && world.getServer().getNetPlay().clientSock.statusText != null)
-            {
-                //Console.WriteLine("Lost connection");
-            }
-            world.getServer().getNetPlay().clientSock.statusCount = 0;
-            world.getServer().getNetPlay().clientSock.statusMax = 0;
-            world.getServer().getNetPlay().clientSock.statusText = "";
-           // Main.netMode = 0;
-        }
-
-        public static int GetSectionX(int x)
-        {
-            return x / 200;
-        }
-        
-        public static int GetSectionY(int y)
-        {
-            return y / 150;
-        }
-
-        public void Init()
-        {
-            for (int i = 0; i < 257; i++)
-            {
-                if (i < 9)
-                {
-                    world.getServer().getNetPlay().serverSock[i] = new ServerSock(world);
-                    world.getServer().getNetPlay().serverSock[i].tcpClient.NoDelay = true;
-                }
-                NetMessage.buffer[i] = new messageBuffer();
-                NetMessage.buffer[i].whoAmI = i;
-            }
-            world.getServer().getNetPlay().clientSock.tcpClient.NoDelay = true;
-        }
-
-        public void ListenForClients(object threadContext)
-        {
-            while (!world.getServer().getNetPlay().disconnect && !world.getServer().getNetPlay().stopListen)
-            {
-                int num = -1;
-                for (int i = 0; i < 8; i++)
-                {
-                    if (!world.getServer().getNetPlay().serverSock[i].tcpClient.Connected)
-                    {
-                        num = i;
-                        break;
-                    }
-                }
-                if (num >= 0)
-                {
-                    try
-                    {
-                        world.getServer().getNetPlay().serverSock[num].tcpClient = world.getServer().getNetPlay().tcpListener.AcceptTcpClient();
-                        world.getServer().getNetPlay().serverSock[num].tcpClient.NoDelay = true;
-                    }
-                    catch (Exception arg_6B_0)
-                    {
-                        Exception exception = arg_6B_0;
-                        if (!world.getServer().getNetPlay().disconnect)
-                        {
-                            //Main.menuMode = 15;
-                            Console.WriteLine(exception.ToString());
-                            world.getServer().getNetPlay().disconnect = true;
-                        }
-                    }
-                }
-                else
-                {
-                    world.getServer().getNetPlay().stopListen = true;
-                    world.getServer().getNetPlay().tcpListener.Stop();
-                }
-            }
-        }
-
-        public void ServerLoop(object threadContext)
-        {
-            if (Statics.rand == null)
-            {
-                DateTime now = DateTime.Now;
-                Statics.rand = new Random((int)now.Ticks);
-            }
-            if (WorldGen.genRand == null)
-            {
-                DateTime now = DateTime.Now;
-                WorldGen.genRand = new Random((int)now.Ticks);
-            }
-            Statics.myPlayer = 8;
-            world.getServer().getNetPlay().serverIP = IPAddress.Any;
-            world.getServer().getNetPlay().serverListenIP = world.getServer().getNetPlay().serverIP;
-            //Main.menuMode = 14;
-            Console.WriteLine("Starting server on " + serverListenIP + ":" + serverPort.ToString());
-            Statics.netMode = 2;
-            world.getServer().getNetPlay().disconnect = false;
-            for (int i = 0; i < 256; i++)
-            {
-                world.getServer().getNetPlay().serverSock[i] = new ServerSock(world);
-                world.getServer().getNetPlay().serverSock[i].Reset();
-                world.getServer().getNetPlay().serverSock[i].whoAmI = i;
-                world.getServer().getNetPlay().serverSock[i].tcpClient = new TcpClient();
-                world.getServer().getNetPlay().serverSock[i].tcpClient.NoDelay = true;
-                world.getServer().getNetPlay().serverSock[i].readBuffer = new byte[1024];
-                world.getServer().getNetPlay().serverSock[i].writeBuffer = new byte[1024];
-            }
-            world.getServer().getNetPlay().tcpListener = new TcpListener(world.getServer().getNetPlay().serverListenIP, world.getServer().getNetPlay().serverPort);
-            try
-            {
-                world.getServer().getNetPlay().tcpListener.Start();
-            }
-            catch (Exception arg_142_0)
-            {
-                Exception exception = arg_142_0;
-                //Main.menuMode = 15;
-                Console.WriteLine(exception.ToString());
-                world.getServer().getNetPlay().disconnect = true;
-            }
-            if (!world.getServer().getNetPlay().disconnect)
-            {
-                ThreadPool.QueueUserWorkItem(new WaitCallback(world.getServer().getNetPlay().ListenForClients), 1);
+							});
+						}
+					}
+					Thread.Sleep(1);
+				}
+				else
+				{
+					if (NetPlay.clientSock.active)
+					{
+						Main.statusText = "Lost connection";
+						NetPlay.disconnect = true;
+					}
+				}
+				num = NetPlay.clientSock.state;
+			}
+			try
+			{
+				NetPlay.clientSock.networkStream.Close();
+				NetPlay.clientSock.networkStream = NetPlay.clientSock.tcpClient.GetStream();
+			}
+			catch
+			{
+			}
+			if (!Main.gameMenu)
+			{
+				Main.netMode = 0;
+				Player.SavePlayer(Main.player[Main.myPlayer]);
+				Main.gameMenu = true;
+				Main.menuMode = 14;
+			}
+			NetMessage.buffer[256].Reset();
+			if (Main.menuMode == 15 && Main.statusText == "Lost connection")
+			{
+				Main.menuMode = 14;
+			}
+			if (NetPlay.clientSock.statusText != "" && NetPlay.clientSock.statusText != null)
+			{
+				Main.statusText = "Lost connection";
+			}
+			NetPlay.clientSock.statusCount = 0;
+			NetPlay.clientSock.statusMax = 0;
+			NetPlay.clientSock.statusText = "";
+			Main.netMode = 0;
+		}
+		
+        public static void ServerLoop(object threadContext)
+		{
+			if (Main.rand == null)
+			{
+				Main.rand = new Random((int)DateTime.Now.Ticks);
+			}
+			if (WorldGen.genRand == null)
+			{
+				WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
+			}
+			Main.myPlayer = 255;
+			NetPlay.serverIP = IPAddress.Any;
+			NetPlay.serverListenIP = NetPlay.serverIP;
+			Main.menuMode = 14;
+			Main.statusText = "Starting server...";
+			Main.netMode = 2;
+			NetPlay.disconnect = false;
+			for (int i = 0; i < 256; i++)
+			{
+				NetPlay.serverSock[i] = new ServerSock();
+				NetPlay.serverSock[i].Reset();
+				NetPlay.serverSock[i].whoAmI = i;
+				NetPlay.serverSock[i].tcpClient = new TcpClient();
+				NetPlay.serverSock[i].tcpClient.NoDelay = true;
+				NetPlay.serverSock[i].readBuffer = new byte[1024];
+				NetPlay.serverSock[i].writeBuffer = new byte[1024];
+			}
+			NetPlay.tcpListener = new TcpListener(NetPlay.serverListenIP, NetPlay.serverPort);
+			try
+			{
+				NetPlay.tcpListener.Start();
+			}
+			catch (Exception arg_11F_0)
+			{
+				Exception exception = arg_11F_0;
+				Main.menuMode = 15;
+				Main.statusText = exception.ToString();
+				NetPlay.disconnect = true;
+			}
+			if (!NetPlay.disconnect)
+			{
+				ThreadPool.QueueUserWorkItem(new WaitCallback(NetPlay.ListenForClients), 1);
+                Program.updateThread.Start();
+                Statics.serverStarted = true;
                 Console.WriteLine("Server started\nLoading Plugins.");
-                world.getServer().getPluginManager().ReloadPlugins();
-            }
-            while (!world.getServer().getNetPlay().disconnect)
-            {
-                if (world.getServer().getNetPlay().stopListen)
-                {
-                    int num = -1;
-                    for (int j = 0; j < 255; j++)
-                    {
-                        if (!world.getServer().getNetPlay().serverSock[j].tcpClient.Connected)
-                        {
-                            num = j;
-                            break;
-                        }
-                    }
-                    if (num >= 0)
-                    {
-                        world.getServer().getNetPlay().tcpListener.Start();
-                        world.getServer().getNetPlay().stopListen = false;
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(world.getServer().getNetPlay().ListenForClients), 1);
-                    }
-                }
-                int num2 = 0;
-                for (int k = 0; k < 256; k++)
-                {
-                    if (NetMessage.buffer[k].checkBytes)
-                    {
-                        NetMessage.CheckBytes(world, k);
-                    }
-                    if (world.getServer().getNetPlay().serverSock[k].kill)
-                    {
-                        world.getServer().getNetPlay().serverSock[k].Reset();
-                        NetMessage.syncPlayers(world);
-                    }
-                    else
-                    {
-                        if (world.getServer().getNetPlay().serverSock[k].tcpClient.Connected)
-                        {
-                            if (!world.getServer().getNetPlay().serverSock[k].active)
-                            {
-                                world.getServer().getNetPlay().serverSock[k].state = 0;
-                            }
-                            world.getServer().getNetPlay().serverSock[k].active = true;
-                            num2++;
-                            if (!world.getServer().getNetPlay().serverSock[k].locked)
-                            {
-                                try
-                                {
-                                    world.getServer().getNetPlay().serverSock[k].networkStream = world.getServer().getNetPlay().serverSock[k].tcpClient.GetStream();
-                                    if (world.getServer().getNetPlay().serverSock[k].networkStream.DataAvailable)
-                                    {
-                                        world.getServer().getNetPlay().serverSock[k].locked = true;
-                                        world.getServer().getNetPlay().serverSock[k].networkStream.BeginRead(world.getServer().getNetPlay().serverSock[k].readBuffer, 0, world.getServer().getNetPlay().serverSock[k].readBuffer.Length, new AsyncCallback(world.getServer().getNetPlay().serverSock[k].ServerReadCallBack), world.getServer().getNetPlay().serverSock[k].networkStream);
-                                    }
-                                }
-                                catch
-                                {
-                                    world.getServer().getNetPlay().serverSock[k].kill = true;
-                                }
-                            }
-                            if (world.getServer().getNetPlay().serverSock[k].statusMax > 0 && world.getServer().getNetPlay().serverSock[k].statusText2 != "")
-                            {
-                                if (world.getServer().getNetPlay().serverSock[k].statusCount >= world.getServer().getNetPlay().serverSock[k].statusMax)
-                                {
-                                    world.getServer().getNetPlay().serverSock[k].statusText = string.Concat(new object[]
+                Program.server.getPluginManager().ReloadPlugins();
+			}
+			while (!NetPlay.disconnect)
+			{
+				if (NetPlay.stopListen)
+				{
+					int num = -1;
+					for (int j = 0; j < 255; j++)
+					{
+						if (!NetPlay.serverSock[j].tcpClient.Connected)
+						{
+							num = j;
+							break;
+						}
+					}
+					if (num >= 0)
+					{
+                        NetPlay.tcpListener.Start();
+                        NetPlay.stopListen = false;
+                        ThreadPool.QueueUserWorkItem(new WaitCallback(NetPlay.ListenForClients), 1);
+					}
+				}
+				int num2 = 0;
+				for (int k = 0; k < 256; k++)
+				{
+					if (NetMessage.buffer[k].checkBytes)
+					{
+						NetMessage.CheckBytes(k);
+					}
+					if (NetPlay.serverSock[k].kill)
+					{
+						NetPlay.serverSock[k].Reset();
+						NetMessage.syncPlayers();
+					}
+					else
+					{
+						if (NetPlay.serverSock[k].tcpClient.Connected)
+						{
+							if (!NetPlay.serverSock[k].active)
+							{
+								NetPlay.serverSock[k].state = 0;
+							}
+							NetPlay.serverSock[k].active = true;
+							num2++;
+							if (!NetPlay.serverSock[k].locked)
+							{
+								try
+								{
+									NetPlay.serverSock[k].networkStream = NetPlay.serverSock[k].tcpClient.GetStream();
+									if (NetPlay.serverSock[k].networkStream.DataAvailable)
+									{
+										NetPlay.serverSock[k].locked = true;
+										NetPlay.serverSock[k].networkStream.BeginRead(NetPlay.serverSock[k].readBuffer, 0, NetPlay.serverSock[k].readBuffer.Length, new AsyncCallback(NetPlay.serverSock[k].ServerReadCallBack), NetPlay.serverSock[k].networkStream);
+									}
+								}
+								catch
+								{
+									NetPlay.serverSock[k].kill = true;
+								}
+							}
+							if (NetPlay.serverSock[k].statusMax > 0 && NetPlay.serverSock[k].statusText2 != "")
+							{
+								if (NetPlay.serverSock[k].statusCount >= NetPlay.serverSock[k].statusMax)
+								{
+									NetPlay.serverSock[k].statusText = string.Concat(new object[]
 									{
 										"(", 
-										world.getServer().getNetPlay().serverSock[k].tcpClient.Client.RemoteEndPoint, 
+										NetPlay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
 										") ", 
-										world.getServer().getNetPlay().serverSock[k].name, 
+										NetPlay.serverSock[k].name, 
 										" ", 
-										world.getServer().getNetPlay().serverSock[k].statusText2, 
+										NetPlay.serverSock[k].statusText2, 
 										": Complete!"
 									});
-                                    world.getServer().getNetPlay().serverSock[k].statusText2 = "";
-                                    world.getServer().getNetPlay().serverSock[k].statusMax = 0;
-                                    world.getServer().getNetPlay().serverSock[k].statusCount = 0;
-                                }
-                                else
-                                {
-                                    world.getServer().getNetPlay().serverSock[k].statusText = string.Concat(new object[]
+									NetPlay.serverSock[k].statusText2 = "";
+									NetPlay.serverSock[k].statusMax = 0;
+									NetPlay.serverSock[k].statusCount = 0;
+								}
+								else
+								{
+									NetPlay.serverSock[k].statusText = string.Concat(new object[]
 									{
 										"(", 
-										world.getServer().getNetPlay().serverSock[k].tcpClient.Client.RemoteEndPoint, 
+										NetPlay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
 										") ", 
-										world.getServer().getNetPlay().serverSock[k].name, 
+										NetPlay.serverSock[k].name, 
 										" ", 
-										world.getServer().getNetPlay().serverSock[k].statusText2, 
+										NetPlay.serverSock[k].statusText2, 
 										": ", 
-										(int)((float)world.getServer().getNetPlay().serverSock[k].statusCount / (float)world.getServer().getNetPlay().serverSock[k].statusMax * 100f), 
+										(int)((float)NetPlay.serverSock[k].statusCount / (float)NetPlay.serverSock[k].statusMax * 100f), 
 										"%"
 									});
-                                }
-                            }
-                            else
-                            {
-                                if (world.getServer().getNetPlay().serverSock[k].state == 0)
-                                {
-                                    world.getServer().getNetPlay().serverSock[k].statusText = string.Concat(new object[]
+								}
+							}
+							else
+							{
+								if (NetPlay.serverSock[k].state == 0)
+								{
+									NetPlay.serverSock[k].statusText = string.Concat(new object[]
 									{
 										"(", 
-										world.getServer().getNetPlay().serverSock[k].tcpClient.Client.RemoteEndPoint, 
+										NetPlay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
 										") ", 
-										world.getServer().getNetPlay().serverSock[k].name, 
+										NetPlay.serverSock[k].name, 
 										" is connecting..."
 									});
-                                }
-                                else
-                                {
-                                    if (world.getServer().getNetPlay().serverSock[k].state == 1)
-                                    {
-                                        world.getServer().getNetPlay().serverSock[k].statusText = string.Concat(new object[]
+								}
+								else
+								{
+									if (NetPlay.serverSock[k].state == 1)
+									{
+										NetPlay.serverSock[k].statusText = string.Concat(new object[]
 										{
 											"(", 
-											world.getServer().getNetPlay().serverSock[k].tcpClient.Client.RemoteEndPoint, 
+											NetPlay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
 											") ", 
-											world.getServer().getNetPlay().serverSock[k].name, 
+											NetPlay.serverSock[k].name, 
 											" is sending player data..."
 										});
-                                    }
-                                    else
-                                    {
-                                        if (world.getServer().getNetPlay().serverSock[k].state == 2)
-                                        {
-                                            world.getServer().getNetPlay().serverSock[k].statusText = string.Concat(new object[]
+									}
+									else
+									{
+										if (NetPlay.serverSock[k].state == 2)
+										{
+											NetPlay.serverSock[k].statusText = string.Concat(new object[]
 											{
 												"(", 
-												world.getServer().getNetPlay().serverSock[k].tcpClient.Client.RemoteEndPoint, 
+												NetPlay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
 												") ", 
-												world.getServer().getNetPlay().serverSock[k].name, 
+												NetPlay.serverSock[k].name, 
 												" requested world information"
 											});
-                                        }
-                                        else
-                                        {
-                                            if (world.getServer().getNetPlay().serverSock[k].state != 3 && world.getServer().getNetPlay().serverSock[k].state == 10)
-                                            {
-                                                world.getServer().getNetPlay().serverSock[k].statusText = string.Concat(new object[]
+										}
+										else
+										{
+											if (NetPlay.serverSock[k].state != 3 && NetPlay.serverSock[k].state == 10)
+											{
+												NetPlay.serverSock[k].statusText = string.Concat(new object[]
 												{
 													"(", 
-													world.getServer().getNetPlay().serverSock[k].tcpClient.Client.RemoteEndPoint, 
+													NetPlay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
 													") ", 
-													world.getServer().getNetPlay().serverSock[k].name, 
+													NetPlay.serverSock[k].name, 
 													" is playing"
 												});
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (world.getServer().getNetPlay().serverSock[k].active)
-                            {
-                                world.getServer().getNetPlay().serverSock[k].kill = true;
-                            }
-                            else
-                            {
-                                world.getServer().getNetPlay().serverSock[k].statusText2 = "";
-                                if (k < 8)
-                                {
-                                    world.getPlayerList()[k].active = false;
-                                }
-                            }
-                        }
-                    }
-                    Thread.Sleep(1);
-                }
-                if (!Statics.saveLock)
-                {
-                    if (num2 == 0)
-                    {
-                        if (!world.getServer().getNetPlay().cake)
-                        {
-                            world.getServer().getNetPlay().cake = true;
-                            Program.updateThread.Start(world.getServer());
-                            Console.WriteLine("Started update thread!");
-
-                            Statics.serverStarted = true;
-                        }
-                    }
-                }
-            }
-            world.getServer().getNetPlay().tcpListener.Stop();
-            for (int l = 0; l < 256; l++)
-            {
-                world.getServer().getNetPlay().serverSock[l].Reset();
-            }
-                WorldGen.saveWorld(world, false);
-                while (Statics.saveLock)
+											}
+										}
+									}
+								}
+							}
+						}
+						else
+						{
+							if (NetPlay.serverSock[k].active)
+							{
+								NetPlay.serverSock[k].kill = true;
+							}
+							else
+							{
+								NetPlay.serverSock[k].statusText2 = "";
+								if (k < 255)
+								{
+									Main.player[k].active = false;
+								}
+							}
+						}
+					}
+				}
+				Thread.Sleep(1);
+				if (!WorldGen.saveLock && !Main.dedServ)
+				{
+					if (num2 == 0)
+					{
+						Main.statusText = "Waiting for clients...";
+					}
+					else
+					{
+						Main.statusText = num2 + " clients connected";
+					}
+				}
+				NetPlay.ServerUp = true;
+			}
+			NetPlay.tcpListener.Stop();
+			for (int l = 0; l < 256; l++)
+			{
+				NetPlay.serverSock[l].Reset();
+			}
+			if (Main.menuMode != 15)
+			{
+				Main.netMode = 0;
+				Main.menuMode = 10;
+                WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
+                while (WorldGen.saveLock)
                 {
                 }
                 Statics.serverStarted = false;
-            //    Main.menuMode = 0;
-            //}
-            //else
-            //{
-            //    Main.netMode = 0;
-            //}
-            Statics.myPlayer = 0;
-        }
+			}
+			Main.myPlayer = 0;
+		}
+		
+        public static void ListenForClients(object threadContext)
+		{
+			while (!NetPlay.disconnect && !NetPlay.stopListen)
+			{
+				int num = -1;
+				for (int i = 0; i < Main.maxNetPlayers; i++)
+				{
+					if (!NetPlay.serverSock[i].tcpClient.Connected)
+					{
+						num = i;
+						break;
+					}
+				}
+				if (num >= 0)
+				{
+					try
+					{
+						NetPlay.serverSock[num].tcpClient = NetPlay.tcpListener.AcceptTcpClient();
+						NetPlay.serverSock[num].tcpClient.NoDelay = true;
+						Console.WriteLine(NetPlay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
+						continue;
+					}
+					catch (Exception arg_81_0)
+					{
+						Exception exception = arg_81_0;
+						if (!NetPlay.disconnect)
+						{
+							Main.menuMode = 15;
+							Main.statusText = exception.ToString();
+							NetPlay.disconnect = true;
+						}
+						continue;
+					}
+				}
+				NetPlay.stopListen = true;
+				NetPlay.tcpListener.Stop();
+			}
+		}
+		
+        public static void StartClient()
+		{
+			ThreadPool.QueueUserWorkItem(new WaitCallback(NetPlay.ClientLoop), 1);
+		}
+		
+        public static void StartServer()
+		{
+			ThreadPool.QueueUserWorkItem(new WaitCallback(NetPlay.ServerLoop), 1);
+		}
 
-        /*void ServerLoop(object threadContext)
-        {
-            if (Statics.rand == null)
-            {
-                Statics.rand = new Random((int)DateTime.Now.Ticks);
-            }
-            if (WorldGen.genRand == null)
-            {
-                WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
-            }
-            Statics.myPlayer = 255;
-            serverIP = IPAddress.Any;
-            serverListenIP = serverIP;
-            //Main.menuMode = 14;
-            ////Console.WriteLine("Starting server...";
-            Console.WriteLine("Starting Server...");
-            Statics.netMode = 2;
-            disconnect = false;
-            for (int i = 0; i < 256; i++)
-            {
-                serverSock[i] = new ServerSock(world);
-                serverSock[i].Reset();
-                serverSock[i].whoAmI = i;
-                serverSock[i].tcpClient = new TcpClient();
-                serverSock[i].tcpClient.NoDelay = true;
-                serverSock[i].readBuffer = new byte[1024];
-                serverSock[i].writeBuffer = new byte[1024];
-            }
-            tcpListener = new TcpListener(serverListenIP, serverPort);
-            try
-            {
-                tcpListener.Start();
-            }
-            catch (Exception arg_11F_0)
-            {
-                Exception exception = arg_11F_0;
-                //Main.menuMode = 15;
-                ////Console.WriteLine(exception.ToString();
-                Console.WriteLine(exception.ToString());
-                disconnect = true;
-            }
-            if (!disconnect)
-            {
-                ThreadPool.QueueUserWorkItem(new WaitCallback(ListenForClients), 1);
-                ////Console.WriteLine("Server started";
-                Console.WriteLine("Server Started.");
-            }
-            while (!disconnect)
-            {
-                if (stopListen)
-                {
-                    int num = -1;
-                    for (int j = 0; j < 255; j++)
-                    {
-                        if (!serverSock[j].tcpClient.Connected)
-                        {
-                            num = j;
-                            break;
-                        }
-                    }
-                    if (num >= 0)
-                    {
-                        tcpListener.Start();
-                        stopListen = false;
-                        ThreadPool.QueueUserWorkItem(new WaitCallback(ListenForClients), 1);
-                    }
-                }
-                int num2 = 0;
-                for (int k = 0; k < 256; k++)
-                {
-                    if (NetMessage.buffer[k].checkBytes)
-                    {
-                        NetMessage.CheckBytes(world, k);
-                    }
-                    if (serverSock[k].kill)
-                    {
-                        serverSock[k].Reset();
-                        NetMessage.syncPlayers(world);
-                    }
-                    else
-                    {
-                        if (serverSock[k].tcpClient.Connected)
-                        {
-                            if (!serverSock[k].active)
-                            {
-                                serverSock[k].state = 0;
-                            }
-                            serverSock[k].active = true;
-                            num2++;
-                            if (!serverSock[k].locked)
-                            {
-                                try
-                                {
-                                    serverSock[k].networkStream = serverSock[k].tcpClient.GetStream();
-                                    if (serverSock[k].networkStream.DataAvailable)
-                                    {
-                                        serverSock[k].locked = true;
-                                        serverSock[k].networkStream.BeginRead(serverSock[k].readBuffer, 0, serverSock[k].readBuffer.Length, new AsyncCallback(serverSock[k].ServerReadCallBack), serverSock[k].networkStream);
-                                    }
-                                }
-                                catch
-                                {
-                                    serverSock[k].kill = true;
-                                }
-                            }
-                            if (serverSock[k].statusMax > 0 && serverSock[k].statusText2 != "")
-                            {
-                                if (serverSock[k].statusCount >= serverSock[k].statusMax)
-                                {
-                                    serverSock[k].statusText = string.Concat(new object[]
-							{
-								"(", 
-								serverSock[k].tcpClient.Client.RemoteEndPoint, 
-								") ", 
-								serverSock[k].name, 
-								" ", 
-								serverSock[k].statusText2, 
-								": Complete!"
-							});
-                                    serverSock[k].statusText2 = "";
-                                    serverSock[k].statusMax = 0;
-                                    serverSock[k].statusCount = 0;
-                                }
-                                else
-                                {
-                                    serverSock[k].statusText = string.Concat(new object[]
-							{
-								"(", 
-								serverSock[k].tcpClient.Client.RemoteEndPoint, 
-								") ", 
-								serverSock[k].name, 
-								" ", 
-								serverSock[k].statusText2, 
-								": ", 
-								(int)((float)serverSock[k].statusCount / (float)serverSock[k].statusMax * 100f), 
-								"%"
-							});
-                                }
-                            }
-                            else
-                            {
-                                if (serverSock[k].state == 0)
-                                {
-                                    serverSock[k].statusText = string.Concat(new object[]
-							{
-								"(", 
-								serverSock[k].tcpClient.Client.RemoteEndPoint, 
-								") ", 
-								serverSock[k].name, 
-								" is connecting..."
-							});
-                                }
-                                else
-                                {
-                                    if (serverSock[k].state == 1)
-                                    {
-                                        serverSock[k].statusText = string.Concat(new object[]
-								{
-									"(", 
-									serverSock[k].tcpClient.Client.RemoteEndPoint, 
-									") ", 
-									serverSock[k].name, 
-									" is sending player data..."
-								});
-                                    }
-                                    else
-                                    {
-                                        if (serverSock[k].state == 2)
-                                        {
-                                            serverSock[k].statusText = string.Concat(new object[]
-									{
-										"(", 
-										serverSock[k].tcpClient.Client.RemoteEndPoint, 
-										") ", 
-										serverSock[k].name, 
-										" requested world information"
-									});
-                                        }
-                                        else
-                                        {
-                                            if (serverSock[k].state != 3 && serverSock[k].state == 10)
-                                            {
-                                                serverSock[k].statusText = string.Concat(new object[]
-										{
-											"(", 
-											serverSock[k].tcpClient.Client.RemoteEndPoint, 
-											") ", 
-											serverSock[k].name, 
-											" is playing"
-										});
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (serverSock[k].active)
-                            {
-                                serverSock[k].kill = true;
-                            }
-                            else
-                            {
-                                serverSock[k].statusText2 = "";
-                                if (k < 255)
-                                {
-                                    world.getPlayerList()[k].active = false;
-                                }
-                            }
-                        }
-                    }
-                }
-                Thread.Sleep(1);
-                
-                //ServerUp = true;
-            }
-            tcpListener.Stop();
-            for (int l = 0; l < 256; l++)
-            {
-                serverSock[l].Reset();
-            }
-            //if (Main.menuMode != 15)
-            //{
-                //Statics.netMode = 0;
-                //Main.menuMode = 10;
-                WorldGen.saveWorld(world, false);
-                while (Statics.saveLock)
-                {
-                }
-                //Main.menuMode = 0;
-            //}
-            //else
-            //{
-            //    Main.netMode = 0;
-            //}
-                Statics.myPlayer = 0;
-        }*/
-
-        public bool SetIP(string newIP)
-        {
-            bool result;
-            try
-            {
-                world.getServer().getNetPlay().serverIP = IPAddress.Parse(newIP);
-            }
-            catch
-            {
-                result = false;
-                return result;
-            }
-            result = true;
-            return result;
-        }
-
-        public bool SetIP2(string newIP)
-        {
-            bool result;
-            try
-            {
-                IPAddress[] addressList = Dns.GetHostEntry(newIP).AddressList;
-                for (int i = 0; i < addressList.Length; i++)
-                {
-                    if (addressList[i].AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        world.getServer().getNetPlay().serverIP = addressList[i];
-                        result = true;
-                        return result;
-                    }
-                }
-                result = false;
-            }
-            catch
-            {
-                result = false;
-            }
-            return result;
-        }
-
-        public void StartClient()
-        {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(world.getServer().getNetPlay().ClientLoop), 1);
-        }
-
-        public void StartServer()
-        {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(world.getServer().getNetPlay().ServerLoop), 1);
-        }
-
-        public void StopServer()
+        public static void StopServer()
         {
             Statics.IsActive = false;
             Console.WriteLine("Disabling Plugins");
-            world.getServer().getPluginManager().DisablePlugins();
+            Program.server.getPluginManager().DisablePlugins();
             Console.WriteLine("Closing Connections...");
-            this.disconnect = true;
-            /*for (int i = 0; i < this.serverSock.Length; i++)
-            {
-                if (serverSock[i] != null)
-                {
-                    serverSock[i].Reset();
-                }
-            }
-            this.tcpListener.Stop();
-            Statics.saveLock = false;
-            Console.WriteLine("Saving World...");
-            WorldGen.saveWorld(world, false);
-            while (Statics.saveLock)
-            {
-            }*/
+            disconnect = true;
         }
-  
-    }
 
+        public static bool SetIP(string newIP)
+		{
+			bool result;
+			try
+			{
+				NetPlay.serverIP = IPAddress.Parse(newIP);
+			}
+			catch
+			{
+				result = false;
+				return result;
+			}
+			return true;
+		}
+		
+        public static bool SetIP2(string newIP)
+		{
+			bool result;
+			try
+			{
+				IPHostEntry hostEntry = Dns.GetHostEntry(newIP);
+				IPAddress[] addressList = hostEntry.AddressList;
+				for (int i = 0; i < addressList.Length; i++)
+				{
+					if (addressList[i].AddressFamily == AddressFamily.InterNetwork)
+					{
+						NetPlay.serverIP = addressList[i];
+						result = true;
+						return result;
+					}
+				}
+				result = false;
+			}
+			catch
+			{
+				result = false;
+			}
+			return result;
+		}
+		
+        public static void Init()
+		{
+			for (int i = 0; i < 257; i++)
+			{
+				if (i < 256)
+				{
+					NetPlay.serverSock[i] = new ServerSock();
+					NetPlay.serverSock[i].tcpClient.NoDelay = true;
+				}
+				NetMessage.buffer[i] = new messageBuffer();
+				NetMessage.buffer[i].whoAmI = i;
+			}
+			NetPlay.clientSock.tcpClient.NoDelay = true;
+		}
+		
+        public static int GetSectionX(int x)
+		{
+			return x / 200;
+		}
+		
+        public static int GetSectionY(int y)
+		{
+			return y / 150;
+		}
+	}
 }

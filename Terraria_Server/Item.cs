@@ -1,4281 +1,4456 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
+using System;
 namespace Terraria_Server
 {
-    public class Item
-    {
-
-        public bool accessory;
-        public bool active;
-        public int alpha;
-        public int ammo;
-        public bool autoReuse;
-        public int axe;
-        public bool beingGrabbed;
-        public int bodySlot;
-        public bool buy;
-        public bool channel;
-        public Color color = new Color();
-        public bool consumable;
-        public int createTile;
-        public int createWall;
-        public int damage;
-        public int defense;
-        public int hammer;
-        public int headSlot;
-        public int healLife;
-        public int healMana;
-        public int height;
-        public int holdStyle;
-        public int keepTime;
-        public float knockBack;
-        public bool lavaWet;
-        public int legSlot;
-        public int lifeRegen;
-        public int mana;
-        public int manaRegen;
-        public int maxStack;
-        public string name;
-        public int noGrabDelay;
-        public bool noMelee;
-        public bool noUseGraphic;
-        public int owner;
-        public int ownIgnore;
-        public int ownTime;
-        public int pick;
+	public class Item
+	{
+		public static int potionDelay = 720;
+		public bool wet;
+		public byte wetCount;
+		public bool lavaWet;
         public Vector2 position = new Vector2();
-        public bool potion;
-        public int rare;
-        public int release;
-        public float scale;
-        public int shoot;
-        public float shootSpeed;
-        public int spawnTime;
-        public int stack;
-        public int tileBoost;
-        public string toolTip;
-        public int type;
-        public int useAmmo;
-        public int useAnimation;
-        public int useSound;
-        public int useStyle;
-        public int useTime;
-        public bool useTurn;
-        public int value;
         public Vector2 velocity = new Vector2();
-        public bool wet;
-        public byte wetCount;
-        public int width;
-        public bool wornArmor;
-
-        public static int potionDelay;
-
-        public Item()
-        {
-            ownIgnore = -1;
-            createTile = -1;
-            createWall = -1;
-            scale = 1.0F;
-            headSlot = -1;
-            bodySlot = -1;
-            legSlot = -1;
-            owner = 8;
-        }
-
-        static Item()
-        {
-            Item.potionDelay = 720;
-        }
-
-        public object Clone()
-        {
-            return MemberwiseClone();
-        }
-
-        public void FindOwner(int whoAmI, World world)
-        {
-            if (this.keepTime <= 0)
-            {
-                int num = this.owner;
-                this.owner = 8;
-                float num2 = -1f;
-                for (int i = 0; i < 8; i++)
-                {
-                    if (this.ownIgnore != i && world.getPlayerList()[i].active && world.getPlayerList()[i].ItemSpace(world.getItemList()[whoAmI]))
-                    {
-                        float num3 = Math.Abs(world.getPlayerList()[i].position.X + (float)(world.getPlayerList()[i].width / 2) - this.position.X - 
-                            (float)(this.width / 2)) + Math.Abs(world.getPlayerList()[i].position.Y + (float)(world.getPlayerList()[i].height / 2) - 
-                            this.position.Y - (float)this.height);
-                        if (num3 < (float)(600 / 2 + 800 / 2) && (num2 == -1f || num3 < num2))
-                        {
-                            num2 = num3;
-                            this.owner = i;
-                        }
-                    }
-                }
-                if (this.owner != num && ((num == Statics.myPlayer && Statics.netMode == 1) || (num == 8 && Statics.netMode == 2) || 
-                    !world.getPlayerList()[num].active))
-                {
-                    NetMessage.SendData(21, world, -1, -1, "", whoAmI, 0f, 0f, 0f);
-                    if (this.active)
-                    {
-                        NetMessage.SendData(22, world, -1, -1, "", whoAmI, 0f, 0f, 0f);
-                    }
-                }
-            }
-        }
-
-        public Color GetAlpha(Color newColor)
-        {
-            // trial
-            return newColor;
-        }
-
-        public Color GetColor(Color newColor)
-        {
-            int i1 = color.R - (255 - newColor.R);
-            int i2 = color.G - (255 - newColor.G);
-            int i3 = color.B - (255 - newColor.B);
-            int i4 = color.A - (255 - newColor.A);
-            if (i1 < 0)
-                i1 = 0;
-            if (i1 > 255)
-                i1 = 255;
-            if (i2 < 0)
-                i2 = 0;
-            if (i2 > 255)
-                i2 = 255;
-            if (i3 < 0)
-                i3 = 0;
-            if (i3 > 255)
-                i3 = 255;
-            if (i4 < 0)
-                i4 = 0;
-            if (i4 > 255)
-                i4 = 255;
-            return new Color(i1, i2, i3, i4);
-        }
-
-        public bool IsNotTheSameAs(Item compareItem)
-        {
-            return this.name != compareItem.name || this.stack != compareItem.stack;
-        }
-
-        public bool IsTheSameAs(Item compareItem)
-        {
-            return this.name == compareItem.name;
-        }
-
-        public void SetDefaults(string ItemName)
-        {
-            this.name = "";
-            if (ItemName == "Gold Pickaxe")
-            {
-                this.SetDefaults(1);
-                this.color = new Color(210, 190, 0, 100);
-                this.useTime = 17;
-                this.pick = 55;
-                this.useAnimation = 20;
-                this.scale = 1.05f;
-                this.damage = 6;
-                this.value = 10000;
-            }
-            else
-            {
-                if (ItemName == "Gold Broadsword")
-                {
-                    this.SetDefaults(4);
-                    this.color = new Color(210, 190, 0, 100);
-                    this.useAnimation = 20;
-                    this.damage = 13;
-                    this.scale = 1.05f;
-                    this.value = 9000;
-                }
-                else
-                {
-                    if (ItemName == "Gold Shortsword")
-                    {
-                        this.SetDefaults(6);
-                        this.color = new Color(210, 190, 0, 100);
-                        this.damage = 11;
-                        this.useAnimation = 11;
-                        this.scale = 0.95f;
-                        this.value = 7000;
-                    }
-                    else
-                    {
-                        if (ItemName == "Gold Axe")
-                        {
-                            this.SetDefaults(10);
-                            this.color = new Color(210, 190, 0, 100);
-                            this.useTime = 18;
-                            this.axe = 11;
-                            this.useAnimation = 26;
-                            this.scale = 1.15f;
-                            this.damage = 7;
-                            this.value = 8000;
-                        }
-                        else
-                        {
-                            if (ItemName == "Gold Hammer")
-                            {
-                                this.SetDefaults(7);
-                                this.color = new Color(210, 190, 0, 100);
-                                this.useAnimation = 28;
-                                this.useTime = 23;
-                                this.scale = 1.25f;
-                                this.damage = 9;
-                                this.hammer = 55;
-                                this.value = 8000;
-                            }
-                            else
-                            {
-                                if (ItemName == "Gold Bow")
-                                {
-                                    this.SetDefaults(99);
-                                    this.useAnimation = 26;
-                                    this.useTime = 26;
-                                    this.color = new Color(210, 190, 0, 100);
-                                    this.damage = 11;
-                                    this.value = 7000;
-                                }
-                                else
-                                {
-                                    if (ItemName == "Silver Pickaxe")
-                                    {
-                                        this.SetDefaults(1);
-                                        this.color = new Color(180, 180, 180, 100);
-                                        this.useTime = 11;
-                                        this.pick = 45;
-                                        this.useAnimation = 19;
-                                        this.scale = 1.05f;
-                                        this.damage = 6;
-                                        this.value = 5000;
-                                    }
-                                    else
-                                    {
-                                        if (ItemName == "Silver Broadsword")
-                                        {
-                                            this.SetDefaults(4);
-                                            this.color = new Color(180, 180, 180, 100);
-                                            this.useAnimation = 21;
-                                            this.damage = 11;
-                                            this.value = 4500;
-                                        }
-                                        else
-                                        {
-                                            if (ItemName == "Silver Shortsword")
-                                            {
-                                                this.SetDefaults(6);
-                                                this.color = new Color(180, 180, 180, 100);
-                                                this.damage = 9;
-                                                this.useAnimation = 12;
-                                                this.scale = 0.95f;
-                                                this.value = 3500;
-                                            }
-                                            else
-                                            {
-                                                if (ItemName == "Silver Axe")
-                                                {
-                                                    this.SetDefaults(10);
-                                                    this.color = new Color(180, 180, 180, 100);
-                                                    this.useTime = 18;
-                                                    this.axe = 10;
-                                                    this.useAnimation = 26;
-                                                    this.scale = 1.15f;
-                                                    this.damage = 6;
-                                                    this.value = 4000;
-                                                }
-                                                else
-                                                {
-                                                    if (ItemName == "Silver Hammer")
-                                                    {
-                                                        this.SetDefaults(7);
-                                                        this.color = new Color(180, 180, 180, 100);
-                                                        this.useAnimation = 29;
-                                                        this.useTime = 19;
-                                                        this.scale = 1.25f;
-                                                        this.damage = 9;
-                                                        this.hammer = 45;
-                                                        this.value = 4000;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (ItemName == "Silver Bow")
-                                                        {
-                                                            this.SetDefaults(99);
-                                                            this.useAnimation = 27;
-                                                            this.useTime = 27;
-                                                            this.color = new Color(180, 180, 180, 100);
-                                                            this.damage = 10;
-                                                            this.value = 3500;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (ItemName == "Copper Pickaxe")
-                                                            {
-                                                                this.SetDefaults(1);
-                                                                this.color = new Color(180, 100, 45, 80);
-                                                                this.useTime = 15;
-                                                                this.pick = 35;
-                                                                this.useAnimation = 23;
-                                                                this.scale = 0.9f;
-                                                                this.tileBoost = -1;
-                                                                this.value = 500;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (ItemName == "Copper Broadsword")
-                                                                {
-                                                                    this.SetDefaults(4);
-                                                                    this.color = new Color(180, 100, 45, 80);
-                                                                    this.useAnimation = 23;
-                                                                    this.damage = 8;
-                                                                    this.value = 450;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (ItemName == "Copper Shortsword")
-                                                                    {
-                                                                        this.SetDefaults(6);
-                                                                        this.color = new Color(180, 100, 45, 80);
-                                                                        this.damage = 6;
-                                                                        this.useAnimation = 13;
-                                                                        this.scale = 0.8f;
-                                                                        this.value = 350;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (ItemName == "Copper Axe")
-                                                                        {
-                                                                            this.SetDefaults(10);
-                                                                            this.color = new Color(180, 100, 45, 80);
-                                                                            this.useTime = 21;
-                                                                            this.axe = 8;
-                                                                            this.useAnimation = 30;
-                                                                            this.scale = 1f;
-                                                                            this.damage = 3;
-                                                                            this.tileBoost = -1;
-                                                                            this.value = 400;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (ItemName == "Copper Hammer")
-                                                                            {
-                                                                                this.SetDefaults(7);
-                                                                                this.color = new Color(180, 100, 45, 80);
-                                                                                this.useAnimation = 33;
-                                                                                this.useTime = 23;
-                                                                                this.scale = 1.1f;
-                                                                                this.damage = 4;
-                                                                                this.hammer = 35;
-                                                                                this.tileBoost = -1;
-                                                                                this.value = 400;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (ItemName == "Copper Bow")
-                                                                                {
-                                                                                    this.SetDefaults(99);
-                                                                                    this.useAnimation = 29;
-                                                                                    this.useTime = 29;
-                                                                                    this.color = new Color(180, 100, 45, 80);
-                                                                                    this.damage = 8;
-                                                                                    this.value = 350;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (ItemName != "")
-                                                                                    {
-                                                                                        for (int i = 0; i < 236; i++)
-                                                                                        {
-                                                                                            this.SetDefaults(i);
-                                                                                            if (this.name == ItemName)
-                                                                                            {
-                                                                                                break;
-                                                                                            }
-                                                                                            if (i == 235)
-                                                                                            {
-                                                                                                this.SetDefaults(0);
-                                                                                                this.name = "";
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (this.type != 0)
-            {
-                this.name = ItemName;
-            }
-        }
-
-        public void SetDefaults(int Type)
-        {
-            if ((Statics.netMode == 1) || (Statics.netMode == 2))
-                owner = 8;
-            else
-                owner = Statics.myPlayer;
-            mana = 0;
-            wet = false;
-            wetCount = 0;
-            lavaWet = false;
-            channel = false;
-            manaRegen = 0;
-            release = 0;
-            noMelee = false;
-            noUseGraphic = false;
-            lifeRegen = 0;
-            shootSpeed = 0.0F;
-            active = true;
-            alpha = 0;
-            ammo = 0;
-            useAmmo = 0;
-            autoReuse = false;
-            accessory = false;
-            axe = 0;
-            healMana = 0;
-            bodySlot = -1;
-            legSlot = -1;
-            headSlot = -1;
-            potion = false;
-            color = new Color();
-            consumable = false;
-            createTile = -1;
-            createWall = -1;
-            damage = -1;
-            defense = 0;
-            hammer = 0;
-            healLife = 0;
-            holdStyle = 0;
-            knockBack = 0.0F;
-            maxStack = 1;
-            pick = 0;
-            rare = 0;
-            scale = 1.0F;
-            shoot = 0;
-            stack = 1;
-            toolTip = null;
-            tileBoost = 0;
-            type = Type;
-            useStyle = 0;
-            useSound = 0;
-            useTime = 100;
-            useAnimation = 100;
-            value = 0;
-            useTurn = false;
-            buy = false;
-            if (type == 1)
-            {
-                name = "Iron Pickaxe";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 20;
-                useTime = 13;
-                autoReuse = true;
-                width = 24;
-                height = 28;
-                damage = 5;
-                pick = 45;
-                useSound = 1;
-                knockBack = 2.0F;
-                value = 2000;
-            }
-            else if (type == 2)
-            {
-                name = "Dirt Block";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createTile = 0;
-                width = 12;
-                height = 12;
-            }
-            else if (type == 3)
-            {
-                name = "Stone Block";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createTile = 1;
-                width = 12;
-                height = 12;
-            }
-            else if (type == 4)
-            {
-                name = "Iron Broadsword";
-                useStyle = 1;
-                useTurn = false;
-                useAnimation = 21;
-                useTime = 21;
-                width = 24;
-                height = 28;
-                damage = 10;
-                knockBack = 5.0F;
-                useSound = 1;
-                scale = 1.0F;
-                value = 1800;
-            }
-            else if (type == 5)
-            {
-                name = "Mushroom";
-                useStyle = 2;
-                useSound = 2;
-                useTurn = false;
-                useAnimation = 17;
-                useTime = 17;
-                width = 16;
-                height = 18;
-                healLife = 20;
-                maxStack = 99;
-                consumable = true;
-                potion = true;
-                value = 50;
-            }
-            else if (type == 6)
-            {
-                name = "Iron Shortsword";
-                useStyle = 3;
-                useTurn = false;
-                useAnimation = 12;
-                useTime = 12;
-                width = 24;
-                height = 28;
-                damage = 8;
-                knockBack = 4.0F;
-                scale = 0.9F;
-                useSound = 1;
-                useTurn = true;
-                value = 1400;
-            }
-            else if (type == 7)
-            {
-                name = "Iron Hammer";
-                autoReuse = true;
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 30;
-                useTime = 20;
-                hammer = 45;
-                width = 24;
-                height = 28;
-                damage = 7;
-                knockBack = 5.5F;
-                scale = 1.2F;
-                useSound = 1;
-                value = 1600;
-            }
-            else if (type == 8)
-            {
-                name = "Torch";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                holdStyle = 1;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 4;
-                width = 10;
-                height = 12;
-                toolTip = "Provides light";
-                value = 50;
-            }
-            else if (type == 9)
-            {
-                name = "Wood";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createTile = 30;
-                width = 8;
-                height = 10;
-            }
-            else if (type == 10)
-            {
-                name = "Iron Axe";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 27;
-                knockBack = 4.5F;
-                useTime = 19;
-                autoReuse = true;
-                width = 24;
-                height = 28;
-                damage = 5;
-                axe = 9;
-                scale = 1.1F;
-                useSound = 1;
-                value = 1600;
-            }
-            else if (type == 11)
-            {
-                name = "Iron Ore";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 6;
-                width = 12;
-                height = 12;
-                value = 500;
-            }
-            else if (type == 12)
-            {
-                name = "Copper Ore";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 7;
-                width = 12;
-                height = 12;
-                value = 250;
-            }
-            else if (type == 13)
-            {
-                name = "Gold Ore";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 8;
-                width = 12;
-                height = 12;
-                value = 2000;
-            }
-            else if (type == 14)
-            {
-                name = "Silver Ore";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 9;
-                width = 12;
-                height = 12;
-                value = 1000;
-            }
-            else if (type == 15)
-            {
-                name = "Copper Watch";
-                width = 24;
-                height = 28;
-                accessory = true;
-                toolTip = "Tells the time";
-                value = 1000;
-            }
-            else if (type == 16)
-            {
-                name = "Silver Watch";
-                width = 24;
-                height = 28;
-                accessory = true;
-                toolTip = "Tells the time";
-                value = 5000;
-            }
-            else if (type == 17)
-            {
-                name = "Gold Watch";
-                width = 24;
-                height = 28;
-                accessory = true;
-                rare = 1;
-                toolTip = "Tells the time";
-                value = 10000;
-            }
-            else if (type == 18)
-            {
-                name = "Depth Meter";
-                width = 24;
-                height = 18;
-                accessory = true;
-                rare = 1;
-                toolTip = "Shows depth";
-                value = 10000;
-            }
-            else if (type == 19)
-            {
-                name = "Gold Bar";
-                width = 20;
-                height = 20;
-                maxStack = 99;
-                value = 6000;
-            }
-            else if (type == 20)
-            {
-                name = "Copper Bar";
-                width = 20;
-                height = 20;
-                maxStack = 99;
-                value = 750;
-            }
-            else if (type == 21)
-            {
-                name = "Silver Bar";
-                width = 20;
-                height = 20;
-                maxStack = 99;
-                value = 3000;
-            }
-            else if (type == 22)
-            {
-                name = "Iron Bar";
-                width = 20;
-                height = 20;
-                maxStack = 99;
-                value = 1500;
-            }
-            else if (type == 23)
-            {
-                name = "Gel";
-                width = 10;
-                height = 12;
-                maxStack = 99;
-                alpha = 175;
-                color = new Color(0, 80, 255, 100);
-                toolTip = "'Both tasty and flammable'";
-                value = 5;
-            }
-            else if (type == 24)
-            {
-                name = "Wooden Sword";
-                useStyle = 1;
-                useTurn = false;
-                useAnimation = 25;
-                width = 24;
-                height = 28;
-                damage = 7;
-                knockBack = 4.0F;
-                scale = 0.95F;
-                useSound = 1;
-                value = 100;
-            }
-            else if (type == 25)
-            {
-                name = "Wooden Door";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                maxStack = 99;
-                consumable = true;
-                createTile = 10;
-                width = 14;
-                height = 28;
-                value = 200;
-            }
-            else if (type == 26)
-            {
-                name = "Stone Wall";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createWall = 1;
-                width = 12;
-                height = 12;
-            }
-            else if (type == 27)
-            {
-                name = "Acorn";
-                useTurn = true;
-                useStyle = 1;
-                useAnimation = 15;
-                useTime = 10;
-                maxStack = 99;
-                consumable = true;
-                createTile = 20;
-                width = 18;
-                height = 18;
-                value = 10;
-            }
-            else if (type == 28)
-            {
-                name = "Lesser Healing Potion";
-                useSound = 3;
-                healLife = 100;
-                useStyle = 2;
-                useTurn = true;
-                useAnimation = 17;
-                useTime = 17;
-                maxStack = 30;
-                consumable = true;
-                width = 14;
-                height = 24;
-                potion = true;
-                value = 200;
-            }
-            else if (type == 29)
-            {
-                name = "Life Crystal";
-                maxStack = 99;
-                consumable = true;
-                width = 18;
-                height = 18;
-                useStyle = 4;
-                useTime = 30;
-                useSound = 4;
-                useAnimation = 30;
-                toolTip = "Increases maximum life";
-                rare = 2;
-            }
-            else if (type == 30)
-            {
-                name = "Dirt Wall";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createWall = 2;
-                width = 12;
-                height = 12;
-            }
-            else if (type == 31)
-            {
-                name = "Bottle";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 13;
-                width = 16;
-                height = 24;
-                value = 100;
-            }
-            else if (type == 32)
-            {
-                name = "Wooden Table";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 14;
-                width = 26;
-                height = 20;
-                value = 300;
-            }
-            else if (type == 33)
-            {
-                name = "Furnace";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 17;
-                width = 26;
-                height = 24;
-                value = 300;
-            }
-            else if (type == 34)
-            {
-                name = "Wooden Chair";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 15;
-                width = 12;
-                height = 30;
-                value = 150;
-            }
-            else if (type == 35)
-            {
-                name = "Iron Anvil";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 16;
-                width = 28;
-                height = 14;
-                value = 5000;
-            }
-            else if (type == 36)
-            {
-                name = "Work Bench";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 18;
-                width = 28;
-                height = 14;
-                value = 150;
-            }
-            else if (type == 37)
-            {
-                name = "Goggles";
-                width = 28;
-                height = 12;
-                defense = 1;
-                headSlot = 10;
-                rare = 1;
-                value = 1000;
-            }
-            else if (type == 38)
-            {
-                name = "Lens";
-                width = 12;
-                height = 20;
-                maxStack = 99;
-                value = 500;
-            }
-            else if (type == 39)
-            {
-                useStyle = 5;
-                useAnimation = 30;
-                useTime = 30;
-                name = "Wooden Bow";
-                width = 12;
-                height = 28;
-                shoot = 1;
-                useAmmo = 1;
-                useSound = 5;
-                damage = 5;
-                shootSpeed = 6.1F;
-                noMelee = true;
-                value = 100;
-            }
-            else if (type == 40)
-            {
-                name = "Wooden Arrow";
-                shootSpeed = 3.0F;
-                shoot = 1;
-                damage = 5;
-                width = 10;
-                height = 28;
-                maxStack = 250;
-                consumable = true;
-                ammo = 1;
-                knockBack = 2.0F;
-                value = 10;
-            }
-            else if (type == 41)
-            {
-                name = "Flaming Arrow";
-                shootSpeed = 3.5F;
-                shoot = 2;
-                damage = 7;
-                width = 10;
-                height = 28;
-                maxStack = 250;
-                consumable = true;
-                ammo = 1;
-                knockBack = 2.0F;
-                value = 15;
-            }
-            else if (type == 42)
-            {
-                useStyle = 1;
-                name = "Shuriken";
-                shootSpeed = 9.0F;
-                shoot = 3;
-                damage = 10;
-                width = 18;
-                height = 20;
-                maxStack = 250;
-                consumable = true;
-                useSound = 1;
-                useAnimation = 15;
-                useTime = 15;
-                noUseGraphic = true;
-                noMelee = true;
-                value = 20;
-            }
-            else if (type == 43)
-            {
-                useStyle = 4;
-                name = "Suspicious Looking Eye";
-                width = 22;
-                height = 14;
-                consumable = true;
-                useAnimation = 45;
-                useTime = 45;
-                toolTip = "May cause terrible things to occur";
-            }
-            else if (type == 44)
-            {
-                useStyle = 5;
-                useAnimation = 25;
-                useTime = 25;
-                name = "Demon Bow";
-                width = 12;
-                height = 28;
-                shoot = 1;
-                useAmmo = 1;
-                useSound = 5;
-                damage = 13;
-                shootSpeed = 6.7F;
-                knockBack = 1.0F;
-                alpha = 30;
-                rare = 1;
-                noMelee = true;
-                value = 18000;
-            }
-            else if (type == 45)
-            {
-                name = "War Axe of the Night";
-                autoReuse = true;
-                useStyle = 1;
-                useAnimation = 30;
-                knockBack = 6.0F;
-                useTime = 15;
-                width = 24;
-                height = 28;
-                damage = 21;
-                axe = 15;
-                scale = 1.2F;
-                useSound = 1;
-                rare = 1;
-                value = 13500;
-            }
-            else if (type == 46)
-            {
-                name = "Light's Bane";
-                useStyle = 1;
-                useAnimation = 20;
-                knockBack = 5.0F;
-                width = 24;
-                height = 28;
-                damage = 16;
-                scale = 1.1F;
-                useSound = 1;
-                rare = 1;
-                value = 13500;
-            }
-            else if (type == 47)
-            {
-                name = "Unholy Arrow";
-                shootSpeed = 3.4F;
-                shoot = 4;
-                damage = 8;
-                width = 10;
-                height = 28;
-                maxStack = 250;
-                consumable = true;
-                ammo = 1;
-                knockBack = 3.0F;
-                alpha = 30;
-                rare = 1;
-                value = 40;
-            }
-            else if (type == 48)
-            {
-                name = "Chest";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 21;
-                width = 26;
-                height = 22;
-                value = 500;
-            }
-            else if (type == 49)
-            {
-                name = "Band of Regeneration";
-                width = 22;
-                height = 22;
-                accessory = true;
-                lifeRegen = 1;
-                rare = 1;
-                toolTip = "Slowly regenerates life";
-                value = 50000;
-            }
-            else if (type == 50)
-            {
-                name = "Magic Mirror";
-                useTurn = true;
-                width = 20;
-                height = 20;
-                useStyle = 4;
-                useTime = 90;
-                useSound = 6;
-                useAnimation = 90;
-                toolTip = "Gaze in the mirror to return home";
-                rare = 1;
-                value = 50000;
-            }
-            else if (type == 51)
-            {
-                name = "Jester's Arrow";
-                shootSpeed = 0.5F;
-                shoot = 5;
-                damage = 9;
-                width = 10;
-                height = 28;
-                maxStack = 250;
-                consumable = true;
-                ammo = 1;
-                knockBack = 4.0F;
-                rare = 1;
-                value = 100;
-            }
-            else if (type == 52)
-            {
-                name = "Angel Statue";
-                width = 24;
-                height = 28;
-                toolTip = "It doesn't do anything";
-                value = 1;
-            }
-            else if (type == 53)
-            {
-                name = "Cloud in a Bottle";
-                width = 16;
-                height = 24;
-                accessory = true;
-                rare = 1;
-                toolTip = "Allows the holder to double jump";
-                value = 50000;
-            }
-            else if (type == 54)
-            {
-                name = "Hermes Boots";
-                width = 28;
-                height = 24;
-                accessory = true;
-                rare = 1;
-                toolTip = "The wearer can run super fast";
-                value = 50000;
-            }
-            else if (type == 55)
-            {
-                noMelee = true;
-                useStyle = 1;
-                name = "Enchanted Boomerang";
-                shootSpeed = 10.0F;
-                shoot = 6;
-                damage = 13;
-                knockBack = 8.0F;
-                width = 14;
-                height = 28;
-                useSound = 1;
-                useAnimation = 15;
-                useTime = 15;
-                noUseGraphic = true;
-                rare = 1;
-                value = 50000;
-            }
-            else if (type == 56)
-            {
-                name = "Demonite Ore";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 22;
-                width = 12;
-                height = 12;
-                rare = 1;
-                toolTip = "Pulsing with dark energy";
-                value = 4000;
-            }
-            else if (type == 57)
-            {
-                name = "Demonite Bar";
-                width = 20;
-                height = 20;
-                maxStack = 99;
-                rare = 1;
-                toolTip = "Pulsing with dark energy";
-                value = 16000;
-            }
-            else if (type == 58)
-            {
-                name = "Heart";
-                width = 12;
-                height = 12;
-            }
-            else if (type == 59)
-            {
-                name = "Corrupt Seeds";
-                useTurn = true;
-                useStyle = 1;
-                useAnimation = 15;
-                useTime = 10;
-                maxStack = 99;
-                consumable = true;
-                createTile = 23;
-                width = 14;
-                height = 14;
-                value = 500;
-            }
-            else if (type == 60)
-            {
-                name = "Vile Mushroom";
-                width = 16;
-                height = 18;
-                maxStack = 99;
-                value = 50;
-            }
-            else if (type == 61)
-            {
-                name = "Ebonstone Block";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createTile = 25;
-                width = 12;
-                height = 12;
-            }
-            else if (type == 62)
-            {
-                name = "Grass Seeds";
-                useTurn = true;
-                useStyle = 1;
-                useAnimation = 15;
-                useTime = 10;
-                maxStack = 99;
-                consumable = true;
-                createTile = 2;
-                width = 14;
-                height = 14;
-                value = 20;
-            }
-            else if (type == 63)
-            {
-                name = "Sunflower";
-                useTurn = true;
-                useStyle = 1;
-                useAnimation = 15;
-                useTime = 10;
-                maxStack = 99;
-                consumable = true;
-                createTile = 27;
-                width = 26;
-                height = 26;
-                value = 200;
-            }
-            else if (type == 64)
-            {
-                mana = 5;
-                damage = 8;
-                useStyle = 1;
-                name = "Vilethorn";
-                shootSpeed = 32.0F;
-                shoot = 7;
-                width = 26;
-                height = 28;
-                useSound = 8;
-                useAnimation = 30;
-                useTime = 30;
-                rare = 1;
-                noMelee = true;
-                toolTip = "Summons a vile thorn";
-                value = 10000;
-            }
-            else if (type == 65)
-            {
-                mana = 11;
-                knockBack = 5.0F;
-                alpha = 100;
-                color = new Color(150, 150, 150, 0);
-                damage = 15;
-                useStyle = 1;
-                scale = 1.15F;
-                name = "Starfury";
-                shootSpeed = 12.0F;
-                shoot = 9;
-                width = 14;
-                height = 28;
-                useSound = 9;
-                useAnimation = 25;
-                useTime = 10;
-                rare = 1;
-                toolTip = "Forged with the fury of heaven";
-                value = 50000;
-            }
-            else if (type == 66)
-            {
-                useStyle = 1;
-                name = "Purification Powder";
-                shootSpeed = 4.0F;
-                shoot = 10;
-                width = 16;
-                height = 24;
-                maxStack = 99;
-                consumable = true;
-                useSound = 1;
-                useAnimation = 15;
-                useTime = 15;
-                noMelee = true;
-                toolTip = "Cleanses the corruption";
-                value = 75;
-            }
-            else if (type == 67)
-            {
-                damage = 8;
-                useStyle = 1;
-                name = "Vile Powder";
-                shootSpeed = 4.0F;
-                shoot = 11;
-                width = 16;
-                height = 24;
-                maxStack = 99;
-                consumable = true;
-                useSound = 1;
-                useAnimation = 15;
-                useTime = 15;
-                noMelee = true;
-                value = 100;
-            }
-            else if (type == 68)
-            {
-                name = "Rotten Chunk";
-                width = 18;
-                height = 20;
-                maxStack = 99;
-                toolTip = "Looks tasty!";
-                value = 10;
-            }
-            else if (type == 69)
-            {
-                name = "Worm Tooth";
-                width = 8;
-                height = 20;
-                maxStack = 99;
-                value = 100;
-            }
-            else if (type == 70)
-            {
-                useStyle = 4;
-                consumable = true;
-                useAnimation = 45;
-                useTime = 45;
-                name = "Worm Food";
-                width = 28;
-                height = 28;
-                toolTip = "May attract giant worms";
-            }
-            else if (type == 71)
-            {
-                name = "Copper Coin";
-                width = 10;
-                height = 12;
-                maxStack = 100;
-            }
-            else if (type == 72)
-            {
-                name = "Silver Coin";
-                width = 10;
-                height = 12;
-                maxStack = 100;
-            }
-            else if (type == 73)
-            {
-                name = "Gold Coin";
-                width = 10;
-                height = 12;
-                maxStack = 100;
-            }
-            else if (type == 74)
-            {
-                name = "Platinum Coin";
-                width = 10;
-                height = 12;
-                maxStack = 100;
-            }
-            else if (type == 75)
-            {
-                name = "Fallen Star";
-                width = 18;
-                height = 20;
-                maxStack = 100;
-                alpha = 75;
-                ammo = 15;
-                toolTip = "Disappears after the sunrise";
-                value = 500;
-                useStyle = 4;
-                useSound = 4;
-                useTurn = false;
-                useAnimation = 17;
-                useTime = 17;
-                healMana = 20;
-                consumable = true;
-                rare = 1;
-                potion = true;
-            }
-            else if (type == 76)
-            {
-                name = "Copper Greaves";
-                width = 18;
-                height = 28;
-                defense = 1;
-                legSlot = 1;
-                value = 750;
-            }
-            else if (type == 77)
-            {
-                name = "Iron Greaves";
-                width = 18;
-                height = 28;
-                defense = 2;
-                legSlot = 2;
-                value = 3000;
-            }
-            else if (type == 78)
-            {
-                name = "Silver Greaves";
-                width = 18;
-                height = 28;
-                defense = 3;
-                legSlot = 3;
-                value = 7500;
-            }
-            else if (type == 79)
-            {
-                name = "Gold Greaves";
-                width = 18;
-                height = 28;
-                defense = 4;
-                legSlot = 4;
-                value = 15000;
-            }
-            else if (type == 80)
-            {
-                name = "Copper Chainmail";
-                width = 26;
-                height = 28;
-                defense = 2;
-                bodySlot = 1;
-                value = 1000;
-            }
-            else if (type == 81)
-            {
-                name = "Iron Chainmail";
-                width = 26;
-                height = 28;
-                defense = 3;
-                bodySlot = 2;
-                value = 4000;
-            }
-            else if (type == 82)
-            {
-                name = "Silver Chainmail";
-                width = 26;
-                height = 28;
-                defense = 4;
-                bodySlot = 3;
-                value = 10000;
-            }
-            else if (type == 83)
-            {
-                name = "Gold Chainmail";
-                width = 26;
-                height = 28;
-                defense = 5;
-                bodySlot = 4;
-                value = 20000;
-            }
-            else if (type == 84)
-            {
-                noUseGraphic = true;
-                damage = 0;
-                knockBack = 7.0F;
-                useStyle = 5;
-                name = "Grappling Hook";
-                shootSpeed = 11.0F;
-                shoot = 13;
-                width = 18;
-                height = 28;
-                useSound = 1;
-                useAnimation = 20;
-                useTime = 20;
-                rare = 1;
-                noMelee = true;
-                value = 20000;
-            }
-            else if (type == 85)
-            {
-                name = "Iron Chain";
-                width = 14;
-                height = 20;
-                maxStack = 99;
-                value = 1000;
-            }
-            else if (type == 86)
-            {
-                name = "Shadow Scale";
-                width = 14;
-                height = 18;
-                maxStack = 99;
-                rare = 1;
-                value = 500;
-            }
-            else if (type == 87)
-            {
-                name = "Piggy Bank";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 29;
-                width = 20;
-                height = 12;
-                value = 10000;
-            }
-            else if (type == 88)
-            {
-                name = "Mining Helmet";
-                width = 22;
-                height = 16;
-                defense = 1;
-                headSlot = 11;
-                rare = 1;
-                value = 80000;
-                toolTip = "Provides light when worn";
-            }
-            else if (type == 89)
-            {
-                name = "Copper Helmet";
-                width = 22;
-                height = 22;
-                defense = 1;
-                headSlot = 1;
-                value = 1250;
-            }
-            else if (type == 90)
-            {
-                name = "Iron Helmet";
-                width = 22;
-                height = 22;
-                defense = 2;
-                headSlot = 2;
-                value = 5000;
-            }
-            else if (type == 91)
-            {
-                name = "Silver Helmet";
-                width = 22;
-                height = 22;
-                defense = 3;
-                headSlot = 3;
-                value = 12500;
-            }
-            else if (type == 92)
-            {
-                name = "Gold Helmet";
-                width = 22;
-                height = 22;
-                defense = 4;
-                headSlot = 4;
-                value = 25000;
-            }
-            else if (type == 93)
-            {
-                name = "Wood Wall";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createWall = 4;
-                width = 12;
-                height = 12;
-            }
-            else if (type == 94)
-            {
-                name = "Wood Platform";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 19;
-                width = 8;
-                height = 10;
-            }
-            else if (type == 95)
-            {
-                useStyle = 5;
-                useAnimation = 20;
-                useTime = 20;
-                name = "Flintlock Pistol";
-                width = 24;
-                height = 28;
-                shoot = 14;
-                useAmmo = 14;
-                useSound = 11;
-                damage = 7;
-                shootSpeed = 5.0F;
-                noMelee = true;
-                value = 50000;
-                scale = 0.9F;
-                rare = 1;
-            }
-            else if (type == 96)
-            {
-                useStyle = 5;
-                autoReuse = true;
-                useAnimation = 45;
-                useTime = 45;
-                name = "Musket";
-                width = 44;
-                height = 14;
-                shoot = 10;
-                useAmmo = 14;
-                useSound = 11;
-                damage = 14;
-                shootSpeed = 8.0F;
-                noMelee = true;
-                value = 100000;
-                knockBack = 4.0F;
-                rare = 1;
-            }
-            else if (type == 97)
-            {
-                name = "Musket Ball";
-                shootSpeed = 4.0F;
-                shoot = 14;
-                damage = 7;
-                width = 8;
-                height = 8;
-                maxStack = 250;
-                consumable = true;
-                ammo = 14;
-                knockBack = 2.0F;
-                value = 8;
-            }
-            else if (type == 98)
-            {
-                useStyle = 5;
-                autoReuse = true;
-                useAnimation = 8;
-                useTime = 8;
-                name = "Minishark";
-                width = 50;
-                height = 18;
-                shoot = 10;
-                useAmmo = 14;
-                useSound = 11;
-                damage = 5;
-                shootSpeed = 7.0F;
-                noMelee = true;
-                value = 500000;
-                rare = 2;
-                toolTip = "Half shark, half gun, completely awesome.";
-            }
-            else if (type == 99)
-            {
-                useStyle = 5;
-                useAnimation = 28;
-                useTime = 28;
-                name = "Iron Bow";
-                width = 12;
-                height = 28;
-                shoot = 1;
-                useAmmo = 1;
-                useSound = 5;
-                damage = 9;
-                shootSpeed = 6.6F;
-                noMelee = true;
-                value = 1400;
-            }
-            else if (type == 100)
-            {
-                name = "Shadow Greaves";
-                width = 18;
-                height = 28;
-                defense = 6;
-                legSlot = 5;
-                rare = 1;
-                value = 22500;
-            }
-            else if (type == 101)
-            {
-                name = "Shadow Scalemail";
-                width = 26;
-                height = 28;
-                defense = 7;
-                bodySlot = 5;
-                rare = 1;
-                value = 30000;
-            }
-            else
-            {
-                if (type == 102)
-                {
-                    name = "Shadow Helmet";
-                    width = 22;
-                    height = 22;
-                    defense = 6;
-                    headSlot = 5;
-                    rare = 1;
-                    value = 37500;
-                }
-                else
-                {
-                    if (type == 103)
-                    {
-                        name = "Nightmare Pickaxe";
-                        useStyle = 1;
-                        useTurn = true;
-                        useAnimation = 20;
-                        useTime = 15;
-                        autoReuse = true;
-                        width = 24;
-                        height = 28;
-                        damage = 11;
-                        pick = 65;
-                        useSound = 1;
-                        knockBack = 3.0F;
-                        rare = 1;
-                        value = 18000;
-                        scale = 1.15F;
-                    }
-                    else
-                    {
-                        if (type == 104)
-                        {
-                            name = "The Breaker";
-                            autoReuse = true;
-                            useStyle = 1;
-                            useAnimation = 40;
-                            useTime = 19;
-                            hammer = 55;
-                            width = 24;
-                            height = 28;
-                            damage = 28;
-                            knockBack = 6.5F;
-                            scale = 1.3F;
-                            useSound = 1;
-                            rare = 1;
-                            value = 15000;
-                        }
-                        else
-                        {
-                            if (type == 105)
-                            {
-                                name = "Candle";
-                                useStyle = 1;
-                                useTurn = true;
-                                useAnimation = 15;
-                                useTime = 10;
-                                autoReuse = true;
-                                maxStack = 99;
-                                consumable = true;
-                                createTile = 33;
-                                width = 8;
-                                height = 18;
-                                holdStyle = 1;
-                            }
-                            else
-                            {
-                                if (type == 106)
-                                {
-                                    name = "Copper Chandelier";
-                                    useStyle = 1;
-                                    useTurn = true;
-                                    useAnimation = 15;
-                                    useTime = 10;
-                                    autoReuse = true;
-                                    maxStack = 99;
-                                    consumable = true;
-                                    createTile = 34;
-                                    width = 26;
-                                    height = 26;
-                                }
-                                else
-                                {
-                                    if (type == 107)
-                                    {
-                                        name = "Silver Chandelier";
-                                        useStyle = 1;
-                                        useTurn = true;
-                                        useAnimation = 15;
-                                        useTime = 10;
-                                        autoReuse = true;
-                                        maxStack = 99;
-                                        consumable = true;
-                                        createTile = 35;
-                                        width = 26;
-                                        height = 26;
-                                    }
-                                    else
-                                    {
-                                        if (type == 108)
-                                        {
-                                            name = "Gold Chandelier";
-                                            useStyle = 1;
-                                            useTurn = true;
-                                            useAnimation = 15;
-                                            useTime = 10;
-                                            autoReuse = true;
-                                            maxStack = 99;
-                                            consumable = true;
-                                            createTile = 36;
-                                            width = 26;
-                                            height = 26;
-                                        }
-                                        else
-                                        {
-                                            if (type == 109)
-                                            {
-                                                name = "Mana Crystal";
-                                                maxStack = 99;
-                                                consumable = true;
-                                                width = 18;
-                                                height = 18;
-                                                useStyle = 4;
-                                                useTime = 30;
-                                                useSound = 4;
-                                                useAnimation = 30;
-                                                toolTip = "Increases maximum mana";
-                                                rare = 2;
-                                            }
-                                            else
-                                            {
-                                                if (type == 110)
-                                                {
-                                                    name = "Lesser Mana Potion";
-                                                    useSound = 3;
-                                                    healMana = 100;
-                                                    useStyle = 2;
-                                                    useTurn = true;
-                                                    useAnimation = 17;
-                                                    useTime = 17;
-                                                    maxStack = 30;
-                                                    consumable = true;
-                                                    width = 14;
-                                                    height = 24;
-                                                    potion = true;
-                                                    value = 1000;
-                                                }
-                                                else
-                                                {
-                                                    if (type == 111)
-                                                    {
-                                                        name = "Band of Starpower";
-                                                        width = 22;
-                                                        height = 22;
-                                                        accessory = true;
-                                                        manaRegen = 3;
-                                                        rare = 1;
-                                                        toolTip = "Slowly regenerates mana";
-                                                        value = 50000;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (type == 112)
-                                                        {
-                                                            mana = 10;
-                                                            damage = 30;
-                                                            useStyle = 1;
-                                                            name = "Flower of Fire";
-                                                            shootSpeed = 6.0F;
-                                                            shoot = 15;
-                                                            width = 26;
-                                                            height = 28;
-                                                            useSound = 8;
-                                                            useAnimation = 30;
-                                                            useTime = 30;
-                                                            rare = 3;
-                                                            noMelee = true;
-                                                            knockBack = 5.0F;
-                                                            toolTip = "Throws balls of fire";
-                                                            value = 10000;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (type == 113)
-                                                            {
-                                                                mana = 18;
-                                                                channel = true;
-                                                                damage = 30;
-                                                                useStyle = 1;
-                                                                name = "Magic Missile";
-                                                                shootSpeed = 6.0F;
-                                                                shoot = 16;
-                                                                width = 26;
-                                                                height = 28;
-                                                                useSound = 9;
-                                                                useAnimation = 20;
-                                                                useTime = 20;
-                                                                rare = 2;
-                                                                noMelee = true;
-                                                                knockBack = 5.0F;
-                                                                toolTip = "Casts a controllable missile";
-                                                                value = 10000;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (type == 114)
-                                                                {
-                                                                    mana = 5;
-                                                                    channel = true;
-                                                                    damage = 0;
-                                                                    useStyle = 1;
-                                                                    name = "Dirt Rod";
-                                                                    shoot = 17;
-                                                                    width = 26;
-                                                                    height = 28;
-                                                                    useSound = 8;
-                                                                    useAnimation = 20;
-                                                                    useTime = 20;
-                                                                    rare = 1;
-                                                                    noMelee = true;
-                                                                    knockBack = 5.0F;
-                                                                    toolTip = "Magically move dirt";
-                                                                    value = 200000;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (type == 115)
-                                                                    {
-                                                                        mana = 40;
-                                                                        channel = true;
-                                                                        damage = 0;
-                                                                        useStyle = 4;
-                                                                        name = "Orb of Light";
-                                                                        shoot = 18;
-                                                                        width = 24;
-                                                                        height = 24;
-                                                                        useSound = 8;
-                                                                        useAnimation = 20;
-                                                                        useTime = 20;
-                                                                        rare = 1;
-                                                                        noMelee = true;
-                                                                        toolTip = "Creates a magical orb of light";
-                                                                        value = 10000;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (type == 116)
-                                                                        {
-                                                                            name = "Meteorite";
-                                                                            useStyle = 1;
-                                                                            useTurn = true;
-                                                                            useAnimation = 15;
-                                                                            useTime = 10;
-                                                                            autoReuse = true;
-                                                                            maxStack = 250;
-                                                                            consumable = true;
-                                                                            createTile = 37;
-                                                                            width = 12;
-                                                                            height = 12;
-                                                                            value = 1000;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (type == 117)
-                                                                            {
-                                                                                name = "Meteorite Bar";
-                                                                                width = 20;
-                                                                                height = 20;
-                                                                                maxStack = 99;
-                                                                                rare = 1;
-                                                                                toolTip = "Warm to the touch";
-                                                                                value = 7000;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (type == 118)
-                                                                                {
-                                                                                    name = "Hook";
-                                                                                    maxStack = 99;
-                                                                                    width = 18;
-                                                                                    height = 18;
-                                                                                    value = 1000;
-                                                                                    toolTip = "Combine with chains to making a grappling hook";
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (type == 119)
-                                                                                    {
-                                                                                        noMelee = true;
-                                                                                        useStyle = 1;
-                                                                                        name = "Flamarang";
-                                                                                        shootSpeed = 11.0F;
-                                                                                        shoot = 19;
-                                                                                        damage = 32;
-                                                                                        knockBack = 8.0F;
-                                                                                        width = 14;
-                                                                                        height = 28;
-                                                                                        useSound = 1;
-                                                                                        useAnimation = 15;
-                                                                                        useTime = 15;
-                                                                                        noUseGraphic = true;
-                                                                                        rare = 3;
-                                                                                        value = 100000;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (type == 120)
-                                                                                        {
-                                                                                            useStyle = 5;
-                                                                                            useAnimation = 25;
-                                                                                            useTime = 25;
-                                                                                            name = "Molten Fury";
-                                                                                            width = 14;
-                                                                                            height = 32;
-                                                                                            shoot = 1;
-                                                                                            useAmmo = 1;
-                                                                                            useSound = 5;
-                                                                                            damage = 29;
-                                                                                            shootSpeed = 8.0F;
-                                                                                            knockBack = 2.0F;
-                                                                                            alpha = 30;
-                                                                                            rare = 3;
-                                                                                            noMelee = true;
-                                                                                            scale = 1.1F;
-                                                                                            value = 27000;
-                                                                                            toolTip = "Lights wooden arrows ablaze";
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (type == 121)
-                                                                                            {
-                                                                                                name = "Fiery Greatsword";
-                                                                                                useStyle = 1;
-                                                                                                useAnimation = 35;
-                                                                                                knockBack = 6.5F;
-                                                                                                width = 24;
-                                                                                                height = 28;
-                                                                                                damage = 34;
-                                                                                                scale = 1.3F;
-                                                                                                useSound = 1;
-                                                                                                rare = 3;
-                                                                                                value = 27000;
-                                                                                                toolTip = "It's made out of fire!";
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (type == 122)
-            {
-                name = "Molten Pickaxe";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 25;
-                useTime = 25;
-                autoReuse = true;
-                width = 24;
-                height = 28;
-                damage = 18;
-                pick = 100;
-                scale = 1.15F;
-                useSound = 1;
-                knockBack = 2.0F;
-                rare = 3;
-                value = 27000;
-            }
-            else
-            {
-                if (type == 123)
-                {
-                    name = "Meteor Helmet";
-                    width = 22;
-                    height = 22;
-                    defense = 4;
-                    headSlot = 6;
-                    rare = 1;
-                    value = 45000;
-                    manaRegen = 3;
-                    toolTip = "Slowly regenerates mana";
-                }
-                else
-                {
-                    if (type == 124)
-                    {
-                        name = "Meteor Suit";
-                        width = 26;
-                        height = 28;
-                        defense = 5;
-                        bodySlot = 6;
-                        rare = 1;
-                        value = 30000;
-                        manaRegen = 3;
-                        toolTip = "Slowly regenerates mana";
-                    }
-                    else
-                    {
-                        if (type == 125)
-                        {
-                            name = "Meteor Leggings";
-                            width = 18;
-                            height = 28;
-                            defense = 4;
-                            legSlot = 6;
-                            rare = 1;
-                            manaRegen = 3;
-                            value = 30000;
-                            toolTip = "Slowly regenerates mana";
-                        }
-                        else
-                        {
-                            if (type == 126)
-                            {
-                                name = "Angel Statue";
-                                width = 24;
-                                height = 28;
-                                toolTip = "It doesn't do anything";
-                                value = 1;
-                            }
-                            else
-                            {
-                                if (type == 127)
-                                {
-                                    autoReuse = true;
-                                    useStyle = 5;
-                                    useAnimation = 18;
-                                    useTime = 18;
-                                    name = "Space Gun";
-                                    width = 24;
-                                    height = 28;
-                                    shoot = 20;
-                                    mana = 9;
-                                    useSound = 12;
-                                    knockBack = 1.0F;
-                                    damage = 15;
-                                    shootSpeed = 10.0F;
-                                    noMelee = true;
-                                    scale = 0.8F;
-                                    rare = 1;
-                                }
-                                else
-                                {
-                                    if (type == 128)
-                                    {
-                                        mana = 7;
-                                        name = "Rocket Boots";
-                                        width = 28;
-                                        height = 24;
-                                        accessory = true;
-                                        rare = 3;
-                                        toolTip = "Allows flight";
-                                        value = 50000;
-                                    }
-                                    else
-                                    {
-                                        if (type == 129)
-                                        {
-                                            name = "Gray Brick";
-                                            useStyle = 1;
-                                            useTurn = true;
-                                            useAnimation = 15;
-                                            useTime = 10;
-                                            autoReuse = true;
-                                            maxStack = 250;
-                                            consumable = true;
-                                            createTile = 38;
-                                            width = 12;
-                                            height = 12;
-                                        }
-                                        else
-                                        {
-                                            if (type == 130)
-                                            {
-                                                name = "Gray Brick Wall";
-                                                useStyle = 1;
-                                                useTurn = true;
-                                                useAnimation = 15;
-                                                useTime = 10;
-                                                autoReuse = true;
-                                                maxStack = 250;
-                                                consumable = true;
-                                                createWall = 5;
-                                                width = 12;
-                                                height = 12;
-                                            }
-                                            else
-                                            {
-                                                if (type == 131)
-                                                {
-                                                    name = "Red Brick";
-                                                    useStyle = 1;
-                                                    useTurn = true;
-                                                    useAnimation = 15;
-                                                    useTime = 10;
-                                                    autoReuse = true;
-                                                    maxStack = 250;
-                                                    consumable = true;
-                                                    createTile = 39;
-                                                    width = 12;
-                                                    height = 12;
-                                                }
-                                                else
-                                                {
-                                                    if (type == 132)
-                                                    {
-                                                        name = "Red Brick Wall";
-                                                        useStyle = 1;
-                                                        useTurn = true;
-                                                        useAnimation = 15;
-                                                        useTime = 10;
-                                                        autoReuse = true;
-                                                        maxStack = 250;
-                                                        consumable = true;
-                                                        createWall = 6;
-                                                        width = 12;
-                                                        height = 12;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (type == 133)
-                                                        {
-                                                            name = "Clay Block";
-                                                            useStyle = 1;
-                                                            useTurn = true;
-                                                            useAnimation = 15;
-                                                            useTime = 10;
-                                                            autoReuse = true;
-                                                            maxStack = 250;
-                                                            consumable = true;
-                                                            createTile = 40;
-                                                            width = 12;
-                                                            height = 12;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (type == 134)
-                                                            {
-                                                                name = "Blue Brick";
-                                                                useStyle = 1;
-                                                                useTurn = true;
-                                                                useAnimation = 15;
-                                                                useTime = 10;
-                                                                autoReuse = true;
-                                                                maxStack = 250;
-                                                                consumable = true;
-                                                                createTile = 41;
-                                                                width = 12;
-                                                                height = 12;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (type == 135)
-                                                                {
-                                                                    name = "Blue Brick Wall";
-                                                                    useStyle = 1;
-                                                                    useTurn = true;
-                                                                    useAnimation = 15;
-                                                                    useTime = 10;
-                                                                    autoReuse = true;
-                                                                    maxStack = 250;
-                                                                    consumable = true;
-                                                                    createWall = 7;
-                                                                    width = 12;
-                                                                    height = 12;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (type == 136)
-                                                                    {
-                                                                        name = "Chain Lantern";
-                                                                        useStyle = 1;
-                                                                        useTurn = true;
-                                                                        useAnimation = 15;
-                                                                        useTime = 10;
-                                                                        autoReuse = true;
-                                                                        maxStack = 250;
-                                                                        consumable = true;
-                                                                        createTile = 42;
-                                                                        width = 12;
-                                                                        height = 28;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (type == 137)
-                                                                        {
-                                                                            name = "Green Brick";
-                                                                            useStyle = 1;
-                                                                            useTurn = true;
-                                                                            useAnimation = 15;
-                                                                            useTime = 10;
-                                                                            autoReuse = true;
-                                                                            maxStack = 250;
-                                                                            consumable = true;
-                                                                            createTile = 43;
-                                                                            width = 12;
-                                                                            height = 12;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (type == 138)
-                                                                            {
-                                                                                name = "Green Brick Wall";
-                                                                                useStyle = 1;
-                                                                                useTurn = true;
-                                                                                useAnimation = 15;
-                                                                                useTime = 10;
-                                                                                autoReuse = true;
-                                                                                maxStack = 250;
-                                                                                consumable = true;
-                                                                                createWall = 8;
-                                                                                width = 12;
-                                                                                height = 12;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (type == 139)
-                                                                                {
-                                                                                    name = "Pink Brick";
-                                                                                    useStyle = 1;
-                                                                                    useTurn = true;
-                                                                                    useAnimation = 15;
-                                                                                    useTime = 10;
-                                                                                    autoReuse = true;
-                                                                                    maxStack = 250;
-                                                                                    consumable = true;
-                                                                                    createTile = 44;
-                                                                                    width = 12;
-                                                                                    height = 12;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (type == 140)
-                                                                                    {
-                                                                                        name = "Pink Brick Wall";
-                                                                                        useStyle = 1;
-                                                                                        useTurn = true;
-                                                                                        useAnimation = 15;
-                                                                                        useTime = 10;
-                                                                                        autoReuse = true;
-                                                                                        maxStack = 250;
-                                                                                        consumable = true;
-                                                                                        createWall = 9;
-                                                                                        width = 12;
-                                                                                        height = 12;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (type == 141)
-                                                                                        {
-                                                                                            name = "Gold Brick";
-                                                                                            useStyle = 1;
-                                                                                            useTurn = true;
-                                                                                            useAnimation = 15;
-                                                                                            useTime = 10;
-                                                                                            autoReuse = true;
-                                                                                            maxStack = 250;
-                                                                                            consumable = true;
-                                                                                            createTile = 45;
-                                                                                            width = 12;
-                                                                                            height = 12;
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (type == 142)
-                                                                                            {
-                                                                                                name = "Gold Brick Wall";
-                                                                                                useStyle = 1;
-                                                                                                useTurn = true;
-                                                                                                useAnimation = 15;
-                                                                                                useTime = 10;
-                                                                                                autoReuse = true;
-                                                                                                maxStack = 250;
-                                                                                                consumable = true;
-                                                                                                createWall = 10;
-                                                                                                width = 12;
-                                                                                                height = 12;
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (type == 143)
-                                                                                                {
-                                                                                                    name = "Silver Brick";
-                                                                                                    useStyle = 1;
-                                                                                                    useTurn = true;
-                                                                                                    useAnimation = 15;
-                                                                                                    useTime = 10;
-                                                                                                    autoReuse = true;
-                                                                                                    maxStack = 250;
-                                                                                                    consumable = true;
-                                                                                                    createTile = 46;
-                                                                                                    width = 12;
-                                                                                                    height = 12;
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (type == 144)
-                                                                                                    {
-                                                                                                        name = "Silver Brick Wall";
-                                                                                                        useStyle = 1;
-                                                                                                        useTurn = true;
-                                                                                                        useAnimation = 15;
-                                                                                                        useTime = 10;
-                                                                                                        autoReuse = true;
-                                                                                                        maxStack = 250;
-                                                                                                        consumable = true;
-                                                                                                        createWall = 11;
-                                                                                                        width = 12;
-                                                                                                        height = 12;
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (type == 145)
-                                                                                                        {
-                                                                                                            name = "Copper Brick";
-                                                                                                            useStyle = 1;
-                                                                                                            useTurn = true;
-                                                                                                            useAnimation = 15;
-                                                                                                            useTime = 10;
-                                                                                                            autoReuse = true;
-                                                                                                            maxStack = 250;
-                                                                                                            consumable = true;
-                                                                                                            createTile = 47;
-                                                                                                            width = 12;
-                                                                                                            height = 12;
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (type == 146)
-                                                                                                            {
-                                                                                                                name = "Copper Brick Wall";
-                                                                                                                useStyle = 1;
-                                                                                                                useTurn = true;
-                                                                                                                useAnimation = 15;
-                                                                                                                useTime = 10;
-                                                                                                                autoReuse = true;
-                                                                                                                maxStack = 250;
-                                                                                                                consumable = true;
-                                                                                                                createWall = 12;
-                                                                                                                width = 12;
-                                                                                                                height = 12;
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                if (type == 147)
-                                                                                                                {
-                                                                                                                    name = "Spike";
-                                                                                                                    useStyle = 1;
-                                                                                                                    useTurn = true;
-                                                                                                                    useAnimation = 15;
-                                                                                                                    useTime = 10;
-                                                                                                                    autoReuse = true;
-                                                                                                                    maxStack = 250;
-                                                                                                                    consumable = true;
-                                                                                                                    createTile = 48;
-                                                                                                                    width = 12;
-                                                                                                                    height = 12;
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    if (type == 148)
-                                                                                                                    {
-                                                                                                                        name = "Water Candle";
-                                                                                                                        useStyle = 1;
-                                                                                                                        useTurn = true;
-                                                                                                                        useAnimation = 15;
-                                                                                                                        useTime = 10;
-                                                                                                                        autoReuse = true;
-                                                                                                                        maxStack = 99;
-                                                                                                                        consumable = true;
-                                                                                                                        createTile = 49;
-                                                                                                                        width = 8;
-                                                                                                                        height = 18;
-                                                                                                                        holdStyle = 1;
-                                                                                                                        toolTip = "Holding this may attract unwanted attention";
-                                                                                                                    }
-                                                                                                                    else
-                                                                                                                    {
-                                                                                                                        if (type == 149)
-                                                                                                                        {
-                                                                                                                            name = "Book";
-                                                                                                                            useStyle = 1;
-                                                                                                                            useTurn = true;
-                                                                                                                            useAnimation = 15;
-                                                                                                                            useTime = 10;
-                                                                                                                            autoReuse = true;
-                                                                                                                            maxStack = 99;
-                                                                                                                            consumable = true;
-                                                                                                                            createTile = 50;
-                                                                                                                            width = 24;
-                                                                                                                            height = 28;
-                                                                                                                            toolTip = "It contains strange symbols";
-                                                                                                                        }
-                                                                                                                        else
-                                                                                                                        {
-                                                                                                                            if (type == 150)
-                                                                                                                            {
-                                                                                                                                name = "Cobweb";
-                                                                                                                                useStyle = 1;
-                                                                                                                                useTurn = true;
-                                                                                                                                useAnimation = 15;
-                                                                                                                                useTime = 10;
-                                                                                                                                autoReuse = true;
-                                                                                                                                maxStack = 250;
-                                                                                                                                consumable = true;
-                                                                                                                                createTile = 51;
-                                                                                                                                width = 20;
-                                                                                                                                height = 24;
-                                                                                                                                alpha = 100;
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-                                                                                                                                if (type == 151)
-                                                                                                                                {
-                                                                                                                                    name = "Necro Helmet";
-                                                                                                                                    width = 22;
-                                                                                                                                    height = 22;
-                                                                                                                                    defense = 6;
-                                                                                                                                    headSlot = 7;
-                                                                                                                                    rare = 2;
-                                                                                                                                    value = 45000;
-                                                                                                                                }
-                                                                                                                                else
-                                                                                                                                {
-                                                                                                                                    if (type == 152)
-                                                                                                                                    {
-                                                                                                                                        name = "Necro Breastplate";
-                                                                                                                                        width = 26;
-                                                                                                                                        height = 28;
-                                                                                                                                        defense = 7;
-                                                                                                                                        bodySlot = 7;
-                                                                                                                                        rare = 2;
-                                                                                                                                        value = 30000;
-                                                                                                                                    }
-                                                                                                                                    else
-                                                                                                                                    {
-                                                                                                                                        if (type == 153)
-                                                                                                                                        {
-                                                                                                                                            name = "Necro Greaves";
-                                                                                                                                            width = 18;
-                                                                                                                                            height = 28;
-                                                                                                                                            defense = 6;
-                                                                                                                                            legSlot = 7;
-                                                                                                                                            rare = 2;
-                                                                                                                                            value = 30000;
-                                                                                                                                        }
-                                                                                                                                        else
-                                                                                                                                        {
-                                                                                                                                            if (type == 154)
-                                                                                                                                            {
-                                                                                                                                                name = "Bone";
-                                                                                                                                                maxStack = 99;
-                                                                                                                                                consumable = true;
-                                                                                                                                                width = 12;
-                                                                                                                                                height = 14;
-                                                                                                                                                value = 50;
-                                                                                                                                                useAnimation = 12;
-                                                                                                                                                useTime = 12;
-                                                                                                                                                useStyle = 1;
-                                                                                                                                                useSound = 1;
-                                                                                                                                                shootSpeed = 8.0F;
-                                                                                                                                                noUseGraphic = true;
-                                                                                                                                                damage = 22;
-                                                                                                                                                knockBack = 4.0F;
-                                                                                                                                                shoot = 21;
-                                                                                                                                            }
-                                                                                                                                            else
-                                                                                                                                            {
-                                                                                                                                                if (type == 155)
-                                                                                                                                                {
-                                                                                                                                                    autoReuse = true;
-                                                                                                                                                    useTurn = true;
-                                                                                                                                                    name = "Muramasa";
-                                                                                                                                                    useStyle = 1;
-                                                                                                                                                    useAnimation = 20;
-                                                                                                                                                    knockBack = 3.0F;
-                                                                                                                                                    width = 40;
-                                                                                                                                                    height = 40;
-                                                                                                                                                    damage = 22;
-                                                                                                                                                    scale = 1.2F;
-                                                                                                                                                    useSound = 1;
-                                                                                                                                                    rare = 2;
-                                                                                                                                                    value = 27000;
-                                                                                                                                                }
-                                                                                                                                                else
-                                                                                                                                                {
-                                                                                                                                                    if (type == 156)
-                                                                                                                                                    {
-                                                                                                                                                        name = "Cobalt Shield";
-                                                                                                                                                        width = 24;
-                                                                                                                                                        height = 28;
-                                                                                                                                                        rare = 2;
-                                                                                                                                                        value = 27000;
-                                                                                                                                                        accessory = true;
-                                                                                                                                                        defense = 2;
-                                                                                                                                                        toolTip = "Grants immunity to knockback";
-                                                                                                                                                    }
-                                                                                                                                                    else
-                                                                                                                                                    {
-                                                                                                                                                        if (type == 157)
-                                                                                                                                                        {
-                                                                                                                                                            mana = 12;
-                                                                                                                                                            autoReuse = true;
-                                                                                                                                                            name = "Aqua Scepter";
-                                                                                                                                                            useStyle = 5;
-                                                                                                                                                            useAnimation = 30;
-                                                                                                                                                            useTime = 5;
-                                                                                                                                                            knockBack = 3.0F;
-                                                                                                                                                            width = 38;
-                                                                                                                                                            height = 10;
-                                                                                                                                                            damage = 15;
-                                                                                                                                                            scale = 1.0F;
-                                                                                                                                                            shoot = 22;
-                                                                                                                                                            shootSpeed = 10.0F;
-                                                                                                                                                            useSound = 13;
-                                                                                                                                                            rare = 2;
-                                                                                                                                                            value = 27000;
-                                                                                                                                                            toolTip = "Sprays out a shower of water";
-                                                                                                                                                        }
-                                                                                                                                                        else
-                                                                                                                                                        {
-                                                                                                                                                            if (type == 158)
-                                                                                                                                                            {
-                                                                                                                                                                name = "Lucky Horseshoe";
-                                                                                                                                                                width = 20;
-                                                                                                                                                                height = 22;
-                                                                                                                                                                rare = 1;
-                                                                                                                                                                value = 27000;
-                                                                                                                                                                accessory = true;
-                                                                                                                                                                toolTip = "Negate fall damage";
-                                                                                                                                                            }
-                                                                                                                                                            else
-                                                                                                                                                            {
-                                                                                                                                                                if (type == 159)
-                                                                                                                                                                {
-                                                                                                                                                                    name = "Shiny Red Balloon";
-                                                                                                                                                                    width = 14;
-                                                                                                                                                                    height = 28;
-                                                                                                                                                                    rare = 1;
-                                                                                                                                                                    value = 27000;
-                                                                                                                                                                    accessory = true;
-                                                                                                                                                                    toolTip = "Increases jump height";
-                                                                                                                                                                }
-                                                                                                                                                                else
-                                                                                                                                                                {
-                                                                                                                                                                    if (type == 160)
-                                                                                                                                                                    {
-                                                                                                                                                                        autoReuse = true;
-                                                                                                                                                                        name = "Harpoon";
-                                                                                                                                                                        useStyle = 5;
-                                                                                                                                                                        useAnimation = 30;
-                                                                                                                                                                        useTime = 30;
-                                                                                                                                                                        knockBack = 6.0F;
-                                                                                                                                                                        width = 30;
-                                                                                                                                                                        height = 10;
-                                                                                                                                                                        damage = 15;
-                                                                                                                                                                        scale = 1.1F;
-                                                                                                                                                                        shoot = 23;
-                                                                                                                                                                        shootSpeed = 10.0F;
-                                                                                                                                                                        useSound = 10;
-                                                                                                                                                                        rare = 2;
-                                                                                                                                                                        value = 27000;
-                                                                                                                                                                    }
-                                                                                                                                                                    else
-                                                                                                                                                                    {
-                                                                                                                                                                        if (type == 161)
-                                                                                                                                                                        {
-                                                                                                                                                                            useStyle = 1;
-                                                                                                                                                                            name = "Spiky Ball";
-                                                                                                                                                                            shootSpeed = 5.0F;
-                                                                                                                                                                            shoot = 24;
-                                                                                                                                                                            knockBack = 1.0F;
-                                                                                                                                                                            damage = 12;
-                                                                                                                                                                            width = 10;
-                                                                                                                                                                            height = 10;
-                                                                                                                                                                            maxStack = 250;
-                                                                                                                                                                            consumable = true;
-                                                                                                                                                                            useSound = 1;
-                                                                                                                                                                            useAnimation = 15;
-                                                                                                                                                                            useTime = 15;
-                                                                                                                                                                            noUseGraphic = true;
-                                                                                                                                                                            noMelee = true;
-                                                                                                                                                                            value = 20;
-                                                                                                                                                                        }
-                                                                                                                                                                        else
-                                                                                                                                                                        {
-                                                                                                                                                                            if (type == 162)
-                                                                                                                                                                            {
-                                                                                                                                                                                name = "Ball 'O Hurt";
-                                                                                                                                                                                useStyle = 5;
-                                                                                                                                                                                useAnimation = 30;
-                                                                                                                                                                                useTime = 30;
-                                                                                                                                                                                knockBack = 7.0F;
-                                                                                                                                                                                width = 30;
-                                                                                                                                                                                height = 10;
-                                                                                                                                                                                damage = 15;
-                                                                                                                                                                                scale = 1.1F;
-                                                                                                                                                                                noUseGraphic = true;
-                                                                                                                                                                                shoot = 25;
-                                                                                                                                                                                shootSpeed = 12.0F;
-                                                                                                                                                                                useSound = 1;
-                                                                                                                                                                                rare = 1;
-                                                                                                                                                                                value = 27000;
-                                                                                                                                                                            }
-                                                                                                                                                                            else
-                                                                                                                                                                            {
-                                                                                                                                                                                if (type == 163)
-                                                                                                                                                                                {
-                                                                                                                                                                                    name = "Blue Moon";
-                                                                                                                                                                                    useStyle = 5;
-                                                                                                                                                                                    useAnimation = 30;
-                                                                                                                                                                                    useTime = 30;
-                                                                                                                                                                                    knockBack = 7.0F;
-                                                                                                                                                                                    width = 30;
-                                                                                                                                                                                    height = 10;
-                                                                                                                                                                                    damage = 30;
-                                                                                                                                                                                    scale = 1.1F;
-                                                                                                                                                                                    noUseGraphic = true;
-                                                                                                                                                                                    shoot = 26;
-                                                                                                                                                                                    shootSpeed = 12.0F;
-                                                                                                                                                                                    useSound = 1;
-                                                                                                                                                                                    rare = 2;
-                                                                                                                                                                                    value = 27000;
-                                                                                                                                                                                }
-                                                                                                                                                                                else
-                                                                                                                                                                                {
-                                                                                                                                                                                    if (type == 164)
-                                                                                                                                                                                    {
-                                                                                                                                                                                        autoReuse = false;
-                                                                                                                                                                                        useStyle = 5;
-                                                                                                                                                                                        useAnimation = 10;
-                                                                                                                                                                                        useTime = 10;
-                                                                                                                                                                                        name = "Handgun";
-                                                                                                                                                                                        width = 24;
-                                                                                                                                                                                        height = 28;
-                                                                                                                                                                                        shoot = 14;
-                                                                                                                                                                                        knockBack = 3.0F;
-                                                                                                                                                                                        useAmmo = 14;
-                                                                                                                                                                                        useSound = 11;
-                                                                                                                                                                                        damage = 12;
-                                                                                                                                                                                        shootSpeed = 10.0F;
-                                                                                                                                                                                        noMelee = true;
-                                                                                                                                                                                        value = 50000;
-                                                                                                                                                                                        scale = 0.8F;
-                                                                                                                                                                                        rare = 2;
-                                                                                                                                                                                    }
-                                                                                                                                                                                    else
-                                                                                                                                                                                    {
-                                                                                                                                                                                        if (type == 165)
-                                                                                                                                                                                        {
-                                                                                                                                                                                            rare = 2;
-                                                                                                                                                                                            mana = 20;
-                                                                                                                                                                                            useSound = 8;
-                                                                                                                                                                                            name = "Water Bolt";
-                                                                                                                                                                                            useStyle = 5;
-                                                                                                                                                                                            damage = 15;
-                                                                                                                                                                                            useAnimation = 20;
-                                                                                                                                                                                            useTime = 20;
-                                                                                                                                                                                            width = 24;
-                                                                                                                                                                                            height = 28;
-                                                                                                                                                                                            shoot = 27;
-                                                                                                                                                                                            scale = 0.8F;
-                                                                                                                                                                                            shootSpeed = 4.0F;
-                                                                                                                                                                                            knockBack = 5.0F;
-                                                                                                                                                                                            toolTip = "Casts a slow moving bolt of water";
-                                                                                                                                                                                        }
-                                                                                                                                                                                        else
-                                                                                                                                                                                        {
-                                                                                                                                                                                            if (type == 166)
-                                                                                                                                                                                            {
-                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                name = "Bomb";
-                                                                                                                                                                                                shootSpeed = 5.0F;
-                                                                                                                                                                                                shoot = 28;
-                                                                                                                                                                                                width = 20;
-                                                                                                                                                                                                height = 20;
-                                                                                                                                                                                                maxStack = 20;
-                                                                                                                                                                                                consumable = true;
-                                                                                                                                                                                                useSound = 1;
-                                                                                                                                                                                                useAnimation = 25;
-                                                                                                                                                                                                useTime = 25;
-                                                                                                                                                                                                noUseGraphic = true;
-                                                                                                                                                                                                noMelee = true;
-                                                                                                                                                                                                value = 500;
-                                                                                                                                                                                                damage = 0;
-                                                                                                                                                                                                toolTip = "A small explosion that will destroy some tiles";
-                                                                                                                                                                                            }
-                                                                                                                                                                                            else
-                                                                                                                                                                                            {
-                                                                                                                                                                                                if (type == 167)
-                                                                                                                                                                                                {
-                                                                                                                                                                                                    useStyle = 1;
-                                                                                                                                                                                                    name = "Dynamite";
-                                                                                                                                                                                                    shootSpeed = 4.0F;
-                                                                                                                                                                                                    shoot = 29;
-                                                                                                                                                                                                    width = 8;
-                                                                                                                                                                                                    height = 28;
-                                                                                                                                                                                                    maxStack = 3;
-                                                                                                                                                                                                    consumable = true;
-                                                                                                                                                                                                    useSound = 1;
-                                                                                                                                                                                                    useAnimation = 40;
-                                                                                                                                                                                                    useTime = 40;
-                                                                                                                                                                                                    noUseGraphic = true;
-                                                                                                                                                                                                    noMelee = true;
-                                                                                                                                                                                                    value = 5000;
-                                                                                                                                                                                                    rare = 1;
-                                                                                                                                                                                                    toolTip = "A large explosion that will destroy most tiles";
-                                                                                                                                                                                                }
-                                                                                                                                                                                                else
-                                                                                                                                                                                                {
-                                                                                                                                                                                                    if (type == 168)
-                                                                                                                                                                                                    {
-                                                                                                                                                                                                        useStyle = 1;
-                                                                                                                                                                                                        name = "Grenade";
-                                                                                                                                                                                                        shootSpeed = 5.5F;
-                                                                                                                                                                                                        shoot = 30;
-                                                                                                                                                                                                        width = 20;
-                                                                                                                                                                                                        height = 20;
-                                                                                                                                                                                                        maxStack = 20;
-                                                                                                                                                                                                        consumable = true;
-                                                                                                                                                                                                        useSound = 1;
-                                                                                                                                                                                                        useAnimation = 60;
-                                                                                                                                                                                                        useTime = 60;
-                                                                                                                                                                                                        noUseGraphic = true;
-                                                                                                                                                                                                        noMelee = true;
-                                                                                                                                                                                                        value = 500;
-                                                                                                                                                                                                        damage = 60;
-                                                                                                                                                                                                        knockBack = 8.0F;
-                                                                                                                                                                                                        toolTip = "A small explosion that will not destroy tiles";
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                    else
-                                                                                                                                                                                                    {
-                                                                                                                                                                                                        if (type == 169)
-                                                                                                                                                                                                        {
-                                                                                                                                                                                                            name = "Sand Block";
-                                                                                                                                                                                                            useStyle = 1;
-                                                                                                                                                                                                            useTurn = true;
-                                                                                                                                                                                                            useAnimation = 15;
-                                                                                                                                                                                                            useTime = 10;
-                                                                                                                                                                                                            autoReuse = true;
-                                                                                                                                                                                                            maxStack = 250;
-                                                                                                                                                                                                            consumable = true;
-                                                                                                                                                                                                            createTile = 53;
-                                                                                                                                                                                                            width = 12;
-                                                                                                                                                                                                            height = 12;
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                        else
-                                                                                                                                                                                                        {
-                                                                                                                                                                                                            if (type == 170)
-                                                                                                                                                                                                            {
-                                                                                                                                                                                                                name = "Glass";
-                                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                                useTurn = true;
-                                                                                                                                                                                                                useAnimation = 15;
-                                                                                                                                                                                                                useTime = 10;
-                                                                                                                                                                                                                autoReuse = true;
-                                                                                                                                                                                                                maxStack = 250;
-                                                                                                                                                                                                                consumable = true;
-                                                                                                                                                                                                                createTile = 54;
-                                                                                                                                                                                                                width = 12;
-                                                                                                                                                                                                                height = 12;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                            else
-                                                                                                                                                                                                            {
-                                                                                                                                                                                                                if (type == 171)
-                                                                                                                                                                                                                {
-                                                                                                                                                                                                                    name = "Sign";
-                                                                                                                                                                                                                    useStyle = 1;
-                                                                                                                                                                                                                    useTurn = true;
-                                                                                                                                                                                                                    useAnimation = 15;
-                                                                                                                                                                                                                    useTime = 10;
-                                                                                                                                                                                                                    autoReuse = true;
-                                                                                                                                                                                                                    maxStack = 250;
-                                                                                                                                                                                                                    consumable = true;
-                                                                                                                                                                                                                    createTile = 55;
-                                                                                                                                                                                                                    width = 28;
-                                                                                                                                                                                                                    height = 28;
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                else
-                                                                                                                                                                                                                {
-                                                                                                                                                                                                                    if (type == 172)
-                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                        name = "Ash Block";
-                                                                                                                                                                                                                        useStyle = 1;
-                                                                                                                                                                                                                        useTurn = true;
-                                                                                                                                                                                                                        useAnimation = 15;
-                                                                                                                                                                                                                        useTime = 10;
-                                                                                                                                                                                                                        autoReuse = true;
-                                                                                                                                                                                                                        maxStack = 250;
-                                                                                                                                                                                                                        consumable = true;
-                                                                                                                                                                                                                        createTile = 57;
-                                                                                                                                                                                                                        width = 12;
-                                                                                                                                                                                                                        height = 12;
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                        if (type == 173)
-                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                            name = "Obsidian";
-                                                                                                                                                                                                                            useStyle = 1;
-                                                                                                                                                                                                                            useTurn = true;
-                                                                                                                                                                                                                            useAnimation = 15;
-                                                                                                                                                                                                                            useTime = 10;
-                                                                                                                                                                                                                            autoReuse = true;
-                                                                                                                                                                                                                            maxStack = 250;
-                                                                                                                                                                                                                            consumable = true;
-                                                                                                                                                                                                                            createTile = 56;
-                                                                                                                                                                                                                            width = 12;
-                                                                                                                                                                                                                            height = 12;
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                            if (type == 174)
-                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                name = "Hellstone";
-                                                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                                                useTurn = true;
-                                                                                                                                                                                                                                useAnimation = 15;
-                                                                                                                                                                                                                                useTime = 10;
-                                                                                                                                                                                                                                autoReuse = true;
-                                                                                                                                                                                                                                maxStack = 250;
-                                                                                                                                                                                                                                consumable = true;
-                                                                                                                                                                                                                                createTile = 58;
-                                                                                                                                                                                                                                width = 12;
-                                                                                                                                                                                                                                height = 12;
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                if (type == 175)
-                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                    name = "Hellstone Bar";
-                                                                                                                                                                                                                                    width = 20;
-                                                                                                                                                                                                                                    height = 20;
-                                                                                                                                                                                                                                    maxStack = 99;
-                                                                                                                                                                                                                                    rare = 2;
-                                                                                                                                                                                                                                    toolTip = "Hot to the touch";
-                                                                                                                                                                                                                                    value = 20000;
-                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                    if (type == 176)
-                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                        name = "Mud Block";
-                                                                                                                                                                                                                                        useStyle = 1;
-                                                                                                                                                                                                                                        useTurn = true;
-                                                                                                                                                                                                                                        useAnimation = 15;
-                                                                                                                                                                                                                                        useTime = 10;
-                                                                                                                                                                                                                                        autoReuse = true;
-                                                                                                                                                                                                                                        maxStack = 250;
-                                                                                                                                                                                                                                        consumable = true;
-                                                                                                                                                                                                                                        createTile = 59;
-                                                                                                                                                                                                                                        width = 12;
-                                                                                                                                                                                                                                        height = 12;
-                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                        if (type == 177)
-                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                            name = "Sapphire";
-                                                                                                                                                                                                                                            maxStack = 99;
-                                                                                                                                                                                                                                            alpha = 50;
-                                                                                                                                                                                                                                            width = 10;
-                                                                                                                                                                                                                                            height = 14;
-                                                                                                                                                                                                                                            value = 7000;
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                            if (type == 178)
-                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                name = "Ruby";
-                                                                                                                                                                                                                                                maxStack = 99;
-                                                                                                                                                                                                                                                alpha = 50;
-                                                                                                                                                                                                                                                width = 10;
-                                                                                                                                                                                                                                                height = 14;
-                                                                                                                                                                                                                                                value = 20000;
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                if (type == 179)
-                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                    name = "Emerald";
-                                                                                                                                                                                                                                                    maxStack = 99;
-                                                                                                                                                                                                                                                    alpha = 50;
-                                                                                                                                                                                                                                                    width = 10;
-                                                                                                                                                                                                                                                    height = 14;
-                                                                                                                                                                                                                                                    value = 15000;
-                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                    if (type == 180)
-                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                        name = "Topaz";
-                                                                                                                                                                                                                                                        maxStack = 99;
-                                                                                                                                                                                                                                                        alpha = 50;
-                                                                                                                                                                                                                                                        width = 10;
-                                                                                                                                                                                                                                                        height = 14;
-                                                                                                                                                                                                                                                        value = 5000;
-                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                        if (type == 181)
-                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                            name = "Amethyst";
-                                                                                                                                                                                                                                                            maxStack = 99;
-                                                                                                                                                                                                                                                            alpha = 50;
-                                                                                                                                                                                                                                                            width = 10;
-                                                                                                                                                                                                                                                            height = 14;
-                                                                                                                                                                                                                                                            value = 2500;
-                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                            if (type == 182)
-                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                name = "Diamond";
-                                                                                                                                                                                                                                                                maxStack = 99;
-                                                                                                                                                                                                                                                                alpha = 50;
-                                                                                                                                                                                                                                                                width = 10;
-                                                                                                                                                                                                                                                                height = 14;
-                                                                                                                                                                                                                                                                value = 40000;
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                if (type == 183)
-                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                    name = "Glowing Mushroom";
-                                                                                                                                                                                                                                                                    useStyle = 2;
-                                                                                                                                                                                                                                                                    useSound = 2;
-                                                                                                                                                                                                                                                                    useTurn = false;
-                                                                                                                                                                                                                                                                    useAnimation = 17;
-                                                                                                                                                                                                                                                                    useTime = 17;
-                                                                                                                                                                                                                                                                    width = 16;
-                                                                                                                                                                                                                                                                    height = 18;
-                                                                                                                                                                                                                                                                    healLife = 50;
-                                                                                                                                                                                                                                                                    maxStack = 99;
-                                                                                                                                                                                                                                                                    consumable = true;
-                                                                                                                                                                                                                                                                    potion = true;
-                                                                                                                                                                                                                                                                    value = 50;
-                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                    if (type == 184)
-                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                        name = "Star";
-                                                                                                                                                                                                                                                                        width = 12;
-                                                                                                                                                                                                                                                                        height = 12;
-                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                        if (type == 185)
-                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                            noUseGraphic = true;
-                                                                                                                                                                                                                                                                            damage = 0;
-                                                                                                                                                                                                                                                                            knockBack = 7.0F;
-                                                                                                                                                                                                                                                                            useStyle = 5;
-                                                                                                                                                                                                                                                                            name = "Ivy Whip";
-                                                                                                                                                                                                                                                                            shootSpeed = 13.0F;
-                                                                                                                                                                                                                                                                            shoot = 32;
-                                                                                                                                                                                                                                                                            width = 18;
-                                                                                                                                                                                                                                                                            height = 28;
-                                                                                                                                                                                                                                                                            useSound = 1;
-                                                                                                                                                                                                                                                                            useAnimation = 20;
-                                                                                                                                                                                                                                                                            useTime = 20;
-                                                                                                                                                                                                                                                                            rare = 3;
-                                                                                                                                                                                                                                                                            noMelee = true;
-                                                                                                                                                                                                                                                                            value = 20000;
-                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                            if (type == 186)
-                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                name = "Breathing Reed";
-                                                                                                                                                                                                                                                                                width = 44;
-                                                                                                                                                                                                                                                                                height = 44;
-                                                                                                                                                                                                                                                                                rare = 1;
-                                                                                                                                                                                                                                                                                value = 10000;
-                                                                                                                                                                                                                                                                                holdStyle = 2;
-                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                if (type == 187)
-                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                    name = "Flipper";
-                                                                                                                                                                                                                                                                                    width = 28;
-                                                                                                                                                                                                                                                                                    height = 28;
-                                                                                                                                                                                                                                                                                    rare = 1;
-                                                                                                                                                                                                                                                                                    value = 10000;
-                                                                                                                                                                                                                                                                                    accessory = true;
-                                                                                                                                                                                                                                                                                    toolTip = "Grants the ability to swim";
-                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                    if (type == 188)
-                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                        name = "Healing Potion";
-                                                                                                                                                                                                                                                                                        useSound = 3;
-                                                                                                                                                                                                                                                                                        healLife = 200;
-                                                                                                                                                                                                                                                                                        useStyle = 2;
-                                                                                                                                                                                                                                                                                        useTurn = true;
-                                                                                                                                                                                                                                                                                        useAnimation = 17;
-                                                                                                                                                                                                                                                                                        useTime = 17;
-                                                                                                                                                                                                                                                                                        maxStack = 30;
-                                                                                                                                                                                                                                                                                        consumable = true;
-                                                                                                                                                                                                                                                                                        width = 14;
-                                                                                                                                                                                                                                                                                        height = 24;
-                                                                                                                                                                                                                                                                                        rare = 1;
-                                                                                                                                                                                                                                                                                        potion = true;
-                                                                                                                                                                                                                                                                                        value = 1000;
-                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                        if (type == 189)
-                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                            name = "Mana Potion";
-                                                                                                                                                                                                                                                                                            useSound = 3;
-                                                                                                                                                                                                                                                                                            healMana = 200;
-                                                                                                                                                                                                                                                                                            useStyle = 2;
-                                                                                                                                                                                                                                                                                            useTurn = true;
-                                                                                                                                                                                                                                                                                            useAnimation = 17;
-                                                                                                                                                                                                                                                                                            useTime = 17;
-                                                                                                                                                                                                                                                                                            maxStack = 30;
-                                                                                                                                                                                                                                                                                            consumable = true;
-                                                                                                                                                                                                                                                                                            width = 14;
-                                                                                                                                                                                                                                                                                            height = 24;
-                                                                                                                                                                                                                                                                                            rare = 1;
-                                                                                                                                                                                                                                                                                            potion = true;
-                                                                                                                                                                                                                                                                                            value = 1000;
-                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                            if (type == 190)
-                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                name = "Blade of Grass";
-                                                                                                                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                                                                                                                useAnimation = 30;
-                                                                                                                                                                                                                                                                                                knockBack = 3.0F;
-                                                                                                                                                                                                                                                                                                width = 40;
-                                                                                                                                                                                                                                                                                                height = 40;
-                                                                                                                                                                                                                                                                                                damage = 28;
-                                                                                                                                                                                                                                                                                                scale = 1.4F;
-                                                                                                                                                                                                                                                                                                useSound = 1;
-                                                                                                                                                                                                                                                                                                rare = 3;
-                                                                                                                                                                                                                                                                                                value = 27000;
-                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                if (type == 191)
-                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                    noMelee = true;
-                                                                                                                                                                                                                                                                                                    useStyle = 1;
-                                                                                                                                                                                                                                                                                                    name = "Thorn Chakrum";
-                                                                                                                                                                                                                                                                                                    shootSpeed = 11.0F;
-                                                                                                                                                                                                                                                                                                    shoot = 33;
-                                                                                                                                                                                                                                                                                                    damage = 25;
-                                                                                                                                                                                                                                                                                                    knockBack = 8.0F;
-                                                                                                                                                                                                                                                                                                    width = 14;
-                                                                                                                                                                                                                                                                                                    height = 28;
-                                                                                                                                                                                                                                                                                                    useSound = 1;
-                                                                                                                                                                                                                                                                                                    useAnimation = 15;
-                                                                                                                                                                                                                                                                                                    useTime = 15;
-                                                                                                                                                                                                                                                                                                    noUseGraphic = true;
-                                                                                                                                                                                                                                                                                                    rare = 3;
-                                                                                                                                                                                                                                                                                                    value = 50000;
-                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                    if (type == 192)
-                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                        name = "Obsidian Brick";
-                                                                                                                                                                                                                                                                                                        useStyle = 1;
-                                                                                                                                                                                                                                                                                                        useTurn = true;
-                                                                                                                                                                                                                                                                                                        useAnimation = 15;
-                                                                                                                                                                                                                                                                                                        useTime = 10;
-                                                                                                                                                                                                                                                                                                        autoReuse = true;
-                                                                                                                                                                                                                                                                                                        maxStack = 250;
-                                                                                                                                                                                                                                                                                                        consumable = true;
-                                                                                                                                                                                                                                                                                                        createTile = 75;
-                                                                                                                                                                                                                                                                                                        width = 12;
-                                                                                                                                                                                                                                                                                                        height = 12;
-                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                        if (type == 193)
-                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                            name = "Obsidian Skull";
-                                                                                                                                                                                                                                                                                                            width = 20;
-                                                                                                                                                                                                                                                                                                            height = 22;
-                                                                                                                                                                                                                                                                                                            rare = 2;
-                                                                                                                                                                                                                                                                                                            value = 27000;
-                                                                                                                                                                                                                                                                                                            accessory = true;
-                                                                                                                                                                                                                                                                                                            defense = 2;
-                                                                                                                                                                                                                                                                                                            toolTip = "Grants immunity to fire blocks";
-                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                            if (type == 194)
-                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                name = "Mushroom Grass Seeds";
-                                                                                                                                                                                                                                                                                                                useTurn = true;
-                                                                                                                                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                                                                                                                                useAnimation = 15;
-                                                                                                                                                                                                                                                                                                                useTime = 10;
-                                                                                                                                                                                                                                                                                                                maxStack = 99;
-                                                                                                                                                                                                                                                                                                                consumable = true;
-                                                                                                                                                                                                                                                                                                                createTile = 70;
-                                                                                                                                                                                                                                                                                                                width = 14;
-                                                                                                                                                                                                                                                                                                                height = 14;
-                                                                                                                                                                                                                                                                                                                value = 150;
-                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                if (type == 195)
-                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                    name = "Jungle Grass Seeds";
-                                                                                                                                                                                                                                                                                                                    useTurn = true;
-                                                                                                                                                                                                                                                                                                                    useStyle = 1;
-                                                                                                                                                                                                                                                                                                                    useAnimation = 15;
-                                                                                                                                                                                                                                                                                                                    useTime = 10;
-                                                                                                                                                                                                                                                                                                                    maxStack = 99;
-                                                                                                                                                                                                                                                                                                                    consumable = true;
-                                                                                                                                                                                                                                                                                                                    createTile = 60;
-                                                                                                                                                                                                                                                                                                                    width = 14;
-                                                                                                                                                                                                                                                                                                                    height = 14;
-                                                                                                                                                                                                                                                                                                                    value = 150;
-                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                    if (type == 196)
-                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                        name = "Wooden Hammer";
-                                                                                                                                                                                                                                                                                                                        autoReuse = true;
-                                                                                                                                                                                                                                                                                                                        useStyle = 1;
-                                                                                                                                                                                                                                                                                                                        useTurn = true;
-                                                                                                                                                                                                                                                                                                                        useAnimation = 37;
-                                                                                                                                                                                                                                                                                                                        useTime = 25;
-                                                                                                                                                                                                                                                                                                                        hammer = 25;
-                                                                                                                                                                                                                                                                                                                        width = 24;
-                                                                                                                                                                                                                                                                                                                        height = 28;
-                                                                                                                                                                                                                                                                                                                        damage = 2;
-                                                                                                                                                                                                                                                                                                                        knockBack = 5.5F;
-                                                                                                                                                                                                                                                                                                                        scale = 1.2F;
-                                                                                                                                                                                                                                                                                                                        useSound = 1;
-                                                                                                                                                                                                                                                                                                                        tileBoost = -1;
-                                                                                                                                                                                                                                                                                                                        value = 50;
-                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                        if (type == 197)
-                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                            autoReuse = true;
-                                                                                                                                                                                                                                                                                                                            useStyle = 5;
-                                                                                                                                                                                                                                                                                                                            useAnimation = 12;
-                                                                                                                                                                                                                                                                                                                            useTime = 12;
-                                                                                                                                                                                                                                                                                                                            name = "Star Cannon";
-                                                                                                                                                                                                                                                                                                                            width = 50;
-                                                                                                                                                                                                                                                                                                                            height = 18;
-                                                                                                                                                                                                                                                                                                                            shoot = 12;
-                                                                                                                                                                                                                                                                                                                            useAmmo = 15;
-                                                                                                                                                                                                                                                                                                                            useSound = 9;
-                                                                                                                                                                                                                                                                                                                            damage = 75;
-                                                                                                                                                                                                                                                                                                                            shootSpeed = 14.0F;
-                                                                                                                                                                                                                                                                                                                            noMelee = true;
-                                                                                                                                                                                                                                                                                                                            value = 500000;
-                                                                                                                                                                                                                                                                                                                            rare = 2;
-                                                                                                                                                                                                                                                                                                                            toolTip = "Shoots fallen stars";
-                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                            if (type == 198)
-                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                name = "Blue Phaseblade";
-                                                                                                                                                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                useAnimation = 25;
-                                                                                                                                                                                                                                                                                                                                knockBack = 3.0F;
-                                                                                                                                                                                                                                                                                                                                width = 40;
-                                                                                                                                                                                                                                                                                                                                height = 40;
-                                                                                                                                                                                                                                                                                                                                damage = 21;
-                                                                                                                                                                                                                                                                                                                                scale = 1.0F;
-                                                                                                                                                                                                                                                                                                                                useSound = 15;
-                                                                                                                                                                                                                                                                                                                                rare = 1;
-                                                                                                                                                                                                                                                                                                                                value = 27000;
-                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                if (type == 199)
-                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                    name = "Red Phaseblade";
-                                                                                                                                                                                                                                                                                                                                    useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                    useAnimation = 25;
-                                                                                                                                                                                                                                                                                                                                    knockBack = 3.0F;
-                                                                                                                                                                                                                                                                                                                                    width = 40;
-                                                                                                                                                                                                                                                                                                                                    height = 40;
-                                                                                                                                                                                                                                                                                                                                    damage = 21;
-                                                                                                                                                                                                                                                                                                                                    scale = 1.0F;
-                                                                                                                                                                                                                                                                                                                                    useSound = 15;
-                                                                                                                                                                                                                                                                                                                                    rare = 1;
-                                                                                                                                                                                                                                                                                                                                    value = 27000;
-                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                    if (type == 200)
-                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                        name = "Green Phaseblade";
-                                                                                                                                                                                                                                                                                                                                        useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                        useAnimation = 25;
-                                                                                                                                                                                                                                                                                                                                        knockBack = 3.0F;
-                                                                                                                                                                                                                                                                                                                                        width = 40;
-                                                                                                                                                                                                                                                                                                                                        height = 40;
-                                                                                                                                                                                                                                                                                                                                        damage = 21;
-                                                                                                                                                                                                                                                                                                                                        scale = 1.0F;
-                                                                                                                                                                                                                                                                                                                                        useSound = 15;
-                                                                                                                                                                                                                                                                                                                                        rare = 1;
-                                                                                                                                                                                                                                                                                                                                        value = 27000;
-                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                        if (type == 201)
-                                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                                            name = "Purple Phaseblade";
-                                                                                                                                                                                                                                                                                                                                            useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                            useAnimation = 25;
-                                                                                                                                                                                                                                                                                                                                            knockBack = 3.0F;
-                                                                                                                                                                                                                                                                                                                                            width = 40;
-                                                                                                                                                                                                                                                                                                                                            height = 40;
-                                                                                                                                                                                                                                                                                                                                            damage = 21;
-                                                                                                                                                                                                                                                                                                                                            scale = 1.0F;
-                                                                                                                                                                                                                                                                                                                                            useSound = 15;
-                                                                                                                                                                                                                                                                                                                                            rare = 1;
-                                                                                                                                                                                                                                                                                                                                            value = 27000;
-                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                                            if (type == 202)
-                                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                                name = "White Phaseblade";
-                                                                                                                                                                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                                useAnimation = 25;
-                                                                                                                                                                                                                                                                                                                                                knockBack = 3.0F;
-                                                                                                                                                                                                                                                                                                                                                width = 40;
-                                                                                                                                                                                                                                                                                                                                                height = 40;
-                                                                                                                                                                                                                                                                                                                                                damage = 21;
-                                                                                                                                                                                                                                                                                                                                                scale = 1.0F;
-                                                                                                                                                                                                                                                                                                                                                useSound = 15;
-                                                                                                                                                                                                                                                                                                                                                rare = 1;
-                                                                                                                                                                                                                                                                                                                                                value = 27000;
-                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                                if (type == 203)
-                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                    name = "Yellow Phaseblade";
-                                                                                                                                                                                                                                                                                                                                                    useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                                    useAnimation = 25;
-                                                                                                                                                                                                                                                                                                                                                    knockBack = 3.0F;
-                                                                                                                                                                                                                                                                                                                                                    width = 40;
-                                                                                                                                                                                                                                                                                                                                                    height = 40;
-                                                                                                                                                                                                                                                                                                                                                    damage = 21;
-                                                                                                                                                                                                                                                                                                                                                    scale = 1.0F;
-                                                                                                                                                                                                                                                                                                                                                    useSound = 15;
-                                                                                                                                                                                                                                                                                                                                                    rare = 1;
-                                                                                                                                                                                                                                                                                                                                                    value = 27000;
-                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                    if (type == 204)
-                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                        name = "Meteor Hamaxe";
-                                                                                                                                                                                                                                                                                                                                                        useTurn = true;
-                                                                                                                                                                                                                                                                                                                                                        autoReuse = true;
-                                                                                                                                                                                                                                                                                                                                                        useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                                        useAnimation = 30;
-                                                                                                                                                                                                                                                                                                                                                        useTime = 16;
-                                                                                                                                                                                                                                                                                                                                                        hammer = 60;
-                                                                                                                                                                                                                                                                                                                                                        axe = 20;
-                                                                                                                                                                                                                                                                                                                                                        width = 24;
-                                                                                                                                                                                                                                                                                                                                                        height = 28;
-                                                                                                                                                                                                                                                                                                                                                        damage = 20;
-                                                                                                                                                                                                                                                                                                                                                        knockBack = 7.0F;
-                                                                                                                                                                                                                                                                                                                                                        scale = 1.2F;
-                                                                                                                                                                                                                                                                                                                                                        useSound = 1;
-                                                                                                                                                                                                                                                                                                                                                        rare = 1;
-                                                                                                                                                                                                                                                                                                                                                        value = 15000;
-                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                        if (type == 205)
-                                                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                                                            name = "Empty Bucket";
-                                                                                                                                                                                                                                                                                                                                                            useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                                            useTurn = true;
-                                                                                                                                                                                                                                                                                                                                                            useAnimation = 15;
-                                                                                                                                                                                                                                                                                                                                                            useTime = 10;
-                                                                                                                                                                                                                                                                                                                                                            width = 20;
-                                                                                                                                                                                                                                                                                                                                                            height = 20;
-                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                                                            if (type == 206)
-                                                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                                                name = "Water Bucket";
-                                                                                                                                                                                                                                                                                                                                                                useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                                                useTurn = true;
-                                                                                                                                                                                                                                                                                                                                                                useAnimation = 15;
-                                                                                                                                                                                                                                                                                                                                                                useTime = 10;
-                                                                                                                                                                                                                                                                                                                                                                width = 20;
-                                                                                                                                                                                                                                                                                                                                                                height = 20;
-                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                                                if (type == 207)
-                                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                                    name = "Lava Bucket";
-                                                                                                                                                                                                                                                                                                                                                                    useStyle = 1;
-                                                                                                                                                                                                                                                                                                                                                                    useTurn = true;
-                                                                                                                                                                                                                                                                                                                                                                    useAnimation = 15;
-                                                                                                                                                                                                                                                                                                                                                                    useTime = 10;
-                                                                                                                                                                                                                                                                                                                                                                    width = 20;
-                                                                                                                                                                                                                                                                                                                                                                    height = 20;
-                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                                    if (type == 208)
-                                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                                        name = "Jungle Rose";
-                                                                                                                                                                                                                                                                                                                                                                        width = 20;
-                                                                                                                                                                                                                                                                                                                                                                        height = 20;
-                                                                                                                                                                                                                                                                                                                                                                        maxStack = 99;
-                                                                                                                                                                                                                                                                                                                                                                        value = 100;
-                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                                        if (type == 209)
-                                                                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                                                                            name = "Stinger";
-                                                                                                                                                                                                                                                                                                                                                                            width = 16;
-                                                                                                                                                                                                                                                                                                                                                                            height = 18;
-                                                                                                                                                                                                                                                                                                                                                                            maxStack = 99;
-                                                                                                                                                                                                                                                                                                                                                                            value = 200;
-                                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                                                                                                                                                                            if (type == 210)
-                                                                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                                                                name = "Vine";
-                                                                                                                                                                                                                                                                                                                                                                                width = 14;
-                                                                                                                                                                                                                                                                                                                                                                                height = 20;
-                                                                                                                                                                                                                                                                                                                                                                                maxStack = 99;
-                                                                                                                                                                                                                                                                                                                                                                                value = 1000;
-                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                                                                                                                                                                if (type == 211)
-                                                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                                                    name = "Feral Claws";
-                                                                                                                                                                                                                                                                                                                                                                                    width = 20;
-                                                                                                                                                                                                                                                                                                                                                                                    height = 20;
-                                                                                                                                                                                                                                                                                                                                                                                    accessory = true;
-                                                                                                                                                                                                                                                                                                                                                                                    rare = 3;
-                                                                                                                                                                                                                                                                                                                                                                                    toolTip = "10 % increased melee speed";
-                                                                                                                                                                                                                                                                                                                                                                                    value = 50000;
-                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                                else
-                                                                                                                                                                                                                                                                                                                                                                                {
-                                                                                                                                                                                                                                                                                                                                                                                    if (type == 212)
-                                                                                                                                                                                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                                                                                                                                                                                        name = "Anklet of the Wind";
-                                                                                                                                                                                                                                                                                                                                                                                        width = 20;
-                                                                                                                                                                                                                                                                                                                                                                                        height = 20;
-                                                                                                                                                                                                                                                                                                                                                                                        accessory = true;
-                                                                                                                                                                                                                                                                                                                                                                                        rare = 3;
-                                                                                                                                                                                                                                                                                                                                                                                        toolTip = "10% increased movement speed";
-                                                                                                                                                                                                                                                                                                                                                                                        value = 50000;
-                                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                                }
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                }
-                                                                                                                                                                                            }
-                                                                                                                                                                                        }
-                                                                                                                                                                                    }
-                                                                                                                                                                                }
-                                                                                                                                                                            }
-                                                                                                                                                                        }
-                                                                                                                                                                    }
-                                                                                                                                                                }
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                    }
-                                                                                                                                                }
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if (type == 213)
-            {
-                name = "Staff of Regrowth";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 20;
-                useTime = 13;
-                autoReuse = true;
-                width = 24;
-                height = 28;
-                damage = 20;
-                createTile = 2;
-                scale = 1.2F;
-                useSound = 1;
-                knockBack = 3.0F;
-                rare = 3;
-                value = 2000;
-                toolTip = "Creates grass on dirt";
-                return;
-            }
-            if (type == 214)
-            {
-                name = "Hellstone Brick";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 250;
-                consumable = true;
-                createTile = 76;
-                width = 12;
-                height = 12;
-                return;
-            }
-            if (type == 215)
-            {
-                name = "Whoopie Cushion";
-                width = 18;
-                height = 18;
-                useTurn = true;
-                useTime = 30;
-                useAnimation = 30;
-                noUseGraphic = true;
-                useStyle = 10;
-                useSound = 16;
-                rare = 2;
-                toolTip = "May annoy others";
-                value = 100;
-                return;
-            }
-            if (type == 216)
-            {
-                name = "Shackle";
-                width = 20;
-                height = 20;
-                rare = 1;
-                value = 1500;
-                accessory = true;
-                defense = 1;
-                return;
-            }
-            if (type == 217)
-            {
-                name = "Molten Hamaxe";
-                useTurn = true;
-                autoReuse = true;
-                useStyle = 1;
-                useAnimation = 27;
-                useTime = 14;
-                hammer = 70;
-                axe = 30;
-                width = 24;
-                height = 28;
-                damage = 20;
-                knockBack = 7.0F;
-                scale = 1.4F;
-                useSound = 1;
-                rare = 3;
-                value = 15000;
-                return;
-            }
-            if (type == 218)
-            {
-                mana = 20;
-                channel = true;
-                damage = 35;
-                useStyle = 1;
-                name = "Flamelash";
-                shootSpeed = 6.0F;
-                shoot = 34;
-                width = 26;
-                height = 28;
-                useSound = 8;
-                useAnimation = 20;
-                useTime = 20;
-                rare = 3;
-                noMelee = true;
-                knockBack = 5.0F;
-                toolTip = "Summons a controllable ball of fire";
-                value = 10000;
-                return;
-            }
-            if (type == 219)
-            {
-                autoReuse = false;
-                useStyle = 5;
-                useAnimation = 10;
-                useTime = 10;
-                name = "Phoenix Blaster";
-                width = 24;
-                height = 28;
-                shoot = 14;
-                knockBack = 4.0F;
-                useAmmo = 14;
-                useSound = 11;
-                damage = 28;
-                shootSpeed = 13.0F;
-                noMelee = true;
-                value = 50000;
-                scale = 0.9F;
-                rare = 3;
-                return;
-            }
-            if (type == 220)
-            {
-                name = "Sunfury";
-                useStyle = 5;
-                useAnimation = 30;
-                useTime = 30;
-                knockBack = 7.0F;
-                width = 30;
-                height = 10;
-                damage = 40;
-                scale = 1.1F;
-                noUseGraphic = true;
-                shoot = 35;
-                shootSpeed = 12.0F;
-                useSound = 1;
-                rare = 3;
-                value = 27000;
-                return;
-            }
-            if (type == 221)
-            {
-                name = "Hellforge";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 77;
-                width = 26;
-                height = 24;
-                value = 3000;
-                return;
-            }
-            if (type == 222)
-            {
-                name = "Clay Pot";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                autoReuse = true;
-                maxStack = 99;
-                consumable = true;
-                createTile = 78;
-                width = 14;
-                height = 14;
-                value = 100;
-                return;
-            }
-            if (type == 223)
-            {
-                name = "Nature's Gift";
-                width = 20;
-                height = 22;
-                rare = 3;
-                value = 27000;
-                accessory = true;
-                toolTip = "Spawn with max life and mana after death";
-                return;
-            }
-            if (type == 224)
-            {
-                name = "Bed";
-                useStyle = 1;
-                useTurn = true;
-                useAnimation = 15;
-                useTime = 10;
-                maxStack = 99;
-                consumable = true;
-                createTile = 79;
-                width = 28;
-                height = 20;
-                value = 2000;
-                return;
-            }
-            if (type == 225)
-            {
-                name = "Silk";
-                maxStack = 99;
-                width = 22;
-                height = 22;
-                value = 1000;
-                return;
-            }
-            if (type == 226)
-            {
-                name = "Lesser Restoration Potion";
-                useSound = 3;
-                healMana = 100;
-                healLife = 100;
-                useStyle = 2;
-                useTurn = true;
-                useAnimation = 17;
-                useTime = 17;
-                maxStack = 20;
-                consumable = true;
-                width = 14;
-                height = 24;
-                potion = true;
-                value = 2000;
-                return;
-            }
-            if (type == 227)
-            {
-                name = "Restoration Potion";
-                useSound = 3;
-                healMana = 200;
-                healLife = 200;
-                useStyle = 2;
-                useTurn = true;
-                useAnimation = 17;
-                useTime = 17;
-                maxStack = 20;
-                consumable = true;
-                width = 14;
-                height = 24;
-                potion = true;
-                value = 4000;
-                return;
-            }
-            if (type == 228)
-            {
-                name = "Cobalt Helmet";
-                width = 22;
-                height = 22;
-                defense = 6;
-                headSlot = 8;
-                rare = 3;
-                value = 45000;
-                toolTip = "Slowly regenerates mana";
-                manaRegen = 4;
-                return;
-            }
-            if (type == 229)
-            {
-                name = "Cobalt Breastplate";
-                width = 26;
-                height = 28;
-                defense = 7;
-                bodySlot = 8;
-                rare = 3;
-                value = 30000;
-                toolTip = "Slowly regenerates mana";
-                manaRegen = 4;
-                return;
-            }
-            if (type == 230)
-            {
-                name = "Cobalt Greaves";
-                width = 18;
-                height = 28;
-                defense = 6;
-                legSlot = 8;
-                rare = 3;
-                value = 30000;
-                toolTip = "Slowly regenerates mana";
-                manaRegen = 3;
-                return;
-            }
-            if (type == 231)
-            {
-                name = "Molten Helmet";
-                width = 22;
-                height = 22;
-                defense = 9;
-                headSlot = 9;
-                rare = 3;
-                value = 45000;
-                return;
-            }
-            if (type == 232)
-            {
-                name = "Molten Breastplate";
-                width = 26;
-                height = 28;
-                defense = 10;
-                bodySlot = 9;
-                rare = 3;
-                value = 30000;
-                return;
-            }
-            if (type == 233)
-            {
-                name = "Molten Greaves";
-                width = 18;
-                height = 28;
-                defense = 9;
-                legSlot = 9;
-                rare = 3;
-                value = 30000;
-                return;
-            }
-            if (type == 234)
-            {
-                name = "Meteor Shot";
-                shootSpeed = 3.0F;
-                shoot = 36;
-                damage = 9;
-                width = 8;
-                height = 8;
-                maxStack = 250;
-                consumable = true;
-                ammo = 14;
-                knockBack = 1.0F;
-                value = 8;
-                rare = 1;
-                return;
-            }
-            if (type == 235)
-            {
-                useStyle = 1;
-                name = "Sticky Bomb";
-                shootSpeed = 5.0F;
-                shoot = 37;
-                width = 20;
-                height = 20;
-                maxStack = 20;
-                consumable = true;
-                useSound = 1;
-                useAnimation = 25;
-                useTime = 25;
-                noUseGraphic = true;
-                noMelee = true;
-                value = 500;
-                damage = 0;
-                toolTip = "Tossing may be difficult.";
-            }
-        }
-
-        public void UpdateItem(int i, World world)
-        {
-            if (this.active)
-            {
-                if (Statics.netMode == 0)
-                {
-                    this.owner = Statics.myPlayer;
-                }
-                float num = 0.1f;
-                float num2 = 7f;
-                if (this.wet)
-                {
-                    num2 = 5f;
-                    num = 0.08f;
-                }
-                Vector2 value = this.velocity * 0.5f;
-                if (this.ownTime > 0)
-                {
-                    this.ownTime--;
-                }
-                else
-                {
-                    this.ownIgnore = -1;
-                }
-                if (this.keepTime > 0)
-                {
-                    this.keepTime--;
-                }
-                if (!this.beingGrabbed)
-                {
-                    this.velocity.Y = this.velocity.Y + num;
-                    if (this.velocity.Y > num2)
-                    {
-                        this.velocity.Y = num2;
-                    }
-                    this.velocity.X = this.velocity.X * 0.95f;
-                    if ((double)this.velocity.X < 0.1 && (double)this.velocity.X > -0.1)
-                    {
-                        this.velocity.X = 0f;
-                    }
-                    bool flag = Collision.LavaCollision(this.position, world, this.width, this.height);
-                    if (flag)
-                    {
-                        this.lavaWet = true;
-                    }
-                    if (Collision.WetCollision(this.position, this.width, this.height, world))
-                    {
-                        if (!this.wet)
-                        {
-                            if (this.wetCount == 0)
-                            {
-                                this.wetCount = 20;
-                                if (!flag)
-                                {
-                                    for (int j = 0; j < 10; j++)
-                                    {
-                                        Color newColor = default(Color);
-                                        int num3 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f)
-                                            , world, this.width + 12, 24, 33, 0f, 0f, 0, newColor, 1f);
-                                        Dust expr_263_cp_0 = world.getDust()[num3];
-                                        expr_263_cp_0.velocity.Y = expr_263_cp_0.velocity.Y - 4f;
-                                        Dust expr_281_cp_0 = world.getDust()[num3];
-                                        expr_281_cp_0.velocity.X = expr_281_cp_0.velocity.X * 2.5f;
-                                        world.getDust()[num3].scale = 1.3f;
-                                        world.getDust()[num3].alpha = 100;
-                                        world.getDust()[num3].noGravity = true;
-                                    }
-                                    //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
-                                }
-                                else
-                                {
-                                    for (int k = 0; k < 5; k++)
-                                    {
-                                        Color newColor2 = default(Color);
-                                        int num4 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f), world
-                                            , this.width + 12, 24, 35, 0f, 0f, 0, newColor2, 1f);
-                                        Dust expr_374_cp_0 = world.getDust()[num4];
-                                        expr_374_cp_0.velocity.Y = expr_374_cp_0.velocity.Y - 1.5f;
-                                        Dust expr_392_cp_0 = world.getDust()[num4];
-                                        expr_392_cp_0.velocity.X = expr_392_cp_0.velocity.X * 2.5f;
-                                        world.getDust()[num4].scale = 1.3f;
-                                        world.getDust()[num4].alpha = 100;
-                                        world.getDust()[num4].noGravity = true;
-                                    }
-                                    //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
-                                }
-                            }
-                            this.wet = true;
-                        }
-                    }
-                    else
-                    {
-                        if (this.wet)
-                        {
-                            this.wet = false;
-                        }
-                    }
-                    if (!this.wet)
-                    {
-                        this.lavaWet = false;
-                    }
-                    if (this.wetCount > 0)
-                    {
-                        this.wetCount -= 1;
-                    }
-                    if (this.wet)
-                    {
-                        if (this.wet)
-                        {
-                            Vector2 vector = this.velocity;
-                            this.velocity = Collision.TileCollision(this.position, this.velocity, world, this.width, this.height, false, false);
-                            if (this.velocity.X != vector.X)
-                            {
-                                value.X = this.velocity.X;
-                            }
-                            if (this.velocity.Y != vector.Y)
-                            {
-                                value.Y = this.velocity.Y;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        this.velocity = Collision.TileCollision(this.position, this.velocity, world, this.width, this.height, false, false);
-                    }
-                    if (this.owner == Statics.myPlayer && this.lavaWet)
-                    {
-                        this.active = false;
-                        this.type = 0;
-                        this.name = "";
-                        this.stack = 0;
-                        if (Statics.netMode != 0)
-                        {
-                            NetMessage.SendData(21, world, -1, -1, "", i, 0f, 0f, 0f);
-                        }
-                    }
-                    if (this.type == 75 && world.isDayTime())
-                    {
-                        for (int l = 0; l < 10; l++)
-                        {
-                            Color newColor3 = default(Color);
-                            Dust.NewDust(this.position, world, this.width, this.height, 15, this.velocity.X, this.velocity.Y, 150, newColor3, 1.2f);
-                        }
-                        for (int m = 0; m < 3; m++)
-                        {
-                            Gore.NewGore(this.position, new Vector2(this.velocity.X, this.velocity.Y), Statics.rand.Next(16, 18), world);
-                        }
-                        this.active = false;
-                        this.type = 0;
-                        this.stack = 0;
-                        if (Statics.netMode == 2)
-                        {
-                            NetMessage.SendData(21, world, -1, -1, "", i, 0f, 0f, 0f);
-                        }
-                    }
-                }
-                else
-                {
-                    this.beingGrabbed = false;
-                }
-                if (this.type == 8 || this.type == 41 || (this.type == 75 || this.type == 105) || this.type == 116)
-                {
-                    if (!this.wet)
-                    {
-                        //Lighting.addLight((int)((this.position.X - 7f) / 16f), (int)((this.position.Y - 7f) / 16f), 1f);
-                    }
-                }
-                else
-                {
-                    if (this.type == 183)
-                    {
-                        //Lighting.addLight((int)((this.position.X - 7f) / 16f), (int)((this.position.Y - 7f) / 16f), 0.5f);
-                    }
-                }
-                if (this.type == 75)
-                {
-                    if (Statics.rand.Next(25) == 0)
-                    {
-                        Dust.NewDust(this.position, world, this.width, this.height, 15, this.velocity.X * 0.5f, this.velocity.Y * 0.5f, 150, default(Color), 1.2f);
-                    }
-                    if (Statics.rand.Next(50) == 0)
-                    {
-                        Gore.NewGore(this.position, new Vector2(this.velocity.X * 0.2f, this.velocity.Y * 0.2f), Statics.rand.Next(16, 18), world);
-                    }
-                }
-                if (this.spawnTime < 2147483646)
-                {
-                    this.spawnTime++;
-                }
-                if (Statics.netMode == 2 && this.owner != Statics.myPlayer)
-                {
-                    this.release++;
-                    if (this.release >= 300)
-                    {
-                        this.release = 0;
-                        NetMessage.SendData(39, world, this.owner, -1, "", i, 0f, 0f, 0f);
-                    }
-                }
-                if (this.wet)
-                {
-                    this.position += value;
-                }
-                else
-                {
-                    this.position += this.velocity;
-                }
-                if (this.noGrabDelay > 0)
-                {
-                    this.noGrabDelay--;
-                }
-            }
-        }
-
-        public static int NewItem(int X, int Y, World world, int Width, int Height, int Type, int Stack, bool noBroadcast)
-        {
-            if (WorldGen.gen)
-                return 0;
-            int i1 = 200;
-            world.setItem(200, new Item());
-            if (Statics.netMode != 1)
-            {
-                for (int i2 = 0; i2 < 200; i2++)
-                {
-                    if (!world.getItemList()[i2].active)
-                    {
-                        i1 = i2;
-                        break;
-                    }
-                }
-            }
-            if ((i1 == 200) && (Statics.netMode != 1))
-            {
-                int i3 = 0;
-                for (int i4 = 0; i4 < 200; i4++)
-                {
-                    if (world.getItemList()[i4].spawnTime > i3)
-                    {
-                        i3 = world.getItemList()[i4].spawnTime;
-                        i1 = i4;
-                    }
-                }
-            }
-            //Item item = new Item();
-            world.getItemList()[i1] = new Item();
-            world.getItemList()[i1].SetDefaults(Type);
-            world.getItemList()[i1].position.X = (float)(X + (Width / 2) - (world.getItemList()[i1].width / 2));
-            world.getItemList()[i1].position.Y = (float)(Y + (Height / 2) - (world.getItemList()[i1].height / 2));
-            world.getItemList()[i1].wet = Collision.WetCollision(world.getItemList()[i1].position, world.getItemList()[i1].width, world.getItemList()[i1].height, world);
-            world.getItemList()[i1].velocity.X = (float)Statics.rand.Next(-20, 21) * 0.1F;
-            world.getItemList()[i1].velocity.Y = (float)Statics.rand.Next(-30, -10) * 0.1F;
-            world.getItemList()[i1].active = true;
-            world.getItemList()[i1].spawnTime = 0;
-            world.getItemList()[i1].stack = Stack;
-            if ((Statics.netMode == 2) && !noBroadcast)
-            {
-                NetMessage.SendData(21, world, -1, -1, "", i1, 0.0F, 0.0F, 0.0F);
-                world.getItemList()[i1].FindOwner(i1, world);
-            }
-            else if (Statics.netMode == 0)
-            {
-                world.getItemList()[i1].owner = Statics.myPlayer;
-            }
-            //world.setItem(i1, item);
-            return i1;
-        }
-
-    }
+		public int width;
+		public int height;
+		public bool active;
+		public int noGrabDelay;
+		public bool beingGrabbed;
+		public int spawnTime;
+		public bool wornArmor;
+		public int ownIgnore = -1;
+		public int ownTime;
+		public int keepTime;
+		public int type;
+		public string name;
+		public int holdStyle;
+		public int useStyle;
+		public bool channel;
+		public bool accessory;
+		public int useAnimation;
+		public int useTime;
+		public int stack;
+		public int maxStack;
+		public int pick;
+		public int axe;
+		public int hammer;
+		public int tileBoost;
+		public int createTile = -1;
+		public int createWall = -1;
+		public int damage;
+		public float knockBack;
+		public int healLife;
+		public int healMana;
+		public bool potion;
+		public bool consumable;
+		public bool autoReuse;
+		public bool useTurn;
+		public Color color;
+		public int alpha;
+		public float scale = 1f;
+		public int useSound;
+		public int defense;
+		public int headSlot = -1;
+		public int bodySlot = -1;
+		public int legSlot = -1;
+		public string toolTip;
+		public int owner = 255;
+		public int rare;
+		public int shoot;
+		public float shootSpeed;
+		public int ammo;
+		public int useAmmo;
+		public int lifeRegen;
+		public int manaRegen;
+		public int mana;
+		public bool noUseGraphic;
+		public bool noMelee;
+		public int release;
+		public int value;
+		public bool buy;
+		public void SetDefaults(string ItemName)
+		{
+			this.name = "";
+			if (ItemName == "Gold Pickaxe")
+			{
+				this.SetDefaults(1);
+				this.color = new Color(210, 190, 0, 100);
+				this.useTime = 17;
+				this.pick = 55;
+				this.useAnimation = 20;
+				this.scale = 1.05f;
+				this.damage = 6;
+				this.value = 10000;
+			}
+			else
+			{
+				if (ItemName == "Gold Broadsword")
+				{
+					this.SetDefaults(4);
+					this.color = new Color(210, 190, 0, 100);
+					this.useAnimation = 20;
+					this.damage = 13;
+					this.scale = 1.05f;
+					this.value = 9000;
+				}
+				else
+				{
+					if (ItemName == "Gold Shortsword")
+					{
+						this.SetDefaults(6);
+						this.color = new Color(210, 190, 0, 100);
+						this.damage = 11;
+						this.useAnimation = 11;
+						this.scale = 0.95f;
+						this.value = 7000;
+					}
+					else
+					{
+						if (ItemName == "Gold Axe")
+						{
+							this.SetDefaults(10);
+							this.color = new Color(210, 190, 0, 100);
+							this.useTime = 18;
+							this.axe = 11;
+							this.useAnimation = 26;
+							this.scale = 1.15f;
+							this.damage = 7;
+							this.value = 8000;
+						}
+						else
+						{
+							if (ItemName == "Gold Hammer")
+							{
+								this.SetDefaults(7);
+								this.color = new Color(210, 190, 0, 100);
+								this.useAnimation = 28;
+								this.useTime = 23;
+								this.scale = 1.25f;
+								this.damage = 9;
+								this.hammer = 55;
+								this.value = 8000;
+							}
+							else
+							{
+								if (ItemName == "Gold Bow")
+								{
+									this.SetDefaults(99);
+									this.useAnimation = 26;
+									this.useTime = 26;
+									this.color = new Color(210, 190, 0, 100);
+									this.damage = 11;
+									this.value = 7000;
+								}
+								else
+								{
+									if (ItemName == "Silver Pickaxe")
+									{
+										this.SetDefaults(1);
+										this.color = new Color(180, 180, 180, 100);
+										this.useTime = 11;
+										this.pick = 45;
+										this.useAnimation = 19;
+										this.scale = 1.05f;
+										this.damage = 6;
+										this.value = 5000;
+									}
+									else
+									{
+										if (ItemName == "Silver Broadsword")
+										{
+											this.SetDefaults(4);
+											this.color = new Color(180, 180, 180, 100);
+											this.useAnimation = 21;
+											this.damage = 11;
+											this.value = 4500;
+										}
+										else
+										{
+											if (ItemName == "Silver Shortsword")
+											{
+												this.SetDefaults(6);
+												this.color = new Color(180, 180, 180, 100);
+												this.damage = 9;
+												this.useAnimation = 12;
+												this.scale = 0.95f;
+												this.value = 3500;
+											}
+											else
+											{
+												if (ItemName == "Silver Axe")
+												{
+													this.SetDefaults(10);
+													this.color = new Color(180, 180, 180, 100);
+													this.useTime = 18;
+													this.axe = 10;
+													this.useAnimation = 26;
+													this.scale = 1.15f;
+													this.damage = 6;
+													this.value = 4000;
+												}
+												else
+												{
+													if (ItemName == "Silver Hammer")
+													{
+														this.SetDefaults(7);
+														this.color = new Color(180, 180, 180, 100);
+														this.useAnimation = 29;
+														this.useTime = 19;
+														this.scale = 1.25f;
+														this.damage = 9;
+														this.hammer = 45;
+														this.value = 4000;
+													}
+													else
+													{
+														if (ItemName == "Silver Bow")
+														{
+															this.SetDefaults(99);
+															this.useAnimation = 27;
+															this.useTime = 27;
+															this.color = new Color(180, 180, 180, 100);
+															this.damage = 10;
+															this.value = 3500;
+														}
+														else
+														{
+															if (ItemName == "Copper Pickaxe")
+															{
+																this.SetDefaults(1);
+																this.color = new Color(180, 100, 45, 80);
+																this.useTime = 15;
+																this.pick = 35;
+																this.useAnimation = 23;
+																this.scale = 0.9f;
+																this.tileBoost = -1;
+																this.value = 500;
+															}
+															else
+															{
+																if (ItemName == "Copper Broadsword")
+																{
+																	this.SetDefaults(4);
+																	this.color = new Color(180, 100, 45, 80);
+																	this.useAnimation = 23;
+																	this.damage = 8;
+																	this.value = 450;
+																}
+																else
+																{
+																	if (ItemName == "Copper Shortsword")
+																	{
+																		this.SetDefaults(6);
+																		this.color = new Color(180, 100, 45, 80);
+																		this.damage = 6;
+																		this.useAnimation = 13;
+																		this.scale = 0.8f;
+																		this.value = 350;
+																	}
+																	else
+																	{
+																		if (ItemName == "Copper Axe")
+																		{
+																			this.SetDefaults(10);
+																			this.color = new Color(180, 100, 45, 80);
+																			this.useTime = 21;
+																			this.axe = 8;
+																			this.useAnimation = 30;
+																			this.scale = 1f;
+																			this.damage = 3;
+																			this.tileBoost = -1;
+																			this.value = 400;
+																		}
+																		else
+																		{
+																			if (ItemName == "Copper Hammer")
+																			{
+																				this.SetDefaults(7);
+																				this.color = new Color(180, 100, 45, 80);
+																				this.useAnimation = 33;
+																				this.useTime = 23;
+																				this.scale = 1.1f;
+																				this.damage = 4;
+																				this.hammer = 35;
+																				this.tileBoost = -1;
+																				this.value = 400;
+																			}
+																			else
+																			{
+																				if (ItemName == "Copper Bow")
+																				{
+																					this.SetDefaults(99);
+																					this.useAnimation = 29;
+																					this.useTime = 29;
+																					this.color = new Color(180, 100, 45, 80);
+																					this.damage = 8;
+																					this.value = 350;
+																				}
+																				else
+																				{
+																					if (ItemName != "")
+																					{
+																						for (int i = 0; i < 239; i++)
+																						{
+																							this.SetDefaults(i);
+																							if (this.name == ItemName)
+																							{
+																								return;
+																							}
+																						}
+																						this.SetDefaults(0);
+																						this.name = "";
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			if (this.type != 0)
+			{
+				this.name = ItemName;
+			}
+		}
+		public void SetDefaults(int Type)
+		{
+			if (Main.netMode == 1 || Main.netMode == 2)
+			{
+				this.owner = 255;
+			}
+			else
+			{
+				this.owner = Main.myPlayer;
+			}
+			this.mana = 0;
+			this.wet = false;
+			this.wetCount = 0;
+			this.lavaWet = false;
+			this.channel = false;
+			this.manaRegen = 0;
+			this.release = 0;
+			this.noMelee = false;
+			this.noUseGraphic = false;
+			this.lifeRegen = 0;
+			this.shootSpeed = 0f;
+			this.active = true;
+			this.alpha = 0;
+			this.ammo = 0;
+			this.useAmmo = 0;
+			this.autoReuse = false;
+			this.accessory = false;
+			this.axe = 0;
+			this.healMana = 0;
+			this.bodySlot = -1;
+			this.legSlot = -1;
+			this.headSlot = -1;
+			this.potion = false;
+			this.color = default(Color);
+			this.consumable = false;
+			this.createTile = -1;
+			this.createWall = -1;
+			this.damage = -1;
+			this.defense = 0;
+			this.hammer = 0;
+			this.healLife = 0;
+			this.holdStyle = 0;
+			this.knockBack = 0f;
+			this.maxStack = 1;
+			this.pick = 0;
+			this.rare = 0;
+			this.scale = 1f;
+			this.shoot = 0;
+			this.stack = 1;
+			this.toolTip = null;
+			this.tileBoost = 0;
+			this.type = Type;
+			this.useStyle = 0;
+			this.useSound = 0;
+			this.useTime = 100;
+			this.useAnimation = 100;
+			this.value = 0;
+			this.useTurn = false;
+			this.buy = false;
+			if (this.type == 1)
+			{
+				this.name = "Iron Pickaxe";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 20;
+				this.useTime = 13;
+				this.autoReuse = true;
+				this.width = 24;
+				this.height = 28;
+				this.damage = 5;
+				this.pick = 45;
+				this.useSound = 1;
+				this.knockBack = 2f;
+				this.value = 2000;
+			}
+			else
+			{
+				if (this.type == 2)
+				{
+					this.name = "Dirt Block";
+					this.useStyle = 1;
+					this.useTurn = true;
+					this.useAnimation = 15;
+					this.useTime = 10;
+					this.autoReuse = true;
+					this.maxStack = 250;
+					this.consumable = true;
+					this.createTile = 0;
+					this.width = 12;
+					this.height = 12;
+				}
+				else
+				{
+					if (this.type == 3)
+					{
+						this.name = "Stone Block";
+						this.useStyle = 1;
+						this.useTurn = true;
+						this.useAnimation = 15;
+						this.useTime = 10;
+						this.autoReuse = true;
+						this.maxStack = 250;
+						this.consumable = true;
+						this.createTile = 1;
+						this.width = 12;
+						this.height = 12;
+					}
+					else
+					{
+						if (this.type == 4)
+						{
+							this.name = "Iron Broadsword";
+							this.useStyle = 1;
+							this.useTurn = false;
+							this.useAnimation = 21;
+							this.useTime = 21;
+							this.width = 24;
+							this.height = 28;
+							this.damage = 10;
+							this.knockBack = 5f;
+							this.useSound = 1;
+							this.scale = 1f;
+							this.value = 1800;
+						}
+						else
+						{
+							if (this.type == 5)
+							{
+								this.name = "Mushroom";
+								this.useStyle = 2;
+								this.useSound = 2;
+								this.useTurn = false;
+								this.useAnimation = 17;
+								this.useTime = 17;
+								this.width = 16;
+								this.height = 18;
+								this.healLife = 20;
+								this.maxStack = 99;
+								this.consumable = true;
+								this.potion = true;
+								this.value = 50;
+							}
+							else
+							{
+								if (this.type == 6)
+								{
+									this.name = "Iron Shortsword";
+									this.useStyle = 3;
+									this.useTurn = false;
+									this.useAnimation = 12;
+									this.useTime = 12;
+									this.width = 24;
+									this.height = 28;
+									this.damage = 8;
+									this.knockBack = 4f;
+									this.scale = 0.9f;
+									this.useSound = 1;
+									this.useTurn = true;
+									this.value = 1400;
+								}
+								else
+								{
+									if (this.type == 7)
+									{
+										this.name = "Iron Hammer";
+										this.autoReuse = true;
+										this.useStyle = 1;
+										this.useTurn = true;
+										this.useAnimation = 30;
+										this.useTime = 20;
+										this.hammer = 45;
+										this.width = 24;
+										this.height = 28;
+										this.damage = 7;
+										this.knockBack = 5.5f;
+										this.scale = 1.2f;
+										this.useSound = 1;
+										this.value = 1600;
+									}
+									else
+									{
+										if (this.type == 8)
+										{
+											this.name = "Torch";
+											this.useStyle = 1;
+											this.useTurn = true;
+											this.useAnimation = 15;
+											this.useTime = 10;
+											this.holdStyle = 1;
+											this.autoReuse = true;
+											this.maxStack = 99;
+											this.consumable = true;
+											this.createTile = 4;
+											this.width = 10;
+											this.height = 12;
+											this.toolTip = "Provides light";
+											this.value = 50;
+										}
+										else
+										{
+											if (this.type == 9)
+											{
+												this.name = "Wood";
+												this.useStyle = 1;
+												this.useTurn = true;
+												this.useAnimation = 15;
+												this.useTime = 10;
+												this.autoReuse = true;
+												this.maxStack = 250;
+												this.consumable = true;
+												this.createTile = 30;
+												this.width = 8;
+												this.height = 10;
+											}
+											else
+											{
+												if (this.type == 10)
+												{
+													this.name = "Iron Axe";
+													this.useStyle = 1;
+													this.useTurn = true;
+													this.useAnimation = 27;
+													this.knockBack = 4.5f;
+													this.useTime = 19;
+													this.autoReuse = true;
+													this.width = 24;
+													this.height = 28;
+													this.damage = 5;
+													this.axe = 9;
+													this.scale = 1.1f;
+													this.useSound = 1;
+													this.value = 1600;
+												}
+												else
+												{
+													if (this.type == 11)
+													{
+														this.name = "Iron Ore";
+														this.useStyle = 1;
+														this.useTurn = true;
+														this.useAnimation = 15;
+														this.useTime = 10;
+														this.autoReuse = true;
+														this.maxStack = 99;
+														this.consumable = true;
+														this.createTile = 6;
+														this.width = 12;
+														this.height = 12;
+														this.value = 500;
+													}
+													else
+													{
+														if (this.type == 12)
+														{
+															this.name = "Copper Ore";
+															this.useStyle = 1;
+															this.useTurn = true;
+															this.useAnimation = 15;
+															this.useTime = 10;
+															this.autoReuse = true;
+															this.maxStack = 99;
+															this.consumable = true;
+															this.createTile = 7;
+															this.width = 12;
+															this.height = 12;
+															this.value = 250;
+														}
+														else
+														{
+															if (this.type == 13)
+															{
+																this.name = "Gold Ore";
+																this.useStyle = 1;
+																this.useTurn = true;
+																this.useAnimation = 15;
+																this.useTime = 10;
+																this.autoReuse = true;
+																this.maxStack = 99;
+																this.consumable = true;
+																this.createTile = 8;
+																this.width = 12;
+																this.height = 12;
+																this.value = 2000;
+															}
+															else
+															{
+																if (this.type == 14)
+																{
+																	this.name = "Silver Ore";
+																	this.useStyle = 1;
+																	this.useTurn = true;
+																	this.useAnimation = 15;
+																	this.useTime = 10;
+																	this.autoReuse = true;
+																	this.maxStack = 99;
+																	this.consumable = true;
+																	this.createTile = 9;
+																	this.width = 12;
+																	this.height = 12;
+																	this.value = 1000;
+																}
+																else
+																{
+																	if (this.type == 15)
+																	{
+																		this.name = "Copper Watch";
+																		this.width = 24;
+																		this.height = 28;
+																		this.accessory = true;
+																		this.toolTip = "Tells the time";
+																		this.value = 1000;
+																	}
+																	else
+																	{
+																		if (this.type == 16)
+																		{
+																			this.name = "Silver Watch";
+																			this.width = 24;
+																			this.height = 28;
+																			this.accessory = true;
+																			this.toolTip = "Tells the time";
+																			this.value = 5000;
+																		}
+																		else
+																		{
+																			if (this.type == 17)
+																			{
+																				this.name = "Gold Watch";
+																				this.width = 24;
+																				this.height = 28;
+																				this.accessory = true;
+																				this.rare = 1;
+																				this.toolTip = "Tells the time";
+																				this.value = 10000;
+																			}
+																			else
+																			{
+																				if (this.type == 18)
+																				{
+																					this.name = "Depth Meter";
+																					this.width = 24;
+																					this.height = 18;
+																					this.accessory = true;
+																					this.rare = 1;
+																					this.toolTip = "Shows depth";
+																					this.value = 10000;
+																				}
+																				else
+																				{
+																					if (this.type == 19)
+																					{
+																						this.name = "Gold Bar";
+																						this.width = 20;
+																						this.height = 20;
+																						this.maxStack = 99;
+																						this.value = 6000;
+																					}
+																					else
+																					{
+																						if (this.type == 20)
+																						{
+																							this.name = "Copper Bar";
+																							this.width = 20;
+																							this.height = 20;
+																							this.maxStack = 99;
+																							this.value = 750;
+																						}
+																						else
+																						{
+																							if (this.type == 21)
+																							{
+																								this.name = "Silver Bar";
+																								this.width = 20;
+																								this.height = 20;
+																								this.maxStack = 99;
+																								this.value = 3000;
+																							}
+																							else
+																							{
+																								if (this.type == 22)
+																								{
+																									this.name = "Iron Bar";
+																									this.width = 20;
+																									this.height = 20;
+																									this.maxStack = 99;
+																									this.value = 1500;
+																								}
+																								else
+																								{
+																									if (this.type == 23)
+																									{
+																										this.name = "Gel";
+																										this.width = 10;
+																										this.height = 12;
+																										this.maxStack = 99;
+																										this.alpha = 175;
+																										this.color = new Color(0, 80, 255, 100);
+																										this.toolTip = "'Both tasty and flammable'";
+																										this.value = 5;
+																									}
+																									else
+																									{
+																										if (this.type == 24)
+																										{
+																											this.name = "Wooden Sword";
+																											this.useStyle = 1;
+																											this.useTurn = false;
+																											this.useAnimation = 25;
+																											this.width = 24;
+																											this.height = 28;
+																											this.damage = 7;
+																											this.knockBack = 4f;
+																											this.scale = 0.95f;
+																											this.useSound = 1;
+																											this.value = 100;
+																										}
+																										else
+																										{
+																											if (this.type == 25)
+																											{
+																												this.name = "Wooden Door";
+																												this.useStyle = 1;
+																												this.useTurn = true;
+																												this.useAnimation = 15;
+																												this.useTime = 10;
+																												this.maxStack = 99;
+																												this.consumable = true;
+																												this.createTile = 10;
+																												this.width = 14;
+																												this.height = 28;
+																												this.value = 200;
+																											}
+																											else
+																											{
+																												if (this.type == 26)
+																												{
+																													this.name = "Stone Wall";
+																													this.useStyle = 1;
+																													this.useTurn = true;
+																													this.useAnimation = 15;
+																													this.useTime = 10;
+																													this.autoReuse = true;
+																													this.maxStack = 250;
+																													this.consumable = true;
+																													this.createWall = 1;
+																													this.width = 12;
+																													this.height = 12;
+																												}
+																												else
+																												{
+																													if (this.type == 27)
+																													{
+																														this.name = "Acorn";
+																														this.useTurn = true;
+																														this.useStyle = 1;
+																														this.useAnimation = 15;
+																														this.useTime = 10;
+																														this.maxStack = 99;
+																														this.consumable = true;
+																														this.createTile = 20;
+																														this.width = 18;
+																														this.height = 18;
+																														this.value = 10;
+																													}
+																													else
+																													{
+																														if (this.type == 28)
+																														{
+																															this.name = "Lesser Healing Potion";
+																															this.useSound = 3;
+																															this.healLife = 100;
+																															this.useStyle = 2;
+																															this.useTurn = true;
+																															this.useAnimation = 17;
+																															this.useTime = 17;
+																															this.maxStack = 30;
+																															this.consumable = true;
+																															this.width = 14;
+																															this.height = 24;
+																															this.potion = true;
+																															this.value = 200;
+																														}
+																														else
+																														{
+																															if (this.type == 29)
+																															{
+																																this.name = "Life Crystal";
+																																this.maxStack = 99;
+																																this.consumable = true;
+																																this.width = 18;
+																																this.height = 18;
+																																this.useStyle = 4;
+																																this.useTime = 30;
+																																this.useSound = 4;
+																																this.useAnimation = 30;
+																																this.toolTip = "Increases maximum life";
+																																this.rare = 2;
+																															}
+																															else
+																															{
+																																if (this.type == 30)
+																																{
+																																	this.name = "Dirt Wall";
+																																	this.useStyle = 1;
+																																	this.useTurn = true;
+																																	this.useAnimation = 15;
+																																	this.useTime = 10;
+																																	this.autoReuse = true;
+																																	this.maxStack = 250;
+																																	this.consumable = true;
+																																	this.createWall = 2;
+																																	this.width = 12;
+																																	this.height = 12;
+																																}
+																																else
+																																{
+																																	if (this.type == 31)
+																																	{
+																																		this.name = "Bottle";
+																																		this.useStyle = 1;
+																																		this.useTurn = true;
+																																		this.useAnimation = 15;
+																																		this.useTime = 10;
+																																		this.autoReuse = true;
+																																		this.maxStack = 99;
+																																		this.consumable = true;
+																																		this.createTile = 13;
+																																		this.width = 16;
+																																		this.height = 24;
+																																		this.value = 100;
+																																	}
+																																	else
+																																	{
+																																		if (this.type == 32)
+																																		{
+																																			this.name = "Wooden Table";
+																																			this.useStyle = 1;
+																																			this.useTurn = true;
+																																			this.useAnimation = 15;
+																																			this.useTime = 10;
+																																			this.autoReuse = true;
+																																			this.maxStack = 99;
+																																			this.consumable = true;
+																																			this.createTile = 14;
+																																			this.width = 26;
+																																			this.height = 20;
+																																			this.value = 300;
+																																		}
+																																		else
+																																		{
+																																			if (this.type == 33)
+																																			{
+																																				this.name = "Furnace";
+																																				this.useStyle = 1;
+																																				this.useTurn = true;
+																																				this.useAnimation = 15;
+																																				this.useTime = 10;
+																																				this.autoReuse = true;
+																																				this.maxStack = 99;
+																																				this.consumable = true;
+																																				this.createTile = 17;
+																																				this.width = 26;
+																																				this.height = 24;
+																																				this.value = 300;
+																																			}
+																																			else
+																																			{
+																																				if (this.type == 34)
+																																				{
+																																					this.name = "Wooden Chair";
+																																					this.useStyle = 1;
+																																					this.useTurn = true;
+																																					this.useAnimation = 15;
+																																					this.useTime = 10;
+																																					this.autoReuse = true;
+																																					this.maxStack = 99;
+																																					this.consumable = true;
+																																					this.createTile = 15;
+																																					this.width = 12;
+																																					this.height = 30;
+																																					this.value = 150;
+																																				}
+																																				else
+																																				{
+																																					if (this.type == 35)
+																																					{
+																																						this.name = "Iron Anvil";
+																																						this.useStyle = 1;
+																																						this.useTurn = true;
+																																						this.useAnimation = 15;
+																																						this.useTime = 10;
+																																						this.autoReuse = true;
+																																						this.maxStack = 99;
+																																						this.consumable = true;
+																																						this.createTile = 16;
+																																						this.width = 28;
+																																						this.height = 14;
+																																						this.value = 5000;
+																																					}
+																																					else
+																																					{
+																																						if (this.type == 36)
+																																						{
+																																							this.name = "Work Bench";
+																																							this.useStyle = 1;
+																																							this.useTurn = true;
+																																							this.useAnimation = 15;
+																																							this.useTime = 10;
+																																							this.autoReuse = true;
+																																							this.maxStack = 99;
+																																							this.consumable = true;
+																																							this.createTile = 18;
+																																							this.width = 28;
+																																							this.height = 14;
+																																							this.value = 150;
+																																						}
+																																						else
+																																						{
+																																							if (this.type == 37)
+																																							{
+																																								this.name = "Goggles";
+																																								this.width = 28;
+																																								this.height = 12;
+																																								this.defense = 1;
+																																								this.headSlot = 10;
+																																								this.rare = 1;
+																																								this.value = 1000;
+																																							}
+																																							else
+																																							{
+																																								if (this.type == 38)
+																																								{
+																																									this.name = "Lens";
+																																									this.width = 12;
+																																									this.height = 20;
+																																									this.maxStack = 99;
+																																									this.value = 500;
+																																								}
+																																								else
+																																								{
+																																									if (this.type == 39)
+																																									{
+																																										this.useStyle = 5;
+																																										this.useAnimation = 30;
+																																										this.useTime = 30;
+																																										this.name = "Wooden Bow";
+																																										this.width = 12;
+																																										this.height = 28;
+																																										this.shoot = 1;
+																																										this.useAmmo = 1;
+																																										this.useSound = 5;
+																																										this.damage = 5;
+																																										this.shootSpeed = 6.1f;
+																																										this.noMelee = true;
+																																										this.value = 100;
+																																									}
+																																									else
+																																									{
+																																										if (this.type == 40)
+																																										{
+																																											this.name = "Wooden Arrow";
+																																											this.shootSpeed = 3f;
+																																											this.shoot = 1;
+																																											this.damage = 5;
+																																											this.width = 10;
+																																											this.height = 28;
+																																											this.maxStack = 250;
+																																											this.consumable = true;
+																																											this.ammo = 1;
+																																											this.knockBack = 2f;
+																																											this.value = 10;
+																																										}
+																																										else
+																																										{
+																																											if (this.type == 41)
+																																											{
+																																												this.name = "Flaming Arrow";
+																																												this.shootSpeed = 3.5f;
+																																												this.shoot = 2;
+																																												this.damage = 7;
+																																												this.width = 10;
+																																												this.height = 28;
+																																												this.maxStack = 250;
+																																												this.consumable = true;
+																																												this.ammo = 1;
+																																												this.knockBack = 2f;
+																																												this.value = 15;
+																																											}
+																																											else
+																																											{
+																																												if (this.type == 42)
+																																												{
+																																													this.useStyle = 1;
+																																													this.name = "Shuriken";
+																																													this.shootSpeed = 9f;
+																																													this.shoot = 3;
+																																													this.damage = 10;
+																																													this.width = 18;
+																																													this.height = 20;
+																																													this.maxStack = 250;
+																																													this.consumable = true;
+																																													this.useSound = 1;
+																																													this.useAnimation = 15;
+																																													this.useTime = 15;
+																																													this.noUseGraphic = true;
+																																													this.noMelee = true;
+																																													this.value = 20;
+																																												}
+																																												else
+																																												{
+																																													if (this.type == 43)
+																																													{
+																																														this.useStyle = 4;
+																																														this.name = "Suspicious Looking Eye";
+																																														this.width = 22;
+																																														this.height = 14;
+																																														this.consumable = true;
+																																														this.useAnimation = 45;
+																																														this.useTime = 45;
+																																														this.toolTip = "May cause terrible things to occur";
+																																													}
+																																													else
+																																													{
+																																														if (this.type == 44)
+																																														{
+																																															this.useStyle = 5;
+																																															this.useAnimation = 25;
+																																															this.useTime = 25;
+																																															this.name = "Demon Bow";
+																																															this.width = 12;
+																																															this.height = 28;
+																																															this.shoot = 1;
+																																															this.useAmmo = 1;
+																																															this.useSound = 5;
+																																															this.damage = 13;
+																																															this.shootSpeed = 6.7f;
+																																															this.knockBack = 1f;
+																																															this.alpha = 30;
+																																															this.rare = 1;
+																																															this.noMelee = true;
+																																															this.value = 18000;
+																																														}
+																																														else
+																																														{
+																																															if (this.type == 45)
+																																															{
+																																																this.name = "War Axe of the Night";
+																																																this.autoReuse = true;
+																																																this.useStyle = 1;
+																																																this.useAnimation = 30;
+																																																this.knockBack = 6f;
+																																																this.useTime = 15;
+																																																this.width = 24;
+																																																this.height = 28;
+																																																this.damage = 21;
+																																																this.axe = 15;
+																																																this.scale = 1.2f;
+																																																this.useSound = 1;
+																																																this.rare = 1;
+																																																this.value = 13500;
+																																															}
+																																															else
+																																															{
+																																																if (this.type == 46)
+																																																{
+																																																	this.name = "Light's Bane";
+																																																	this.useStyle = 1;
+																																																	this.useAnimation = 20;
+																																																	this.knockBack = 5f;
+																																																	this.width = 24;
+																																																	this.height = 28;
+																																																	this.damage = 16;
+																																																	this.scale = 1.1f;
+																																																	this.useSound = 1;
+																																																	this.rare = 1;
+																																																	this.value = 13500;
+																																																}
+																																																else
+																																																{
+																																																	if (this.type == 47)
+																																																	{
+																																																		this.name = "Unholy Arrow";
+																																																		this.shootSpeed = 3.4f;
+																																																		this.shoot = 4;
+																																																		this.damage = 8;
+																																																		this.width = 10;
+																																																		this.height = 28;
+																																																		this.maxStack = 250;
+																																																		this.consumable = true;
+																																																		this.ammo = 1;
+																																																		this.knockBack = 3f;
+																																																		this.alpha = 30;
+																																																		this.rare = 1;
+																																																		this.value = 40;
+																																																	}
+																																																	else
+																																																	{
+																																																		if (this.type == 48)
+																																																		{
+																																																			this.name = "Chest";
+																																																			this.useStyle = 1;
+																																																			this.useTurn = true;
+																																																			this.useAnimation = 15;
+																																																			this.useTime = 10;
+																																																			this.autoReuse = true;
+																																																			this.maxStack = 99;
+																																																			this.consumable = true;
+																																																			this.createTile = 21;
+																																																			this.width = 26;
+																																																			this.height = 22;
+																																																			this.value = 500;
+																																																		}
+																																																		else
+																																																		{
+																																																			if (this.type == 49)
+																																																			{
+																																																				this.name = "Band of Regeneration";
+																																																				this.width = 22;
+																																																				this.height = 22;
+																																																				this.accessory = true;
+																																																				this.lifeRegen = 1;
+																																																				this.rare = 1;
+																																																				this.toolTip = "Slowly regenerates life";
+																																																				this.value = 50000;
+																																																			}
+																																																			else
+																																																			{
+																																																				if (this.type == 50)
+																																																				{
+																																																					this.name = "Magic Mirror";
+																																																					this.useTurn = true;
+																																																					this.width = 20;
+																																																					this.height = 20;
+																																																					this.useStyle = 4;
+																																																					this.useTime = 90;
+																																																					this.useSound = 6;
+																																																					this.useAnimation = 90;
+																																																					this.toolTip = "Gaze in the mirror to return home";
+																																																					this.rare = 1;
+																																																					this.value = 50000;
+																																																				}
+																																																				else
+																																																				{
+																																																					if (this.type == 51)
+																																																					{
+																																																						this.name = "Jester's Arrow";
+																																																						this.shootSpeed = 0.5f;
+																																																						this.shoot = 5;
+																																																						this.damage = 9;
+																																																						this.width = 10;
+																																																						this.height = 28;
+																																																						this.maxStack = 250;
+																																																						this.consumable = true;
+																																																						this.ammo = 1;
+																																																						this.knockBack = 4f;
+																																																						this.rare = 1;
+																																																						this.value = 100;
+																																																					}
+																																																					else
+																																																					{
+																																																						if (this.type == 52)
+																																																						{
+																																																							this.name = "Angel Statue";
+																																																							this.width = 24;
+																																																							this.height = 28;
+																																																							this.toolTip = "It doesn't do anything";
+																																																							this.value = 1;
+																																																						}
+																																																						else
+																																																						{
+																																																							if (this.type == 53)
+																																																							{
+																																																								this.name = "Cloud in a Bottle";
+																																																								this.width = 16;
+																																																								this.height = 24;
+																																																								this.accessory = true;
+																																																								this.rare = 1;
+																																																								this.toolTip = "Allows the holder to double jump";
+																																																								this.value = 50000;
+																																																							}
+																																																							else
+																																																							{
+																																																								if (this.type == 54)
+																																																								{
+																																																									this.name = "Hermes Boots";
+																																																									this.width = 28;
+																																																									this.height = 24;
+																																																									this.accessory = true;
+																																																									this.rare = 1;
+																																																									this.toolTip = "The wearer can run super fast";
+																																																									this.value = 50000;
+																																																								}
+																																																								else
+																																																								{
+																																																									if (this.type == 55)
+																																																									{
+																																																										this.noMelee = true;
+																																																										this.useStyle = 1;
+																																																										this.name = "Enchanted Boomerang";
+																																																										this.shootSpeed = 10f;
+																																																										this.shoot = 6;
+																																																										this.damage = 13;
+																																																										this.knockBack = 8f;
+																																																										this.width = 14;
+																																																										this.height = 28;
+																																																										this.useSound = 1;
+																																																										this.useAnimation = 15;
+																																																										this.useTime = 15;
+																																																										this.noUseGraphic = true;
+																																																										this.rare = 1;
+																																																										this.value = 50000;
+																																																									}
+																																																									else
+																																																									{
+																																																										if (this.type == 56)
+																																																										{
+																																																											this.name = "Demonite Ore";
+																																																											this.useStyle = 1;
+																																																											this.useTurn = true;
+																																																											this.useAnimation = 15;
+																																																											this.useTime = 10;
+																																																											this.autoReuse = true;
+																																																											this.maxStack = 99;
+																																																											this.consumable = true;
+																																																											this.createTile = 22;
+																																																											this.width = 12;
+																																																											this.height = 12;
+																																																											this.rare = 1;
+																																																											this.toolTip = "Pulsing with dark energy";
+																																																											this.value = 4000;
+																																																										}
+																																																										else
+																																																										{
+																																																											if (this.type == 57)
+																																																											{
+																																																												this.name = "Demonite Bar";
+																																																												this.width = 20;
+																																																												this.height = 20;
+																																																												this.maxStack = 99;
+																																																												this.rare = 1;
+																																																												this.toolTip = "Pulsing with dark energy";
+																																																												this.value = 16000;
+																																																											}
+																																																											else
+																																																											{
+																																																												if (this.type == 58)
+																																																												{
+																																																													this.name = "Heart";
+																																																													this.width = 12;
+																																																													this.height = 12;
+																																																												}
+																																																												else
+																																																												{
+																																																													if (this.type == 59)
+																																																													{
+																																																														this.name = "Corrupt Seeds";
+																																																														this.useTurn = true;
+																																																														this.useStyle = 1;
+																																																														this.useAnimation = 15;
+																																																														this.useTime = 10;
+																																																														this.maxStack = 99;
+																																																														this.consumable = true;
+																																																														this.createTile = 23;
+																																																														this.width = 14;
+																																																														this.height = 14;
+																																																														this.value = 500;
+																																																													}
+																																																													else
+																																																													{
+																																																														if (this.type == 60)
+																																																														{
+																																																															this.name = "Vile Mushroom";
+																																																															this.width = 16;
+																																																															this.height = 18;
+																																																															this.maxStack = 99;
+																																																															this.value = 50;
+																																																														}
+																																																														else
+																																																														{
+																																																															if (this.type == 61)
+																																																															{
+																																																																this.name = "Ebonstone Block";
+																																																																this.useStyle = 1;
+																																																																this.useTurn = true;
+																																																																this.useAnimation = 15;
+																																																																this.useTime = 10;
+																																																																this.autoReuse = true;
+																																																																this.maxStack = 250;
+																																																																this.consumable = true;
+																																																																this.createTile = 25;
+																																																																this.width = 12;
+																																																																this.height = 12;
+																																																															}
+																																																															else
+																																																															{
+																																																																if (this.type == 62)
+																																																																{
+																																																																	this.name = "Grass Seeds";
+																																																																	this.useTurn = true;
+																																																																	this.useStyle = 1;
+																																																																	this.useAnimation = 15;
+																																																																	this.useTime = 10;
+																																																																	this.maxStack = 99;
+																																																																	this.consumable = true;
+																																																																	this.createTile = 2;
+																																																																	this.width = 14;
+																																																																	this.height = 14;
+																																																																	this.value = 20;
+																																																																}
+																																																																else
+																																																																{
+																																																																	if (this.type == 63)
+																																																																	{
+																																																																		this.name = "Sunflower";
+																																																																		this.useTurn = true;
+																																																																		this.useStyle = 1;
+																																																																		this.useAnimation = 15;
+																																																																		this.useTime = 10;
+																																																																		this.maxStack = 99;
+																																																																		this.consumable = true;
+																																																																		this.createTile = 27;
+																																																																		this.width = 26;
+																																																																		this.height = 26;
+																																																																		this.value = 200;
+																																																																	}
+																																																																	else
+																																																																	{
+																																																																		if (this.type == 64)
+																																																																		{
+																																																																			this.mana = 5;
+																																																																			this.damage = 8;
+																																																																			this.useStyle = 1;
+																																																																			this.name = "Vilethorn";
+																																																																			this.shootSpeed = 32f;
+																																																																			this.shoot = 7;
+																																																																			this.width = 26;
+																																																																			this.height = 28;
+																																																																			this.useSound = 8;
+																																																																			this.useAnimation = 30;
+																																																																			this.useTime = 30;
+																																																																			this.rare = 1;
+																																																																			this.noMelee = true;
+																																																																			this.toolTip = "Summons a vile thorn";
+																																																																			this.value = 10000;
+																																																																		}
+																																																																		else
+																																																																		{
+																																																																			if (this.type == 65)
+																																																																			{
+																																																																				this.mana = 11;
+																																																																				this.knockBack = 5f;
+																																																																				this.alpha = 100;
+																																																																				this.color = new Color(150, 150, 150, 0);
+																																																																				this.damage = 15;
+																																																																				this.useStyle = 1;
+																																																																				this.scale = 1.15f;
+																																																																				this.name = "Starfury";
+																																																																				this.shootSpeed = 12f;
+																																																																				this.shoot = 9;
+																																																																				this.width = 14;
+																																																																				this.height = 28;
+																																																																				this.useSound = 9;
+																																																																				this.useAnimation = 25;
+																																																																				this.useTime = 10;
+																																																																				this.rare = 1;
+																																																																				this.toolTip = "Forged with the fury of heaven";
+																																																																				this.value = 50000;
+																																																																			}
+																																																																			else
+																																																																			{
+																																																																				if (this.type == 66)
+																																																																				{
+																																																																					this.useStyle = 1;
+																																																																					this.name = "Purification Powder";
+																																																																					this.shootSpeed = 4f;
+																																																																					this.shoot = 10;
+																																																																					this.width = 16;
+																																																																					this.height = 24;
+																																																																					this.maxStack = 99;
+																																																																					this.consumable = true;
+																																																																					this.useSound = 1;
+																																																																					this.useAnimation = 15;
+																																																																					this.useTime = 15;
+																																																																					this.noMelee = true;
+																																																																					this.toolTip = "Cleanses the corruption";
+																																																																					this.value = 75;
+																																																																				}
+																																																																				else
+																																																																				{
+																																																																					if (this.type == 67)
+																																																																					{
+																																																																						this.damage = 8;
+																																																																						this.useStyle = 1;
+																																																																						this.name = "Vile Powder";
+																																																																						this.shootSpeed = 4f;
+																																																																						this.shoot = 11;
+																																																																						this.width = 16;
+																																																																						this.height = 24;
+																																																																						this.maxStack = 99;
+																																																																						this.consumable = true;
+																																																																						this.useSound = 1;
+																																																																						this.useAnimation = 15;
+																																																																						this.useTime = 15;
+																																																																						this.noMelee = true;
+																																																																						this.value = 100;
+																																																																					}
+																																																																					else
+																																																																					{
+																																																																						if (this.type == 68)
+																																																																						{
+																																																																							this.name = "Rotten Chunk";
+																																																																							this.width = 18;
+																																																																							this.height = 20;
+																																																																							this.maxStack = 99;
+																																																																							this.toolTip = "Looks tasty!";
+																																																																							this.value = 10;
+																																																																						}
+																																																																						else
+																																																																						{
+																																																																							if (this.type == 69)
+																																																																							{
+																																																																								this.name = "Worm Tooth";
+																																																																								this.width = 8;
+																																																																								this.height = 20;
+																																																																								this.maxStack = 99;
+																																																																								this.value = 100;
+																																																																							}
+																																																																							else
+																																																																							{
+																																																																								if (this.type == 70)
+																																																																								{
+																																																																									this.useStyle = 4;
+																																																																									this.consumable = true;
+																																																																									this.useAnimation = 45;
+																																																																									this.useTime = 45;
+																																																																									this.name = "Worm Food";
+																																																																									this.width = 28;
+																																																																									this.height = 28;
+																																																																									this.toolTip = "May attract giant worms";
+																																																																								}
+																																																																								else
+																																																																								{
+																																																																									if (this.type == 71)
+																																																																									{
+																																																																										this.name = "Copper Coin";
+																																																																										this.width = 10;
+																																																																										this.height = 12;
+																																																																										this.maxStack = 100;
+																																																																									}
+																																																																									else
+																																																																									{
+																																																																										if (this.type == 72)
+																																																																										{
+																																																																											this.name = "Silver Coin";
+																																																																											this.width = 10;
+																																																																											this.height = 12;
+																																																																											this.maxStack = 100;
+																																																																										}
+																																																																										else
+																																																																										{
+																																																																											if (this.type == 73)
+																																																																											{
+																																																																												this.name = "Gold Coin";
+																																																																												this.width = 10;
+																																																																												this.height = 12;
+																																																																												this.maxStack = 100;
+																																																																											}
+																																																																											else
+																																																																											{
+																																																																												if (this.type == 74)
+																																																																												{
+																																																																													this.name = "Platinum Coin";
+																																																																													this.width = 10;
+																																																																													this.height = 12;
+																																																																													this.maxStack = 100;
+																																																																												}
+																																																																												else
+																																																																												{
+																																																																													if (this.type == 75)
+																																																																													{
+																																																																														this.name = "Fallen Star";
+																																																																														this.width = 18;
+																																																																														this.height = 20;
+																																																																														this.maxStack = 100;
+																																																																														this.alpha = 75;
+																																																																														this.ammo = 15;
+																																																																														this.toolTip = "Disappears after the sunrise";
+																																																																														this.value = 500;
+																																																																														this.useStyle = 4;
+																																																																														this.useSound = 4;
+																																																																														this.useTurn = false;
+																																																																														this.useAnimation = 17;
+																																																																														this.useTime = 17;
+																																																																														this.healMana = 20;
+																																																																														this.consumable = true;
+																																																																														this.rare = 1;
+																																																																														this.potion = true;
+																																																																													}
+																																																																													else
+																																																																													{
+																																																																														if (this.type == 76)
+																																																																														{
+																																																																															this.name = "Copper Greaves";
+																																																																															this.width = 18;
+																																																																															this.height = 18;
+																																																																															this.defense = 1;
+																																																																															this.legSlot = 1;
+																																																																															this.value = 750;
+																																																																														}
+																																																																														else
+																																																																														{
+																																																																															if (this.type == 77)
+																																																																															{
+																																																																																this.name = "Iron Greaves";
+																																																																																this.width = 18;
+																																																																																this.height = 18;
+																																																																																this.defense = 2;
+																																																																																this.legSlot = 2;
+																																																																																this.value = 3000;
+																																																																															}
+																																																																															else
+																																																																															{
+																																																																																if (this.type == 78)
+																																																																																{
+																																																																																	this.name = "Silver Greaves";
+																																																																																	this.width = 18;
+																																																																																	this.height = 18;
+																																																																																	this.defense = 3;
+																																																																																	this.legSlot = 3;
+																																																																																	this.value = 7500;
+																																																																																}
+																																																																																else
+																																																																																{
+																																																																																	if (this.type == 79)
+																																																																																	{
+																																																																																		this.name = "Gold Greaves";
+																																																																																		this.width = 18;
+																																																																																		this.height = 18;
+																																																																																		this.defense = 4;
+																																																																																		this.legSlot = 4;
+																																																																																		this.value = 15000;
+																																																																																	}
+																																																																																	else
+																																																																																	{
+																																																																																		if (this.type == 80)
+																																																																																		{
+																																																																																			this.name = "Copper Chainmail";
+																																																																																			this.width = 18;
+																																																																																			this.height = 18;
+																																																																																			this.defense = 2;
+																																																																																			this.bodySlot = 1;
+																																																																																			this.value = 1000;
+																																																																																		}
+																																																																																		else
+																																																																																		{
+																																																																																			if (this.type == 81)
+																																																																																			{
+																																																																																				this.name = "Iron Chainmail";
+																																																																																				this.width = 18;
+																																																																																				this.height = 18;
+																																																																																				this.defense = 3;
+																																																																																				this.bodySlot = 2;
+																																																																																				this.value = 4000;
+																																																																																			}
+																																																																																			else
+																																																																																			{
+																																																																																				if (this.type == 82)
+																																																																																				{
+																																																																																					this.name = "Silver Chainmail";
+																																																																																					this.width = 18;
+																																																																																					this.height = 18;
+																																																																																					this.defense = 4;
+																																																																																					this.bodySlot = 3;
+																																																																																					this.value = 10000;
+																																																																																				}
+																																																																																				else
+																																																																																				{
+																																																																																					if (this.type == 83)
+																																																																																					{
+																																																																																						this.name = "Gold Chainmail";
+																																																																																						this.width = 18;
+																																																																																						this.height = 18;
+																																																																																						this.defense = 5;
+																																																																																						this.bodySlot = 4;
+																																																																																						this.value = 20000;
+																																																																																					}
+																																																																																					else
+																																																																																					{
+																																																																																						if (this.type == 84)
+																																																																																						{
+																																																																																							this.noUseGraphic = true;
+																																																																																							this.damage = 0;
+																																																																																							this.knockBack = 7f;
+																																																																																							this.useStyle = 5;
+																																																																																							this.name = "Grappling Hook";
+																																																																																							this.shootSpeed = 11f;
+																																																																																							this.shoot = 13;
+																																																																																							this.width = 18;
+																																																																																							this.height = 28;
+																																																																																							this.useSound = 1;
+																																																																																							this.useAnimation = 20;
+																																																																																							this.useTime = 20;
+																																																																																							this.rare = 1;
+																																																																																							this.noMelee = true;
+																																																																																							this.value = 20000;
+																																																																																						}
+																																																																																						else
+																																																																																						{
+																																																																																							if (this.type == 85)
+																																																																																							{
+																																																																																								this.name = "Iron Chain";
+																																																																																								this.width = 14;
+																																																																																								this.height = 20;
+																																																																																								this.maxStack = 99;
+																																																																																								this.value = 1000;
+																																																																																							}
+																																																																																							else
+																																																																																							{
+																																																																																								if (this.type == 86)
+																																																																																								{
+																																																																																									this.name = "Shadow Scale";
+																																																																																									this.width = 14;
+																																																																																									this.height = 18;
+																																																																																									this.maxStack = 99;
+																																																																																									this.rare = 1;
+																																																																																									this.value = 500;
+																																																																																								}
+																																																																																								else
+																																																																																								{
+																																																																																									if (this.type == 87)
+																																																																																									{
+																																																																																										this.name = "Piggy Bank";
+																																																																																										this.useStyle = 1;
+																																																																																										this.useTurn = true;
+																																																																																										this.useAnimation = 15;
+																																																																																										this.useTime = 10;
+																																																																																										this.autoReuse = true;
+																																																																																										this.maxStack = 99;
+																																																																																										this.consumable = true;
+																																																																																										this.createTile = 29;
+																																																																																										this.width = 20;
+																																																																																										this.height = 12;
+																																																																																										this.value = 10000;
+																																																																																									}
+																																																																																									else
+																																																																																									{
+																																																																																										if (this.type == 88)
+																																																																																										{
+																																																																																											this.name = "Mining Helmet";
+																																																																																											this.width = 22;
+																																																																																											this.height = 16;
+																																																																																											this.defense = 1;
+																																																																																											this.headSlot = 11;
+																																																																																											this.rare = 1;
+																																																																																											this.value = 80000;
+																																																																																											this.toolTip = "Provides light when worn";
+																																																																																										}
+																																																																																										else
+																																																																																										{
+																																																																																											if (this.type == 89)
+																																																																																											{
+																																																																																												this.name = "Copper Helmet";
+																																																																																												this.width = 18;
+																																																																																												this.height = 18;
+																																																																																												this.defense = 1;
+																																																																																												this.headSlot = 1;
+																																																																																												this.value = 1250;
+																																																																																											}
+																																																																																											else
+																																																																																											{
+																																																																																												if (this.type == 90)
+																																																																																												{
+																																																																																													this.name = "Iron Helmet";
+																																																																																													this.width = 18;
+																																																																																													this.height = 18;
+																																																																																													this.defense = 2;
+																																																																																													this.headSlot = 2;
+																																																																																													this.value = 5000;
+																																																																																												}
+																																																																																												else
+																																																																																												{
+																																																																																													if (this.type == 91)
+																																																																																													{
+																																																																																														this.name = "Silver Helmet";
+																																																																																														this.width = 18;
+																																																																																														this.height = 18;
+																																																																																														this.defense = 3;
+																																																																																														this.headSlot = 3;
+																																																																																														this.value = 12500;
+																																																																																													}
+																																																																																													else
+																																																																																													{
+																																																																																														if (this.type == 92)
+																																																																																														{
+																																																																																															this.name = "Gold Helmet";
+																																																																																															this.width = 18;
+																																																																																															this.height = 18;
+																																																																																															this.defense = 4;
+																																																																																															this.headSlot = 4;
+																																																																																															this.value = 25000;
+																																																																																														}
+																																																																																														else
+																																																																																														{
+																																																																																															if (this.type == 93)
+																																																																																															{
+																																																																																																this.name = "Wood Wall";
+																																																																																																this.useStyle = 1;
+																																																																																																this.useTurn = true;
+																																																																																																this.useAnimation = 15;
+																																																																																																this.useTime = 10;
+																																																																																																this.autoReuse = true;
+																																																																																																this.maxStack = 250;
+																																																																																																this.consumable = true;
+																																																																																																this.createWall = 4;
+																																																																																																this.width = 12;
+																																																																																																this.height = 12;
+																																																																																															}
+																																																																																															else
+																																																																																															{
+																																																																																																if (this.type == 94)
+																																																																																																{
+																																																																																																	this.name = "Wood Platform";
+																																																																																																	this.useStyle = 1;
+																																																																																																	this.useTurn = true;
+																																																																																																	this.useAnimation = 15;
+																																																																																																	this.useTime = 10;
+																																																																																																	this.autoReuse = true;
+																																																																																																	this.maxStack = 99;
+																																																																																																	this.consumable = true;
+																																																																																																	this.createTile = 19;
+																																																																																																	this.width = 8;
+																																																																																																	this.height = 10;
+																																																																																																}
+																																																																																																else
+																																																																																																{
+																																																																																																	if (this.type == 95)
+																																																																																																	{
+																																																																																																		this.useStyle = 5;
+																																																																																																		this.useAnimation = 20;
+																																																																																																		this.useTime = 20;
+																																																																																																		this.name = "Flintlock Pistol";
+																																																																																																		this.width = 24;
+																																																																																																		this.height = 28;
+																																																																																																		this.shoot = 14;
+																																																																																																		this.useAmmo = 14;
+																																																																																																		this.useSound = 11;
+																																																																																																		this.damage = 7;
+																																																																																																		this.shootSpeed = 5f;
+																																																																																																		this.noMelee = true;
+																																																																																																		this.value = 50000;
+																																																																																																		this.scale = 0.9f;
+																																																																																																		this.rare = 1;
+																																																																																																	}
+																																																																																																	else
+																																																																																																	{
+																																																																																																		if (this.type == 96)
+																																																																																																		{
+																																																																																																			this.useStyle = 5;
+																																																																																																			this.autoReuse = true;
+																																																																																																			this.useAnimation = 45;
+																																																																																																			this.useTime = 45;
+																																																																																																			this.name = "Musket";
+																																																																																																			this.width = 44;
+																																																																																																			this.height = 14;
+																																																																																																			this.shoot = 10;
+																																																																																																			this.useAmmo = 14;
+																																																																																																			this.useSound = 11;
+																																																																																																			this.damage = 14;
+																																																																																																			this.shootSpeed = 8f;
+																																																																																																			this.noMelee = true;
+																																																																																																			this.value = 100000;
+																																																																																																			this.knockBack = 4f;
+																																																																																																			this.rare = 1;
+																																																																																																		}
+																																																																																																		else
+																																																																																																		{
+																																																																																																			if (this.type == 97)
+																																																																																																			{
+																																																																																																				this.name = "Musket Ball";
+																																																																																																				this.shootSpeed = 4f;
+																																																																																																				this.shoot = 14;
+																																																																																																				this.damage = 7;
+																																																																																																				this.width = 8;
+																																																																																																				this.height = 8;
+																																																																																																				this.maxStack = 250;
+																																																																																																				this.consumable = true;
+																																																																																																				this.ammo = 14;
+																																																																																																				this.knockBack = 2f;
+																																																																																																				this.value = 8;
+																																																																																																			}
+																																																																																																			else
+																																																																																																			{
+																																																																																																				if (this.type == 98)
+																																																																																																				{
+																																																																																																					this.useStyle = 5;
+																																																																																																					this.autoReuse = true;
+																																																																																																					this.useAnimation = 8;
+																																																																																																					this.useTime = 8;
+																																																																																																					this.name = "Minishark";
+																																																																																																					this.width = 50;
+																																																																																																					this.height = 18;
+																																																																																																					this.shoot = 10;
+																																																																																																					this.useAmmo = 14;
+																																																																																																					this.useSound = 11;
+																																																																																																					this.damage = 5;
+																																																																																																					this.shootSpeed = 7f;
+																																																																																																					this.noMelee = true;
+																																																																																																					this.value = 500000;
+																																																																																																					this.rare = 2;
+																																																																																																					this.toolTip = "Half shark, half gun, completely awesome.";
+																																																																																																				}
+																																																																																																				else
+																																																																																																				{
+																																																																																																					if (this.type == 99)
+																																																																																																					{
+																																																																																																						this.useStyle = 5;
+																																																																																																						this.useAnimation = 28;
+																																																																																																						this.useTime = 28;
+																																																																																																						this.name = "Iron Bow";
+																																																																																																						this.width = 12;
+																																																																																																						this.height = 28;
+																																																																																																						this.shoot = 1;
+																																																																																																						this.useAmmo = 1;
+																																																																																																						this.useSound = 5;
+																																																																																																						this.damage = 9;
+																																																																																																						this.shootSpeed = 6.6f;
+																																																																																																						this.noMelee = true;
+																																																																																																						this.value = 1400;
+																																																																																																					}
+																																																																																																					else
+																																																																																																					{
+																																																																																																						if (this.type == 100)
+																																																																																																						{
+																																																																																																							this.name = "Shadow Greaves";
+																																																																																																							this.width = 18;
+																																																																																																							this.height = 18;
+																																																																																																							this.defense = 6;
+																																																																																																							this.legSlot = 5;
+																																																																																																							this.rare = 1;
+																																																																																																							this.value = 22500;
+																																																																																																						}
+																																																																																																						else
+																																																																																																						{
+																																																																																																							if (this.type == 101)
+																																																																																																							{
+																																																																																																								this.name = "Shadow Scalemail";
+																																																																																																								this.width = 18;
+																																																																																																								this.height = 18;
+																																																																																																								this.defense = 7;
+																																																																																																								this.bodySlot = 5;
+																																																																																																								this.rare = 1;
+																																																																																																								this.value = 30000;
+																																																																																																							}
+																																																																																																							else
+																																																																																																							{
+																																																																																																								if (this.type == 102)
+																																																																																																								{
+																																																																																																									this.name = "Shadow Helmet";
+																																																																																																									this.width = 18;
+																																																																																																									this.height = 18;
+																																																																																																									this.defense = 6;
+																																																																																																									this.headSlot = 5;
+																																																																																																									this.rare = 1;
+																																																																																																									this.value = 37500;
+																																																																																																								}
+																																																																																																								else
+																																																																																																								{
+																																																																																																									if (this.type == 103)
+																																																																																																									{
+																																																																																																										this.name = "Nightmare Pickaxe";
+																																																																																																										this.useStyle = 1;
+																																																																																																										this.useTurn = true;
+																																																																																																										this.useAnimation = 20;
+																																																																																																										this.useTime = 15;
+																																																																																																										this.autoReuse = true;
+																																																																																																										this.width = 24;
+																																																																																																										this.height = 28;
+																																																																																																										this.damage = 11;
+																																																																																																										this.pick = 65;
+																																																																																																										this.useSound = 1;
+																																																																																																										this.knockBack = 3f;
+																																																																																																										this.rare = 1;
+																																																																																																										this.value = 18000;
+																																																																																																										this.scale = 1.15f;
+																																																																																																									}
+																																																																																																									else
+																																																																																																									{
+																																																																																																										if (this.type == 104)
+																																																																																																										{
+																																																																																																											this.name = "The Breaker";
+																																																																																																											this.autoReuse = true;
+																																																																																																											this.useStyle = 1;
+																																																																																																											this.useAnimation = 40;
+																																																																																																											this.useTime = 19;
+																																																																																																											this.hammer = 55;
+																																																																																																											this.width = 24;
+																																																																																																											this.height = 28;
+																																																																																																											this.damage = 28;
+																																																																																																											this.knockBack = 6.5f;
+																																																																																																											this.scale = 1.3f;
+																																																																																																											this.useSound = 1;
+																																																																																																											this.rare = 1;
+																																																																																																											this.value = 15000;
+																																																																																																										}
+																																																																																																										else
+																																																																																																										{
+																																																																																																											if (this.type == 105)
+																																																																																																											{
+																																																																																																												this.name = "Candle";
+																																																																																																												this.useStyle = 1;
+																																																																																																												this.useTurn = true;
+																																																																																																												this.useAnimation = 15;
+																																																																																																												this.useTime = 10;
+																																																																																																												this.autoReuse = true;
+																																																																																																												this.maxStack = 99;
+																																																																																																												this.consumable = true;
+																																																																																																												this.createTile = 33;
+																																																																																																												this.width = 8;
+																																																																																																												this.height = 18;
+																																																																																																												this.holdStyle = 1;
+																																																																																																											}
+																																																																																																											else
+																																																																																																											{
+																																																																																																												if (this.type == 106)
+																																																																																																												{
+																																																																																																													this.name = "Copper Chandelier";
+																																																																																																													this.useStyle = 1;
+																																																																																																													this.useTurn = true;
+																																																																																																													this.useAnimation = 15;
+																																																																																																													this.useTime = 10;
+																																																																																																													this.autoReuse = true;
+																																																																																																													this.maxStack = 99;
+																																																																																																													this.consumable = true;
+																																																																																																													this.createTile = 34;
+																																																																																																													this.width = 26;
+																																																																																																													this.height = 26;
+																																																																																																												}
+																																																																																																												else
+																																																																																																												{
+																																																																																																													if (this.type == 107)
+																																																																																																													{
+																																																																																																														this.name = "Silver Chandelier";
+																																																																																																														this.useStyle = 1;
+																																																																																																														this.useTurn = true;
+																																																																																																														this.useAnimation = 15;
+																																																																																																														this.useTime = 10;
+																																																																																																														this.autoReuse = true;
+																																																																																																														this.maxStack = 99;
+																																																																																																														this.consumable = true;
+																																																																																																														this.createTile = 35;
+																																																																																																														this.width = 26;
+																																																																																																														this.height = 26;
+																																																																																																													}
+																																																																																																													else
+																																																																																																													{
+																																																																																																														if (this.type == 108)
+																																																																																																														{
+																																																																																																															this.name = "Gold Chandelier";
+																																																																																																															this.useStyle = 1;
+																																																																																																															this.useTurn = true;
+																																																																																																															this.useAnimation = 15;
+																																																																																																															this.useTime = 10;
+																																																																																																															this.autoReuse = true;
+																																																																																																															this.maxStack = 99;
+																																																																																																															this.consumable = true;
+																																																																																																															this.createTile = 36;
+																																																																																																															this.width = 26;
+																																																																																																															this.height = 26;
+																																																																																																														}
+																																																																																																														else
+																																																																																																														{
+																																																																																																															if (this.type == 109)
+																																																																																																															{
+																																																																																																																this.name = "Mana Crystal";
+																																																																																																																this.maxStack = 99;
+																																																																																																																this.consumable = true;
+																																																																																																																this.width = 18;
+																																																																																																																this.height = 18;
+																																																																																																																this.useStyle = 4;
+																																																																																																																this.useTime = 30;
+																																																																																																																this.useSound = 4;
+																																																																																																																this.useAnimation = 30;
+																																																																																																																this.toolTip = "Increases maximum mana";
+																																																																																																																this.rare = 2;
+																																																																																																															}
+																																																																																																															else
+																																																																																																															{
+																																																																																																																if (this.type == 110)
+																																																																																																																{
+																																																																																																																	this.name = "Lesser Mana Potion";
+																																																																																																																	this.useSound = 3;
+																																																																																																																	this.healMana = 100;
+																																																																																																																	this.useStyle = 2;
+																																																																																																																	this.useTurn = true;
+																																																																																																																	this.useAnimation = 17;
+																																																																																																																	this.useTime = 17;
+																																																																																																																	this.maxStack = 30;
+																																																																																																																	this.consumable = true;
+																																																																																																																	this.width = 14;
+																																																																																																																	this.height = 24;
+																																																																																																																	this.potion = true;
+																																																																																																																	this.value = 1000;
+																																																																																																																}
+																																																																																																																else
+																																																																																																																{
+																																																																																																																	if (this.type == 111)
+																																																																																																																	{
+																																																																																																																		this.name = "Band of Starpower";
+																																																																																																																		this.width = 22;
+																																																																																																																		this.height = 22;
+																																																																																																																		this.accessory = true;
+																																																																																																																		this.manaRegen = 3;
+																																																																																																																		this.rare = 1;
+																																																																																																																		this.toolTip = "Slowly regenerates mana";
+																																																																																																																		this.value = 50000;
+																																																																																																																	}
+																																																																																																																	else
+																																																																																																																	{
+																																																																																																																		if (this.type == 112)
+																																																																																																																		{
+																																																																																																																			this.mana = 10;
+																																																																																																																			this.damage = 33;
+																																																																																																																			this.useStyle = 1;
+																																																																																																																			this.name = "Flower of Fire";
+																																																																																																																			this.shootSpeed = 6f;
+																																																																																																																			this.shoot = 15;
+																																																																																																																			this.width = 26;
+																																																																																																																			this.height = 28;
+																																																																																																																			this.useSound = 8;
+																																																																																																																			this.useAnimation = 30;
+																																																																																																																			this.useTime = 30;
+																																																																																																																			this.rare = 3;
+																																																																																																																			this.noMelee = true;
+																																																																																																																			this.knockBack = 5f;
+																																																																																																																			this.toolTip = "Throws balls of fire";
+																																																																																																																			this.value = 10000;
+																																																																																																																		}
+																																																																																																																		else
+																																																																																																																		{
+																																																																																																																			if (this.type == 113)
+																																																																																																																			{
+																																																																																																																				this.mana = 18;
+																																																																																																																				this.channel = true;
+																																																																																																																				this.damage = 32;
+																																																																																																																				this.useStyle = 1;
+																																																																																																																				this.name = "Magic Missile";
+																																																																																																																				this.shootSpeed = 6f;
+																																																																																																																				this.shoot = 16;
+																																																																																																																				this.width = 26;
+																																																																																																																				this.height = 28;
+																																																																																																																				this.useSound = 9;
+																																																																																																																				this.useAnimation = 20;
+																																																																																																																				this.useTime = 20;
+																																																																																																																				this.rare = 2;
+																																																																																																																				this.noMelee = true;
+																																																																																																																				this.knockBack = 5f;
+																																																																																																																				this.toolTip = "Casts a controllable missile";
+																																																																																																																				this.value = 10000;
+																																																																																																																			}
+																																																																																																																			else
+																																																																																																																			{
+																																																																																																																				if (this.type == 114)
+																																																																																																																				{
+																																																																																																																					this.mana = 5;
+																																																																																																																					this.channel = true;
+																																																																																																																					this.damage = 0;
+																																																																																																																					this.useStyle = 1;
+																																																																																																																					this.name = "Dirt Rod";
+																																																																																																																					this.shoot = 17;
+																																																																																																																					this.width = 26;
+																																																																																																																					this.height = 28;
+																																																																																																																					this.useSound = 8;
+																																																																																																																					this.useAnimation = 20;
+																																																																																																																					this.useTime = 20;
+																																																																																																																					this.rare = 1;
+																																																																																																																					this.noMelee = true;
+																																																																																																																					this.knockBack = 5f;
+																																																																																																																					this.toolTip = "Magically move dirt";
+																																																																																																																					this.value = 200000;
+																																																																																																																				}
+																																																																																																																				else
+																																																																																																																				{
+																																																																																																																					if (this.type == 115)
+																																																																																																																					{
+																																																																																																																						this.mana = 40;
+																																																																																																																						this.channel = true;
+																																																																																																																						this.damage = 0;
+																																																																																																																						this.useStyle = 4;
+																																																																																																																						this.name = "Orb of Light";
+																																																																																																																						this.shoot = 18;
+																																																																																																																						this.width = 24;
+																																																																																																																						this.height = 24;
+																																																																																																																						this.useSound = 8;
+																																																																																																																						this.useAnimation = 20;
+																																																																																																																						this.useTime = 20;
+																																																																																																																						this.rare = 1;
+																																																																																																																						this.noMelee = true;
+																																																																																																																						this.toolTip = "Creates a magical orb of light";
+																																																																																																																						this.value = 10000;
+																																																																																																																					}
+																																																																																																																					else
+																																																																																																																					{
+																																																																																																																						if (this.type == 116)
+																																																																																																																						{
+																																																																																																																							this.name = "Meteorite";
+																																																																																																																							this.useStyle = 1;
+																																																																																																																							this.useTurn = true;
+																																																																																																																							this.useAnimation = 15;
+																																																																																																																							this.useTime = 10;
+																																																																																																																							this.autoReuse = true;
+																																																																																																																							this.maxStack = 250;
+																																																																																																																							this.consumable = true;
+																																																																																																																							this.createTile = 37;
+																																																																																																																							this.width = 12;
+																																																																																																																							this.height = 12;
+																																																																																																																							this.value = 1000;
+																																																																																																																						}
+																																																																																																																						else
+																																																																																																																						{
+																																																																																																																							if (this.type == 117)
+																																																																																																																							{
+																																																																																																																								this.name = "Meteorite Bar";
+																																																																																																																								this.width = 20;
+																																																																																																																								this.height = 20;
+																																																																																																																								this.maxStack = 99;
+																																																																																																																								this.rare = 1;
+																																																																																																																								this.toolTip = "Warm to the touch";
+																																																																																																																								this.value = 7000;
+																																																																																																																							}
+																																																																																																																							else
+																																																																																																																							{
+																																																																																																																								if (this.type == 118)
+																																																																																																																								{
+																																																																																																																									this.name = "Hook";
+																																																																																																																									this.maxStack = 99;
+																																																																																																																									this.width = 18;
+																																																																																																																									this.height = 18;
+																																																																																																																									this.value = 1000;
+																																																																																																																									this.toolTip = "Combine with chains to making a grappling hook";
+																																																																																																																								}
+																																																																																																																								else
+																																																																																																																								{
+																																																																																																																									if (this.type == 119)
+																																																																																																																									{
+																																																																																																																										this.noMelee = true;
+																																																																																																																										this.useStyle = 1;
+																																																																																																																										this.name = "Flamarang";
+																																																																																																																										this.shootSpeed = 11f;
+																																																																																																																										this.shoot = 19;
+																																																																																																																										this.damage = 32;
+																																																																																																																										this.knockBack = 8f;
+																																																																																																																										this.width = 14;
+																																																																																																																										this.height = 28;
+																																																																																																																										this.useSound = 1;
+																																																																																																																										this.useAnimation = 15;
+																																																																																																																										this.useTime = 15;
+																																																																																																																										this.noUseGraphic = true;
+																																																																																																																										this.rare = 3;
+																																																																																																																										this.value = 100000;
+																																																																																																																									}
+																																																																																																																									else
+																																																																																																																									{
+																																																																																																																										if (this.type == 120)
+																																																																																																																										{
+																																																																																																																											this.useStyle = 5;
+																																																																																																																											this.useAnimation = 25;
+																																																																																																																											this.useTime = 25;
+																																																																																																																											this.name = "Molten Fury";
+																																																																																																																											this.width = 14;
+																																																																																																																											this.height = 32;
+																																																																																																																											this.shoot = 1;
+																																																																																																																											this.useAmmo = 1;
+																																																																																																																											this.useSound = 5;
+																																																																																																																											this.damage = 29;
+																																																																																																																											this.shootSpeed = 8f;
+																																																																																																																											this.knockBack = 2f;
+																																																																																																																											this.alpha = 30;
+																																																																																																																											this.rare = 3;
+																																																																																																																											this.noMelee = true;
+																																																																																																																											this.scale = 1.1f;
+																																																																																																																											this.value = 27000;
+																																																																																																																											this.toolTip = "Lights wooden arrows ablaze";
+																																																																																																																										}
+																																																																																																																										else
+																																																																																																																										{
+																																																																																																																											if (this.type == 121)
+																																																																																																																											{
+																																																																																																																												this.name = "Fiery Greatsword";
+																																																																																																																												this.useStyle = 1;
+																																																																																																																												this.useAnimation = 35;
+																																																																																																																												this.knockBack = 6.5f;
+																																																																																																																												this.width = 24;
+																																																																																																																												this.height = 28;
+																																																																																																																												this.damage = 34;
+																																																																																																																												this.scale = 1.3f;
+																																																																																																																												this.useSound = 1;
+																																																																																																																												this.rare = 3;
+																																																																																																																												this.value = 27000;
+																																																																																																																												this.toolTip = "It's made out of fire!";
+																																																																																																																											}
+																																																																																																																										}
+																																																																																																																									}
+																																																																																																																								}
+																																																																																																																							}
+																																																																																																																						}
+																																																																																																																					}
+																																																																																																																				}
+																																																																																																																			}
+																																																																																																																		}
+																																																																																																																	}
+																																																																																																																}
+																																																																																																															}
+																																																																																																														}
+																																																																																																													}
+																																																																																																												}
+																																																																																																											}
+																																																																																																										}
+																																																																																																									}
+																																																																																																								}
+																																																																																																							}
+																																																																																																						}
+																																																																																																					}
+																																																																																																				}
+																																																																																																			}
+																																																																																																		}
+																																																																																																	}
+																																																																																																}
+																																																																																															}
+																																																																																														}
+																																																																																													}
+																																																																																												}
+																																																																																											}
+																																																																																										}
+																																																																																									}
+																																																																																								}
+																																																																																							}
+																																																																																						}
+																																																																																					}
+																																																																																				}
+																																																																																			}
+																																																																																		}
+																																																																																	}
+																																																																																}
+																																																																															}
+																																																																														}
+																																																																													}
+																																																																												}
+																																																																											}
+																																																																										}
+																																																																									}
+																																																																								}
+																																																																							}
+																																																																						}
+																																																																					}
+																																																																				}
+																																																																			}
+																																																																		}
+																																																																	}
+																																																																}
+																																																															}
+																																																														}
+																																																													}
+																																																												}
+																																																											}
+																																																										}
+																																																									}
+																																																								}
+																																																							}
+																																																						}
+																																																					}
+																																																				}
+																																																			}
+																																																		}
+																																																	}
+																																																}
+																																															}
+																																														}
+																																													}
+																																												}
+																																											}
+																																										}
+																																									}
+																																								}
+																																							}
+																																						}
+																																					}
+																																				}
+																																			}
+																																		}
+																																	}
+																																}
+																															}
+																														}
+																													}
+																												}
+																											}
+																										}
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			if (this.type == 122)
+			{
+				this.name = "Molten Pickaxe";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 25;
+				this.useTime = 25;
+				this.autoReuse = true;
+				this.width = 24;
+				this.height = 28;
+				this.damage = 18;
+				this.pick = 100;
+				this.scale = 1.15f;
+				this.useSound = 1;
+				this.knockBack = 2f;
+				this.rare = 3;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 123)
+			{
+				this.name = "Meteor Helmet";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 4;
+				this.headSlot = 6;
+				this.rare = 1;
+				this.value = 45000;
+				this.manaRegen = 3;
+				this.toolTip = "Slowly regenerates mana";
+				return;
+			}
+			if (this.type == 124)
+			{
+				this.name = "Meteor Suit";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 5;
+				this.bodySlot = 6;
+				this.rare = 1;
+				this.value = 30000;
+				this.manaRegen = 3;
+				this.toolTip = "Slowly regenerates mana";
+				return;
+			}
+			if (this.type == 125)
+			{
+				this.name = "Meteor Leggings";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 4;
+				this.legSlot = 6;
+				this.rare = 1;
+				this.manaRegen = 3;
+				this.value = 30000;
+				this.toolTip = "Slowly regenerates mana";
+				return;
+			}
+			if (this.type == 126)
+			{
+				this.name = "Angel Statue";
+				this.width = 24;
+				this.height = 28;
+				this.toolTip = "It doesn't do anything";
+				this.value = 1;
+				return;
+			}
+			if (this.type == 127)
+			{
+				this.autoReuse = true;
+				this.useStyle = 5;
+				this.useAnimation = 19;
+				this.useTime = 19;
+				this.name = "Space Gun";
+				this.width = 24;
+				this.height = 28;
+				this.shoot = 20;
+				this.mana = 9;
+				this.useSound = 12;
+				this.knockBack = 1f;
+				this.damage = 14;
+				this.shootSpeed = 10f;
+				this.noMelee = true;
+				this.scale = 0.8f;
+				this.rare = 1;
+				return;
+			}
+			if (this.type == 128)
+			{
+				this.mana = 7;
+				this.name = "Rocket Boots";
+				this.width = 28;
+				this.height = 24;
+				this.accessory = true;
+				this.rare = 3;
+				this.toolTip = "Allows flight";
+				this.value = 50000;
+				return;
+			}
+			if (this.type == 129)
+			{
+				this.name = "Gray Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 38;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 130)
+			{
+				this.name = "Gray Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 5;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 131)
+			{
+				this.name = "Red Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 39;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 132)
+			{
+				this.name = "Red Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 6;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 133)
+			{
+				this.name = "Clay Block";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 40;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 134)
+			{
+				this.name = "Blue Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 41;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 135)
+			{
+				this.name = "Blue Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 7;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 136)
+			{
+				this.name = "Chain Lantern";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 42;
+				this.width = 12;
+				this.height = 28;
+				return;
+			}
+			if (this.type == 137)
+			{
+				this.name = "Green Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 43;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 138)
+			{
+				this.name = "Green Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 8;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 139)
+			{
+				this.name = "Pink Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 44;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 140)
+			{
+				this.name = "Pink Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 9;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 141)
+			{
+				this.name = "Gold Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 45;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 142)
+			{
+				this.name = "Gold Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 10;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 143)
+			{
+				this.name = "Silver Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 46;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 144)
+			{
+				this.name = "Silver Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 11;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 145)
+			{
+				this.name = "Copper Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 47;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 146)
+			{
+				this.name = "Copper Brick Wall";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createWall = 12;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 147)
+			{
+				this.name = "Spike";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 48;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 148)
+			{
+				this.name = "Water Candle";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.createTile = 49;
+				this.width = 8;
+				this.height = 18;
+				this.holdStyle = 1;
+				this.toolTip = "Holding this may attract unwanted attention";
+				return;
+			}
+			if (this.type == 149)
+			{
+				this.name = "Book";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.createTile = 50;
+				this.width = 24;
+				this.height = 28;
+				this.toolTip = "It contains strange symbols";
+				return;
+			}
+			if (this.type == 150)
+			{
+				this.name = "Cobweb";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 51;
+				this.width = 20;
+				this.height = 24;
+				this.alpha = 100;
+				return;
+			}
+			if (this.type == 151)
+			{
+				this.name = "Necro Helmet";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 6;
+				this.headSlot = 7;
+				this.rare = 2;
+				this.value = 45000;
+				return;
+			}
+			if (this.type == 152)
+			{
+				this.name = "Necro Breastplate";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 7;
+				this.bodySlot = 7;
+				this.rare = 2;
+				this.value = 30000;
+				return;
+			}
+			if (this.type == 153)
+			{
+				this.name = "Necro Greaves";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 6;
+				this.legSlot = 7;
+				this.rare = 2;
+				this.value = 30000;
+				return;
+			}
+			if (this.type == 154)
+			{
+				this.name = "Bone";
+				this.maxStack = 99;
+				this.consumable = true;
+				this.width = 12;
+				this.height = 14;
+				this.value = 50;
+				this.useAnimation = 12;
+				this.useTime = 12;
+				this.useStyle = 1;
+				this.useSound = 1;
+				this.shootSpeed = 8f;
+				this.noUseGraphic = true;
+				this.damage = 22;
+				this.knockBack = 4f;
+				this.shoot = 21;
+				return;
+			}
+			if (this.type == 155)
+			{
+				this.autoReuse = true;
+				this.useTurn = true;
+				this.name = "Muramasa";
+				this.useStyle = 1;
+				this.useAnimation = 20;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 22;
+				this.scale = 1.2f;
+				this.useSound = 1;
+				this.rare = 2;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 156)
+			{
+				this.name = "Cobalt Shield";
+				this.width = 24;
+				this.height = 28;
+				this.rare = 2;
+				this.value = 27000;
+				this.accessory = true;
+				this.defense = 2;
+				this.toolTip = "Grants immunity to knockback";
+				return;
+			}
+			if (this.type == 157)
+			{
+				this.mana = 12;
+				this.autoReuse = true;
+				this.name = "Aqua Scepter";
+				this.useStyle = 5;
+				this.useAnimation = 30;
+				this.useTime = 5;
+				this.knockBack = 3f;
+				this.width = 38;
+				this.height = 10;
+				this.damage = 15;
+				this.scale = 1f;
+				this.shoot = 22;
+				this.shootSpeed = 10f;
+				this.useSound = 13;
+				this.rare = 2;
+				this.value = 27000;
+				this.toolTip = "Sprays out a shower of water";
+				return;
+			}
+			if (this.type == 158)
+			{
+				this.name = "Lucky Horseshoe";
+				this.width = 20;
+				this.height = 22;
+				this.rare = 1;
+				this.value = 27000;
+				this.accessory = true;
+				this.toolTip = "Negate fall damage";
+				return;
+			}
+			if (this.type == 159)
+			{
+				this.name = "Shiny Red Balloon";
+				this.width = 14;
+				this.height = 28;
+				this.rare = 1;
+				this.value = 27000;
+				this.accessory = true;
+				this.toolTip = "Increases jump height";
+				return;
+			}
+			if (this.type == 160)
+			{
+				this.autoReuse = true;
+				this.name = "Harpoon";
+				this.useStyle = 5;
+				this.useAnimation = 30;
+				this.useTime = 30;
+				this.knockBack = 6f;
+				this.width = 30;
+				this.height = 10;
+				this.damage = 15;
+				this.scale = 1.1f;
+				this.shoot = 23;
+				this.shootSpeed = 10f;
+				this.useSound = 10;
+				this.rare = 2;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 161)
+			{
+				this.useStyle = 1;
+				this.name = "Spiky Ball";
+				this.shootSpeed = 5f;
+				this.shoot = 24;
+				this.knockBack = 1f;
+				this.damage = 12;
+				this.width = 10;
+				this.height = 10;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.useSound = 1;
+				this.useAnimation = 15;
+				this.useTime = 15;
+				this.noUseGraphic = true;
+				this.noMelee = true;
+				this.value = 20;
+				return;
+			}
+			if (this.type == 162)
+			{
+				this.name = "Ball 'O Hurt";
+				this.useStyle = 5;
+				this.useAnimation = 30;
+				this.useTime = 30;
+				this.knockBack = 7f;
+				this.width = 30;
+				this.height = 10;
+				this.damage = 15;
+				this.scale = 1.1f;
+				this.noUseGraphic = true;
+				this.shoot = 25;
+				this.shootSpeed = 12f;
+				this.useSound = 1;
+				this.rare = 1;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 163)
+			{
+				this.name = "Blue Moon";
+				this.useStyle = 5;
+				this.useAnimation = 30;
+				this.useTime = 30;
+				this.knockBack = 7f;
+				this.width = 30;
+				this.height = 10;
+				this.damage = 30;
+				this.scale = 1.1f;
+				this.noUseGraphic = true;
+				this.shoot = 26;
+				this.shootSpeed = 12f;
+				this.useSound = 1;
+				this.rare = 2;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 164)
+			{
+				this.autoReuse = false;
+				this.useStyle = 5;
+				this.useAnimation = 10;
+				this.useTime = 10;
+				this.name = "Handgun";
+				this.width = 24;
+				this.height = 28;
+				this.shoot = 14;
+				this.knockBack = 3f;
+				this.useAmmo = 14;
+				this.useSound = 11;
+				this.damage = 12;
+				this.shootSpeed = 10f;
+				this.noMelee = true;
+				this.value = 50000;
+				this.scale = 0.8f;
+				this.rare = 2;
+				return;
+			}
+			if (this.type == 165)
+			{
+				this.rare = 2;
+				this.mana = 20;
+				this.useSound = 8;
+				this.name = "Water Bolt";
+				this.useStyle = 5;
+				this.damage = 15;
+				this.useAnimation = 20;
+				this.useTime = 20;
+				this.width = 24;
+				this.height = 28;
+				this.shoot = 27;
+				this.scale = 0.8f;
+				this.shootSpeed = 4f;
+				this.knockBack = 5f;
+				this.toolTip = "Casts a slow moving bolt of water";
+				return;
+			}
+			if (this.type == 166)
+			{
+				this.useStyle = 1;
+				this.name = "Bomb";
+				this.shootSpeed = 5f;
+				this.shoot = 28;
+				this.width = 20;
+				this.height = 20;
+				this.maxStack = 20;
+				this.consumable = true;
+				this.useSound = 1;
+				this.useAnimation = 25;
+				this.useTime = 25;
+				this.noUseGraphic = true;
+				this.noMelee = true;
+				this.value = 500;
+				this.damage = 0;
+				this.toolTip = "A small explosion that will destroy some tiles";
+				return;
+			}
+			if (this.type == 167)
+			{
+				this.useStyle = 1;
+				this.name = "Dynamite";
+				this.shootSpeed = 4f;
+				this.shoot = 29;
+				this.width = 8;
+				this.height = 28;
+				this.maxStack = 3;
+				this.consumable = true;
+				this.useSound = 1;
+				this.useAnimation = 40;
+				this.useTime = 40;
+				this.noUseGraphic = true;
+				this.noMelee = true;
+				this.value = 5000;
+				this.rare = 1;
+				this.toolTip = "A large explosion that will destroy most tiles";
+				return;
+			}
+			if (this.type == 168)
+			{
+				this.useStyle = 1;
+				this.name = "Grenade";
+				this.shootSpeed = 5.5f;
+				this.shoot = 30;
+				this.width = 20;
+				this.height = 20;
+				this.maxStack = 20;
+				this.consumable = true;
+				this.useSound = 1;
+				this.useAnimation = 60;
+				this.useTime = 60;
+				this.noUseGraphic = true;
+				this.noMelee = true;
+				this.value = 500;
+				this.damage = 60;
+				this.knockBack = 8f;
+				this.toolTip = "A small explosion that will not destroy tiles";
+				return;
+			}
+			if (this.type == 169)
+			{
+				this.name = "Sand Block";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 53;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 170)
+			{
+				this.name = "Glass";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 54;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 171)
+			{
+				this.name = "Sign";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 55;
+				this.width = 28;
+				this.height = 28;
+				return;
+			}
+			if (this.type == 172)
+			{
+				this.name = "Ash Block";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 57;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 173)
+			{
+				this.name = "Obsidian";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 56;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 174)
+			{
+				this.name = "Hellstone";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 58;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 175)
+			{
+				this.name = "Hellstone Bar";
+				this.width = 20;
+				this.height = 20;
+				this.maxStack = 99;
+				this.rare = 2;
+				this.toolTip = "Hot to the touch";
+				this.value = 20000;
+				return;
+			}
+			if (this.type == 176)
+			{
+				this.name = "Mud Block";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 59;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 177)
+			{
+				this.name = "Sapphire";
+				this.maxStack = 99;
+				this.alpha = 50;
+				this.width = 10;
+				this.height = 14;
+				this.value = 7000;
+				return;
+			}
+			if (this.type == 178)
+			{
+				this.name = "Ruby";
+				this.maxStack = 99;
+				this.alpha = 50;
+				this.width = 10;
+				this.height = 14;
+				this.value = 20000;
+				return;
+			}
+			if (this.type == 179)
+			{
+				this.name = "Emerald";
+				this.maxStack = 99;
+				this.alpha = 50;
+				this.width = 10;
+				this.height = 14;
+				this.value = 15000;
+				return;
+			}
+			if (this.type == 180)
+			{
+				this.name = "Topaz";
+				this.maxStack = 99;
+				this.alpha = 50;
+				this.width = 10;
+				this.height = 14;
+				this.value = 5000;
+				return;
+			}
+			if (this.type == 181)
+			{
+				this.name = "Amethyst";
+				this.maxStack = 99;
+				this.alpha = 50;
+				this.width = 10;
+				this.height = 14;
+				this.value = 2500;
+				return;
+			}
+			if (this.type == 182)
+			{
+				this.name = "Diamond";
+				this.maxStack = 99;
+				this.alpha = 50;
+				this.width = 10;
+				this.height = 14;
+				this.value = 40000;
+				return;
+			}
+			if (this.type == 183)
+			{
+				this.name = "Glowing Mushroom";
+				this.useStyle = 2;
+				this.useSound = 2;
+				this.useTurn = false;
+				this.useAnimation = 17;
+				this.useTime = 17;
+				this.width = 16;
+				this.height = 18;
+				this.healLife = 50;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.potion = true;
+				this.value = 50;
+				return;
+			}
+			if (this.type == 184)
+			{
+				this.name = "Star";
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 185)
+			{
+				this.noUseGraphic = true;
+				this.damage = 0;
+				this.knockBack = 7f;
+				this.useStyle = 5;
+				this.name = "Ivy Whip";
+				this.shootSpeed = 13f;
+				this.shoot = 32;
+				this.width = 18;
+				this.height = 28;
+				this.useSound = 1;
+				this.useAnimation = 20;
+				this.useTime = 20;
+				this.rare = 3;
+				this.noMelee = true;
+				this.value = 20000;
+				return;
+			}
+			if (this.type == 186)
+			{
+				this.name = "Breathing Reed";
+				this.width = 44;
+				this.height = 44;
+				this.rare = 1;
+				this.value = 10000;
+				this.holdStyle = 2;
+				return;
+			}
+			if (this.type == 187)
+			{
+				this.name = "Flipper";
+				this.width = 28;
+				this.height = 28;
+				this.rare = 1;
+				this.value = 10000;
+				this.accessory = true;
+				this.toolTip = "Grants the ability to swim";
+				return;
+			}
+			if (this.type == 188)
+			{
+				this.name = "Healing Potion";
+				this.useSound = 3;
+				this.healLife = 200;
+				this.useStyle = 2;
+				this.useTurn = true;
+				this.useAnimation = 17;
+				this.useTime = 17;
+				this.maxStack = 30;
+				this.consumable = true;
+				this.width = 14;
+				this.height = 24;
+				this.rare = 1;
+				this.potion = true;
+				this.value = 1000;
+				return;
+			}
+			if (this.type == 189)
+			{
+				this.name = "Mana Potion";
+				this.useSound = 3;
+				this.healMana = 200;
+				this.useStyle = 2;
+				this.useTurn = true;
+				this.useAnimation = 17;
+				this.useTime = 17;
+				this.maxStack = 30;
+				this.consumable = true;
+				this.width = 14;
+				this.height = 24;
+				this.rare = 1;
+				this.potion = true;
+				this.value = 1000;
+				return;
+			}
+			if (this.type == 190)
+			{
+				this.name = "Blade of Grass";
+				this.useStyle = 1;
+				this.useAnimation = 30;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 28;
+				this.scale = 1.4f;
+				this.useSound = 1;
+				this.rare = 3;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 191)
+			{
+				this.noMelee = true;
+				this.useStyle = 1;
+				this.name = "Thorn Chakrum";
+				this.shootSpeed = 11f;
+				this.shoot = 33;
+				this.damage = 25;
+				this.knockBack = 8f;
+				this.width = 14;
+				this.height = 28;
+				this.useSound = 1;
+				this.useAnimation = 15;
+				this.useTime = 15;
+				this.noUseGraphic = true;
+				this.rare = 3;
+				this.value = 50000;
+				return;
+			}
+			if (this.type == 192)
+			{
+				this.name = "Obsidian Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 75;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 193)
+			{
+				this.name = "Obsidian Skull";
+				this.width = 20;
+				this.height = 22;
+				this.rare = 2;
+				this.value = 27000;
+				this.accessory = true;
+				this.defense = 2;
+				this.toolTip = "Grants immunity to fire blocks";
+				return;
+			}
+			if (this.type == 194)
+			{
+				this.name = "Mushroom Grass Seeds";
+				this.useTurn = true;
+				this.useStyle = 1;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.createTile = 70;
+				this.width = 14;
+				this.height = 14;
+				this.value = 150;
+				return;
+			}
+			if (this.type == 195)
+			{
+				this.name = "Jungle Grass Seeds";
+				this.useTurn = true;
+				this.useStyle = 1;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.createTile = 60;
+				this.width = 14;
+				this.height = 14;
+				this.value = 150;
+				return;
+			}
+			if (this.type == 196)
+			{
+				this.name = "Wooden Hammer";
+				this.autoReuse = true;
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 37;
+				this.useTime = 25;
+				this.hammer = 25;
+				this.width = 24;
+				this.height = 28;
+				this.damage = 2;
+				this.knockBack = 5.5f;
+				this.scale = 1.2f;
+				this.useSound = 1;
+				this.tileBoost = -1;
+				this.value = 50;
+				return;
+			}
+			if (this.type == 197)
+			{
+				this.autoReuse = true;
+				this.useStyle = 5;
+				this.useAnimation = 12;
+				this.useTime = 12;
+				this.name = "Star Cannon";
+				this.width = 50;
+				this.height = 18;
+				this.shoot = 12;
+				this.useAmmo = 15;
+				this.useSound = 9;
+				this.damage = 75;
+				this.shootSpeed = 14f;
+				this.noMelee = true;
+				this.value = 500000;
+				this.rare = 2;
+				this.toolTip = "Shoots fallen stars";
+				return;
+			}
+			if (this.type == 198)
+			{
+				this.name = "Blue Phaseblade";
+				this.useStyle = 1;
+				this.useAnimation = 25;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 21;
+				this.scale = 1f;
+				this.useSound = 15;
+				this.rare = 1;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 199)
+			{
+				this.name = "Red Phaseblade";
+				this.useStyle = 1;
+				this.useAnimation = 25;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 21;
+				this.scale = 1f;
+				this.useSound = 15;
+				this.rare = 1;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 200)
+			{
+				this.name = "Green Phaseblade";
+				this.useStyle = 1;
+				this.useAnimation = 25;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 21;
+				this.scale = 1f;
+				this.useSound = 15;
+				this.rare = 1;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 201)
+			{
+				this.name = "Purple Phaseblade";
+				this.useStyle = 1;
+				this.useAnimation = 25;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 21;
+				this.scale = 1f;
+				this.useSound = 15;
+				this.rare = 1;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 202)
+			{
+				this.name = "White Phaseblade";
+				this.useStyle = 1;
+				this.useAnimation = 25;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 21;
+				this.scale = 1f;
+				this.useSound = 15;
+				this.rare = 1;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 203)
+			{
+				this.name = "Yellow Phaseblade";
+				this.useStyle = 1;
+				this.useAnimation = 25;
+				this.knockBack = 3f;
+				this.width = 40;
+				this.height = 40;
+				this.damage = 21;
+				this.scale = 1f;
+				this.useSound = 15;
+				this.rare = 1;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 204)
+			{
+				this.name = "Meteor Hamaxe";
+				this.useTurn = true;
+				this.autoReuse = true;
+				this.useStyle = 1;
+				this.useAnimation = 30;
+				this.useTime = 16;
+				this.hammer = 60;
+				this.axe = 20;
+				this.width = 24;
+				this.height = 28;
+				this.damage = 20;
+				this.knockBack = 7f;
+				this.scale = 1.2f;
+				this.useSound = 1;
+				this.rare = 1;
+				this.value = 15000;
+				return;
+			}
+			if (this.type == 205)
+			{
+				this.name = "Empty Bucket";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.width = 20;
+				this.height = 20;
+				this.headSlot = 13;
+				return;
+			}
+			if (this.type == 206)
+			{
+				this.name = "Water Bucket";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.width = 20;
+				this.height = 20;
+				return;
+			}
+			if (this.type == 207)
+			{
+				this.name = "Lava Bucket";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.width = 20;
+				this.height = 20;
+				return;
+			}
+			if (this.type == 208)
+			{
+				this.name = "Jungle Rose";
+				this.width = 20;
+				this.height = 20;
+				this.maxStack = 99;
+				this.value = 100;
+				return;
+			}
+			if (this.type == 209)
+			{
+				this.name = "Stinger";
+				this.width = 16;
+				this.height = 18;
+				this.maxStack = 99;
+				this.value = 200;
+				return;
+			}
+			if (this.type == 210)
+			{
+				this.name = "Vine";
+				this.width = 14;
+				this.height = 20;
+				this.maxStack = 99;
+				this.value = 1000;
+				return;
+			}
+			if (this.type == 211)
+			{
+				this.name = "Feral Claws";
+				this.width = 20;
+				this.height = 20;
+				this.accessory = true;
+				this.rare = 3;
+				this.toolTip = "10 % increased melee speed";
+				this.value = 50000;
+				return;
+			}
+			if (this.type == 212)
+			{
+				this.name = "Anklet of the Wind";
+				this.width = 20;
+				this.height = 20;
+				this.accessory = true;
+				this.rare = 3;
+				this.toolTip = "10% increased movement speed";
+				this.value = 50000;
+				return;
+			}
+			if (this.type == 213)
+			{
+				this.name = "Staff of Regrowth";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 20;
+				this.useTime = 13;
+				this.autoReuse = true;
+				this.width = 24;
+				this.height = 28;
+				this.damage = 20;
+				this.createTile = 2;
+				this.scale = 1.2f;
+				this.useSound = 1;
+				this.knockBack = 3f;
+				this.rare = 3;
+				this.value = 2000;
+				this.toolTip = "Creates grass on dirt";
+				return;
+			}
+			if (this.type == 214)
+			{
+				this.name = "Hellstone Brick";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.createTile = 76;
+				this.width = 12;
+				this.height = 12;
+				return;
+			}
+			if (this.type == 215)
+			{
+				this.name = "Whoopie Cushion";
+				this.width = 18;
+				this.height = 18;
+				this.useTurn = true;
+				this.useTime = 30;
+				this.useAnimation = 30;
+				this.noUseGraphic = true;
+				this.useStyle = 10;
+				this.useSound = 16;
+				this.rare = 2;
+				this.toolTip = "May annoy others";
+				this.value = 100;
+				return;
+			}
+			if (this.type == 216)
+			{
+				this.name = "Shackle";
+				this.width = 20;
+				this.height = 20;
+				this.rare = 1;
+				this.value = 1500;
+				this.accessory = true;
+				this.defense = 1;
+				return;
+			}
+			if (this.type == 217)
+			{
+				this.name = "Molten Hamaxe";
+				this.useTurn = true;
+				this.autoReuse = true;
+				this.useStyle = 1;
+				this.useAnimation = 27;
+				this.useTime = 14;
+				this.hammer = 70;
+				this.axe = 30;
+				this.width = 24;
+				this.height = 28;
+				this.damage = 20;
+				this.knockBack = 7f;
+				this.scale = 1.4f;
+				this.useSound = 1;
+				this.rare = 3;
+				this.value = 15000;
+				return;
+			}
+			if (this.type == 218)
+			{
+				this.mana = 20;
+				this.channel = true;
+				this.damage = 41;
+				this.useStyle = 1;
+				this.name = "Flamelash";
+				this.shootSpeed = 6f;
+				this.shoot = 34;
+				this.width = 26;
+				this.height = 28;
+				this.useSound = 8;
+				this.useAnimation = 20;
+				this.useTime = 20;
+				this.rare = 3;
+				this.noMelee = true;
+				this.knockBack = 5f;
+				this.toolTip = "Summons a controllable ball of fire";
+				this.value = 10000;
+				return;
+			}
+			if (this.type == 219)
+			{
+				this.autoReuse = false;
+				this.useStyle = 5;
+				this.useAnimation = 10;
+				this.useTime = 10;
+				this.name = "Phoenix Blaster";
+				this.width = 24;
+				this.height = 28;
+				this.shoot = 14;
+				this.knockBack = 4f;
+				this.useAmmo = 14;
+				this.useSound = 11;
+				this.damage = 26;
+				this.shootSpeed = 13f;
+				this.noMelee = true;
+				this.value = 50000;
+				this.scale = 0.9f;
+				this.rare = 3;
+				return;
+			}
+			if (this.type == 220)
+			{
+				this.name = "Sunfury";
+				this.useStyle = 5;
+				this.useAnimation = 30;
+				this.useTime = 30;
+				this.knockBack = 7f;
+				this.width = 30;
+				this.height = 10;
+				this.damage = 40;
+				this.scale = 1.1f;
+				this.noUseGraphic = true;
+				this.shoot = 35;
+				this.shootSpeed = 12f;
+				this.useSound = 1;
+				this.rare = 3;
+				this.value = 27000;
+				return;
+			}
+			if (this.type == 221)
+			{
+				this.name = "Hellforge";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.createTile = 77;
+				this.width = 26;
+				this.height = 24;
+				this.value = 3000;
+				return;
+			}
+			if (this.type == 222)
+			{
+				this.name = "Clay Pot";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.autoReuse = true;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.createTile = 78;
+				this.width = 14;
+				this.height = 14;
+				this.value = 100;
+				return;
+			}
+			if (this.type == 223)
+			{
+				this.name = "Nature's Gift";
+				this.width = 20;
+				this.height = 22;
+				this.rare = 3;
+				this.value = 27000;
+				this.accessory = true;
+				this.toolTip = "Spawn with max life and mana after death";
+				return;
+			}
+			if (this.type == 224)
+			{
+				this.name = "Bed";
+				this.useStyle = 1;
+				this.useTurn = true;
+				this.useAnimation = 15;
+				this.useTime = 10;
+				this.maxStack = 99;
+				this.consumable = true;
+				this.createTile = 79;
+				this.width = 28;
+				this.height = 20;
+				this.value = 2000;
+				return;
+			}
+			if (this.type == 225)
+			{
+				this.name = "Silk";
+				this.maxStack = 99;
+				this.width = 22;
+				this.height = 22;
+				this.value = 1000;
+				return;
+			}
+			if (this.type == 226)
+			{
+				this.name = "Lesser Restoration Potion";
+				this.useSound = 3;
+				this.healMana = 100;
+				this.healLife = 100;
+				this.useStyle = 2;
+				this.useTurn = true;
+				this.useAnimation = 17;
+				this.useTime = 17;
+				this.maxStack = 20;
+				this.consumable = true;
+				this.width = 14;
+				this.height = 24;
+				this.potion = true;
+				this.value = 2000;
+				return;
+			}
+			if (this.type == 227)
+			{
+				this.name = "Restoration Potion";
+				this.useSound = 3;
+				this.healMana = 200;
+				this.healLife = 200;
+				this.useStyle = 2;
+				this.useTurn = true;
+				this.useAnimation = 17;
+				this.useTime = 17;
+				this.maxStack = 20;
+				this.consumable = true;
+				this.width = 14;
+				this.height = 24;
+				this.potion = true;
+				this.value = 4000;
+				return;
+			}
+			if (this.type == 228)
+			{
+				this.name = "Jungle Hat";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 6;
+				this.headSlot = 8;
+				this.rare = 3;
+				this.value = 45000;
+				this.toolTip = "Slowly regenerates mana";
+				this.manaRegen = 4;
+				return;
+			}
+			if (this.type == 229)
+			{
+				this.name = "Jungle Shirt";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 7;
+				this.bodySlot = 8;
+				this.rare = 3;
+				this.value = 30000;
+				this.toolTip = "Slowly regenerates mana";
+				this.manaRegen = 4;
+				return;
+			}
+			if (this.type == 230)
+			{
+				this.name = "Jungle Pants";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 6;
+				this.legSlot = 8;
+				this.rare = 3;
+				this.value = 30000;
+				this.toolTip = "Slowly regenerates mana";
+				this.manaRegen = 3;
+				return;
+			}
+			if (this.type == 231)
+			{
+				this.name = "Molten Helmet";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 7;
+				this.headSlot = 9;
+				this.rare = 3;
+				this.value = 45000;
+				return;
+			}
+			if (this.type == 232)
+			{
+				this.name = "Molten Breastplate";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 8;
+				this.bodySlot = 9;
+				this.rare = 3;
+				this.value = 30000;
+				return;
+			}
+			if (this.type == 233)
+			{
+				this.name = "Molten Greaves";
+				this.width = 18;
+				this.height = 18;
+				this.defense = 7;
+				this.legSlot = 9;
+				this.rare = 3;
+				this.value = 30000;
+				return;
+			}
+			if (this.type == 234)
+			{
+				this.name = "Meteor Shot";
+				this.shootSpeed = 3f;
+				this.shoot = 36;
+				this.damage = 9;
+				this.width = 8;
+				this.height = 8;
+				this.maxStack = 250;
+				this.consumable = true;
+				this.ammo = 14;
+				this.knockBack = 1f;
+				this.value = 8;
+				this.rare = 1;
+				return;
+			}
+			if (this.type == 235)
+			{
+				this.useStyle = 1;
+				this.name = "Sticky Bomb";
+				this.shootSpeed = 5f;
+				this.shoot = 37;
+				this.width = 20;
+				this.height = 20;
+				this.maxStack = 20;
+				this.consumable = true;
+				this.useSound = 1;
+				this.useAnimation = 25;
+				this.useTime = 25;
+				this.noUseGraphic = true;
+				this.noMelee = true;
+				this.value = 500;
+				this.damage = 0;
+				this.toolTip = "Tossing may be difficult.";
+				return;
+			}
+			if (this.type == 236)
+			{
+				this.name = "Black Lens";
+				this.width = 12;
+				this.height = 20;
+				this.maxStack = 99;
+				this.value = 5000;
+				return;
+			}
+			if (this.type == 237)
+			{
+				this.name = "Sunglasses";
+				this.width = 28;
+				this.height = 12;
+				this.headSlot = 12;
+				this.rare = 2;
+				this.value = 10000;
+				this.toolTip = "Makes you look cool!";
+				return;
+			}
+			if (this.type == 238)
+			{
+				this.name = "Wizard Hat";
+				this.width = 28;
+				this.height = 20;
+				this.headSlot = 14;
+				this.rare = 2;
+				this.value = 10000;
+				this.toolTip = "Increases magic damage by 15%";
+			}
+		}
+		public static string VersionName(string oldName, int release)
+		{
+			string result = oldName;
+			if (release <= 4)
+			{
+				if (oldName == "Cobalt Helmet")
+				{
+					result = "Jungle Hat";
+				}
+				else
+				{
+					if (oldName == "Cobalt Breastplate")
+					{
+						result = "Jungle Shirt";
+					}
+					else
+					{
+						if (oldName == "Cobalt Greaves")
+						{
+							result = "Jungle Pants";
+						}
+					}
+				}
+			}
+			return result;
+		}
+		public Color GetAlpha(Color newColor)
+		{
+			int r = (int)newColor.R - this.alpha;
+			int g = (int)newColor.G - this.alpha;
+			int b = (int)newColor.B - this.alpha;
+			int num = (int)newColor.A - this.alpha;
+			if (num < 0)
+			{
+				num = 0;
+			}
+			if (num > 255)
+			{
+				num = 255;
+			}
+			if (this.type >= 198 && this.type <= 203)
+			{
+				return new Color(255, 255, 255);
+			}
+			return new Color(r, g, b, num);
+		}
+		public Color GetColor(Color newColor)
+		{
+			int num = (int)(this.color.R - (255 - newColor.R));
+			int num2 = (int)(this.color.G - (255 - newColor.G));
+			int num3 = (int)(this.color.B - (255 - newColor.B));
+			int num4 = (int)(this.color.A - (255 - newColor.A));
+			if (num < 0)
+			{
+				num = 0;
+			}
+			if (num > 255)
+			{
+				num = 255;
+			}
+			if (num2 < 0)
+			{
+				num2 = 0;
+			}
+			if (num2 > 255)
+			{
+				num2 = 255;
+			}
+			if (num3 < 0)
+			{
+				num3 = 0;
+			}
+			if (num3 > 255)
+			{
+				num3 = 255;
+			}
+			if (num4 < 0)
+			{
+				num4 = 0;
+			}
+			if (num4 > 255)
+			{
+				num4 = 255;
+			}
+			return new Color(num, num2, num3, num4);
+		}
+		public void UpdateItem(int i)
+		{
+			if (this.active)
+			{
+				if (Main.netMode == 0)
+				{
+					this.owner = Main.myPlayer;
+				}
+				float num = 0.1f;
+				float num2 = 7f;
+				if (this.wet)
+				{
+					num2 = 5f;
+					num = 0.08f;
+				}
+				Vector2 value = this.velocity * 0.5f;
+				if (this.ownTime > 0)
+				{
+					this.ownTime--;
+				}
+				else
+				{
+					this.ownIgnore = -1;
+				}
+				if (this.keepTime > 0)
+				{
+					this.keepTime--;
+				}
+				if (!this.beingGrabbed)
+				{
+					this.velocity.Y = this.velocity.Y + num;
+					if (this.velocity.Y > num2)
+					{
+						this.velocity.Y = num2;
+					}
+					this.velocity.X = this.velocity.X * 0.95f;
+					if ((double)this.velocity.X < 0.1 && (double)this.velocity.X > -0.1)
+					{
+						this.velocity.X = 0f;
+					}
+					bool flag = Collision.LavaCollision(this.position, this.width, this.height);
+					if (flag)
+					{
+						this.lavaWet = true;
+					}
+					bool flag2 = Collision.WetCollision(this.position, this.width, this.height);
+					if (flag2)
+					{
+						if (!this.wet)
+						{
+							if (this.wetCount == 0)
+							{
+								this.wetCount = 20;
+								if (!flag)
+								{
+									for (int j = 0; j < 10; j++)
+									{
+										int num3 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
+										Dust expr_1EC_cp_0 = Main.dust[num3];
+										expr_1EC_cp_0.velocity.Y = expr_1EC_cp_0.velocity.Y - 4f;
+										Dust expr_20A_cp_0 = Main.dust[num3];
+										expr_20A_cp_0.velocity.X = expr_20A_cp_0.velocity.X * 2.5f;
+										Main.dust[num3].scale = 1.3f;
+										Main.dust[num3].alpha = 100;
+										Main.dust[num3].noGravity = true;
+									}
+									//Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
+								}
+								else
+								{
+									for (int k = 0; k < 5; k++)
+									{
+										int num4 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
+										Dust expr_2F2_cp_0 = Main.dust[num4];
+										expr_2F2_cp_0.velocity.Y = expr_2F2_cp_0.velocity.Y - 1.5f;
+										Dust expr_310_cp_0 = Main.dust[num4];
+										expr_310_cp_0.velocity.X = expr_310_cp_0.velocity.X * 2.5f;
+										Main.dust[num4].scale = 1.3f;
+										Main.dust[num4].alpha = 100;
+										Main.dust[num4].noGravity = true;
+									}
+									//Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
+								}
+							}
+							this.wet = true;
+						}
+					}
+					else
+					{
+						if (this.wet)
+						{
+							this.wet = false;
+						}
+					}
+					if (!this.wet)
+					{
+						this.lavaWet = false;
+					}
+					if (this.wetCount > 0)
+					{
+						this.wetCount -= 1;
+					}
+					if (this.wet)
+					{
+						if (this.wet)
+						{
+							Vector2 vector = this.velocity;
+							this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, false, false);
+							if (this.velocity.X != vector.X)
+							{
+								value.X = this.velocity.X;
+							}
+							if (this.velocity.Y != vector.Y)
+							{
+								value.Y = this.velocity.Y;
+							}
+						}
+					}
+					else
+					{
+						this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, false, false);
+					}
+					if (this.owner == Main.myPlayer && this.lavaWet)
+					{
+						this.active = false;
+						this.type = 0;
+						this.name = "";
+						this.stack = 0;
+						if (Main.netMode != 0)
+						{
+							NetMessage.SendData(21, -1, -1, "", i, 0f, 0f, 0f);
+						}
+					}
+					if (this.type == 75 && Main.dayTime)
+					{
+						for (int l = 0; l < 10; l++)
+						{
+							Dust.NewDust(this.position, this.width, this.height, 15, this.velocity.X, this.velocity.Y, 150, default(Color), 1.2f);
+						}
+						for (int m = 0; m < 3; m++)
+						{
+							Gore.NewGore(this.position, new Vector2(this.velocity.X, this.velocity.Y), Main.rand.Next(16, 18));
+						}
+						this.active = false;
+						this.type = 0;
+						this.stack = 0;
+						if (Main.netMode == 2)
+						{
+							NetMessage.SendData(21, -1, -1, "", i, 0f, 0f, 0f);
+						}
+					}
+				}
+				else
+				{
+					this.beingGrabbed = false;
+				}
+				if (this.type == 8 || this.type == 41 || this.type == 75 || this.type == 105 || this.type == 116)
+				{
+					if (!this.wet)
+					{
+						//Lighting.addLight((int)((this.position.X - 7f) / 16f), (int)((this.position.Y - 7f) / 16f), 1f);
+					}
+				}
+				else
+				{
+					if (this.type == 183)
+					{
+						//Lighting.addLight((int)((this.position.X - 7f) / 16f), (int)((this.position.Y - 7f) / 16f), 0.5f);
+					}
+				}
+				if (this.type == 75)
+				{
+					if (Main.rand.Next(25) == 0)
+					{
+						Dust.NewDust(this.position, this.width, this.height, 15, this.velocity.X * 0.5f, this.velocity.Y * 0.5f, 150, default(Color), 1.2f);
+					}
+					if (Main.rand.Next(50) == 0)
+					{
+						Gore.NewGore(this.position, new Vector2(this.velocity.X * 0.2f, this.velocity.Y * 0.2f), Main.rand.Next(16, 18));
+					}
+				}
+				if (this.spawnTime < 2147483646)
+				{
+					this.spawnTime++;
+				}
+				if (Main.netMode == 2 && this.owner != Main.myPlayer)
+				{
+					this.release++;
+					if (this.release >= 300)
+					{
+						this.release = 0;
+						NetMessage.SendData(39, this.owner, -1, "", i, 0f, 0f, 0f);
+					}
+				}
+				if (this.wet)
+				{
+					this.position += value;
+				}
+				else
+				{
+					this.position += this.velocity;
+				}
+				if (this.noGrabDelay > 0)
+				{
+					this.noGrabDelay--;
+				}
+			}
+		}
+		public static int NewItem(int X, int Y, int Width, int Height, int Type, int Stack = 1, bool noBroadcast = false)
+		{
+			if (WorldGen.gen)
+			{
+				return 0;
+			}
+			int num = 200;
+			Main.item[200] = new Item();
+			if (Main.netMode != 1)
+			{
+				for (int i = 0; i < 200; i++)
+				{
+					if (!Main.item[i].active)
+					{
+						num = i;
+						break;
+					}
+				}
+			}
+			if (num == 200 && Main.netMode != 1)
+			{
+				int num2 = 0;
+				for (int j = 0; j < 200; j++)
+				{
+					if (Main.item[j].spawnTime > num2)
+					{
+						num2 = Main.item[j].spawnTime;
+						num = j;
+					}
+				}
+			}
+			Main.item[num] = new Item();
+			Main.item[num].SetDefaults(Type);
+			Main.item[num].position.X = (float)(X + Width / 2 - Main.item[num].width / 2);
+			Main.item[num].position.Y = (float)(Y + Height / 2 - Main.item[num].height / 2);
+			Main.item[num].wet = Collision.WetCollision(Main.item[num].position, Main.item[num].width, Main.item[num].height);
+			Main.item[num].velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
+			Main.item[num].velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
+			Main.item[num].active = true;
+			Main.item[num].spawnTime = 0;
+			Main.item[num].stack = Stack;
+			if (Main.netMode == 2 && !noBroadcast)
+			{
+				NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
+				Main.item[num].FindOwner(num);
+			}
+			else
+			{
+				if (Main.netMode == 0)
+				{
+					Main.item[num].owner = Main.myPlayer;
+				}
+			}
+			return num;
+		}
+		public void FindOwner(int whoAmI)
+		{
+			if (this.keepTime > 0)
+			{
+				return;
+			}
+			int num = this.owner;
+			this.owner = 255;
+			float num2 = -1f;
+			for (int i = 0; i < 255; i++)
+			{
+				if (this.ownIgnore != i && Main.player[i].active && Main.player[i].ItemSpace(Main.item[whoAmI]))
+				{
+					float num3 = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - this.position.X - (float)(this.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - this.position.Y - (float)this.height);
+					if (num3 < (float)(Main.screenWidth / 2 + Main.screenHeight / 2) && (num2 == -1f || num3 < num2))
+					{
+						num2 = num3;
+						this.owner = i;
+					}
+				}
+			}
+			if (this.owner != num && ((num == Main.myPlayer && Main.netMode == 1) || (num == 255 && Main.netMode == 2) || !Main.player[num].active))
+			{
+				NetMessage.SendData(21, -1, -1, "", whoAmI, 0f, 0f, 0f);
+				if (this.active)
+				{
+					NetMessage.SendData(22, -1, -1, "", whoAmI, 0f, 0f, 0f);
+				}
+			}
+		}
+		public object Clone()
+		{
+			return base.MemberwiseClone();
+		}
+		public bool IsTheSameAs(Item compareItem)
+		{
+			return this.name == compareItem.name;
+		}
+		public bool IsNotTheSameAs(Item compareItem)
+		{
+			return this.name != compareItem.name || this.stack != compareItem.stack;
+		}
+	}
 }
