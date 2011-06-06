@@ -4,7 +4,7 @@ namespace Terraria_Server
 {
 	public class Dust
 	{
-		public Vector2 position;
+		public Vector2 position = new Vector2();
 		public Vector2 velocity;
 		public bool noGravity;
 		public float scale;
@@ -12,9 +12,9 @@ namespace Terraria_Server
 		public bool noLight;
 		public bool active;
 		public int type;
-		public Color color;
+		public Color color = new Color();
 		public int alpha;
-		public Rectangle frame;
+		public Rectangle frame = new Rectangle();
 		public static int NewDust(Vector2 Position, int Width, int Height, int Type, float SpeedX = 0f, float SpeedY = 0f, int Alpha = 0, Color newColor = default(Color), float Scale = 1f)
 		{
 			if (WorldGen.gen)
