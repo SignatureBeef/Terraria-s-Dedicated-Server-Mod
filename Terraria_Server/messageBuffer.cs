@@ -1,5 +1,7 @@
 using System;
 using System.Text;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 namespace Terraria_Server
 {
 	public class messageBuffer
@@ -60,6 +62,16 @@ namespace Terraria_Server
 			}
 			if (b == 1 && Main.netMode == 2)
 			{
+                LoginEvent Event = new LoginEvent();
+                Event.setSocket(NetPlay.serverSock[this.whoAmI]);
+                Event.setSender(Main.player[this.whoAmI]);
+                Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, Event);
+                if (Event.getCancelled())
+                {
+                    NetMessage.SendData(2, this.whoAmI, -1, "Disconnected By Server.", 0, 0f, 0f, 0f);
+                    return;
+                }
+
 				if (Main.dedServ && NetPlay.CheckBan(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString()))
 				{
 					NetMessage.SendData(2, this.whoAmI, -1, "You are banned from this server.", 0, 0f, 0f, 0f);
@@ -1075,71 +1087,46 @@ namespace Terraria_Server
 																										byte b13 = this.readBuffer[start + 3];
 																										byte b14 = this.readBuffer[start + 4];
 																										string string7 = Encoding.ASCII.GetString(this.readBuffer, start + 5, length - 5);
-																										if (Main.netMode == 1)
-																										{
-																											string newText = string7;
-																											if (num46 < 255)
-																											{
-																												newText = "<" + Main.player[num46].name + "> " + string7;
-																												Main.player[num46].chatText = string7;
-																												Main.player[num46].chatShowTime = Main.chatLength / 2;
-																											}
-																											//Main.NewText(newText, b12, b13, b14);
-																											return;
-																										}
+																										
 																										if (Main.netMode == 2)
 																										{
-																											string text = string7.ToLower();
-																											if (text == "/playing")
-																											{
-																												string text2 = "";
-																												for (int num47 = 0; num47 < 255; num47++)
-																												{
-																													if (Main.player[num47].active)
-																													{
-																														if (text2 == "")
-																														{
-																															text2 += Main.player[num47].name;
-																														}
-																														else
-																														{
-																															text2 = text2 + ", " + Main.player[num47].name;
-																														}
-																													}
-																												}
-																												NetMessage.SendData(25, this.whoAmI, -1, "Current players: " + text2 + ".", 255, 255f, 240f, 20f);
-																												return;
-																											}
-																											if (text.Length >= 4 && text.Substring(0, 4) == "/me ")
-																											{
-																												NetMessage.SendData(25, -1, -1, "*" + Main.player[this.whoAmI].name + " " + string7.Substring(4), 255, 200f, 100f, 0f);
-																												return;
-																											}
-																											if (text.Length >= 3 && text.Substring(0, 3) == "/p ")
-																											{
-																												if (Main.player[this.whoAmI].team != 0)
-																												{
-																													for (int num48 = 0; num48 < 255; num48++)
-																													{
-																														if (Main.player[num48].team == Main.player[this.whoAmI].team)
-																														{
-																															NetMessage.SendData(25, num48, -1, string7.Substring(3), num46, (float)Main.teamColor[Main.player[this.whoAmI].team].R, (float)Main.teamColor[Main.player[this.whoAmI].team].G, (float)Main.teamColor[Main.player[this.whoAmI].team].B);
-																														}
-																													}
-																													return;
-																												}
-																												NetMessage.SendData(25, this.whoAmI, -1, "You are not in a party!", 255, 255f, 240f, 20f);
-																												return;
-																											}
-																											else
-																											{
-																												NetMessage.SendData(25, -1, -1, string7, num46, (float)b12, (float)b13, (float)b14);
-																												if (Main.dedServ)
-																												{
-																													Console.WriteLine("<" + Main.player[this.whoAmI].name + "> " + string7);
-																													return;
-																												}
-																											}
+																											string Chat = string7.ToLower().Trim();
+
+                                                                                                            if (Chat.Length > 0)
+                                                                                                            {
+                                                                                                                if(Chat.Substring(0, 1).Equals('/')) {
+
+                                                                                                                    PlayerCommand Event = new PlayerCommand();
+                                                                                                                    Event.setMessage(Chat);
+                                                                                                                    Event.setSender(Main.player[this.whoAmI]);
+                                                                                                                    Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_COMMAND, Event);
+
+                                                                                                                    if (Event.getCancelled())
+                                                                                                                    {
+                                                                                                                        return;
+                                                                                                                    }
+
+                                                                                                                } else {
+
+                                                                                                                    PlayerChatEvent Event = new PlayerChatEvent();
+                                                                                                                    Event.setMessage(Chat);
+                                                                                                                    Event.setSender(Main.player[this.whoAmI]);
+                                                                                                                    Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_CHAT, Event);
+
+                                                                                                                    if (Event.getCancelled())
+                                                                                                                    {
+                                                                                                                        return;
+                                                                                                                    }
+                                                                                                                }
+
+                                                                                                                NetMessage.SendData(25, -1, -1, string7, num46, (float)b12, (float)b13, (float)b14);
+                                                                                                                if (Main.dedServ)
+                                                                                                                {
+                                                                                                                    Console.WriteLine("<" + Main.player[this.whoAmI].name + "> " + string7);
+                                                                                                                    return;
+                                                                                                                }
+                                                                                                            }
+																											
 																										}
 																									}
 																									else
@@ -1620,10 +1607,10 @@ namespace Terraria_Server
 																																												int num84 = (int)this.readBuffer[num];
 																																												num++;
 																																												int team = Main.player[num83].team;
-																																												Main.player[num83].team = num84;
 																																												if (Main.netMode == 2)
 																																												{
 																																													NetMessage.SendData(45, -1, this.whoAmI, "", num83, 0f, 0f, 0f);
+                                                                                                                                                                                    Party party = Party.NONE;
 																																													string str2 = "";
 																																													if (num84 == 0)
 																																													{
@@ -1634,30 +1621,44 @@ namespace Terraria_Server
 																																														if (num84 == 1)
 																																														{
 																																															str2 = " has joined the red party.";
+                                                                                                                                                                                            party = Party.RED;
 																																														}
 																																														else
 																																														{
 																																															if (num84 == 2)
 																																															{
 																																																str2 = " has joined the green party.";
+                                                                                                                                                                                                party = Party.GREEN;
 																																															}
 																																															else
 																																															{
 																																																if (num84 == 3)
 																																																{
 																																																	str2 = " has joined the blue party.";
+                                                                                                                                                                                                    party = Party.BLUE;
 																																																}
 																																																else
 																																																{
 																																																	if (num84 == 4)
 																																																	{
 																																																		str2 = " has joined the yellow party.";
+                                                                                                                                                                                                        party = Party.YELLOW;
 																																																	}
 																																																}
 																																															}
 																																														}
-																																													}
-																																													for (int num85 = 0; num85 < 255; num85++)
+                                                                                                                                                                                    }
+                                                                                                                                                                                    PartyChangeEvent Event = new PartyChangeEvent();
+                                                                                                                                                                                    Event.setPartyType(party);
+                                                                                                                                                                                    Event.setSender(Main.player[this.whoAmI]);
+                                                                                                                                                                                    Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PARTYCHANGE, Event);
+                                                                                                                                                                                    if (Event.getCancelled())
+                                                                                                                                                                                    {
+                                                                                                                                                                                        return;
+                                                                                                                                                                                    }
+
+                                                                                                                                                                                    Main.player[num83].team = num84;
+                                                                                                                                                                                    for (int num85 = 0; num85 < 255; num85++)
 																																													{
 																																														if (num85 == this.whoAmI || (team > 0 && Main.player[num85].team == team) || (num84 > 0 && Main.player[num85].team == num84))
 																																														{

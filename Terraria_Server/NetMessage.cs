@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Terraria_Server.Events;
 namespace Terraria_Server
 {
 	public class NetMessage
@@ -1556,6 +1557,12 @@ namespace Terraria_Server
 						if (Main.dedServ)
 						{
 							Console.WriteLine(Main.player[i].name + " has joined.");
+
+
+                            LoginEvent Event = new LoginEvent();
+                            Event.setSocket(NetPlay.serverSock[i]);
+                            Event.setSender(Main.player[i]);
+                            Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_LOGIN, Event);
 						}
 					}
 				}
@@ -1569,6 +1576,11 @@ namespace Terraria_Server
 						if (Main.dedServ)
 						{
 							Console.WriteLine(NetPlay.serverSock[i].oldName + " has left.");
+
+                            LogoutEvent Event = new LogoutEvent();
+                            Event.setSocket(NetPlay.serverSock[i]);
+                            Event.setSender(Main.player[i]);
+                            Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
 						}
 					}
 				}
