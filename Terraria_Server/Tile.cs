@@ -17,5 +17,7 @@ namespace Terraria_Server
 		public byte frameNumber;
 		public short frameX;
 		public short frameY;
+        public int tileX;
+        public int tileY;
 	}
 }

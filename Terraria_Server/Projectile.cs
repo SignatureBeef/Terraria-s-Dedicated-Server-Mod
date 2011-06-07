@@ -917,7 +917,6 @@ namespace Terraria_Server
 				}
 				this.position += this.velocity;
 				goto IL_B65;
-				return;
 				IL_B65:
 				if ((this.aiStyle != 3 || this.ai[0] != 1f) && (this.aiStyle != 7 || this.ai[0] != 1f) && (this.aiStyle != 13 || this.ai[0] != 1f) && (this.aiStyle != 15 || this.ai[0] != 1f))
 				{

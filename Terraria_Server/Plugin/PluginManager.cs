@@ -109,12 +109,12 @@ namespace Terraria_Server.Plugin
                         {
                             case Hooks.CONSOLE_COMMAND:
                                 {
-                                    plugin.onPlayerCommandProcess((ConsoleCommand) Event);
+                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent) Event);
                                     break;
                                 }
                             case Hooks.PLAYER_COMMAND:
                                 {
-                                    plugin.onPlayerCommand((PlayerCommand)Event);
+                                    plugin.onPlayerCommand((PlayerCommandEvent)Event);
                                     break;
                                 }
                             case Hooks.PLAYER_CHAT:

@@ -88,7 +88,25 @@ namespace Terraria_Server
 		private static int numMCaves = 0;
 		private static int[] mCaveX = new int[300];
 		private static int[] mCaveY = new int[300];
-		public static void SpawnNPC(int x, int y)
+
+        public static Tile cloneTile(Tile tile)
+        {
+            return new Tile
+            {
+                type = tile.type,
+                liquid = tile.liquid,
+                active = tile.active,
+                frameNumber = tile.frameNumber,
+                wallFrameX = tile.wallFrameX,
+                wallFrameY = tile.wallFrameY,
+                lava = tile.lava,
+                lighted = tile.lighted,
+                frameX = tile.frameX,
+                frameY = tile.frameY
+            };
+        }
+        
+        public static void SpawnNPC(int x, int y)
 		{
 			if (Main.wallHouse[(int)Main.tile[x, y].wall])
 			{

@@ -695,14 +695,36 @@ namespace Terraria_Server
 																			{
 																				fail = true;
 																			}
-																			if (Main.tile[num26, num27] == null)
-																			{
-																				Main.tile[num26, num27] = new Tile();
-																			}
+                                                                            Tile tile = new Tile();
+
+
+                                                                            if (Main.tile[num26, num27] != null)
+                                                                            {
+                                                                                tile = WorldGen.cloneTile(Main.tile[num26, num27]);
+                                                                            }
+                                                                            if (Main.tile[num26, num27] == null)
+                                                                            {
+                                                                                Main.tile[num26, num27] = new Tile();
+                                                                            }
 																			if (Main.netMode == 2 && !NetPlay.serverSock[this.whoAmI].tileSection[NetPlay.GetSectionX(num26), NetPlay.GetSectionY(num27)])
 																			{
 																				fail = true;
 																			}
+
+                                                                            tile.tileX = num26;
+                                                                            tile.tileY = num27;
+
+                                                                            TileChangeEvent Event = new TileChangeEvent(); 
+                                                                            Event.setSender(Main.player[this.whoAmI]);
+                                                                            Event.setTile(tile);
+                                                                            Event.setTileType(b5);
+                                                                            Program.server.getPluginManager().processHook(Hooks.TILE_CHANGE, Event);
+                                                                            if (Event.getCancelled())
+                                                                            {
+                                                                                NetMessage.SendTileSquare(this.whoAmI, num26, num27, 1);
+                                                                                return;
+                                                                            }
+
 																			if (b4 == 0)
 																			{
 																				WorldGen.KillTile(num26, num27, fail, false, false);
@@ -1096,7 +1118,7 @@ namespace Terraria_Server
                                                                                                             {
                                                                                                                 if(Chat.Substring(0, 1).Equals('/')) {
 
-                                                                                                                    PlayerCommand Event = new PlayerCommand();
+                                                                                                                    PlayerCommandEvent Event = new PlayerCommandEvent();
                                                                                                                     Event.setMessage(Chat);
                                                                                                                     Event.setSender(Main.player[this.whoAmI]);
                                                                                                                     Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_COMMAND, Event);
@@ -1486,15 +1508,18 @@ namespace Terraria_Server
 																																					{
 																																						if (Main.netMode == 2)
 																																						{
-																																							string string9 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-																																							if (string9 == NetPlay.password)
-																																							{
-																																								NetPlay.serverSock[this.whoAmI].state = 1;
-																																								NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
-																																								return;
-																																							}
-																																							NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f);
-																																							return;
+																																							string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                                                                            if (pasword == NetPlay.password)
+                                                                                                                                                            {
+                                                                                                                                                                Main.player[this.whoAmI].setOp(true);
+                                                                                                                                                            }
+                                                                                                                                                            else
+                                                                                                                                                            {
+                                                                                                                                                                Main.player[this.whoAmI].setOp(false);
+                                                                                                                                                            }
+                                                                                                                                                            NetPlay.serverSock[this.whoAmI].state = 1;
+                                                                                                                                                            NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                                                                                                                                                            return;
 																																						}
 																																					}
 																																					else

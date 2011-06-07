@@ -13,6 +13,7 @@ namespace Terraria_Server.Plugin
         PLAYER_LOGIN,
         PLAYER_LOGOUT,
         PLAYER_PARTYCHANGE,
-        PLAYER_CHAT
+        PLAYER_CHAT,
+        TILE_CHANGE
     }
 }

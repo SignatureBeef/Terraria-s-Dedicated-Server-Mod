@@ -168,7 +168,9 @@ namespace Terraria_Server
 		public int talkNPC = -1;
 		public int fallStart;
 		public int slowCount;
-		public void HealEffect(int healAmount)
+		
+        
+        public void HealEffect(int healAmount)
 		{
 			//CombatText.NewText(new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height), new Color(100, 100, 255, 255), string.Concat(healAmount));
 			if (Main.netMode == 1 && this.whoAmi == Main.myPlayer)
@@ -176,7 +178,8 @@ namespace Terraria_Server
 				NetMessage.SendData(35, -1, -1, "", this.whoAmi, (float)healAmount, 0f, 0f);
 			}
 		}
-		public void ManaEffect(int manaAmount)
+		
+        public void ManaEffect(int manaAmount)
 		{
 			//CombatText.NewText(new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height), new Color(180, 50, 255, 255), string.Concat(manaAmount));
 			if (Main.netMode == 1 && this.whoAmi == Main.myPlayer)
@@ -184,7 +187,8 @@ namespace Terraria_Server
 				NetMessage.SendData(43, -1, -1, "", this.whoAmi, (float)manaAmount, 0f, 0f);
 			}
 		}
-		public static byte FindClosest(Vector2 Position, int Width, int Height)
+		
+        public static byte FindClosest(Vector2 Position, int Width, int Height)
 		{
 			byte result = 0;
 			for (int i = 0; i < 255; i++)
@@ -206,7 +210,8 @@ namespace Terraria_Server
 			}
 			return result;
 		}
-		public void UpdatePlayer(int i)
+		
+        public void UpdatePlayer(int i)
 		{
 			float num = 10f;
 			float num2 = 0.4f;
@@ -2120,7 +2125,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public bool SellItem(int price)
+		
+        public bool SellItem(int price)
 		{
 			if (price <= 0)
 			{
@@ -2292,7 +2298,8 @@ namespace Terraria_Server
 			}
 			return true;
 		}
-		public bool BuyItem(int price)
+		
+        public bool BuyItem(int price)
 		{
 			if (price == 0)
 			{
@@ -2524,7 +2531,8 @@ namespace Terraria_Server
 			}
 			return false;
 		}
-		public void AdjTiles()
+		
+        public void AdjTiles()
 		{
 			int num = 4;
 			int num2 = 3;
@@ -2566,7 +2574,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public void PlayerFrame()
+		
+        public void PlayerFrame()
 		{
 			if (this.swimTime > 0)
 			{
@@ -2799,7 +2808,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public void Spawn()
+		
+        public void Spawn()
 		{
 			if (this.whoAmi == Main.myPlayer)
 			{
@@ -2881,7 +2891,8 @@ namespace Terraria_Server
 				Main.screenPosition.Y = this.position.Y + (float)(this.height / 2) - (float)(Main.screenHeight / 2);
 			}
 		}
-		public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false)
+		
+        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false)
 		{
 			if (!this.immune && !Main.godMode)
 			{
@@ -2965,7 +2976,8 @@ namespace Terraria_Server
 			}
 			return 0.0;
 		}
-		public void KillMe(double dmg, int hitDirection, bool pvp = false)
+		
+        public void KillMe(double dmg, int hitDirection, bool pvp = false)
 		{
 			if (Main.godMode && Main.myPlayer == this.whoAmi)
 			{
@@ -3024,7 +3036,8 @@ namespace Terraria_Server
 				this.DropItems();
 			}
 		}
-		public bool ItemSpace(Item newItem)
+		
+        public bool ItemSpace(Item newItem)
 		{
 			if (newItem.type == 58)
 			{
@@ -3055,7 +3068,8 @@ namespace Terraria_Server
 			}
 			return false;
 		}
-		public void DoCoins(int i)
+		
+        public void DoCoins(int i)
 		{
 			if (this.inventory[i].stack == 100 && (this.inventory[i].type == 71 || this.inventory[i].type == 72 || this.inventory[i].type == 73))
 			{
@@ -3075,7 +3089,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public Item GetItem(int plr, Item newItem)
+		
+        public Item GetItem(int plr, Item newItem)
 		{
 			if (newItem.noGrabDelay > 0)
 			{
@@ -3136,7 +3151,8 @@ namespace Terraria_Server
 			}
 			return newItem;
 		}
-		public void ItemCheck(int i)
+		
+        public void ItemCheck(int i)
 		{
 			if (this.inventory[this.selectedItem].autoReuse)
 			{
@@ -4569,7 +4585,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public Color GetImmuneAlpha(Color newColor)
+		
+        public Color GetImmuneAlpha(Color newColor)
 		{
 			float num = (float)(255 - this.immuneAlpha) / 255f;
 			if (this.shadow > 0f)
@@ -4590,7 +4607,8 @@ namespace Terraria_Server
 			}
 			return new Color(r, g, b, num2);
 		}
-		public Color GetDeathAlpha(Color newColor)
+		
+        public Color GetDeathAlpha(Color newColor)
 		{
 			int r = (int)newColor.R + (int)((double)this.immuneAlpha * 0.9);
 			int g = (int)newColor.G + (int)((double)this.immuneAlpha * 0.5);
@@ -4606,7 +4624,8 @@ namespace Terraria_Server
 			}
 			return new Color(r, g, b, num);
 		}
-		public void DropItems()
+		
+        public void DropItems()
 		{
 			for (int i = 0; i < 44; i++)
 			{
@@ -4631,11 +4650,13 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public object Clone()
+		
+        public object Clone()
 		{
 			return base.MemberwiseClone();
 		}
-		public object clientClone()
+		
+        public object clientClone()
 		{
 			Player player = new Player();
 			player.zoneEvil = this.zoneEvil;
@@ -4667,7 +4688,8 @@ namespace Terraria_Server
 			}
 			return player;
 		}
-		private static void EncryptFile(string inputFile, string outputFile)
+		
+        private static void EncryptFile(string inputFile, string outputFile)
 		{
 			string s = "h3y_gUyZ";
 			UnicodeEncoding unicodeEncoding = new UnicodeEncoding();
@@ -4685,7 +4707,8 @@ namespace Terraria_Server
 			cryptoStream.Close();
 			fileStream.Close();
 		}
-		private static bool DecryptFile(string inputFile, string outputFile)
+		
+        private static bool DecryptFile(string inputFile, string outputFile)
 		{
 			string s = "h3y_gUyZ";
 			UnicodeEncoding unicodeEncoding = new UnicodeEncoding();
@@ -4694,7 +4717,7 @@ namespace Terraria_Server
 			RijndaelManaged rijndaelManaged = new RijndaelManaged();
 			CryptoStream cryptoStream = new CryptoStream(fileStream, rijndaelManaged.CreateDecryptor(bytes, bytes), CryptoStreamMode.Read);
 			FileStream fileStream2 = new FileStream(outputFile, FileMode.Create);
-			bool result;
+
 			try
 			{
 				int num;
@@ -4711,13 +4734,12 @@ namespace Terraria_Server
 				fileStream2.Close();
 				fileStream.Close();
 				File.Delete(outputFile);
-				result = true;
-				return result;
+				return true;
 			}
 			return false;
-			return result;
 		}
-		public static bool CheckSpawn(int x, int y)
+		
+        public static bool CheckSpawn(int x, int y)
 		{
 			if (x < 10 || x > Main.maxTilesX - 10 || y < 10 || y > Main.maxTilesX - 10)
 			{
@@ -4747,7 +4769,8 @@ namespace Terraria_Server
 			}
 			return WorldGen.StartRoomCheck(x, y - 1);
 		}
-		public void FindSpawn()
+		
+        public void FindSpawn()
 		{
 			for (int i = 0; i < 200; i++)
 			{
@@ -4765,7 +4788,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public void ChangeSpawn(int x, int y)
+		
+        public void ChangeSpawn(int x, int y)
 		{
 			int num = 0;
 			while (num < 200 && this.spN[num] != null)
@@ -4802,7 +4826,8 @@ namespace Terraria_Server
 			this.spX[0] = x;
 			this.spY[0] = y;
 		}
-		public static void SavePlayer(Player newPlayer)
+		
+        public static void SavePlayer(Player newPlayer)
 		{
             string playerPath = Statics.getPlayerPath + "\\" + newPlayer.name;
             try
@@ -4898,7 +4923,8 @@ namespace Terraria_Server
 			Player.EncryptFile(text, playerPath);
 			File.Delete(text);
 		}
-		public static Player LoadPlayer(string playerPath)
+		
+        public static Player LoadPlayer(string playerPath)
 		{
 			bool flag = false;
 			if (Main.rand == null)
@@ -4906,7 +4932,6 @@ namespace Terraria_Server
 				Main.rand = new Random((int)DateTime.Now.Ticks);
 			}
 			Player player = new Player();
-			Player result;
 			try
 			{
 				string text = playerPath + ".dat";
@@ -4984,8 +5009,7 @@ namespace Terraria_Server
 					}
 					player.PlayerFrame();
 					File.Delete(text);
-					result = player;
-					return result;
+                    return player;
 				}
 			}
 			catch
@@ -5004,9 +5028,9 @@ namespace Terraria_Server
 				return Player.LoadPlayer(playerPath);
 			}
 			return new Player();
-			return result;
 		}
-		public Player()
+		
+        public Player()
 		{
 			for (int i = 0; i < 44; i++)
 			{
@@ -5032,5 +5056,11 @@ namespace Terraria_Server
 				this.oldAdjTile[k] = false;
 			}
 		}
-	}
+
+        public void sendMessage(string Message)
+        {
+            NetMessage.SendData(25, this.whoAmi, -1, Message, 255, 255f, 240f, 20f);
+        }
+
+    }
 }

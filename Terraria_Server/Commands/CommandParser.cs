@@ -40,7 +40,7 @@ namespace Terraria_Server.Commands
             ConsoleSender cSender = new ConsoleSender(server);
             cSender.getConsoleCommand().setMessage(Line);
             cSender.getConsoleCommand().setSender(new Sender());
-            cSender.getConsoleCommand().getSender().setServer(server);
+            //cSender.getConsoleCommand().getSender().setServer(server);
             server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, cSender.getConsoleCommand());
             if (cSender.getConsoleCommand().getCancelled())
             {
@@ -58,7 +58,7 @@ namespace Terraria_Server.Commands
 
         public void parsePlayerCommand(Player player, string Line)
         {
-            PlayerCommand cCommand = new PlayerCommand();
+            PlayerCommandEvent cCommand = new PlayerCommandEvent();
             cCommand.setMessage(Line);
             cCommand.setSender(player);
             cCommand.setPlayer(player);

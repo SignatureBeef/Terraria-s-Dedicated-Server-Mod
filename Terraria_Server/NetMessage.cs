@@ -1290,7 +1290,6 @@ namespace Terraria_Server
 					{
 						goto IL_33DC;
 					}
-					goto IL_329C;
 				}
 				IL_33DC:
 				if (Main.verboseNetplay)

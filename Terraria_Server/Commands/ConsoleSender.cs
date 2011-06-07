@@ -8,15 +8,15 @@ namespace Terraria_Server.Commands
 {
     public class ConsoleSender : Sender
     {
-        ConsoleCommand cCommand = null;
+        ConsoleCommandEvent cCommand = null;
 
         public ConsoleSender(Server server)
         {
-            cCommand = new ConsoleCommand();
-            setServer(server);
+            cCommand = new ConsoleCommandEvent();
+            //setServer(server);
         }
 
-        public ConsoleCommand getConsoleCommand()
+        public ConsoleCommandEvent getConsoleCommand()
         {
             return cCommand;
         }
