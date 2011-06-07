@@ -522,6 +522,9 @@ namespace Terraria_Server
             Console.WriteLine("Disabling Plugins");
             Program.server.getPluginManager().DisablePlugins();
             Console.WriteLine("Closing Connections...");
+            //foreach(Player player in Main.player) {
+            //    NetMessage.SendData(2, player.whoAmi, -1, "Disconnected By Server", 0, 0f, 0f, 0f);
+            //}
             disconnect = true;
         }
 

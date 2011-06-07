@@ -1,7 +1,0 @@
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\obj\Debug\ResolveAssemblyReference.cache
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\bin\Debug\HomePlugin.dll
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\bin\Debug\HomePlugin.pdb
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\bin\Debug\Terraria_Server.pdb
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\obj\Debug\HomePlugin.dll
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\obj\Debug\HomePlugin.pdb
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\bin\Debug\Terraria_Server.exe

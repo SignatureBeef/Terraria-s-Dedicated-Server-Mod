@@ -32,7 +32,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerLogout(LogoutEvent Event) { }
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
         public virtual void onPlayerChat(PlayerChatEvent Event) { }
-        public virtual void onTileChange(TileChangeEvent Event) { }
+        public virtual void onTileBreak(TileBreakEvent Event) { }
         
         private ArrayList pluginHooks = new ArrayList();
 

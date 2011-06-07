@@ -1,7 +1,0 @@
-C:\Users\Sactual\Desktop\TDSMPlugin\TDSMPlugin\bin\Debug\TDSMPlugin.dll
-C:\Users\Sactual\Desktop\TDSMPlugin\TDSMPlugin\bin\Debug\TDSMPlugin.pdb
-C:\Users\Sactual\Desktop\TDSMPlugin\TDSMPlugin\bin\Debug\Terraria_Server.pdb
-C:\Users\Sactual\Desktop\TDSMPlugin\TDSMPlugin\obj\Debug\ResolveAssemblyReference.cache
-C:\Users\Sactual\Desktop\TDSMPlugin\TDSMPlugin\obj\Debug\TDSMPlugin.dll
-C:\Users\Sactual\Desktop\TDSMPlugin\TDSMPlugin\obj\Debug\TDSMPlugin.pdb
-D:\Media\Terraria_Server\Terraria_Server\bin\Debug\TDSMPlugin\obj\Debug\ResolveAssemblyReference.cache

@@ -714,11 +714,11 @@ namespace Terraria_Server
                                                                             tile.tileX = num26;
                                                                             tile.tileY = num27;
 
-                                                                            TileChangeEvent Event = new TileChangeEvent(); 
+                                                                            TileBreakEvent Event = new TileBreakEvent(); 
                                                                             Event.setSender(Main.player[this.whoAmI]);
                                                                             Event.setTile(tile);
                                                                             Event.setTileType(b5);
-                                                                            Program.server.getPluginManager().processHook(Hooks.TILE_CHANGE, Event);
+                                                                            Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, Event);
                                                                             if (Event.getCancelled())
                                                                             {
                                                                                 NetMessage.SendTileSquare(this.whoAmI, num26, num27, 1);
