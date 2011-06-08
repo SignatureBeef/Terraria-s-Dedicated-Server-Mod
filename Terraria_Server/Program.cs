@@ -79,6 +79,22 @@ namespace Terraria_Server
             preserve = dataText.Length;
         }
 
+        public static string mergeStrArray(string[] Array)
+        {
+            string ReT = "";
+            if (Array != null && Array.Length > 0)
+            {
+                for (int i = 0; i < Array.Length; i++)
+                {
+                    if (Array[i] != null)
+                    {
+                        ReT += " " + Array[i];
+                    }
+                }
+            }
+            return ReT.Trim();
+        }
+
         public static Server server;
 
         static void Main(string[] args)

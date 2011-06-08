@@ -264,7 +264,8 @@ namespace Terraria_Server
 				WorldGen.spawnNPC = 0;
 			}
 		}
-		public static bool RoomNeeds(int npcType)
+		
+        public static bool RoomNeeds(int npcType)
 		{
 			if (WorldGen.houseTile[15] && (WorldGen.houseTile[14] || WorldGen.houseTile[18]) && (WorldGen.houseTile[4] || WorldGen.houseTile[33] || WorldGen.houseTile[34] || WorldGen.houseTile[35] || WorldGen.houseTile[36] || WorldGen.houseTile[42] || WorldGen.houseTile[49]) && (WorldGen.houseTile[10] || WorldGen.houseTile[11] || WorldGen.houseTile[19]))
 			{
@@ -276,7 +277,8 @@ namespace Terraria_Server
 			}
 			return WorldGen.canSpawn;
 		}
-		public static void QuickFindHome(int npc)
+		
+        public static void QuickFindHome(int npc)
 		{
 			if (Main.npc[npc].homeTileX > 10 && Main.npc[npc].homeTileY > 10 && Main.npc[npc].homeTileX < Main.maxTilesX - 10 && Main.npc[npc].homeTileY < Main.maxTilesY)
 			{
@@ -329,7 +331,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void ScoreRoom(int ignoreNPC = -1)
+		
+        public static void ScoreRoom(int ignoreNPC = -1)
 		{
 			for (int i = 0; i < 1000; i++)
 			{
@@ -477,7 +480,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static bool StartRoomCheck(int x, int y)
+		
+        public static bool StartRoomCheck(int x, int y)
 		{
 			WorldGen.roomX1 = x;
 			WorldGen.roomX2 = x;
@@ -500,7 +504,8 @@ namespace Terraria_Server
 			}
 			return WorldGen.canSpawn;
 		}
-		public static void CheckRoom(int x, int y)
+		
+        public static void CheckRoom(int x, int y)
 		{
 			if (!WorldGen.canSpawn)
 			{
@@ -587,7 +592,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void dropMeteor()
+		
+        public static void dropMeteor()
 		{
 			bool flag = true;
 			int num = 0;
@@ -645,7 +651,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static bool meteor(int i, int j)
+		
+        public static bool meteor(int i, int j)
 		{
 			if (i < 50 || i > Main.maxTilesX - 50)
 			{
@@ -763,14 +770,16 @@ namespace Terraria_Server
 			}
 			return true;
 		}
-		public static void setWorldSize()
+		
+        public static void setWorldSize()
 		{
 			Main.bottomWorld = (float)(Main.maxTilesY * 16);
 			Main.rightWorld = (float)(Main.maxTilesX * 16);
 			Main.maxSectionsX = Main.maxTilesX / 200;
 			Main.maxSectionsY = Main.maxTilesY / 150;
 		}
-		public static void worldGenCallBack(object threadContext)
+		
+        public static void worldGenCallBack(object threadContext)
 		{
 			//Main.PlaySound(10, -1, -1, 1);
 			//WorldGen.clearWorld();
@@ -783,11 +792,13 @@ namespace Terraria_Server
             //}
 			//Main.PlaySound(10, -1, -1, 1);
 		}
-		public static void CreateNewWorld()
+		
+        public static void CreateNewWorld()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.worldGenCallBack), 1);
 		}
-		public static void SaveAndQuitCallBack(object threadContext)
+		
+        public static void SaveAndQuitCallBack(object threadContext)
 		{
 			Main.menuMode = 10;
 			Main.gameMenu = true;
@@ -804,12 +815,14 @@ namespace Terraria_Server
 			}
 			Main.menuMode = 0;
 		}
-		public static void SaveAndQuit()
+		
+        public static void SaveAndQuit()
 		{
 			//Main.PlaySound(11, -1, -1, 1);
 			ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.SaveAndQuitCallBack), 1);
 		}
-		public static void playWorldCallBack(object threadContext)
+		
+        public static void playWorldCallBack(object threadContext)
 		{
 			if (Main.rand == null)
 			{
@@ -841,27 +854,33 @@ namespace Terraria_Server
 			//Main.PlaySound(11, -1, -1, 1);
 			Main.resetClouds = true;
 		}
-		public static void playWorld()
+		
+        public static void playWorld()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.playWorldCallBack), 1);
 		}
-		public static void saveAndPlayCallBack(object threadContext)
+		
+        public static void saveAndPlayCallBack(object threadContext)
 		{
             WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
 		}
-		public static void saveAndPlay()
+		
+        public static void saveAndPlay()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.saveAndPlayCallBack), 1);
 		}
-		public static void saveToonWhilePlayingCallBack(object threadContext)
+		
+        public static void saveToonWhilePlayingCallBack(object threadContext)
 		{
 			Player.SavePlayer(Main.player[Main.myPlayer]);
 		}
-		public static void saveToonWhilePlaying()
+		
+        public static void saveToonWhilePlaying()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.saveToonWhilePlayingCallBack), 1);
 		}
-		public static void serverLoadWorldCallBack(object threadContext)
+		
+        public static void serverLoadWorldCallBack(object threadContext)
 		{
 			WorldGen.loadWorld();
 			if (WorldGen.loadFailed)
@@ -875,11 +894,13 @@ namespace Terraria_Server
 			Main.moonPhase = WorldGen.tempMoonPhase;
 			Main.bloodMoon = WorldGen.tempBloodMoon;
 		}
-		public static void serverLoadWorld()
+		
+        public static void serverLoadWorld()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.serverLoadWorldCallBack), 1);
 		}
-		public static void clearWorld()
+		
+        public static void clearWorld()
 		{
 			WorldGen.spawnEye = false;
 			WorldGen.spawnNPC = 0;
@@ -968,7 +989,8 @@ namespace Terraria_Server
 			WorldGen.setWorldSize();
 			WorldGen.worldCleared = true;
 		}
-		public static void saveWorld(string savePath, bool resetTime = false)
+		
+        public static void saveWorld(string savePath, bool resetTime = false)
 		{
 			if (WorldGen.saveLock)
 			{
@@ -1142,7 +1164,8 @@ namespace Terraria_Server
             WorldGen.saveLock = false;
             Console.WriteLine();
 		}
-		public static void loadWorld()
+		
+        public static void loadWorld()
 		{
 			if (WorldGen.genRand == null)
 			{
@@ -1332,7 +1355,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		private static void resetGen()
+		
+        private static void resetGen()
 		{
 			WorldGen.numMCaves = 0;
 			WorldGen.numIslandHouses = 0;
@@ -1343,7 +1367,8 @@ namespace Terraria_Server
 			WorldGen.numDPlats = 0;
 			WorldGen.numJChests = 0;
 		}
-		public static void generateWorld(int seed = -1)
+		
+        public static void generateWorld(int seed = -1)
 		{
 			WorldGen.gen = true;
 
@@ -3344,7 +3369,8 @@ namespace Terraria_Server
 			}
 			WorldGen.gen = false;
 		}
-		public static void GrowEpicTree(int i, int y)
+		
+        public static void GrowEpicTree(int i, int y)
 		{
 			int num = y;
 			while (Main.tile[i, num].type == 20)
@@ -3778,7 +3804,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void GrowTree(int i, int y)
+		
+        public static void GrowTree(int i, int y)
 		{
 			int num = y;
 			while (Main.tile[i, num].type == 20)
@@ -4216,7 +4243,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void GrowShroom(int i, int y)
+		
+        public static void GrowShroom(int i, int y)
 		{
 			if (Main.tile[i - 1, y - 1].lava || Main.tile[i - 1, y - 1].lava || Main.tile[i + 1, y - 1].lava)
 			{
@@ -4271,7 +4299,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void AddTrees()
+		
+        public static void AddTrees()
 		{
 			for (int i = 1; i < Main.maxTilesX - 1; i++)
 			{
@@ -4283,7 +4312,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static bool EmptyTileCheck(int startX, int endX, int startY, int endY, int ignoreStyle = -1)
+		
+        public static bool EmptyTileCheck(int startX, int endX, int startY, int endY, int ignoreStyle = -1)
 		{
 			if (startX < 0)
 			{
@@ -4328,7 +4358,8 @@ namespace Terraria_Server
 			}
 			return true;
 		}
-		public static bool PlaceDoor(int i, int j, int type)
+		
+        public static bool PlaceDoor(int i, int j, int type)
 		{
 			bool result;
 			try
@@ -4360,7 +4391,8 @@ namespace Terraria_Server
 			}
 			return result;
 		}
-		public static bool CloseDoor(int i, int j, bool forced = false)
+		
+        public static bool CloseDoor(int i, int j, bool forced = false)
 		{
 			int num = 0;
 			int num2 = i;
@@ -4466,7 +4498,8 @@ namespace Terraria_Server
 			//Main.PlaySound(9, i * 16, j * 16, 1);
 			return true;
 		}
-		public static bool AddLifeCrystal(int i, int j)
+		
+        public static bool AddLifeCrystal(int i, int j)
 		{
 			int k = j;
 			while (k < Main.maxTilesY)
@@ -4507,7 +4540,8 @@ namespace Terraria_Server
 			}
 			return false;
 		}
-		public static void AddShadowOrb(int x, int y)
+		
+        public static void AddShadowOrb(int x, int y)
 		{
 			if (x < 10 || x > Main.maxTilesX - 10)
 			{
@@ -4534,7 +4568,8 @@ namespace Terraria_Server
 			Main.tile[x, y].frameX = 18;
 			Main.tile[x, y].frameY = 18;
 		}
-		public static void AddHellHouses()
+		
+        public static void AddHellHouses()
 		{
 			int num = (int)((double)Main.maxTilesX * 0.25);
 			for (int i = num; i < Main.maxTilesX - num; i++)
@@ -4551,7 +4586,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void HellHouse(int i, int j)
+		
+        public static void HellHouse(int i, int j)
 		{
 			int num = WorldGen.genRand.Next(8, 20);
 			int num2 = WorldGen.genRand.Next(3);
@@ -4662,7 +4698,8 @@ namespace Terraria_Server
 				num15++;
 			}
 		}
-		public static void HellRoom(int i, int j, int width, int height)
+		
+        public static void HellRoom(int i, int j, int width, int height)
 		{
 			for (int k = i - width / 2; k <= i + width / 2; k++)
 			{
@@ -4697,7 +4734,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void MakeDungeon(int x, int y, int tileType = 41, int wallType = 7)
+		
+        public static void MakeDungeon(int x, int y, int tileType = 41, int wallType = 7)
 		{
 			int num = WorldGen.genRand.Next(3);
 			int num2 = WorldGen.genRand.Next(3);
@@ -5469,7 +5507,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void DungeonStairs(int i, int j, int tileType, int wallType)
+		
+        public static void DungeonStairs(int i, int j, int tileType, int wallType)
 		{
 			Vector2 value = new Vector2();
 			double num = (double)WorldGen.genRand.Next(5, 9);
@@ -5596,7 +5635,8 @@ namespace Terraria_Server
 			WorldGen.dungeonX = (int)value2.X;
 			WorldGen.dungeonY = (int)value2.Y;
 		}
-		public static void DungeonHalls(int i, int j, int tileType, int wallType, bool forceX = false)
+		
+        public static void DungeonHalls(int i, int j, int tileType, int wallType, bool forceX = false)
 		{
 			Vector2 value = new Vector2();
 			double num = (double)WorldGen.genRand.Next(4, 6);
@@ -5968,7 +6008,8 @@ namespace Terraria_Server
 			WorldGen.DPlatY[WorldGen.numDPlats] = (int)value3.Y;
 			WorldGen.numDPlats++;
 		}
-		public static void DungeonRoom(int i, int j, int tileType, int wallType)
+		
+        public static void DungeonRoom(int i, int j, int tileType, int wallType)
 		{
 			double num = (double)WorldGen.genRand.Next(15, 30);
             Vector2 value = new Vector2();
@@ -6098,7 +6139,8 @@ namespace Terraria_Server
 			WorldGen.dRoomTreasure[WorldGen.numDRooms] = false;
 			WorldGen.numDRooms++;
 		}
-		public static void DungeonEnt(int i, int j, int tileType, int wallType)
+		
+        public static void DungeonEnt(int i, int j, int tileType, int wallType)
 		{
 			double num = WorldGen.dxStrength1;
 			double num2 = WorldGen.dyStrength1;
@@ -6566,7 +6608,8 @@ namespace Terraria_Server
 			}
 			WorldGen.PlaceTile((int)vector.X, (int)vector.Y + 1, 10, false, false, -1);
 		}
-		public static bool AddBuriedChest(int i, int j, int contain = 0)
+		
+        public static bool AddBuriedChest(int i, int j, int contain = 0)
 		{
 			if (WorldGen.genRand == null)
 			{
@@ -6710,7 +6753,8 @@ namespace Terraria_Server
 			}
 			return false;
 		}
-		public static bool OpenDoor(int i, int j, int direction)
+		
+        public static bool OpenDoor(int i, int j, int direction)
 		{
 			int num = 0;
 			if (Main.tile[i, j - 1] == null)
@@ -6839,7 +6883,8 @@ namespace Terraria_Server
 			}
 			return flag;
 		}
-		public static void Check1x2(int x, int j, byte type)
+		
+        public static void Check1x2(int x, int j, byte type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -6897,7 +6942,8 @@ namespace Terraria_Server
 				WorldGen.destroyObject = false;
 			}
 		}
-		public static void CheckOnTable1x1(int x, int y, int type)
+		
+        public static void CheckOnTable1x1(int x, int y, int type)
 		{
 			if (Main.tile[x, y + 1] != null && (!Main.tile[x, y + 1].active || !Main.tileTable[(int)Main.tile[x, y + 1].type]))
 			{
@@ -6915,7 +6961,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void CheckSign(int x, int y, int type)
+		
+        public static void CheckSign(int x, int y, int type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -7047,7 +7094,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static bool PlaceSign(int x, int y, int type)
+		
+        public static bool PlaceSign(int x, int y, int type)
 		{
 			int num = x - 2;
 			int num2 = x + 3;
@@ -7127,7 +7175,8 @@ namespace Terraria_Server
 			}
 			return true;
 		}
-		public static void PlaceOnTable1x1(int x, int y, int type)
+		
+        public static void PlaceOnTable1x1(int x, int y, int type)
 		{
 			bool flag = false;
 			if (Main.tile[x, y] == null)
@@ -7158,7 +7207,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void Place1x2(int x, int y, int type)
+		
+        public static void Place1x2(int x, int y, int type)
 		{
 			short frameX = 0;
 			if (type == 20)
@@ -7185,7 +7235,8 @@ namespace Terraria_Server
 				Main.tile[x, y].type = (byte)type;
 			}
 		}
-		public static void Place1x2Top(int x, int y, int type)
+		
+        public static void Place1x2Top(int x, int y, int type)
 		{
 			short frameX = 0;
 			if (Main.tile[x, y - 1] == null)
@@ -7208,7 +7259,8 @@ namespace Terraria_Server
 				Main.tile[x, y + 1].type = (byte)type;
 			}
 		}
-		public static void Check1x2Top(int x, int j, byte type)
+		
+        public static void Check1x2Top(int x, int j, byte type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -7262,7 +7314,8 @@ namespace Terraria_Server
 				WorldGen.destroyObject = false;
 			}
 		}
-		public static void Check2x1(int i, int y, byte type)
+		
+        public static void Check2x1(int i, int y, byte type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -7347,7 +7400,8 @@ namespace Terraria_Server
 				WorldGen.destroyObject = false;
 			}
 		}
-		public static void Place2x1(int x, int y, int type)
+		
+        public static void Place2x1(int x, int y, int type)
 		{
 			if (Main.tile[x, y] == null)
 			{
@@ -7389,7 +7443,8 @@ namespace Terraria_Server
 				Main.tile[x + 1, y].type = (byte)type;
 			}
 		}
-		public static void Check4x2(int i, int j, int type)
+		
+        public static void Check4x2(int i, int j, int type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -7457,7 +7512,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void Check3x2(int i, int j, int type)
+		
+        public static void Check3x2(int i, int j, int type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -7529,7 +7585,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void Place4x2(int x, int y, int type, int direction = -1)
+		
+        public static void Place4x2(int x, int y, int type, int direction = -1)
 		{
 			if (x < 5 || x > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
 			{
@@ -7599,7 +7656,8 @@ namespace Terraria_Server
 				Main.tile[x + 2, y].type = (byte)type;
 			}
 		}
-		public static void Place3x2(int x, int y, int type)
+		
+        public static void Place3x2(int x, int y, int type)
 		{
 			if (x < 5 || x > Main.maxTilesX - 5 || y < 5 || y > Main.maxTilesY - 5)
 			{
@@ -7656,7 +7714,8 @@ namespace Terraria_Server
 				Main.tile[x + 1, y].type = (byte)type;
 			}
 		}
-		public static void Check3x3(int i, int j, int type)
+		
+        public static void Check3x3(int i, int j, int type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -7728,7 +7787,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void Place3x3(int x, int y, int type)
+		
+        public static void Place3x3(int x, int y, int type)
 		{
 			bool flag = true;
 			for (int i = x - 1; i < x + 2; i++)
@@ -7793,7 +7853,8 @@ namespace Terraria_Server
 				Main.tile[x + 1, y + 2].type = (byte)type;
 			}
 		}
-		public static void PlaceSunflower(int x, int y, int type = 27)
+		
+        public static void PlaceSunflower(int x, int y, int type = 27)
 		{
 			if ((double)y > Main.worldSurface - 1.0)
 			{
@@ -7838,7 +7899,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void CheckSunflower(int i, int j, int type = 27)
+		
+        public static void CheckSunflower(int i, int j, int type = 27)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -7897,7 +7959,8 @@ namespace Terraria_Server
 				WorldGen.destroyObject = false;
 			}
 		}
-		public static bool PlacePot(int x, int y, int type = 28)
+		
+        public static bool PlacePot(int x, int y, int type = 28)
 		{
 			bool flag = true;
 			for (int i = x; i < x + 2; i++)
@@ -7940,7 +8003,8 @@ namespace Terraria_Server
 			}
 			return false;
 		}
-		public static void CheckPot(int i, int j, int type = 28)
+		
+        public static void CheckPot(int i, int j, int type = 28)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -8139,7 +8203,8 @@ namespace Terraria_Server
 				WorldGen.destroyObject = false;
 			}
 		}
-		public static int PlaceChest(int x, int y, int type = 21)
+		
+        public static int PlaceChest(int x, int y, int type = 21)
 		{
 			bool flag = true;
 			int num = -1;
@@ -8198,7 +8263,8 @@ namespace Terraria_Server
 			}
 			return num;
 		}
-		public static void CheckChest(int i, int j, int type)
+		
+        public static void CheckChest(int i, int j, int type)
 		{
 			if (WorldGen.destroyObject)
 			{
@@ -8246,7 +8312,8 @@ namespace Terraria_Server
 				WorldGen.destroyObject = false;
 			}
 		}
-		public static bool PlaceTile(int i, int j, int type, bool mute = false, bool forced = false, int plr = -1)
+		
+        public static bool PlaceTile(int i, int j, int type, bool mute = false, bool forced = false, int plr = -1)
 		{
 			bool result = false;
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
@@ -8586,7 +8653,8 @@ namespace Terraria_Server
 			}
 			return result;
 		}
-		public static void KillWall(int i, int j, bool fail = false)
+		
+        public static void KillWall(int i, int j, bool fail = false)
 		{
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{
@@ -8694,7 +8762,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void KillTile(int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false)
+		
+        public static void KillTile(int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false)
 		{
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
 			{
@@ -9384,7 +9453,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static bool PlayerLOS(int x, int y)
+		
+        public static bool PlayerLOS(int x, int y)
 		{
 			Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
 			for (int i = 0; i < 255; i++)
@@ -9400,7 +9470,8 @@ namespace Terraria_Server
 			}
 			return false;
 		}
-		public static void UpdateWorld()
+		
+        public static void UpdateWorld()
 		{
             if (WorldGen.genRand == null)
             {
@@ -9964,7 +10035,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void PlaceWall(int i, int j, int type, bool mute = false)
+		
+        public static void PlaceWall(int i, int j, int type, bool mute = false)
 		{
 			if (Main.tile[i, j] == null)
 			{
@@ -9994,7 +10066,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void AddPlants()
+		
+        public static void AddPlants()
 		{
 			for (int i = 0; i < Main.maxTilesX; i++)
 			{
@@ -10017,7 +10090,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void SpreadGrass(int i, int j, int dirt = 0, int grass = 2, bool repeat = true)
+		
+        public static void SpreadGrass(int i, int j, int dirt = 0, int grass = 2, bool repeat = true)
 		{
 			if ((int)Main.tile[i, j].type != dirt || !Main.tile[i, j].active || ((double)j >= Main.worldSurface && dirt != 59))
 			{
@@ -10074,7 +10148,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void ChasmRunner(int i, int j, int steps, bool makeOrb = false)
+		
+        public static void ChasmRunner(int i, int j, int steps, bool makeOrb = false)
 		{
 			bool flag = false;
 			bool flag2 = false;
@@ -10292,7 +10367,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void TileRunner(int i, int j, double strength, int steps, int type, bool addTile = false, float speedX = 0f, float speedY = 0f, bool noYChange = false, bool overRide = true)
+		
+        public static void TileRunner(int i, int j, double strength, int steps, int type, bool addTile = false, float speedX = 0f, float speedY = 0f, bool noYChange = false, bool overRide = true)
 		{
 			double num = strength;
 			float num2 = (float)steps;
@@ -10515,7 +10591,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void FloatingIsland(int i, int j)
+		
+        public static void FloatingIsland(int i, int j)
 		{
 			double num = (double)WorldGen.genRand.Next(80, 120);
 			float num2 = (float)WorldGen.genRand.Next(20, 25);
@@ -10641,7 +10718,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void IslandHouse(int i, int j)
+		
+        public static void IslandHouse(int i, int j)
 		{
 			byte type = (byte)WorldGen.genRand.Next(45, 48);
 			byte wall = (byte)WorldGen.genRand.Next(10, 13);
@@ -10759,7 +10837,8 @@ namespace Terraria_Server
 			WorldGen.AddBuriedChest(i, num10 - 3, contain);
 			WorldGen.houseCount++;
 		}
-		public static void Mountinater(int i, int j)
+		
+        public static void Mountinater(int i, int j)
 		{
 			double num = (double)WorldGen.genRand.Next(80, 120);
 			float num2 = (float)WorldGen.genRand.Next(40, 55);
@@ -10829,7 +10908,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void Lakinater(int i, int j)
+		
+        public static void Lakinater(int i, int j)
 		{
 			double num = (double)WorldGen.genRand.Next(25, 50);
 			double num2 = num;
@@ -10913,7 +10993,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void ShroomPatch(int i, int j)
+		
+        public static void ShroomPatch(int i, int j)
 		{
 			double num = (double)WorldGen.genRand.Next(40, 70);
 			double num2 = num;
@@ -11001,7 +11082,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void Cavinator(int i, int j, int steps)
+		
+        public static void Cavinator(int i, int j, int steps)
 		{
 			double num = (double)WorldGen.genRand.Next(7, 15);
 			int num2 = 1;
@@ -11078,7 +11160,8 @@ namespace Terraria_Server
 				WorldGen.Cavinator((int)value.X, (int)value.Y, steps - 1);
 			}
 		}
-		public static void CaveOpenater(int i, int j)
+		
+        public static void CaveOpenater(int i, int j)
 		{
 			double num = (double)WorldGen.genRand.Next(7, 12);
 			int num2 = 1;
@@ -11155,7 +11238,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void SquareTileFrame(int i, int j, bool resetFrame = true)
+		
+        public static void SquareTileFrame(int i, int j, bool resetFrame = true)
 		{
 			WorldGen.TileFrame(i - 1, j - 1, false, false);
 			WorldGen.TileFrame(i - 1, j, false, false);
@@ -11167,7 +11251,8 @@ namespace Terraria_Server
 			WorldGen.TileFrame(i + 1, j, false, false);
 			WorldGen.TileFrame(i + 1, j + 1, false, false);
 		}
-		public static void SquareWallFrame(int i, int j, bool resetFrame = true)
+		
+        public static void SquareWallFrame(int i, int j, bool resetFrame = true)
 		{
 			WorldGen.WallFrame(i - 1, j - 1, false);
 			WorldGen.WallFrame(i - 1, j, false);
@@ -11179,7 +11264,8 @@ namespace Terraria_Server
 			WorldGen.WallFrame(i + 1, j, false);
 			WorldGen.WallFrame(i + 1, j + 1, false);
 		}
-		public static void SectionTileFrame(int startX, int startY, int endX, int endY)
+		
+        public static void SectionTileFrame(int startX, int startY, int endX, int endY)
 		{
 			int num = startX * 200;
 			int num2 = (endX + 1) * 200;
@@ -11214,7 +11300,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void RangeFrame(int startX, int startY, int endX, int endY)
+		
+        public static void RangeFrame(int startX, int startY, int endX, int endY)
 		{
 			int num = endX + 1;
 			int num2 = endY + 1;
@@ -11227,7 +11314,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void WaterCheck()
+		
+        public static void WaterCheck()
 		{
 			Liquid.numLiquid = 0;
 			LiquidBuffer.numLiquidBuffer = 0;
@@ -11310,7 +11398,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void EveryTileFrame()
+		
+        public static void EveryTileFrame()
 		{
 			WorldGen.noLiquidCheck = true;
 			for (int i = 0; i < Main.maxTilesX; i++)
@@ -11325,7 +11414,8 @@ namespace Terraria_Server
 			}
 			WorldGen.noLiquidCheck = false;
 		}
-		public static void PlantCheck(int i, int j)
+		
+        public static void PlantCheck(int i, int j)
 		{
 			int num = -1;
 			int type = (int)Main.tile[i, j].type;
@@ -11374,7 +11464,8 @@ namespace Terraria_Server
 				WorldGen.KillTile(i, j, false, false, false);
 			}
 		}
-		public static void WallFrame(int i, int j, bool resetFrame = false)
+		
+        public static void WallFrame(int i, int j, bool resetFrame = false)
 		{
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY && Main.tile[i, j] != null && Main.tile[i, j].wall > 0)
 			{
@@ -11927,7 +12018,8 @@ namespace Terraria_Server
 				Main.tile[i, j].wallFrameY = (byte)rectangle.Y;
 			}
 		}
-		public static void TileFrame(int i, int j, bool resetFrame = false, bool noBreak = false)
+		
+        public static void TileFrame(int i, int j, bool resetFrame = false, bool noBreak = false)
 		{
 			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY && Main.tile[i, j] != null)
 			{

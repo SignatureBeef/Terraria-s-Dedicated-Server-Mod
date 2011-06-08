@@ -206,6 +206,25 @@ namespace Terraria_Server
             id = ID;
         }
 
+        public double getTime()
+        {
+            return Main.time;
+        }
+
+        public void setTime(double Time)
+        {
+            Main.time = Time;
+
+            if (Time > 13500)
+            {
+                Main.dayTime = true;
+            }
+            else
+            {
+                Main.dayTime = false;
+            }
+        }
+
         //public int getMoonPhase()
         //{
         //    return moonPhase;

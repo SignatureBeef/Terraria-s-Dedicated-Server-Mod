@@ -1460,7 +1460,8 @@ namespace Terraria_Server
                 {
                     if (motd[i] != null && motd[i].Trim().Length > 0)
                     {
-                        NetMessage.SendData(25, plr, -1, motd[i], 255, 255f, 240f, 20f);
+                        //NetMessage.SendData(25, plr, -1, motd[i], 255, 255f, 240f, 20f);
+                        NetMessage.SendData(25, plr, -1, motd[i], 255, 0f, 0f, 255f);
                     }
                 }
             }

@@ -58,16 +58,22 @@ namespace Terraria_Server.Commands
 
         public void parsePlayerCommand(Player player, string Line)
         {
-            PlayerCommandEvent cCommand = new PlayerCommandEvent();
-            cCommand.setMessage(Line);
-            cCommand.setSender(player);
-            cCommand.setPlayer(player);
-            server.getPluginManager().processHook(Hooks.PLAYER_COMMAND, cCommand);
-            if (cCommand.getCancelled())
+            /*
+             * Already have this in messageBuffer D:< (Hurp DeathCradle, HURP)
+                PlayerCommandEvent cCommand = new PlayerCommandEvent();
+                cCommand.setMessage(Line);
+                cCommand.setSender(player);
+                cCommand.setPlayer(player);
+                server.getPluginManager().processHook(Hooks.PLAYER_COMMAND, cCommand);
+                if (cCommand.getCancelled())
+                {
+                    return;
+                }
+             */
+            if (Line.StartsWith("/"))
             {
-                return;
+                Line = Line.Remove(0, 1);
             }
-
             string[] commands = Line.Trim().ToLower().Split(' ');
             if (commands == null || commands.Length <= 0)
             {
@@ -95,13 +101,67 @@ namespace Terraria_Server.Commands
                     {
                         if (sender is Player)
                         {
-                            //((Player)sender).sendMessage("Reloading Plugins.");
+                            ((Player)sender).sendMessage("Reloading Plugins.");
                         }
                         else
                         {
                             Console.WriteLine("Reloading Plugins");
                         }
                         Commands.Reload(sender.getServer());
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_LIST:
+                    {
+                        if (sender is Player)
+                        {
+                            Commands.List(((Player)sender).whoAmi);
+                        }
+                        else
+                        {
+                            Console.WriteLine(Commands.List(0, false));
+                        }
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_PLAYERS:
+                    {
+                        //same stuff, Just making it easier.
+                        goto case (int)Commands.Command.COMMAND_LIST;
+                    }
+                case (int)Commands.Command.PLAYER_ME:
+                    {
+                        string Message = Program.mergeStrArray(commands); 
+                        if (sender is Player)
+                        {
+                            Commands.Me_Say(Message.Remove(0, 3).Trim(), ((Player)sender).whoAmi);
+                        }
+                        else
+                        {
+                            Commands.Me_Say(Message.Remove(0, 4).Trim(), -1); //turn command list into a string and remove "say "
+                        }
+                        break;
+                    }
+                case (int)Commands.Command.CONSOLE_SAY:
+                    {
+                        goto case (int)Commands.Command.PLAYER_ME;
+                    }
+                case (int)Commands.Command.COMMAND_SAVE_ALL:
+                    {
+                        if (sender is Player)
+                        {
+                            Player player = (Player)sender;
+                            if (player.isOp())
+                            {
+                                Commands.SaveAll();
+                            }
+                            else
+                            {
+                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                            }
+                        }
+                        else
+                        {
+                            Commands.SaveAll();
+                        }
                         break;
                     }
                 default:

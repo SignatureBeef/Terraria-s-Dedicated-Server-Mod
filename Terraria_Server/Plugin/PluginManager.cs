@@ -92,9 +92,9 @@ namespace Terraria_Server.Plugin
                     plugin.Enabled = false;
                     plugin.Disable();
                 }
-            }
 
-            pluginList.Clear();
+                pluginList.Clear();
+            }
         }
 
         public void processHook(Hooks Hook, Event Event)
@@ -142,7 +142,7 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerPartyChange((PartyChangeEvent)Event);
                                     break;
                                 }
-                            case Hooks.TILE_CHANGE:
+                            case Hooks.TILE_BREAK:
                                 {
                                     plugin.onTileBreak((TileBreakEvent)Event);
                                     break;

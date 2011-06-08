@@ -1116,8 +1116,7 @@ namespace Terraria_Server
 
                                                                                                             if (Chat.Length > 0)
                                                                                                             {
-                                                                                                                if(Chat.Substring(0, 1).Equals('/')) {
-
+                                                                                                                if(Chat.Substring(0, 1).Equals("/")) {
                                                                                                                     PlayerCommandEvent Event = new PlayerCommandEvent();
                                                                                                                     Event.setMessage(Chat);
                                                                                                                     Event.setSender(Main.player[this.whoAmI]);
@@ -1128,6 +1127,10 @@ namespace Terraria_Server
                                                                                                                         return;
                                                                                                                     }
 
+                                                                                                                    Program.commandParser.parsePlayerCommand(Main.player[this.whoAmI], Chat);
+
+                                                                                                                    Console.WriteLine(Main.player[this.whoAmI].name + " Sent Command: " + string7);
+                                                                                                                    return;
                                                                                                                 } else {
 
                                                                                                                     PlayerChatEvent Event = new PlayerChatEvent();
