@@ -3,6 +3,8 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 using Terraria_Server.Commands;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server
 {
@@ -2897,6 +2899,18 @@ namespace Terraria_Server
 			if (!this.immune && !Main.godMode)
 			{
 				int num = Damage;
+
+                PlayerHurtEvent playerEvent = new PlayerHurtEvent();
+                playerEvent.setSender(new Sender());
+                playerEvent.setDamage(Damage);
+                Program.server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, playerEvent);
+                if (playerEvent.getCancelled())
+                {
+                    return 0;
+                }
+
+                num = playerEvent.getDamage();
+
 				if (pvp)
 				{
 					num *= 2;

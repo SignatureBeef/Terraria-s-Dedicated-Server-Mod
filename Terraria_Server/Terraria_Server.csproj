@@ -62,6 +62,7 @@
     <Compile Include="Dust.cs" />
     <Compile Include="Events\ConsoleCommandEvent.cs" />
     <Compile Include="Events\Event.cs" />
+    <Compile Include="Events\PlayerHurtEvent.cs" />
     <Compile Include="Events\TileBreakEvent.cs" />
     <Compile Include="Gore.cs" />
     <Compile Include="Item.cs" />

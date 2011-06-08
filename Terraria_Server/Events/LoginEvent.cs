@@ -7,12 +7,13 @@ namespace Terraria_Server.Events
 {
     public class LoginEvent : Event
     {
+
+        private ServerSock socket = null;
+
         public Player getPlayer()
         {
             return (Player)base.getSender();
         }
-
-        private ServerSock socket = null;
 
         public ServerSock getSocket()
         {

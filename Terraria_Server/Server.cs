@@ -72,5 +72,25 @@ namespace Terraria_Server
             NetPlay.StartServer();
         }
 
+        public void notifyOps(string Message)
+        {
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.player[i].active)
+                {
+                    if (Main.player[i].isOp())
+                    {
+                        NetMessage.SendData(25, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
+                    }
+                }
+            }
+        }
+
+        public void notifyAll(string Message)
+        {
+            NetMessage.SendData(25, -1, -1, Message, 255, 238f, 130f, 238f);
+        }
+
+
     }
 }

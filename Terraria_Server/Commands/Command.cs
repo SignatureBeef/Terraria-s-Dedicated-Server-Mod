@@ -99,32 +99,14 @@ namespace Terraria_Server.Commands
         public static void SaveAll()
         {
             Console.WriteLine("Saving World");
-            for (int i = 0; i < 255; i++)
-            {
-                if (Main.player[i].active)
-                {
-                    if (Main.player[i].isOp())
-                    {
-                        NetMessage.SendData(25, Main.player[i].whoAmi, -1, "Saving World...", 255, 176f, 196, 222f);
-                    }
-                }
-            }
+            Program.server.notifyOps("Saving World...");
 
             WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
             while (WorldGen.saveLock)
             {
             }
 
-            for (int i = 0; i < 255; i++)
-            {
-                if (Main.player[i].active)
-                {
-                    if (Main.player[i].isOp())
-                    {
-                        NetMessage.SendData(25, Main.player[i].whoAmi, -1, "Saving Complete.", 255, 176f, 196, 222f);
-                    }
-                }
-            }
+            Program.server.notifyOps("Saving Complete.");
 
             Console.WriteLine("Saving Complete.");
         }

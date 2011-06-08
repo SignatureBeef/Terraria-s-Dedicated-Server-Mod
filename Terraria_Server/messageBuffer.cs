@@ -1127,9 +1127,9 @@ namespace Terraria_Server
                                                                                                                         return;
                                                                                                                     }
 
-                                                                                                                    Program.commandParser.parsePlayerCommand(Main.player[this.whoAmI], Chat);
-
                                                                                                                     Console.WriteLine(Main.player[this.whoAmI].name + " Sent Command: " + string7);
+
+                                                                                                                    Program.commandParser.parsePlayerCommand(Main.player[this.whoAmI], Chat);
                                                                                                                     return;
                                                                                                                 } else {
 
@@ -1170,6 +1170,7 @@ namespace Terraria_Server
 																											{
 																												pvp = true;
 																											}
+
 																											Main.player[(int)b15].Hurt((int)num50, num49, pvp, true);
 																											if (Main.netMode == 2)
 																											{

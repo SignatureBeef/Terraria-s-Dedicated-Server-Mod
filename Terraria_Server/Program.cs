@@ -4,6 +4,7 @@ using System.IO;
 using System.Diagnostics;
 
 using Terraria_Server.Commands;
+using System.Collections;
 
 namespace Terraria_Server
 {
@@ -99,6 +100,7 @@ namespace Terraria_Server
 
         static void Main(string[] args)
         {
+            Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
 
             if(Statics.isLinux)
             {
@@ -113,8 +115,7 @@ namespace Terraria_Server
             }
             Console.WriteLine("Setting up Properties.");
             setupProperties();
-
-
+             
             Console.WriteLine("Preparing Server Data...");
 
             string worldFile = properties.getInitialWorldPath();

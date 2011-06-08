@@ -25,13 +25,15 @@ namespace Terraria_Server.Plugin
         public abstract void Enable();
         public abstract void Disable();
 
+        public virtual void onPlayerChat(PlayerChatEvent Event) { }
         public virtual void onPlayerCommand(PlayerCommandEvent Event) { }
         public virtual void onPlayerCommandProcess(ConsoleCommandEvent Event) { }
+        public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
+        public virtual void onPlayerJoin(LoginEvent Event) { }
         public virtual void onPlayerPreLogin(LoginEvent Event) { }
         public virtual void onPlayerJoin(LoginEvent Event) { }
         public virtual void onPlayerLogout(LogoutEvent Event) { }
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
-        public virtual void onPlayerChat(PlayerChatEvent Event) { }
         public virtual void onTileBreak(TileBreakEvent Event) { }
         
         private ArrayList pluginHooks = new ArrayList();

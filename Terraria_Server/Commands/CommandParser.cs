@@ -94,6 +94,18 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.CONSOLE_EXIT:
                     {
+                        if (sender is Player)
+                        {
+                            Player player = (Player)sender;
+                            if (!player.isOp())
+                            {
+                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                return;
+                            }
+                        }
+
+                        Program.server.notifyOps("Stopping Server...");
+                        Console.WriteLine("Stopping Server...");
                         Commands.Exit(sender.getServer());
                         break;
                     }
@@ -101,12 +113,16 @@ namespace Terraria_Server.Commands
                     {
                         if (sender is Player)
                         {
-                            ((Player)sender).sendMessage("Reloading Plugins.");
+                            Player player = (Player)sender;
+                            if (!player.isOp())
+                            {
+                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                return;
+                            }
                         }
-                        else
-                        {
-                            Console.WriteLine("Reloading Plugins");
-                        }
+
+                        Program.server.notifyOps("Reloading Plugins.");
+                        Console.WriteLine("Reloading Plugins.");
                         Commands.Reload(sender.getServer());
                         break;
                     }
@@ -149,19 +165,13 @@ namespace Terraria_Server.Commands
                         if (sender is Player)
                         {
                             Player player = (Player)sender;
-                            if (player.isOp())
-                            {
-                                Commands.SaveAll();
-                            }
-                            else
+                            if (!player.isOp())
                             {
                                 NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                return;
                             }
                         }
-                        else
-                        {
-                            Commands.SaveAll();
-                        }
+                        Commands.SaveAll();
                         break;
                     }
                 default:
