@@ -5,6 +5,8 @@ Aims to provide a stable Server + API and compatibility with Mono.
 
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
 
+*Jump on over to the Forums at: http://www.tdsm.org/
+
 
 Status
 -------------
