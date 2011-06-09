@@ -8645,7 +8645,7 @@ namespace Terraria_Server
 						{
 							for (int k = 0; k < 3; k++)
 							{
-								Dust.NewDust(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16, 14, 0f, 0f, 0, default(Color), 1f);
+								Dust.NewDust(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16, 14, 0f, 0f, 0,  new Color(), 1f);
 							}
 						}
 					}
@@ -8705,7 +8705,7 @@ namespace Terraria_Server
 						{
 							type = 11;
 						}
-						Dust.NewDust(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16, type, 0f, 0f, 0, default(Color), 1f);
+						Dust.NewDust(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16, type, 0f, 0f, 0,  new Color(), 1f);
 					}
 					if (fail)
 					{
@@ -9042,7 +9042,7 @@ namespace Terraria_Server
 						}
 						if (num2 >= 0)
 						{
-							Dust.NewDust(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16, num2, 0f, 0f, 0, default(Color), 1f);
+							Dust.NewDust(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16, num2, 0f, 0f, 0,  new Color(), 1f);
 						}
 					}
 					if (effectOnly)

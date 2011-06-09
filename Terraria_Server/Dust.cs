@@ -15,7 +15,7 @@ namespace Terraria_Server
 		public Color color = new Color();
 		public int alpha;
 		public Rectangle frame = new Rectangle();
-		public static int NewDust(Vector2 Position, int Width, int Height, int Type, float SpeedX = 0f, float SpeedY = 0f, int Alpha = 0, Color newColor = default(Color), float Scale = 1f)
+		public static int NewDust(Vector2 Position, int Width, int Height, int Type, float SpeedX = 0f, float SpeedY = 0f, int Alpha = 0, Color newColor = null, float Scale = 1f)
 		{
 			if (WorldGen.gen)
 			{
@@ -25,6 +25,10 @@ namespace Terraria_Server
 			{
 				return 0;
 			}
+            if (newColor == null)
+            {
+                newColor = new Color();
+            }
 			int result = 0;
 			int i = 0;
 			while (i < 2000)

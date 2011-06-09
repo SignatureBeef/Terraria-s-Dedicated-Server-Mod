@@ -215,1917 +215,1629 @@ namespace Terraria_Server
 		
         public void UpdatePlayer(int i)
 		{
-			float num = 10f;
-			float num2 = 0.4f;
-			Player.jumpHeight = 15;
-			Player.jumpSpeed = 5.01f;
-			if (this.wet)
-			{
-				num2 = 0.2f;
-				num = 5f;
-				Player.jumpHeight = 30;
-				Player.jumpSpeed = 6.01f;
-			}
-			float num3 = 3f;
-			float num4 = 0.08f;
-			float num5 = 0.2f;
-			float num6 = num3;
-			if (this.active)
-			{
-				this.shadowCount++;
-				if (this.shadowCount == 1)
-				{
-					this.shadowPos[2] = this.shadowPos[1];
-				}
-				else
-				{
-					if (this.shadowCount == 2)
-					{
-						this.shadowPos[1] = this.shadowPos[0];
-					}
-					else
-					{
-						if (this.shadowCount >= 3)
-						{
-							this.shadowCount = 0;
-							this.shadowPos[0] = this.position;
-						}
-					}
-				}
-				this.whoAmi = i;
-				if (this.runSoundDelay > 0)
-				{
-					this.runSoundDelay--;
-				}
-				if (this.attackCD > 0)
-				{
-					this.attackCD--;
-				}
-				if (this.itemAnimation == 0)
-				{
-					this.attackCD = 0;
-				}
-				if (this.chatShowTime > 0)
-				{
-					this.chatShowTime--;
-				}
-				if (this.potionDelay > 0)
-				{
-					this.potionDelay--;
-				}
-				if (this.dead)
-				{
-					if (i == Main.myPlayer)
-					{
-						Main.npcChatText = "";
-						Main.editSign = false;
-					}
-					this.sign = -1;
-					this.talkNPC = -1;
-					this.statLife = 0;
-					this.channel = false;
-					this.potionDelay = 0;
-					this.chest = -1;
-					this.changeItem = -1;
-					this.itemAnimation = 0;
-					this.immuneAlpha += 2;
-					if (this.immuneAlpha > 255)
-					{
-						this.immuneAlpha = 255;
-					}
-					this.respawnTimer--;
-					this.headPosition += this.headVelocity;
-					this.bodyPosition += this.bodyVelocity;
-					this.legPosition += this.legVelocity;
-					this.headRotation += this.headVelocity.X * 0.1f;
-					this.bodyRotation += this.bodyVelocity.X * 0.1f;
-					this.legRotation += this.legVelocity.X * 0.1f;
-					this.headVelocity.Y = this.headVelocity.Y + 0.1f;
-					this.bodyVelocity.Y = this.bodyVelocity.Y + 0.1f;
-					this.legVelocity.Y = this.legVelocity.Y + 0.1f;
-					this.headVelocity.X = this.headVelocity.X * 0.99f;
-					this.bodyVelocity.X = this.bodyVelocity.X * 0.99f;
-					this.legVelocity.X = this.legVelocity.X * 0.99f;
-					if (this.respawnTimer <= 0 && Main.myPlayer == this.whoAmi)
-					{
-						this.Spawn();
-						return;
-					}
-				}
-				else
-				{
-					if (i == Main.myPlayer)
-					{
-						this.zoneEvil = false;
-						if (Main.evilTiles >= 500)
-						{
-							this.zoneEvil = true;
-						}
-						this.zoneMeteor = false;
-						if (Main.meteorTiles >= 50)
-						{
-							this.zoneMeteor = true;
-						}
-						this.zoneDungeon = false;
-						if (Main.dungeonTiles >= 250 && (double)this.position.Y > Main.worldSurface * 16.0 + (double)Main.screenHeight)
-						{
-							int num7 = (int)this.position.X / 16;
-							int num8 = (int)this.position.Y / 16;
-							if (Main.tile[num7, num8].wall > 0 && !Main.wallHouse[(int)Main.tile[num7, num8].wall])
-							{
-								this.zoneDungeon = true;
-							}
-						}
-						this.zoneJungle = false;
-						if (Main.jungleTiles >= 200)
-						{
-							this.zoneJungle = true;
-						}
-						this.controlUp = false;
-						this.controlLeft = false;
-						this.controlDown = false;
-						this.controlRight = false;
-						this.controlJump = false;
-						this.controlUseItem = false;
-						this.controlUseTile = false;
-						this.controlThrow = false;
-						this.controlInv = false;
-                        //if (Main.hasFocus)
-                        //{
-                        //    if (!Main.chatMode && !Main.editSign)
-                        //    {
-                        //        Keys[] pressedKeys = Main.keyState.GetPressedKeys();
-                        //        for (int j = 0; j < pressedKeys.Length; j++)
-                        //        {
-                        //            string a = string.Concat(pressedKeys[j]);
-                        //            if (a == Main.cUp)
-                        //            {
-                        //                this.controlUp = true;
-                        //            }
-                        //            if (a == Main.cLeft)
-                        //            {
-                        //                this.controlLeft = true;
-                        //            }
-                        //            if (a == Main.cDown)
-                        //            {
-                        //                this.controlDown = true;
-                        //            }
-                        //            if (a == Main.cRight)
-                        //            {
-                        //                this.controlRight = true;
-                        //            }
-                        //            if (a == Main.cJump)
-                        //            {
-                        //                this.controlJump = true;
-                        //            }
-                        //            if (a == Main.cThrowItem)
-                        //            {
-                        //                this.controlThrow = true;
-                        //            }
-                        //            if (a == Main.cInv)
-                        //            {
-                        //                this.controlInv = true;
-                        //            }
-                        //        }
-                        //        if (this.controlLeft && this.controlRight)
-                        //        {
-                        //            this.controlLeft = false;
-                        //            this.controlRight = false;
-                        //        }
-                        //    }
-                        //    if (Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface)
-                        //    {
-                        //        this.controlUseItem = true;
-                        //    }
-                        //    if (Main.mouseState.RightButton == ButtonState.Pressed && !this.mouseInterface)
-                        //    {
-                        //        this.controlUseTile = true;
-                        //    }
-                        //    if (this.controlInv)
-                        //    {
-                        //        if (this.releaseInventory)
-                        //        {
-                        //            if (this.talkNPC >= 0)
-                        //            {
-                        //                this.talkNPC = -1;
-                        //                Main.npcChatText = "";
-                        //                //Main.PlaySound(11, -1, -1, 1);
-                        //            }
-                        //            else
-                        //            {
-                        //                if (this.sign >= 0)
-                        //                {
-                        //                    this.sign = -1;
-                        //                    Main.editSign = false;
-                        //                    Main.npcChatText = "";
-                        //                    //Main.PlaySound(11, -1, -1, 1);
-                        //                }
-                        //                else
-                        //                {
-                        //                    if (!Main.playerInventory)
-                        //                    {
-                        //                        Recipe.FindRecipes();
-                        //                        Main.playerInventory = true;
-                        //                        //Main.PlaySound(10, -1, -1, 1);
-                        //                    }
-                        //                    else
-                        //                    {
-                        //                        Main.playerInventory = false;
-                        //                        //Main.PlaySound(11, -1, -1, 1);
-                        //                    }
-                        //                }
-                        //            }
-                        //        }
-                        //        this.releaseInventory = false;
-                        //    }
-                        //    else
-                        //    {
-                        //        this.releaseInventory = true;
-                        //    }
-                        //    if (this.delayUseItem)
-                        //    {
-                        //        if (!this.controlUseItem)
-                        //        {
-                        //            this.delayUseItem = false;
-                        //        }
-                        //        this.controlUseItem = false;
-                        //    }
-                        //    if (this.itemAnimation == 0 && this.itemTime == 0)
-                        //    {
-                        //        if ((this.controlThrow && this.inventory[this.selectedItem].type > 0 && !Main.chatMode) || (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface && Main.mouseLeftRelease) || !Main.playerInventory) && Main.mouseItem.type > 0))
-                        //        {
-                        //            Item item = new Item();
-                        //            bool flag = false;
-                        //            if (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface && Main.mouseLeftRelease) || !Main.playerInventory) && Main.mouseItem.type > 0)
-                        //            {
-                        //                item = this.inventory[this.selectedItem];
-                        //                this.inventory[this.selectedItem] = Main.mouseItem;
-                        //                this.delayUseItem = true;
-                        //                this.controlUseItem = false;
-                        //                flag = true;
-                        //            }
-                        //            int num9 = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.inventory[this.selectedItem].type, 1, false);
-                        //            if (!flag && this.inventory[this.selectedItem].type == 8 && this.inventory[this.selectedItem].stack > 1)
-                        //            {
-                        //                this.inventory[this.selectedItem].stack--;
-                        //            }
-                        //            else
-                        //            {
-                        //                this.inventory[this.selectedItem].position = Main.item[num9].position;
-                        //                Main.item[num9] = this.inventory[this.selectedItem];
-                        //                this.inventory[this.selectedItem] = new Item();
-                        //            }
-                        //            if (Main.netMode == 0)
-                        //            {
-                        //                Main.item[num9].noGrabDelay = 100;
-                        //            }
-                        //            Main.item[num9].velocity.Y = -2f;
-                        //            Main.item[num9].velocity.X = (float)(4 * this.direction) + this.velocity.X;
-                        //            if (((Main.mouseState.LeftButton == ButtonState.Pressed && !this.mouseInterface) || !Main.playerInventory) && Main.mouseItem.type > 0)
-                        //            {
-                        //                this.inventory[this.selectedItem] = item;
-                        //                Main.mouseItem = new Item();
-                        //            }
-                        //            else
-                        //            {
-                        //                this.itemAnimation = 10;
-                        //                this.itemAnimationMax = 10;
-                        //            }
-                        //            Recipe.FindRecipes();
-                        //            if (Main.netMode == 1)
-                        //            {
-                        //                NetMessage.SendData(21, -1, -1, "", num9, 0f, 0f, 0f);
-                        //            }
-                        //        }
-                        //        if (!Main.playerInventory)
-                        //        {
-                        //            int num10 = this.selectedItem;
-                        //            if (!Main.chatMode)
-                        //            {
-                        //                if (Main.keyState.IsKeyDown(Keys.D1))
-                        //                {
-                        //                    this.selectedItem = 0;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D2))
-                        //                {
-                        //                    this.selectedItem = 1;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D3))
-                        //                {
-                        //                    this.selectedItem = 2;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D4))
-                        //                {
-                        //                    this.selectedItem = 3;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D5))
-                        //                {
-                        //                    this.selectedItem = 4;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D6))
-                        //                {
-                        //                    this.selectedItem = 5;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D7))
-                        //                {
-                        //                    this.selectedItem = 6;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D8))
-                        //                {
-                        //                    this.selectedItem = 7;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D9))
-                        //                {
-                        //                    this.selectedItem = 8;
-                        //                }
-                        //                if (Main.keyState.IsKeyDown(Keys.D0))
-                        //                {
-                        //                    this.selectedItem = 9;
-                        //                }
-                        //            }
-                        //            if (num10 != this.selectedItem)
-                        //            {
-                        //                //Main.PlaySound(12, -1, -1, 1);
-                        //            }
-                        //            int k;
-                        //            for (k = (Main.mouseState.ScrollWheelValue - Main.oldMouseState.ScrollWheelValue) / 120; k > 9; k -= 10)
-                        //            {
-                        //            }
-                        //            while (k < 0)
-                        //            {
-                        //                k += 10;
-                        //            }
-                        //            this.selectedItem -= k;
-                        //            if (k != 0)
-                        //            {
-                        //                //Main.PlaySound(12, -1, -1, 1);
-                        //            }
-                        //            if (this.changeItem >= 0)
-                        //            {
-                        //                if (this.selectedItem != this.changeItem)
-                        //                {
-                        //                    //Main.PlaySound(12, -1, -1, 1);
-                        //                }
-                        //                this.selectedItem = this.changeItem;
-                        //                this.changeItem = -1;
-                        //            }
-                        //            while (this.selectedItem > 9)
-                        //            {
-                        //                this.selectedItem -= 10;
-                        //            }
-                        //            while (this.selectedItem < 0)
-                        //            {
-                        //                this.selectedItem += 10;
-                        //            }
-                        //        }
-                        //        else
-                        //        {
-                        //            int num11 = (Main.mouseState.ScrollWheelValue - Main.oldMouseState.ScrollWheelValue) / 120;
-                        //            Main.focusRecipe += num11;
-                        //            if (Main.focusRecipe > Main.numAvailableRecipes - 1)
-                        //            {
-                        //                Main.focusRecipe = Main.numAvailableRecipes - 1;
-                        //            }
-                        //            if (Main.focusRecipe < 0)
-                        //            {
-                        //                Main.focusRecipe = 0;
-                        //            }
-                        //        }
-                        //    }
-                        //}
-						if (Main.netMode == 1)
-						{
-							bool flag2 = false;
-							if (this.statLife != Main.clientPlayer.statLife || this.statLifeMax != Main.clientPlayer.statLifeMax)
-							{
-								NetMessage.SendData(16, -1, -1, "", Main.myPlayer, 0f, 0f, 0f);
-								flag2 = true;
-							}
-							if (this.statMana != Main.clientPlayer.statMana || this.statManaMax != Main.clientPlayer.statManaMax)
-							{
-								NetMessage.SendData(42, -1, -1, "", Main.myPlayer, 0f, 0f, 0f);
-								flag2 = true;
-							}
-							if (this.controlUp != Main.clientPlayer.controlUp)
-							{
-								flag2 = true;
-							}
-							if (this.controlDown != Main.clientPlayer.controlDown)
-							{
-								flag2 = true;
-							}
-							if (this.controlLeft != Main.clientPlayer.controlLeft)
-							{
-								flag2 = true;
-							}
-							if (this.controlRight != Main.clientPlayer.controlRight)
-							{
-								flag2 = true;
-							}
-							if (this.controlJump != Main.clientPlayer.controlJump)
-							{
-								flag2 = true;
-							}
-							if (this.controlUseItem != Main.clientPlayer.controlUseItem)
-							{
-								flag2 = true;
-							}
-							if (this.selectedItem != Main.clientPlayer.selectedItem)
-							{
-								flag2 = true;
-							}
-							if (flag2)
-							{
-								NetMessage.SendData(13, -1, -1, "", Main.myPlayer, 0f, 0f, 0f);
-							}
-						}
-						if (Main.playerInventory)
-						{
-							this.AdjTiles();
-						}
-						if (this.chest != -1)
-						{
-							int num12 = (int)(((double)this.position.X + (double)this.width * 0.5) / 16.0);
-							int num13 = (int)(((double)this.position.Y + (double)this.height * 0.5) / 16.0);
-							if (num12 < this.chestX - 5 || num12 > this.chestX + 6 || num13 < this.chestY - 4 || num13 > this.chestY + 5)
-							{
-								if (this.chest != -1)
-								{
-									//Main.PlaySound(11, -1, -1, 1);
-								}
-								this.chest = -1;
-							}
-							if (!Main.tile[this.chestX, this.chestY].active)
-							{
-								//Main.PlaySound(11, -1, -1, 1);
-								this.chest = -1;
-							}
-						}
-						if (this.velocity.Y == 0f)
-						{
-							int num14 = (int)(this.position.Y / 16f) - this.fallStart;
-							if (num14 > 25 && !this.noFallDmg)
-							{
-								int damage = (num14 - 25) * 10;
-								this.immune = false;
-								this.Hurt(damage, -this.direction, false, false);
-							}
-							this.fallStart = (int)(this.position.Y / 16f);
-						}
-						if (this.velocity.Y < 0f || this.rocketDelay > 0 || this.wet)
-						{
-							this.fallStart = (int)(this.position.Y / 16f);
-						}
-					}
-					if (this.mouseInterface)
-					{
-						this.delayUseItem = true;
-					}
-                    //Player.tileTargetX = (int)(((float)Main.mouseState.X + Main.screenPosition.X) / 16f);
-                    //Player.tileTargetY = (int)(((float)Main.mouseState.Y + Main.screenPosition.Y) / 16f);
-					if (this.immune)
-					{
-						this.immuneTime--;
-						if (this.immuneTime <= 0)
-						{
-							this.immune = false;
-						}
-						this.immuneAlpha += this.immuneAlphaDirection * 50;
-						if (this.immuneAlpha <= 50)
-						{
-							this.immuneAlphaDirection = 1;
-						}
-						else
-						{
-							if (this.immuneAlpha >= 205)
-							{
-								this.immuneAlphaDirection = -1;
-							}
-						}
-					}
-					else
-					{
-						this.immuneAlpha = 0;
-					}
-					if (this.manaRegenDelay > 0)
-					{
-						this.manaRegenDelay--;
-					}
-					this.statDefense = 0;
-					this.accWatch = 0;
-					this.accDepthMeter = 0;
-					this.lifeRegen = 0;
-					this.manaCost = 1f;
-					this.meleeSpeed = 1f;
-					this.boneArmor = false;
-					this.rocketBoots = false;
-					this.fireWalk = false;
-					this.noKnockback = false;
-					this.jumpBoost = false;
-					this.noFallDmg = false;
-					this.accFlipper = false;
-					this.spawnMax = false;
-					this.spaceGun = false;
-					this.magicBoost = 1f;
-					if (this.manaRegenDelay == 0)
-					{
-						this.manaRegen = this.statManaMax / 30 + 1;
-					}
-					else
-					{
-						this.manaRegen = 0;
-					}
-					this.doubleJump = false;
-					for (int l = 0; l < 8; l++)
-					{
-						this.statDefense += this.armor[l].defense;
-						this.lifeRegen += this.armor[l].lifeRegen;
-						this.manaRegen += this.armor[l].manaRegen;
-						if (this.armor[l].type == 193)
-						{
-							this.fireWalk = true;
-						}
-						if (this.armor[l].type == 238)
-						{
-							this.magicBoost *= 1.15f;
-						}
-					}
-					this.head = this.armor[0].headSlot;
-					this.body = this.armor[1].bodySlot;
-					this.legs = this.armor[2].legSlot;
-					for (int m = 3; m < 8; m++)
-					{
-						if (this.armor[m].type == 15 && this.accWatch < 1)
-						{
-							this.accWatch = 1;
-						}
-						if (this.armor[m].type == 16 && this.accWatch < 2)
-						{
-							this.accWatch = 2;
-						}
-						if (this.armor[m].type == 17 && this.accWatch < 3)
-						{
-							this.accWatch = 3;
-						}
-						if (this.armor[m].type == 18 && this.accDepthMeter < 1)
-						{
-							this.accDepthMeter = 1;
-						}
-						if (this.armor[m].type == 53)
-						{
-							this.doubleJump = true;
-						}
-						if (this.armor[m].type == 54)
-						{
-							num6 = 6f;
-						}
-						if (this.armor[m].type == 128)
-						{
-							this.rocketBoots = true;
-						}
-						if (this.armor[m].type == 156)
-						{
-							this.noKnockback = true;
-						}
-						if (this.armor[m].type == 158)
-						{
-							this.noFallDmg = true;
-						}
-						if (this.armor[m].type == 159)
-						{
-							this.jumpBoost = true;
-						}
-						if (this.armor[m].type == 187)
-						{
-							this.accFlipper = true;
-						}
-						if (this.armor[m].type == 211)
-						{
-							this.meleeSpeed *= 0.9f;
-						}
-						if (this.armor[m].type == 223)
-						{
-							this.spawnMax = true;
-						}
-						if (this.armor[m].type == 212)
-						{
-							num4 *= 1.1f;
-							num3 *= 1.1f;
-						}
-					}
-					this.lifeRegenCount += this.lifeRegen;
-					while (this.lifeRegenCount >= 120)
-					{
-						this.lifeRegenCount -= 120;
-						if (this.statLife < this.statLifeMax)
-						{
-							this.statLife++;
-						}
-						if (this.statLife > this.statLifeMax)
-						{
-							this.statLife = this.statLifeMax;
-						}
-					}
-					this.manaRegenCount += this.manaRegen;
-					while (this.manaRegenCount >= 120)
-					{
-						this.manaRegenCount -= 120;
-						if (this.statMana < this.statManaMax)
-						{
-							this.statMana++;
-						}
-						if (this.statMana > this.statManaMax)
-						{
-							this.statMana = this.statManaMax;
-						}
-					}
-					if (this.head == 11)
-					{
-						int i2 = (int)(this.position.X + (float)(this.width / 2) + (float)(8 * this.direction)) / 16;
-						int j2 = (int)(this.position.Y + 2f) / 16;
-						//Lighting.addLight(i2, j2, 0.8f);
-					}
-					if (this.jumpBoost)
-					{
-						Player.jumpHeight = 20;
-						Player.jumpSpeed = 6.51f;
-					}
-					this.setBonus = "";
-					if ((this.head == 1 && this.body == 1 && this.legs == 1) || (this.head == 2 && this.body == 2 && this.legs == 2))
-					{
-						this.setBonus = "2 defense";
-						this.statDefense += 2;
-					}
-					if ((this.head == 3 && this.body == 3 && this.legs == 3) || (this.head == 4 && this.body == 4 && this.legs == 4))
-					{
-						this.setBonus = "3 defense";
-						this.statDefense += 3;
-					}
-					if (this.head == 5 && this.body == 5 && this.legs == 5)
-					{
-						this.setBonus = "15 % increased melee speed";
-						this.meleeSpeed *= 0.85f;
-						if (Main.rand.Next(10) == 0)
-						{
-							Vector2 arg_147A_0 = new Vector2(this.position.X, this.position.Y);
-							int arg_147A_1 = this.width;
-							int arg_147A_2 = this.height;
-							int arg_147A_3 = 14;
-							float arg_147A_4 = 0f;
-							float arg_147A_5 = 0f;
-							int arg_147A_6 = 200;
-							Color newColor = default(Color);
-							Dust.NewDust(arg_147A_0, arg_147A_1, arg_147A_2, arg_147A_3, arg_147A_4, arg_147A_5, arg_147A_6, newColor, 1.2f);
-						}
-					}
-					if (this.head == 6 && this.body == 6 && this.legs == 6)
-					{
-						this.setBonus = "Space Gun costs 0 mana";
-						this.spaceGun = true;
-						if (Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y) > 1f && !this.rocketFrame)
-						{
-							for (int n = 0; n < 2; n++)
-							{
-								Vector2 arg_1561_0 = new Vector2(this.position.X - this.velocity.X * 2f, this.position.Y - 2f - this.velocity.Y * 2f);
-								int arg_1561_1 = this.width;
-								int arg_1561_2 = this.height;
-								int arg_1561_3 = 6;
-								float arg_1561_4 = 0f;
-								float arg_1561_5 = 0f;
-								int arg_1561_6 = 100;
-								Color newColor = default(Color);
-								int num15 = Dust.NewDust(arg_1561_0, arg_1561_1, arg_1561_2, arg_1561_3, arg_1561_4, arg_1561_5, arg_1561_6, newColor, 2f);
-								Main.dust[num15].noGravity = true;
-								Dust expr_1583_cp_0 = Main.dust[num15];
-								expr_1583_cp_0.velocity.X = expr_1583_cp_0.velocity.X - this.velocity.X * 0.5f;
-								Dust expr_15AD_cp_0 = Main.dust[num15];
-								expr_15AD_cp_0.velocity.Y = expr_15AD_cp_0.velocity.Y - this.velocity.Y * 0.5f;
-							}
-						}
-					}
-					if (this.head == 7 && this.body == 7 && this.legs == 7)
-					{
-						num4 *= 1.3f;
-						num3 *= 1.3f;
-						this.setBonus = "30% increased movement speed";
-						this.boneArmor = true;
-					}
-					if (this.head == 8 && this.body == 8 && this.legs == 8)
-					{
-						this.setBonus = "25% reduced mana usage";
-						this.manaCost *= 0.75f;
-						this.meleeSpeed *= 0.9f;
-						if (Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y) > 1f)
-						{
-							Vector2 arg_1701_0 = new Vector2(this.position.X - this.velocity.X * 2f, this.position.Y - 2f - this.velocity.Y * 2f);
-							int arg_1701_1 = this.width;
-							int arg_1701_2 = this.height;
-							int arg_1701_3 = 40;
-							float arg_1701_4 = 0f;
-							float arg_1701_5 = 0f;
-							int arg_1701_6 = 50;
-							Color newColor = default(Color);
-							int num16 = Dust.NewDust(arg_1701_0, arg_1701_1, arg_1701_2, arg_1701_3, arg_1701_4, arg_1701_5, arg_1701_6, newColor, 1.4f);
-							Main.dust[num16].noGravity = true;
-							Main.dust[num16].velocity.X = this.velocity.X * 0.25f;
-							Main.dust[num16].velocity.Y = this.velocity.Y * 0.25f;
-						}
-					}
-					if (this.head == 9 && this.body == 9 && this.legs == 9)
-					{
-						this.setBonus = "5 defense";
-						this.statDefense += 5;
-						if (Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y) > 1f && !this.rocketFrame)
-						{
-							for (int num17 = 0; num17 < 2; num17++)
-							{
-								Vector2 arg_1847_0 = new Vector2(this.position.X - this.velocity.X * 2f, this.position.Y - 2f - this.velocity.Y * 2f);
-								int arg_1847_1 = this.width;
-								int arg_1847_2 = this.height;
-								int arg_1847_3 = 6;
-								float arg_1847_4 = 0f;
-								float arg_1847_5 = 0f;
-								int arg_1847_6 = 100;
-								Color newColor = default(Color);
-								int num18 = Dust.NewDust(arg_1847_0, arg_1847_1, arg_1847_2, arg_1847_3, arg_1847_4, arg_1847_5, arg_1847_6, newColor, 2f);
-								Main.dust[num18].noGravity = true;
-								Dust expr_1869_cp_0 = Main.dust[num18];
-								expr_1869_cp_0.velocity.X = expr_1869_cp_0.velocity.X - this.velocity.X * 0.5f;
-								Dust expr_1893_cp_0 = Main.dust[num18];
-								expr_1893_cp_0.velocity.Y = expr_1893_cp_0.velocity.Y - this.velocity.Y * 0.5f;
-							}
-						}
-					}
-					if (!this.doubleJump)
-					{
-						this.jumpAgain = false;
-					}
-					else
-					{
-						if (this.velocity.Y == 0f)
-						{
-							this.jumpAgain = true;
-						}
-					}
-					if ((double)this.meleeSpeed < 0.7)
-					{
-						this.meleeSpeed = 0.7f;
-					}
-					if (this.grappling[0] == -1)
-					{
-						if (this.controlLeft && this.velocity.X > -num3)
-						{
-							if (this.velocity.X > num5)
-							{
-								this.velocity.X = this.velocity.X - num5;
-							}
-							this.velocity.X = this.velocity.X - num4;
-							if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
-							{
-								this.direction = -1;
-							}
-						}
-						else
-						{
-							if (this.controlRight && this.velocity.X < num3)
-							{
-								if (this.velocity.X < -num5)
-								{
-									this.velocity.X = this.velocity.X + num5;
-								}
-								this.velocity.X = this.velocity.X + num4;
-								if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
-								{
-									this.direction = 1;
-								}
-							}
-							else
-							{
-								if (this.controlLeft && this.velocity.X > -num6)
-								{
-									if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
-									{
-										this.direction = -1;
-									}
-									if (this.velocity.Y == 0f)
-									{
-										if (this.velocity.X > num5)
-										{
-											this.velocity.X = this.velocity.X - num5;
-										}
-										this.velocity.X = this.velocity.X - num4 * 0.2f;
-									}
-									if (this.velocity.X < -(num6 + num3) / 2f && this.velocity.Y == 0f)
-									{
-										if (this.runSoundDelay == 0 && this.velocity.Y == 0f)
-										{
-											//Main.PlaySound(17, (int)this.position.X, (int)this.position.Y, 1);
-											this.runSoundDelay = 9;
-										}
-										Vector2 arg_1B6C_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height);
-										int arg_1B6C_1 = this.width + 8;
-										int arg_1B6C_2 = 4;
-										int arg_1B6C_3 = 16;
-										float arg_1B6C_4 = -this.velocity.X * 0.5f;
-										float arg_1B6C_5 = this.velocity.Y * 0.5f;
-										int arg_1B6C_6 = 50;
-										Color newColor = default(Color);
-										int num19 = Dust.NewDust(arg_1B6C_0, arg_1B6C_1, arg_1B6C_2, arg_1B6C_3, arg_1B6C_4, arg_1B6C_5, arg_1B6C_6, newColor, 1.5f);
-										Main.dust[num19].velocity.X = Main.dust[num19].velocity.X * 0.2f;
-										Main.dust[num19].velocity.Y = Main.dust[num19].velocity.Y * 0.2f;
-									}
-								}
-								else
-								{
-									if (this.controlRight && this.velocity.X < num6)
-									{
-										if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
-										{
-											this.direction = 1;
-										}
-										if (this.velocity.Y == 0f)
-										{
-											if (this.velocity.X < -num5)
-											{
-												this.velocity.X = this.velocity.X + num5;
-											}
-											this.velocity.X = this.velocity.X + num4 * 0.2f;
-										}
-										if (this.velocity.X > (num6 + num3) / 2f && this.velocity.Y == 0f)
-										{
-											if (this.runSoundDelay == 0 && this.velocity.Y == 0f)
-											{
-												//Main.PlaySound(17, (int)this.position.X, (int)this.position.Y, 1);
-												this.runSoundDelay = 9;
-											}
-											Vector2 arg_1D34_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height);
-											int arg_1D34_1 = this.width + 8;
-											int arg_1D34_2 = 4;
-											int arg_1D34_3 = 16;
-											float arg_1D34_4 = -this.velocity.X * 0.5f;
-											float arg_1D34_5 = this.velocity.Y * 0.5f;
-											int arg_1D34_6 = 50;
-											Color newColor = default(Color);
-											int num20 = Dust.NewDust(arg_1D34_0, arg_1D34_1, arg_1D34_2, arg_1D34_3, arg_1D34_4, arg_1D34_5, arg_1D34_6, newColor, 1.5f);
-											Main.dust[num20].velocity.X = Main.dust[num20].velocity.X * 0.2f;
-											Main.dust[num20].velocity.Y = Main.dust[num20].velocity.Y * 0.2f;
-										}
-									}
-									else
-									{
-										if (this.velocity.Y == 0f)
-										{
-											if (this.velocity.X > num5)
-											{
-												this.velocity.X = this.velocity.X - num5;
-											}
-											else
-											{
-												if (this.velocity.X < -num5)
-												{
-													this.velocity.X = this.velocity.X + num5;
-												}
-												else
-												{
-													this.velocity.X = 0f;
-												}
-											}
-										}
-										else
-										{
-											if ((double)this.velocity.X > (double)num5 * 0.5)
-											{
-												this.velocity.X = this.velocity.X - num5 * 0.5f;
-											}
-											else
-											{
-												if ((double)this.velocity.X < (double)(-(double)num5) * 0.5)
-												{
-													this.velocity.X = this.velocity.X + num5 * 0.5f;
-												}
-												else
-												{
-													this.velocity.X = 0f;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-						if (this.controlJump)
-						{
-							if (this.jump > 0)
-							{
-								if (this.velocity.Y > -Player.jumpSpeed + num2 * 2f)
-								{
-									this.jump = 0;
-								}
-								else
-								{
-									this.velocity.Y = -Player.jumpSpeed;
-									this.jump--;
-								}
-							}
-							else
-							{
-								if ((this.velocity.Y == 0f || this.jumpAgain || (this.wet && this.accFlipper)) && this.releaseJump)
-								{
-									bool flag3 = false;
-									if (this.wet && this.accFlipper)
-									{
-										if (this.swimTime == 0)
-										{
-											this.swimTime = 30;
-										}
-										flag3 = true;
-									}
-									this.jumpAgain = false;
-									this.canRocket = false;
-									this.rocketRelease = false;
-									if (this.velocity.Y == 0f && this.doubleJump)
-									{
-										this.jumpAgain = true;
-									}
-									if (this.velocity.Y == 0f || flag3)
-									{
-										this.velocity.Y = -Player.jumpSpeed;
-										this.jump = Player.jumpHeight;
-									}
-									else
-									{
-										//Main.PlaySound(16, (int)this.position.X, (int)this.position.Y, 1);
-										this.velocity.Y = -Player.jumpSpeed;
-										this.jump = Player.jumpHeight / 2;
-										for (int num21 = 0; num21 < 10; num21++)
-										{
-											Vector2 arg_2064_0 = new Vector2(this.position.X - 34f, this.position.Y + (float)this.height - 16f);
-											int arg_2064_1 = 102;
-											int arg_2064_2 = 32;
-											int arg_2064_3 = 16;
-											float arg_2064_4 = -this.velocity.X * 0.5f;
-											float arg_2064_5 = this.velocity.Y * 0.5f;
-											int arg_2064_6 = 100;
-											Color newColor = default(Color);
-											int num22 = Dust.NewDust(arg_2064_0, arg_2064_1, arg_2064_2, arg_2064_3, arg_2064_4, arg_2064_5, arg_2064_6, newColor, 1.5f);
-											Main.dust[num22].velocity.X = Main.dust[num22].velocity.X * 0.5f - this.velocity.X * 0.1f;
-											Main.dust[num22].velocity.Y = Main.dust[num22].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
-										}
-										int num23 = Gore.NewGore(new Vector2(this.position.X + (float)(this.width / 2) - 16f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
-										Main.gore[num23].velocity.X = Main.gore[num23].velocity.X * 0.1f - this.velocity.X * 0.1f;
-										Main.gore[num23].velocity.Y = Main.gore[num23].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
-										num23 = Gore.NewGore(new Vector2(this.position.X - 36f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
-										Main.gore[num23].velocity.X = Main.gore[num23].velocity.X * 0.1f - this.velocity.X * 0.1f;
-										Main.gore[num23].velocity.Y = Main.gore[num23].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
-										num23 = Gore.NewGore(new Vector2(this.position.X + (float)this.width + 4f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
-										Main.gore[num23].velocity.X = Main.gore[num23].velocity.X * 0.1f - this.velocity.X * 0.1f;
-										Main.gore[num23].velocity.Y = Main.gore[num23].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
-									}
-								}
-							}
-							this.releaseJump = false;
-						}
-						else
-						{
-							this.jump = 0;
-							this.releaseJump = true;
-							this.rocketRelease = true;
-						}
-						if (this.doubleJump && !this.jumpAgain && this.velocity.Y < 0f && !this.rocketBoots && !this.accFlipper)
-						{
-							Vector2 arg_2456_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height);
-							int arg_2456_1 = this.width + 8;
-							int arg_2456_2 = 4;
-							int arg_2456_3 = 16;
-							float arg_2456_4 = -this.velocity.X * 0.5f;
-							float arg_2456_5 = this.velocity.Y * 0.5f;
-							int arg_2456_6 = 100;
-							Color newColor = default(Color);
-							int num24 = Dust.NewDust(arg_2456_0, arg_2456_1, arg_2456_2, arg_2456_3, arg_2456_4, arg_2456_5, arg_2456_6, newColor, 1.5f);
-							Main.dust[num24].velocity.X = Main.dust[num24].velocity.X * 0.5f - this.velocity.X * 0.1f;
-							Main.dust[num24].velocity.Y = Main.dust[num24].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
-						}
-						if (this.velocity.Y > -Player.jumpSpeed && this.velocity.Y != 0f)
-						{
-							this.canRocket = true;
-						}
-						if (this.rocketBoots && this.controlJump && this.rocketDelay == 0 && this.canRocket && this.rocketRelease && !this.jumpAgain)
-						{
-							int num25 = 7;
-							if (this.statMana >= (int)((float)num25 * this.manaCost))
-							{
-								this.manaRegenDelay = 180;
-								this.statMana -= (int)((float)num25 * this.manaCost);
-								this.rocketDelay = 10;
-								if (this.rocketDelay2 <= 0)
-								{
-									//Main.PlaySound(2, (int)this.position.X, (int)this.position.Y, 13);
-									this.rocketDelay2 = 30;
-								}
-							}
-							else
-							{
-								this.canRocket = false;
-							}
-						}
-						if (this.rocketDelay2 > 0)
-						{
-							this.rocketDelay2--;
-						}
-						if (this.rocketDelay == 0)
-						{
-							this.rocketFrame = false;
-						}
-						if (this.rocketDelay > 0)
-						{
-							this.rocketFrame = true;
-							for (int num26 = 0; num26 < 2; num26++)
-							{
-								if (num26 == 0)
-								{
-									Vector2 arg_2650_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height - 10f);
-									int arg_2650_1 = 8;
-									int arg_2650_2 = 8;
-									int arg_2650_3 = 6;
-									float arg_2650_4 = 0f;
-									float arg_2650_5 = 0f;
-									int arg_2650_6 = 100;
-									Color newColor = default(Color);
-									int num27 = Dust.NewDust(arg_2650_0, arg_2650_1, arg_2650_2, arg_2650_3, arg_2650_4, arg_2650_5, arg_2650_6, newColor, 2.5f);
-									Main.dust[num27].noGravity = true;
-									Main.dust[num27].velocity.X = Main.dust[num27].velocity.X * 1f - 2f - this.velocity.X * 0.3f;
-									Main.dust[num27].velocity.Y = Main.dust[num27].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
-								}
-								else
-								{
-									Vector2 arg_2743_0 = new Vector2(this.position.X + (float)this.width - 4f, this.position.Y + (float)this.height - 10f);
-									int arg_2743_1 = 8;
-									int arg_2743_2 = 8;
-									int arg_2743_3 = 6;
-									float arg_2743_4 = 0f;
-									float arg_2743_5 = 0f;
-									int arg_2743_6 = 100;
-									Color newColor = default(Color);
-									int num28 = Dust.NewDust(arg_2743_0, arg_2743_1, arg_2743_2, arg_2743_3, arg_2743_4, arg_2743_5, arg_2743_6, newColor, 2.5f);
-									Main.dust[num28].noGravity = true;
-									Main.dust[num28].velocity.X = Main.dust[num28].velocity.X * 1f + 2f - this.velocity.X * 0.3f;
-									Main.dust[num28].velocity.Y = Main.dust[num28].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
-								}
-							}
-							if (this.rocketDelay == 0)
-							{
-								this.releaseJump = true;
-							}
-							this.rocketDelay--;
-							this.velocity.Y = this.velocity.Y - 0.1f;
-							if (this.velocity.Y > 0f)
-							{
-								this.velocity.Y = this.velocity.Y - 0.3f;
-							}
-							if (this.velocity.Y < -Player.jumpSpeed)
-							{
-								this.velocity.Y = -Player.jumpSpeed;
-							}
-						}
-						else
-						{
-							this.velocity.Y = this.velocity.Y + num2;
-						}
-						if (this.velocity.Y > num)
-						{
-							this.velocity.Y = num;
-						}
-					}
-					for (int num29 = 0; num29 < 200; num29++)
-					{
-						if (Main.item[num29].active && Main.item[num29].noGrabDelay == 0 && Main.item[num29].owner == i)
-						{
-							Rectangle rectangle = new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height);
-							if (rectangle.Intersects(new Rectangle((int)Main.item[num29].position.X, (int)Main.item[num29].position.Y, Main.item[num29].width, Main.item[num29].height)))
-							{
-								if (i == Main.myPlayer && (this.inventory[this.selectedItem].type != 0 || this.itemAnimation <= 0))
-								{
-									if (Main.item[num29].type == 58)
-									{
-										//Main.PlaySound(7, (int)this.position.X, (int)this.position.Y, 1);
-										this.statLife += 20;
-										if (Main.myPlayer == this.whoAmi)
-										{
-											this.HealEffect(20);
-										}
-										if (this.statLife > this.statLifeMax)
-										{
-											this.statLife = this.statLifeMax;
-										}
-										Main.item[num29] = new Item();
-										if (Main.netMode == 1)
-										{
-											NetMessage.SendData(21, -1, -1, "", num29, 0f, 0f, 0f);
-										}
-									}
-									else
-									{
-										if (Main.item[num29].type == 184)
-										{
-											//Main.PlaySound(7, (int)this.position.X, (int)this.position.Y, 1);
-											this.statMana += 20;
-											if (Main.myPlayer == this.whoAmi)
-											{
-												this.ManaEffect(20);
-											}
-											if (this.statMana > this.statManaMax)
-											{
-												this.statMana = this.statManaMax;
-											}
-											Main.item[num29] = new Item();
-											if (Main.netMode == 1)
-											{
-												NetMessage.SendData(21, -1, -1, "", num29, 0f, 0f, 0f);
-											}
-										}
-										else
-										{
-											Main.item[num29] = this.GetItem(i, Main.item[num29]);
-											if (Main.netMode == 1)
-											{
-												NetMessage.SendData(21, -1, -1, "", num29, 0f, 0f, 0f);
-											}
-										}
-									}
-								}
-							}
-							else
-							{
-								rectangle = new Rectangle((int)this.position.X - Player.itemGrabRange, (int)this.position.Y - Player.itemGrabRange, this.width + Player.itemGrabRange * 2, this.height + Player.itemGrabRange * 2);
-								if (rectangle.Intersects(new Rectangle((int)Main.item[num29].position.X, (int)Main.item[num29].position.Y, Main.item[num29].width, Main.item[num29].height)) && this.ItemSpace(Main.item[num29]))
-								{
-									Main.item[num29].beingGrabbed = true;
-									if ((double)this.position.X + (double)this.width * 0.5 > (double)Main.item[num29].position.X + (double)Main.item[num29].width * 0.5)
-									{
-										if (Main.item[num29].velocity.X < Player.itemGrabSpeedMax + this.velocity.X)
-										{
-											Item expr_2C5D_cp_0 = Main.item[num29];
-											expr_2C5D_cp_0.velocity.X = expr_2C5D_cp_0.velocity.X + Player.itemGrabSpeed;
-										}
-										if (Main.item[num29].velocity.X < 0f)
-										{
-											Item expr_2C97_cp_0 = Main.item[num29];
-											expr_2C97_cp_0.velocity.X = expr_2C97_cp_0.velocity.X + Player.itemGrabSpeed * 0.75f;
-										}
-									}
-									else
-									{
-										if (Main.item[num29].velocity.X > -Player.itemGrabSpeedMax + this.velocity.X)
-										{
-											Item expr_2CE6_cp_0 = Main.item[num29];
-											expr_2CE6_cp_0.velocity.X = expr_2CE6_cp_0.velocity.X - Player.itemGrabSpeed;
-										}
-										if (Main.item[num29].velocity.X > 0f)
-										{
-											Item expr_2D1D_cp_0 = Main.item[num29];
-											expr_2D1D_cp_0.velocity.X = expr_2D1D_cp_0.velocity.X - Player.itemGrabSpeed * 0.75f;
-										}
-									}
-									if ((double)this.position.Y + (double)this.height * 0.5 > (double)Main.item[num29].position.Y + (double)Main.item[num29].height * 0.5)
-									{
-										if (Main.item[num29].velocity.Y < Player.itemGrabSpeedMax)
-										{
-											Item expr_2DA6_cp_0 = Main.item[num29];
-											expr_2DA6_cp_0.velocity.Y = expr_2DA6_cp_0.velocity.Y + Player.itemGrabSpeed;
-										}
-										if (Main.item[num29].velocity.Y < 0f)
-										{
-											Item expr_2DE0_cp_0 = Main.item[num29];
-											expr_2DE0_cp_0.velocity.Y = expr_2DE0_cp_0.velocity.Y + Player.itemGrabSpeed * 0.75f;
-										}
-									}
-									else
-									{
-										if (Main.item[num29].velocity.Y > -Player.itemGrabSpeedMax)
-										{
-											Item expr_2E20_cp_0 = Main.item[num29];
-											expr_2E20_cp_0.velocity.Y = expr_2E20_cp_0.velocity.Y - Player.itemGrabSpeed;
-										}
-										if (Main.item[num29].velocity.Y > 0f)
-										{
-											Item expr_2E57_cp_0 = Main.item[num29];
-											expr_2E57_cp_0.velocity.Y = expr_2E57_cp_0.velocity.Y - Player.itemGrabSpeed * 0.75f;
-										}
-									}
-								}
-							}
-						}
-					}
-					if (this.position.X / 16f - (float)Player.tileRangeX <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY - 2f >= (float)Player.tileTargetY && Main.tile[Player.tileTargetX, Player.tileTargetY].active)
-					{
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 79)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 224;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 48;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 8;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13)
-						{
-							this.showItemIcon = true;
-							if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 18)
-							{
-								this.showItemIcon2 = 28;
-							}
-							else
-							{
-								if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 36)
-								{
-									this.showItemIcon2 = 110;
-								}
-								else
-								{
-									this.showItemIcon2 = 31;
-								}
-							}
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 87;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 105;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 148;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 90)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 165;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 55)
-						{
-							int num30 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
-							int num31 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
-							while (num30 > 1)
-							{
-								num30 -= 2;
-							}
-							int num32 = Player.tileTargetX - num30;
-							int num33 = Player.tileTargetY - num31;
-							Main.signBubble = true;
-							Main.signX = num32 * 16 + 16;
-							Main.signY = num33 * 16;
-						}
-						if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 10 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 11)
-						{
-							this.showItemIcon = true;
-							this.showItemIcon2 = 25;
-						}
-						if (this.controlUseTile)
-						{
-							if (this.releaseUseTile)
-							{
-								if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49 || (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 90))
-								{
-									WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-									if (Main.netMode == 1)
-									{
-										NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 0f);
-									}
-								}
-								else
-								{
-									if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 79)
-									{
-										int num34 = Player.tileTargetX;
-										int num35 = Player.tileTargetY;
-										num34 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18 * -1);
-										if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX >= 72)
-										{
-											num34 += 4;
-											num34++;
-										}
-										else
-										{
-											num34 += 2;
-										}
-										num35 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18 * -1);
-										num35 += 2;
-										if (Player.CheckSpawn(num34, num35))
-										{
-											this.ChangeSpawn(num34, num35);
-											//Main.NewText("Spawn point set!", 255, 240, 20);
-										}
-									}
-									else
-									{
-										if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 55)
-										{
-											bool flag4 = true;
-											if (this.sign >= 0)
-											{
-												int num36 = Sign.ReadSign(Player.tileTargetX, Player.tileTargetY);
-												if (num36 == this.sign)
-												{
-													this.sign = -1;
-													Main.npcChatText = "";
-													Main.editSign = false;
-													//Main.PlaySound(11, -1, -1, 1);
-													flag4 = false;
-												}
-											}
-											if (flag4)
-											{
-												if (Main.netMode == 0)
-												{
-													this.talkNPC = -1;
-													Main.playerInventory = false;
-													Main.editSign = false;
-													//Main.PlaySound(10, -1, -1, 1);
-													int num37 = Sign.ReadSign(Player.tileTargetX, Player.tileTargetY);
-													this.sign = num37;
-													Main.npcChatText = Main.sign[num37].text;
-												}
-												else
-												{
-													int num38 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
-													int num39 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
-													while (num38 > 1)
-													{
-														num38 -= 2;
-													}
-													int num40 = Player.tileTargetX - num38;
-													int num41 = Player.tileTargetY - num39;
-													if (Main.tile[num40, num41].type == 55)
-													{
-														NetMessage.SendData(46, -1, -1, "", num40, (float)num41, 0f, 0f);
-													}
-												}
-											}
-										}
-										else
-										{
-											if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 10)
-											{
-												WorldGen.OpenDoor(Player.tileTargetX, Player.tileTargetY, this.direction);
-												NetMessage.SendData(19, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
-											}
-											else
-											{
-												if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 11)
-												{
-													if (WorldGen.CloseDoor(Player.tileTargetX, Player.tileTargetY, false))
-													{
-														NetMessage.SendData(19, -1, -1, "", 1, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
-													}
-												}
-												else
-												{
-													if ((Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29) && this.talkNPC == -1)
-													{
-														bool flag5 = false;
-														int num42 = Player.tileTargetX - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
-														int num43 = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
-														if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29)
-														{
-															flag5 = true;
-														}
-														if (Main.netMode == 1 && !flag5)
-														{
-															if (num42 == this.chestX && num43 == this.chestY && this.chest != -1)
-															{
-																this.chest = -1;
-																//Main.PlaySound(11, -1, -1, 1);
-															}
-															else
-															{
-																NetMessage.SendData(31, -1, -1, "", num42, (float)num43, 0f, 0f);
-															}
-														}
-														else
-														{
-															int num44 = -1;
-															if (flag5)
-															{
-																num44 = -2;
-															}
-															else
-															{
-																num44 = Chest.FindChest(num42, num43);
-															}
-															if (num44 != -1)
-															{
-																if (num44 == this.chest)
-																{
-																	this.chest = -1;
-																	//Main.PlaySound(11, -1, -1, 1);
-																}
-																else
-																{
-																	if (num44 != this.chest && this.chest == -1)
-																	{
-																		this.chest = num44;
-																		Main.playerInventory = true;
-																		//Main.PlaySound(10, -1, -1, 1);
-																		this.chestX = num42;
-																		this.chestY = num43;
-																	}
-																	else
-																	{
-																		this.chest = num44;
-																		Main.playerInventory = true;
-																		//Main.PlaySound(12, -1, -1, 1);
-																		this.chestX = num42;
-																		this.chestY = num43;
-																	}
-																}
-															}
-														}
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-							this.releaseUseTile = false;
-						}
-						else
-						{
-							this.releaseUseTile = true;
-						}
-					}
-					if (Main.myPlayer == this.whoAmi)
-					{
-						if (this.talkNPC >= 0)
-						{
-							Rectangle rectangle2 = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)(Player.tileRangeX * 16)), (int)(this.position.Y + (float)(this.height / 2) - (float)(Player.tileRangeY * 16)), Player.tileRangeX * 16 * 2, Player.tileRangeY * 16 * 2);
-							Rectangle value = new Rectangle((int)Main.npc[this.talkNPC].position.X, (int)Main.npc[this.talkNPC].position.Y, Main.npc[this.talkNPC].width, Main.npc[this.talkNPC].height);
-							if (!rectangle2.Intersects(value) || this.chest != -1 || !Main.npc[this.talkNPC].active)
-							{
-								if (this.chest == -1)
-								{
-									//Main.PlaySound(11, -1, -1, 1);
-								}
-								this.talkNPC = -1;
-								Main.npcChatText = "";
-							}
-						}
-						if (this.sign >= 0)
-						{
-							Rectangle rectangle3 = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)(Player.tileRangeX * 16)), (int)(this.position.Y + (float)(this.height / 2) - (float)(Player.tileRangeY * 16)), Player.tileRangeX * 16 * 2, Player.tileRangeY * 16 * 2);
-							Rectangle value2 = new Rectangle(Main.sign[this.sign].x * 16, Main.sign[this.sign].y * 16, 32, 32);
-							if (!rectangle3.Intersects(value2))
-							{
-								//Main.PlaySound(11, -1, -1, 1);
-								this.sign = -1;
-								Main.editSign = false;
-								Main.npcChatText = "";
-							}
-						}
-						if (Main.editSign)
-						{
-							if (this.sign == -1)
-							{
-								Main.editSign = false;
-							}
-							else
-							{
-                                //Main.npcChatText = Main.GetInputText(Main.npcChatText);
-                                //if (Main.inputTextEnter)
-                                //{
-                                //    byte[] bytes = new byte[]
-                                //    {
-                                //        10
-                                //    };
-                                //    Main.npcChatText += Encoding.ASCII.GetString(bytes);
-                                //}
-							}
-						}
-						Rectangle rectangle4 = new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height);
-						for (int num45 = 0; num45 < 1000; num45++)
-						{
-							if (Main.npc[num45].active && !Main.npc[num45].friendly && rectangle4.Intersects(new Rectangle((int)Main.npc[num45].position.X, (int)Main.npc[num45].position.Y, Main.npc[num45].width, Main.npc[num45].height)))
-							{
-								int hitDirection = -1;
-								if (Main.npc[num45].position.X + (float)(Main.npc[num45].width / 2) < this.position.X + (float)(this.width / 2))
-								{
-									hitDirection = 1;
-								}
-								this.Hurt(Main.npc[num45].damage, hitDirection, false, false);
-							}
-						}
-						Vector2 vector = Collision.HurtTiles(this.position, this.velocity, this.width, this.height, this.fireWalk);
-						if (vector.Y != 0f)
-						{
-							this.Hurt((int)vector.Y, (int)vector.X, false, false);
-						}
-					}
-					if (this.grappling[0] >= 0)
-					{
-						this.rocketDelay = 0;
-						this.rocketFrame = false;
-						this.canRocket = false;
-						this.rocketRelease = false;
-						this.fallStart = (int)(this.position.Y / 16f);
-						float num46 = 0f;
-						float num47 = 0f;
-						for (int num48 = 0; num48 < this.grapCount; num48++)
-						{
-							num46 += Main.projectile[this.grappling[num48]].position.X + (float)(Main.projectile[this.grappling[num48]].width / 2);
-							num47 += Main.projectile[this.grappling[num48]].position.Y + (float)(Main.projectile[this.grappling[num48]].height / 2);
-						}
-						num46 /= (float)this.grapCount;
-						num47 /= (float)this.grapCount;
-						Vector2 vector2 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-						float num49 = num46 - vector2.X;
-						float num50 = num47 - vector2.Y;
-						float num51 = (float)Math.Sqrt((double)(num49 * num49 + num50 * num50));
-						float num52 = 11f;
-						float num53 = num51;
-						if (num51 > num52)
-						{
-							num53 = num52 / num51;
-						}
-						else
-						{
-							num53 = 1f;
-						}
-						num49 *= num53;
-						num50 *= num53;
-						this.velocity.X = num49;
-						this.velocity.Y = num50;
-						if (this.itemAnimation == 0)
-						{
-							if (this.velocity.X > 0f)
-							{
-								this.direction = 1;
-							}
-							if (this.velocity.X < 0f)
-							{
-								this.direction = -1;
-							}
-						}
-						if (this.controlJump)
-						{
-							if (this.releaseJump)
-							{
-								if (this.velocity.Y == 0f || (this.wet && (double)this.velocity.Y > -0.02 && (double)this.velocity.Y < 0.02))
-								{
-									this.velocity.Y = -Player.jumpSpeed;
-									this.jump = Player.jumpHeight / 2;
-									this.releaseJump = false;
-								}
-								else
-								{
-									this.velocity.Y = this.velocity.Y + 0.01f;
-									this.releaseJump = false;
-								}
-								if (this.doubleJump)
-								{
-									this.jumpAgain = true;
-								}
-								this.grappling[0] = 0;
-								this.grapCount = 0;
-								for (int num54 = 0; num54 < 1000; num54++)
-								{
-									if (Main.projectile[num54].active && Main.projectile[num54].owner == i && Main.projectile[num54].aiStyle == 7)
-									{
-										Main.projectile[num54].Kill();
-									}
-								}
-							}
-						}
-						else
-						{
-							this.releaseJump = true;
-						}
-					}
-					if (Collision.StickyTiles(this.position, this.velocity, this.width, this.height))
-					{
-						this.fallStart = (int)(this.position.Y / 16f);
-						this.jump = 0;
-						if (this.velocity.X > 1f)
-						{
-							this.velocity.X = 1f;
-						}
-						if (this.velocity.X < -1f)
-						{
-							this.velocity.X = -1f;
-						}
-						if (this.velocity.Y > 1f)
-						{
-							this.velocity.Y = 1f;
-						}
-						if (this.velocity.Y < -5f)
-						{
-							this.velocity.Y = -5f;
-						}
-						if ((double)this.velocity.X > 0.75 || (double)this.velocity.X < -0.75)
-						{
-							this.velocity.X = this.velocity.X * 0.85f;
-						}
-						else
-						{
-							this.velocity.X = this.velocity.X * 0.6f;
-						}
-						if (this.velocity.Y < 0f)
-						{
-							this.velocity.Y = this.velocity.Y * 0.96f;
-						}
-						else
-						{
-							this.velocity.Y = this.velocity.Y * 0.3f;
-						}
-					}
-					bool flag6 = Collision.DrownCollision(this.position, this.width, this.height);
-					if (this.inventory[this.selectedItem].type == 186)
-					{
-						try
-						{
-							int num55 = (int)((this.position.X + (float)(this.width / 2) + (float)(6 * this.direction)) / 16f);
-							int num56 = (int)((this.position.Y - 44f) / 16f);
-							if (Main.tile[num55, num56].liquid < 128)
-							{
-								if (Main.tile[num55, num56] == null)
-								{
-									Main.tile[num55, num56] = new Tile();
-								}
-								if (!Main.tile[num55, num56].active || !Main.tileSolid[(int)Main.tile[num55, num56].type] || Main.tileSolidTop[(int)Main.tile[num55, num56].type])
-								{
-									flag6 = false;
-								}
-							}
-						}
-						catch
-						{
-						}
-					}
-					if (Main.myPlayer == i)
-					{
-						if (flag6)
-						{
-							this.breathCD++;
-							int num57 = 7;
-							if (this.inventory[this.selectedItem].type == 186)
-							{
-								num57 *= 2;
-							}
-							if (this.breathCD >= num57)
-							{
-								this.breathCD = 0;
-								this.breath--;
-								if (this.breath <= 0)
-								{
-									this.breath = 0;
-									this.statLife -= 2;
-									if (this.statLife <= 0)
-									{
-										this.statLife = 0;
-										this.KillMe(10.0, 0, false);
-									}
-								}
-							}
-						}
-						else
-						{
-							this.breath += 3;
-							if (this.breath > this.breathMax)
-							{
-								this.breath = this.breathMax;
-							}
-							this.breathCD = 0;
-						}
-					}
-					if (flag6 && Main.rand.Next(20) == 0)
-					{
-						if (this.inventory[this.selectedItem].type == 186)
-						{
-							Vector2 arg_4204_0 = new Vector2(this.position.X + (float)(10 * this.direction) + 4f, this.position.Y - 54f);
-							int arg_4204_1 = this.width - 8;
-							int arg_4204_2 = 8;
-							int arg_4204_3 = 34;
-							float arg_4204_4 = 0f;
-							float arg_4204_5 = 0f;
-							int arg_4204_6 = 0;
-							Color newColor = default(Color);
-							Dust.NewDust(arg_4204_0, arg_4204_1, arg_4204_2, arg_4204_3, arg_4204_4, arg_4204_5, arg_4204_6, newColor, 1.2f);
-						}
-						else
-						{
-							Vector2 arg_425D_0 = new Vector2(this.position.X + (float)(12 * this.direction), this.position.Y + 4f);
-							int arg_425D_1 = this.width - 8;
-							int arg_425D_2 = 8;
-							int arg_425D_3 = 34;
-							float arg_425D_4 = 0f;
-							float arg_425D_5 = 0f;
-							int arg_425D_6 = 0;
-							Color newColor = default(Color);
-							Dust.NewDust(arg_425D_0, arg_425D_1, arg_425D_2, arg_425D_3, arg_425D_4, arg_425D_5, arg_425D_6, newColor, 1.2f);
-						}
-					}
-					bool flag7 = Collision.LavaCollision(this.position, this.width, this.height);
-					if (flag7)
-					{
-						if (Main.myPlayer == i)
-						{
-							this.Hurt(100, 0, false, false);
-						}
-						this.lavaWet = true;
-					}
-					bool flag8 = Collision.WetCollision(this.position, this.width, this.height);
-					if (flag8)
-					{
-						if (!this.wet)
-						{
-							if (this.wetCount == 0)
-							{
-								this.wetCount = 10;
-								if (!flag7)
-								{
-									for (int num58 = 0; num58 < 50; num58++)
-									{
-										Vector2 arg_4340_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f);
-										int arg_4340_1 = this.width + 12;
-										int arg_4340_2 = 24;
-										int arg_4340_3 = 33;
-										float arg_4340_4 = 0f;
-										float arg_4340_5 = 0f;
-										int arg_4340_6 = 0;
-										Color newColor = default(Color);
-										int num59 = Dust.NewDust(arg_4340_0, arg_4340_1, arg_4340_2, arg_4340_3, arg_4340_4, arg_4340_5, arg_4340_6, newColor, 1f);
-										Dust expr_4354_cp_0 = Main.dust[num59];
-										expr_4354_cp_0.velocity.Y = expr_4354_cp_0.velocity.Y - 4f;
-										Dust expr_4372_cp_0 = Main.dust[num59];
-										expr_4372_cp_0.velocity.X = expr_4372_cp_0.velocity.X * 2.5f;
-										Main.dust[num59].scale = 1.3f;
-										Main.dust[num59].alpha = 100;
-										Main.dust[num59].noGravity = true;
-									}
-									//Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 0);
-								}
-								else
-								{
-									for (int num60 = 0; num60 < 20; num60++)
-									{
-										Vector2 arg_4446_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f);
-										int arg_4446_1 = this.width + 12;
-										int arg_4446_2 = 24;
-										int arg_4446_3 = 35;
-										float arg_4446_4 = 0f;
-										float arg_4446_5 = 0f;
-										int arg_4446_6 = 0;
-										Color newColor = default(Color);
-										int num61 = Dust.NewDust(arg_4446_0, arg_4446_1, arg_4446_2, arg_4446_3, arg_4446_4, arg_4446_5, arg_4446_6, newColor, 1f);
-										Dust expr_445A_cp_0 = Main.dust[num61];
-										expr_445A_cp_0.velocity.Y = expr_445A_cp_0.velocity.Y - 1.5f;
-										Dust expr_4478_cp_0 = Main.dust[num61];
-										expr_4478_cp_0.velocity.X = expr_4478_cp_0.velocity.X * 2.5f;
-										Main.dust[num61].scale = 1.3f;
-										Main.dust[num61].alpha = 100;
-										Main.dust[num61].noGravity = true;
-									}
-									//Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
-								}
-							}
-							this.wet = true;
-						}
-					}
-					else
-					{
-						if (this.wet)
-						{
-							this.wet = false;
-							if (this.jump > Player.jumpHeight / 5)
-							{
-								this.jump = Player.jumpHeight / 5;
-							}
-							if (this.wetCount == 0)
-							{
-								this.wetCount = 10;
-								if (!this.lavaWet)
-								{
-									for (int num62 = 0; num62 < 50; num62++)
-									{
-										Vector2 arg_4599_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2));
-										int arg_4599_1 = this.width + 12;
-										int arg_4599_2 = 24;
-										int arg_4599_3 = 33;
-										float arg_4599_4 = 0f;
-										float arg_4599_5 = 0f;
-										int arg_4599_6 = 0;
-										Color newColor = default(Color);
-										int num63 = Dust.NewDust(arg_4599_0, arg_4599_1, arg_4599_2, arg_4599_3, arg_4599_4, arg_4599_5, arg_4599_6, newColor, 1f);
-										Dust expr_45AD_cp_0 = Main.dust[num63];
-										expr_45AD_cp_0.velocity.Y = expr_45AD_cp_0.velocity.Y - 4f;
-										Dust expr_45CB_cp_0 = Main.dust[num63];
-										expr_45CB_cp_0.velocity.X = expr_45CB_cp_0.velocity.X * 2.5f;
-										Main.dust[num63].scale = 1.3f;
-										Main.dust[num63].alpha = 100;
-										Main.dust[num63].noGravity = true;
-									}
-									//Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 0);
-								}
-								else
-								{
-									for (int num64 = 0; num64 < 20; num64++)
-									{
-										Vector2 arg_469F_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f);
-										int arg_469F_1 = this.width + 12;
-										int arg_469F_2 = 24;
-										int arg_469F_3 = 35;
-										float arg_469F_4 = 0f;
-										float arg_469F_5 = 0f;
-										int arg_469F_6 = 0;
-										Color newColor = default(Color);
-										int num65 = Dust.NewDust(arg_469F_0, arg_469F_1, arg_469F_2, arg_469F_3, arg_469F_4, arg_469F_5, arg_469F_6, newColor, 1f);
-										Dust expr_46B3_cp_0 = Main.dust[num65];
-										expr_46B3_cp_0.velocity.Y = expr_46B3_cp_0.velocity.Y - 1.5f;
-										Dust expr_46D1_cp_0 = Main.dust[num65];
-										expr_46D1_cp_0.velocity.X = expr_46D1_cp_0.velocity.X * 2.5f;
-										Main.dust[num65].scale = 1.3f;
-										Main.dust[num65].alpha = 100;
-										Main.dust[num65].noGravity = true;
-									}
-									//Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
-								}
-							}
-						}
-					}
-					if (!this.wet)
-					{
-						this.lavaWet = false;
-					}
-					if (this.wetCount > 0)
-					{
-						this.wetCount -= 1;
-					}
-					if (this.wet)
-					{
-						if (this.wet)
-						{
-							Vector2 vector3 = this.velocity;
-							this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, this.controlDown, false);
-							Vector2 value3 = this.velocity * 0.5f;
-							if (this.velocity.X != vector3.X)
-							{
-								value3.X = this.velocity.X;
-							}
-							if (this.velocity.Y != vector3.Y)
-							{
-								value3.Y = this.velocity.Y;
-							}
-							this.position += value3;
-						}
-					}
-					else
-					{
-						this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, this.controlDown, false);
-						this.position += this.velocity;
-					}
-					if (this.position.X < Main.leftWorld + 336f + 16f)
-					{
-						this.position.X = Main.leftWorld + 336f + 16f;
-						this.velocity.X = 0f;
-					}
-					if (this.position.X + (float)this.width > Main.rightWorld - 336f - 32f)
-					{
-						this.position.X = Main.rightWorld - 336f - 32f - (float)this.width;
-						this.velocity.X = 0f;
-					}
-					if (this.position.Y < Main.topWorld + 336f + 16f)
-					{
-						this.position.Y = Main.topWorld + 336f + 16f;
-						if ((double)this.velocity.Y < -0.1)
-						{
-							this.velocity.Y = -0.1f;
-						}
-					}
-					if (this.position.Y > Main.bottomWorld - 336f - 32f - (float)this.height)
-					{
-						this.position.Y = Main.bottomWorld - 336f - 32f - (float)this.height;
-						this.velocity.Y = 0f;
-					}
-					this.ItemCheck(i);
-					this.PlayerFrame();
-					if (this.statLife > this.statLifeMax)
-					{
-						this.statLife = this.statLifeMax;
-					}
-					this.grappling[0] = -1;
-					this.grapCount = 0;
-				}
-			}
+            try
+            {
+                float num = 10f;
+                float num2 = 0.4f;
+                Player.jumpHeight = 15;
+                Player.jumpSpeed = 5.01f;
+                if (this.wet)
+                {
+                    num2 = 0.2f;
+                    num = 5f;
+                    Player.jumpHeight = 30;
+                    Player.jumpSpeed = 6.01f;
+                }
+                float num3 = 3f;
+                float num4 = 0.08f;
+                float num5 = 0.2f;
+                float num6 = num3;
+                if (this.active)
+                {
+                    this.shadowCount++;
+                    if (this.shadowCount == 1)
+                    {
+                        this.shadowPos[2] = this.shadowPos[1];
+                    }
+                    else
+                    {
+                        if (this.shadowCount == 2)
+                        {
+                            this.shadowPos[1] = this.shadowPos[0];
+                        }
+                        else
+                        {
+                            if (this.shadowCount >= 3)
+                            {
+                                this.shadowCount = 0;
+                                this.shadowPos[0] = this.position;
+                            }
+                        }
+                    }
+                    this.whoAmi = i;
+                    if (this.runSoundDelay > 0)
+                    {
+                        this.runSoundDelay--;
+                    }
+                    if (this.attackCD > 0)
+                    {
+                        this.attackCD--;
+                    }
+                    if (this.itemAnimation == 0)
+                    {
+                        this.attackCD = 0;
+                    }
+                    if (this.chatShowTime > 0)
+                    {
+                        this.chatShowTime--;
+                    }
+                    if (this.potionDelay > 0)
+                    {
+                        this.potionDelay--;
+                    }
+                    if (this.dead)
+                    {
+                        if (i == Main.myPlayer)
+                        {
+                            Main.npcChatText = "";
+                            Main.editSign = false;
+                        }
+                        this.sign = -1;
+                        this.talkNPC = -1;
+                        this.statLife = 0;
+                        this.channel = false;
+                        this.potionDelay = 0;
+                        this.chest = -1;
+                        this.changeItem = -1;
+                        this.itemAnimation = 0;
+                        this.immuneAlpha += 2;
+                        if (this.immuneAlpha > 255)
+                        {
+                            this.immuneAlpha = 255;
+                        }
+                        this.respawnTimer--;
+                        this.headPosition += this.headVelocity;
+                        this.bodyPosition += this.bodyVelocity;
+                        this.legPosition += this.legVelocity;
+                        this.headRotation += this.headVelocity.X * 0.1f;
+                        this.bodyRotation += this.bodyVelocity.X * 0.1f;
+                        this.legRotation += this.legVelocity.X * 0.1f;
+                        this.headVelocity.Y = this.headVelocity.Y + 0.1f;
+                        this.bodyVelocity.Y = this.bodyVelocity.Y + 0.1f;
+                        this.legVelocity.Y = this.legVelocity.Y + 0.1f;
+                        this.headVelocity.X = this.headVelocity.X * 0.99f;
+                        this.bodyVelocity.X = this.bodyVelocity.X * 0.99f;
+                        this.legVelocity.X = this.legVelocity.X * 0.99f;
+                        if (this.respawnTimer <= 0 && Main.myPlayer == this.whoAmi)
+                        {
+                            this.Spawn();
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        if (i == Main.myPlayer)
+                        {
+                            this.zoneEvil = false;
+                            if (Main.evilTiles >= 500)
+                            {
+                                this.zoneEvil = true;
+                            }
+                            this.zoneMeteor = false;
+                            if (Main.meteorTiles >= 50)
+                            {
+                                this.zoneMeteor = true;
+                            }
+                            this.zoneDungeon = false;
+                            if (Main.dungeonTiles >= 250 && (double)this.position.Y > Main.worldSurface * 16.0 + (double)Main.screenHeight)
+                            {
+                                int num7 = (int)this.position.X / 16;
+                                int num8 = (int)this.position.Y / 16;
+                                if (Main.tile[num7, num8].wall > 0 && !Main.wallHouse[(int)Main.tile[num7, num8].wall])
+                                {
+                                    this.zoneDungeon = true;
+                                }
+                            }
+                            this.zoneJungle = false;
+                            if (Main.jungleTiles >= 200)
+                            {
+                                this.zoneJungle = true;
+                            }
+                            this.controlUp = false;
+                            this.controlLeft = false;
+                            this.controlDown = false;
+                            this.controlRight = false;
+                            this.controlJump = false;
+                            this.controlUseItem = false;
+                            this.controlUseTile = false;
+                            this.controlThrow = false;
+                            this.controlInv = false;
+
+                            if (Main.playerInventory)
+                            {
+                                this.AdjTiles();
+                            }
+                            if (this.chest != -1)
+                            {
+                                int num12 = (int)(((double)this.position.X + (double)this.width * 0.5) / 16.0);
+                                int num13 = (int)(((double)this.position.Y + (double)this.height * 0.5) / 16.0);
+                                if (num12 < this.chestX - 5 || num12 > this.chestX + 6 || num13 < this.chestY - 4 || num13 > this.chestY + 5)
+                                {
+                                    this.chest = -1;
+                                }
+                                if (!Main.tile[this.chestX, this.chestY].active)
+                                {
+                                    this.chest = -1;
+                                }
+                            }
+                            if (this.velocity.Y == 0f)
+                            {
+                                int num14 = (int)(this.position.Y / 16f) - this.fallStart;
+                                if (num14 > 25 && !this.noFallDmg)
+                                {
+                                    int damage = (num14 - 25) * 10;
+                                    this.immune = false;
+                                    this.Hurt(damage, -this.direction, false, false);
+                                }
+                                this.fallStart = (int)(this.position.Y / 16f);
+                            }
+                            if (this.velocity.Y < 0f || this.rocketDelay > 0 || this.wet)
+                            {
+                                this.fallStart = (int)(this.position.Y / 16f);
+                            }
+                        }
+                        if (this.mouseInterface)
+                        {
+                            this.delayUseItem = true;
+                        }
+                        if (this.immune)
+                        {
+                            this.immuneTime--;
+                            if (this.immuneTime <= 0)
+                            {
+                                this.immune = false;
+                            }
+                            this.immuneAlpha += this.immuneAlphaDirection * 50;
+                            if (this.immuneAlpha <= 50)
+                            {
+                                this.immuneAlphaDirection = 1;
+                            }
+                            else
+                            {
+                                if (this.immuneAlpha >= 205)
+                                {
+                                    this.immuneAlphaDirection = -1;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            this.immuneAlpha = 0;
+                        }
+                        if (this.manaRegenDelay > 0)
+                        {
+                            this.manaRegenDelay--;
+                        }
+                        this.statDefense = 0;
+                        this.accWatch = 0;
+                        this.accDepthMeter = 0;
+                        this.lifeRegen = 0;
+                        this.manaCost = 1f;
+                        this.meleeSpeed = 1f;
+                        this.boneArmor = false;
+                        this.rocketBoots = false;
+                        this.fireWalk = false;
+                        this.noKnockback = false;
+                        this.jumpBoost = false;
+                        this.noFallDmg = false;
+                        this.accFlipper = false;
+                        this.spawnMax = false;
+                        this.spaceGun = false;
+                        this.magicBoost = 1f;
+                        if (this.manaRegenDelay == 0)
+                        {
+                            this.manaRegen = this.statManaMax / 30 + 1;
+                        }
+                        else
+                        {
+                            this.manaRegen = 0;
+                        }
+                        this.doubleJump = false;
+                        for (int l = 0; l < 8; l++)
+                        {
+                            this.statDefense += this.armor[l].defense;
+                            this.lifeRegen += this.armor[l].lifeRegen;
+                            this.manaRegen += this.armor[l].manaRegen;
+                            if (this.armor[l].type == 193)
+                            {
+                                this.fireWalk = true;
+                            }
+                            if (this.armor[l].type == 238)
+                            {
+                                this.magicBoost *= 1.15f;
+                            }
+                        }
+                        this.head = this.armor[0].headSlot;
+                        this.body = this.armor[1].bodySlot;
+                        this.legs = this.armor[2].legSlot;
+                        for (int m = 3; m < 8; m++)
+                        {
+                            if (this.armor[m].type == 15 && this.accWatch < 1)
+                            {
+                                this.accWatch = 1;
+                            }
+                            if (this.armor[m].type == 16 && this.accWatch < 2)
+                            {
+                                this.accWatch = 2;
+                            }
+                            if (this.armor[m].type == 17 && this.accWatch < 3)
+                            {
+                                this.accWatch = 3;
+                            }
+                            if (this.armor[m].type == 18 && this.accDepthMeter < 1)
+                            {
+                                this.accDepthMeter = 1;
+                            }
+                            if (this.armor[m].type == 53)
+                            {
+                                this.doubleJump = true;
+                            }
+                            if (this.armor[m].type == 54)
+                            {
+                                num6 = 6f;
+                            }
+                            if (this.armor[m].type == 128)
+                            {
+                                this.rocketBoots = true;
+                            }
+                            if (this.armor[m].type == 156)
+                            {
+                                this.noKnockback = true;
+                            }
+                            if (this.armor[m].type == 158)
+                            {
+                                this.noFallDmg = true;
+                            }
+                            if (this.armor[m].type == 159)
+                            {
+                                this.jumpBoost = true;
+                            }
+                            if (this.armor[m].type == 187)
+                            {
+                                this.accFlipper = true;
+                            }
+                            if (this.armor[m].type == 211)
+                            {
+                                this.meleeSpeed *= 0.9f;
+                            }
+                            if (this.armor[m].type == 223)
+                            {
+                                this.spawnMax = true;
+                            }
+                            if (this.armor[m].type == 212)
+                            {
+                                num4 *= 1.1f;
+                                num3 *= 1.1f;
+                            }
+                        }
+                        this.lifeRegenCount += this.lifeRegen;
+                        while (this.lifeRegenCount >= 120)
+                        {
+                            this.lifeRegenCount -= 120;
+                            if (this.statLife < this.statLifeMax)
+                            {
+                                this.statLife++;
+                            }
+                            if (this.statLife > this.statLifeMax)
+                            {
+                                this.statLife = this.statLifeMax;
+                            }
+                        }
+                        this.manaRegenCount += this.manaRegen;
+                        while (this.manaRegenCount >= 120)
+                        {
+                            this.manaRegenCount -= 120;
+                            if (this.statMana < this.statManaMax)
+                            {
+                                this.statMana++;
+                            }
+                            if (this.statMana > this.statManaMax)
+                            {
+                                this.statMana = this.statManaMax;
+                            }
+                        }
+                        if (this.head == 11)
+                        {
+                            int i2 = (int)(this.position.X + (float)(this.width / 2) + (float)(8 * this.direction)) / 16;
+                            int j2 = (int)(this.position.Y + 2f) / 16;
+                        }
+                        if (this.jumpBoost)
+                        {
+                            Player.jumpHeight = 20;
+                            Player.jumpSpeed = 6.51f;
+                        }
+                        this.setBonus = "";
+                        if ((this.head == 1 && this.body == 1 && this.legs == 1) || (this.head == 2 && this.body == 2 && this.legs == 2))
+                        {
+                            this.setBonus = "2 defense";
+                            this.statDefense += 2;
+                        }
+                        if ((this.head == 3 && this.body == 3 && this.legs == 3) || (this.head == 4 && this.body == 4 && this.legs == 4))
+                        {
+                            this.setBonus = "3 defense";
+                            this.statDefense += 3;
+                        }
+                        if (this.head == 5 && this.body == 5 && this.legs == 5)
+                        {
+                            this.setBonus = "15 % increased melee speed";
+                            this.meleeSpeed *= 0.85f;
+                            if (Main.rand.Next(10) == 0)
+                            {
+                                Vector2 arg_147A_0 = new Vector2(this.position.X, this.position.Y);
+                                int arg_147A_1 = this.width;
+                                int arg_147A_2 = this.height;
+                                int arg_147A_3 = 14;
+                                float arg_147A_4 = 0f;
+                                float arg_147A_5 = 0f;
+                                int arg_147A_6 = 200;
+                                Color newColor = new Color();
+                                Dust.NewDust(arg_147A_0, arg_147A_1, arg_147A_2, arg_147A_3, arg_147A_4, arg_147A_5, arg_147A_6, newColor, 1.2f);
+                            }
+                        }
+                        if (this.head == 6 && this.body == 6 && this.legs == 6)
+                        {
+                            this.setBonus = "Space Gun costs 0 mana";
+                            this.spaceGun = true;
+                            if (Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y) > 1f && !this.rocketFrame)
+                            {
+                                for (int n = 0; n < 2; n++)
+                                {
+                                    Vector2 arg_1561_0 = new Vector2(this.position.X - this.velocity.X * 2f, this.position.Y - 2f - this.velocity.Y * 2f);
+                                    int arg_1561_1 = this.width;
+                                    int arg_1561_2 = this.height;
+                                    int arg_1561_3 = 6;
+                                    float arg_1561_4 = 0f;
+                                    float arg_1561_5 = 0f;
+                                    int arg_1561_6 = 100;
+                                    Color newColor = new Color();
+                                    int num15 = Dust.NewDust(arg_1561_0, arg_1561_1, arg_1561_2, arg_1561_3, arg_1561_4, arg_1561_5, arg_1561_6, newColor, 2f);
+                                    Main.dust[num15].noGravity = true;
+                                    Dust expr_1583_cp_0 = Main.dust[num15];
+                                    expr_1583_cp_0.velocity.X = expr_1583_cp_0.velocity.X - this.velocity.X * 0.5f;
+                                    Dust expr_15AD_cp_0 = Main.dust[num15];
+                                    expr_15AD_cp_0.velocity.Y = expr_15AD_cp_0.velocity.Y - this.velocity.Y * 0.5f;
+                                }
+                            }
+                        }
+                        if (this.head == 7 && this.body == 7 && this.legs == 7)
+                        {
+                            num4 *= 1.3f;
+                            num3 *= 1.3f;
+                            this.setBonus = "30% increased movement speed";
+                            this.boneArmor = true;
+                        }
+                        if (this.head == 8 && this.body == 8 && this.legs == 8)
+                        {
+                            this.setBonus = "25% reduced mana usage";
+                            this.manaCost *= 0.75f;
+                            this.meleeSpeed *= 0.9f;
+                            if (Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y) > 1f)
+                            {
+                                Vector2 arg_1701_0 = new Vector2(this.position.X - this.velocity.X * 2f, this.position.Y - 2f - this.velocity.Y * 2f);
+                                int arg_1701_1 = this.width;
+                                int arg_1701_2 = this.height;
+                                int arg_1701_3 = 40;
+                                float arg_1701_4 = 0f;
+                                float arg_1701_5 = 0f;
+                                int arg_1701_6 = 50;
+                                Color newColor = new Color();
+                                int num16 = Dust.NewDust(arg_1701_0, arg_1701_1, arg_1701_2, arg_1701_3, arg_1701_4, arg_1701_5, arg_1701_6, newColor, 1.4f);
+                                Main.dust[num16].noGravity = true;
+                                Main.dust[num16].velocity.X = this.velocity.X * 0.25f;
+                                Main.dust[num16].velocity.Y = this.velocity.Y * 0.25f;
+                            }
+                        }
+                        if (this.head == 9 && this.body == 9 && this.legs == 9)
+                        {
+                            this.setBonus = "5 defense";
+                            this.statDefense += 5;
+                            if (Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y) > 1f && !this.rocketFrame)
+                            {
+                                for (int num17 = 0; num17 < 2; num17++)
+                                {
+                                    Vector2 arg_1847_0 = new Vector2(this.position.X - this.velocity.X * 2f, this.position.Y - 2f - this.velocity.Y * 2f);
+                                    int arg_1847_1 = this.width;
+                                    int arg_1847_2 = this.height;
+                                    int arg_1847_3 = 6;
+                                    float arg_1847_4 = 0f;
+                                    float arg_1847_5 = 0f;
+                                    int arg_1847_6 = 100;
+                                    Color newColor = new Color();
+                                    int num18 = Dust.NewDust(arg_1847_0, arg_1847_1, arg_1847_2, arg_1847_3, arg_1847_4, arg_1847_5, arg_1847_6, newColor, 2f);
+                                    Main.dust[num18].noGravity = true;
+                                    Dust expr_1869_cp_0 = Main.dust[num18];
+                                    expr_1869_cp_0.velocity.X = expr_1869_cp_0.velocity.X - this.velocity.X * 0.5f;
+                                    Dust expr_1893_cp_0 = Main.dust[num18];
+                                    expr_1893_cp_0.velocity.Y = expr_1893_cp_0.velocity.Y - this.velocity.Y * 0.5f;
+                                }
+                            }
+                        }
+                        if (!this.doubleJump)
+                        {
+                            this.jumpAgain = false;
+                        }
+                        else
+                        {
+                            if (this.velocity.Y == 0f)
+                            {
+                                this.jumpAgain = true;
+                            }
+                        }
+                        if ((double)this.meleeSpeed < 0.7)
+                        {
+                            this.meleeSpeed = 0.7f;
+                        }
+                        if (this.grappling[0] == -1)
+                        {
+                            if (this.controlLeft && this.velocity.X > -num3)
+                            {
+                                if (this.velocity.X > num5)
+                                {
+                                    this.velocity.X = this.velocity.X - num5;
+                                }
+                                this.velocity.X = this.velocity.X - num4;
+                                if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                {
+                                    this.direction = -1;
+                                }
+                            }
+                            else
+                            {
+                                if (this.controlRight && this.velocity.X < num3)
+                                {
+                                    if (this.velocity.X < -num5)
+                                    {
+                                        this.velocity.X = this.velocity.X + num5;
+                                    }
+                                    this.velocity.X = this.velocity.X + num4;
+                                    if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                    {
+                                        this.direction = 1;
+                                    }
+                                }
+                                else
+                                {
+                                    if (this.controlLeft && this.velocity.X > -num6)
+                                    {
+                                        if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                        {
+                                            this.direction = -1;
+                                        }
+                                        if (this.velocity.Y == 0f)
+                                        {
+                                            if (this.velocity.X > num5)
+                                            {
+                                                this.velocity.X = this.velocity.X - num5;
+                                            }
+                                            this.velocity.X = this.velocity.X - num4 * 0.2f;
+                                        }
+                                        if (this.velocity.X < -(num6 + num3) / 2f && this.velocity.Y == 0f)
+                                        {
+                                            if (this.runSoundDelay == 0 && this.velocity.Y == 0f)
+                                            {
+                                                //Main.PlaySound(17, (int)this.position.X, (int)this.position.Y, 1);
+                                                this.runSoundDelay = 9;
+                                            }
+                                            Vector2 arg_1B6C_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height);
+                                            int arg_1B6C_1 = this.width + 8;
+                                            int arg_1B6C_2 = 4;
+                                            int arg_1B6C_3 = 16;
+                                            float arg_1B6C_4 = -this.velocity.X * 0.5f;
+                                            float arg_1B6C_5 = this.velocity.Y * 0.5f;
+                                            int arg_1B6C_6 = 50;
+                                            Color newColor = new Color();
+                                            int num19 = Dust.NewDust(arg_1B6C_0, arg_1B6C_1, arg_1B6C_2, arg_1B6C_3, arg_1B6C_4, arg_1B6C_5, arg_1B6C_6, newColor, 1.5f);
+                                            Main.dust[num19].velocity.X = Main.dust[num19].velocity.X * 0.2f;
+                                            Main.dust[num19].velocity.Y = Main.dust[num19].velocity.Y * 0.2f;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (this.controlRight && this.velocity.X < num6)
+                                        {
+                                            if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                            {
+                                                this.direction = 1;
+                                            }
+                                            if (this.velocity.Y == 0f)
+                                            {
+                                                if (this.velocity.X < -num5)
+                                                {
+                                                    this.velocity.X = this.velocity.X + num5;
+                                                }
+                                                this.velocity.X = this.velocity.X + num4 * 0.2f;
+                                            }
+                                            if (this.velocity.X > (num6 + num3) / 2f && this.velocity.Y == 0f)
+                                            {
+                                                if (this.runSoundDelay == 0 && this.velocity.Y == 0f)
+                                                {
+                                                    //Main.PlaySound(17, (int)this.position.X, (int)this.position.Y, 1);
+                                                    this.runSoundDelay = 9;
+                                                }
+                                                Vector2 arg_1D34_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height);
+                                                int arg_1D34_1 = this.width + 8;
+                                                int arg_1D34_2 = 4;
+                                                int arg_1D34_3 = 16;
+                                                float arg_1D34_4 = -this.velocity.X * 0.5f;
+                                                float arg_1D34_5 = this.velocity.Y * 0.5f;
+                                                int arg_1D34_6 = 50;
+                                                Color newColor = new Color();
+                                                int num20 = Dust.NewDust(arg_1D34_0, arg_1D34_1, arg_1D34_2, arg_1D34_3, arg_1D34_4, arg_1D34_5, arg_1D34_6, newColor, 1.5f);
+                                                Main.dust[num20].velocity.X = Main.dust[num20].velocity.X * 0.2f;
+                                                Main.dust[num20].velocity.Y = Main.dust[num20].velocity.Y * 0.2f;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (this.velocity.Y == 0f)
+                                            {
+                                                if (this.velocity.X > num5)
+                                                {
+                                                    this.velocity.X = this.velocity.X - num5;
+                                                }
+                                                else
+                                                {
+                                                    if (this.velocity.X < -num5)
+                                                    {
+                                                        this.velocity.X = this.velocity.X + num5;
+                                                    }
+                                                    else
+                                                    {
+                                                        this.velocity.X = 0f;
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if ((double)this.velocity.X > (double)num5 * 0.5)
+                                                {
+                                                    this.velocity.X = this.velocity.X - num5 * 0.5f;
+                                                }
+                                                else
+                                                {
+                                                    if ((double)this.velocity.X < (double)(-(double)num5) * 0.5)
+                                                    {
+                                                        this.velocity.X = this.velocity.X + num5 * 0.5f;
+                                                    }
+                                                    else
+                                                    {
+                                                        this.velocity.X = 0f;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (this.controlJump)
+                            {
+                                if (this.jump > 0)
+                                {
+                                    if (this.velocity.Y > -Player.jumpSpeed + num2 * 2f)
+                                    {
+                                        this.jump = 0;
+                                    }
+                                    else
+                                    {
+                                        this.velocity.Y = -Player.jumpSpeed;
+                                        this.jump--;
+                                    }
+                                }
+                                else
+                                {
+                                    if ((this.velocity.Y == 0f || this.jumpAgain || (this.wet && this.accFlipper)) && this.releaseJump)
+                                    {
+                                        bool flag3 = false;
+                                        if (this.wet && this.accFlipper)
+                                        {
+                                            if (this.swimTime == 0)
+                                            {
+                                                this.swimTime = 30;
+                                            }
+                                            flag3 = true;
+                                        }
+                                        this.jumpAgain = false;
+                                        this.canRocket = false;
+                                        this.rocketRelease = false;
+                                        if (this.velocity.Y == 0f && this.doubleJump)
+                                        {
+                                            this.jumpAgain = true;
+                                        }
+                                        if (this.velocity.Y == 0f || flag3)
+                                        {
+                                            this.velocity.Y = -Player.jumpSpeed;
+                                            this.jump = Player.jumpHeight;
+                                        }
+                                        else
+                                        {
+                                            //Main.PlaySound(16, (int)this.position.X, (int)this.position.Y, 1);
+                                            this.velocity.Y = -Player.jumpSpeed;
+                                            this.jump = Player.jumpHeight / 2;
+                                            for (int num21 = 0; num21 < 10; num21++)
+                                            {
+                                                Vector2 arg_2064_0 = new Vector2(this.position.X - 34f, this.position.Y + (float)this.height - 16f);
+                                                int arg_2064_1 = 102;
+                                                int arg_2064_2 = 32;
+                                                int arg_2064_3 = 16;
+                                                float arg_2064_4 = -this.velocity.X * 0.5f;
+                                                float arg_2064_5 = this.velocity.Y * 0.5f;
+                                                int arg_2064_6 = 100;
+                                                Color newColor = new Color();
+                                                int num22 = Dust.NewDust(arg_2064_0, arg_2064_1, arg_2064_2, arg_2064_3, arg_2064_4, arg_2064_5, arg_2064_6, newColor, 1.5f);
+                                                Main.dust[num22].velocity.X = Main.dust[num22].velocity.X * 0.5f - this.velocity.X * 0.1f;
+                                                Main.dust[num22].velocity.Y = Main.dust[num22].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
+                                            }
+                                            int num23 = Gore.NewGore(new Vector2(this.position.X + (float)(this.width / 2) - 16f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
+                                            Main.gore[num23].velocity.X = Main.gore[num23].velocity.X * 0.1f - this.velocity.X * 0.1f;
+                                            Main.gore[num23].velocity.Y = Main.gore[num23].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
+                                            num23 = Gore.NewGore(new Vector2(this.position.X - 36f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
+                                            Main.gore[num23].velocity.X = Main.gore[num23].velocity.X * 0.1f - this.velocity.X * 0.1f;
+                                            Main.gore[num23].velocity.Y = Main.gore[num23].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
+                                            num23 = Gore.NewGore(new Vector2(this.position.X + (float)this.width + 4f, this.position.Y + (float)this.height - 16f), new Vector2(-this.velocity.X, -this.velocity.Y), Main.rand.Next(11, 14));
+                                            Main.gore[num23].velocity.X = Main.gore[num23].velocity.X * 0.1f - this.velocity.X * 0.1f;
+                                            Main.gore[num23].velocity.Y = Main.gore[num23].velocity.Y * 0.1f - this.velocity.Y * 0.05f;
+                                        }
+                                    }
+                                }
+                                this.releaseJump = false;
+                            }
+                            else
+                            {
+                                this.jump = 0;
+                                this.releaseJump = true;
+                                this.rocketRelease = true;
+                            }
+                            if (this.doubleJump && !this.jumpAgain && this.velocity.Y < 0f && !this.rocketBoots && !this.accFlipper)
+                            {
+                                Vector2 arg_2456_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height);
+                                int arg_2456_1 = this.width + 8;
+                                int arg_2456_2 = 4;
+                                int arg_2456_3 = 16;
+                                float arg_2456_4 = -this.velocity.X * 0.5f;
+                                float arg_2456_5 = this.velocity.Y * 0.5f;
+                                int arg_2456_6 = 100;
+                                Color newColor = new Color();
+                                int num24 = Dust.NewDust(arg_2456_0, arg_2456_1, arg_2456_2, arg_2456_3, arg_2456_4, arg_2456_5, arg_2456_6, newColor, 1.5f);
+                                Main.dust[num24].velocity.X = Main.dust[num24].velocity.X * 0.5f - this.velocity.X * 0.1f;
+                                Main.dust[num24].velocity.Y = Main.dust[num24].velocity.Y * 0.5f - this.velocity.Y * 0.3f;
+                            }
+                            if (this.velocity.Y > -Player.jumpSpeed && this.velocity.Y != 0f)
+                            {
+                                this.canRocket = true;
+                            }
+                            if (this.rocketBoots && this.controlJump && this.rocketDelay == 0 && this.canRocket && this.rocketRelease && !this.jumpAgain)
+                            {
+                                int num25 = 7;
+                                if (this.statMana >= (int)((float)num25 * this.manaCost))
+                                {
+                                    this.manaRegenDelay = 180;
+                                    this.statMana -= (int)((float)num25 * this.manaCost);
+                                    this.rocketDelay = 10;
+                                    if (this.rocketDelay2 <= 0)
+                                    {
+                                        //Main.PlaySound(2, (int)this.position.X, (int)this.position.Y, 13);
+                                        this.rocketDelay2 = 30;
+                                    }
+                                }
+                                else
+                                {
+                                    this.canRocket = false;
+                                }
+                            }
+                            if (this.rocketDelay2 > 0)
+                            {
+                                this.rocketDelay2--;
+                            }
+                            if (this.rocketDelay == 0)
+                            {
+                                this.rocketFrame = false;
+                            }
+                            if (this.rocketDelay > 0)
+                            {
+                                this.rocketFrame = true;
+                                for (int num26 = 0; num26 < 2; num26++)
+                                {
+                                    if (num26 == 0)
+                                    {
+                                        Vector2 arg_2650_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height - 10f);
+                                        int arg_2650_1 = 8;
+                                        int arg_2650_2 = 8;
+                                        int arg_2650_3 = 6;
+                                        float arg_2650_4 = 0f;
+                                        float arg_2650_5 = 0f;
+                                        int arg_2650_6 = 100;
+                                        Color newColor = new Color();
+                                        int num27 = Dust.NewDust(arg_2650_0, arg_2650_1, arg_2650_2, arg_2650_3, arg_2650_4, arg_2650_5, arg_2650_6, newColor, 2.5f);
+                                        Main.dust[num27].noGravity = true;
+                                        Main.dust[num27].velocity.X = Main.dust[num27].velocity.X * 1f - 2f - this.velocity.X * 0.3f;
+                                        Main.dust[num27].velocity.Y = Main.dust[num27].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
+                                    }
+                                    else
+                                    {
+                                        Vector2 arg_2743_0 = new Vector2(this.position.X + (float)this.width - 4f, this.position.Y + (float)this.height - 10f);
+                                        int arg_2743_1 = 8;
+                                        int arg_2743_2 = 8;
+                                        int arg_2743_3 = 6;
+                                        float arg_2743_4 = 0f;
+                                        float arg_2743_5 = 0f;
+                                        int arg_2743_6 = 100;
+                                        Color newColor = new Color();
+                                        int num28 = Dust.NewDust(arg_2743_0, arg_2743_1, arg_2743_2, arg_2743_3, arg_2743_4, arg_2743_5, arg_2743_6, newColor, 2.5f);
+                                        Main.dust[num28].noGravity = true;
+                                        Main.dust[num28].velocity.X = Main.dust[num28].velocity.X * 1f + 2f - this.velocity.X * 0.3f;
+                                        Main.dust[num28].velocity.Y = Main.dust[num28].velocity.Y * 1f + 2f - this.velocity.Y * 0.3f;
+                                    }
+                                }
+                                if (this.rocketDelay == 0)
+                                {
+                                    this.releaseJump = true;
+                                }
+                                this.rocketDelay--;
+                                this.velocity.Y = this.velocity.Y - 0.1f;
+                                if (this.velocity.Y > 0f)
+                                {
+                                    this.velocity.Y = this.velocity.Y - 0.3f;
+                                }
+                                if (this.velocity.Y < -Player.jumpSpeed)
+                                {
+                                    this.velocity.Y = -Player.jumpSpeed;
+                                }
+                            }
+                            else
+                            {
+                                this.velocity.Y = this.velocity.Y + num2;
+                            }
+                            if (this.velocity.Y > num)
+                            {
+                                this.velocity.Y = num;
+                            }
+                        }
+                        for (int num29 = 0; num29 < 200; num29++)
+                        {
+                            if (Main.item[num29].active && Main.item[num29].noGrabDelay == 0 && Main.item[num29].owner == i)
+                            {
+                                Rectangle rectangle = new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height);
+                                if (rectangle.Intersects(new Rectangle((int)Main.item[num29].position.X, (int)Main.item[num29].position.Y, Main.item[num29].width, Main.item[num29].height)))
+                                {
+                                    if (i == Main.myPlayer && (this.inventory[this.selectedItem].type != 0 || this.itemAnimation <= 0))
+                                    {
+                                        if (Main.item[num29].type == 58)
+                                        {
+                                            //Main.PlaySound(7, (int)this.position.X, (int)this.position.Y, 1);
+                                            this.statLife += 20;
+                                            if (Main.myPlayer == this.whoAmi)
+                                            {
+                                                this.HealEffect(20);
+                                            }
+                                            if (this.statLife > this.statLifeMax)
+                                            {
+                                                this.statLife = this.statLifeMax;
+                                            }
+                                            Main.item[num29] = new Item();
+                                            if (Main.netMode == 1)
+                                            {
+                                                NetMessage.SendData(21, -1, -1, "", num29, 0f, 0f, 0f);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Main.item[num29].type == 184)
+                                            {
+                                                //Main.PlaySound(7, (int)this.position.X, (int)this.position.Y, 1);
+                                                this.statMana += 20;
+                                                if (Main.myPlayer == this.whoAmi)
+                                                {
+                                                    this.ManaEffect(20);
+                                                }
+                                                if (this.statMana > this.statManaMax)
+                                                {
+                                                    this.statMana = this.statManaMax;
+                                                }
+                                                Main.item[num29] = new Item();
+                                                if (Main.netMode == 1)
+                                                {
+                                                    NetMessage.SendData(21, -1, -1, "", num29, 0f, 0f, 0f);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                Main.item[num29] = this.GetItem(i, Main.item[num29]);
+                                                if (Main.netMode == 1)
+                                                {
+                                                    NetMessage.SendData(21, -1, -1, "", num29, 0f, 0f, 0f);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    rectangle = new Rectangle((int)this.position.X - Player.itemGrabRange, (int)this.position.Y - Player.itemGrabRange, this.width + Player.itemGrabRange * 2, this.height + Player.itemGrabRange * 2);
+                                    if (rectangle.Intersects(new Rectangle((int)Main.item[num29].position.X, (int)Main.item[num29].position.Y, Main.item[num29].width, Main.item[num29].height)) && this.ItemSpace(Main.item[num29]))
+                                    {
+                                        Main.item[num29].beingGrabbed = true;
+                                        if ((double)this.position.X + (double)this.width * 0.5 > (double)Main.item[num29].position.X + (double)Main.item[num29].width * 0.5)
+                                        {
+                                            if (Main.item[num29].velocity.X < Player.itemGrabSpeedMax + this.velocity.X)
+                                            {
+                                                Item expr_2C5D_cp_0 = Main.item[num29];
+                                                expr_2C5D_cp_0.velocity.X = expr_2C5D_cp_0.velocity.X + Player.itemGrabSpeed;
+                                            }
+                                            if (Main.item[num29].velocity.X < 0f)
+                                            {
+                                                Item expr_2C97_cp_0 = Main.item[num29];
+                                                expr_2C97_cp_0.velocity.X = expr_2C97_cp_0.velocity.X + Player.itemGrabSpeed * 0.75f;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Main.item[num29].velocity.X > -Player.itemGrabSpeedMax + this.velocity.X)
+                                            {
+                                                Item expr_2CE6_cp_0 = Main.item[num29];
+                                                expr_2CE6_cp_0.velocity.X = expr_2CE6_cp_0.velocity.X - Player.itemGrabSpeed;
+                                            }
+                                            if (Main.item[num29].velocity.X > 0f)
+                                            {
+                                                Item expr_2D1D_cp_0 = Main.item[num29];
+                                                expr_2D1D_cp_0.velocity.X = expr_2D1D_cp_0.velocity.X - Player.itemGrabSpeed * 0.75f;
+                                            }
+                                        }
+                                        if ((double)this.position.Y + (double)this.height * 0.5 > (double)Main.item[num29].position.Y + (double)Main.item[num29].height * 0.5)
+                                        {
+                                            if (Main.item[num29].velocity.Y < Player.itemGrabSpeedMax)
+                                            {
+                                                Item expr_2DA6_cp_0 = Main.item[num29];
+                                                expr_2DA6_cp_0.velocity.Y = expr_2DA6_cp_0.velocity.Y + Player.itemGrabSpeed;
+                                            }
+                                            if (Main.item[num29].velocity.Y < 0f)
+                                            {
+                                                Item expr_2DE0_cp_0 = Main.item[num29];
+                                                expr_2DE0_cp_0.velocity.Y = expr_2DE0_cp_0.velocity.Y + Player.itemGrabSpeed * 0.75f;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Main.item[num29].velocity.Y > -Player.itemGrabSpeedMax)
+                                            {
+                                                Item expr_2E20_cp_0 = Main.item[num29];
+                                                expr_2E20_cp_0.velocity.Y = expr_2E20_cp_0.velocity.Y - Player.itemGrabSpeed;
+                                            }
+                                            if (Main.item[num29].velocity.Y > 0f)
+                                            {
+                                                Item expr_2E57_cp_0 = Main.item[num29];
+                                                expr_2E57_cp_0.velocity.Y = expr_2E57_cp_0.velocity.Y - Player.itemGrabSpeed * 0.75f;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (this.position.X / 16f - (float)Player.tileRangeX <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY - 2f >= (float)Player.tileTargetY && Main.tile[Player.tileTargetX, Player.tileTargetY].active)
+                        {
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 79)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 224;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 48;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 8;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13)
+                            {
+                                this.showItemIcon = true;
+                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 18)
+                                {
+                                    this.showItemIcon2 = 28;
+                                }
+                                else
+                                {
+                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 36)
+                                    {
+                                        this.showItemIcon2 = 110;
+                                    }
+                                    else
+                                    {
+                                        this.showItemIcon2 = 31;
+                                    }
+                                }
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 87;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 105;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 148;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 90)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 165;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 55)
+                            {
+                                int num30 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
+                                int num31 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+                                while (num30 > 1)
+                                {
+                                    num30 -= 2;
+                                }
+                                int num32 = Player.tileTargetX - num30;
+                                int num33 = Player.tileTargetY - num31;
+                                Main.signBubble = true;
+                                Main.signX = num32 * 16 + 16;
+                                Main.signY = num33 * 16;
+                            }
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 10 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 11)
+                            {
+                                this.showItemIcon = true;
+                                this.showItemIcon2 = 25;
+                            }
+                            if (this.controlUseTile)
+                            {
+                                if (this.releaseUseTile)
+                                {
+                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49 || (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 90))
+                                    {
+                                        WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                        if (Main.netMode == 1)
+                                        {
+                                            NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 0f);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 79)
+                                        {
+                                            int num34 = Player.tileTargetX;
+                                            int num35 = Player.tileTargetY;
+                                            num34 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18 * -1);
+                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX >= 72)
+                                            {
+                                                num34 += 4;
+                                                num34++;
+                                            }
+                                            else
+                                            {
+                                                num34 += 2;
+                                            }
+                                            num35 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18 * -1);
+                                            num35 += 2;
+                                            if (Player.CheckSpawn(num34, num35))
+                                            {
+                                                this.ChangeSpawn(num34, num35);
+                                                //Main.NewText("Spawn point set!", 255, 240, 20);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 55)
+                                            {
+                                                bool flag4 = true;
+                                                if (this.sign >= 0)
+                                                {
+                                                    int num36 = Sign.ReadSign(Player.tileTargetX, Player.tileTargetY);
+                                                    if (num36 == this.sign)
+                                                    {
+                                                        this.sign = -1;
+                                                        Main.npcChatText = "";
+                                                        Main.editSign = false;
+                                                        //Main.PlaySound(11, -1, -1, 1);
+                                                        flag4 = false;
+                                                    }
+                                                }
+                                                if (flag4)
+                                                {
+                                                    if (Main.netMode == 0)
+                                                    {
+                                                        this.talkNPC = -1;
+                                                        Main.playerInventory = false;
+                                                        Main.editSign = false;
+                                                        //Main.PlaySound(10, -1, -1, 1);
+                                                        int num37 = Sign.ReadSign(Player.tileTargetX, Player.tileTargetY);
+                                                        this.sign = num37;
+                                                        Main.npcChatText = Main.sign[num37].text;
+                                                    }
+                                                    else
+                                                    {
+                                                        int num38 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
+                                                        int num39 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+                                                        while (num38 > 1)
+                                                        {
+                                                            num38 -= 2;
+                                                        }
+                                                        int num40 = Player.tileTargetX - num38;
+                                                        int num41 = Player.tileTargetY - num39;
+                                                        if (Main.tile[num40, num41].type == 55)
+                                                        {
+                                                            NetMessage.SendData(46, -1, -1, "", num40, (float)num41, 0f, 0f);
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 10)
+                                                {
+                                                    WorldGen.OpenDoor(Player.tileTargetX, Player.tileTargetY, this.direction);
+                                                    NetMessage.SendData(19, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
+                                                }
+                                                else
+                                                {
+                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 11)
+                                                    {
+                                                        if (WorldGen.CloseDoor(Player.tileTargetX, Player.tileTargetY, false))
+                                                        {
+                                                            NetMessage.SendData(19, -1, -1, "", 1, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if ((Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29) && this.talkNPC == -1)
+                                                        {
+                                                            bool flag5 = false;
+                                                            int num42 = Player.tileTargetX - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
+                                                            int num43 = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+                                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29)
+                                                            {
+                                                                flag5 = true;
+                                                            }
+                                                            if (Main.netMode == 1 && !flag5)
+                                                            {
+                                                                if (num42 == this.chestX && num43 == this.chestY && this.chest != -1)
+                                                                {
+                                                                    this.chest = -1;
+                                                                    //Main.PlaySound(11, -1, -1, 1);
+                                                                }
+                                                                else
+                                                                {
+                                                                    NetMessage.SendData(31, -1, -1, "", num42, (float)num43, 0f, 0f);
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                int num44 = -1;
+                                                                if (flag5)
+                                                                {
+                                                                    num44 = -2;
+                                                                }
+                                                                else
+                                                                {
+                                                                    num44 = Chest.FindChest(num42, num43);
+                                                                }
+                                                                if (num44 != -1)
+                                                                {
+                                                                    if (num44 == this.chest)
+                                                                    {
+                                                                        this.chest = -1;
+                                                                        //Main.PlaySound(11, -1, -1, 1);
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        if (num44 != this.chest && this.chest == -1)
+                                                                        {
+                                                                            this.chest = num44;
+                                                                            Main.playerInventory = true;
+                                                                            //Main.PlaySound(10, -1, -1, 1);
+                                                                            this.chestX = num42;
+                                                                            this.chestY = num43;
+                                                                        }
+                                                                        else
+                                                                        {
+                                                                            this.chest = num44;
+                                                                            Main.playerInventory = true;
+                                                                            //Main.PlaySound(12, -1, -1, 1);
+                                                                            this.chestX = num42;
+                                                                            this.chestY = num43;
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                this.releaseUseTile = false;
+                            }
+                            else
+                            {
+                                this.releaseUseTile = true;
+                            }
+                        }
+                        if (Main.myPlayer == this.whoAmi)
+                        {
+                            if (this.talkNPC >= 0)
+                            {
+                                Rectangle rectangle2 = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)(Player.tileRangeX * 16)), (int)(this.position.Y + (float)(this.height / 2) - (float)(Player.tileRangeY * 16)), Player.tileRangeX * 16 * 2, Player.tileRangeY * 16 * 2);
+                                Rectangle value = new Rectangle((int)Main.npc[this.talkNPC].position.X, (int)Main.npc[this.talkNPC].position.Y, Main.npc[this.talkNPC].width, Main.npc[this.talkNPC].height);
+                                if (!rectangle2.Intersects(value) || this.chest != -1 || !Main.npc[this.talkNPC].active)
+                                {
+                                    if (this.chest == -1)
+                                    {
+                                        //Main.PlaySound(11, -1, -1, 1);
+                                    }
+                                    this.talkNPC = -1;
+                                    Main.npcChatText = "";
+                                }
+                            }
+                            if (this.sign >= 0)
+                            {
+                                Rectangle rectangle3 = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)(Player.tileRangeX * 16)), (int)(this.position.Y + (float)(this.height / 2) - (float)(Player.tileRangeY * 16)), Player.tileRangeX * 16 * 2, Player.tileRangeY * 16 * 2);
+                                Rectangle value2 = new Rectangle(Main.sign[this.sign].x * 16, Main.sign[this.sign].y * 16, 32, 32);
+                                if (!rectangle3.Intersects(value2))
+                                {
+                                    //Main.PlaySound(11, -1, -1, 1);
+                                    this.sign = -1;
+                                    Main.editSign = false;
+                                    Main.npcChatText = "";
+                                }
+                            }
+                            if (Main.editSign)
+                            {
+                                if (this.sign == -1)
+                                {
+                                    Main.editSign = false;
+                                }
+                                else
+                                {
+                                    //Main.npcChatText = Main.GetInputText(Main.npcChatText);
+                                    //if (Main.inputTextEnter)
+                                    //{
+                                    //    byte[] bytes = new byte[]
+                                    //    {
+                                    //        10
+                                    //    };
+                                    //    Main.npcChatText += Encoding.ASCII.GetString(bytes);
+                                    //}
+                                }
+                            }
+                            Rectangle rectangle4 = new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height);
+                            for (int num45 = 0; num45 < 1000; num45++)
+                            {
+                                if (Main.npc[num45].active && !Main.npc[num45].friendly && rectangle4.Intersects(new Rectangle((int)Main.npc[num45].position.X, (int)Main.npc[num45].position.Y, Main.npc[num45].width, Main.npc[num45].height)))
+                                {
+                                    int hitDirection = -1;
+                                    if (Main.npc[num45].position.X + (float)(Main.npc[num45].width / 2) < this.position.X + (float)(this.width / 2))
+                                    {
+                                        hitDirection = 1;
+                                    }
+                                    this.Hurt(Main.npc[num45].damage, hitDirection, false, false);
+                                }
+                            }
+                            Vector2 vector = Collision.HurtTiles(this.position, this.velocity, this.width, this.height, this.fireWalk);
+                            if (vector.Y != 0f)
+                            {
+                                this.Hurt((int)vector.Y, (int)vector.X, false, false);
+                            }
+                        }
+                        if (this.grappling[0] >= 0)
+                        {
+                            this.rocketDelay = 0;
+                            this.rocketFrame = false;
+                            this.canRocket = false;
+                            this.rocketRelease = false;
+                            this.fallStart = (int)(this.position.Y / 16f);
+                            float num46 = 0f;
+                            float num47 = 0f;
+                            for (int num48 = 0; num48 < this.grapCount; num48++)
+                            {
+                                num46 += Main.projectile[this.grappling[num48]].position.X + (float)(Main.projectile[this.grappling[num48]].width / 2);
+                                num47 += Main.projectile[this.grappling[num48]].position.Y + (float)(Main.projectile[this.grappling[num48]].height / 2);
+                            }
+                            num46 /= (float)this.grapCount;
+                            num47 /= (float)this.grapCount;
+                            Vector2 vector2 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
+                            float num49 = num46 - vector2.X;
+                            float num50 = num47 - vector2.Y;
+                            float num51 = (float)Math.Sqrt((double)(num49 * num49 + num50 * num50));
+                            float num52 = 11f;
+                            float num53 = num51;
+                            if (num51 > num52)
+                            {
+                                num53 = num52 / num51;
+                            }
+                            else
+                            {
+                                num53 = 1f;
+                            }
+                            num49 *= num53;
+                            num50 *= num53;
+                            this.velocity.X = num49;
+                            this.velocity.Y = num50;
+                            if (this.itemAnimation == 0)
+                            {
+                                if (this.velocity.X > 0f)
+                                {
+                                    this.direction = 1;
+                                }
+                                if (this.velocity.X < 0f)
+                                {
+                                    this.direction = -1;
+                                }
+                            }
+                            if (this.controlJump)
+                            {
+                                if (this.releaseJump)
+                                {
+                                    if (this.velocity.Y == 0f || (this.wet && (double)this.velocity.Y > -0.02 && (double)this.velocity.Y < 0.02))
+                                    {
+                                        this.velocity.Y = -Player.jumpSpeed;
+                                        this.jump = Player.jumpHeight / 2;
+                                        this.releaseJump = false;
+                                    }
+                                    else
+                                    {
+                                        this.velocity.Y = this.velocity.Y + 0.01f;
+                                        this.releaseJump = false;
+                                    }
+                                    if (this.doubleJump)
+                                    {
+                                        this.jumpAgain = true;
+                                    }
+                                    this.grappling[0] = 0;
+                                    this.grapCount = 0;
+                                    for (int num54 = 0; num54 < 1000; num54++)
+                                    {
+                                        if (Main.projectile[num54].active && Main.projectile[num54].owner == i && Main.projectile[num54].aiStyle == 7)
+                                        {
+                                            Main.projectile[num54].Kill();
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                this.releaseJump = true;
+                            }
+                        }
+                        if (Collision.StickyTiles(this.position, this.velocity, this.width, this.height))
+                        {
+                            this.fallStart = (int)(this.position.Y / 16f);
+                            this.jump = 0;
+                            if (this.velocity.X > 1f)
+                            {
+                                this.velocity.X = 1f;
+                            }
+                            if (this.velocity.X < -1f)
+                            {
+                                this.velocity.X = -1f;
+                            }
+                            if (this.velocity.Y > 1f)
+                            {
+                                this.velocity.Y = 1f;
+                            }
+                            if (this.velocity.Y < -5f)
+                            {
+                                this.velocity.Y = -5f;
+                            }
+                            if ((double)this.velocity.X > 0.75 || (double)this.velocity.X < -0.75)
+                            {
+                                this.velocity.X = this.velocity.X * 0.85f;
+                            }
+                            else
+                            {
+                                this.velocity.X = this.velocity.X * 0.6f;
+                            }
+                            if (this.velocity.Y < 0f)
+                            {
+                                this.velocity.Y = this.velocity.Y * 0.96f;
+                            }
+                            else
+                            {
+                                this.velocity.Y = this.velocity.Y * 0.3f;
+                            }
+                        }
+                        bool flag6 = Collision.DrownCollision(this.position, this.width, this.height);
+                        if (this.inventory[this.selectedItem].type == 186)
+                        {
+                            try
+                            {
+                                int num55 = (int)((this.position.X + (float)(this.width / 2) + (float)(6 * this.direction)) / 16f);
+                                int num56 = (int)((this.position.Y - 44f) / 16f);
+                                if (Main.tile[num55, num56].liquid < 128)
+                                {
+                                    if (Main.tile[num55, num56] == null)
+                                    {
+                                        Main.tile[num55, num56] = new Tile();
+                                    }
+                                    if (!Main.tile[num55, num56].active || !Main.tileSolid[(int)Main.tile[num55, num56].type] || Main.tileSolidTop[(int)Main.tile[num55, num56].type])
+                                    {
+                                        flag6 = false;
+                                    }
+                                }
+                            }
+                            catch
+                            {
+                            }
+                        }
+                        if (Main.myPlayer == i)
+                        {
+                            if (flag6)
+                            {
+                                this.breathCD++;
+                                int num57 = 7;
+                                if (this.inventory[this.selectedItem].type == 186)
+                                {
+                                    num57 *= 2;
+                                }
+                                if (this.breathCD >= num57)
+                                {
+                                    this.breathCD = 0;
+                                    this.breath--;
+                                    if (this.breath <= 0)
+                                    {
+                                        this.breath = 0;
+                                        this.statLife -= 2;
+                                        if (this.statLife <= 0)
+                                        {
+                                            this.statLife = 0;
+                                            this.KillMe(10.0, 0, false);
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                this.breath += 3;
+                                if (this.breath > this.breathMax)
+                                {
+                                    this.breath = this.breathMax;
+                                }
+                                this.breathCD = 0;
+                            }
+                        }
+                        if (flag6 && Main.rand.Next(20) == 0)
+                        {
+                            if (this.inventory[this.selectedItem].type == 186)
+                            {
+                                Vector2 arg_4204_0 = new Vector2(this.position.X + (float)(10 * this.direction) + 4f, this.position.Y - 54f);
+                                int arg_4204_1 = this.width - 8;
+                                int arg_4204_2 = 8;
+                                int arg_4204_3 = 34;
+                                float arg_4204_4 = 0f;
+                                float arg_4204_5 = 0f;
+                                int arg_4204_6 = 0;
+                                Color newColor = new Color();
+                                Dust.NewDust(arg_4204_0, arg_4204_1, arg_4204_2, arg_4204_3, arg_4204_4, arg_4204_5, arg_4204_6, newColor, 1.2f);
+                            }
+                            else
+                            {
+                                Vector2 arg_425D_0 = new Vector2(this.position.X + (float)(12 * this.direction), this.position.Y + 4f);
+                                int arg_425D_1 = this.width - 8;
+                                int arg_425D_2 = 8;
+                                int arg_425D_3 = 34;
+                                float arg_425D_4 = 0f;
+                                float arg_425D_5 = 0f;
+                                int arg_425D_6 = 0;
+                                Color newColor = new Color();
+                                Dust.NewDust(arg_425D_0, arg_425D_1, arg_425D_2, arg_425D_3, arg_425D_4, arg_425D_5, arg_425D_6, newColor, 1.2f);
+                            }
+                        }
+                        bool flag7 = Collision.LavaCollision(this.position, this.width, this.height);
+                        if (flag7)
+                        {
+                            if (Main.myPlayer == i)
+                            {
+                                this.Hurt(100, 0, false, false);
+                            }
+                            this.lavaWet = true;
+                        }
+                        bool flag8 = Collision.WetCollision(this.position, this.width, this.height);
+                        if (flag8)
+                        {
+                            if (!this.wet)
+                            {
+                                if (this.wetCount == 0)
+                                {
+                                    this.wetCount = 10;
+                                    if (!flag7)
+                                    {
+                                        for (int num58 = 0; num58 < 50; num58++)
+                                        {
+                                            Vector2 arg_4340_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f);
+                                            int arg_4340_1 = this.width + 12;
+                                            int arg_4340_2 = 24;
+                                            int arg_4340_3 = 33;
+                                            float arg_4340_4 = 0f;
+                                            float arg_4340_5 = 0f;
+                                            int arg_4340_6 = 0;
+                                            Color newColor = new Color();
+                                            int num59 = Dust.NewDust(arg_4340_0, arg_4340_1, arg_4340_2, arg_4340_3, arg_4340_4, arg_4340_5, arg_4340_6, newColor, 1f);
+                                            Dust expr_4354_cp_0 = Main.dust[num59];
+                                            expr_4354_cp_0.velocity.Y = expr_4354_cp_0.velocity.Y - 4f;
+                                            Dust expr_4372_cp_0 = Main.dust[num59];
+                                            expr_4372_cp_0.velocity.X = expr_4372_cp_0.velocity.X * 2.5f;
+                                            Main.dust[num59].scale = 1.3f;
+                                            Main.dust[num59].alpha = 100;
+                                            Main.dust[num59].noGravity = true;
+                                        }
+                                        //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 0);
+                                    }
+                                    else
+                                    {
+                                        for (int num60 = 0; num60 < 20; num60++)
+                                        {
+                                            Vector2 arg_4446_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f);
+                                            int arg_4446_1 = this.width + 12;
+                                            int arg_4446_2 = 24;
+                                            int arg_4446_3 = 35;
+                                            float arg_4446_4 = 0f;
+                                            float arg_4446_5 = 0f;
+                                            int arg_4446_6 = 0;
+                                            Color newColor = new Color();
+                                            int num61 = Dust.NewDust(arg_4446_0, arg_4446_1, arg_4446_2, arg_4446_3, arg_4446_4, arg_4446_5, arg_4446_6, newColor, 1f);
+                                            Dust expr_445A_cp_0 = Main.dust[num61];
+                                            expr_445A_cp_0.velocity.Y = expr_445A_cp_0.velocity.Y - 1.5f;
+                                            Dust expr_4478_cp_0 = Main.dust[num61];
+                                            expr_4478_cp_0.velocity.X = expr_4478_cp_0.velocity.X * 2.5f;
+                                            Main.dust[num61].scale = 1.3f;
+                                            Main.dust[num61].alpha = 100;
+                                            Main.dust[num61].noGravity = true;
+                                        }
+                                        //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
+                                    }
+                                }
+                                this.wet = true;
+                            }
+                        }
+                        else
+                        {
+                            if (this.wet)
+                            {
+                                this.wet = false;
+                                if (this.jump > Player.jumpHeight / 5)
+                                {
+                                    this.jump = Player.jumpHeight / 5;
+                                }
+                                if (this.wetCount == 0)
+                                {
+                                    this.wetCount = 10;
+                                    if (!this.lavaWet)
+                                    {
+                                        for (int num62 = 0; num62 < 50; num62++)
+                                        {
+                                            Vector2 arg_4599_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2));
+                                            int arg_4599_1 = this.width + 12;
+                                            int arg_4599_2 = 24;
+                                            int arg_4599_3 = 33;
+                                            float arg_4599_4 = 0f;
+                                            float arg_4599_5 = 0f;
+                                            int arg_4599_6 = 0;
+                                            Color newColor = new Color();
+                                            int num63 = Dust.NewDust(arg_4599_0, arg_4599_1, arg_4599_2, arg_4599_3, arg_4599_4, arg_4599_5, arg_4599_6, newColor, 1f);
+                                            Dust expr_45AD_cp_0 = Main.dust[num63];
+                                            expr_45AD_cp_0.velocity.Y = expr_45AD_cp_0.velocity.Y - 4f;
+                                            Dust expr_45CB_cp_0 = Main.dust[num63];
+                                            expr_45CB_cp_0.velocity.X = expr_45CB_cp_0.velocity.X * 2.5f;
+                                            Main.dust[num63].scale = 1.3f;
+                                            Main.dust[num63].alpha = 100;
+                                            Main.dust[num63].noGravity = true;
+                                        }
+                                        //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 0);
+                                    }
+                                    else
+                                    {
+                                        for (int num64 = 0; num64 < 20; num64++)
+                                        {
+                                            Vector2 arg_469F_0 = new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f);
+                                            int arg_469F_1 = this.width + 12;
+                                            int arg_469F_2 = 24;
+                                            int arg_469F_3 = 35;
+                                            float arg_469F_4 = 0f;
+                                            float arg_469F_5 = 0f;
+                                            int arg_469F_6 = 0;
+                                            Color newColor = new Color();
+                                            int num65 = Dust.NewDust(arg_469F_0, arg_469F_1, arg_469F_2, arg_469F_3, arg_469F_4, arg_469F_5, arg_469F_6, newColor, 1f);
+                                            Dust expr_46B3_cp_0 = Main.dust[num65];
+                                            expr_46B3_cp_0.velocity.Y = expr_46B3_cp_0.velocity.Y - 1.5f;
+                                            Dust expr_46D1_cp_0 = Main.dust[num65];
+                                            expr_46D1_cp_0.velocity.X = expr_46D1_cp_0.velocity.X * 2.5f;
+                                            Main.dust[num65].scale = 1.3f;
+                                            Main.dust[num65].alpha = 100;
+                                            Main.dust[num65].noGravity = true;
+                                        }
+                                        //Main.PlaySound(19, (int)this.position.X, (int)this.position.Y, 1);
+                                    }
+                                }
+                            }
+                        }
+                        if (!this.wet)
+                        {
+                            this.lavaWet = false;
+                        }
+                        if (this.wetCount > 0)
+                        {
+                            this.wetCount -= 1;
+                        }
+                        if (this.wet)
+                        {
+                            if (this.wet)
+                            {
+                                Vector2 vector3 = this.velocity;
+                                this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, this.controlDown, false);
+                                Vector2 value3 = this.velocity * 0.5f;
+                                if (this.velocity.X != vector3.X)
+                                {
+                                    value3.X = this.velocity.X;
+                                }
+                                if (this.velocity.Y != vector3.Y)
+                                {
+                                    value3.Y = this.velocity.Y;
+                                }
+                                this.position += value3;
+                            }
+                        }
+                        else
+                        {
+                            this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, this.controlDown, false);
+                            this.position += this.velocity;
+                        }
+                        if (this.position.X < Main.leftWorld + 336f + 16f)
+                        {
+                            this.position.X = Main.leftWorld + 336f + 16f;
+                            this.velocity.X = 0f;
+                        }
+                        if (this.position.X + (float)this.width > Main.rightWorld - 336f - 32f)
+                        {
+                            this.position.X = Main.rightWorld - 336f - 32f - (float)this.width;
+                            this.velocity.X = 0f;
+                        }
+                        if (this.position.Y < Main.topWorld + 336f + 16f)
+                        {
+                            this.position.Y = Main.topWorld + 336f + 16f;
+                            if ((double)this.velocity.Y < -0.1)
+                            {
+                                this.velocity.Y = -0.1f;
+                            }
+                        }
+                        if (this.position.Y > Main.bottomWorld - 336f - 32f - (float)this.height)
+                        {
+                            this.position.Y = Main.bottomWorld - 336f - 32f - (float)this.height;
+                            this.velocity.Y = 0f;
+                        }
+                        this.ItemCheck(i);
+                        this.PlayerFrame();
+                        if (this.statLife > this.statLifeMax)
+                        {
+                            this.statLife = this.statLifeMax;
+                        }
+                        this.grappling[0] = -1;
+                        this.grapCount = 0;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error In UpdatePlayer: " + e.Message);
+                Console.WriteLine("Stack: " + e.StackTrace);
+            }
 		}
 		
         public bool SellItem(int price)
@@ -2964,11 +2676,11 @@ namespace Terraria_Server
 						{
 							if (this.boneArmor)
 							{
-								Dust.NewDust(this.position, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+								Dust.NewDust(this.position, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0,  new Color(), 1f);
 							}
 							else
 							{
-								Dust.NewDust(this.position, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+								Dust.NewDust(this.position, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0,  new Color(), 1f);
 							}
 							num4++;
 						}
@@ -3017,11 +2729,11 @@ namespace Terraria_Server
 			{
 				if (this.boneArmor)
 				{
-					Dust.NewDust(this.position, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+					Dust.NewDust(this.position, this.width, this.height, 26, (float)(2 * hitDirection), -2f, 0,  new Color(), 1f);
 				}
 				else
 				{
-					Dust.NewDust(this.position, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0, default(Color), 1f);
+					Dust.NewDust(this.position, this.width, this.height, 5, (float)(2 * hitDirection), -2f, 0,  new Color(), 1f);
 				}
 				num++;
 			}
@@ -3465,7 +3177,7 @@ namespace Terraria_Server
 						float arg_ECC_4 = 0f;
 						float arg_ECC_5 = 0f;
 						int arg_ECC_6 = 100;
-						Color newColor = default(Color);
+						Color newColor =  new Color();
 						Dust.NewDust(arg_ECC_0, arg_ECC_1, arg_ECC_2, arg_ECC_3, arg_ECC_4, arg_ECC_5, arg_ECC_6, newColor, 1f);
 					}
 					//Lighting.addLight((int)((this.itemLocation.X - 16f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
@@ -3481,7 +3193,7 @@ namespace Terraria_Server
 						float arg_F70_4 = 0f;
 						float arg_F70_5 = 0f;
 						int arg_F70_6 = 100;
-						Color newColor = default(Color);
+						Color newColor =  new Color();
 						Dust.NewDust(arg_F70_0, arg_F70_1, arg_F70_2, arg_F70_3, arg_F70_4, arg_F70_5, arg_F70_6, newColor, 1f);
 					}
 					//Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
@@ -3507,7 +3219,7 @@ namespace Terraria_Server
 							float arg_1049_4 = 0f;
 							float arg_1049_5 = 0f;
 							int arg_1049_6 = 100;
-							Color newColor = default(Color);
+							Color newColor =  new Color();
 							Dust.NewDust(arg_1049_0, arg_1049_1, arg_1049_2, arg_1049_3, arg_1049_4, arg_1049_5, arg_1049_6, newColor, 1f);
 						}
 						//Lighting.addLight((int)((this.itemLocation.X - 16f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
@@ -3523,7 +3235,7 @@ namespace Terraria_Server
 							float arg_10ED_4 = 0f;
 							float arg_10ED_5 = 0f;
 							int arg_10ED_6 = 100;
-							Color newColor = default(Color);
+							Color newColor =  new Color();
 							Dust.NewDust(arg_10ED_0, arg_10ED_1, arg_10ED_2, arg_10ED_3, arg_10ED_4, arg_10ED_5, arg_10ED_6, newColor, 1f);
 						}
 						//Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
@@ -3549,7 +3261,7 @@ namespace Terraria_Server
 								float arg_11CA_4 = 0f;
 								float arg_11CA_5 = 0f;
 								int arg_11CA_6 = 100;
-								Color newColor = default(Color);
+								Color newColor =  new Color();
 								Dust.NewDust(arg_11CA_0, arg_11CA_1, arg_11CA_2, arg_11CA_3, arg_11CA_4, arg_11CA_5, arg_11CA_6, newColor, 1f);
 							}
 							//Lighting.addLight((int)((this.itemLocation.X - 16f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
@@ -3565,7 +3277,7 @@ namespace Terraria_Server
 								float arg_126F_4 = 0f;
 								float arg_126F_5 = 0f;
 								int arg_126F_6 = 100;
-								Color newColor = default(Color);
+								Color newColor =  new Color();
 								Dust.NewDust(arg_126F_0, arg_126F_1, arg_126F_2, arg_126F_3, arg_126F_4, arg_126F_5, arg_126F_6, newColor, 1f);
 							}
 							//Lighting.addLight((int)((this.itemLocation.X + 6f + this.velocity.X) / 16f), (int)((this.itemLocation.Y - 14f) / 16f), 1f);
@@ -4298,7 +4010,7 @@ namespace Terraria_Server
 						float arg_3FC1_4 = (float)(this.direction * 2);
 						float arg_3FC1_5 = 0f;
 						int arg_3FC1_6 = 150;
-						Color newColor = default(Color);
+						Color newColor =  new Color();
 						Dust.NewDust(arg_3FC1_0, arg_3FC1_1, arg_3FC1_2, arg_3FC1_3, arg_3FC1_4, arg_3FC1_5, arg_3FC1_6, newColor, 1.3f);
 					}
 					if (this.inventory[this.selectedItem].type == 65)
@@ -4312,7 +4024,7 @@ namespace Terraria_Server
 							float arg_4030_4 = 0f;
 							float arg_4030_5 = 0f;
 							int arg_4030_6 = 150;
-							Color newColor = default(Color);
+							Color newColor =  new Color();
 							Dust.NewDust(arg_4030_0, arg_4030_1, arg_4030_2, arg_4030_3, arg_4030_4, arg_4030_5, arg_4030_6, newColor, 1.2f);
 						}
 						if (Main.rand.Next(10) == 0)
@@ -4329,7 +4041,7 @@ namespace Terraria_Server
 						float arg_410A_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
 						float arg_410A_5 = this.velocity.Y * 0.2f;
 						int arg_410A_6 = 0;
-						Color newColor = default(Color);
+						Color newColor =  new Color();
 						int num30 = Dust.NewDust(arg_410A_0, arg_410A_1, arg_410A_2, arg_410A_3, arg_410A_4, arg_410A_5, arg_410A_6, newColor, 1.2f);
 						Main.dust[num30].noGravity = true;
 					}
@@ -4344,7 +4056,7 @@ namespace Terraria_Server
 							float arg_41A1_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
 							float arg_41A1_5 = this.velocity.Y * 0.2f;
 							int arg_41A1_6 = 100;
-							Color newColor = default(Color);
+							Color newColor =  new Color();
 							int num32 = Dust.NewDust(arg_41A1_0, arg_41A1_1, arg_41A1_2, arg_41A1_3, arg_41A1_4, arg_41A1_5, arg_41A1_6, newColor, 2.5f);
 							Main.dust[num32].noGravity = true;
 							Dust expr_41C3_cp_0 = Main.dust[num32];
@@ -4362,7 +4074,7 @@ namespace Terraria_Server
 						float arg_4290_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
 						float arg_4290_5 = this.velocity.Y * 0.2f;
 						int arg_4290_6 = 100;
-						Color newColor = default(Color);
+						Color newColor =  new Color();
 						int num33 = Dust.NewDust(arg_4290_0, arg_4290_1, arg_4290_2, arg_4290_3, arg_4290_4, arg_4290_5, arg_4290_6, newColor, 1.9f);
 						Main.dust[num33].noGravity = true;
 					}
@@ -4375,7 +4087,7 @@ namespace Terraria_Server
 						float arg_4323_4 = this.velocity.X * 0.2f + (float)(this.direction * 3);
 						float arg_4323_5 = this.velocity.Y * 0.2f;
 						int arg_4323_6 = 100;
-						Color newColor = default(Color);
+						Color newColor =  new Color();
 						int num34 = Dust.NewDust(arg_4323_0, arg_4323_1, arg_4323_2, arg_4323_3, arg_4323_4, arg_4323_5, arg_4323_6, newColor, 2f);
 						Main.dust[num34].noGravity = true;
 						Dust expr_4345_cp_0 = Main.dust[num34];
@@ -4535,7 +4247,7 @@ namespace Terraria_Server
 					float arg_4BFA_4 = 0f;
 					float arg_4BFA_5 = 0f;
 					int arg_4BFA_6 = 150;
-					Color newColor = default(Color);
+					Color newColor =  new Color();
 					Dust.NewDust(arg_4BFA_0, arg_4BFA_1, arg_4BFA_2, arg_4BFA_3, arg_4BFA_4, arg_4BFA_5, arg_4BFA_6, newColor, 1.1f);
 				}
 				if (this.itemTime == 0)
@@ -4555,7 +4267,7 @@ namespace Terraria_Server
 							float arg_4C93_4 = this.velocity.X * 0.5f;
 							float arg_4C93_5 = this.velocity.Y * 0.5f;
 							int arg_4C93_6 = 150;
-							Color newColor = default(Color);
+							Color newColor =  new Color();
 							Dust.NewDust(arg_4C93_0, arg_4C93_1, arg_4C93_2, arg_4C93_3, arg_4C93_4, arg_4C93_5, arg_4C93_6, newColor, 1.5f);
 						}
 						this.grappling[0] = -1;
@@ -4577,7 +4289,7 @@ namespace Terraria_Server
 							float arg_4D42_4 = 0f;
 							float arg_4D42_5 = 0f;
 							int arg_4D42_6 = 150;
-							Color newColor = default(Color);
+							Color newColor =  new Color();
 							Dust.NewDust(arg_4D42_0, arg_4D42_1, arg_4D42_2, arg_4D42_3, arg_4D42_4, arg_4D42_5, arg_4D42_6, newColor, 1.5f);
 						}
 					}
