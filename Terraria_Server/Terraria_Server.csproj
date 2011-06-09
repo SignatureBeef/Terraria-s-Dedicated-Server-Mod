@@ -91,6 +91,7 @@
     <Compile Include="Statics.cs" />
     <Compile Include="Tile.cs" />
     <Compile Include="Vector2.cs" />
+    <Compile Include="DataRegister.cs" />
     <Compile Include="World.cs" />
     <Compile Include="WorldGen.cs" />
   </ItemGroup>

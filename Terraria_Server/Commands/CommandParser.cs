@@ -175,12 +175,17 @@ namespace Terraria_Server.Commands
                     }*/
                 case (int)Commands.Command.COMMAND_HELP:
                     {
-                        Commands.showHelp(sender);
+                        Commands.ShowHelp(sender);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_WHITELIST:
+                    {
+                        Commands.WhiteList(sender, commands);
                         break;
                     }
                 default:
                     {
-                        Console.WriteLine("Uknown Command Issue.");
+                        Console.WriteLine("Uknown Command Issued.");
                         break;
                     }
 

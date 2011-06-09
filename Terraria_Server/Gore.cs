@@ -5,8 +5,8 @@ namespace Terraria_Server
 	public class Gore
 	{
 		public static int goreTime = 600;
-		public Vector2 position;
-		public Vector2 velocity;
+		public Vector2 position = new Vector2();
+		public Vector2 velocity = new Vector2();
 		public float rotation;
 		public float scale;
 		public int alpha;

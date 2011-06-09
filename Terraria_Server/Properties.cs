@@ -296,5 +296,24 @@ namespace Terraria_Server
         {
             base.setValue("optional-mapsize", MapSize);
         }
+
+        public bool isUsingWhiteList()
+        {
+            string WhiteList = base.getValue("whitelist");
+            if (WhiteList == null || WhiteList.Trim().Length < 0)
+            {
+                return false;
+            }
+            else
+            {
+                return Boolean.Parse(WhiteList);
+            }
+        }
+
+        public void setUsingWhiteList(bool WhiteList)
+        {
+            base.setValue("whitelist", WhiteList.ToString());
+        }
+
     }
 }

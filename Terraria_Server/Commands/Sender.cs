@@ -40,5 +40,17 @@ namespace Terraria_Server.Commands
             return "CONSOLE";
         }
 
+        public void sendMessage(string Message)
+        {
+            if (this is Player)
+            {
+                ((Player)this).sendMessage(Message);
+            }
+            else
+            {
+                Console.WriteLine(Message);
+            }
+        }
+
     }
 }

@@ -20,25 +20,25 @@ namespace Terraria_Server
         public static string serverSIP = "0.0.0.0";
 		public static bool disconnect = false;
 		public static string password = "";
-		public static bool ServerUp = false;
-		
+        public static bool ServerUp = false;
+        
         public static void AddBan(int plr)
-		{
-			string text = NetPlay.serverSock[plr].tcpClient.Client.RemoteEndPoint.ToString();
-			string value = text;
-			for (int i = 0; i < text.Length; i++)
-			{
-				if (text.Substring(i, 1) == ":")
-				{
-					value = text.Substring(0, i);
-				}
-			}
-			using (StreamWriter streamWriter = new StreamWriter("banlist.txt", true))
-			{
-				streamWriter.WriteLine("//" + Main.player[plr].name);
-				streamWriter.WriteLine(value);
-			}
-		}
+        {
+            string text = NetPlay.serverSock[plr].tcpClient.Client.RemoteEndPoint.ToString();
+            string value = text;
+            for (int i = 0; i < text.Length; i++)
+            {
+                if (text.Substring(i, 1) == ":")
+                {
+                    value = text.Substring(0, i);
+                }
+            }
+            using (StreamWriter streamWriter = new StreamWriter("banlist.txt", true))
+            {
+                streamWriter.WriteLine("//" + Main.player[plr].name);
+                streamWriter.WriteLine(value);
+            }
+        }
 		
         public static bool CheckBan(string ip)
 		{
@@ -267,7 +267,7 @@ namespace Terraria_Server
 				ThreadPool.QueueUserWorkItem(new WaitCallback(NetPlay.ListenForClients), 1);
                 Program.updateThread.Start();
                 Statics.serverStarted = true;
-                Console.WriteLine("Server started\nLoading Plugins.");
+                Console.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString() + "\nLoading Plugins.");
                 Program.server.getPluginManager().ReloadPlugins();
 			}
 			while (!NetPlay.disconnect)

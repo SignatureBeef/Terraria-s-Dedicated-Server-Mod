@@ -74,15 +74,21 @@ namespace Terraria_Server
 
 				if (Main.dedServ && NetPlay.CheckBan(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString()))
 				{
-					NetMessage.SendData(2, this.whoAmI, -1, "You are banned from this server.", 0, 0f, 0f, 0f);
+					NetMessage.SendData(2, this.whoAmI, -1, "You are banned from this Server.", 0, 0f, 0f, 0f);
 					return;
 				}
+
+                if(!Program.server.getWhiteList().containsException(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
+                    NetMessage.SendData(2, this.whoAmI, -1, "You are not on the WhiteList.", 0, 0f, 0f, 0f);
+					return;
+                }
+
 				if (NetPlay.serverSock[this.whoAmI].state == 0)
 				{
                     string version = Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
 					if (!(version == "Terraria" + Statics.currentRelease))
 					{
-						NetMessage.SendData(2, this.whoAmI, -1, "You are not using the same version as this server.", 0, 0f, 0f, 0f);
+						NetMessage.SendData(2, this.whoAmI, -1, "You are not using the same version as this Server.", 0, 0f, 0f, 0f);
 						return;
 					}
 					if (NetPlay.password == null || NetPlay.password == "")

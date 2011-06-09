@@ -14,50 +14,64 @@ namespace Terraria_Server
         public static Properties properties = null;
         public static CommandParser commandParser = null;
 
+        static bool createDirectory(string dirPath)
+        {
+            if (!System.IO.Directory.Exists(dirPath))
+            {
+                try
+                {
+                    System.IO.Directory.CreateDirectory(dirPath);
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.ToString());
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey(true);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        static bool createFile(string filePath)
+        {
+            if (!System.IO.File.Exists(filePath))
+            {
+                try
+                {
+                    System.IO.File.Create(filePath).Close();
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(exception.ToString());
+                    Console.WriteLine("Press any key to continue...");
+                    Console.ReadKey(true);
+                    return false;
+                }
+            }
+            return true;
+        }
+
         static bool setupPaths()
         {
-            if (!System.IO.Directory.Exists(Statics.getWorldPath))
+            if (!createDirectory(Statics.getWorldPath))
             {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(Statics.getWorldPath);
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey(true);
-                    return false;
-                }
+                return false;
             }
-            if (!System.IO.Directory.Exists(Statics.getPlayerPath))
+            if (!createDirectory(Statics.getPlayerPath))
             {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(Statics.getPlayerPath);
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey(true);
-                    return false;
-                }
+                return false;
             }
-            if (!System.IO.Directory.Exists(Statics.getPluginPath))
+            if (!createDirectory(Statics.getPluginPath))
             {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(Statics.getPluginPath);
-                }
-                catch (Exception exception)
-                {
-                    Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey(true);
-                    return false;
-                }
+                return false;
             }
+            if (!createDirectory(Statics.getDataPath))
+            {
+                return false;
+            }
+            createFile(Statics.getDataPath + Statics.systemSeperator + "whitelist.txt");
+            //createFile(Statics.getDataPath + Statics.systemSeperator + "joinedplayers.txt");
             return true;
         }
 
@@ -187,7 +201,7 @@ namespace Terraria_Server
             World world = new World(worldXtiles, worldYtiles);
             world.setSavePath(worldFile);
 
-            server = new Server(properties.getMaxPlayers(), world);
+            server = new Server(world, properties.getMaxPlayers(), Statics.getDataPath + Statics.systemSeperator + "whitelist.txt");
             server.setOpPassword(properties.getOpPassword());
             server.setPort(properties.getPort());
             server.setIP(properties.getServerIP());

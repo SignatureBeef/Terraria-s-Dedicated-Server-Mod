@@ -38,9 +38,10 @@ namespace Terraria_Server.Commands
             CONSOLE_SAY = 5,
             COMMAND_SAVE_ALL = 6,
             COMMAND_HELP = 7,
+            COMMAND_WHITELIST = 8,
         }
 
-        public static string[] CommandDefinition = new string[] { "exit", "reload", "list", "players", "me", "say", "save-all", "help" };
+        public static string[] CommandDefinition = new string[] { "exit", "reload", "list", "players", "me", "say", "save-all", "help", "whitelist" };
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
                                                                     "Reload Plugins", 
                                                                     "Show Online Players", 
@@ -48,7 +49,8 @@ namespace Terraria_Server.Commands
                                                                     "Talk in 3rd Person", 
                                                                     "Send A Console Message To Online Players", 
                                                                     "Trigger a World Save", 
-                                                                    "Show this Help" };
+                                                                    "Show this Help", 
+                                                                    "add:remove to the whitelist" };
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -131,7 +133,7 @@ namespace Terraria_Server.Commands
             Program.server.setGodMode(GodMode);
         }
 
-        public static void showHelp(Sender sender)
+        public static void ShowHelp(Sender sender)
         {
             if (sender is Player)
             {
@@ -147,6 +149,61 @@ namespace Terraria_Server.Commands
                     Console.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
                 }
             }
+        }
+
+        public static void WhiteList(Sender sender, string[] commands)
+        {
+            // /whitelist <add:remove> <player>
+            // arg  0         1           2
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (commands != null && commands.Length > 2)
+            {
+                if (commands[1] != null && commands[2] != null && commands[1].Length > 0 && commands[2].Length > 0)
+                {
+                    string caseType = "ADD";
+
+                    switch (commands[1].Trim().ToUpper())
+                    {
+                        case "ADD":
+                            {
+                                Program.server.getWhiteList().addException(commands[2]);
+                                break;
+                            }
+                        case "REMOVE":
+                            {
+                                Program.server.getWhiteList().removeException(commands[2]);
+                                caseType = "REMOVE";
+                                break;
+                            }
+                        default:
+                            {
+                                goto ERROR;
+                            }
+
+                    }
+
+                    string Message = sender.getName() + " used WhiteList command " + caseType + " for: " + commands[2];
+                    Program.server.notifyOps(Message);
+                    sender.sendMessage(Message);
+
+                    if (!Program.server.getWhiteList().Save())
+                    {
+                        Program.server.notifyOps("WhiteList Failed to Save due to " + sender.getName() + "'s command");
+                    }
+                    return;
+                }
+            }
+            ERROR:
+            sender.sendMessage("Command args Error!");
         }
 
     }

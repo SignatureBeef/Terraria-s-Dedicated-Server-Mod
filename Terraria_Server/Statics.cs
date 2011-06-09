@@ -41,6 +41,14 @@ namespace Terraria_Server
             }
         }
 
+        public static string getDataPath
+        {
+            get
+            {
+                return Statics.SavePath + systemSeperator + "Data";
+            }
+        }
+
         public static string systemSeperator = "\\";
 
         public static int currentRelease = 4;

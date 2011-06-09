@@ -15,14 +15,21 @@ namespace Terraria_Server
         
         private World world = null;
 
+        private DataRegister whiteList = null;
+        //private DataRegister joinedPlayerList = null;
+
         public Server() { }
 
-        public Server(int PlayerCap, World World)
+        public Server(World World, int PlayerCap, string WhiteList)
         {
             Main.maxNetPlayers = PlayerCap;
             world = World;
             world.setServer(this);
             pluginManager = new PluginManager(Statics.getPluginPath, this);
+            whiteList = new DataRegister(WhiteList);
+            whiteList.Load();
+            //joinedPlayerList = new DataRegister(JoinedPlayers);
+            //joinedPlayerList.Load();
         }
 
         public Player GetPlayerByName(string name)
@@ -111,6 +118,26 @@ namespace Terraria_Server
         {
             Main.godMode = Status;
         }
+
+        public DataRegister getWhiteList()
+        {
+            return whiteList;
+        }
+
+        public void setWhiteList(DataRegister WhiteList)
+        {
+            whiteList = WhiteList;
+        }
+
+        /*public DataRegister getJoinedPlayerList()
+        {
+            return joinedPlayerList;
+        }
+
+        public void setJoinedPlayerList(DataRegister JoinedPlayerList)
+        {
+            joinedPlayerList = JoinedPlayerList;
+        }*/
 
 
     }
