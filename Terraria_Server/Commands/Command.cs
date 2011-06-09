@@ -125,8 +125,13 @@ namespace Terraria_Server.Commands
             {
             }
 
-            Program.server.notifyOps("Saving Complete.");
+            Console.WriteLine("Saving Data");
+            Program.server.notifyOps("Saving Data...");
 
+            Program.server.getBanList().Save();
+            Program.server.getWhiteList().Save();
+
+            Program.server.notifyOps("Saving Complete.");
             Console.WriteLine("Saving Complete.");
         }
 

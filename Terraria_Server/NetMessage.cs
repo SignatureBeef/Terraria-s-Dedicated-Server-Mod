@@ -1,6 +1,9 @@
 using System;
 using System.Text;
+
+using Terraria_Server.Commands;
 using Terraria_Server.Events;
+
 namespace Terraria_Server
 {
 	public class NetMessage
@@ -1587,7 +1590,8 @@ namespace Terraria_Server
 			}
 			if (Main.autoShutdown && !flag)
 			{
-				WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
+                //WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
+                Commands.Commands.SaveAll();
 				NetPlay.disconnect = true;
 			}
 		}

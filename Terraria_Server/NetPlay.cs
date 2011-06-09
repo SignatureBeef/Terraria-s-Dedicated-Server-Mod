@@ -489,7 +489,7 @@ namespace Terraria_Server
 					{
 						NetPlay.serverSock[num].tcpClient = NetPlay.tcpListener.AcceptTcpClient();
 						NetPlay.serverSock[num].tcpClient.NoDelay = true;
-						//Console.WriteLine(NetPlay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
+						Console.WriteLine(NetPlay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
                         Main.player[num].setIPAddress(NetPlay.serverSock[num].tcpClient.Client.RemoteEndPoint.ToString());
 						continue;
 					}

@@ -78,7 +78,7 @@ namespace Terraria_Server
 					return;
 				}
 
-                if(!Program.server.getWhiteList().containsException(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
+                if(Program.properties.isUsingWhiteList() && !Program.server.getWhiteList().containsException(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
                     NetMessage.SendData(2, this.whoAmI, -1, "You are not on the WhiteList.", 0, 0f, 0f, 0f);
 					return;
                 }
