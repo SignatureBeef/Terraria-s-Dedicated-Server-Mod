@@ -58,8 +58,19 @@ namespace Terraria_Server
             return world;
         }
 
-        public void setOpPassword(String Password) {
+        public void setOpPassword(String Password)
+        {
             NetPlay.password = Password;
+        }
+
+        public void setPort(int Port)
+        {
+            NetPlay.serverPort = Port;
+        }
+
+        public void setIP(String IPAddress)
+        {
+            NetPlay.serverSIP = IPAddress;
         }
 
         public void StopServer()

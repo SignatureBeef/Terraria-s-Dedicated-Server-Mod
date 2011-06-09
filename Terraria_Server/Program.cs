@@ -189,6 +189,8 @@ namespace Terraria_Server
 
             server = new Server(properties.getMaxPlayers(), world);
             server.setOpPassword(properties.getOpPassword());
+            server.setPort(properties.getPort());
+            server.setIP(properties.getServerIP());
             server.Initialize();
 
             WorldGen.loadWorld();

@@ -173,6 +173,11 @@ namespace Terraria_Server.Commands
                         Console.WriteLine(sender.getName() + " toggled God Mode to: " + Program.server.getGodMode().ToString());
                         break;
                     }*/
+                case (int)Commands.Command.COMMAND_HELP:
+                    {
+                        Commands.showHelp(sender);
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("Uknown Command Issue.");

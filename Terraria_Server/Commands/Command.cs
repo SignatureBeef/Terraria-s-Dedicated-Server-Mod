@@ -37,10 +37,18 @@ namespace Terraria_Server.Commands
             PLAYER_ME = 4,
             CONSOLE_SAY = 5,
             COMMAND_SAVE_ALL = 6,
-            COMMAND_ALLOW_GOD_MODE = 7,
+            COMMAND_HELP = 7,
         }
 
-        public static string[] CommandDefinition = new string[] { "exit", "reload", "list", "players", "me", "say", "save-all", "god-mode" };
+        public static string[] CommandDefinition = new string[] { "exit", "reload", "list", "players", "me", "say", "save-all", "help" };
+        public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
+                                                                    "Reload Plugins", 
+                                                                    "Show Online Players", 
+                                                                    "Show Online Players", 
+                                                                    "Talk in 3rd Person", 
+                                                                    "Send A Console Message To Online Players", 
+                                                                    "Trigger a World Save", 
+                                                                    "Show this Help" };
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -121,6 +129,24 @@ namespace Terraria_Server.Commands
         public static void setGodMode(bool GodMode)
         {
             Program.server.setGodMode(GodMode);
+        }
+
+        public static void showHelp(Sender sender)
+        {
+            if (sender is Player)
+            {
+                for (int i = 0; i < CommandDefinition.Length; i++)
+                {
+                    ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < CommandDefinition.Length; i++)
+                {
+                    Console.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
+                }
+            }
         }
 
     }
