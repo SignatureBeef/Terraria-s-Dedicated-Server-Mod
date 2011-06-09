@@ -10,14 +10,20 @@ Status
 -------------
 TDSM is currently runnable as a server, You may also find that Developers can also now make plugins for it if they feel so.
 
+How To Use
+-------------
+To use TDSM place the executable in the location you wish, Then run it. It will generate a properties file & start generating a world!
+This properties file contains server properties such as Max Players, Greeting (MOTD) and the port to use.
+
+TDSM has included the use for Operators. To use this feature simply set a password in the server properties and when you log into the server, Enter your password and you ill be set to an OP. This OP can do commands such as /exit & /reload etc.
 
 TODO
 -------------
 * Yet to clean up (Minor)
-* yet to removed un-needed code for client purpose. (Major)
-* yet to test on other OS's
-* yet to add more plugin hooks! (Possibly wanting to organise current Events)
-* yet to rememeber what else!
+* Yet to removed un-needed code for client purpose. (Major)
+* Yet to test on other OS's
+* Yet to add more plugin hooks! (Possibly wanting to organise current Events)
+* Yet to rememeber what else!
 
 Developers
 =============

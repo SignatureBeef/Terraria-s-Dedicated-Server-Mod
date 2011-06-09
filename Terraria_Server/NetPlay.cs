@@ -463,6 +463,7 @@ namespace Terraria_Server
                 {
                 }
                 Statics.serverStarted = false;
+                Statics.IsActive = false;
 			}
 			Main.myPlayer = 0;
 		}

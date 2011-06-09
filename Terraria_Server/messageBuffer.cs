@@ -1171,10 +1171,13 @@ namespace Terraria_Server
 																												pvp = true;
 																											}
 
-																											Main.player[(int)b15].Hurt((int)num50, num49, pvp, true);
+																											//if(
+                                                                                                                Main.player[(int)b15].Hurt((int)num50, num49, pvp, true); // <= 0.0) {
+                                                                                                            //    return;
+                                                                                                            //}
 																											if (Main.netMode == 2)
 																											{
-																												NetMessage.SendData(26, -1, this.whoAmI, "", (int)b15, (float)num49, (float)num50, (float)b16);
+																												//NetMessage.SendData(26, -1, this.whoAmI, "", (int)b15, (float)num49, (float)num50, (float)b16);
 																												return;
 																											}
 																										}

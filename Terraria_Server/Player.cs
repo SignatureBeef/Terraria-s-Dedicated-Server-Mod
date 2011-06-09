@@ -2896,7 +2896,7 @@ namespace Terraria_Server
 		
         public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false)
 		{
-			if (!this.immune && !Main.godMode)
+            if (!this.immune && !Main.godMode)
 			{
 				int num = Damage;
 
@@ -2906,7 +2906,7 @@ namespace Terraria_Server
                 Program.server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, playerEvent);
                 if (playerEvent.getCancelled())
                 {
-                    return 0;
+                    return 0.0;
                 }
 
                 num = playerEvent.getDamage();
@@ -2941,22 +2941,22 @@ namespace Terraria_Server
 					{
 						this.velocity.X = 4.5f * (float)hitDirection;
 						this.velocity.Y = -3.5f;
-					}
-					if (this.boneArmor)
-					{
-						//Main.PlaySound(3, (int)this.position.X, (int)this.position.Y, 2);
-					}
-					else
-					{
-						if (this.hair == 5 || this.hair == 6 || this.hair == 9 || this.hair == 11)
-						{
-							//Main.PlaySound(20, (int)this.position.X, (int)this.position.Y, 1);
-						}
-						else
-						{
-							//Main.PlaySound(1, (int)this.position.X, (int)this.position.Y, 1);
-						}
-					}
+                    }
+                    //if (this.boneArmor)
+                    //{
+                    //    //Main.PlaySound(3, (int)this.position.X, (int)this.position.Y, 2);
+                    //}
+                    //else
+                    //{
+                    //    if (this.hair == 5 || this.hair == 6 || this.hair == 9 || this.hair == 11)
+                    //    {
+                    //        //Main.PlaySound(20, (int)this.position.X, (int)this.position.Y, 1);
+                    //    }
+                    //    else
+                    //    {
+                    //        //Main.PlaySound(1, (int)this.position.X, (int)this.position.Y, 1);
+                    //    }
+                    //}
 					if (this.statLife > 0)
 					{
 						int num4 = 0;
@@ -5073,8 +5073,8 @@ namespace Terraria_Server
 
         public void sendMessage(string Message)
         {
-            NetMessage.SendData(25, this.whoAmi, -1, Message, 255, 255f, 240f, 20f);
+            NetMessage.SendData(25, this.whoAmi, -1, Message, 255, 255f, 0f, 0f);
         }
-
+        
     }
 }

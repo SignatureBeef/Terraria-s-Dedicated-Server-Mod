@@ -147,6 +147,11 @@ namespace Terraria_Server.Plugin
                                     plugin.onTileBreak((TileBreakEvent)Event);
                                     break;
                                 }
+                            case Hooks.PLAYER_HURT:
+                                {
+                                    plugin.onPlayerHurt((PlayerHurtEvent)Event);
+                                    break;
+                                }
 						}
 					}
 				}

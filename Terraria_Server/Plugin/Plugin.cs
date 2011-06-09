@@ -31,7 +31,6 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
         public virtual void onPlayerJoin(LoginEvent Event) { }
         public virtual void onPlayerPreLogin(LoginEvent Event) { }
-        public virtual void onPlayerJoin(LoginEvent Event) { }
         public virtual void onPlayerLogout(LogoutEvent Event) { }
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
         public virtual void onTileBreak(TileBreakEvent Event) { }

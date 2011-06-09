@@ -9,6 +9,7 @@ namespace Terraria_Server.Commands
     {
         //private Server server = null;
         private bool op = false;
+        //private string name = "";
 
         public Server getServer()
         {
@@ -28,6 +29,15 @@ namespace Terraria_Server.Commands
         public bool isOp()
         {
             return op;
+        }
+
+        public string getName()
+        {
+            if (this is Player)
+            {
+                return ((Player)this).name;
+            }
+            return "CONSOLE";
         }
 
     }

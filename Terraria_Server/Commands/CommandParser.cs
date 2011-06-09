@@ -18,29 +18,11 @@ namespace Terraria_Server.Commands
             server = Server;
         }
 
-        /*public bool runCommand(Terraria_Server.Commands.Commands.Command cmd, Sender sender)
-        {
-            switch (cmd)
-            {
-                case Terraria_Server.Commands.Commands.Command.CONSOLE_EXIT:
-                    {
-                        Commands.Exit(sender.getServer());
-                        return true;
-                    }
-                default:
-                    {
-                        break;
-                    }
-            }
-            return false;
-        }*/
-
         public void parseConsoleCommand(string Line, Server server)
         {
             ConsoleSender cSender = new ConsoleSender(server);
             cSender.getConsoleCommand().setMessage(Line);
             cSender.getConsoleCommand().setSender(new Sender());
-            //cSender.getConsoleCommand().getSender().setServer(server);
             server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, cSender.getConsoleCommand());
             if (cSender.getConsoleCommand().getCancelled())
             {
@@ -174,6 +156,23 @@ namespace Terraria_Server.Commands
                         Commands.SaveAll();
                         break;
                     }
+                /*case (int)Commands.Command.COMMAND_ALLOW_GOD_MODE:
+                    {
+                        if (sender is Player)
+                        {
+                            Player player = (Player)sender;
+                            if (!player.isOp())
+                            {
+                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                return;
+                            }
+                        }
+                        Program.server.setGodMode(!Program.server.getGodMode());
+                        Program.server.notifyAll("God Mode is now " + Program.server.getGodMode().ToString());
+                        Program.server.notifyOps("Gode Mod Toggled by " + sender.getName());
+                        Console.WriteLine(sender.getName() + " toggled God Mode to: " + Program.server.getGodMode().ToString());
+                        break;
+                    }*/
                 default:
                     {
                         Console.WriteLine("Uknown Command Issue.");

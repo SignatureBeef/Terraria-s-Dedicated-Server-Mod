@@ -25,6 +25,7 @@ namespace Terraria_Server.Commands
              * 
              * Console Output to In-Game OPs are sent with the Colour: 176-196-222
              * Server Messages: 238-130-238
+             * Player Messages: 255-0-0
              * 
              */
 
@@ -36,9 +37,10 @@ namespace Terraria_Server.Commands
             PLAYER_ME = 4,
             CONSOLE_SAY = 5,
             COMMAND_SAVE_ALL = 6,
+            COMMAND_ALLOW_GOD_MODE = 7,
         }
 
-        public static string[] CommandDefinition = new string[] { "exit", "reload", "list", "players", "me", "say", "save-all" };
+        public static string[] CommandDefinition = new string[] { "exit", "reload", "list", "players", "me", "say", "save-all", "god-mode" };
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -109,6 +111,16 @@ namespace Terraria_Server.Commands
             Program.server.notifyOps("Saving Complete.");
 
             Console.WriteLine("Saving Complete.");
+        }
+
+        public static bool getGodMode()
+        {
+            return Program.server.getGodMode();
+        }
+
+        public static void setGodMode(bool GodMode)
+        {
+            Program.server.setGodMode(GodMode);
         }
 
     }

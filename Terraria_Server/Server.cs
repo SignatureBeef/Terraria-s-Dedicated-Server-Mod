@@ -91,6 +91,16 @@ namespace Terraria_Server
             NetMessage.SendData(25, -1, -1, Message, 255, 238f, 130f, 238f);
         }
 
+        public bool getGodMode()
+        {
+            return Main.godMode;
+        }
+
+        public void setGodMode(bool Status)
+        {
+            Main.godMode = Status;
+        }
+
 
     }
 }

@@ -43,10 +43,6 @@ namespace Terraria_Server
 		public const int maxStarTypes = 5;
 		public const int maxClouds = 100;
 		public const int maxCloudTypes = 4;
-        //public const int maxHair = 17;
-        //public static int curRelease = 4;
-        //public static string versionNumber = "v1.0.3";
-        //public static string versionNumber2 = "v1.0.3";
 		public static bool grabSun = false;
 		public static bool debugMode = false;
 		public static bool godMode = false;
@@ -62,12 +58,7 @@ namespace Terraria_Server
 		public static bool webProtect = false;
 		public static bool showSplash = true;
         public static string defaultIP = "";
-        //private GraphicsDeviceManager graphics;
-        //private SpriteBatch spriteBatch;
         private Process tServer = new Process();
-        //public static MouseState mouseState = Mouse.GetState();
-        //public static MouseState oldMouseState = Mouse.GetState();
-        //public static KeyboardState keyState = Keyboard.GetState();
 		private static bool webAuth = false;
 		public static int updateTime = 0;
 		public static int drawTime = 0;
@@ -118,7 +109,6 @@ namespace Terraria_Server
 		public static int numClouds = Main.cloudLimit;
 		public static float windSpeed = 0f;
 		public static float windSpeedSpeed = 0f;
-        //public static Cloud[] cloud = new Cloud[100];
 		public static bool resetClouds = true;
 		public static int evilTiles;
 		public static int meteorTiles;
@@ -127,118 +117,9 @@ namespace Terraria_Server
 		public static int fadeCounter = 0;
 		[ThreadStatic]
 		public static Random rand;
-        //public static Texture2D[] armorHeadTexture = new Texture2D[15];
-        //public static Texture2D[] armorBodyTexture = new Texture2D[10];
-        //public static Texture2D[] armorArmTexture = new Texture2D[10];
-        //public static Texture2D[] armorLegTexture = new Texture2D[10];
-        //public static Texture2D chainTexture;
-        //public static Texture2D chain2Texture;
-        //public static Texture2D chain3Texture;
-        //public static Texture2D chain4Texture;
-        //public static Texture2D chain5Texture;
-        //public static Texture2D chain6Texture;
-        //public static Texture2D cdTexture;
-        //public static Texture2D boneArmTexture;
-        //public static Texture2D[] itemTexture = new Texture2D[239];
-        //public static Texture2D[] npcTexture = new Texture2D[46];
-        //public static Texture2D[] projectileTexture = new Texture2D[38];
-        //public static Texture2D[] goreTexture = new Texture2D[76];
-        //public static Texture2D cursorTexture;
-        //public static Texture2D dustTexture;
-        //public static Texture2D sunTexture;
-        //public static Texture2D sun2Texture;
-        //public static Texture2D moonTexture;
-        //public static Texture2D[] tileTexture = new Texture2D[80];
-        //public static Texture2D blackTileTexture;
-        //public static Texture2D[] wallTexture = new Texture2D[14];
-        //public static Texture2D[] backgroundTexture = new Texture2D[7];
-        //public static Texture2D[] cloudTexture = new Texture2D[4];
-        //public static Texture2D[] starTexture = new Texture2D[5];
-        //public static Texture2D[] liquidTexture = new Texture2D[2];
-        //public static Texture2D heartTexture;
-        //public static Texture2D manaTexture;
-        //public static Texture2D bubbleTexture;
-        //public static Texture2D[] treeTopTexture = new Texture2D[2];
-        //public static Texture2D shroomCapTexture;
-        //public static Texture2D[] treeBranchTexture = new Texture2D[2];
-        //public static Texture2D inventoryBackTexture;
-        //public static Texture2D logoTexture;
-        //public static Texture2D textBackTexture;
-        //public static Texture2D chatTexture;
-        //public static Texture2D chat2Texture;
-        //public static Texture2D chatBackTexture;
-        //public static Texture2D teamTexture;
-        //public static Texture2D reTexture;
-        //public static Texture2D raTexture;
-        //public static Texture2D splashTexture;
-        //public static Texture2D fadeTexture;
-        //public static Texture2D playerEyeWhitesTexture;
-        //public static Texture2D playerEyesTexture;
-        //public static Texture2D playerHandsTexture;
-        //public static Texture2D playerHands2Texture;
-        //public static Texture2D playerHeadTexture;
-        //public static Texture2D playerPantsTexture;
-        //public static Texture2D playerShirtTexture;
-        //public static Texture2D playerShoesTexture;
-        //public static Texture2D playerBeltTexture;
-        //public static Texture2D playerUnderShirtTexture;
-        //public static Texture2D playerUnderShirt2Texture;
-        //public static Texture2D[] playerHairTexture = new Texture2D[17];
-        //public static SoundEffect[] soundDig = new SoundEffect[3];
-        //public static SoundEffectInstance[] soundInstanceDig = new SoundEffectInstance[3];
-        //public static SoundEffect[] soundTink = new SoundEffect[3];
-        //public static SoundEffectInstance[] soundInstanceTink = new SoundEffectInstance[3];
-        //public static SoundEffect[] soundPlayerHit = new SoundEffect[3];
-        //public static SoundEffectInstance[] soundInstancePlayerHit = new SoundEffectInstance[3];
-        //public static SoundEffect[] soundFemaleHit = new SoundEffect[3];
-        //public static SoundEffectInstance[] soundInstanceFemaleHit = new SoundEffectInstance[3];
-        //public static SoundEffect soundPlayerKilled;
-        //public static SoundEffectInstance soundInstancePlayerKilled;
-        //public static SoundEffect soundGrass;
-        //public static SoundEffectInstance soundInstanceGrass;
-        //public static SoundEffect soundGrab;
-        //public static SoundEffectInstance soundInstanceGrab;
-        //public static SoundEffect[] soundItem = new SoundEffect[17];
-        //public static SoundEffectInstance[] soundInstanceItem = new SoundEffectInstance[17];
-        //public static SoundEffect[] soundNPCHit = new SoundEffect[4];
-        //public static SoundEffectInstance[] soundInstanceNPCHit = new SoundEffectInstance[4];
-        //public static SoundEffect[] soundNPCKilled = new SoundEffect[4];
-        //public static SoundEffectInstance[] soundInstanceNPCKilled = new SoundEffectInstance[4];
-        //public static SoundEffect soundDoorOpen;
-        //public static SoundEffectInstance soundInstanceDoorOpen;
-        //public static SoundEffect soundDoorClosed;
-        //public static SoundEffectInstance soundInstanceDoorClosed;
-        //public static SoundEffect soundMenuOpen;
-        //public static SoundEffectInstance soundInstanceMenuOpen;
-        //public static SoundEffect soundMenuClose;
-        //public static SoundEffectInstance soundInstanceMenuClose;
-        //public static SoundEffect soundMenuTick;
-        //public static SoundEffectInstance soundInstanceMenuTick;
-        //public static SoundEffect soundShatter;
-        //public static SoundEffectInstance soundInstanceShatter;
-        //public static SoundEffect[] soundZombie = new SoundEffect[3];
-        //public static SoundEffectInstance[] soundInstanceZombie = new SoundEffectInstance[3];
-        //public static SoundEffect[] soundRoar = new SoundEffect[2];
-        //public static SoundEffectInstance[] soundInstanceRoar = new SoundEffectInstance[2];
-        //public static SoundEffect[] soundSplash = new SoundEffect[2];
-        //public static SoundEffectInstance[] soundInstanceSplash = new SoundEffectInstance[2];
-        //public static SoundEffect soundDoubleJump;
-        //public static SoundEffectInstance soundInstanceDoubleJump;
-        //public static SoundEffect soundRun;
-        //public static SoundEffectInstance soundInstanceRun;
-        //public static SoundEffect soundCoins;
-        //public static SoundEffectInstance soundInstanceCoins;
-        //public static AudioEngine engine;
-        //public static SoundBank soundBank;
-        //public static WaveBank waveBank;
-        //public static Cue[] music = new Cue[7];
 		public static float[] musicFade = new float[7];
 		public static float musicVolume = 0.75f;
 		public static float soundVolume = 1f;
-        //public static SpriteFont fontItemStack;
-        //public static SpriteFont fontMouseText;
-        //public static SpriteFont fontDeathText;
-        //public static SpriteFont fontCombatText;
 		public static bool[] wallHouse = new bool[14];
 		public static bool[] tileStone = new bool[80];
 		public static bool[] tileWaterDeath = new bool[80];
@@ -256,12 +137,10 @@ namespace Terraria_Server
 		public static bool tilesLoaded = false;
 		public static Tile[,] tile = new Tile[Main.maxTilesX, Main.maxTilesY];
 		public static Dust[] dust = new Dust[2000];
-        //public static Star[] star = new Star[130];
 		public static Item[] item = new Item[201];
 		public static NPC[] npc = new NPC[1001];
 		public static Gore[] gore = new Gore[201];
 		public static Projectile[] projectile = new Projectile[1001];
-        //public static CombatText[] combatText = new CombatText[100];
 		public static Chest[] chest = new Chest[1000];
 		public static Sign[] sign = new Sign[1000];
 		public static Vector2 screenPosition;
@@ -273,7 +152,6 @@ namespace Terraria_Server
 		public static bool chatRelease = false;
 		public static int numChatLines = 7;
 		public static string chatText = "";
-        //public static ChatLine[] chatLine = new ChatLine[Main.numChatLines];
 		public static bool inputTextEnter = false;
 		public static float[] hotbarScale = new float[]
 		{
@@ -297,7 +175,6 @@ namespace Terraria_Server
 		public static int stackCounter = 0;
 		public static int stackDelay = 7;
 		public static Item mouseItem = new Item();
-		private static float inventoryScale = 0.75f;
 		public static bool hasFocus = true;
 		public static Recipe[] recipe = new Recipe[Recipe.maxRecipes];
 		public static int[] availableRecipe = new int[Recipe.maxRecipes];
@@ -317,26 +194,17 @@ namespace Terraria_Server
 		public static int npcShop = 0;
 		public Chest[] shop = new Chest[5];
 		private static Item toolTip = new Item();
-		private static int backSpaceCount = 0;
 		public static string motd = "";
 		public bool toggleFullscreen;
-		private int numDisplayModes;
 		private int[] displayWidth = new int[99];
 		private int[] displayHeight = new int[99];
 		public static bool gameMenu = true;
 		public static Player[] loadPlayer = new Player[5];
 		public static string[] loadPlayerPath = new string[5];
-		private static int numLoadPlayers = 0;
 		public static string playerPathName;
 		public static string[] loadWorld = new string[999];
 		public static string[] loadWorldPath = new string[999];
-		private static int numLoadWorlds = 0;
 		public static string worldPathName;
-        //public static string SavePath = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria";
-        //public static string WorldPath = Main.SavePath + "\\Worlds";
-        //public static string PlayerPath = Main.SavePath + "\\Players";
-        //private static KeyboardState inputText;
-        //private static KeyboardState oldInputText;
 		public static int invasionType = 0;
 		public static double invasionX = 0.0;
 		public static int invasionSize = 0;
@@ -391,8 +259,6 @@ namespace Terraria_Server
 			14, 
 			3
 		};
-		private static bool mouseExit = false;
-		private static float exitScale = 0.8f;
 		public static Player clientPlayer = new Player();
 		public static string getIP = Main.defaultIP;
 		public static string getPort = Convert.ToString(NetPlay.serverPort);
@@ -423,30 +289,13 @@ namespace Terraria_Server
 		public static bool hideUI = false;
 		public static bool releaseUI = false;
 		public static bool fixedTiming = false;
-		private int splashCounter;
 		public static string oldStatusText = "";
 		public static bool autoShutdown = false;
-		private float logoRotation;
-		private float logoRotationDirection = 1f;
-		private float logoRotationSpeed = 1f;
-		private float logoScale = 1f;
-		private float logoScaleDirection = 1f;
-		private float logoScaleSpeed = 1f;
 		private static int maxMenuItems = 11;
 		private float[] menuItemScale = new float[Main.maxMenuItems];
-		private int focusMenu = -1;
-		private int selectedMenu = -1;
-		private int selectedPlayer;
-		private int selectedWorld;
 		public static int menuMode = 0;
-		private int textBlinkerCount;
-		private int textBlinkerState;
 		public static string newWorldName = "";
 		private Color selColor = new Color(255, 255, 255);
-		private int focusColor;
-		private int colorDelay;
-		private int setKey = -1;
-		private int bgScroll;
 		public static bool autoPass = false;
 		
         public void SetNetPlayers(int mPlayers)
@@ -461,7 +310,6 @@ namespace Terraria_Server
 				this.getAuth();
 				while (!Main.webAuth)
 				{
-                    //Statics.Exit();
                     Statics.IsActive = false;
 				}
 			}
@@ -474,26 +322,7 @@ namespace Terraria_Server
 				WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
 			}
 			int num = Main.rand.Next(5);
-            //if (num == 0)
-            //{
-            //    Statics.Window.Title = "Terraria: Dig Peon, Dig!";
-            //}
-            //if (num == 1)
-            //{
-            //    Statics.Window.Title = "Terraria: Epic Dirt";
-            //}
-            //if (num == 2)
-            //{
-            //    Statics.Window.Title = "Terraria: Hey Guys!";
-            //}
-            //if (num == 3)
-            //{
-            //    Statics.Window.Title = "Terraria: Sand is Overpowered";
-            //}
-            //else
-            //{
-            //    Statics.Window.Title = "Terraria: Shut Up and Dig Gaiden!";
-            //}
+
 			Main.tileSolid[0] = true;
 			Main.tileBlockLight[0] = true;
 			Main.tileSolid[1] = true;
@@ -765,62 +594,6 @@ namespace Terraria_Server
 			Main.teamColor[3] = new Color(75, 90, 255);
 			Main.teamColor[4] = new Color(200, 180, 0);
 			NetPlay.Init();
-            //if (Main.skipMenu)
-            //{
-            //    WorldGen.clearWorld();
-            //    Main.gameMenu = false;
-            //    Main.LoadPlayers();
-            //    Main.player[Main.myPlayer] = (Player)Main.loadPlayer[0].Clone();
-            //    Main.PlayerPath = Main.loadPlayerPath[0];
-            //    Main.LoadWorlds();
-            //    WorldGen.generateWorld(-1);
-            //    WorldGen.EveryTileFrame();
-            //    Main.player[Main.myPlayer].Spawn();
-            //}
-            //else
-            //{
-            //    IntPtr systemMenu = Main.GetSystemMenu(Statics.Window.Handle, false);
-            //    int menuItemCount = Main.GetMenuItemCount(systemMenu);
-            //    Main.RemoveMenu(systemMenu, menuItemCount - 1, 1024);
-            //}
-			if (Main.dedServ)
-			{
-				return;
-			}
-            //this.graphics.PreferredBackBufferWidth = Main.screenWidth;
-            //this.graphics.PreferredBackBufferHeight = Main.screenHeight;
-            //this.graphics.ApplyChanges();
-            //Statics.Initialize();
-            //Statics.Window.AllowUserResizing = true;
-            //this.OpenSettings();
-            //Star.SpawnStars();
-            //foreach (DisplayMode current in GraphicsAdapter.DefaultAdapter.SupportedDisplayModes)
-            //{
-            //    if (current.Width >= 800 && current.Height >= 600 && current.Height <= 1200)
-            //    {
-            //        bool flag = true;
-            //        for (int num9 = 0; num9 < this.numDisplayModes; num9++)
-            //        {
-            //            if (current.Width == this.displayWidth[num9] && current.Height == this.displayHeight[num9])
-            //            {
-            //                flag = false;
-            //                break;
-            //            }
-            //        }
-            //        if (flag)
-            //        {
-            //            this.displayHeight[this.numDisplayModes] = current.Height;
-            //            this.displayWidth[this.numDisplayModes] = current.Width;
-            //            this.numDisplayModes++;
-            //        }
-            //    }
-            //}
-            //if (Main.autoJoin)
-            //{
-            //    Main.LoadPlayers();
-            //    Main.menuMode = 1;
-            //    Main.menuMultiplayer = true;
-            //}
 		}
         
         public void Update()
@@ -830,7 +603,6 @@ namespace Terraria_Server
 				if (Statics.IsActive)
 				{
                     Statics.IsFixedTimeStep = false;
-					//this.graphics.SynchronizeWithVerticalRetrace = true;
 				}
 				else
 				{
@@ -841,7 +613,6 @@ namespace Terraria_Server
 			{
                 Statics.IsFixedTimeStep = true;
 			}
-			//this.UpdateMusic();
 			if (!Main.gameMenu && Main.netMode != 2)
 			{
 				Main.saveTimer++;
@@ -867,8 +638,6 @@ namespace Terraria_Server
 				Main.drawTime = 0;
 				if (Main.frameRate == 60)
 				{
-					//Lighting.lightPasses = 2;
-					//Lighting.lightSkip = 0;
 					Main.cloudLimit = 100;
 					Gore.goreTime = 1200;
 				}
@@ -876,8 +645,6 @@ namespace Terraria_Server
 				{
 					if (Main.frameRate >= 58)
 					{
-						//Lighting.lightPasses = 2;
-						//Lighting.lightSkip = 0;
 						Main.cloudLimit = 100;
 						Gore.goreTime = 600;
 					}
@@ -885,8 +652,6 @@ namespace Terraria_Server
 					{
 						if (Main.frameRate >= 43)
 						{
-							//Lighting.lightPasses = 2;
-							//Lighting.lightSkip = 1;
 							Main.cloudLimit = 75;
 							Gore.goreTime = 300;
 						}
@@ -899,15 +664,11 @@ namespace Terraria_Server
 									Liquid.maxLiquid = 3000;
 									Liquid.cycles = 6;
 								}
-								//Lighting.lightPasses = 2;
-								//Lighting.lightSkip = 2;
 								Main.cloudLimit = 50;
 								Gore.goreTime = 180;
 							}
 							else
 							{
-								//Lighting.lightPasses = 2;
-								//Lighting.lightSkip = 4;
 								Main.cloudLimit = 0;
 								Gore.goreTime = 0;
 							}
@@ -969,131 +730,12 @@ namespace Terraria_Server
 			{
 				Main.hasFocus = true;
 			}
-            //if (!Statics.IsActive && Main.netMode == 0)
-            //{
-            //    Statics.IsMouseVisible = true;
-            //    if (Main.netMode != 2 && Main.myPlayer >= 0)
-            //    {
-            //        Main.player[Main.myPlayer].delayUseItem = true;
-            //    }
-            //    Main.mouseLeftRelease = false;
-            //    Main.mouseRightRelease = false;
-            //    if (Main.gameMenu)
-            //    {
-            //        Main.UpdateMenu();
-            //    }
-            //    return;
-            //}
-            //Statics.IsMouseVisible = false;
-            //if (Main.keyState.IsKeyDown(Keys.F10) && !Main.chatMode && !Main.editSign)
-            //{
-            //    if (Main.frameRelease)
-            //    {
-            //        //Main.PlaySound(12, -1, -1, 1);
-            //        if (Main.showFrameRate)
-            //        {
-            //            Main.showFrameRate = false;
-            //        }
-            //        else
-            //        {
-            //            Main.showFrameRate = true;
-            //        }
-            //    }
-            //    Main.frameRelease = false;
-            //}
-            //else
-            //{
-            //    Main.frameRelease = true;
-            //}
-            //if (Main.keyState.IsKeyDown(Keys.F11))
-            //{
-            //    if (Main.releaseUI)
-            //    {
-            //        if (Main.hideUI)
-            //        {
-            //            Main.hideUI = false;
-            //        }
-            //        else
-            //        {
-            //            Main.hideUI = true;
-            //        }
-            //    }
-            //    Main.releaseUI = false;
-            //}
-            //else
-            //{
-            //    Main.releaseUI = true;
-            //}
-            //if ((Main.keyState.IsKeyDown(Keys.LeftAlt) || Main.keyState.IsKeyDown(Keys.RightAlt)) && Main.keyState.IsKeyDown(Keys.Enter))
-            //{
-            //    if (this.toggleFullscreen)
-            //    {
-            //        this.graphics.ToggleFullScreen();
-            //        Main.chatRelease = false;
-            //    }
-            //    this.toggleFullscreen = false;
-            //}
-            //else
-            //{
-            //    this.toggleFullscreen = true;
-            //}
-            //Main.oldMouseState = Main.mouseState;
-            //Main.mouseState = Mouse.GetState();
-            //Main.keyState = Keyboard.GetState();
+            
 			if (Main.editSign)
 			{
 				Main.chatMode = false;
 			}
-            //if (Main.chatMode)
-            //{
-            //    string a = Main.chatText;
-            //    Main.chatText = Main.GetInputText(Main.chatText);
-            //    while (Main.fontMouseText.MeasureString(Main.chatText).X > 470f)
-            //    {
-            //        Main.chatText = Main.chatText.Substring(0, Main.chatText.Length - 1);
-            //    }
-            //    if (a != Main.chatText)
-            //    {
-            //        //Main.PlaySound(12, -1, -1, 1);
-            //    }
-            //    if (Main.inputTextEnter && Main.chatRelease)
-            //    {
-            //        if (Main.chatText != "")
-            //        {
-            //            NetMessage.SendData(25, -1, -1, Main.chatText, Main.myPlayer, 0f, 0f, 0f);
-            //        }
-            //        Main.chatText = "";
-            //        Main.chatMode = false;
-            //        Main.chatRelease = false;
-            //        //Main.PlaySound(11, -1, -1, 1);
-            //    }
-            //}
-            //if (Main.keyState.IsKeyDown(Keys.Enter) && Main.netMode == 1 && !Main.keyState.IsKeyDown(Keys.LeftAlt) && !Main.keyState.IsKeyDown(Keys.RightAlt))
-            //{
-            //    if (Main.chatRelease && !Main.chatMode && !Main.editSign)
-            //    {
-            //        //Main.PlaySound(10, -1, -1, 1);
-            //        Main.chatMode = true;
-            //        Main.chatText = "";
-            //    }
-            //    Main.chatRelease = false;
-            //}
-            //else
-            //{
-            //    Main.chatRelease = true;
-            //}
-            //if (Main.gameMenu)
-            //{
-            //    Main.UpdateMenu();
-            //    if (Main.netMode != 2)
-            //    {
-            //        return;
-            //    }
-            //}
-            //if (Main.debugMode)
-            //{
-            //    Main.UpdateDebug();
-            //}
+            
 			if (Main.netMode == 1)
 			{
 				for (int i = 0; i < 44; i++)
@@ -1356,10 +998,6 @@ namespace Terraria_Server
 					{
 						Main.UpdateServer();
 					}
-                    //if (Main.netMode == 1)
-                    //{
-                    //    Main.UpdateClient();
-                    //}
                     goto IL_D31;
 				}
 				catch
@@ -1380,54 +1018,12 @@ namespace Terraria_Server
 			{
 				Main.UpdateServer();
 			}
-            //if (Main.netMode == 1)
-            //{
-            //    Main.UpdateClient();
-            //    if (this.graphics.PreferredBackBufferHeight == 600)
-            //    {
-            //        this.QuitGame();
-            //    }
-            //    if (this.graphics.PreferredBackBufferWidth == 800)
-            //    {
-            //        this.QuitGame();
-            //    }
-            //}
-            ////IL_C92:
-            //if (Main.ignoreErrors)
-            //{
-            //    try
-            //    {
-            //        for (int num3 = 0; num3 < Main.numChatLines; num3++)
-            //        {
-            //            if (Main.chatLine[num3].showTime > 0)
-            //            {
-            //                Main.chatLine[num3].showTime--;
-            //            }
-            //        }
-            //        goto IL_D31;
-            //    }
-            //    catch
-            //    {
-            //        for (int num4 = 0; num4 < Main.numChatLines; num4++)
-            //        {
-            //            Main.chatLine[num4] = new ChatLine();
-            //        }
-            //        goto IL_D31;
-            //    }
-            //    goto IL_CF8;
-            //}
+            
 			goto IL_CF8;
 			IL_D31:
 			//Statics.Update();
 			return;
 			IL_CF8:
-            //for (int num5 = 0; num5 < Main.numChatLines; num5++)
-            //{
-            //    if (Main.chatLine[num5].showTime > 0)
-            //    {
-            //        Main.chatLine[num5].showTime--;
-            //    }
-            //}
 			goto IL_D31;
 		}
 		private static void UpdateInvasion()
@@ -1512,7 +1108,6 @@ namespace Terraria_Server
 			}
 			if (Main.netMode == 0)
 			{
-				//Main.NewText(text, 175, 75, 255);
 				return;
 			}
 			if (Main.netMode == 2)
