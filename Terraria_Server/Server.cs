@@ -16,11 +16,12 @@ namespace Terraria_Server
         private World world = null;
 
         private DataRegister whiteList = null;
+        private DataRegister banList = null;
         //private DataRegister joinedPlayerList = null;
 
         public Server() { }
 
-        public Server(World World, int PlayerCap, string WhiteList)
+        public Server(World World, int PlayerCap, string WhiteList, string BanList)
         {
             Main.maxNetPlayers = PlayerCap;
             world = World;
@@ -30,6 +31,8 @@ namespace Terraria_Server
             whiteList.Load();
             //joinedPlayerList = new DataRegister(JoinedPlayers);
             //joinedPlayerList.Load();
+            banList = new DataRegister(BanList);
+            banList.Load();
         }
 
         public Player GetPlayerByName(string name)
@@ -60,6 +63,7 @@ namespace Terraria_Server
         {
             return pluginManager;
         }
+        
         public World getWorld()
         {
             return world;
@@ -124,6 +128,11 @@ namespace Terraria_Server
             return whiteList;
         }
 
+        public Player[] getPlayerList()
+        {
+            return Main.player;
+        }
+
         public void setWhiteList(DataRegister WhiteList)
         {
             whiteList = WhiteList;
@@ -138,6 +147,16 @@ namespace Terraria_Server
         {
             joinedPlayerList = JoinedPlayerList;
         }*/
+
+        public DataRegister getBanList()
+        {
+            return banList;
+        }
+
+        public void setBanList(DataRegister BanList)
+        {
+            banList = BanList;
+        }
 
 
     }

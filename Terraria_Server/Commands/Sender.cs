@@ -44,7 +44,7 @@ namespace Terraria_Server.Commands
         {
             if (this is Player)
             {
-                ((Player)this).sendMessage(Message);
+                NetMessage.SendData(25, ((Player)this).whoAmi, -1, Message, 255, 255f, 0f, 0f);
             }
             else
             {

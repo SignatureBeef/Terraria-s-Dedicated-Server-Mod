@@ -72,7 +72,7 @@ namespace Terraria_Server
                     return;
                 }
 
-				if (Main.dedServ && NetPlay.CheckBan(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString()))
+				if (Main.dedServ && Program.server.getBanList().containsException(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]))
 				{
 					NetMessage.SendData(2, this.whoAmI, -1, "You are banned from this Server.", 0, 0f, 0f, 0f);
 					return;

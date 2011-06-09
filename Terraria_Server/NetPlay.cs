@@ -22,56 +22,56 @@ namespace Terraria_Server
 		public static string password = "";
         public static bool ServerUp = false;
         
-        public static void AddBan(int plr)
-        {
-            string text = NetPlay.serverSock[plr].tcpClient.Client.RemoteEndPoint.ToString();
-            string value = text;
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text.Substring(i, 1) == ":")
-                {
-                    value = text.Substring(0, i);
-                }
-            }
-            using (StreamWriter streamWriter = new StreamWriter("banlist.txt", true))
-            {
-                streamWriter.WriteLine("//" + Main.player[plr].name);
-                streamWriter.WriteLine(value);
-            }
-        }
+        //public static void AddBan(int plr)
+        //{
+        //    string text = NetPlay.serverSock[plr].tcpClient.Client.RemoteEndPoint.ToString();
+        //    string value = text;
+        //    for (int i = 0; i < text.Length; i++)
+        //    {
+        //        if (text.Substring(i, 1) == ":")
+        //        {
+        //            value = text.Substring(0, i);
+        //        }
+        //    }
+        //    using (StreamWriter streamWriter = new StreamWriter("banlist.txt", true))
+        //    {
+        //        streamWriter.WriteLine("//" + Main.player[plr].name);
+        //        streamWriter.WriteLine(value);
+        //    }
+        //}
 		
-        public static bool CheckBan(string ip)
-		{
-			try
-			{
-				string b = ip;
-				for (int i = 0; i < ip.Length; i++)
-				{
-					if (ip.Substring(i, 1) == ":")
-					{
-						b = ip.Substring(0, i);
-					}
-				}
-				if (File.Exists("banlist.txt"))
-				{
-					using (StreamReader streamReader = new StreamReader("banlist.txt"))
-					{
-						string a;
-						while ((a = streamReader.ReadLine()) != null)
-						{
-							if (a == b)
-							{
-								return true;
-							}
-						}
-					}
-				}
-			}
-			catch
-			{
-			}
-			return false;
-		}
+        //public static bool CheckBan(string ip)
+        //{
+        //    try
+        //    {
+        //        string b = ip;
+        //        for (int i = 0; i < ip.Length; i++)
+        //        {
+        //            if (ip.Substring(i, 1) == ":")
+        //            {
+        //                b = ip.Substring(0, i);
+        //            }
+        //        }
+        //        if (File.Exists("banlist.txt"))
+        //        {
+        //            using (StreamReader streamReader = new StreamReader("banlist.txt"))
+        //            {
+        //                string a;
+        //                while ((a = streamReader.ReadLine()) != null)
+        //                {
+        //                    if (a == b)
+        //                    {
+        //                        return true;
+        //                    }
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch
+        //    {
+        //    }
+        //    return false;
+        //}
 		
         public static void ClientLoop(object threadContext)
 		{
@@ -374,6 +374,7 @@ namespace Terraria_Server
 										NetPlay.serverSock[k].name, 
 										" is connecting..."
 									});
+
 								}
 								else
 								{
@@ -488,7 +489,8 @@ namespace Terraria_Server
 					{
 						NetPlay.serverSock[num].tcpClient = NetPlay.tcpListener.AcceptTcpClient();
 						NetPlay.serverSock[num].tcpClient.NoDelay = true;
-						Console.WriteLine(NetPlay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
+						//Console.WriteLine(NetPlay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
+                        Main.player[num].setIPAddress(NetPlay.serverSock[num].tcpClient.Client.RemoteEndPoint.ToString());
 						continue;
 					}
 					catch (Exception arg_81_0)

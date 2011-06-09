@@ -72,6 +72,7 @@ namespace Terraria_Server
             }
             createFile(Statics.getDataPath + Statics.systemSeperator + "whitelist.txt");
             //createFile(Statics.getDataPath + Statics.systemSeperator + "joinedplayers.txt");
+            createFile(Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
             return true;
         }
 
@@ -201,7 +202,9 @@ namespace Terraria_Server
             World world = new World(worldXtiles, worldYtiles);
             world.setSavePath(worldFile);
 
-            server = new Server(world, properties.getMaxPlayers(), Statics.getDataPath + Statics.systemSeperator + "whitelist.txt");
+            server = new Server(world, properties.getMaxPlayers(), 
+                Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
+                Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
             server.setOpPassword(properties.getOpPassword());
             server.setPort(properties.getPort());
             server.setIP(properties.getServerIP());

@@ -1026,7 +1026,8 @@ namespace Terraria_Server
 			IL_CF8:
 			goto IL_D31;
 		}
-		private static void UpdateInvasion()
+		
+        private static void UpdateInvasion()
 		{
 			if (Main.invasionType > 0)
 			{
@@ -1077,7 +1078,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		private static void InvasionWarning()
+		
+        private static void InvasionWarning()
 		{
 			if (Main.invasionType == 0)
 			{
@@ -1115,7 +1117,8 @@ namespace Terraria_Server
 				NetMessage.SendData(25, -1, -1, text, 255, 175f, 75f, 255f);
 			}
 		}
-		private static void StartInvasion()
+		
+        private static void StartInvasion()
 		{
 			if (!WorldGen.shadowOrbSmashed)
 			{
@@ -1523,7 +1526,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static double CalculateDamage(int Damage, int Defense)
+		
+        public static double CalculateDamage(int Damage, int Defense)
 		{
 			double num = (double)Damage - (double)Defense * 0.5;
 			if (num < 1.0)

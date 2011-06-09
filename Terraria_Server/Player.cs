@@ -5,11 +5,14 @@ using System.Text;
 using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
+using System.Net;
 
 namespace Terraria_Server
 {
 	public class Player : Sender
 	{
+        private string ipAddress = null;
+
 		public bool pvpDeath;
 		public bool zoneDungeon;
 		public bool zoneEvil;
@@ -4783,10 +4786,32 @@ namespace Terraria_Server
 			}
 		}
 
-        public void sendMessage(string Message)
+        public ServerSock getSocket()
         {
-            NetMessage.SendData(25, this.whoAmi, -1, Message, 255, 255f, 0f, 0f);
+            return NetPlay.serverSock[this.whoAmi];
         }
-        
+
+        public void Kick(string Reason = null)
+        {
+            string message = "You have been Kicked from this Server.";
+
+            if (Reason != null)
+            {
+                message = Reason;
+            }
+
+            NetMessage.SendData(2, this.whoAmi, -1, message, 0, 0f, 0f, 0f);
+        }
+
+        public string getIPAddress()
+        {
+            return ipAddress;
+        }
+
+        public void setIPAddress(string IPaddress)
+        {
+            ipAddress = IPaddress;
+        }
+
     }
 }

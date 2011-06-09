@@ -39,9 +39,14 @@ namespace Terraria_Server.Commands
             COMMAND_SAVE_ALL = 6,
             COMMAND_HELP = 7,
             COMMAND_WHITELIST = 8,
+            COMMAND_BAN = 9,
+            COMMAND_UNBAN = 10,
         }
 
-        public static string[] CommandDefinition = new string[] { "exit", "reload", "list", "players", "me", "say", "save-all", "help", "whitelist" };
+        public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
+                                                                    "players",      "me",           "say",          
+                                                                    "save-all",     "help",         "whitelist",
+                                                                    "ban",          "unban" };
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
                                                                     "Reload Plugins", 
                                                                     "Show Online Players", 
@@ -50,7 +55,9 @@ namespace Terraria_Server.Commands
                                                                     "Send A Console Message To Online Players", 
                                                                     "Trigger a World Save", 
                                                                     "Show this Help", 
-                                                                    "add:remove to the whitelist" };
+                                                                    "add:remove to the whitelist", 
+                                                                    "Ban a Player", 
+                                                                    "Un-Ban a Player" };
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -202,8 +209,92 @@ namespace Terraria_Server.Commands
                     return;
                 }
             }
-            ERROR:
+        ERROR:
             sender.sendMessage("Command args Error!");
+        }
+
+        public static void BanList(Sender sender, string[] commands)
+        {
+            // /ban  <player>
+            // /unban <player>
+
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (commands != null && commands.Length > 1)
+            {
+                if (commands[0] != null && commands[1].Length > 0)
+                {
+                    int caseType = -1;
+
+                    if (commands[0].Trim().ToLower().Equals("ban"))
+                    {
+                        caseType = 0;
+                    }
+                    else if (commands[0].Trim().ToLower().Equals("unban"))
+                    {
+                        caseType = 1;
+                    }
+
+                    switch (caseType)
+                    {
+                        case 0:
+                            {
+                                Program.server.getBanList().addException(commands[1]);
+
+                                //We now should check to make sure they are off the server...
+                                Player banee = Program.server.GetPlayerByName(commands[1]);
+
+                                if (banee == null)
+                                {
+                                    foreach (Player player in Program.server.getPlayerList())
+                                    {
+                                        if (NetPlay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint.ToString()
+                                            .Split(':')[0].Equals(commands[1]))
+                                        {
+                                            banee = player;
+                                        }
+                                    }
+                                }
+
+                                if (banee != null)
+                                {
+                                    banee.Kick("You have been banned from this Server.");
+                                }
+                                break;
+                            }
+                        case 1:
+                            {
+                                Program.server.getBanList().removeException(commands[1]);
+                                break;
+                            }
+                        default:
+                            {
+                                goto ERROR;
+                            }
+
+                    }
+
+                    string Message = sender.getName() + " used Ban command case " + caseType + " for: " + commands[1];
+                    Program.server.notifyOps(Message);
+                    sender.sendMessage(Message);
+
+                    if (!Program.server.getWhiteList().Save())
+                    {
+                        Program.server.notifyOps("BanList Failed to Save due to " + sender.getName() + "'s command");
+                    }
+                    return;
+                }
+            }
+        ERROR:
+            sender.sendMessage("Command Error!");
         }
 
     }
