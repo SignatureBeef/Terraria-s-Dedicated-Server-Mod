@@ -6,6 +6,8 @@ Aims to provide a stable Server + API and compatibility with Mono.
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
 
 * Jump on over to the Forums at: http://www.tdsm.org/
+* Temp forums at http://Olympus-Gaming.net/tdsm
+* On a side Note i have jsut recovered from a computer crash so i'm still installing software with also being capped from doing so -_- if any other devs can help out, it WILL be greatly appreciated.
 
 
 Status

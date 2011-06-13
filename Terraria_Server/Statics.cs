@@ -51,8 +51,8 @@ namespace Terraria_Server
 
         public static string systemSeperator = "\\";
 
-        public static int currentRelease = 4;
-        public static string versionNumber = "v1.0.3";
+        public static int currentRelease = 9;
+        public static string versionNumber = "v1.0.4";
         /*
          * @netMode
          * 
