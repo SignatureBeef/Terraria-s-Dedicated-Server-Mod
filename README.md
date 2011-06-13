@@ -7,7 +7,7 @@ If you like TDSM or want to help support us, we simply ask you to tell your frie
 
 * Jump on over to the Forums at: http://www.tdsm.org/
 * Temp forums at http://Olympus-Gaming.net/tdsm
-* On a side Note i have jsut recovered from a computer crash so i'm still installing software with also being capped from doing so -_- if any other devs can help out, it WILL be greatly appreciated.
+* On a side Note I have just recovered from a computer crash so I'm still installing software with also being capped from doing so -_- if any other devs can help out, it WILL be greatly appreciated.
 
 
 Status
