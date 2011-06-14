@@ -25,6 +25,7 @@ namespace Terraria_Server
             setOpPassword(getOpPassword());
             setSeed(getSeed());
             setMapSize(getMapSize());
+            setNPCDoorOpenCancel(isNPCDoorOpenCancelled());
             setUsingCutomTiles(isUsingCutomTiles());
             setMaxTilesX(getMaxTilesX());
             setMaxTilesY(getMaxTilesY());
@@ -315,5 +316,22 @@ namespace Terraria_Server
             base.setValue("whitelist", WhiteList.ToString());
         }
 
+        public bool isNPCDoorOpenCancelled()
+        {
+            string WhiteList = base.getValue("npc-opendoor");
+            if (WhiteList == null || WhiteList.Trim().Length < 0)
+            {
+                return false;
+            }
+            else
+            {
+                return Boolean.Parse(WhiteList);
+            }
+        }
+
+        public void setNPCDoorOpenCancel(bool NPCDoorOpen)
+        {
+            base.setValue("npc-opendoor", NPCDoorOpen.ToString());
+        }
     }
 }

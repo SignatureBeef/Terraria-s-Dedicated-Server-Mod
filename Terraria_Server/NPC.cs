@@ -3244,6 +3244,10 @@ namespace Terraria_Server
                                                             {
                                                                 if (Main.netMode != 1)
                                                                 {
+                                                                    if (Program.properties.isNPCDoorOpenCancelled())
+                                                                    {
+                                                                        return;
+                                                                    }
                                                                     bool flag4 = WorldGen.OpenDoor(num3, num4 - 2, this.direction);
                                                                     if (flag4)
                                                                     {

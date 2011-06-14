@@ -226,6 +226,10 @@ namespace Terraria_Server
 								NetMessage.SendData(2, this.whoAmI, -1, string2 + " is already on this server.", 0, 0f, 0f, 0f);
 								return;
 							}
+                            if (string2.Length > 20)
+                            {
+                                NetMessage.SendData(2, this.whoAmI, -1, "Name is too long.", 0, 0f, 0f, 0f);
+                            }
 							NetPlay.serverSock[this.whoAmI].oldName = string2;
 							NetPlay.serverSock[this.whoAmI].name = string2;
 							NetMessage.SendData(4, -1, this.whoAmI, string2, num3, 0f, 0f, 0f);
