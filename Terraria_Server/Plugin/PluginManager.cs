@@ -158,14 +158,14 @@ namespace Terraria_Server.Plugin
                                     break;
                                 }
                         }
-					}
-				}
-				catch (Exception exception)
+                    }
+                }
+                catch (Exception exception)
                 {
                     Console.WriteLine("Error Passing Event " + Hook.ToString() + " to " + plugin.Name);
-					Console.WriteLine(exception.ToString());
-				}
-			}
+                    Console.WriteLine(exception.ToString());
+                }
+            }
         }
     }
 }
