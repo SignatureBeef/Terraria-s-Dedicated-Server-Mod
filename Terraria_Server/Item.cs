@@ -4857,7 +4857,7 @@ namespace Terraria_Server
                         if (this.wet)
                         {
                             this.wet = false;
-                            bool flag3 = 0 == 0;
+                            //bool flag3 = 0 == 0;
                         }
                     }
                     if (!this.wet)

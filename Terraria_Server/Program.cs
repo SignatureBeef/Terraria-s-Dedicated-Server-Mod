@@ -87,12 +87,19 @@ namespace Terraria_Server
         static int preserve = 0;
         public static void printData(string dataText)
         {
-            for (int i_ = 0; i_ < preserve; i_++)
+            if (Statics.platform > 0)
             {
-                Console.Write("\b");
+                Console.WriteLine(dataText);
             }
-            Console.Write(dataText);
-            preserve = dataText.Length;
+            else
+            {
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                Console.Write(dataText);
+                preserve = dataText.Length;
+            }
         }
 
         public static string mergeStrArray(string[] Array)
@@ -121,6 +128,7 @@ namespace Terraria_Server
             {
                 Console.WriteLine("Detected Linux OS.");
                 Statics.systemSeperator = "/";
+                Statics.platform = 1;
             } //if mac...erm i've never used it, Google later?
 
             Console.WriteLine("Setting up Paths.");

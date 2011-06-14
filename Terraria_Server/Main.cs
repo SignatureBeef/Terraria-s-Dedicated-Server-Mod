@@ -10,6 +10,7 @@ namespace Terraria_Server
 {
 	public class Main
 	{
+        public static int alwaysSpawn = 0;
 		private const int MF_BYPOSITION = 1024;
 		public const int sectionWidth = 200;
 		public const int sectionHeight = 150;
@@ -18,15 +19,15 @@ namespace Terraria_Server
 		public const int maxBackgrounds = 7;
 		public const int maxDust = 2000;
 		public const int maxCombatText = 100;
-		public const int maxPlayers = 255;
+		public const int maxPlayers = 265;
 		public const int maxChests = 1000;
-		public const int maxItemTypes = 239;
+        public const int maxItemTypes = 265;
 		public const int maxItems = 200;
-		public const int maxProjectileTypes = 38;
+		public const int maxProjectileTypes = 39;
 		public const int maxProjectiles = 1000;
-		public const int maxNPCTypes = 46;
+		public const int maxNPCTypes = 59;
 		public const int maxNPCs = 1000;
-		public const int maxGoreTypes = 76;
+		public const int maxGoreTypes = 86;
 		public const int maxGore = 200;
 		public const int maxInventory = 44;
 		public const int maxItemSounds = 16;
@@ -34,9 +35,9 @@ namespace Terraria_Server
 		public const int maxNPCKilledSounds = 3;
 		public const int maxLiquidTypes = 2;
 		public const int maxMusic = 7;
-		public const int numArmorHead = 15;
-		public const int numArmorBody = 10;
-		public const int numArmorLegs = 10;
+        public const int numArmorHead = 27;
+		public const int numArmorBody = 16;
+		public const int numArmorLegs = 15;
 		public const double dayLength = 54000.0;
 		public const double nightLength = 32400.0;
 		public const int maxStars = 130;
@@ -210,55 +211,68 @@ namespace Terraria_Server
 		public static int invasionSize = 0;
 		public static int invasionDelay = 0;
 		public static int invasionWarn = 0;
-		public static int[] npcFrameCount = new int[]
-		{
-			1, 
-			2, 
-			2, 
-			3, 
-			6, 
-			2, 
-			2, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			1, 
-			2, 
-			16, 
-			14, 
-			16, 
-			14, 
-			14, 
-			16, 
-			2, 
-			10, 
-			1, 
-			16, 
-			16, 
-			16, 
-			3, 
-			1, 
-			14, 
-			3, 
-			1, 
-			3, 
-			1, 
-			1, 
-			16, 
-			16, 
-			1, 
-			1, 
-			1, 
-			3, 
-			3, 
-			14, 
-			3
-		};
+        public static int[] npcFrameCount = new int[]
+{
+	1, 
+	2, 
+	2, 
+	3, 
+	6, 
+	2, 
+	2, 
+	1, 
+	1, 
+	1, 
+	1, 
+	1, 
+	1, 
+	1, 
+	1, 
+	1, 
+	2, 
+	16, 
+	14, 
+	16, 
+	14, 
+	15, 
+	16, 
+	2, 
+	10, 
+	1, 
+	16, 
+	16, 
+	16, 
+	3, 
+	1, 
+	15, 
+	3, 
+	1, 
+	3, 
+	1, 
+	1, 
+	16, 
+	16, 
+	1, 
+	1, 
+	1, 
+	3, 
+	3, 
+	15, 
+	3, 
+	7, 
+	7, 
+	4, 
+	5, 
+	5, 
+	5, 
+	3, 
+	3, 
+	16, 
+	6, 
+	3, 
+	6, 
+	6
+};
 		public static Player clientPlayer = new Player();
 		public static string getIP = Main.defaultIP;
 		public static string getPort = Convert.ToString(NetPlay.serverPort);
