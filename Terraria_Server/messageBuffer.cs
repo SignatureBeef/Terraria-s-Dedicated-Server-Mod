@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
+
 namespace Terraria_Server
 {
 	public class messageBuffer
@@ -233,38 +234,39 @@ namespace Terraria_Server
 					}
 					else
 					{
-						if (b == 5)
-						{
-							int num4 = (int)this.readBuffer[start + 1];
-							if (Main.netMode == 2)
-							{
-								num4 = this.whoAmI;
-							}
-							if (num4 == Main.myPlayer)
-							{
-								return;
-							}
-							int num5 = (int)this.readBuffer[start + 2];
-							int stack = (int)this.readBuffer[start + 3];
-							string string3 = Encoding.ASCII.GetString(this.readBuffer, start + 4, length - 4);
-							if (num5 < 44)
-							{
-								Main.player[num4].inventory[num5] = new Item();
-								Main.player[num4].inventory[num5].SetDefaults(string3);
-								Main.player[num4].inventory[num5].stack = stack;
-							}
-							else
-							{
-								Main.player[num4].armor[num5 - 44] = new Item();
-								Main.player[num4].armor[num5 - 44].SetDefaults(string3);
-								Main.player[num4].armor[num5 - 44].stack = stack;
-							}
-							if (Main.netMode == 2 && num4 == this.whoAmI)
-							{
-								NetMessage.SendData(5, -1, this.whoAmI, string3, num4, (float)num5, 0f, 0f);
-								return;
-							}
-						}
+                        if (b == 5)
+                        {
+                            int num2 = (int)this.readBuffer[start + 1];
+                            if (Main.netMode == 2)
+                            {
+                                num2 = this.whoAmI;
+                            }
+                            if (num2 != Main.myPlayer)
+                            {
+                                lock (Main.player[num2])
+                                {
+                                    int num3 = (int)this.readBuffer[start + 2];
+                                    int stack = (int)this.readBuffer[start + 3];
+                                    string string3 = Encoding.ASCII.GetString(this.readBuffer, start + 4, length - 4);
+                                    if (num3 < 44)
+                                    {
+                                        Main.player[num2].inventory[num3] = new Item();
+                                        Main.player[num2].inventory[num3].SetDefaults(string3);
+                                        Main.player[num2].inventory[num3].stack = stack;
+                                    }
+                                    else
+                                    {
+                                        Main.player[num2].armor[num3 - 44] = new Item();
+                                        Main.player[num2].armor[num3 - 44].SetDefaults(string3);
+                                        Main.player[num2].armor[num3 - 44].stack = stack;
+                                    }
+                                    if (Main.netMode == 2 && num2 == this.whoAmI)
+                                    {
+                                        NetMessage.SendData(5, -1, this.whoAmI, string3, num2, (float)num3, 0f, 0f);
+                                    }
+                                }
+                            }
+                        }
 						else
 						{
 							if (b == 6)

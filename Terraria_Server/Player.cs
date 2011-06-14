@@ -38,7 +38,7 @@ namespace Terraria_Server
 		public bool mouseInterface;
 		public int changeItem = -1;
 		public int selectedItem;
-		public Item[] armor = new Item[8];
+		public Item[] armor = new Item[11];
 		public int itemAnimation;
 		public int itemAnimationMax;
 		public int itemTime;
