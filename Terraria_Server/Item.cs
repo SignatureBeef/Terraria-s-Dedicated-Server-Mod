@@ -70,6 +70,7 @@ namespace Terraria_Server
         public bool social = false;
         public bool vanity = false;
         public bool material = false;
+        
         public void SetDefaults(string ItemName)
         {
             this.name = "";
@@ -326,6 +327,7 @@ namespace Terraria_Server
                 this.name = ItemName;
             }
         }
+        
         public bool checkMat()
         {
             bool result;
@@ -355,6 +357,7 @@ namespace Terraria_Server
             }
             return result;
         }
+        
         public void SetDefaults(int Type)
         {
             if (Main.netMode == 1 || Main.netMode == 2)
@@ -4653,6 +4656,7 @@ namespace Terraria_Server
             }
             this.checkMat();
         }
+        
         public static string VersionName(string oldName, int release)
         {
             string result = oldName;
@@ -4679,6 +4683,7 @@ namespace Terraria_Server
             }
             return result;
         }
+        
         public Color GetAlpha(Color newColor)
         {
             int r = (int)newColor.R - this.alpha;
@@ -4704,6 +4709,7 @@ namespace Terraria_Server
             }
             return result;
         }
+        
         public Color GetColor(Color newColor)
         {
             int num = (int)(this.color.R - (255 - newColor.R));
@@ -4744,6 +4750,7 @@ namespace Terraria_Server
             }
             return new Color(num, num2, num3, num4);
         }
+        
         public void UpdateItem(int i)
         {
             if (this.active)
@@ -4989,6 +4996,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static int NewItem(int X, int Y, int Width, int Height, int Type, int Stack = 1, bool noBroadcast = false)
         {
             int result;
@@ -5049,6 +5057,7 @@ namespace Terraria_Server
             }
             return result;
         }
+        
         public void FindOwner(int whoAmI)
         {
             if (this.keepTime <= 0)
@@ -5087,14 +5096,17 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public object Clone()
         {
             return base.MemberwiseClone();
         }
+        
         public bool IsTheSameAs(Item compareItem)
         {
             return this.name == compareItem.name;
         }
+        
         public bool IsNotTheSameAs(Item compareItem)
         {
             return this.name != compareItem.name || this.stack != compareItem.stack;
