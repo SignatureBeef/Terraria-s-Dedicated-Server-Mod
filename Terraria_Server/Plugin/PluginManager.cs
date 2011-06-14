@@ -105,59 +105,59 @@ namespace Terraria_Server.Plugin
 				{
                     if (plugin.containsHook(Hook))
 					{
-						switch (Hook)
-						{
-							case Hooks.CONSOLE_COMMAND:
-								{
-									plugin.onPlayerCommandProcess((ConsoleCommandEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_COMMAND:
-								{
-									plugin.onPlayerCommand((PlayerCommandEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_CHAT:
-								{
-									plugin.onPlayerChat((PlayerChatEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_PRELOGIN:
-								{
-									plugin.onPlayerPreLogin((LoginEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_LOGIN:
-								{
-									plugin.onPlayerJoin((LoginEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_LOGOUT:
-								{
-									plugin.onPlayerLogout((LogoutEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_PARTYCHANGE:
-								{
-									plugin.onPlayerPartyChange((PartyChangeEvent)Event);
-									break;
-								}
-							case Hooks.TILE_BREAK:
-								{
-									plugin.onTileBreak((TileBreakEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_HURT:
-								{
-									plugin.onPlayerHurt((PlayerHurtEvent)Event);
-									break;
-								}
-							case Hooks.PLAYER_CHEST:
-								{
-									plugin.onPlayerOpenChest((ChestOpenEvent)Event);
-									break;
-								}
-						}
+                        switch (Hook)
+                        {
+                            case Hooks.CONSOLE_COMMAND:
+                                {
+                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_COMMAND:
+                                {
+                                    plugin.onPlayerCommand((PlayerCommandEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_CHAT:
+                                {
+                                    plugin.onPlayerChat((PlayerChatEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_PRELOGIN:
+                                {
+                                    plugin.onPlayerPreLogin((LoginEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_LOGIN:
+                                {
+                                    plugin.onPlayerJoin((LoginEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_LOGOUT:
+                                {
+                                    plugin.onPlayerLogout((LogoutEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_PARTYCHANGE:
+                                {
+                                    plugin.onPlayerPartyChange((PartyChangeEvent)Event);
+                                    break;
+                                }
+                            case Hooks.TILE_BREAK:
+                                {
+                                    plugin.onTileBreak((TileBreakEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_HURT:
+                                {
+                                    plugin.onPlayerHurt((PlayerHurtEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_CHEST:
+                                {
+                                    plugin.onPlayerOpenChest((ChestOpenEvent)Event);
+                                    break;
+                                }
+                        }
 					}
 				}
 				catch (Exception exception)
