@@ -9,6 +9,7 @@ namespace Terraria_Server.Events
     {
         private Tile tile = null;
         private int type;
+    	private Vector2 pos;
 
         public Player getPlayer()
         {
@@ -34,7 +35,14 @@ namespace Terraria_Server.Events
         {
             type = TileType;
         }
-
+		public Vector2 getTilePos()
+		{
+			return pos;
+		}
+		public void setTilePos(Vector2 Pos)
+		{
+			pos = Pos;
+		}
     }
 }
 

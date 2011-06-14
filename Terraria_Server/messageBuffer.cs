@@ -730,6 +730,7 @@ namespace Terraria_Server
                                                                             Event.setSender(Main.player[this.whoAmI]);
                                                                             Event.setTile(tile);
                                                                             Event.setTileType(b5);
+																			Event.setTilePos(new Vector2(num26,num27));
                                                                             Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, Event);
                                                                             if (Event.getCancelled())
                                                                             {
@@ -1351,6 +1352,11 @@ namespace Terraria_Server
 																																	int y7 = BitConverter.ToInt32(this.readBuffer, num);
 																																	num += 4;
 																																	int num63 = Chest.FindChest(x8, y7);
+																																	var Event = new ChestOpenEvent();
+																																	Event.setSender(Main.player[whoAmI]);
+																																	Event.setChestID(num63);
+																																	Program.server.getPluginManager().processHook(Hooks.PLAYER_CHEST, Event);
+																																	if (Event.getCancelled()) return;
 																																	if (num63 > -1 && Chest.UsingChest(num63) == -1)
 																																	{
 																																		for (int num64 = 0; num64 < Chest.maxItems; num64++)
