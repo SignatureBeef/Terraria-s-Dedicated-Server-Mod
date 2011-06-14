@@ -4723,6 +4723,7 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine();
             Program.printData("Adding gems...");
             for (i = 63; i <= 68; i++)
             {
@@ -5411,881 +5412,904 @@ namespace Terraria_Server
             WorldGen.gen = false;
         }
 
+        public static bool GrowEpicTree(int i, int y)
+        {
+            int num = y;
+            while (Main.tile[i, num].type == 20)
+            {
+                num++;
+            }
+            bool result;
+            if (Main.tile[i, num].active)
+            {
+                if (Main.tile[i, num].type == 2 && Main.tile[i, num - 1].wall == 0 && Main.tile[i, num - 1].liquid == 0)
+                {
+                    if (Main.tile[i - 1, num].active && Main.tile[i - 1, num].type == 2 && Main.tile[i + 1, num].active && Main.tile[i + 1, num].type == 2)
+                    {
+                        int num2 = 2;
+                        if (WorldGen.EmptyTileCheck(i - num2, i + num2, num - 55, num - 1, 20))
+                        {
+                            bool flag = false;
+                            bool flag2 = false;
+                            int num3 = WorldGen.genRand.Next(20, 30);
+                            int num4;
+                            for (int j = num - num3; j < num; j++)
+                            {
+                                Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
+                                Main.tile[i, j].active = true;
+                                Main.tile[i, j].type = 5;
+                                num4 = WorldGen.genRand.Next(3);
+                                int num5 = WorldGen.genRand.Next(10);
+                                if (j == num - 1 || j == num - num3)
+                                {
+                                    num5 = 0;
+                                }
+                                while (((num5 == 5 || num5 == 7) && flag) || ((num5 == 6 || num5 == 7) && flag2))
+                                {
+                                    num5 = WorldGen.genRand.Next(10);
+                                }
+                                flag = false;
+                                flag2 = false;
+                                if (num5 == 5 || num5 == 7)
+                                {
+                                    flag = true;
+                                }
+                                if (num5 == 6 || num5 == 7)
+                                {
+                                    flag2 = true;
+                                }
+                                if (num5 == 1)
+                                {
+                                    if (num4 == 0)
+                                    {
+                                        Main.tile[i, j].frameX = 0;
+                                        Main.tile[i, j].frameY = 66;
+                                    }
+                                    if (num4 == 1)
+                                    {
+                                        Main.tile[i, j].frameX = 0;
+                                        Main.tile[i, j].frameY = 88;
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.tile[i, j].frameX = 0;
+                                        Main.tile[i, j].frameY = 110;
+                                    }
+                                }
+                                else
+                                {
+                                    if (num5 == 2)
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i, j].frameX = 22;
+                                            Main.tile[i, j].frameY = 0;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i, j].frameX = 22;
+                                            Main.tile[i, j].frameY = 22;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i, j].frameX = 22;
+                                            Main.tile[i, j].frameY = 44;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (num5 == 3)
+                                        {
+                                            if (num4 == 0)
+                                            {
+                                                Main.tile[i, j].frameX = 44;
+                                                Main.tile[i, j].frameY = 66;
+                                            }
+                                            if (num4 == 1)
+                                            {
+                                                Main.tile[i, j].frameX = 44;
+                                                Main.tile[i, j].frameY = 88;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i, j].frameX = 44;
+                                                Main.tile[i, j].frameY = 110;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (num5 == 4)
+                                            {
+                                                if (num4 == 0)
+                                                {
+                                                    Main.tile[i, j].frameX = 22;
+                                                    Main.tile[i, j].frameY = 66;
+                                                }
+                                                if (num4 == 1)
+                                                {
+                                                    Main.tile[i, j].frameX = 22;
+                                                    Main.tile[i, j].frameY = 88;
+                                                }
+                                                if (num4 == 2)
+                                                {
+                                                    Main.tile[i, j].frameX = 22;
+                                                    Main.tile[i, j].frameY = 110;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (num5 == 5)
+                                                {
+                                                    if (num4 == 0)
+                                                    {
+                                                        Main.tile[i, j].frameX = 88;
+                                                        Main.tile[i, j].frameY = 0;
+                                                    }
+                                                    if (num4 == 1)
+                                                    {
+                                                        Main.tile[i, j].frameX = 88;
+                                                        Main.tile[i, j].frameY = 22;
+                                                    }
+                                                    if (num4 == 2)
+                                                    {
+                                                        Main.tile[i, j].frameX = 88;
+                                                        Main.tile[i, j].frameY = 44;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (num5 == 6)
+                                                    {
+                                                        if (num4 == 0)
+                                                        {
+                                                            Main.tile[i, j].frameX = 66;
+                                                            Main.tile[i, j].frameY = 66;
+                                                        }
+                                                        if (num4 == 1)
+                                                        {
+                                                            Main.tile[i, j].frameX = 66;
+                                                            Main.tile[i, j].frameY = 88;
+                                                        }
+                                                        if (num4 == 2)
+                                                        {
+                                                            Main.tile[i, j].frameX = 66;
+                                                            Main.tile[i, j].frameY = 110;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (num5 == 7)
+                                                        {
+                                                            if (num4 == 0)
+                                                            {
+                                                                Main.tile[i, j].frameX = 110;
+                                                                Main.tile[i, j].frameY = 66;
+                                                            }
+                                                            if (num4 == 1)
+                                                            {
+                                                                Main.tile[i, j].frameX = 110;
+                                                                Main.tile[i, j].frameY = 88;
+                                                            }
+                                                            if (num4 == 2)
+                                                            {
+                                                                Main.tile[i, j].frameX = 110;
+                                                                Main.tile[i, j].frameY = 110;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (num4 == 0)
+                                                            {
+                                                                Main.tile[i, j].frameX = 0;
+                                                                Main.tile[i, j].frameY = 0;
+                                                            }
+                                                            if (num4 == 1)
+                                                            {
+                                                                Main.tile[i, j].frameX = 0;
+                                                                Main.tile[i, j].frameY = 22;
+                                                            }
+                                                            if (num4 == 2)
+                                                            {
+                                                                Main.tile[i, j].frameX = 0;
+                                                                Main.tile[i, j].frameY = 44;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                if (num5 == 5 || num5 == 7)
+                                {
+                                    Main.tile[i - 1, j].active = true;
+                                    Main.tile[i - 1, j].type = 5;
+                                    num4 = WorldGen.genRand.Next(3);
+                                    if (WorldGen.genRand.Next(3) < 2)
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i - 1, j].frameX = 44;
+                                            Main.tile[i - 1, j].frameY = 198;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i - 1, j].frameX = 44;
+                                            Main.tile[i - 1, j].frameY = 220;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i - 1, j].frameX = 44;
+                                            Main.tile[i - 1, j].frameY = 242;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i - 1, j].frameX = 66;
+                                            Main.tile[i - 1, j].frameY = 0;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i - 1, j].frameX = 66;
+                                            Main.tile[i - 1, j].frameY = 22;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i - 1, j].frameX = 66;
+                                            Main.tile[i - 1, j].frameY = 44;
+                                        }
+                                    }
+                                }
+                                if (num5 == 6 || num5 == 7)
+                                {
+                                    Main.tile[i + 1, j].active = true;
+                                    Main.tile[i + 1, j].type = 5;
+                                    num4 = WorldGen.genRand.Next(3);
+                                    if (WorldGen.genRand.Next(3) < 2)
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i + 1, j].frameX = 66;
+                                            Main.tile[i + 1, j].frameY = 198;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i + 1, j].frameX = 66;
+                                            Main.tile[i + 1, j].frameY = 220;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i + 1, j].frameX = 66;
+                                            Main.tile[i + 1, j].frameY = 242;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i + 1, j].frameX = 88;
+                                            Main.tile[i + 1, j].frameY = 66;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i + 1, j].frameX = 88;
+                                            Main.tile[i + 1, j].frameY = 88;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i + 1, j].frameX = 88;
+                                            Main.tile[i + 1, j].frameY = 110;
+                                        }
+                                    }
+                                }
+                            }
+                            int num6 = WorldGen.genRand.Next(3);
+                            if (num6 == 0 || num6 == 1)
+                            {
+                                Main.tile[i + 1, num - 1].active = true;
+                                Main.tile[i + 1, num - 1].type = 5;
+                                num4 = WorldGen.genRand.Next(3);
+                                if (num4 == 0)
+                                {
+                                    Main.tile[i + 1, num - 1].frameX = 22;
+                                    Main.tile[i + 1, num - 1].frameY = 132;
+                                }
+                                if (num4 == 1)
+                                {
+                                    Main.tile[i + 1, num - 1].frameX = 22;
+                                    Main.tile[i + 1, num - 1].frameY = 154;
+                                }
+                                if (num4 == 2)
+                                {
+                                    Main.tile[i + 1, num - 1].frameX = 22;
+                                    Main.tile[i + 1, num - 1].frameY = 176;
+                                }
+                            }
+                            if (num6 == 0 || num6 == 2)
+                            {
+                                Main.tile[i - 1, num - 1].active = true;
+                                Main.tile[i - 1, num - 1].type = 5;
+                                num4 = WorldGen.genRand.Next(3);
+                                if (num4 == 0)
+                                {
+                                    Main.tile[i - 1, num - 1].frameX = 44;
+                                    Main.tile[i - 1, num - 1].frameY = 132;
+                                }
+                                if (num4 == 1)
+                                {
+                                    Main.tile[i - 1, num - 1].frameX = 44;
+                                    Main.tile[i - 1, num - 1].frameY = 154;
+                                }
+                                if (num4 == 2)
+                                {
+                                    Main.tile[i - 1, num - 1].frameX = 44;
+                                    Main.tile[i - 1, num - 1].frameY = 176;
+                                }
+                            }
+                            num4 = WorldGen.genRand.Next(3);
+                            if (num6 == 0)
+                            {
+                                if (num4 == 0)
+                                {
+                                    Main.tile[i, num - 1].frameX = 88;
+                                    Main.tile[i, num - 1].frameY = 132;
+                                }
+                                if (num4 == 1)
+                                {
+                                    Main.tile[i, num - 1].frameX = 88;
+                                    Main.tile[i, num - 1].frameY = 154;
+                                }
+                                if (num4 == 2)
+                                {
+                                    Main.tile[i, num - 1].frameX = 88;
+                                    Main.tile[i, num - 1].frameY = 176;
+                                }
+                            }
+                            else
+                            {
+                                if (num6 == 1)
+                                {
+                                    if (num4 == 0)
+                                    {
+                                        Main.tile[i, num - 1].frameX = 0;
+                                        Main.tile[i, num - 1].frameY = 132;
+                                    }
+                                    if (num4 == 1)
+                                    {
+                                        Main.tile[i, num - 1].frameX = 0;
+                                        Main.tile[i, num - 1].frameY = 154;
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.tile[i, num - 1].frameX = 0;
+                                        Main.tile[i, num - 1].frameY = 176;
+                                    }
+                                }
+                                else
+                                {
+                                    if (num6 == 2)
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i, num - 1].frameX = 66;
+                                            Main.tile[i, num - 1].frameY = 132;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i, num - 1].frameX = 66;
+                                            Main.tile[i, num - 1].frameY = 154;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i, num - 1].frameX = 66;
+                                            Main.tile[i, num - 1].frameY = 176;
+                                        }
+                                    }
+                                }
+                            }
+                            if (WorldGen.genRand.Next(3) < 2)
+                            {
+                                num4 = WorldGen.genRand.Next(3);
+                                if (num4 == 0)
+                                {
+                                    Main.tile[i, num - num3].frameX = 22;
+                                    Main.tile[i, num - num3].frameY = 198;
+                                }
+                                if (num4 == 1)
+                                {
+                                    Main.tile[i, num - num3].frameX = 22;
+                                    Main.tile[i, num - num3].frameY = 220;
+                                }
+                                if (num4 == 2)
+                                {
+                                    Main.tile[i, num - num3].frameX = 22;
+                                    Main.tile[i, num - num3].frameY = 242;
+                                }
+                            }
+                            else
+                            {
+                                num4 = WorldGen.genRand.Next(3);
+                                if (num4 == 0)
+                                {
+                                    Main.tile[i, num - num3].frameX = 0;
+                                    Main.tile[i, num - num3].frameY = 198;
+                                }
+                                if (num4 == 1)
+                                {
+                                    Main.tile[i, num - num3].frameX = 0;
+                                    Main.tile[i, num - num3].frameY = 220;
+                                }
+                                if (num4 == 2)
+                                {
+                                    Main.tile[i, num - num3].frameX = 0;
+                                    Main.tile[i, num - num3].frameY = 242;
+                                }
+                            }
+                            WorldGen.RangeFrame(i - 2, num - num3 - 1, i + 2, num + 1);
+                            if (Main.netMode == 2)
+                            {
+                                NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num3 * 0.5), num3 + 1);
+                            }
+                            result = true;
+                            return result;
+                        }
+                    }
+                }
+            }
+            result = false;
+            return result;
+        }
 
-        public static void GrowEpicTree(int i, int y)
-		{
-			int num = y;
-			while (Main.tile[i, num].type == 20)
-			{
-				num++;
-			}
-			if (Main.tile[i, num].active && Main.tile[i, num].type == 2 && Main.tile[i, num - 1].wall == 0 && Main.tile[i, num - 1].liquid == 0 && Main.tile[i - 1, num].active && Main.tile[i - 1, num].type == 2 && Main.tile[i + 1, num].active && Main.tile[i + 1, num].type == 2 && WorldGen.EmptyTileCheck(i - 2, i + 2, num - 55, num - 1, 20))
-			{
-				bool flag = false;
-				bool flag2 = false;
-				int num2 = WorldGen.genRand.Next(20, 30);
-				int num3;
-				for (int j = num - num2; j < num; j++)
-				{
-					Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
-					Main.tile[i, j].active = true;
-					Main.tile[i, j].type = 5;
-					num3 = WorldGen.genRand.Next(3);
-					int num4 = WorldGen.genRand.Next(10);
-					if (j == num - 1 || j == num - num2)
-					{
-						num4 = 0;
-					}
-					while (((num4 == 5 || num4 == 7) && flag) || ((num4 == 6 || num4 == 7) && flag2))
-					{
-						num4 = WorldGen.genRand.Next(10);
-					}
-					flag = false;
-					flag2 = false;
-					if (num4 == 5 || num4 == 7)
-					{
-						flag = true;
-					}
-					if (num4 == 6 || num4 == 7)
-					{
-						flag2 = true;
-					}
-					if (num4 == 1)
-					{
-						if (num3 == 0)
-						{
-							Main.tile[i, j].frameX = 0;
-							Main.tile[i, j].frameY = 66;
-						}
-						if (num3 == 1)
-						{
-							Main.tile[i, j].frameX = 0;
-							Main.tile[i, j].frameY = 88;
-						}
-						if (num3 == 2)
-						{
-							Main.tile[i, j].frameX = 0;
-							Main.tile[i, j].frameY = 110;
-						}
-					}
-					else
-					{
-						if (num4 == 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i, j].frameX = 22;
-								Main.tile[i, j].frameY = 0;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i, j].frameX = 22;
-								Main.tile[i, j].frameY = 22;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i, j].frameX = 22;
-								Main.tile[i, j].frameY = 44;
-							}
-						}
-						else
-						{
-							if (num4 == 3)
-							{
-								if (num3 == 0)
-								{
-									Main.tile[i, j].frameX = 44;
-									Main.tile[i, j].frameY = 66;
-								}
-								if (num3 == 1)
-								{
-									Main.tile[i, j].frameX = 44;
-									Main.tile[i, j].frameY = 88;
-								}
-								if (num3 == 2)
-								{
-									Main.tile[i, j].frameX = 44;
-									Main.tile[i, j].frameY = 110;
-								}
-							}
-							else
-							{
-								if (num4 == 4)
-								{
-									if (num3 == 0)
-									{
-										Main.tile[i, j].frameX = 22;
-										Main.tile[i, j].frameY = 66;
-									}
-									if (num3 == 1)
-									{
-										Main.tile[i, j].frameX = 22;
-										Main.tile[i, j].frameY = 88;
-									}
-									if (num3 == 2)
-									{
-										Main.tile[i, j].frameX = 22;
-										Main.tile[i, j].frameY = 110;
-									}
-								}
-								else
-								{
-									if (num4 == 5)
-									{
-										if (num3 == 0)
-										{
-											Main.tile[i, j].frameX = 88;
-											Main.tile[i, j].frameY = 0;
-										}
-										if (num3 == 1)
-										{
-											Main.tile[i, j].frameX = 88;
-											Main.tile[i, j].frameY = 22;
-										}
-										if (num3 == 2)
-										{
-											Main.tile[i, j].frameX = 88;
-											Main.tile[i, j].frameY = 44;
-										}
-									}
-									else
-									{
-										if (num4 == 6)
-										{
-											if (num3 == 0)
-											{
-												Main.tile[i, j].frameX = 66;
-												Main.tile[i, j].frameY = 66;
-											}
-											if (num3 == 1)
-											{
-												Main.tile[i, j].frameX = 66;
-												Main.tile[i, j].frameY = 88;
-											}
-											if (num3 == 2)
-											{
-												Main.tile[i, j].frameX = 66;
-												Main.tile[i, j].frameY = 110;
-											}
-										}
-										else
-										{
-											if (num4 == 7)
-											{
-												if (num3 == 0)
-												{
-													Main.tile[i, j].frameX = 110;
-													Main.tile[i, j].frameY = 66;
-												}
-												if (num3 == 1)
-												{
-													Main.tile[i, j].frameX = 110;
-													Main.tile[i, j].frameY = 88;
-												}
-												if (num3 == 2)
-												{
-													Main.tile[i, j].frameX = 110;
-													Main.tile[i, j].frameY = 110;
-												}
-											}
-											else
-											{
-												if (num3 == 0)
-												{
-													Main.tile[i, j].frameX = 0;
-													Main.tile[i, j].frameY = 0;
-												}
-												if (num3 == 1)
-												{
-													Main.tile[i, j].frameX = 0;
-													Main.tile[i, j].frameY = 22;
-												}
-												if (num3 == 2)
-												{
-													Main.tile[i, j].frameX = 0;
-													Main.tile[i, j].frameY = 44;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					if (num4 == 5 || num4 == 7)
-					{
-						Main.tile[i - 1, j].active = true;
-						Main.tile[i - 1, j].type = 5;
-						num3 = WorldGen.genRand.Next(3);
-						if (WorldGen.genRand.Next(3) < 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i - 1, j].frameX = 44;
-								Main.tile[i - 1, j].frameY = 198;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i - 1, j].frameX = 44;
-								Main.tile[i - 1, j].frameY = 220;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i - 1, j].frameX = 44;
-								Main.tile[i - 1, j].frameY = 242;
-							}
-						}
-						else
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i - 1, j].frameX = 66;
-								Main.tile[i - 1, j].frameY = 0;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i - 1, j].frameX = 66;
-								Main.tile[i - 1, j].frameY = 22;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i - 1, j].frameX = 66;
-								Main.tile[i - 1, j].frameY = 44;
-							}
-						}
-					}
-					if (num4 == 6 || num4 == 7)
-					{
-						Main.tile[i + 1, j].active = true;
-						Main.tile[i + 1, j].type = 5;
-						num3 = WorldGen.genRand.Next(3);
-						if (WorldGen.genRand.Next(3) < 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i + 1, j].frameX = 66;
-								Main.tile[i + 1, j].frameY = 198;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i + 1, j].frameX = 66;
-								Main.tile[i + 1, j].frameY = 220;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i + 1, j].frameX = 66;
-								Main.tile[i + 1, j].frameY = 242;
-							}
-						}
-						else
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i + 1, j].frameX = 88;
-								Main.tile[i + 1, j].frameY = 66;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i + 1, j].frameX = 88;
-								Main.tile[i + 1, j].frameY = 88;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i + 1, j].frameX = 88;
-								Main.tile[i + 1, j].frameY = 110;
-							}
-						}
-					}
-				}
-				int num5 = WorldGen.genRand.Next(3);
-				if (num5 == 0 || num5 == 1)
-				{
-					Main.tile[i + 1, num - 1].active = true;
-					Main.tile[i + 1, num - 1].type = 5;
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i + 1, num - 1].frameX = 22;
-						Main.tile[i + 1, num - 1].frameY = 132;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i + 1, num - 1].frameX = 22;
-						Main.tile[i + 1, num - 1].frameY = 154;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i + 1, num - 1].frameX = 22;
-						Main.tile[i + 1, num - 1].frameY = 176;
-					}
-				}
-				if (num5 == 0 || num5 == 2)
-				{
-					Main.tile[i - 1, num - 1].active = true;
-					Main.tile[i - 1, num - 1].type = 5;
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i - 1, num - 1].frameX = 44;
-						Main.tile[i - 1, num - 1].frameY = 132;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i - 1, num - 1].frameX = 44;
-						Main.tile[i - 1, num - 1].frameY = 154;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i - 1, num - 1].frameX = 44;
-						Main.tile[i - 1, num - 1].frameY = 176;
-					}
-				}
-				num3 = WorldGen.genRand.Next(3);
-				if (num5 == 0)
-				{
-					if (num3 == 0)
-					{
-						Main.tile[i, num - 1].frameX = 88;
-						Main.tile[i, num - 1].frameY = 132;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i, num - 1].frameX = 88;
-						Main.tile[i, num - 1].frameY = 154;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i, num - 1].frameX = 88;
-						Main.tile[i, num - 1].frameY = 176;
-					}
-				}
-				else
-				{
-					if (num5 == 1)
-					{
-						if (num3 == 0)
-						{
-							Main.tile[i, num - 1].frameX = 0;
-							Main.tile[i, num - 1].frameY = 132;
-						}
-						if (num3 == 1)
-						{
-							Main.tile[i, num - 1].frameX = 0;
-							Main.tile[i, num - 1].frameY = 154;
-						}
-						if (num3 == 2)
-						{
-							Main.tile[i, num - 1].frameX = 0;
-							Main.tile[i, num - 1].frameY = 176;
-						}
-					}
-					else
-					{
-						if (num5 == 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i, num - 1].frameX = 66;
-								Main.tile[i, num - 1].frameY = 132;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i, num - 1].frameX = 66;
-								Main.tile[i, num - 1].frameY = 154;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i, num - 1].frameX = 66;
-								Main.tile[i, num - 1].frameY = 176;
-							}
-						}
-					}
-				}
-				if (WorldGen.genRand.Next(3) < 2)
-				{
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i, num - num2].frameX = 22;
-						Main.tile[i, num - num2].frameY = 198;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i, num - num2].frameX = 22;
-						Main.tile[i, num - num2].frameY = 220;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i, num - num2].frameX = 22;
-						Main.tile[i, num - num2].frameY = 242;
-					}
-				}
-				else
-				{
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i, num - num2].frameX = 0;
-						Main.tile[i, num - num2].frameY = 198;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i, num - num2].frameX = 0;
-						Main.tile[i, num - num2].frameY = 220;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i, num - num2].frameX = 0;
-						Main.tile[i, num - num2].frameY = 242;
-					}
-				}
-				WorldGen.RangeFrame(i - 2, num - num2 - 1, i + 2, num + 1);
-				if (Main.netMode == 2)
-				{
-					NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num2 * 0.5), num2 + 1);
-				}
-			}
-		}
-		
         public static void GrowTree(int i, int y)
-		{
-			int num = y;
-			while (Main.tile[i, num].type == 20)
-			{
-				num++;
-			}
-			if (Main.tile[i - 1, num - 1].liquid != 0 || Main.tile[i - 1, num - 1].liquid != 0 || Main.tile[i + 1, num - 1].liquid != 0)
-			{
-				return;
-			}
-			if (Main.tile[i, num].active && (Main.tile[i, num].type == 2 || Main.tile[i, num].type == 23) && Main.tile[i, num - 1].wall == 0 && Main.tile[i - 1, num].active && (Main.tile[i - 1, num].type == 2 || Main.tile[i - 1, num].type == 23) && Main.tile[i + 1, num].active && (Main.tile[i + 1, num].type == 2 || Main.tile[i + 1, num].type == 23) && WorldGen.EmptyTileCheck(i - 2, i + 2, num - 14, num - 1, 20))
-			{
-				bool flag = false;
-				bool flag2 = false;
-				int num2 = WorldGen.genRand.Next(5, 15);
-				int num3;
-				for (int j = num - num2; j < num; j++)
-				{
-					Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
-					Main.tile[i, j].active = true;
-					Main.tile[i, j].type = 5;
-					num3 = WorldGen.genRand.Next(3);
-					int num4 = WorldGen.genRand.Next(10);
-					if (j == num - 1 || j == num - num2)
-					{
-						num4 = 0;
-					}
-					while (((num4 == 5 || num4 == 7) && flag) || ((num4 == 6 || num4 == 7) && flag2))
-					{
-						num4 = WorldGen.genRand.Next(10);
-					}
-					flag = false;
-					flag2 = false;
-					if (num4 == 5 || num4 == 7)
-					{
-						flag = true;
-					}
-					if (num4 == 6 || num4 == 7)
-					{
-						flag2 = true;
-					}
-					if (num4 == 1)
-					{
-						if (num3 == 0)
-						{
-							Main.tile[i, j].frameX = 0;
-							Main.tile[i, j].frameY = 66;
-						}
-						if (num3 == 1)
-						{
-							Main.tile[i, j].frameX = 0;
-							Main.tile[i, j].frameY = 88;
-						}
-						if (num3 == 2)
-						{
-							Main.tile[i, j].frameX = 0;
-							Main.tile[i, j].frameY = 110;
-						}
-					}
-					else
-					{
-						if (num4 == 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i, j].frameX = 22;
-								Main.tile[i, j].frameY = 0;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i, j].frameX = 22;
-								Main.tile[i, j].frameY = 22;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i, j].frameX = 22;
-								Main.tile[i, j].frameY = 44;
-							}
-						}
-						else
-						{
-							if (num4 == 3)
-							{
-								if (num3 == 0)
-								{
-									Main.tile[i, j].frameX = 44;
-									Main.tile[i, j].frameY = 66;
-								}
-								if (num3 == 1)
-								{
-									Main.tile[i, j].frameX = 44;
-									Main.tile[i, j].frameY = 88;
-								}
-								if (num3 == 2)
-								{
-									Main.tile[i, j].frameX = 44;
-									Main.tile[i, j].frameY = 110;
-								}
-							}
-							else
-							{
-								if (num4 == 4)
-								{
-									if (num3 == 0)
-									{
-										Main.tile[i, j].frameX = 22;
-										Main.tile[i, j].frameY = 66;
-									}
-									if (num3 == 1)
-									{
-										Main.tile[i, j].frameX = 22;
-										Main.tile[i, j].frameY = 88;
-									}
-									if (num3 == 2)
-									{
-										Main.tile[i, j].frameX = 22;
-										Main.tile[i, j].frameY = 110;
-									}
-								}
-								else
-								{
-									if (num4 == 5)
-									{
-										if (num3 == 0)
-										{
-											Main.tile[i, j].frameX = 88;
-											Main.tile[i, j].frameY = 0;
-										}
-										if (num3 == 1)
-										{
-											Main.tile[i, j].frameX = 88;
-											Main.tile[i, j].frameY = 22;
-										}
-										if (num3 == 2)
-										{
-											Main.tile[i, j].frameX = 88;
-											Main.tile[i, j].frameY = 44;
-										}
-									}
-									else
-									{
-										if (num4 == 6)
-										{
-											if (num3 == 0)
-											{
-												Main.tile[i, j].frameX = 66;
-												Main.tile[i, j].frameY = 66;
-											}
-											if (num3 == 1)
-											{
-												Main.tile[i, j].frameX = 66;
-												Main.tile[i, j].frameY = 88;
-											}
-											if (num3 == 2)
-											{
-												Main.tile[i, j].frameX = 66;
-												Main.tile[i, j].frameY = 110;
-											}
-										}
-										else
-										{
-											if (num4 == 7)
-											{
-												if (num3 == 0)
-												{
-													Main.tile[i, j].frameX = 110;
-													Main.tile[i, j].frameY = 66;
-												}
-												if (num3 == 1)
-												{
-													Main.tile[i, j].frameX = 110;
-													Main.tile[i, j].frameY = 88;
-												}
-												if (num3 == 2)
-												{
-													Main.tile[i, j].frameX = 110;
-													Main.tile[i, j].frameY = 110;
-												}
-											}
-											else
-											{
-												if (num3 == 0)
-												{
-													Main.tile[i, j].frameX = 0;
-													Main.tile[i, j].frameY = 0;
-												}
-												if (num3 == 1)
-												{
-													Main.tile[i, j].frameX = 0;
-													Main.tile[i, j].frameY = 22;
-												}
-												if (num3 == 2)
-												{
-													Main.tile[i, j].frameX = 0;
-													Main.tile[i, j].frameY = 44;
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					if (num4 == 5 || num4 == 7)
-					{
-						Main.tile[i - 1, j].active = true;
-						Main.tile[i - 1, j].type = 5;
-						num3 = WorldGen.genRand.Next(3);
-						if (WorldGen.genRand.Next(3) < 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i - 1, j].frameX = 44;
-								Main.tile[i - 1, j].frameY = 198;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i - 1, j].frameX = 44;
-								Main.tile[i - 1, j].frameY = 220;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i - 1, j].frameX = 44;
-								Main.tile[i - 1, j].frameY = 242;
-							}
-						}
-						else
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i - 1, j].frameX = 66;
-								Main.tile[i - 1, j].frameY = 0;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i - 1, j].frameX = 66;
-								Main.tile[i - 1, j].frameY = 22;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i - 1, j].frameX = 66;
-								Main.tile[i - 1, j].frameY = 44;
-							}
-						}
-					}
-					if (num4 == 6 || num4 == 7)
-					{
-						Main.tile[i + 1, j].active = true;
-						Main.tile[i + 1, j].type = 5;
-						num3 = WorldGen.genRand.Next(3);
-						if (WorldGen.genRand.Next(3) < 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i + 1, j].frameX = 66;
-								Main.tile[i + 1, j].frameY = 198;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i + 1, j].frameX = 66;
-								Main.tile[i + 1, j].frameY = 220;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i + 1, j].frameX = 66;
-								Main.tile[i + 1, j].frameY = 242;
-							}
-						}
-						else
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i + 1, j].frameX = 88;
-								Main.tile[i + 1, j].frameY = 66;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i + 1, j].frameX = 88;
-								Main.tile[i + 1, j].frameY = 88;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i + 1, j].frameX = 88;
-								Main.tile[i + 1, j].frameY = 110;
-							}
-						}
-					}
-				}
-				int num5 = WorldGen.genRand.Next(3);
-				if (num5 == 0 || num5 == 1)
-				{
-					Main.tile[i + 1, num - 1].active = true;
-					Main.tile[i + 1, num - 1].type = 5;
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i + 1, num - 1].frameX = 22;
-						Main.tile[i + 1, num - 1].frameY = 132;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i + 1, num - 1].frameX = 22;
-						Main.tile[i + 1, num - 1].frameY = 154;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i + 1, num - 1].frameX = 22;
-						Main.tile[i + 1, num - 1].frameY = 176;
-					}
-				}
-				if (num5 == 0 || num5 == 2)
-				{
-					Main.tile[i - 1, num - 1].active = true;
-					Main.tile[i - 1, num - 1].type = 5;
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i - 1, num - 1].frameX = 44;
-						Main.tile[i - 1, num - 1].frameY = 132;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i - 1, num - 1].frameX = 44;
-						Main.tile[i - 1, num - 1].frameY = 154;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i - 1, num - 1].frameX = 44;
-						Main.tile[i - 1, num - 1].frameY = 176;
-					}
-				}
-				num3 = WorldGen.genRand.Next(3);
-				if (num5 == 0)
-				{
-					if (num3 == 0)
-					{
-						Main.tile[i, num - 1].frameX = 88;
-						Main.tile[i, num - 1].frameY = 132;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i, num - 1].frameX = 88;
-						Main.tile[i, num - 1].frameY = 154;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i, num - 1].frameX = 88;
-						Main.tile[i, num - 1].frameY = 176;
-					}
-				}
-				else
-				{
-					if (num5 == 1)
-					{
-						if (num3 == 0)
-						{
-							Main.tile[i, num - 1].frameX = 0;
-							Main.tile[i, num - 1].frameY = 132;
-						}
-						if (num3 == 1)
-						{
-							Main.tile[i, num - 1].frameX = 0;
-							Main.tile[i, num - 1].frameY = 154;
-						}
-						if (num3 == 2)
-						{
-							Main.tile[i, num - 1].frameX = 0;
-							Main.tile[i, num - 1].frameY = 176;
-						}
-					}
-					else
-					{
-						if (num5 == 2)
-						{
-							if (num3 == 0)
-							{
-								Main.tile[i, num - 1].frameX = 66;
-								Main.tile[i, num - 1].frameY = 132;
-							}
-							if (num3 == 1)
-							{
-								Main.tile[i, num - 1].frameX = 66;
-								Main.tile[i, num - 1].frameY = 154;
-							}
-							if (num3 == 2)
-							{
-								Main.tile[i, num - 1].frameX = 66;
-								Main.tile[i, num - 1].frameY = 176;
-							}
-						}
-					}
-				}
-				if (WorldGen.genRand.Next(3) < 2)
-				{
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i, num - num2].frameX = 22;
-						Main.tile[i, num - num2].frameY = 198;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i, num - num2].frameX = 22;
-						Main.tile[i, num - num2].frameY = 220;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i, num - num2].frameX = 22;
-						Main.tile[i, num - num2].frameY = 242;
-					}
-				}
-				else
-				{
-					num3 = WorldGen.genRand.Next(3);
-					if (num3 == 0)
-					{
-						Main.tile[i, num - num2].frameX = 0;
-						Main.tile[i, num - num2].frameY = 198;
-					}
-					if (num3 == 1)
-					{
-						Main.tile[i, num - num2].frameX = 0;
-						Main.tile[i, num - num2].frameY = 220;
-					}
-					if (num3 == 2)
-					{
-						Main.tile[i, num - num2].frameX = 0;
-						Main.tile[i, num - num2].frameY = 242;
-					}
-				}
-				WorldGen.RangeFrame(i - 2, num - num2 - 1, i + 2, num + 1);
-				if (Main.netMode == 2)
-				{
-					NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num2 * 0.5), num2 + 1);
-				}
-			}
-		}
-		
+        {
+            int num = y;
+            while (Main.tile[i, num].type == 20)
+            {
+                num++;
+            }
+            if ((Main.tile[i - 1, num - 1].liquid == 0 && Main.tile[i - 1, num - 1].liquid == 0 && Main.tile[i + 1, num - 1].liquid == 0) || Main.tile[i, num].type == 60)
+            {
+                if (Main.tile[i, num].active)
+                {
+                    if ((Main.tile[i, num].type == 2 || Main.tile[i, num].type == 23 || Main.tile[i, num].type == 60) && Main.tile[i, num - 1].wall == 0)
+                    {
+                        if (Main.tile[i - 1, num].active && (Main.tile[i - 1, num].type == 2 || Main.tile[i - 1, num].type == 23 || Main.tile[i - 1, num].type == 60) && Main.tile[i + 1, num].active && (Main.tile[i + 1, num].type == 2 || Main.tile[i + 1, num].type == 23 || Main.tile[i + 1, num].type == 60))
+                        {
+                            int num2 = 2;
+                            if (WorldGen.EmptyTileCheck(i - num2, i + num2, num - 14, num - 1, 20))
+                            {
+                                bool flag = false;
+                                bool flag2 = false;
+                                int num3 = WorldGen.genRand.Next(5, 15);
+                                int num4;
+                                for (int j = num - num3; j < num; j++)
+                                {
+                                    Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
+                                    Main.tile[i, j].active = true;
+                                    Main.tile[i, j].type = 5;
+                                    num4 = WorldGen.genRand.Next(3);
+                                    int num5 = WorldGen.genRand.Next(10);
+                                    if (j == num - 1 || j == num - num3)
+                                    {
+                                        num5 = 0;
+                                    }
+                                    while (((num5 == 5 || num5 == 7) && flag) || ((num5 == 6 || num5 == 7) && flag2))
+                                    {
+                                        num5 = WorldGen.genRand.Next(10);
+                                    }
+                                    flag = false;
+                                    flag2 = false;
+                                    if (num5 == 5 || num5 == 7)
+                                    {
+                                        flag = true;
+                                    }
+                                    if (num5 == 6 || num5 == 7)
+                                    {
+                                        flag2 = true;
+                                    }
+                                    if (num5 == 1)
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i, j].frameX = 0;
+                                            Main.tile[i, j].frameY = 66;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i, j].frameX = 0;
+                                            Main.tile[i, j].frameY = 88;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i, j].frameX = 0;
+                                            Main.tile[i, j].frameY = 110;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (num5 == 2)
+                                        {
+                                            if (num4 == 0)
+                                            {
+                                                Main.tile[i, j].frameX = 22;
+                                                Main.tile[i, j].frameY = 0;
+                                            }
+                                            if (num4 == 1)
+                                            {
+                                                Main.tile[i, j].frameX = 22;
+                                                Main.tile[i, j].frameY = 22;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i, j].frameX = 22;
+                                                Main.tile[i, j].frameY = 44;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (num5 == 3)
+                                            {
+                                                if (num4 == 0)
+                                                {
+                                                    Main.tile[i, j].frameX = 44;
+                                                    Main.tile[i, j].frameY = 66;
+                                                }
+                                                if (num4 == 1)
+                                                {
+                                                    Main.tile[i, j].frameX = 44;
+                                                    Main.tile[i, j].frameY = 88;
+                                                }
+                                                if (num4 == 2)
+                                                {
+                                                    Main.tile[i, j].frameX = 44;
+                                                    Main.tile[i, j].frameY = 110;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (num5 == 4)
+                                                {
+                                                    if (num4 == 0)
+                                                    {
+                                                        Main.tile[i, j].frameX = 22;
+                                                        Main.tile[i, j].frameY = 66;
+                                                    }
+                                                    if (num4 == 1)
+                                                    {
+                                                        Main.tile[i, j].frameX = 22;
+                                                        Main.tile[i, j].frameY = 88;
+                                                    }
+                                                    if (num4 == 2)
+                                                    {
+                                                        Main.tile[i, j].frameX = 22;
+                                                        Main.tile[i, j].frameY = 110;
+                                                    }
+                                                }
+                                                else
+                                                {
+                                                    if (num5 == 5)
+                                                    {
+                                                        if (num4 == 0)
+                                                        {
+                                                            Main.tile[i, j].frameX = 88;
+                                                            Main.tile[i, j].frameY = 0;
+                                                        }
+                                                        if (num4 == 1)
+                                                        {
+                                                            Main.tile[i, j].frameX = 88;
+                                                            Main.tile[i, j].frameY = 22;
+                                                        }
+                                                        if (num4 == 2)
+                                                        {
+                                                            Main.tile[i, j].frameX = 88;
+                                                            Main.tile[i, j].frameY = 44;
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (num5 == 6)
+                                                        {
+                                                            if (num4 == 0)
+                                                            {
+                                                                Main.tile[i, j].frameX = 66;
+                                                                Main.tile[i, j].frameY = 66;
+                                                            }
+                                                            if (num4 == 1)
+                                                            {
+                                                                Main.tile[i, j].frameX = 66;
+                                                                Main.tile[i, j].frameY = 88;
+                                                            }
+                                                            if (num4 == 2)
+                                                            {
+                                                                Main.tile[i, j].frameX = 66;
+                                                                Main.tile[i, j].frameY = 110;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (num5 == 7)
+                                                            {
+                                                                if (num4 == 0)
+                                                                {
+                                                                    Main.tile[i, j].frameX = 110;
+                                                                    Main.tile[i, j].frameY = 66;
+                                                                }
+                                                                if (num4 == 1)
+                                                                {
+                                                                    Main.tile[i, j].frameX = 110;
+                                                                    Main.tile[i, j].frameY = 88;
+                                                                }
+                                                                if (num4 == 2)
+                                                                {
+                                                                    Main.tile[i, j].frameX = 110;
+                                                                    Main.tile[i, j].frameY = 110;
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                if (num4 == 0)
+                                                                {
+                                                                    Main.tile[i, j].frameX = 0;
+                                                                    Main.tile[i, j].frameY = 0;
+                                                                }
+                                                                if (num4 == 1)
+                                                                {
+                                                                    Main.tile[i, j].frameX = 0;
+                                                                    Main.tile[i, j].frameY = 22;
+                                                                }
+                                                                if (num4 == 2)
+                                                                {
+                                                                    Main.tile[i, j].frameX = 0;
+                                                                    Main.tile[i, j].frameY = 44;
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    if (num5 == 5 || num5 == 7)
+                                    {
+                                        Main.tile[i - 1, j].active = true;
+                                        Main.tile[i - 1, j].type = 5;
+                                        num4 = WorldGen.genRand.Next(3);
+                                        if (WorldGen.genRand.Next(3) < 2)
+                                        {
+                                            if (num4 == 0)
+                                            {
+                                                Main.tile[i - 1, j].frameX = 44;
+                                                Main.tile[i - 1, j].frameY = 198;
+                                            }
+                                            if (num4 == 1)
+                                            {
+                                                Main.tile[i - 1, j].frameX = 44;
+                                                Main.tile[i - 1, j].frameY = 220;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i - 1, j].frameX = 44;
+                                                Main.tile[i - 1, j].frameY = 242;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (num4 == 0)
+                                            {
+                                                Main.tile[i - 1, j].frameX = 66;
+                                                Main.tile[i - 1, j].frameY = 0;
+                                            }
+                                            if (num4 == 1)
+                                            {
+                                                Main.tile[i - 1, j].frameX = 66;
+                                                Main.tile[i - 1, j].frameY = 22;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i - 1, j].frameX = 66;
+                                                Main.tile[i - 1, j].frameY = 44;
+                                            }
+                                        }
+                                    }
+                                    if (num5 == 6 || num5 == 7)
+                                    {
+                                        Main.tile[i + 1, j].active = true;
+                                        Main.tile[i + 1, j].type = 5;
+                                        num4 = WorldGen.genRand.Next(3);
+                                        if (WorldGen.genRand.Next(3) < 2)
+                                        {
+                                            if (num4 == 0)
+                                            {
+                                                Main.tile[i + 1, j].frameX = 66;
+                                                Main.tile[i + 1, j].frameY = 198;
+                                            }
+                                            if (num4 == 1)
+                                            {
+                                                Main.tile[i + 1, j].frameX = 66;
+                                                Main.tile[i + 1, j].frameY = 220;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i + 1, j].frameX = 66;
+                                                Main.tile[i + 1, j].frameY = 242;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (num4 == 0)
+                                            {
+                                                Main.tile[i + 1, j].frameX = 88;
+                                                Main.tile[i + 1, j].frameY = 66;
+                                            }
+                                            if (num4 == 1)
+                                            {
+                                                Main.tile[i + 1, j].frameX = 88;
+                                                Main.tile[i + 1, j].frameY = 88;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i + 1, j].frameX = 88;
+                                                Main.tile[i + 1, j].frameY = 110;
+                                            }
+                                        }
+                                    }
+                                }
+                                int num6 = WorldGen.genRand.Next(3);
+                                if (num6 == 0 || num6 == 1)
+                                {
+                                    Main.tile[i + 1, num - 1].active = true;
+                                    Main.tile[i + 1, num - 1].type = 5;
+                                    num4 = WorldGen.genRand.Next(3);
+                                    if (num4 == 0)
+                                    {
+                                        Main.tile[i + 1, num - 1].frameX = 22;
+                                        Main.tile[i + 1, num - 1].frameY = 132;
+                                    }
+                                    if (num4 == 1)
+                                    {
+                                        Main.tile[i + 1, num - 1].frameX = 22;
+                                        Main.tile[i + 1, num - 1].frameY = 154;
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.tile[i + 1, num - 1].frameX = 22;
+                                        Main.tile[i + 1, num - 1].frameY = 176;
+                                    }
+                                }
+                                if (num6 == 0 || num6 == 2)
+                                {
+                                    Main.tile[i - 1, num - 1].active = true;
+                                    Main.tile[i - 1, num - 1].type = 5;
+                                    num4 = WorldGen.genRand.Next(3);
+                                    if (num4 == 0)
+                                    {
+                                        Main.tile[i - 1, num - 1].frameX = 44;
+                                        Main.tile[i - 1, num - 1].frameY = 132;
+                                    }
+                                    if (num4 == 1)
+                                    {
+                                        Main.tile[i - 1, num - 1].frameX = 44;
+                                        Main.tile[i - 1, num - 1].frameY = 154;
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.tile[i - 1, num - 1].frameX = 44;
+                                        Main.tile[i - 1, num - 1].frameY = 176;
+                                    }
+                                }
+                                num4 = WorldGen.genRand.Next(3);
+                                if (num6 == 0)
+                                {
+                                    if (num4 == 0)
+                                    {
+                                        Main.tile[i, num - 1].frameX = 88;
+                                        Main.tile[i, num - 1].frameY = 132;
+                                    }
+                                    if (num4 == 1)
+                                    {
+                                        Main.tile[i, num - 1].frameX = 88;
+                                        Main.tile[i, num - 1].frameY = 154;
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.tile[i, num - 1].frameX = 88;
+                                        Main.tile[i, num - 1].frameY = 176;
+                                    }
+                                }
+                                else
+                                {
+                                    if (num6 == 1)
+                                    {
+                                        if (num4 == 0)
+                                        {
+                                            Main.tile[i, num - 1].frameX = 0;
+                                            Main.tile[i, num - 1].frameY = 132;
+                                        }
+                                        if (num4 == 1)
+                                        {
+                                            Main.tile[i, num - 1].frameX = 0;
+                                            Main.tile[i, num - 1].frameY = 154;
+                                        }
+                                        if (num4 == 2)
+                                        {
+                                            Main.tile[i, num - 1].frameX = 0;
+                                            Main.tile[i, num - 1].frameY = 176;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (num6 == 2)
+                                        {
+                                            if (num4 == 0)
+                                            {
+                                                Main.tile[i, num - 1].frameX = 66;
+                                                Main.tile[i, num - 1].frameY = 132;
+                                            }
+                                            if (num4 == 1)
+                                            {
+                                                Main.tile[i, num - 1].frameX = 66;
+                                                Main.tile[i, num - 1].frameY = 154;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i, num - 1].frameX = 66;
+                                                Main.tile[i, num - 1].frameY = 176;
+                                            }
+                                        }
+                                    }
+                                }
+                                if (WorldGen.genRand.Next(3) < 2)
+                                {
+                                    num4 = WorldGen.genRand.Next(3);
+                                    if (num4 == 0)
+                                    {
+                                        Main.tile[i, num - num3].frameX = 22;
+                                        Main.tile[i, num - num3].frameY = 198;
+                                    }
+                                    if (num4 == 1)
+                                    {
+                                        Main.tile[i, num - num3].frameX = 22;
+                                        Main.tile[i, num - num3].frameY = 220;
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.tile[i, num - num3].frameX = 22;
+                                        Main.tile[i, num - num3].frameY = 242;
+                                    }
+                                }
+                                else
+                                {
+                                    num4 = WorldGen.genRand.Next(3);
+                                    if (num4 == 0)
+                                    {
+                                        Main.tile[i, num - num3].frameX = 0;
+                                        Main.tile[i, num - num3].frameY = 198;
+                                    }
+                                    if (num4 == 1)
+                                    {
+                                        Main.tile[i, num - num3].frameX = 0;
+                                        Main.tile[i, num - num3].frameY = 220;
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.tile[i, num - num3].frameX = 0;
+                                        Main.tile[i, num - num3].frameY = 242;
+                                    }
+                                }
+                                WorldGen.RangeFrame(i - 2, num - num3 - 1, i + 2, num + 1);
+                                if (Main.netMode == 2)
+                                {
+                                    NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num3 * 0.5), num3 + 1);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public static void GrowShroom(int i, int y)
 		{
 			if (Main.tile[i - 1, y - 1].lava || Main.tile[i - 1, y - 1].lava || Main.tile[i + 1, y - 1].lava)
@@ -13456,56 +13480,62 @@ namespace Terraria_Server
 			}
 			WorldGen.noLiquidCheck = false;
 		}
-		
+
         public static void PlantCheck(int i, int j)
-		{
-			int num = -1;
-			int type = (int)Main.tile[i, j].type;
-			int arg_19_0 = i - 1;
-			int arg_23_0 = i + 1;
-			int arg_22_0 = Main.maxTilesX;
-			int arg_29_0 = j - 1;
-			if (j + 1 >= Main.maxTilesY)
-			{
-				num = type;
-			}
-			if (i - 1 >= 0 && Main.tile[i - 1, j] != null && Main.tile[i - 1, j].active)
-			{
-				byte arg_74_0 = Main.tile[i - 1, j].type;
-			}
-			if (i + 1 < Main.maxTilesX && Main.tile[i + 1, j] != null && Main.tile[i + 1, j].active)
-			{
-				byte arg_B7_0 = Main.tile[i + 1, j].type;
-			}
-			if (j - 1 >= 0 && Main.tile[i, j - 1] != null && Main.tile[i, j - 1].active)
-			{
-				byte arg_F6_0 = Main.tile[i, j - 1].type;
-			}
-			if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1] != null && Main.tile[i, j + 1].active)
-			{
-				num = (int)Main.tile[i, j + 1].type;
-			}
-			if (i - 1 >= 0 && j - 1 >= 0 && Main.tile[i - 1, j - 1] != null && Main.tile[i - 1, j - 1].active)
-			{
-				byte arg_184_0 = Main.tile[i - 1, j - 1].type;
-			}
-			if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile[i + 1, j - 1] != null && Main.tile[i + 1, j - 1].active)
-			{
-				byte arg_1D3_0 = Main.tile[i + 1, j - 1].type;
-			}
-			if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile[i - 1, j + 1] != null && Main.tile[i - 1, j + 1].active)
-			{
-				byte arg_222_0 = Main.tile[i - 1, j + 1].type;
-			}
-			if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile[i + 1, j + 1] != null && Main.tile[i + 1, j + 1].active)
-			{
-				byte arg_275_0 = Main.tile[i + 1, j + 1].type;
-			}
-			if ((type == 3 && num != 2 && num != 78) || (type == 24 && num != 23) || (type == 61 && num != 60) || (type == 71 && num != 70) || (type == 73 && num != 2 && num != 78) || (type == 74 && num != 60))
-			{
-				WorldGen.KillTile(i, j, false, false, false);
-			}
-		}
+        {
+            int num = -1;
+            int type = (int)Main.tile[i, j].type;
+            if (i - 1 >= 0)
+            {
+                if (i + 1 < Main.maxTilesX)
+                {
+                    if (j - 1 < 0)
+                    {
+                        if (j + 1 >= Main.maxTilesY)
+                        {
+                            num = type;
+                        }
+                        if (i - 1 >= 0 && Main.tile[i - 1, j] != null && Main.tile[i - 1, j].active)
+                        {
+                            int type2 = (int)Main.tile[i - 1, j].type;
+                        }
+                        if (i + 1 < Main.maxTilesX && Main.tile[i + 1, j] != null && Main.tile[i + 1, j].active)
+                        {
+                            int type3 = (int)Main.tile[i + 1, j].type;
+                        }
+                        if (j - 1 >= 0 && Main.tile[i, j - 1] != null && Main.tile[i, j - 1].active)
+                        {
+                            int type4 = (int)Main.tile[i, j - 1].type;
+                        }
+                        if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1] != null && Main.tile[i, j + 1].active)
+                        {
+                            num = (int)Main.tile[i, j + 1].type;
+                        }
+                        if (i - 1 >= 0 && j - 1 >= 0 && Main.tile[i - 1, j - 1] != null && Main.tile[i - 1, j - 1].active)
+                        {
+                            int type5 = (int)Main.tile[i - 1, j - 1].type;
+                        }
+                        if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile[i + 1, j - 1] != null && Main.tile[i + 1, j - 1].active)
+                        {
+                            int type6 = (int)Main.tile[i + 1, j - 1].type;
+                        }
+                        if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile[i - 1, j + 1] != null && Main.tile[i - 1, j + 1].active)
+                        {
+                            int type7 = (int)Main.tile[i - 1, j + 1].type;
+                        }
+                        if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile[i + 1, j + 1] != null && Main.tile[i + 1, j + 1].active)
+                        {
+                            int type8 = (int)Main.tile[i + 1, j + 1].type;
+                        }
+                        if ((type == 3 && num != 2 && num != 78) || (type == 24 && num != 23) || (type == 61 && num != 60) || (type == 71 && num != 70) || (type == 73 && num != 2 && num != 78) || (type == 74 && num != 60))
+                        {
+                            WorldGen.KillTile(i, j, false, false, false);
+                        }
+                        return;
+                    }
+                }
+            }
+        }
 		
         public static void WallFrame(int i, int j, bool resetFrame = false)
 		{
