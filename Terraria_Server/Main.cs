@@ -19,7 +19,7 @@ namespace Terraria_Server
 		public const int maxBackgrounds = 7;
 		public const int maxDust = 2000;
 		public const int maxCombatText = 100;
-		public const int maxPlayers = 265;
+		public const int maxPlayers = 255;
 		public const int maxChests = 1000;
         public const int maxItemTypes = 265;
 		public const int maxItems = 200;

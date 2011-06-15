@@ -42,14 +42,15 @@ namespace Terraria_Server.Commands
             COMMAND_BAN = 9,
             COMMAND_UNBAN = 10,
             COMMAND_TIME = 11,
-            COMMAND_GIVE = 12
+            COMMAND_GIVE = 12,
+            PLAYER_SPAWN_NPC = 13
         }
 
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
                                                                     "players",      "me",           "say",          
                                                                     "save-all",     "help",         "whitelist",
                                                                     "ban",          "unban",        "time",
-                                                                    "give"};
+                                                                    "give",         "spawnnpc"};
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
                                                                     "Reload Plugins", 
                                                                     "Show Online Players", 
@@ -62,7 +63,8 @@ namespace Terraria_Server.Commands
                                                                     "Ban a Player", 
                                                                     "Un-Ban a Player", 
                                                                     "Set Time with: set:day:night",
-                                                                    "Give Player an item (/give <player> <amount> <item name:id>)"};
+                                                                    "Give Player an item (/give <player> <amount> <item name:id>)",
+                                                                    "Spawn a NPC (/spawnnpc <amount> <name:id>)"};
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -424,11 +426,6 @@ namespace Terraria_Server.Commands
                         }
                         catch (Exception)
                         {
-                            assumedItem = -1;
-                        }
-
-                        if (assumedItem == -1)
-                        {
                             sender.sendMessage("Item '" + itemName + "' not found!");
                             return;
                         }
@@ -489,6 +486,118 @@ namespace Terraria_Server.Commands
 
         ERROR:
             sender.sendMessage("Command Error!");
+        }
+
+        public static void SpawnNPC(Sender sender, string[] commands)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+
+                // /spawnnpc <amount> <name:id>
+                if (commands.Length > 2 && commands[1] != null && commands[2] != null
+                    && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
+                {
+                    string npcName = Program.mergeStrArray(commands);
+                    npcName = npcName.Remove(0, npcName.IndexOf(commands[2])).Replace(" ", "").ToLower();
+
+                    NPC[] npcs = new NPC[Main.maxItemTypes];
+                    for (int i = 0; i < Main.maxItemTypes; i++)
+                    {
+                        npcs[i] = new NPC();
+                        npcs[i].SetDefaults(i);
+                    }
+
+                    int npcType = -1;
+                    for (int i = 0; i < Main.maxNPCTypes; i++)
+                    {
+                        if (npcs[i] != null)
+                        {
+                            if (npcs[i].name != null && npcs[i].name.Trim().Length > 0)
+                            {
+                                string npc = npcs[i].name.Trim().Replace(" ", "").ToLower();
+                                if (npc == npcName)
+                                {
+                                    npcType = npcs[i].type;
+                                }
+                            }
+                        }
+                    }
+
+                    if (npcType == -1)
+                    {
+                        int assumedItem;
+                        try
+                        {
+                            assumedItem = Int32.Parse(npcName);
+                        }
+                        catch (Exception)
+                        {
+                            sender.sendMessage("NPC Type '" + npcName + "' not found!");
+                            return;
+                        }
+                    
+                        bool assumed = false;
+                        for (int i = 0; i < Main.maxNPCTypes; i++)
+                        {
+                            if (npcs[i].type == assumedItem)
+                            {
+                                npcType = npcs[i].type;
+                                assumed = true;
+                                break;
+                            }
+                        }
+
+                        if (!assumed)
+                        {
+                            sender.sendMessage("Invalid NPC Type '" + npcName + "'!");
+                            return;
+                        }
+                    }
+
+                    int amount = 1;
+                    try
+                    {
+                        amount = Int32.Parse(commands[1]);
+                    }
+                    catch (Exception)
+                    {
+                        sender.sendMessage("Invalid NPC Type '" + npcName + "'!");
+                        return;
+                    }
+
+                    for (int i = 0; i < Main.maxNPCTypes; i++)
+                    {
+                        npcs[i] = null;
+                    }
+                    npcs = null;
+
+                    if (amount >= 0)
+                    {
+                        for (int i = 0; i < amount; i++ )
+                        {
+                            NPC.NewNPC((int)player.position.X + 3, (int)player.position.Y, npcType);
+                        }
+
+                        Program.server.notifyOps("Spawned " + amount.ToString() + " of " + 
+                            npcType.ToString() + " {" + player.name + "}");
+                        return;
+                    }
+
+                }
+                else
+                {
+                    goto ERROR;
+                }
+
+            ERROR:
+                sender.sendMessage("Command Error!");
+            }
         }
 
     }
