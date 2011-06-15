@@ -122,126 +122,133 @@ namespace Terraria_Server
 
         static void Main(string[] args)
         {
-            Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
-
-            if(Statics.isLinux)
+            try
             {
-                Console.WriteLine("Detected Linux OS.");
-                Statics.systemSeperator = "/";
-                Statics.platform = 1;
-            } //if mac...erm i've never used it, Google later?
+                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
 
-            Console.WriteLine("Setting up Paths.");
-            if (!setupPaths())
-            {
-                return;
-            }
-            Console.WriteLine("Setting up Properties.");
-            setupProperties();
-             
-            Console.WriteLine("Preparing Server Data...");
-
-            string worldFile = properties.getInitialWorldPath();
-            FileInfo file = new FileInfo(worldFile);
-
-            if (!file.Exists)
-            {
-                try
+                if (Statics.isLinux)
                 {
-                    file.Directory.Create();
+                    Console.WriteLine("Detected Linux OS.");
+                    Statics.systemSeperator = "/";
+                    Statics.platform = 1;
+                } //if mac...erm i've never used it, Google later?
 
-                }
-                catch (Exception exception) {
-                    Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey(true);
+                Console.WriteLine("Setting up Paths.");
+                if (!setupPaths())
+                {
                     return;
                 }
-                Console.WriteLine("Generating World '" + worldFile + "'");
+                Console.WriteLine("Setting up Properties.");
+                setupProperties();
 
-                int seed = properties.getSeed();
-                if (seed == -1)
+                Console.WriteLine("Preparing Server Data...");
+
+                string worldFile = properties.getInitialWorldPath();
+                FileInfo file = new FileInfo(worldFile);
+
+                if (!file.Exists)
                 {
-                    Console.Write("Generating Seed...");
-                    seed = new Random().Next(100);
-                    Console.Write(seed.ToString() + "\n");
+                    try
+                    {
+                        file.Directory.Create();
+
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception.ToString());
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey(true);
+                        return;
+                    }
+                    Console.WriteLine("Generating World '" + worldFile + "'");
+
+                    int seed = properties.getSeed();
+                    if (seed == -1)
+                    {
+                        Console.Write("Generating Seed...");
+                        seed = new Random().Next(100);
+                        Console.Write(seed.ToString() + "\n");
+                    }
+
+                    int worldX = properties.getMapSizes()[0];
+                    int worldY = properties.getMapSizes()[1];
+                    if (properties.isUsingCutomTiles())
+                    {
+                        int X = properties.getMaxTilesX();
+                        int Y = properties.getMaxTilesY();
+                        if (X > 0 && Y > 0)
+                        {
+                            worldX = X;
+                            worldY = Y;
+                        }
+
+                        Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
+                            ", " + worldY.ToString() + " }");
+                    }
+
+                    Server.maxTilesX = worldX;
+                    Server.maxTilesY = worldY;
+                    Server.tile = new Tile[Server.maxTilesX + 1, Server.maxTilesY + 1];
+
+                    WorldGen.clearWorld();
+                    (new Server()).Initialize();
+                    WorldGen.generateWorld(seed);
+                    WorldGen.saveWorld(worldFile, true);
                 }
 
-                int worldX = properties.getMapSizes()[0];
-                int worldY = properties.getMapSizes()[1];
+                int worldXtiles = properties.getMapSizes()[0];
+                int worldYtiles = properties.getMapSizes()[1];
                 if (properties.isUsingCutomTiles())
                 {
                     int X = properties.getMaxTilesX();
                     int Y = properties.getMaxTilesY();
                     if (X > 0 && Y > 0)
                     {
-                        worldX = X;
-                        worldY = Y;
+                        worldXtiles = X;
+                        worldYtiles = Y;
+                    }
+                    Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
+                        ", " + worldYtiles.ToString() + " }");
+                }
+
+
+                World world = new World(worldXtiles, worldYtiles);
+                world.setSavePath(worldFile);
+
+                server = new Server(world, properties.getMaxPlayers(),
+                    Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
+                    Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
+                server.setOpPassword(properties.getOpPassword());
+                server.setPort(properties.getPort());
+                server.setIP(properties.getServerIP());
+                server.Initialize();
+
+                WorldGen.loadWorld();
+                server.StartServer();
+
+                updateThread = new Thread(Program.Updater);
+
+                Statics.IsActive = true;
+                while (!Statics.serverStarted) { }
+
+                commandParser = new CommandParser(server);
+                Console.WriteLine("You can now insert Commands.");
+                while (Statics.IsActive)
+                {
+                    string line = Console.ReadLine().Trim().ToLower();
+                    if (line.Length > 0)
+                    {
+                        commandParser.parseConsoleCommand(line, server);
                     }
 
-                    Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
-                        ", " + worldY.ToString() + " }");
                 }
-
-                Server.maxTilesX = worldX;
-                Server.maxTilesY = worldY;
-                Server.tile = new Tile[Server.maxTilesX+1, Server.maxTilesY+1];
-
-                WorldGen.clearWorld();
-                (new Server()).Initialize();
-                WorldGen.generateWorld(seed);
-                WorldGen.saveWorld(worldFile, true);
+                while (Statics.serverStarted) { }
+                Console.WriteLine("Exiting...");
             }
-            
-            int worldXtiles = properties.getMapSizes()[0];
-            int worldYtiles = properties.getMapSizes()[1];
-            if (properties.isUsingCutomTiles())
+            catch (Exception)
             {
-                int X = properties.getMaxTilesX();
-                int Y = properties.getMaxTilesY();
-                if (X > 0 && Y > 0)
-                {
-                    worldXtiles = X;
-                    worldYtiles = Y;
-                }
-                Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
-                    ", " + worldYtiles.ToString() + " }");
-            }
-
-
-            World world = new World(worldXtiles, worldYtiles);
-            world.setSavePath(worldFile);
-
-            server = new Server(world, properties.getMaxPlayers(), 
-                Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
-                Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
-            server.setOpPassword(properties.getOpPassword());
-            server.setPort(properties.getPort());
-            server.setIP(properties.getServerIP());
-            server.Initialize();
-
-            WorldGen.loadWorld();
-            server.StartServer();
-            
-            updateThread = new Thread(Program.Updater);
-            
-            Statics.IsActive = true;
-            while (!Statics.serverStarted) { }
-
-            commandParser = new CommandParser(server);
-            Console.WriteLine("You can now insert Commands.");
-            while (Statics.IsActive)
-            {
-                string line = Console.ReadLine().Trim().ToLower();
-                if (line.Length > 0)
-                {
-                    commandParser.parseConsoleCommand(line, server);
-                }
 
             }
-            while (Statics.serverStarted) { }
-            Console.WriteLine("Exiting...");
-            //Console.ReadKey(true);
         }
 
         public static void Updater()
