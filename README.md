@@ -38,7 +38,8 @@ TODO
 Developers
 =============
 TDSM is developed in C# so you will find it reasonably easy to manipulate. Also if ever have done Bukkit (Minecraft) Programming you should see some things are similar when programming a plugin.
-Plugins HAVE to be developed on the .Net 3.5 framework (In Visual Studio you have multiple choices, Choose 3.5) otherwise TDSM will not be able to load your plugin!. And until we add a method for dynamic loading your plugin name will need to be the same as the namespace and class.
+Plugins HAVE to be developed on the .Net 3.5 framework (In Visual Studio you have multiple choices, Choose 3.5) otherwise TDSM will not be able to load your plugin!.
+When developing a Plugin it is no longer needed for the Namespace & Class to be the same, It is now Dynamic.
 
 On a side note, 
 I would love for you to assist in the Development TDSM, you may fully well do so; It's why there is a GitHub :D
