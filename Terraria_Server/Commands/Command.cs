@@ -329,7 +329,7 @@ namespace Terraria_Server.Commands
                     {
                         case "set":
                             {
-                                if (commands[2] != null && commands[2].Length > 0)
+                                if (commands.Length > 2 && commands[2] != null && commands[2].Length > 0)
                                 {
                                     Program.server.getWorld().setTime(Double.Parse(commands[2]));
                                 }
@@ -346,7 +346,7 @@ namespace Terraria_Server.Commands
                             }
                         case "night":
                             {
-                                Program.server.getWorld().setTime(Main.dayLength);
+                                Program.server.getWorld().setTime(0);
                                 break;
                             }
                         default:
@@ -355,6 +355,7 @@ namespace Terraria_Server.Commands
                             }
                     }
 
+                    NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f); //Update players
                     Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.getName());
                     return;
                 }

@@ -215,7 +215,7 @@ namespace Terraria_Server
         {
             Main.time = Time;
 
-            if (Time > Main.dayLength)
+            if (Main.time >= 13500)
             {
                 Main.dayTime = true;
             }
