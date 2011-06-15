@@ -318,20 +318,20 @@ namespace Terraria_Server
 
         public bool isNPCDoorOpenCancelled()
         {
-            string WhiteList = base.getValue("npc-opendoor");
-            if (WhiteList == null || WhiteList.Trim().Length < 0)
+            string NPCDoorOpen = base.getValue("npc-cancelopendoor");
+            if (NPCDoorOpen == null || NPCDoorOpen.Trim().Length < 0)
             {
                 return false;
             }
             else
             {
-                return Boolean.Parse(WhiteList);
+                return Boolean.Parse(NPCDoorOpen);
             }
         }
 
         public void setNPCDoorOpenCancel(bool NPCDoorOpen)
         {
-            base.setValue("npc-opendoor", NPCDoorOpen.ToString());
+            base.setValue("npc-cancelopendoor", NPCDoorOpen.ToString());
         }
     }
 }

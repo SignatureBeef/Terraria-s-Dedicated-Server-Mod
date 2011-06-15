@@ -41,12 +41,15 @@ namespace Terraria_Server.Commands
             COMMAND_WHITELIST = 8,
             COMMAND_BAN = 9,
             COMMAND_UNBAN = 10,
+            COMMAND_TIME = 11,
+            COMMAND_GIVE = 12
         }
 
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
                                                                     "players",      "me",           "say",          
                                                                     "save-all",     "help",         "whitelist",
-                                                                    "ban",          "unban" };
+                                                                    "ban",          "unban",        "time",
+                                                                    "give"};
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
                                                                     "Reload Plugins", 
                                                                     "Show Online Players", 
@@ -57,7 +60,9 @@ namespace Terraria_Server.Commands
                                                                     "Show this Help", 
                                                                     "add:remove to the whitelist", 
                                                                     "Ban a Player", 
-                                                                    "Un-Ban a Player" };
+                                                                    "Un-Ban a Player", 
+                                                                    "Set Time with: set:day:night",
+                                                                    "Give Player an item (/give <player>)"};
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -235,7 +240,7 @@ namespace Terraria_Server.Commands
 
             if (commands != null && commands.Length > 1)
             {
-                if (commands[0] != null && commands[1].Length > 0)
+                if (commands[0] != null && commands[0].Length > 0)
                 {
                     int caseType = -1;
 
@@ -300,6 +305,69 @@ namespace Terraria_Server.Commands
             }
         ERROR:
             sender.sendMessage("Command Error!");
+        }
+
+        public static void Time(Sender sender, string[] commands)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (commands != null && commands.Length > 1)
+            {
+                if (commands[1] != null && commands[1].Length > 0)
+                {
+                    string caseType = commands[1].Trim().ToLower();
+
+                    switch (caseType)
+                    {
+                        case "set":
+                            {
+                                if (commands[2] != null && commands[2].Length > 0)
+                                {
+                                    Program.server.getWorld().setTime(Double.Parse(commands[2]));
+                                }
+                                else
+                                {
+                                    goto ERROR;
+                                }
+                                break;
+                            }
+                        case "day":
+                            {
+                                Program.server.getWorld().setTime(13500);
+                                break;
+                            }
+                        case "night":
+                            {
+                                Program.server.getWorld().setTime(Main.dayLength);
+                                break;
+                            }
+                        default:
+                            {
+                                goto ERROR;
+                            }
+                    }
+
+                    Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.getName());
+                    return;
+                }
+            }
+
+        ERROR:
+            sender.sendMessage("Command Error!");
+        }
+
+        public static void Give(Sender sender, string[] commands)
+        {
+
+
         }
 
     }

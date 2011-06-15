@@ -193,6 +193,11 @@ namespace Terraria_Server.Commands
                         Commands.BanList(sender, commands);
                         break;
                     }
+                case (int)Commands.Command.COMMAND_TIME:
+                    {
+                        Commands.Time(sender, commands);
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("Uknown Command Issued.");

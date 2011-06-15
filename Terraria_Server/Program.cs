@@ -171,8 +171,6 @@ namespace Terraria_Server
                 int worldY = properties.getMapSizes()[1];
                 if (properties.isUsingCutomTiles())
                 {
-                    Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
-                        ", " + worldY.ToString() + " }");
                     int X = properties.getMaxTilesX();
                     int Y = properties.getMaxTilesY();
                     if (X > 0 && Y > 0)
@@ -180,10 +178,14 @@ namespace Terraria_Server
                         worldX = X;
                         worldY = Y;
                     }
+
+                    Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
+                        ", " + worldY.ToString() + " }");
                 }
 
-                Terraria_Server.Main.maxTilesX = worldX;
-                Terraria_Server.Main.maxTilesY = worldY;
+                Server.maxTilesX = worldX;
+                Server.maxTilesY = worldY;
+                Server.tile = new Tile[Server.maxTilesX+1, Server.maxTilesY+1];
 
                 WorldGen.clearWorld();
                 (new Server()).Initialize();
@@ -195,8 +197,6 @@ namespace Terraria_Server
             int worldYtiles = properties.getMapSizes()[1];
             if (properties.isUsingCutomTiles())
             {
-                Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
-                    ", " + worldYtiles.ToString() + " }");
                 int X = properties.getMaxTilesX();
                 int Y = properties.getMaxTilesY();
                 if (X > 0 && Y > 0)
@@ -204,6 +204,8 @@ namespace Terraria_Server
                     worldXtiles = X;
                     worldYtiles = Y;
                 }
+                Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
+                    ", " + worldYtiles.ToString() + " }");
             }
 
 

@@ -151,7 +151,7 @@ namespace Terraria_Server
 				{
 					if (b == 4)
 					{
-						bool flag = false;
+						//bool flag = false;
 						int num3 = (int)this.readBuffer[start + 1];
 						if (Main.netMode == 2)
 						{
@@ -210,22 +210,32 @@ namespace Terraria_Server
 						string string2 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
 						Main.player[num3].name = string2;
 						if (Main.netMode == 2)
-						{
-							if (NetPlay.serverSock[this.whoAmI].state < 10)
-							{
-								for (int l = 0; l < 255; l++)
-								{
-									if (l != num3 && string2 == Main.player[l].name && NetPlay.serverSock[l].active)
-									{
-										flag = true;
-									}
-								}
-							}
-							if (flag)
-							{
-								NetMessage.SendData(2, this.whoAmI, -1, string2 + " is already on this server.", 0, 0f, 0f, 0f);
-								return;
-							}
+                        {
+                            //if (NetPlay.serverSock[this.whoAmI].state < 10)
+                            //{
+                            //    for (int l = 0; l < 255; l++)
+                            //    {
+                            //        if (l != num3 && string2 == Main.player[l].name && NetPlay.serverSock[l].active)
+                            //        {
+                            //            flag = true;
+                            //        }
+                            //    }
+                            //}
+                            //if (flag)
+                            //{
+                            //    NetMessage.SendData(2, this.whoAmI, -1, string2 + " is already on this server.", 0, 0f, 0f, 0f);
+                            //    return;
+                            //}
+                            if (NetPlay.serverSock[this.whoAmI].state < 10)
+                            {
+                                for (int l = 0; l < 255; l++)
+                                {
+                                    if (l != num3 && string2 == Main.player[l].name && NetPlay.serverSock[l].active)
+                                    {
+                                        NetMessage.SendData(2, Main.player[l].whoAmi, -1, string2 + " Logged in from a Different Location.", 0, 0f, 0f, 0f);
+                                    }
+                                }
+                            }
                             if (string2.Length > 20)
                             {
                                 NetMessage.SendData(2, this.whoAmI, -1, "Name is too long.", 0, 0f, 0f, 0f);

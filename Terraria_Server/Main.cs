@@ -48,7 +48,7 @@ namespace Terraria_Server
 		public static bool debugMode = false;
 		public static bool godMode = false;
 
-		public static bool stopSpawns = true;
+		public static bool stopSpawns = false;
 
 
 		public static bool dumbAI = false;
@@ -138,8 +138,8 @@ namespace Terraria_Server
 		public static bool[] tileFrameImportant = new bool[80];
 		public static int[] backgroundWidth = new int[7];
 		public static int[] backgroundHeight = new int[7];
-		public static bool tilesLoaded = false;
-		public static Tile[,] tile = new Tile[Main.maxTilesX, Main.maxTilesY];
+        public static bool tilesLoaded = false;
+        public static Tile[,] tile = new Tile[Main.maxTilesX, Main.maxTilesY];
 		public static Dust[] dust = new Dust[2000];
 		public static Item[] item = new Item[201];
 		public static NPC[] npc = new NPC[1001];

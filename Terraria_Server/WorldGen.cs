@@ -3803,6 +3803,7 @@ namespace Terraria_Server
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num6, Main.maxTilesY), (double)WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 20), type, false, 0f, 0f, false, true);
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num6, Main.maxTilesY), (double)WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(7, 30), type, false, 0f, 0f, false, true);
             }
+            Console.WriteLine();
             for (k = 0; k < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 3E-05); k++)
             {
                 float num10 = (float)((double)k / ((double)(Main.maxTilesX * Main.maxTilesY) * 3E-05));
@@ -10026,6 +10027,7 @@ namespace Terraria_Server
 			}
 		}
 		
+        /*
         public static bool PlacePot(int x, int y, int type = 28)
 		{
 			bool flag = true;
@@ -10037,7 +10039,8 @@ namespace Terraria_Server
 					{
 						Main.tile[i, j] = new Tile();
 					}
-					if (Main.tile[i, j].active)
+					if (Main.tile[i, j
+                        ].active)
 					{
 						flag = false;
 					}
@@ -10069,7 +10072,52 @@ namespace Terraria_Server
 			}
 			return false;
 		}
-		
+		*/
+
+        public static bool PlacePot(int x, int y, int type = 28)
+        {
+            bool flag = true;
+            for (int i = x; i < x + 2; i++)
+            {
+                for (int j = y - 1; j < y + 1; j++)
+                {
+                    if (Main.tile[i, j] == null)
+                    {
+                        Main.tile[i, j] = new Tile();
+                    }
+                    if (Main.tile[i, j].active)
+                    {
+                        flag = false;
+                    }
+                }
+                if (Main.tile[i, y + 1] == null)
+                {
+                    Main.tile[i, y + 1] = new Tile();
+                }
+                if (!Main.tile[i, y + 1].active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
+                {
+                    flag = false;
+                }
+            }
+            if (flag)
+            {
+                for (int k = 0; k < 2; k++)
+                {
+                    for (int l = -1; l < 1; l++)
+                    {
+                        int num = k * 18 + WorldGen.genRand.Next(3) * 36;
+                        int num2 = (l + 1) * 18;
+                        Main.tile[x + k, y + l].active = true;
+                        Main.tile[x + k, y + l].frameX = (short)num;
+                        Main.tile[x + k, y + l].frameY = (short)num2;
+                        Main.tile[x + k, y + l].type = (byte)type;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+
         public static void CheckPot(int i, int j, int type = 28)
 		{
 			if (WorldGen.destroyObject)
