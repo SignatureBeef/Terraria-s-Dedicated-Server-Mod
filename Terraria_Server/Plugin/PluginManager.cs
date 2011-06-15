@@ -109,7 +109,7 @@ namespace Terraria_Server.Plugin
                         {
                             case Hooks.CONSOLE_COMMAND:
                                 {
-                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent) Event);
+                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent)Event);
                                     break;
                                 }
                             case Hooks.PLAYER_COMMAND:
@@ -152,15 +152,20 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerHurt((PlayerHurtEvent)Event);
                                     break;
                                 }
-						}
-					}
-				}
-				catch (Exception exception)
+                            case Hooks.PLAYER_CHEST:
+                                {
+                                    plugin.onPlayerOpenChest((ChestOpenEvent)Event);
+                                    break;
+                                }
+                        }
+                    }
+                }
+                catch (Exception exception)
                 {
                     Console.WriteLine("Error Passing Event " + Hook.ToString() + " to " + plugin.Name);
-					Console.WriteLine(exception.ToString());
-				}
-			}
+                    Console.WriteLine(exception.ToString());
+                }
+            }
         }
     }
 }
