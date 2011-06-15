@@ -417,7 +417,22 @@ namespace Terraria_Server.Commands
                     }
                     else
                     {
-                        int assumedItem = Int32.Parse(itemName);
+                        int assumedItem;
+                        try
+                        {
+                            assumedItem = Int32.Parse(itemName);
+                        }
+                        catch (Exception)
+                        {
+                            assumedItem = -1;
+                        }
+
+                        if (assumedItem == -1)
+                        {
+                            sender.sendMessage("Item '" + itemName + "' not found!");
+                            return;
+                        }
+
                         for (int i = 0; i < Main.maxItems; i++)
                         {
                             if (items[i].type == assumedItem)
@@ -444,10 +459,14 @@ namespace Terraria_Server.Commands
 
                     if(itemType != -1) {
 
-                        int stackSize = 1;
-                        if (commands.Length > 3 && commands[2] != null && commands[2].Trim().Length > 0)
+                        int stackSize;
+                        try
                         {
                             stackSize = Int32.Parse(commands[2]);
+                        }
+                        catch (Exception)
+                        {
+                            stackSize = 1;
                         }
 
                         Item.NewItem((int)player.position.X, (int)player.position.Y, player.width, player.height, itemType, stackSize, false);
