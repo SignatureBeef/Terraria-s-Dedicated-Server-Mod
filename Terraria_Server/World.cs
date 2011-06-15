@@ -663,6 +663,38 @@ namespace Terraria_Server
             leftWorld = LeftWorld;
         }
 
+        public Tile getHighestTile(int axisX)
+        {
+            int tallest = -1;
+            int[] lengths = new int[maxTilesY];
+            int realLength = axisX;
+            for (int i = 0; i < Main.maxTilesX; i++)
+            {
+                if (Main.tile[i, i].active)
+                {
+                    realLength -= Main.tile[axisX, i].frameX;
+                }
+            }
+
+            Console.WriteLine(realLength);
+
+            for (int i = 0; i < maxTilesY; i++)
+            {
+                if (Server.maxTilesX > realLength && Server.tile[realLength, i] != null && Server.tile[realLength, i].active)
+                {
+                    if (i > tallest)
+                    {
+                        tallest = i;
+                    }
+                }
+            }
+            if (tallest >= 0)
+            {
+                return Server.tile[axisX, tallest];
+            }
+            return null;
+        }
+
     }
 
 }

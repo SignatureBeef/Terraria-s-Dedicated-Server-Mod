@@ -8,7 +8,7 @@ using Terraria_Server;
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
 
-namespace TDSMPlugin
+namespace TDSMExamplePlugin
 {
     public class TDSMPlugin : Plugin
     {
@@ -18,8 +18,8 @@ namespace TDSMPlugin
          * Plugins need to be in .NET 3.5
          * Otherwise TDSM will be unable to load it. 
          * 
+         * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
          */
-
 
         public override void Load()
         {
@@ -32,7 +32,7 @@ namespace TDSMPlugin
         public override void Enable()
         {
             Console.WriteLine(base.Name + " enabled.");
-            this.registerHook(Hooks.TILE_CHANGE);
+            this.registerHook(Hooks.TILE_BREAK);
             this.registerHook(Hooks.PLAYER_COMMAND);
         }
 

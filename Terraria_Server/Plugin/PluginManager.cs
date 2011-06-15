@@ -27,28 +27,36 @@ namespace Terraria_Server.Plugin
             try
             {
                 string name = new FileInfo(PluginPath).Name;
-                Assembly pluginAssembly = Assembly.LoadFrom(PluginPath);
-                if (name.Contains("."))
+                Type[] types = Assembly.LoadFrom(PluginPath).GetTypes();
+                for (int i = 0; i < types.Length; i++)
                 {
-                    name = name.Split('.')[0];
+                    Type type = types[i];
+                    if (!type.IsAbstract)
+                    {
+                        Type baseType = type.BaseType;
+                        if (baseType == typeof(Plugin))
+                        {
+                            Plugin plugin = (Plugin)Activator.CreateInstance(type);
+                            if (plugin == null)
+                            {
+                                throw new Exception("Could not Intanciate");
+                            }
+                            else
+                            {
+                                plugin.Server = server;
+                                plugin.Load();
+                                return plugin;
+                            }
+                        }
+                    }
                 }
                 
-                Type pluginType = pluginAssembly.GetType(name + "." + name);
-                Plugin plugin = (Plugin)Activator.CreateInstance(pluginType);
-                if (plugin == null)
-                {
-                    Console.WriteLine("Error Loading Plugin '" + PluginPath + "'. Is it up to Date?");
-                }
-                else
-                {
-                    plugin.Server = server;
-                    plugin.Load();
-                    return plugin;
-                }
+                
             }
             catch (Exception exception)
             {
-                Console.WriteLine("Error Loading Plugin '" + PluginPath + "' : "
+                Console.WriteLine("Error Loading Plugin '" + PluginPath + "'. Is it up to Date?");
+                Console.WriteLine("Plugin Load Exception '" + PluginPath + "' : "
                     + exception.ToString());
             }
 
