@@ -62,7 +62,7 @@ namespace Terraria_Server.Commands
                                                                     "Ban a Player", 
                                                                     "Un-Ban a Player", 
                                                                     "Set Time with: set:day:night",
-                                                                    "Give Player an item (/give <player>)"};
+                                                                    "Give Player an item (/give <player> <amount> <item name:id>)"};
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -303,6 +303,7 @@ namespace Terraria_Server.Commands
                     return;
                 }
             }
+
         ERROR:
             sender.sendMessage("Command Error!");
         }
@@ -367,8 +368,108 @@ namespace Terraria_Server.Commands
 
         public static void Give(Sender sender, string[] commands)
         {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+            // /give <player> <stack> <name> 
+            if (commands.Length > 3 && commands[1] != null && commands[2] != null && commands[3] != null &&
+                commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0 && commands[3].Trim().Length > 0)
+            {
+                string playerName = commands[1].Trim();
+                string itemName = Program.mergeStrArray(commands);
+                itemName = itemName.Remove(0, itemName.IndexOf(commands[3]));
 
+                Player player = Program.server.GetPlayerByName(playerName);
+                if (player != null)
+                {
+                    Item[] items = new Item[Main.maxItems];
+                    for(int i = 0; i < Main.maxItems; i++) {
+                        items[i] = new Item();
+                        items[i].SetDefaults(i);
+                    }
 
+                    Item item = null;
+                    itemName = itemName.Replace(" ", "").ToLower();
+                    for (int i = 0; i < Main.maxItems; i++)
+                    {
+                        if (items[i].name != null)
+                        {
+                            string genItemName = items[i].name.Replace(" ", "").Trim().ToLower();
+                            if (genItemName == itemName)
+                            {
+                                item = items[i];
+                            }
+                        }
+                    }
+
+                    int itemType = -1;
+                    bool assumed = false;
+                    if (item != null)
+                    {
+                        itemType = item.type;
+                        sender.sendMessage("Item '" + itemName + "' found!");
+                    }
+                    else
+                    {
+                        int assumedItem = Int32.Parse(itemName);
+                        for (int i = 0; i < Main.maxItems; i++)
+                        {
+                            if (items[i].type == assumedItem)
+                            {
+                                itemType = items[i].type;
+                                assumed = true;
+                                break;
+                            }
+                        }
+
+                        if (!assumed)
+                        {
+                            sender.sendMessage("Item '" + itemName + "' not found!");
+                            return;
+                        }
+                    }
+
+                    //Clear Data
+                    for (int i = 0; i < Main.maxItems; i++)
+                    {
+                        items[i] = null;
+                    }
+                    items = null;
+
+                    if(itemType != -1) {
+
+                        int stackSize = 1;
+                        if (commands.Length > 3 && commands[2] != null && commands[2].Trim().Length > 0)
+                        {
+                            stackSize = Int32.Parse(commands[2]);
+                        }
+
+                        Item.NewItem((int)player.position.X, (int)player.position.Y, player.width, player.height, itemType, stackSize, false);
+
+                        Program.server.notifyOps("Giving " + player.name + " some " + itemType.ToString() + " {" + sender.getName() + "}");
+
+                        return;
+                    }
+                }
+                else
+                {
+                    sender.sendMessage("Player '" + playerName + "' not found!");
+                    return;
+                }
+            }
+            else
+            {
+                goto ERROR;
+            }
+
+        ERROR:
+            sender.sendMessage("Command Error!");
         }
 
     }

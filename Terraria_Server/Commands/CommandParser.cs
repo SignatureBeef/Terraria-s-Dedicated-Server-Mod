@@ -198,6 +198,11 @@ namespace Terraria_Server.Commands
                         Commands.Time(sender, commands);
                         break;
                     }
+                case (int)Commands.Command.COMMAND_GIVE:
+                    {
+                        Commands.Give(sender, commands);
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("Uknown Command Issued.");

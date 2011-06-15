@@ -37,26 +37,14 @@ namespace Terraria_Server
 
         public Player GetPlayerByName(string name)
         {
-            Player player = null;
-            int num = 0;
-            Player[] player2 = Main.player;
-            Player result;
-            for (int i = 0; i < player2.Length; i++)
+            for (int i = 0; i < Main.player.Length; i++)
             {
-                Player player3 = player2[i];
-                if (player3.name.ToLower() == name.ToLower())
+                if (Main.player[i].name.ToLower() == name.ToLower())
                 {
-                    result = player3;
-                    return result;
-                }
-                if (player3.name.CompareTo(name) > num && player3.name.IndexOf(name) > -1)
-                {
-                    num = player3.name.CompareTo(name);
-                    player = player3;
+                    return Main.player[i];
                 }
             }
-            result = player;
-            return result;
+            return null;
         }
 
         public PluginManager getPluginManager()
