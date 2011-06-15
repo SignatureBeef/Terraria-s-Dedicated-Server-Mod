@@ -245,9 +245,24 @@ namespace Terraria_Server
                 while (Statics.serverStarted) { }
                 Console.WriteLine("Exiting...");
             }
-            catch (Exception)
+            catch (Exception e)
             {
-
+                try
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
+                    {
+                        streamWriter.WriteLine(DateTime.Now);
+                        streamWriter.WriteLine(e);
+                        streamWriter.WriteLine("");
+                    }
+                    Console.WriteLine("Server crash: " + DateTime.Now);
+                    Console.WriteLine(e);
+                    Console.WriteLine("");
+                    Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
+                }
+                catch
+                {
+                }
             }
         }
 

@@ -493,6 +493,33 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
+
+               // try
+               // {
+                Vector2 t = player.position;
+                int tll = Int32.Parse(player.position.X.ToString().Split('.')[0]);
+                Tile tile = Program.server.getWorld().getHighestTile((int)(((float)tll) / 16f));
+                    Server.tile[tile.tileX, tile.tileY] = new Tile();
+                    Server.tile[tile.tileX, tile.tileY].active = false;
+                    Server.tile[tile.tileX, tile.tileY].type = 0;
+
+                    sender.sendMessage(tile.type.ToString());
+
+                    Console.WriteLine(player.getLocation().X);
+                    player.setLocation(new Vector2((float)tile.tileX * 16f, (float)tile.tileY) * 16f);
+                    player.Update();
+                    Console.WriteLine(player.getLocation().X);
+                    NetMessage.SendData(13, -1, player.whoAmi, "", player.whoAmi, 0f, 0f, 0f);
+                    NetMessage.SendData(13, -1, -1, "", player.whoAmi, 0f, 0f, 0f);
+
+                    NetMessage.syncPlayers();
+                //}
+                //catch (Exception)
+                //{
+
+                //}
+                return;
+
                 if (!player.isOp())
                 {
                     NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);

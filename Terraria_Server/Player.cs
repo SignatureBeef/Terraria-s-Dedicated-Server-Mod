@@ -4813,5 +4813,20 @@ namespace Terraria_Server
             ipAddress = IPaddress;
         }
 
+        public Vector2 getLocation()
+        {
+            return position;
+        }
+
+        public void setLocation(Vector2 Location)
+        {
+            position = Location;
+        }
+
+        public void Update()
+        {
+            Main.player[this.whoAmi] = this;
+        }
+
     }
 }

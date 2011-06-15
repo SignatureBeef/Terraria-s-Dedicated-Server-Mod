@@ -89,7 +89,7 @@ namespace Terraria_Server
 		private static int[] mCaveX = new int[300];
 		private static int[] mCaveY = new int[300];
 
-        public static Tile cloneTile(Tile tile)
+        public static Tile cloneTile(Tile tile, int X = 0, int Y = 0)
         {
             return new Tile
             {
@@ -102,7 +102,9 @@ namespace Terraria_Server
                 lava = tile.lava,
                 lighted = tile.lighted,
                 frameX = tile.frameX,
-                frameY = tile.frameY
+                frameY = tile.frameY,
+                tileX = X,
+                tileY = Y
             };
         }
         
