@@ -6,7 +6,10 @@ Aims to provide a stable Server + API and compatibility with Mono.
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
 
 * Jump on over to the Forums at: http://www.tdsm.org/
-* On a side Note I have just recovered from a computer crash so I'm still installing software with also being capped from doing so -_- if any other devs can help out, it WILL be greatly appreciated.
+* Dev's are more than welcome to post their commits to my page, I'm all for it. 
+
+
+TDSM IS NOT tMod. TDSM was actually under development before tMod was released.
 
 
 Status
