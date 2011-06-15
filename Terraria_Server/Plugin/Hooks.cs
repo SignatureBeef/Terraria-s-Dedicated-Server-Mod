@@ -15,6 +15,7 @@ namespace Terraria_Server.Plugin
         PLAYER_PARTYCHANGE,
         PLAYER_CHAT,
         TILE_BREAK,
-        PLAYER_HURT
+        PLAYER_HURT,
+        PLAYER_CHEST
     }
 }

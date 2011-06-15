@@ -34,8 +34,9 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerLogout(LogoutEvent Event) { }
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
         public virtual void onTileBreak(TileBreakEvent Event) { }
-        
-        private ArrayList pluginHooks = new ArrayList();
+        public virtual void onPlayerOpenChest(ChestOpenEvent Event) { }
+
+    	private ArrayList pluginHooks = new ArrayList();
 
         public bool containsHook(Hooks Hook)
         {
