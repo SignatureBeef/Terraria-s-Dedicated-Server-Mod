@@ -20,9 +20,9 @@ namespace Terraria_Server
 		public bool zoneJungle;
 		public bool boneArmor;
 		public int townNPCs;
-		public Vector2 position = new Vector2();
-        public Vector2 velocity = new Vector2();
-        public Vector2 oldVelocity = new Vector2();
+		public Vector2 position;
+        public Vector2 velocity;
+        public Vector2 oldVelocity;
 		public double headFrameCounter;
 		public double bodyFrameCounter;
 		public double legFrameCounter;
@@ -45,7 +45,7 @@ namespace Terraria_Server
 		public float itemRotation;
 		public int itemWidth;
 		public int itemHeight;
-		public Vector2 itemLocation = new Vector2();
+		public Vector2 itemLocation;
 		public int breathCD;
 		public int breathMax = 200;
 		public int breath = 200;
@@ -55,12 +55,12 @@ namespace Terraria_Server
 		public float headRotation;
 		public float bodyRotation;
 		public float legRotation;
-		public Vector2 headPosition = new Vector2();
-        public Vector2 bodyPosition = new Vector2();
-        public Vector2 legPosition = new Vector2();
-        public Vector2 headVelocity = new Vector2();
-        public Vector2 bodyVelocity = new Vector2();
-        public Vector2 legVelocity = new Vector2();
+		public Vector2 headPosition;
+        public Vector2 bodyPosition;
+        public Vector2 legPosition;
+        public Vector2 headVelocity;
+        public Vector2 bodyVelocity;
+        public Vector2 legVelocity;
 		public bool dead;
 		public int respawnTimer;
 		public string name = "";
@@ -132,8 +132,8 @@ namespace Terraria_Server
 		public int[] spI = new int[200];
 		public static int tileRangeX = 5;
 		public static int tileRangeY = 4;
-		private static int tileTargetX;
-		private static int tileTargetY;
+		private static int tileTargetX = 0;
+		private static int tileTargetY = 0;
 		private static int jumpHeight = 15;
 		private static float jumpSpeed = 5.01f;
 		public bool[] adjTile = new bool[80];
@@ -2542,9 +2542,9 @@ namespace Terraria_Server
 				NetMessage.SendData(12, -1, -1, "", Main.myPlayer, 0f, 0f, 0f);
 				Main.gameMenu = false;
 			}
-			this.headPosition = new Vector2();
-			this.bodyPosition = new Vector2();
-			this.legPosition = new Vector2();
+            this.headPosition = default(Vector2);
+            this.bodyPosition = default(Vector2);
+            this.legPosition = default(Vector2);
 			this.headRotation = 0f;
 			this.bodyRotation = 0f;
 			this.legRotation = 0f;

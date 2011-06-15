@@ -145,7 +145,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].liquid > 0)
 					{
-                        Vector2 vector2 = new Vector2();
+                        Vector2 vector2;
 						vector2.X = (float)(i * 16);
 						vector2.Y = (float)(j * 16);
 						int num7 = 16;
@@ -202,7 +202,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].liquid > 0)
 					{
-                        Vector2 vector2 = new Vector2();
+                        Vector2 vector2;
 						vector2.X = (float)(i * 16);
 						vector2.Y = (float)(j * 16);
 						int num7 = 16;
@@ -247,7 +247,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].liquid > 0 && Main.tile[i, j].lava)
 					{
-                        Vector2 vector = new Vector2();
+                        Vector2 vector;
 						vector.X = (float)(i * 16);
 						vector.Y = (float)(j * 16);
 						int num5 = 16;
@@ -300,7 +300,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].active && (Main.tileSolid[(int)Main.tile[i, j].type] || (Main.tileSolidTop[(int)Main.tile[i, j].type] && Main.tile[i, j].frameY == 0)))
 					{
-                        Vector2 vector4 = new Vector2();
+                        Vector2 vector4;
 						vector4.X = (float)(i * 16);
 						vector4.Y = (float)(j * 16);
 						if (vector2.X + (float)Width > vector4.X && vector2.X < vector4.X + 16f && vector2.Y + (float)Height > vector4.Y && vector2.Y < vector4.Y + 16f)
@@ -404,7 +404,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].active)
 					{
-                        Vector2 vector4 = new Vector2();
+                        Vector2 vector4;
 						vector4.X = (float)(i * 16);
 						vector4.Y = (float)(j * 16);
 						if (vector2.X + (float)Width > vector4.X && vector2.X < vector4.X + 16f && vector2.Y + (float)Height > vector4.Y && vector2.Y < vector4.Y + 16f)
@@ -498,7 +498,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].active && (Main.tileSolid[(int)Main.tile[i, j].type] || (Main.tileSolidTop[(int)Main.tile[i, j].type] && Main.tile[i, j].frameY == 0)))
 					{
-                        Vector2 vector2 = new Vector2();
+                        Vector2 vector2;
 						vector2.X = (float)(i * 16);
 						vector2.Y = (float)(j * 16);
 						if (vector.X + (float)Width >= vector2.X && vector.X <= vector2.X + 16f && vector.Y + (float)Height >= vector2.Y && vector.Y <= vector2.Y + 16f)
@@ -538,7 +538,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].active && (Main.tile[i, j].type == 32 || Main.tile[i, j].type == 37 || Main.tile[i, j].type == 48 || Main.tile[i, j].type == 53 || Main.tile[i, j].type == 58 || Main.tile[i, j].type == 69 || Main.tile[i, j].type == 76))
 					{
-                        Vector2 vector2 = new Vector2();
+                        Vector2 vector2;
 						vector2.X = (float)(i * 16);
 						vector2.Y = (float)(j * 16);
 						int num5 = 0;
@@ -634,7 +634,7 @@ namespace Terraria_Server
 				{
 					if (Main.tile[i, j] != null && Main.tile[i, j].active && Main.tile[i, j].type == 51)
 					{
-                        Vector2 vector2 = new Vector2();
+                        Vector2 vector2;
 						vector2.X = (float)(i * 16);
 						vector2.Y = (float)(j * 16);
 						if (vector.X + (float)Width > vector2.X && vector.X < vector2.X + 16f && vector.Y + (float)Height > vector2.Y && (double)vector.Y < (double)vector2.Y + 16.01)

@@ -8,8 +8,8 @@ namespace Terraria_Server
         public bool wet;
         public byte wetCount = 0;
         public bool lavaWet;
-        public Vector2 position = new Vector2();
-        public Vector2 velocity = new Vector2();
+        public Vector2 position;
+        public Vector2 velocity;
         public int width;
         public int height;
         public bool active;

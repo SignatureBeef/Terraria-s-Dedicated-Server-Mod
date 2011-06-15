@@ -5,84 +5,62 @@ using System.Text;
 
 namespace Terraria_Server
 {
-    public class Vector2
+    public struct Vector2
     {
-        public float X = 0;
-        public float Y = 0;
-
-        public Vector2() { }
+        public float X;
+        public float Y;
 
         public Vector2 (float x, float y)
         {
+            this = default(Vector2);
             X = x;
             Y = y;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
         public static Vector2 operator +(Vector2 value1, Vector2 value2)
         {
-            if (value1 == null)
-            {
-                value1 = new Vector2();
-            }
-            if (value2 == null)
-            {
-                value2 = new Vector2();
-            }
-            Vector2 result = new Vector2();
-            result.X = value1.X + value2.X;
-            result.Y = value1.Y + value2.Y;
-            return result;
+            return new Vector2(value1.X + value2.X, value1.Y + value2.Y);
         }
 
         public static Vector2 operator *(Vector2 value1, Vector2 value2)
         {
-            Vector2 result = new Vector2();
-            result.X = value1.X * value2.X;
-            result.Y = value1.Y * value2.Y;
-            return result;
+            return new Vector2(value1.X * value2.X, value1.Y * value2.Y);
         }
+
         public static Vector2 operator *(Vector2 value, float scaleFactor)
         {
-            Vector2 result = new Vector2();
-            result.X = value.X * scaleFactor;
-            result.Y = value.Y * scaleFactor;
-            return result;
+            return new Vector2(value.X * scaleFactor, value.Y * scaleFactor);
         }
+
         public static Vector2 operator *(float scaleFactor, Vector2 value)
         {
-            Vector2 result = new Vector2();
-            result.X = value.X * scaleFactor;
-            result.Y = value.Y * scaleFactor;
-            return result;
+            return new Vector2(value.X * scaleFactor, value.Y * scaleFactor);
         }
 
         public static Vector2 operator -(Vector2 value1, Vector2 value2)
         {
-            Vector2 result = new Vector2();
-            result.X = value1.X - value2.X;
-            result.Y = value1.Y - value2.Y;
-            return result;
+            return new Vector2(value1.X - value2.X, value1.Y - value2.Y);
         }
 
-        /*public float getX()
+        public static bool operator ==(Vector2 a, Vector2 b)
         {
-            return x;
+            return a.X == b.X && a.Y == b.Y;
         }
 
-        public void setX(float X)
+        public static bool operator !=(Vector2 a, Vector2 b)
         {
-            x = X;
+            return a.X != b.X && a.Y != b.Y;
         }
 
-        public float getY()
+        public override bool Equals(object obj)
         {
-            return y;
+            return base.Equals(obj);
         }
-
-        public void setYfloat Y)
-        {
-            y = Y;
-        }*/
 
     }
 

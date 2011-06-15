@@ -50,7 +50,7 @@ namespace Terraria_Server
 		public static int hiScore = 0;
 		public static int dungeonX;
 		public static int dungeonY;
-		public static Vector2 lastDungeonHall = new Vector2();
+		public static Vector2 lastDungeonHall;
 		public static int maxDRooms = 100;
 		public static int numDRooms = 0;
 		public static int[] dRoomX = new int[WorldGen.maxDRooms];
@@ -7577,10 +7577,10 @@ namespace Terraria_Server
 		
         public static void DungeonStairs(int i, int j, int tileType, int wallType)
 		{
-			Vector2 value = new Vector2();
+			Vector2 value;
 			double num = (double)WorldGen.genRand.Next(5, 9);
 			int num2 = 1;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)i;
 			value2.Y = (float)j;
 			int k = WorldGen.genRand.Next(10, 30);
@@ -7705,19 +7705,19 @@ namespace Terraria_Server
 		
         public static void DungeonHalls(int i, int j, int tileType, int wallType, bool forceX = false)
 		{
-			Vector2 value = new Vector2();
+            Vector2 value = default(Vector2);
 			double num = (double)WorldGen.genRand.Next(4, 6);
-			Vector2 vector = new Vector2();
-			Vector2 value2 = new Vector2();
+            Vector2 vector = default(Vector2);
+            Vector2 value2 = default(Vector2);
 			int num2 = 1;
-            Vector2 value3 = new Vector2();
+            Vector2 value3;
 			value3.X = (float)i;
 			value3.Y = (float)j;
 			int k = WorldGen.genRand.Next(35, 80);
 			if (forceX)
 			{
 				k += 20;
-				WorldGen.lastDungeonHall = new Vector2();
+                WorldGen.lastDungeonHall = default(Vector2);
 			}
 			else
 			{
@@ -8079,10 +8079,10 @@ namespace Terraria_Server
         public static void DungeonRoom(int i, int j, int tileType, int wallType)
 		{
 			double num = (double)WorldGen.genRand.Next(15, 30);
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
 			value.Y = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)i;
 			value2.Y = (float)j - (float)num / 2f;
 			int k = WorldGen.genRand.Next(10, 20);
@@ -8211,7 +8211,7 @@ namespace Terraria_Server
 		{
 			double num = WorldGen.dxStrength1;
 			double num2 = WorldGen.dyStrength1;
-            Vector2 vector = new Vector2();
+            Vector2 vector;
 			vector.X = (float)i;
 			vector.Y = (float)j - (float)num2 / 2f;
 			WorldGen.dMinY = (int)vector.Y;
@@ -12272,10 +12272,10 @@ namespace Terraria_Server
 				flag = true;
 			}
 			float num = (float)steps;
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
 			value2.Y = (float)WorldGen.genRand.Next(11) * 0.2f + 0.5f;
 			int num2 = 5;
@@ -12486,10 +12486,10 @@ namespace Terraria_Server
 		{
 			double num = strength;
 			float num2 = (float)steps;
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
 			value2.Y = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
 			if (speedX != 0f || speedY != 0f)
@@ -12710,10 +12710,10 @@ namespace Terraria_Server
 		{
 			double num = (double)WorldGen.genRand.Next(80, 120);
 			float num2 = (float)WorldGen.genRand.Next(20, 25);
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)WorldGen.genRand.Next(-20, 21) * 0.2f;
 			while (value2.X > -2f && value2.X < 2f)
 			{
@@ -12956,10 +12956,10 @@ namespace Terraria_Server
 		{
 			double num = (double)WorldGen.genRand.Next(80, 120);
 			float num2 = (float)WorldGen.genRand.Next(40, 55);
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j + num2 / 2f;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
 			value2.Y = (float)WorldGen.genRand.Next(-20, -10) * 0.1f;
 			while (num > 0.0 && num2 > 0f)
@@ -13034,10 +13034,10 @@ namespace Terraria_Server
 				num2 *= 1.5;
 				num3 *= 1.2f;
 			}
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j - num3 * 0.3f;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
 			value2.Y = (float)WorldGen.genRand.Next(-20, -10) * 0.1f;
 			while (num > 0.0 && num3 > 0f)
@@ -13119,10 +13119,10 @@ namespace Terraria_Server
 				num2 *= 1.5;
 				num3 *= 1.2f;
 			}
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j - num3 * 0.3f;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.X = (float)WorldGen.genRand.Next(-10, 11) * 0.1f;
 			value2.Y = (float)WorldGen.genRand.Next(-20, -10) * 0.1f;
 			while (num > 0.0 && num3 > 0f)
@@ -13205,11 +13205,11 @@ namespace Terraria_Server
 			{
 				num2 = -1;
 			}
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j;
 			int k = WorldGen.genRand.Next(20, 40);
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.Y = (float)WorldGen.genRand.Next(10, 20) * 0.01f;
 			value2.X = (float)num2;
 			while (k > 0)
@@ -13283,11 +13283,11 @@ namespace Terraria_Server
 			{
 				num2 = -1;
 			}
-            Vector2 value = new Vector2();
+            Vector2 value;
 			value.X = (float)i;
 			value.Y = (float)j;
 			int k = 100;
-            Vector2 value2 = new Vector2();
+            Vector2 value2;
 			value2.Y = 0f;
 			value2.X = (float)num2;
 			while (k > 0)

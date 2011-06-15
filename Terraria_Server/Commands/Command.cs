@@ -388,15 +388,16 @@ namespace Terraria_Server.Commands
                 Player player = Program.server.GetPlayerByName(playerName);
                 if (player != null)
                 {
-                    Item[] items = new Item[Main.maxItems];
-                    for(int i = 0; i < Main.maxItems; i++) {
+                    Item[] items = new Item[Main.maxItemTypes];
+                    for (int i = 0; i < Main.maxItemTypes; i++)
+                    {
                         items[i] = new Item();
                         items[i].SetDefaults(i);
                     }
 
                     Item item = null;
                     itemName = itemName.Replace(" ", "").ToLower();
-                    for (int i = 0; i < Main.maxItems; i++)
+                    for (int i = 0; i < Main.maxItemTypes; i++)
                     {
                         if (items[i].name != null)
                         {
@@ -413,7 +414,6 @@ namespace Terraria_Server.Commands
                     if (item != null)
                     {
                         itemType = item.type;
-                        sender.sendMessage("Item '" + itemName + "' found!");
                     }
                     else
                     {
@@ -433,7 +433,7 @@ namespace Terraria_Server.Commands
                             return;
                         }
 
-                        for (int i = 0; i < Main.maxItems; i++)
+                        for (int i = 0; i < Main.maxItemTypes; i++)
                         {
                             if (items[i].type == assumedItem)
                             {
@@ -451,7 +451,7 @@ namespace Terraria_Server.Commands
                     }
 
                     //Clear Data
-                    for (int i = 0; i < Main.maxItems; i++)
+                    for (int i = 0; i < Main.maxItemTypes; i++)
                     {
                         items[i] = null;
                     }

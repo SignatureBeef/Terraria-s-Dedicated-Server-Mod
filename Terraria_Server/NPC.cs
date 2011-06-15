@@ -31,10 +31,10 @@ namespace Terraria_Server
         private static int spawnRate = NPC.defaultSpawnRate;
         private static int maxSpawns = NPC.defaultMaxSpawns;
         public int soundDelay = 0;
-        public Vector2 position = new Vector2();
-        public Vector2 velocity = new Vector2();
-        public Vector2 oldPosition = new Vector2();
-        public Vector2 oldVelocity = new Vector2();
+        public Vector2 position;
+        public Vector2 velocity;
+        public Vector2 oldPosition;
+        public Vector2 oldVelocity;
         public int width;
         public int height;
         public bool active;
@@ -1989,7 +1989,7 @@ namespace Terraria_Server
                                                         float num18 = (float)Math.Sqrt((double)(num16 * num16 + num17 * num17));
                                                         num18 = num15 / num18;
                                                         Vector2 vector2 = vector;
-                                                        Vector2 vector3 = new Vector2();
+                                                        Vector2 vector3;
                                                         vector3.X = num16 * num18;
                                                         vector3.Y = num17 * num18;
                                                         vector2.X += vector3.X * 10f;
@@ -2629,7 +2629,7 @@ namespace Terraria_Server
                                             {
                                                 if (Main.tile[i, j] != null && ((Main.tile[i, j].active && (Main.tileSolid[(int)Main.tile[i, j].type] || (Main.tileSolidTop[(int)Main.tile[i, j].type] && Main.tile[i, j].frameY == 0))) || Main.tile[i, j].liquid > 64))
                                                 {
-                                                    Vector2 vector4 = new Vector2();
+                                                    Vector2 vector4;
                                                     vector4.X = (float)(i * 16);
                                                     vector4.Y = (float)(j * 16);
                                                     if (this.position.X + (float)this.width > vector4.X && this.position.X < vector4.X + 16f && this.position.Y + (float)this.height > vector4.Y && this.position.Y < vector4.Y + 16f)

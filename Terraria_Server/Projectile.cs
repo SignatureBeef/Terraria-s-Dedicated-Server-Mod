@@ -9,8 +9,8 @@ namespace Terraria_Server
 		public bool lavaWet;
 		public int whoAmI;
 		public static int maxAI = 2;
-		public Vector2 position = new Vector2();
-        public Vector2 velocity = new Vector2();
+        public Vector2 position = default(Vector2);
+        public Vector2 velocity = default(Vector2);
 		public int width;
 		public int height;
 		public float scale = 1f;
@@ -39,7 +39,8 @@ namespace Terraria_Server
 		public int numUpdates;
 		public bool ignoreWater;
 		public int[] playerImmune = new int[255];
-		public void SetDefaults(int Type)
+		
+        public void SetDefaults(int Type)
 		{
 			for (int i = 0; i < Projectile.maxAI; i++)
 			{
@@ -62,8 +63,8 @@ namespace Terraria_Server
 			this.light = 0f;
 			this.penetrate = 1;
 			this.tileCollide = true;
-			this.position = new Vector2();
-			this.velocity = new Vector2();
+			this.position = default(Vector2);
+            this.velocity = default(Vector2);
 			this.aiStyle = 0;
 			this.alpha = 0;
 			this.type = Type;
@@ -567,7 +568,8 @@ namespace Terraria_Server
 			this.width = (int)((float)this.width * this.scale);
 			this.height = (int)((float)this.height * this.scale);
 		}
-		public static int NewProjectile(float X, float Y, float SpeedX, float SpeedY, int Type, int Damage, float KnockBack, int Owner = 255)
+		
+        public static int NewProjectile(float X, float Y, float SpeedX, float SpeedY, int Type, int Damage, float KnockBack, int Owner = 255)
 		{
 			int num = 1000;
 			for (int i = 0; i < 1000; i++)
@@ -617,7 +619,8 @@ namespace Terraria_Server
 			}
 			return num;
 		}
-		public void Update(int i)
+		
+        public void Update(int i)
 		{
 			if (this.active)
 			{
@@ -1216,7 +1219,8 @@ namespace Terraria_Server
 				this.netUpdate = false;
 			}
 		}
-		public void AI()
+		
+        public void AI()
 		{
 			if (this.aiStyle == 1)
 			{
@@ -1573,7 +1577,7 @@ namespace Terraria_Server
 									{
 										for (int m = num12; m < num13; m++)
 										{
-                                            Vector2 vector2 = new Vector2();
+                                            Vector2 vector2;
 											vector2.X = (float)(l * 16);
 											vector2.Y = (float)(m * 16);
 											if (this.position.X + (float)this.width > vector2.X && this.position.X < vector2.X + 16f && this.position.Y + (float)this.height > vector2.Y && this.position.Y < vector2.Y + 16f && Main.myPlayer == this.owner && Main.tile[l, m].active)
@@ -1651,7 +1655,7 @@ namespace Terraria_Server
 												{
 													Main.tile[n, num21] = new Tile();
 												}
-                                                Vector2 vector4 = new Vector2();
+                                                Vector2 vector4;
 												vector4.X = (float)(n * 16);
 												vector4.Y = (float)(num21 * 16);
 												if (this.position.X + (float)this.width > vector4.X && this.position.X < vector4.X + 16f && this.position.Y + (float)this.height > vector4.Y && this.position.Y < vector4.Y + 16f && Main.tile[n, num21].active && Main.tileSolid[(int)Main.tile[n, num21].type])
@@ -1760,7 +1764,7 @@ namespace Terraria_Server
 												{
 													Main.tile[num31, num32] = new Tile();
 												}
-												Vector2 vector5 = new Vector2();
+												Vector2 vector5;
 												vector5.X = (float)(num31 * 16);
 												vector5.Y = (float)(num32 * 16);
 												if (this.position.X + (float)(this.width / 2) > vector5.X && this.position.X + (float)(this.width / 2) < vector5.X + 16f && this.position.Y + (float)(this.height / 2) > vector5.Y && this.position.Y + (float)(this.height / 2) < vector5.Y + 16f && Main.tile[num31, num32].active && Main.tileSolid[(int)Main.tile[num31, num32].type])
@@ -2357,7 +2361,7 @@ namespace Terraria_Server
 																			{
 																				if (Main.tile[num66, num67] != null && Main.tile[num66, num67].active && (Main.tileSolid[(int)Main.tile[num66, num67].type] || (Main.tileSolidTop[(int)Main.tile[num66, num67].type] && Main.tile[num66, num67].frameY == 0)))
 																				{
-                                                                                    Vector2 vector11 = new Vector2();
+                                                                                    Vector2 vector11;
 																					vector11.X = (float)(num66 * 16);
 																					vector11.Y = (float)(num67 * 16);
 																					if (this.position.X + (float)this.width - 4f > vector11.X && this.position.X + 4f < vector11.X + 16f && this.position.Y + (float)this.height - 4f > vector11.Y && this.position.Y + 4f < vector11.Y + 16f)
@@ -2468,7 +2472,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public void Kill()
+		
+        public void Kill()
 		{
 			if (!this.active)
 			{
@@ -2769,7 +2774,7 @@ namespace Terraria_Server
 																			expr_CD2.velocity *= 3f;
 																		}
 																		Vector2 arg_D29_0 = new Vector2(this.position.X, this.position.Y);
-																		Vector2 vector = new Vector2();
+                                                                        Vector2 vector = default(Vector2);
 																		int num19 = Gore.NewGore(arg_D29_0, vector, Main.rand.Next(61, 64));
 																		Gore expr_D38 = Main.gore[num19];
 																		expr_D38.velocity *= 0.4f;
@@ -2778,7 +2783,7 @@ namespace Terraria_Server
 																		Gore expr_D78_cp_0 = Main.gore[num19];
 																		expr_D78_cp_0.velocity.Y = expr_D78_cp_0.velocity.Y + 1f;
 																		Vector2 arg_DBC_0 = new Vector2(this.position.X, this.position.Y);
-																		vector = new Vector2();
+																		vector = default(Vector2);
 																		num19 = Gore.NewGore(arg_DBC_0, vector, Main.rand.Next(61, 64));
 																		Gore expr_DCB = Main.gore[num19];
 																		expr_DCB.velocity *= 0.4f;
@@ -2787,7 +2792,7 @@ namespace Terraria_Server
 																		Gore expr_E0B_cp_0 = Main.gore[num19];
 																		expr_E0B_cp_0.velocity.Y = expr_E0B_cp_0.velocity.Y + 1f;
 																		Vector2 arg_E4F_0 = new Vector2(this.position.X, this.position.Y);
-																		vector = new Vector2();
+                                                                        vector = default(Vector2);
 																		num19 = Gore.NewGore(arg_E4F_0, vector, Main.rand.Next(61, 64));
 																		Gore expr_E5E = Main.gore[num19];
 																		expr_E5E.velocity *= 0.4f;
@@ -2796,7 +2801,7 @@ namespace Terraria_Server
 																		Gore expr_E9E_cp_0 = Main.gore[num19];
 																		expr_E9E_cp_0.velocity.Y = expr_E9E_cp_0.velocity.Y - 1f;
 																		Vector2 arg_EE2_0 = new Vector2(this.position.X, this.position.Y);
-																		vector = new Vector2();
+                                                                        vector = default(Vector2);
 																		num19 = Gore.NewGore(arg_EE2_0, vector, Main.rand.Next(61, 64));
 																		Gore expr_EF1 = Main.gore[num19];
 																		expr_EF1.velocity *= 0.4f;
@@ -2859,7 +2864,7 @@ namespace Terraria_Server
 																			for (int num24 = 0; num24 < 2; num24++)
 																			{
 																				Vector2 arg_11BD_0 = new Vector2(this.position.X + (float)(this.width / 2) - 24f, this.position.Y + (float)(this.height / 2) - 24f);
-																				Vector2 vector = new Vector2();
+                                                                                Vector2 vector = default(Vector2);
 																				int num25 = Gore.NewGore(arg_11BD_0, vector, Main.rand.Next(61, 64));
 																				Main.gore[num25].scale = 1.5f;
 																				Gore expr_11E3_cp_0 = Main.gore[num25];
@@ -2867,7 +2872,7 @@ namespace Terraria_Server
 																				Gore expr_1201_cp_0 = Main.gore[num25];
 																				expr_1201_cp_0.velocity.Y = expr_1201_cp_0.velocity.Y + 1.5f;
 																				Vector2 arg_1265_0 = new Vector2(this.position.X + (float)(this.width / 2) - 24f, this.position.Y + (float)(this.height / 2) - 24f);
-																				vector = new Vector2();
+                                                                                vector = default(Vector2);
 																				num25 = Gore.NewGore(arg_1265_0, vector, Main.rand.Next(61, 64));
 																				Main.gore[num25].scale = 1.5f;
 																				Gore expr_128B_cp_0 = Main.gore[num25];
@@ -2875,7 +2880,7 @@ namespace Terraria_Server
 																				Gore expr_12A9_cp_0 = Main.gore[num25];
 																				expr_12A9_cp_0.velocity.Y = expr_12A9_cp_0.velocity.Y + 1.5f;
 																				Vector2 arg_130D_0 = new Vector2(this.position.X + (float)(this.width / 2) - 24f, this.position.Y + (float)(this.height / 2) - 24f);
-																				vector = new Vector2();
+                                                                                vector = default(Vector2);
 																				num25 = Gore.NewGore(arg_130D_0, vector, Main.rand.Next(61, 64));
 																				Main.gore[num25].scale = 1.5f;
 																				Gore expr_1333_cp_0 = Main.gore[num25];
@@ -2883,7 +2888,7 @@ namespace Terraria_Server
 																				Gore expr_1351_cp_0 = Main.gore[num25];
 																				expr_1351_cp_0.velocity.Y = expr_1351_cp_0.velocity.Y - 1.5f;
 																				Vector2 arg_13B5_0 = new Vector2(this.position.X + (float)(this.width / 2) - 24f, this.position.Y + (float)(this.height / 2) - 24f);
-																				vector = new Vector2();
+                                                                                vector = default(Vector2);
 																				num25 = Gore.NewGore(arg_13B5_0, vector, Main.rand.Next(61, 64));
 																				Main.gore[num25].scale = 1.5f;
 																				Gore expr_13DB_cp_0 = Main.gore[num25];
@@ -3080,7 +3085,8 @@ namespace Terraria_Server
 			}
 			this.active = false;
 		}
-		public Color GetAlpha(Color newColor)
+		
+        public Color GetAlpha(Color newColor)
 		{
 			int r;
 			int g;

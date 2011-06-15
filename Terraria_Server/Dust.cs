@@ -4,8 +4,8 @@ namespace Terraria_Server
 {
 	public class Dust
 	{
-		public Vector2 position = new Vector2();
-        public Vector2 velocity = new Vector2();
+		public Vector2 position;
+        public Vector2 velocity;
 		public bool noGravity;
 		public float scale;
 		public float rotation;
