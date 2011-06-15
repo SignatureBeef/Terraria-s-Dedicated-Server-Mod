@@ -493,22 +493,6 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-
-               // try
-               // {
-                    Tile tile = Program.server.getWorld().getHighestTile(Int32.Parse(player.position.X.ToString()));
-                    Server.tile[Int32.Parse(player.position.X.ToString()), tile.tileX] = new Tile();
-                    Server.tile[Int32.Parse(player.position.X.ToString()), tile.tileX].active = false;
-                    Server.tile[Int32.Parse(player.position.X.ToString()), tile.tileX].type = 0;
-
-                    sender.sendMessage(Program.server.getWorld().getHighestTile((int)player.legPosition.X).type.ToString());
-                //}
-                //catch (Exception)
-                //{
-
-                //}
-                return;
-
                 if (!player.isOp())
                 {
                     NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);

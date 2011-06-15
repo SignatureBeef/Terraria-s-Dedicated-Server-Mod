@@ -146,6 +146,5 @@ namespace Terraria_Server
             banList = BanList;
         }
 
-
     }
 }
