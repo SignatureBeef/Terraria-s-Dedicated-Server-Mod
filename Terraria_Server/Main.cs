@@ -610,6 +610,7 @@ namespace Terraria_Server
 			NetPlay.Init();
 		}
         
+        /*
         public void Update()
 		{
 			if (Main.fixedTiming)
@@ -1040,7 +1041,8 @@ namespace Terraria_Server
 			IL_CF8:
 			goto IL_D31;
 		}
-		
+		*/
+
         private static void UpdateInvasion()
 		{
 			if (Main.invasionType > 0)
@@ -1162,7 +1164,110 @@ namespace Terraria_Server
 				}
 			}
 		}
-		
+
+        private static void UpdateServer()
+        {
+            Main.netPlayCounter++;
+            if (Main.netPlayCounter > 3600)
+            {
+                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
+                NetMessage.syncPlayers();
+                Main.netPlayCounter = 0;
+            }
+            for (int i = 0; i < Main.maxNetPlayers; i++)
+            {
+                if (Main.player[i].active && NetPlay.serverSock[i].active)
+                {
+                    NetPlay.serverSock[i].SpamUpdate();
+                }
+            }
+            Math.IEEERemainder((double)Main.netPlayCounter, 60.0);
+            //bool flag = 0 == 0;
+            if (Math.IEEERemainder((double)Main.netPlayCounter, 360.0) == 0.0)
+            {
+                bool flag2 = true;
+                int num = Main.lastItemUpdate;
+                int num2 = 0;
+                while (flag2)
+                {
+                    num++;
+                    if (num >= 200)
+                    {
+                        num = 0;
+                    }
+                    num2++;
+                    if (!Main.item[num].active || Main.item[num].owner == 255)
+                    {
+                        NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
+                    }
+                    if (num2 >= Main.maxItemUpdates || num == Main.lastItemUpdate)
+                    {
+                        flag2 = false;
+                    }
+                }
+                Main.lastItemUpdate = num;
+            }
+            for (int i = 0; i < 200; i++)
+            {
+                if (Main.item[i].active && (Main.item[i].owner == 255 || !Main.player[Main.item[i].owner].active))
+                {
+                    Main.item[i].FindOwner(i);
+                }
+            }
+            for (int i = 0; i < 255; i++)
+            {
+                if (NetPlay.serverSock[i].active)
+                {
+                    NetPlay.serverSock[i].timeOut++;
+                    if (!Main.stopTimeOuts && NetPlay.serverSock[i].timeOut > 60 * Main.timeOut)
+                    {
+                        NetPlay.serverSock[i].kill = true;
+                    }
+                }
+                if (Main.player[i].active)
+                {
+                    int sectionX = NetPlay.GetSectionX((int)(Main.player[i].position.X / 16f));
+                    int sectionY = NetPlay.GetSectionY((int)(Main.player[i].position.Y / 16f));
+                    int num3 = 0;
+                    for (int j = sectionX - 1; j < sectionX + 2; j++)
+                    {
+                        for (int k = sectionY - 1; k < sectionY + 2; k++)
+                        {
+                            if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
+                            {
+                                if (!NetPlay.serverSock[i].tileSection[j, k])
+                                {
+                                    num3++;
+                                }
+                            }
+                        }
+                    }
+                    if (num3 > 0)
+                    {
+                        int num4 = num3 * 150;
+                        NetMessage.SendData(9, i, -1, "Recieving tile data", num4, 0f, 0f, 0f);
+                        NetPlay.serverSock[i].statusText2 = "is recieving tile data";
+                        NetPlay.serverSock[i].statusMax += num4;
+                        for (int j = sectionX - 1; j < sectionX + 2; j++)
+                        {
+                            for (int k = sectionY - 1; k < sectionY + 2; k++)
+                            {
+                                if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
+                                {
+                                    if (!NetPlay.serverSock[i].tileSection[j, k])
+                                    {
+                                        NetMessage.SendSection(i, j, k);
+                                        NetMessage.SendData(11, i, -1, "", j, (float)k, (float)j, (float)k);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        /*
         private static void UpdateServer()
 		{
 			Main.netPlayCounter++;
@@ -1250,7 +1355,9 @@ namespace Terraria_Server
 				}
 			}
 		}
-		
+		*/
+
+        /*
         private static void UpdateTime()
 		{
 			Main.time += 1.0;
@@ -1540,7 +1647,315 @@ namespace Terraria_Server
 				}
 			}
 		}
-		
+		*/
+
+        private static void UpdateTime()
+        {
+            Main.time += 1.0;
+            if (!Main.dayTime)
+            {
+                if (WorldGen.spawnEye && Main.netMode != 1)
+                {
+                    if (Main.time > 4860.0)
+                    {
+                        for (int i = 0; i < 255; i++)
+                        {
+                            if (Main.player[i].active && !Main.player[i].dead && (double)Main.player[i].position.Y < Main.worldSurface * 16.0)
+                            {
+                                NPC.SpawnOnPlayer(i, 4);
+                                WorldGen.spawnEye = false;
+                                break;
+                            }
+                        }
+                    }
+                }
+                if (Main.time > 32400.0)
+                {
+                    if (Main.invasionDelay > 0)
+                    {
+                        Main.invasionDelay--;
+                    }
+                    WorldGen.spawnNPC = 0;
+                    Main.checkForSpawns = 0;
+                    Main.time = 0.0;
+                    Main.bloodMoon = false;
+                    Main.dayTime = true;
+                    Main.moonPhase++;
+                    if (Main.moonPhase >= 8)
+                    {
+                        Main.moonPhase = 0;
+                    }
+                    if (Main.netMode == 2)
+                    {
+                        NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
+                        WorldGen.saveAndPlay();
+                    }
+                    if (Main.netMode != 1)
+                    {
+                        if (Main.rand.Next(15) == 0)
+                        {
+                            Main.StartInvasion();
+                        }
+                    }
+                }
+                if (Main.time > 16200.0 && WorldGen.spawnMeteor)
+                {
+                    WorldGen.spawnMeteor = false;
+                    WorldGen.dropMeteor();
+                }
+            }
+            else
+            {
+                if (Main.time > 54000.0)
+                {
+                    WorldGen.spawnNPC = 0;
+                    Main.checkForSpawns = 0;
+                    if (Main.rand.Next(50) == 0 && Main.netMode != 1 && WorldGen.shadowOrbSmashed)
+                    {
+                        WorldGen.spawnMeteor = true;
+                    }
+                    if (!NPC.downedBoss1 && Main.netMode != 1)
+                    {
+                        bool flag = false;
+                        for (int i = 0; i < 255; i++)
+                        {
+                            if (Main.player[i].active && Main.player[i].statLifeMax >= 200)
+                            {
+                                flag = true;
+                                break;
+                            }
+                        }
+                        if (flag && Main.rand.Next(3) == 0)
+                        {
+                            int num = 0;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                if (Main.npc[i].active)
+                                {
+                                    if (Main.npc[i].townNPC)
+                                    {
+                                        num++;
+                                    }
+                                }
+                            }
+                            if (num >= 4)
+                            {
+                                WorldGen.spawnEye = true;
+                                if (Main.netMode == 0)
+                                {
+                                    //Main.NewText("You feel an evil presence watching you...", 50, 255, 130);
+                                }
+                                else
+                                {
+                                    if (Main.netMode == 2)
+                                    {
+                                        NetMessage.SendData(25, -1, -1, "You feel an evil presence watching you...", 255, 50f, 255f, 130f);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (!WorldGen.spawnEye && Main.moonPhase != 4 && Main.rand.Next(7) == 0 && Main.netMode != 1)
+                    {
+                        for (int i = 0; i < 255; i++)
+                        {
+                            if (Main.player[i].active && Main.player[i].statLifeMax > 100)
+                            {
+                                Main.bloodMoon = true;
+                                break;
+                            }
+                        }
+                        if (Main.bloodMoon)
+                        {
+                            if (Main.netMode == 0)
+                            {
+                                //Main.NewText("The Blood Moon is rising...", 50, 255, 130);
+                            }
+                            else
+                            {
+                                if (Main.netMode == 2)
+                                {
+                                    NetMessage.SendData(25, -1, -1, "The Blood Moon is rising...", 255, 50f, 255f, 130f);
+                                }
+                            }
+                        }
+                    }
+                    Main.time = 0.0;
+                    Main.dayTime = false;
+                    if (Main.netMode == 2)
+                    {
+                        NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
+                    }
+                }
+                if (Main.netMode != 1)
+                {
+                    Main.checkForSpawns++;
+                    if (Main.checkForSpawns >= 7200)
+                    {
+                        int num2 = 0;
+                        for (int i = 0; i < 255; i++)
+                        {
+                            if (Main.player[i].active)
+                            {
+                                num2++;
+                            }
+                        }
+                        Main.checkForSpawns = 0;
+                        WorldGen.spawnNPC = 0;
+                        int num3 = 0;
+                        int num4 = 0;
+                        int num5 = 0;
+                        int num6 = 0;
+                        int num7 = 0;
+                        int num8 = 0;
+                        int num9 = 0;
+                        int num10 = 0;
+                        int num11 = 0;
+                        for (int i = 0; i < 1000; i++)
+                        {
+                            if (Main.npc[i].active && Main.npc[i].townNPC)
+                            {
+                                if (Main.npc[i].type != 37 && !Main.npc[i].homeless)
+                                {
+                                    WorldGen.QuickFindHome(i);
+                                }
+                                else
+                                {
+                                    num8++;
+                                }
+                                if (Main.npc[i].type == 17)
+                                {
+                                    num3++;
+                                }
+                                if (Main.npc[i].type == 18)
+                                {
+                                    num4++;
+                                }
+                                if (Main.npc[i].type == 19)
+                                {
+                                    num6++;
+                                }
+                                if (Main.npc[i].type == 20)
+                                {
+                                    num5++;
+                                }
+                                if (Main.npc[i].type == 22)
+                                {
+                                    num7++;
+                                }
+                                if (Main.npc[i].type == 38)
+                                {
+                                    num9++;
+                                }
+                                if (Main.npc[i].type == 54)
+                                {
+                                    num10++;
+                                }
+                                num11++;
+                            }
+                        }
+                        if (WorldGen.spawnNPC == 0)
+                        {
+                            int num12 = 0;
+                            bool flag2 = false;
+                            int num13 = 0;
+                            bool flag3 = false;
+                            bool flag4 = false;
+                            for (int i = 0; i < 255; i++)
+                            {
+                                if (Main.player[i].active)
+                                {
+                                    for (int j = 0; j < 44; j++)
+                                    {
+                                        if (Main.player[i].inventory[j] != null & Main.player[i].inventory[j].stack > 0)
+                                        {
+                                            if (Main.player[i].inventory[j].type == 71)
+                                            {
+                                                num12 += Main.player[i].inventory[j].stack;
+                                            }
+                                            if (Main.player[i].inventory[j].type == 72)
+                                            {
+                                                num12 += Main.player[i].inventory[j].stack * 100;
+                                            }
+                                            if (Main.player[i].inventory[j].type == 73)
+                                            {
+                                                num12 += Main.player[i].inventory[j].stack * 10000;
+                                            }
+                                            if (Main.player[i].inventory[j].type == 74)
+                                            {
+                                                num12 += Main.player[i].inventory[j].stack * 1000000;
+                                            }
+                                            if (Main.player[i].inventory[j].type == 95 || Main.player[i].inventory[j].type == 96 || Main.player[i].inventory[j].type == 97 || Main.player[i].inventory[j].type == 98 || Main.player[i].inventory[j].useAmmo == 14)
+                                            {
+                                                flag3 = true;
+                                            }
+                                            if (Main.player[i].inventory[j].type == 166 || Main.player[i].inventory[j].type == 167 || Main.player[i].inventory[j].type == 168 || Main.player[i].inventory[j].type == 235)
+                                            {
+                                                flag4 = true;
+                                            }
+                                        }
+                                    }
+                                    int num14 = Main.player[i].statLifeMax / 20;
+                                    if (num14 > 5)
+                                    {
+                                        flag2 = true;
+                                    }
+                                    num13 += num14;
+                                }
+                            }
+                            if (WorldGen.spawnNPC == 0 && num7 < 1)
+                            {
+                                WorldGen.spawnNPC = 22;
+                            }
+                            if (WorldGen.spawnNPC == 0 && (double)num12 > 5000.0 && num3 < 1)
+                            {
+                                WorldGen.spawnNPC = 17;
+                            }
+                            if (WorldGen.spawnNPC == 0 && flag2 && num4 < 1)
+                            {
+                                WorldGen.spawnNPC = 18;
+                            }
+                            if (WorldGen.spawnNPC == 0 && flag3 && num6 < 1)
+                            {
+                                WorldGen.spawnNPC = 19;
+                            }
+                            if (WorldGen.spawnNPC == 0 && (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3) && num5 < 1)
+                            {
+                                WorldGen.spawnNPC = 20;
+                            }
+                            if (WorldGen.spawnNPC == 0 && flag4 && num3 > 0 && num9 < 1)
+                            {
+                                WorldGen.spawnNPC = 38;
+                            }
+                            if (WorldGen.spawnNPC == 0 && NPC.downedBoss3 && num10 < 1)
+                            {
+                                WorldGen.spawnNPC = 54;
+                            }
+                            if (WorldGen.spawnNPC == 0 && num12 > 100000 && num3 < 2 && num2 > 2)
+                            {
+                                WorldGen.spawnNPC = 17;
+                            }
+                            if (WorldGen.spawnNPC == 0 && num13 >= 20 && num4 < 2 && num2 > 2)
+                            {
+                                WorldGen.spawnNPC = 18;
+                            }
+                            if (WorldGen.spawnNPC == 0 && num12 > 5000000 && num3 < 3 && num2 > 4)
+                            {
+                                WorldGen.spawnNPC = 17;
+                            }
+                            if (!NPC.downedBoss3 && num8 == 0)
+                            {
+                                int num15 = NPC.NewNPC(Main.dungeonX * 16 + 8, Main.dungeonY * 16, 37, 0);
+                                Main.npc[num15].homeless = false;
+                                Main.npc[num15].homeTileX = Main.dungeonX;
+                                Main.npc[num15].homeTileY = Main.dungeonY;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         public static double CalculateDamage(int Damage, int Defense)
 		{
 			double num = (double)Damage - (double)Defense * 0.5;
@@ -1583,6 +1998,237 @@ namespace Terraria_Server
 				//this.QuitGame();
 			}
 		}
-		
+
+        public void Update()
+        {
+            for (int i = 0; i < 255; i++)
+            {
+                if (Main.ignoreErrors)
+                {
+                    try
+                    {
+                        Main.player[i].UpdatePlayer(i);
+                    }
+                    catch
+                    {
+                        Debug.WriteLine(string.Concat(new object[]
+						{
+							"Error: player[", 
+							i, 
+							"].UpdatePlayer(", 
+							i, 
+							")"
+						}));
+                    }
+                }
+                else
+                {
+                    Main.player[i].UpdatePlayer(i);
+                }
+            }
+            if (Main.netMode != 1)
+            {
+                NPC.SpawnNPC();
+            }
+            for (int i = 0; i < 255; i++)
+            {
+                Main.player[i].activeNPCs = 0;
+                Main.player[i].townNPCs = 0;
+            }
+            for (int i = 0; i < 1000; i++)
+            {
+                if (Main.ignoreErrors)
+                {
+                    try
+                    {
+                        Main.npc[i].UpdateNPC(i);
+                    }
+                    catch (Exception value)
+                    {
+                        Main.npc[i] = new NPC();
+                        Debug.WriteLine(string.Concat(new object[]
+						{
+							"Error: npc[", 
+							i, 
+							"].UpdateNPC(", 
+							i, 
+							")"
+						}));
+                        Debug.WriteLine(value);
+                    }
+                }
+                else
+                {
+                    Main.npc[i].UpdateNPC(i);
+                }
+            }
+            for (int i = 0; i < 200; i++)
+            {
+                if (Main.ignoreErrors)
+                {
+                    try
+                    {
+                        Main.gore[i].Update();
+                    }
+                    catch
+                    {
+                        Main.gore[i] = new Gore();
+                        Debug.WriteLine("Error: gore[" + i + "].Update()");
+                    }
+                }
+                else
+                {
+                    Main.gore[i].Update();
+                }
+            }
+            for (int i = 0; i < 1000; i++)
+            {
+                if (Main.ignoreErrors)
+                {
+                    try
+                    {
+                        Main.projectile[i].Update(i);
+                    }
+                    catch
+                    {
+                        Main.projectile[i] = new Projectile();
+                        Debug.WriteLine(string.Concat(new object[]
+						{
+							"Error: projectile[", 
+							i, 
+							"].Update(", 
+							i, 
+							")"
+						}));
+                    }
+                }
+                else
+                {
+                    Main.projectile[i].Update(i);
+                }
+            }
+            for (int i = 0; i < 200; i++)
+            {
+                if (Main.ignoreErrors)
+                {
+                    try
+                    {
+                        Main.item[i].UpdateItem(i);
+                    }
+                    catch
+                    {
+                        Main.item[i] = new Item();
+                        Debug.WriteLine(string.Concat(new object[]
+						{
+							"Error: item[", 
+							i, 
+							"].UpdateItem(", 
+							i, 
+							")"
+						}));
+                    }
+                }
+                else
+                {
+                    Main.item[i].UpdateItem(i);
+                }
+            }
+            if (Main.ignoreErrors)
+            {
+                try
+                {
+                    Dust.UpdateDust();
+                }
+                catch
+                {
+                    for (int i = 0; i < 2000; i++)
+                    {
+                        Main.dust[i] = new Dust();
+                    }
+                    Debug.WriteLine("Error: Dust.Update()");
+                }
+            }
+            else
+            {
+                Dust.UpdateDust();
+            }
+            //if (Main.netMode != 2)
+            //{
+            //    CombatText.UpdateCombatText();
+            //}
+            if (Main.ignoreErrors)
+            {
+                try
+                {
+                    Main.UpdateTime();
+                }
+                catch
+                {
+                    Debug.WriteLine("Error: UpdateTime()");
+                    Main.checkForSpawns = 0;
+                }
+            }
+            else
+            {
+                Main.UpdateTime();
+            }
+            if (Main.netMode != 1)
+            {
+                if (Main.ignoreErrors)
+                {
+                    try
+                    {
+                        WorldGen.UpdateWorld();
+                        Main.UpdateInvasion();
+                    }
+                    catch
+                    {
+                        Debug.WriteLine("Error: WorldGen.UpdateWorld()");
+                    }
+                }
+                else
+                {
+                    WorldGen.UpdateWorld();
+                    Main.UpdateInvasion();
+                }
+            }
+            if (Main.ignoreErrors)
+            {
+                try
+                {
+                    if (Main.netMode == 2)
+                    {
+                        Main.UpdateServer();
+                    }
+                    //if (Main.netMode == 1)
+                    //{
+                    //    Main.UpdateClient();
+                    //}
+                }
+                catch
+                {
+                    if (Main.netMode == 2)
+                    {
+                        Debug.WriteLine("Error: UpdateServer()");
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Error: UpdateClient();");
+                    }
+                }
+            }
+            else
+            {
+                if (Main.netMode == 2)
+                {
+                    Main.UpdateServer();
+                }
+                //if (Main.netMode == 1)
+                //{
+                //    Main.UpdateClient();
+                //}
+            }
+        }
+
     }
 }

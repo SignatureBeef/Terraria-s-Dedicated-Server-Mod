@@ -9,6 +9,12 @@ namespace Terraria_Server
 	public class NetMessage
 	{
 		public static messageBuffer[] buffer = new messageBuffer[257];
+
+        public static void BootPlayer(int plr, string msg)
+        {
+            NetMessage.SendData(2, plr, -1, msg, 0, 0f, 0f, 0f);
+        }
+
 		public static void SendData(int msgType, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
 		{
 			int num = 256;

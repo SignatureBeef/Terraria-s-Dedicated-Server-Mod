@@ -257,6 +257,11 @@ namespace Terraria_Server
 	        stopwatch.Start();
 	        double num7 = 0.0;
 
+            if (Server.rand == null)
+            {
+                Server.rand = new Random((int)DateTime.Now.Ticks);
+            }
+
 	        while (Statics.IsActive)
 	        {
 		        double num8 = (double)stopwatch.ElapsedMilliseconds + num7;
