@@ -17,7 +17,6 @@ namespace Terraria_Server
 
         private DataRegister whiteList = null;
         private DataRegister banList = null;
-        //private DataRegister joinedPlayerList = null;
 
         public Server() { }
 

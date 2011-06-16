@@ -122,8 +122,8 @@ namespace Terraria_Server
 
         static void Main(string[] args)
         {
-            //try
-            //{
+            try
+            {
                 Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
 
                 if (Statics.isLinux)
@@ -259,26 +259,26 @@ namespace Terraria_Server
                 }
                 while (Statics.serverStarted) { }
                 Console.WriteLine("Exiting...");
-            //}
-            //catch (Exception e)
-            //{
-            //    try
-            //    {
-            //        using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
-            //        {
-            //            streamWriter.WriteLine(DateTime.Now);
-            //            streamWriter.WriteLine(e);
-            //            streamWriter.WriteLine("");
-            //        }
-            //        Console.WriteLine("Server crash: " + DateTime.Now);
-            //        Console.WriteLine(e);
-            //        Console.WriteLine("");
-            //        Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
-            //    }
-            //    catch
-            //    {
-            //    }
-            //}
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
+                    {
+                        streamWriter.WriteLine(DateTime.Now);
+                        streamWriter.WriteLine(e);
+                        streamWriter.WriteLine("");
+                    }
+                    Console.WriteLine("Server crash: " + DateTime.Now);
+                    Console.WriteLine(e);
+                    Console.WriteLine("");
+                    Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
+                }
+                catch
+                {
+                }
+            }
         }
 
         public static void Updater()
