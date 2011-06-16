@@ -89,7 +89,7 @@ namespace Terraria_Server
                 {
                     if (Main.player[i].isOp())
                     {
-                        NetMessage.SendData(25, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
+                        NetMessage.SendData((int)Packet.PLAYER_CHAT, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
                     }
                 }
             }
@@ -97,7 +97,7 @@ namespace Terraria_Server
 
         public void notifyAll(string Message)
         {
-            NetMessage.SendData(25, -1, -1, Message, 255, 238f, 130f, 238f);
+            NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
         }
 
         public bool getGodMode()

@@ -19,7 +19,8 @@ namespace Terraria_Server
 		public int spamCount;
 		public int maxSpam;
 		public bool checkBytes;
-		public void Reset()
+		
+        public void Reset()
 		{
 			this.writeBuffer = new byte[65535];
 			this.writeLocked = false;
@@ -29,7 +30,8 @@ namespace Terraria_Server
 			this.broadcast = false;
 			this.checkBytes = false;
 		}
-		public void GetData(int start, int length)
+		
+        public void GetData(int start, int length)
 		{
 			if (this.whoAmI < 256)
 			{

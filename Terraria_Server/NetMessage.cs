@@ -1292,8 +1292,9 @@ namespace Terraria_Server
 					try
 					{
 						NetMessage.buffer[num].spamCount++;
-						NetPlay.clientSock.networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(NetPlay.clientSock.ClientWriteCallBack), NetPlay.clientSock.networkStream);
-						goto IL_33DC;
+						//NetPlay.clientSock.networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(NetPlay.clientSock.ClientWriteCallBack), NetPlay.clientSock.networkStream);
+                        NetPlay.clientSock.networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
+                        goto IL_33DC;
 					}
 					catch
 					{
@@ -1323,8 +1324,9 @@ namespace Terraria_Server
 							try
 							{
 								NetMessage.buffer[num11].spamCount++;
-								NetPlay.serverSock[num11].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(NetPlay.serverSock[num11].ServerWriteCallBack), NetPlay.serverSock[num11].networkStream);
-							}
+								//NetPlay.serverSock[num11].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(NetPlay.serverSock[num11].ServerWriteCallBack), NetPlay.serverSock[num11].networkStream);
+                                NetPlay.serverSock[num11].networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
+                            }
 							catch
 							{
 							}
@@ -1337,8 +1339,9 @@ namespace Terraria_Server
 					try
 					{
 						NetMessage.buffer[remoteClient].spamCount++;
-						NetPlay.serverSock[remoteClient].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(NetPlay.serverSock[remoteClient].ServerWriteCallBack), NetPlay.serverSock[remoteClient].networkStream);
-					}
+                        //NetPlay.serverSock[remoteClient].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(NetPlay.serverSock[remoteClient].ServerWriteCallBack), NetPlay.serverSock[remoteClient].networkStream);
+                        NetPlay.serverSock[remoteClient].networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
+                    }
 					catch
 					{
 					}
@@ -1358,7 +1361,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void RecieveBytes(byte[] bytes, int streamLength, int i = 256)
+		
+        public static void RecieveBytes(byte[] bytes, int streamLength, int i = 256)
 		{
 			lock (NetMessage.buffer[i])
 			{
@@ -1383,7 +1387,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void CheckBytes(int i = 256)
+		
+        public static void CheckBytes(int i = 256)
 		{
 			lock (NetMessage.buffer[i])
 			{
@@ -1436,12 +1441,14 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
+		
+        public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
 		{
 			int num = (size - 1) / 2;
 			NetMessage.SendData(20, whoAmi, -1, "", size, (float)(tileX - num), (float)(tileY - num), 0f);
 		}
-		public static void SendSection(int whoAmi, int sectionX, int sectionY)
+		
+        public static void SendSection(int whoAmi, int sectionX, int sectionY)
 		{
 			try
 			{
@@ -1460,7 +1467,8 @@ namespace Terraria_Server
 			{
 			}
 		}
-		public static void greetPlayer(int plr)
+		
+        public static void greetPlayer(int plr)
 		{
             string[] motd = Program.properties.getGreeting().Split('@');
             for (int i = 0; i < motd.Length; i++)
@@ -1492,7 +1500,8 @@ namespace Terraria_Server
 			}
 			NetMessage.SendData(25, plr, -1, "Current players: " + text + ".", 255, 255f, 240f, 20f);
 		}
-		public static void sendWater(int x, int y)
+		
+        public static void sendWater(int x, int y)
 		{
 			if (Main.netMode == 1)
 			{
@@ -1512,7 +1521,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static void syncPlayers()
+		
+        public static void syncPlayers()
 		{
 			bool flag = false;
 			for (int i = 0; i < 255; i++)

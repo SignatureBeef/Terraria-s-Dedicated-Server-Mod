@@ -4825,7 +4825,7 @@ namespace Terraria_Server
 
         public void Update()
         {
-            Main.player[this.whoAmi] = this;
+            Main.player[this.whoAmi].position = this.position;
         }
 
     }

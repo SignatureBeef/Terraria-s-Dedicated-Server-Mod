@@ -81,7 +81,7 @@ namespace Terraria_Server.Commands
                             Player player = (Player)sender;
                             if (!player.isOp())
                             {
-                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                                 return;
                             }
                         }
@@ -98,7 +98,7 @@ namespace Terraria_Server.Commands
                             Player player = (Player)sender;
                             if (!player.isOp())
                             {
-                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                                 return;
                             }
                         }
@@ -149,7 +149,7 @@ namespace Terraria_Server.Commands
                             Player player = (Player)sender;
                             if (!player.isOp())
                             {
-                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                                 return;
                             }
                         }
@@ -163,7 +163,7 @@ namespace Terraria_Server.Commands
                             Player player = (Player)sender;
                             if (!player.isOp())
                             {
-                                NetMessage.SendData(25, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                                 return;
                             }
                         }
@@ -206,6 +206,11 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.PLAYER_SPAWN_NPC:
                     {
                         Commands.SpawnNPC(sender, commands);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_TELEPORT:
+                    {
+                        Commands.Teleport(sender, commands);
                         break;
                     }
                 default:

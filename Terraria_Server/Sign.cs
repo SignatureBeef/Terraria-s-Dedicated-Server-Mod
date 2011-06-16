@@ -8,7 +8,8 @@ namespace Terraria_Server
 		public int x;
 		public int y;
 		public string text;
-		public static void KillSign(int x, int y)
+		
+        public static void KillSign(int x, int y)
 		{
 			for (int i = 0; i < 1000; i++)
 			{
@@ -18,7 +19,8 @@ namespace Terraria_Server
 				}
 			}
 		}
-		public static int ReadSign(int i, int j)
+		
+        public static int ReadSign(int i, int j)
 		{
 			int k = (int)(Main.tile[i, j].frameX / 18);
 			int num = (int)(Main.tile[i, j].frameY / 18);
@@ -59,7 +61,8 @@ namespace Terraria_Server
 			}
 			return num4;
 		}
-		public static void TextSign(int i, string text)
+		
+        public static void TextSign(int i, string text)
 		{
 			if (Main.tile[Main.sign[i].x, Main.sign[i].y] == null || !Main.tile[Main.sign[i].x, Main.sign[i].y].active || Main.tile[Main.sign[i].x, Main.sign[i].y].type != 55)
 			{
