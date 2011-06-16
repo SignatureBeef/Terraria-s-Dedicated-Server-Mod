@@ -122,126 +122,163 @@ namespace Terraria_Server
 
         static void Main(string[] args)
         {
-            Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
+            //try
+            //{
+                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
 
-            if(Statics.isLinux)
-            {
-                Console.WriteLine("Detected Linux OS.");
-                Statics.systemSeperator = "/";
-                Statics.platform = 1;
-            } //if mac...erm i've never used it, Google later?
-
-            Console.WriteLine("Setting up Paths.");
-            if (!setupPaths())
-            {
-                return;
-            }
-            Console.WriteLine("Setting up Properties.");
-            setupProperties();
-             
-            Console.WriteLine("Preparing Server Data...");
-
-            string worldFile = properties.getInitialWorldPath();
-            FileInfo file = new FileInfo(worldFile);
-
-            if (!file.Exists)
-            {
-                try
+                if (Statics.isLinux)
                 {
-                    file.Directory.Create();
+                    Console.WriteLine("Detected Linux OS.");
+                    Statics.systemSeperator = "/";
+                    Statics.platform = 1;
+                } //if mac...erm i've never used it, Google later?
 
-                }
-                catch (Exception exception) {
-                    Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey(true);
+                Console.WriteLine("Setting up Paths.");
+                if (!setupPaths())
+                {
                     return;
                 }
-                Console.WriteLine("Generating World '" + worldFile + "'");
+                Console.WriteLine("Setting up Properties.");
+                setupProperties();
 
-                int seed = properties.getSeed();
-                if (seed == -1)
+                Console.WriteLine("Preparing Server Data...");
+
+                string worldFile = properties.getInitialWorldPath();
+                FileInfo file = new FileInfo(worldFile);
+
+                if (!file.Exists)
                 {
-                    Console.Write("Generating Seed...");
-                    seed = new Random().Next(100);
-                    Console.Write(seed.ToString() + "\n");
+                    try
+                    {
+                        file.Directory.Create();
+
+                    }
+                    catch (Exception exception)
+                    {
+                        Console.WriteLine(exception.ToString());
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey(true);
+                        return;
+                    }
+                    Console.WriteLine("Generating World '" + worldFile + "'");
+
+                    int seed = properties.getSeed();
+                    if (seed == -1)
+                    {
+                        Console.Write("Generating Seed...");
+                        seed = new Random().Next(100);
+                        Console.Write(seed.ToString() + "\n");
+                    }
+
+                    int worldX = properties.getMapSizes()[0];
+                    int worldY = properties.getMapSizes()[1];
+                    if (properties.isUsingCutomTiles())
+                    {
+                        int X = properties.getMaxTilesX();
+                        int Y = properties.getMaxTilesY();
+                        if (X > 0 && Y > 0)
+                        {
+                            worldX = X;
+                            worldY = Y;
+                        }
+
+                        if (worldX < (int)World.MAP_SIZE.SMALL_X || worldY < (int)World.MAP_SIZE.SMALL_Y)
+                        {
+                            Console.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
+                            worldX = (int)(((double)(int)World.MAP_SIZE.SMALL_Y) * 3.5);
+                            worldY = (int)World.MAP_SIZE.SMALL_Y;
+                        }
+
+                        Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
+                            ", " + worldY.ToString() + " }");
+                    }
+
+                    Server.maxTilesX = worldX;
+                    Server.maxTilesY = worldY;
+                    Server.tile = new Tile[Server.maxTilesX + 1, Server.maxTilesY + 1];
+
+                    WorldGen.clearWorld();
+                    (new Server()).Initialize();
+                    WorldGen.generateWorld(seed);
+                    WorldGen.saveWorld(worldFile, true);
                 }
 
-                int worldX = properties.getMapSizes()[0];
-                int worldY = properties.getMapSizes()[1];
+                int worldXtiles = properties.getMapSizes()[0];
+                int worldYtiles = properties.getMapSizes()[1];
                 if (properties.isUsingCutomTiles())
                 {
                     int X = properties.getMaxTilesX();
                     int Y = properties.getMaxTilesY();
                     if (X > 0 && Y > 0)
                     {
-                        worldX = X;
-                        worldY = Y;
+                        worldXtiles = X;
+                        worldYtiles = Y;
                     }
 
-                    Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
-                        ", " + worldY.ToString() + " }");
+                    if (worldXtiles < (int)World.MAP_SIZE.SMALL_X || worldYtiles < (int)World.MAP_SIZE.SMALL_Y)
+                    {
+                        Console.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
+                        worldXtiles = (int)(((double)(int)World.MAP_SIZE.SMALL_Y) * 3.5);
+                        worldYtiles = (int)World.MAP_SIZE.SMALL_Y;
+                    }
+
+                    Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
+                        ", " + worldYtiles.ToString() + " }");
                 }
 
-                Server.maxTilesX = worldX;
-                Server.maxTilesY = worldY;
-                Server.tile = new Tile[Server.maxTilesX+1, Server.maxTilesY+1];
 
-                WorldGen.clearWorld();
-                (new Server()).Initialize();
-                WorldGen.generateWorld(seed);
-                WorldGen.saveWorld(worldFile, true);
-            }
-            
-            int worldXtiles = properties.getMapSizes()[0];
-            int worldYtiles = properties.getMapSizes()[1];
-            if (properties.isUsingCutomTiles())
-            {
-                int X = properties.getMaxTilesX();
-                int Y = properties.getMaxTilesY();
-                if (X > 0 && Y > 0)
+                World world = new World(worldXtiles, worldYtiles);
+                world.setSavePath(worldFile);
+
+                server = new Server(world, properties.getMaxPlayers(),
+                    Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
+                    Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
+                server.setOpPassword(properties.getOpPassword());
+                server.setPort(properties.getPort());
+                server.setIP(properties.getServerIP());
+                server.Initialize();
+
+                WorldGen.loadWorld();
+                server.StartServer();
+
+                updateThread = new Thread(Program.Updater);
+
+                Statics.IsActive = true;
+                while (!Statics.serverStarted) { }
+
+                commandParser = new CommandParser(server);
+                Console.WriteLine("You can now insert Commands.");
+                while (Statics.IsActive)
                 {
-                    worldXtiles = X;
-                    worldYtiles = Y;
+                    string line = Console.ReadLine().Trim().ToLower();
+                    if (line.Length > 0)
+                    {
+                        commandParser.parseConsoleCommand(line, server);
+                    }
+
                 }
-                Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
-                    ", " + worldYtiles.ToString() + " }");
-            }
-
-
-            World world = new World(worldXtiles, worldYtiles);
-            world.setSavePath(worldFile);
-
-            server = new Server(world, properties.getMaxPlayers(), 
-                Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
-                Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
-            server.setOpPassword(properties.getOpPassword());
-            server.setPort(properties.getPort());
-            server.setIP(properties.getServerIP());
-            server.Initialize();
-
-            WorldGen.loadWorld();
-            server.StartServer();
-            
-            updateThread = new Thread(Program.Updater);
-            
-            Statics.IsActive = true;
-            while (!Statics.serverStarted) { }
-
-            commandParser = new CommandParser(server);
-            Console.WriteLine("You can now insert Commands.");
-            while (Statics.IsActive)
-            {
-                string line = Console.ReadLine().Trim().ToLower();
-                if (line.Length > 0)
-                {
-                    commandParser.parseConsoleCommand(line, server);
-                }
-
-            }
-            while (Statics.serverStarted) { }
-            Console.WriteLine("Exiting...");
-            //Console.ReadKey(true);
+                while (Statics.serverStarted) { }
+                Console.WriteLine("Exiting...");
+            //}
+            //catch (Exception e)
+            //{
+            //    try
+            //    {
+            //        using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
+            //        {
+            //            streamWriter.WriteLine(DateTime.Now);
+            //            streamWriter.WriteLine(e);
+            //            streamWriter.WriteLine("");
+            //        }
+            //        Console.WriteLine("Server crash: " + DateTime.Now);
+            //        Console.WriteLine(e);
+            //        Console.WriteLine("");
+            //        Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
+            //    }
+            //    catch
+            //    {
+            //    }
+            //}
         }
 
         public static void Updater()

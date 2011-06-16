@@ -1,12 +1,19 @@
 Terraria's Dedicated Server Mod
 -------------
 
-Aims to provide a stable Server + API and compatibility with Mono.
+Aims to provide a stable Server + API.
 
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
 
 * Jump on over to the Forums at: http://www.tdsm.org/
-* On a side Note I have just recovered from a computer crash so I'm still installing software with also being capped from doing so -_- if any other devs can help out, it WILL be greatly appreciated.
+* Dev's are more than welcome to post their commits to my page, I'm all for it. 
+
+
+TDSM IS NOT tMod. TDSM was actually under development before tMod was released.
+
+-
+	Apparently Asyncronous Sockets are not acheived in Mono yet, I was aware of this, But not as much as I am now.
+	I cannot say how long or when Mono will support it.
 
 
 Status
@@ -31,7 +38,8 @@ TODO
 Developers
 =============
 TDSM is developed in C# so you will find it reasonably easy to manipulate. Also if ever have done Bukkit (Minecraft) Programming you should see some things are similar when programming a plugin.
-Plugins HAVE to be developed on the .Net 3.5 framework (In Visual Studio you have multiple choices, Choose 3.5) otherwise TDSM will not be able to load your plugin!. And until we add a method for dynamic loading your plugin name will need to be the same as the namespace and class.
+Plugins HAVE to be developed on the .Net 3.5 framework (In Visual Studio you have multiple choices, Choose 3.5) otherwise TDSM will not be able to load your plugin!.
+When developing a Plugin it is no longer needed for the Namespace & Class to be the same, It is now Dynamic.
 
 On a side note, 
 I would love for you to assist in the Development TDSM, you may fully well do so; It's why there is a GitHub :D
