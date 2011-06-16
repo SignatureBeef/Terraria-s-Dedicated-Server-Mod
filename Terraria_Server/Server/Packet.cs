@@ -1,0 +1,39 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+namespace Terraria_Server
+{
+    public enum Packet
+    {
+        CONNECTION_REQUEST = 0x01,
+        DISCONNECT = 0x02,
+        CONNECTION_RESPONSE = 0x03,
+        PLAYER_DATA = 0x04,
+        INVENTORY_DATA = 0x05,
+        WORLD_REQUEST = 0x06,
+        WORLD_DATA = 0x07,
+        REQUEST_TILE_BLOCK = 0x08,
+        SEND_TILE_LOADING = 0x09,
+        SEND_TILE_LOADING_MESSAGE = 0x0A,
+        SEND_TILE_CONFIRM = 0x0B,
+        RECEIVING_PLAYER_JOINED = 0x0C,
+        PLAYER_STATE_UPDATE = 0x0D,
+        SYNCH_BEGIN = 0x0E,
+        UNKNOWN = 0x0F,
+        PLAYER_HEALTH_UPDATE = 0x10,
+        TIME_SUN_MOON_UPDATE = 0x12,
+        DOOR_UPDATE = 0x13,
+        TILE_SQUARE = 0x14,
+        ITEM_INFO = 0x15,
+        ITEM_OWNER_INFO = 0x16,
+        NPC_INFO = 0x17,
+        STRIKE_NPC = 0x18,
+        PLAYER_CHAT = 0x19,
+        PASSWORD_REQUEST = 0x25,
+        PPASSWORD_RESPONSE = 0x26,
+        PLAYER_MANA_UPDATE = 0x2A,
+        SEND_SPAWN = 0x31,
+    }
+}
