@@ -87,7 +87,6 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="Server.cs" />
     <Compile Include="ServerSock.cs" />
-    <Compile Include="Server\Packet.cs" />
     <Compile Include="Sign.cs" />
     <Compile Include="Statics.cs" />
     <Compile Include="Tile.cs" />

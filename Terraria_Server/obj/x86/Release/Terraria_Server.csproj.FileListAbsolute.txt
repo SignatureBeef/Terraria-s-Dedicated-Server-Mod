@@ -1,6 +1,0 @@
-D:\Media\Terraria_Server\Terraria_Server\obj\x86\Release\ResolveAssemblyReference.cache
-D:\Media\Terraria_Server\Terraria_Server\bin\Release\Terraria_Server.exe.config
-D:\Media\Terraria_Server\Terraria_Server\bin\Release\Terraria_Server.exe
-D:\Media\Terraria_Server\Terraria_Server\bin\Release\Terraria_Server.pdb
-D:\Media\Terraria_Server\Terraria_Server\obj\x86\Release\Terraria_Server.exe
-D:\Media\Terraria_Server\Terraria_Server\obj\x86\Release\Terraria_Server.pdb
