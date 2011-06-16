@@ -8,7 +8,7 @@ namespace Terraria_Server
     public class World
     {
 
-        public enum MAP_SIZE
+        public enum MAP_SIZE : int
         {
             SMALL_X = 4200,
             MEDIUM_X = 6300,

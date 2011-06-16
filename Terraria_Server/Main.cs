@@ -11,6 +11,7 @@ namespace Terraria_Server
 	public class Main
 	{
         public static int alwaysSpawn = 0;
+        public static bool autoGen = false;
 		private const int MF_BYPOSITION = 1024;
 		public const int sectionWidth = 200;
 		public const int sectionHeight = 150;

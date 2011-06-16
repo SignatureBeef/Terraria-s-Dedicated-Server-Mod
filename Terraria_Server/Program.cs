@@ -122,8 +122,8 @@ namespace Terraria_Server
 
         static void Main(string[] args)
         {
-            try
-            {
+            //try
+            //{
                 Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
 
                 if (Statics.isLinux)
@@ -182,6 +182,13 @@ namespace Terraria_Server
                             worldY = Y;
                         }
 
+                        if (worldX < (int)World.MAP_SIZE.SMALL_X || worldY < (int)World.MAP_SIZE.SMALL_Y)
+                        {
+                            Console.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
+                            worldX = (int)(((double)(int)World.MAP_SIZE.SMALL_Y) * 3.5);
+                            worldY = (int)World.MAP_SIZE.SMALL_Y;
+                        }
+
                         Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
                             ", " + worldY.ToString() + " }");
                     }
@@ -207,6 +214,14 @@ namespace Terraria_Server
                         worldXtiles = X;
                         worldYtiles = Y;
                     }
+
+                    if (worldXtiles < (int)World.MAP_SIZE.SMALL_X || worldYtiles < (int)World.MAP_SIZE.SMALL_Y)
+                    {
+                        Console.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
+                        worldXtiles = (int)(((double)(int)World.MAP_SIZE.SMALL_Y) * 3.5);
+                        worldYtiles = (int)World.MAP_SIZE.SMALL_Y;
+                    }
+
                     Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
                         ", " + worldYtiles.ToString() + " }");
                 }
@@ -244,26 +259,26 @@ namespace Terraria_Server
                 }
                 while (Statics.serverStarted) { }
                 Console.WriteLine("Exiting...");
-            }
-            catch (Exception e)
-            {
-                try
-                {
-                    using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
-                    {
-                        streamWriter.WriteLine(DateTime.Now);
-                        streamWriter.WriteLine(e);
-                        streamWriter.WriteLine("");
-                    }
-                    Console.WriteLine("Server crash: " + DateTime.Now);
-                    Console.WriteLine(e);
-                    Console.WriteLine("");
-                    Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
-                }
-                catch
-                {
-                }
-            }
+            //}
+            //catch (Exception e)
+            //{
+            //    try
+            //    {
+            //        using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
+            //        {
+            //            streamWriter.WriteLine(DateTime.Now);
+            //            streamWriter.WriteLine(e);
+            //            streamWriter.WriteLine("");
+            //        }
+            //        Console.WriteLine("Server crash: " + DateTime.Now);
+            //        Console.WriteLine(e);
+            //        Console.WriteLine("");
+            //        Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
+            //    }
+            //    catch
+            //    {
+            //    }
+            //}
         }
 
         public static void Updater()
