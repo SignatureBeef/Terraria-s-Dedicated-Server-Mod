@@ -10540,6 +10540,10 @@ namespace Terraria_Server
         
         public static void SpreadGrass(int i, int j, int dirt = 0, int grass = 2, bool repeat = true)
         {
+            if (i > Main.maxTilesX || j > Main.maxTilesY)
+            {
+                return;
+            }
             if ((int)Main.tile[i, j].type == dirt && Main.tile[i, j].active && ((double)j >= Main.worldSurface || grass != 70) && ((double)j < Main.worldSurface || dirt != 0))
             {
                 int num = i - 1;
