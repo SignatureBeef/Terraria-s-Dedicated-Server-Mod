@@ -837,7 +837,7 @@ namespace Terraria_Server
             }
             else
             {
-                NetPlay.disconnect = true;
+                Netplay.disconnect = true;
                 Main.netMode = 0;
             }
             Main.menuMode = 0;
@@ -995,7 +995,7 @@ namespace Terraria_Server
                 }
             }
             //Main.PlaySound(10, -1, -1, 1);
-            NetPlay.StartServer();
+            Netplay.StartServer();
             Main.dayTime = WorldGen.tempDayTime;
             Main.time = WorldGen.tempTime;
             Main.moonPhase = WorldGen.tempMoonPhase;

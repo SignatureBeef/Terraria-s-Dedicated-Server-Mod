@@ -21,12 +21,12 @@ namespace Terraria_Server
 		}
 		public void ClientReadCallBack(IAsyncResult ar)
 		{
-			if (!NetPlay.disconnect)
+			if (!Netplay.disconnect)
 			{
 				int num = this.networkStream.EndRead(ar);
 				if (num == 0)
 				{
-					NetPlay.disconnect = true;
+					Netplay.disconnect = true;
                     Program.printData("Lost connection");
 				}
 				else

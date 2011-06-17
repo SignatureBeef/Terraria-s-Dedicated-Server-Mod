@@ -29,9 +29,13 @@ namespace Terraria_Server
             setUsingCutomTiles(isUsingCutomTiles());
             setMaxTilesX(getMaxTilesX());
             setMaxTilesY(getMaxTilesY());
+<<<<<<< HEAD
             setUsingCustomGenOpts(getUsingCustomGenOpts());
             setDungeonAmount(getDungeonAmount());
             setFloatingIslandAmount(getFloatingIslandAmount());
+=======
+            setDebugMode(debugMode());
+>>>>>>> upstream/master
         }
 
         public int getMaxPlayers()
@@ -337,6 +341,7 @@ namespace Terraria_Server
             base.setValue("npc-cancelopendoor", NPCDoorOpen.ToString());
         }
 
+<<<<<<< HEAD
         public void setDungeonAmount(int amount)
         {
             base.setValue("opt-numdungeons", amount.ToString());
@@ -383,6 +388,24 @@ namespace Terraria_Server
                 return (int)((double)Main.maxTilesX * 0.0008) * 3;
             else
                 return Int32.Parse(ficount);
+=======
+        public bool debugMode()
+        {
+            string DebugMode = base.getValue("debugmode");
+            if (DebugMode == null || DebugMode.Trim().Length < 0)
+            {
+                return false;
+            }
+            else
+            {
+                return Boolean.Parse(DebugMode);
+            }
+        }
+
+        public void setDebugMode(bool DebugMode)
+        {
+            base.setValue("debugmode", DebugMode.ToString());
+>>>>>>> upstream/master
         }
     }
 }

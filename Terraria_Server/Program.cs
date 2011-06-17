@@ -122,8 +122,8 @@ namespace Terraria_Server
 
         static void Main(string[] args)
         {
-            //try
-            //{
+            try
+            {
                 Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
 
                 if (Statics.isLinux)
@@ -140,6 +140,12 @@ namespace Terraria_Server
                 }
                 Console.WriteLine("Setting up Properties.");
                 setupProperties();
+
+                Statics.debugMode = properties.debugMode();
+                if (Statics.debugMode)
+                {
+                    Console.WriteLine("CAUTION: Running Debug Mode! Unexpected errors may occur!");
+                }
 
                 Console.WriteLine("Preparing Server Data...");
 
@@ -260,35 +266,39 @@ namespace Terraria_Server
                 Console.WriteLine("You can now insert Commands.");
                 while (Statics.IsActive)
                 {
-                    string line = Console.ReadLine().Trim().ToLower();
-                    if (line.Length > 0)
-                    {
-                        commandParser.parseConsoleCommand(line, server);
-                    }
+                    try {
+						string line = Console.ReadLine().Trim().ToLower();
+	                    if (line.Length > 0)
+	                    {
+	                        commandParser.parseConsoleCommand(line, server);
+	                    }
+					} catch(Exception) {
+						
+					}
 
                 }
                 while (Statics.serverStarted) { }
                 Console.WriteLine("Exiting...");
-            //}
-            //catch (Exception e)
-            //{
-            //    try
-            //    {
-            //        using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
-            //        {
-            //            streamWriter.WriteLine(DateTime.Now);
-            //            streamWriter.WriteLine(e);
-            //            streamWriter.WriteLine("");
-            //        }
-            //        Console.WriteLine("Server crash: " + DateTime.Now);
-            //        Console.WriteLine(e);
-            //        Console.WriteLine("");
-            //        Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
-            //    }
-            //    catch
-            //    {
-            //    }
-            //}
+            }
+            catch (Exception e)
+            {
+                try
+                {
+                    using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
+                    {
+                        streamWriter.WriteLine(DateTime.Now);
+                        streamWriter.WriteLine(e);
+                        streamWriter.WriteLine("");
+                    }
+                    Console.WriteLine("Server crash: " + DateTime.Now);
+                    Console.WriteLine(e);
+                    Console.WriteLine("");
+                    Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
+                }
+                catch
+                {
+                }
+            }
         }
 
         public static void Updater()

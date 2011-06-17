@@ -4788,7 +4788,7 @@ namespace Terraria_Server
 
         public ServerSock getSocket()
         {
-            return NetPlay.serverSock[this.whoAmi];
+            return Netplay.serverSock[this.whoAmi];
         }
 
         public void Kick(string Reason = null)
@@ -4823,10 +4823,10 @@ namespace Terraria_Server
             position = Location;
         }
 
-        public void Update()
-        {
-            Main.player[this.whoAmi] = this;
-        }
+        //public void Update()
+        //{
+        //    Main.player[this.whoAmi].position = this.position;
+        //}
 
     }
 }

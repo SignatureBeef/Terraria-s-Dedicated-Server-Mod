@@ -46,17 +46,6 @@ namespace Terraria_Server
         public Server server = null;
         public int seed = -1; //default
         public int id = 0;
-        //public int moonPhase = 0;
-        //public double time = 0;
-        //public bool dayTime = true;
-        //public bool bloodMoon = false;
-        //public double worldSurface;
-        //public double rockLayer;
-        //public short sunModY = 0;
-        //public short moonModY = 0;
-        //public bool stopNPCSpawns = false;
-        //public int dungeonX;
-        //public int dungeonY;
 
         public float leftWorld = 0.0f;
         public float rightWorld = 134400f;

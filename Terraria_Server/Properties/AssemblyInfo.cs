@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Terraria_Server")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Terraria Server Mod")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("TServer")]
 [assembly: AssemblyProduct("Terraria_Server")]

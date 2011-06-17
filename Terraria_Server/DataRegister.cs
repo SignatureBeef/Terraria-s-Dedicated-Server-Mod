@@ -8,7 +8,7 @@ namespace Terraria_Server
 {
     public class DataRegister
     {
-        private ArrayList whitelist = null;
+        private ArrayList dataList = null;
         private string filePath = "";
 
         public DataRegister(string Location)
@@ -28,31 +28,30 @@ namespace Terraria_Server
 
         public bool containsException(string Exception)
         {
-            bool s = whitelist.Contains(Exception.Trim().ToLower());
-            return whitelist.Contains(Exception.Trim().ToLower());
+            return dataList.Contains(Exception.Trim().ToLower());
         }
 
         public void addException(string Exception)
         {
-            if (!whitelist.Contains(Exception.Trim().ToLower()))
+            if (!dataList.Contains(Exception.Trim().ToLower()))
             {
-                whitelist.Add(Exception.Trim().ToLower());
+                dataList.Add(Exception.Trim().ToLower());
             }
         }
 
         public bool removeException(string Exception)
         {
             bool pass = false;
-            if (whitelist.Contains(Exception.Trim().ToLower()))
+            if (dataList.Contains(Exception.Trim().ToLower()))
             {
-                whitelist.Remove(Exception.Trim().ToLower());
+                dataList.Remove(Exception.Trim().ToLower());
             }
             return pass;
         }
 
         public void Load()
         {
-            whitelist = new ArrayList();
+            dataList = new ArrayList();
 
             if (System.IO.File.Exists(filePath))
             {
@@ -63,7 +62,7 @@ namespace Terraria_Server
                     {
                         if (listee != null && listee.Trim().ToLower().Length > 0)
                         {
-                            whitelist.Add(listee.Trim().ToLower());
+                            dataList.Add(listee.Trim().ToLower());
                         }
                     }
                 }
@@ -82,19 +81,19 @@ namespace Terraria_Server
                 }
             }
 
-            System.IO.File.WriteAllLines(filePath, whitelist.ToArray(typeof(string)) as string[]);
+            System.IO.File.WriteAllLines(filePath, dataList.ToArray(typeof(string)) as string[]);
 
             return true;
         }
 
         public ArrayList getArrayList()
         {
-            return whitelist;
+            return dataList;
         }
 
         public void setArrayList(ArrayList WhiteList)
         {
-            whitelist = WhiteList;
+            dataList = WhiteList;
         }
 
 

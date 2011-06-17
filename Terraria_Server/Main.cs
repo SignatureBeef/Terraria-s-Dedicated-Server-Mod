@@ -80,7 +80,7 @@ namespace Terraria_Server
 		public static int maxTilesY = (int)Main.bottomWorld / 16 + 1;
 		public static int maxSectionsX = Main.maxTilesX / 200;
 		public static int maxSectionsY = Main.maxTilesY / 150;
-		public static int maxNetPlayers = 255;
+		public static int maxNetplayers = 255;
 		public static float caveParrallax = 1f;
 		public static int dungeonX;
 		public static int dungeonY;
@@ -276,12 +276,12 @@ namespace Terraria_Server
 };
 		public static Player clientPlayer = new Player();
 		public static string getIP = Main.defaultIP;
-		public static string getPort = Convert.ToString(NetPlay.serverPort);
+		public static string getPort = Convert.ToString(Netplay.serverPort);
 		public static bool menuMultiplayer = false;
 		public static bool menuServer = false;
 		public static int netMode = 2;
 		public static int timeOut = 120;
-		public static int netPlayCounter;
+		public static int NetplayCounter;
 		public static int lastNPCUpdate;
 		public static int lastItemUpdate;
 		public static int maxNPCUpdates = 15;
@@ -313,9 +313,9 @@ namespace Terraria_Server
 		private Color selColor = new Color(255, 255, 255);
 		public static bool autoPass = false;
 		
-        public void SetNetPlayers(int mPlayers)
+        public void SetNetplayers(int mPlayers)
 		{
-			Main.maxNetPlayers = mPlayers;
+			Main.maxNetplayers = mPlayers;
 		}
 				
         public void Initialize()
@@ -608,7 +608,7 @@ namespace Terraria_Server
 			Main.teamColor[2] = new Color(20, 200, 30);
 			Main.teamColor[3] = new Color(75, 90, 255);
 			Main.teamColor[4] = new Color(200, 180, 0);
-			NetPlay.Init();
+			Netplay.Init();
 		}
         
         /*
@@ -1168,23 +1168,23 @@ namespace Terraria_Server
 
         private static void UpdateServer()
         {
-            Main.netPlayCounter++;
-            if (Main.netPlayCounter > 3600)
+            Main.NetplayCounter++;
+            if (Main.NetplayCounter > 3600)
             {
                 NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
                 NetMessage.syncPlayers();
-                Main.netPlayCounter = 0;
+                Main.NetplayCounter = 0;
             }
-            for (int i = 0; i < Main.maxNetPlayers; i++)
+            for (int i = 0; i < Main.maxNetplayers; i++)
             {
-                if (Main.player[i].active && NetPlay.serverSock[i].active)
+                if (Main.player[i].active && Netplay.serverSock[i].active)
                 {
-                    NetPlay.serverSock[i].SpamUpdate();
+                    Netplay.serverSock[i].SpamUpdate();
                 }
             }
-            Math.IEEERemainder((double)Main.netPlayCounter, 60.0);
+            Math.IEEERemainder((double)Main.NetplayCounter, 60.0);
             //bool flag = 0 == 0;
-            if (Math.IEEERemainder((double)Main.netPlayCounter, 360.0) == 0.0)
+            if (Math.IEEERemainder((double)Main.NetplayCounter, 360.0) == 0.0)
             {
                 bool flag2 = true;
                 int num = Main.lastItemUpdate;
@@ -1217,18 +1217,18 @@ namespace Terraria_Server
             }
             for (int i = 0; i < 255; i++)
             {
-                if (NetPlay.serverSock[i].active)
+                if (Netplay.serverSock[i].active)
                 {
-                    NetPlay.serverSock[i].timeOut++;
-                    if (!Main.stopTimeOuts && NetPlay.serverSock[i].timeOut > 60 * Main.timeOut)
+                    Netplay.serverSock[i].timeOut++;
+                    if (!Main.stopTimeOuts && Netplay.serverSock[i].timeOut > 60 * Main.timeOut)
                     {
-                        NetPlay.serverSock[i].kill = true;
+                        Netplay.serverSock[i].kill = true;
                     }
                 }
                 if (Main.player[i].active)
                 {
-                    int sectionX = NetPlay.GetSectionX((int)(Main.player[i].position.X / 16f));
-                    int sectionY = NetPlay.GetSectionY((int)(Main.player[i].position.Y / 16f));
+                    int sectionX = Netplay.GetSectionX((int)(Main.player[i].position.X / 16f));
+                    int sectionY = Netplay.GetSectionY((int)(Main.player[i].position.Y / 16f));
                     int num3 = 0;
                     for (int j = sectionX - 1; j < sectionX + 2; j++)
                     {
@@ -1236,7 +1236,7 @@ namespace Terraria_Server
                         {
                             if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
                             {
-                                if (!NetPlay.serverSock[i].tileSection[j, k])
+                                if (!Netplay.serverSock[i].tileSection[j, k])
                                 {
                                     num3++;
                                 }
@@ -1247,15 +1247,15 @@ namespace Terraria_Server
                     {
                         int num4 = num3 * 150;
                         NetMessage.SendData(9, i, -1, "Recieving tile data", num4, 0f, 0f, 0f);
-                        NetPlay.serverSock[i].statusText2 = "is recieving tile data";
-                        NetPlay.serverSock[i].statusMax += num4;
+                        Netplay.serverSock[i].statusText2 = "is recieving tile data";
+                        Netplay.serverSock[i].statusMax += num4;
                         for (int j = sectionX - 1; j < sectionX + 2; j++)
                         {
                             for (int k = sectionY - 1; k < sectionY + 2; k++)
                             {
                                 if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
                                 {
-                                    if (!NetPlay.serverSock[i].tileSection[j, k])
+                                    if (!Netplay.serverSock[i].tileSection[j, k])
                                     {
                                         NetMessage.SendSection(i, j, k);
                                         NetMessage.SendData(11, i, -1, "", j, (float)k, (float)j, (float)k);
@@ -1271,15 +1271,15 @@ namespace Terraria_Server
         /*
         private static void UpdateServer()
 		{
-			Main.netPlayCounter++;
-			if (Main.netPlayCounter > 3600)
+			Main.NetplayCounter++;
+			if (Main.NetplayCounter > 3600)
 			{
 				NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
 				NetMessage.syncPlayers();
-				Main.netPlayCounter = 0;
+				Main.NetplayCounter = 0;
 			}
-			Math.IEEERemainder((double)Main.netPlayCounter, 60.0);
-			if (Math.IEEERemainder((double)Main.netPlayCounter, 360.0) == 0.0)
+			Math.IEEERemainder((double)Main.NetplayCounter, 60.0);
+			if (Math.IEEERemainder((double)Main.NetplayCounter, 360.0) == 0.0)
 			{
 				bool flag = true;
 				int num = Main.lastItemUpdate;
@@ -1312,24 +1312,24 @@ namespace Terraria_Server
 			}
 			for (int j = 0; j < 255; j++)
 			{
-				if (NetPlay.serverSock[j].active)
+				if (Netplay.serverSock[j].active)
 				{
-					NetPlay.serverSock[j].timeOut++;
-					if (!Main.stopTimeOuts && NetPlay.serverSock[j].timeOut > 60 * Main.timeOut)
+					Netplay.serverSock[j].timeOut++;
+					if (!Main.stopTimeOuts && Netplay.serverSock[j].timeOut > 60 * Main.timeOut)
 					{
-						NetPlay.serverSock[j].kill = true;
+						Netplay.serverSock[j].kill = true;
 					}
 				}
 				if (Main.player[j].active)
 				{
-					int sectionX = NetPlay.GetSectionX((int)(Main.player[j].position.X / 16f));
-					int sectionY = NetPlay.GetSectionY((int)(Main.player[j].position.Y / 16f));
+					int sectionX = Netplay.GetSectionX((int)(Main.player[j].position.X / 16f));
+					int sectionY = Netplay.GetSectionY((int)(Main.player[j].position.Y / 16f));
 					int num3 = 0;
 					for (int k = sectionX - 1; k < sectionX + 2; k++)
 					{
 						for (int l = sectionY - 1; l < sectionY + 2; l++)
 						{
-							if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !NetPlay.serverSock[j].tileSection[k, l])
+							if (k >= 0 && k < Main.maxSectionsX && l >= 0 && l < Main.maxSectionsY && !Netplay.serverSock[j].tileSection[k, l])
 							{
 								num3++;
 							}
@@ -1339,13 +1339,13 @@ namespace Terraria_Server
 					{
 						int num4 = num3 * 150;
 						NetMessage.SendData(9, j, -1, "Recieving tile data", num4, 0f, 0f, 0f);
-						NetPlay.serverSock[j].statusText2 = "is recieving tile data";
-						NetPlay.serverSock[j].statusMax += num4;
+						Netplay.serverSock[j].statusText2 = "is recieving tile data";
+						Netplay.serverSock[j].statusMax += num4;
 						for (int m = sectionX - 1; m < sectionX + 2; m++)
 						{
 							for (int n = sectionY - 1; n < sectionY + 2; n++)
 							{
-								if (m >= 0 && m < Main.maxSectionsX && n >= 0 && n < Main.maxSectionsY && !NetPlay.serverSock[j].tileSection[m, n])
+								if (m >= 0 && m < Main.maxSectionsX && n >= 0 && n < Main.maxSectionsY && !Netplay.serverSock[j].tileSection[m, n])
 								{
 									NetMessage.SendSection(j, m, n);
 									NetMessage.SendData(11, j, -1, "", m, (float)n, (float)m, (float)n);
