@@ -60,5 +60,6 @@ namespace Terraria_Server
         public static bool IsFixedTimeStep = false;
         public static bool serverStarted = false;
 
+        public static int fidefault = (int)((double)Main.maxTilesX * 0.0008);
     }
 }

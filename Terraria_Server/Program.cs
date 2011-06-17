@@ -184,7 +184,7 @@ namespace Terraria_Server
 
                         if (worldX < (int)World.MAP_SIZE.SMALL_X || worldY < (int)World.MAP_SIZE.SMALL_Y)
                         {
-                            Console.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
+                            Console.WriteLine("World dimensions need to be equal to or larger than " + (int)World.MAP_SIZE.SMALL_X + " by " + (int)World.MAP_SIZE.SMALL_Y + "; using built-in 'small'");
                             worldX = (int)(((double)(int)World.MAP_SIZE.SMALL_Y) * 3.5);
                             worldY = (int)World.MAP_SIZE.SMALL_Y;
                         }
@@ -199,6 +199,16 @@ namespace Terraria_Server
 
                     WorldGen.clearWorld();
                     (new Server()).Initialize();
+                    if (properties.getUsingCustomGenOpts())
+                    {
+                        WorldGen.numDungeons = properties.getDungeonAmount();
+                        WorldGen.ficount = properties.getFloatingIslandAmount();
+                    }
+                    else
+                    {
+                        WorldGen.numDungeons = 1;
+                        WorldGen.ficount = Statics.fidefault;
+                    }
                     WorldGen.generateWorld(seed);
                     WorldGen.saveWorld(worldFile, true);
                 }

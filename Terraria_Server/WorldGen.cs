@@ -90,6 +90,8 @@ namespace Terraria_Server
         private static int numMCaves = 0;
         private static int[] mCaveX = new int[300];
         private static int[] mCaveY = new int[300];
+        public static int numDungeons;
+        public static int ficount;
 
         public static Tile cloneTile(Tile tile, int X = 0, int Y = 0)
         {
@@ -2258,7 +2260,7 @@ namespace Terraria_Server
             WorldGen.houseCount = 0;
             Console.WriteLine();
             Program.printData("Generating floating islands...");
-            for (k = 0; k < (int)((double)Main.maxTilesX * 0.0008); k++)
+            for (k = 0; k < ficount; k++)
             {
                 int num43 = 0;
                 bool flag = false;
@@ -2564,7 +2566,8 @@ namespace Terraria_Server
             }
             l = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldGen.genRand.Next(-200, 200);
             Console.WriteLine();
-            WorldGen.MakeDungeon(m, l, 41, 7);
+            for (int dnum = 0; dnum < numDungeons; dnum++)
+                WorldGen.MakeDungeon(m, l, 41, 7);
             int num48 = 0;
             Console.WriteLine();
             while ((double)num48 < (double)Main.maxTilesX * 0.00045)
