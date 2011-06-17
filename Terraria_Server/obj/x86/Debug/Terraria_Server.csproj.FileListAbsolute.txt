@@ -1,6 +1,0 @@
-E:\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.exe.config
-E:\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.exe
-E:\Terraria_Server\Terraria_Server\bin\Debug\Terraria_Server.pdb
-E:\Terraria_Server\Terraria_Server\obj\x86\Debug\ResolveAssemblyReference.cache
-E:\Terraria_Server\Terraria_Server\obj\x86\Debug\Terraria_Server.exe
-E:\Terraria_Server\Terraria_Server\obj\x86\Debug\Terraria_Server.pdb
