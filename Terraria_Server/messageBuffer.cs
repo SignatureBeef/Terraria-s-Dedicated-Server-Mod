@@ -35,18 +35,18 @@ namespace Terraria_Server
 		{
 			if (this.whoAmI < 256)
 			{
-				NetPlay.serverSock[this.whoAmI].timeOut = 0;
+				Netplay.serverSock[this.whoAmI].timeOut = 0;
 			}
 			else
 			{
-				NetPlay.clientSock.timeOut = 0;
+				Netplay.clientSock.timeOut = 0;
 			}
 			int num = 0;
 			num = start + 1;
 			byte b = this.readBuffer[start];
-			if (Main.netMode == 1 && NetPlay.clientSock.statusMax > 0)
+			if (Main.netMode == 1 && Netplay.clientSock.statusMax > 0)
 			{
-				NetPlay.clientSock.statusCount++;
+				Netplay.clientSock.statusCount++;
 			}
 			if (Main.verboseNetplay)
 			{
@@ -58,7 +58,7 @@ namespace Terraria_Server
 					byte arg_85_0 = this.readBuffer[j];
 				}
 			}
-			if (Main.netMode == 2 && b != 38 && NetPlay.serverSock[this.whoAmI].state == -1)
+			if (Main.netMode == 2 && b != 38 && Netplay.serverSock[this.whoAmI].state == -1)
 			{
 				NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f);
 				return;
@@ -66,7 +66,7 @@ namespace Terraria_Server
 			if (b == 1 && Main.netMode == 2)
 			{
                 LoginEvent Event = new LoginEvent();
-                Event.setSocket(NetPlay.serverSock[this.whoAmI]);
+                Event.setSocket(Netplay.serverSock[this.whoAmI]);
                 Event.setSender(Main.player[this.whoAmI]);
                 Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, Event);
                 if (Event.getCancelled())
@@ -75,18 +75,18 @@ namespace Terraria_Server
                     return;
                 }
 
-				if (Main.dedServ && Program.server.getBanList().containsException(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]))
+				if (Program.server.getBanList().containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]))
 				{
 					NetMessage.SendData(2, this.whoAmI, -1, "You are banned from this Server.", 0, 0f, 0f, 0f);
 					return;
 				}
 
-                if(Program.properties.isUsingWhiteList() && !Program.server.getWhiteList().containsException(NetPlay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
+                if(Program.properties.isUsingWhiteList() && !Program.server.getWhiteList().containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
                     NetMessage.SendData(2, this.whoAmI, -1, "You are not on the WhiteList.", 0, 0f, 0f, 0f);
 					return;
                 }
 
-				if (NetPlay.serverSock[this.whoAmI].state == 0)
+				if (Netplay.serverSock[this.whoAmI].state == 0)
 				{
                     string version = Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
 					if (!(version == "Terraria" + Statics.currentRelease))
@@ -94,13 +94,13 @@ namespace Terraria_Server
 						NetMessage.SendData(2, this.whoAmI, -1, "You are not using the same version as this Server.", 0, 0f, 0f, 0f);
 						return;
 					}
-					if (NetPlay.password == null || NetPlay.password == "")
+					if (Netplay.password == null || Netplay.password == "")
 					{
-						NetPlay.serverSock[this.whoAmI].state = 1;
+						Netplay.serverSock[this.whoAmI].state = 1;
 						NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
 						return;
 					}
-					NetPlay.serverSock[this.whoAmI].state = -1;
+					Netplay.serverSock[this.whoAmI].state = -1;
 					NetMessage.SendData(37, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
 					return;
 				}
@@ -109,15 +109,15 @@ namespace Terraria_Server
 			{
 				if (b == 2 && Main.netMode == 1)
 				{
-					NetPlay.disconnect = true;
+					Netplay.disconnect = true;
 					Main.statusText = Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
 					return;
 				}
 				if (b == 3 && Main.netMode == 1)
 				{
-					if (NetPlay.clientSock.state == 1)
+					if (Netplay.clientSock.state == 1)
 					{
-						NetPlay.clientSock.state = 2;
+						Netplay.clientSock.state = 2;
 					}
 					int num2 = (int)this.readBuffer[start + 1];
 					if (num2 != Main.myPlayer)
@@ -143,9 +143,9 @@ namespace Terraria_Server
 					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[6].name, Main.myPlayer, 50f, 0f, 0f);
 					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[7].name, Main.myPlayer, 51f, 0f, 0f);
 					NetMessage.SendData(6, -1, -1, "", 0, 0f, 0f, 0f);
-					if (NetPlay.clientSock.state == 2)
+					if (Netplay.clientSock.state == 2)
 					{
-						NetPlay.clientSock.state = 3;
+						Netplay.clientSock.state = 3;
 						return;
 					}
 				}
@@ -213,11 +213,11 @@ namespace Terraria_Server
 						Main.player[num3].name = string2;
 						if (Main.netMode == 2)
                         {
-                            //if (NetPlay.serverSock[this.whoAmI].state < 10)
+                            //if (Netplay.serverSock[this.whoAmI].state < 10)
                             //{
                             //    for (int l = 0; l < 255; l++)
                             //    {
-                            //        if (l != num3 && string2 == Main.player[l].name && NetPlay.serverSock[l].active)
+                            //        if (l != num3 && string2 == Main.player[l].name && Netplay.serverSock[l].active)
                             //        {
                             //            flag = true;
                             //        }
@@ -228,11 +228,11 @@ namespace Terraria_Server
                             //    NetMessage.SendData(2, this.whoAmI, -1, string2 + " is already on this server.", 0, 0f, 0f, 0f);
                             //    return;
                             //}
-                            if (NetPlay.serverSock[this.whoAmI].state < 10)
+                            if (Netplay.serverSock[this.whoAmI].state < 10)
                             {
                                 for (int l = 0; l < 255; l++)
                                 {
-                                    if (l != num3 && string2 == Main.player[l].name && NetPlay.serverSock[l].active)
+                                    if (l != num3 && string2 == Main.player[l].name && Netplay.serverSock[l].active)
                                     {
                                         NetMessage.SendData(2, Main.player[l].whoAmi, -1, string2 + " Logged in from a Different Location.", 0, 0f, 0f, 0f);
                                     }
@@ -242,8 +242,8 @@ namespace Terraria_Server
                             {
                                 NetMessage.SendData(2, this.whoAmI, -1, "Name is too long.", 0, 0f, 0f, 0f);
                             }
-							NetPlay.serverSock[this.whoAmI].oldName = string2;
-							NetPlay.serverSock[this.whoAmI].name = string2;
+							Netplay.serverSock[this.whoAmI].oldName = string2;
+							Netplay.serverSock[this.whoAmI].name = string2;
 							NetMessage.SendData(4, -1, this.whoAmI, string2, num3, 0f, 0f, 0f);
 							return;
 						}
@@ -289,9 +289,9 @@ namespace Terraria_Server
 							{
 								if (Main.netMode == 2)
 								{
-									if (NetPlay.serverSock[this.whoAmI].state == 1)
+									if (Netplay.serverSock[this.whoAmI].state == 1)
 									{
-										NetPlay.serverSock[this.whoAmI].state = 2;
+										Netplay.serverSock[this.whoAmI].state = 2;
 									}
 									NetMessage.SendData(7, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
 									return;
@@ -338,9 +338,9 @@ namespace Terraria_Server
 										Main.worldID = BitConverter.ToInt32(this.readBuffer, num);
 										num += 4;
 										Main.worldName = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-										if (NetPlay.clientSock.state == 3)
+										if (Netplay.clientSock.state == 3)
 										{
-											NetPlay.clientSock.state = 4;
+											Netplay.clientSock.state = 4;
 											return;
 										}
 									}
@@ -379,15 +379,15 @@ namespace Terraria_Server
 											{
 												num9 *= 2;
 											}
-											if (NetPlay.serverSock[this.whoAmI].state == 2)
+											if (Netplay.serverSock[this.whoAmI].state == 2)
 											{
-												NetPlay.serverSock[this.whoAmI].state = 3;
+												Netplay.serverSock[this.whoAmI].state = 3;
 											}
 											NetMessage.SendData(9, this.whoAmI, -1, "Receiving tile data", num9, 0f, 0f, 0f);
-											NetPlay.serverSock[this.whoAmI].statusText2 = "is receiving tile data";
-											NetPlay.serverSock[this.whoAmI].statusMax += num9;
-											int sectionX = NetPlay.GetSectionX(Main.spawnTileX);
-											int sectionY = NetPlay.GetSectionY(Main.spawnTileY);
+											Netplay.serverSock[this.whoAmI].statusText2 = "is receiving tile data";
+											Netplay.serverSock[this.whoAmI].statusMax += num9;
+											int sectionX = Netplay.GetSectionX(Main.spawnTileX);
+											int sectionY = Netplay.GetSectionY(Main.spawnTileY);
 											for (int m = sectionX - 2; m < sectionX + 3; m++)
 											{
 												for (int n = sectionY - 1; n < sectionY + 2; n++)
@@ -397,8 +397,8 @@ namespace Terraria_Server
 											}
 											if (flag2)
 											{
-												num7 = NetPlay.GetSectionX(num7);
-												num8 = NetPlay.GetSectionY(num8);
+												num7 = Netplay.GetSectionX(num7);
+												num8 = Netplay.GetSectionY(num8);
 												for (int num10 = num7 - 2; num10 < num7 + 3; num10++)
 												{
 													for (int num11 = num8 - 1; num11 < num8 + 2; num11++)
@@ -436,8 +436,8 @@ namespace Terraria_Server
 											{
 												int num14 = BitConverter.ToInt32(this.readBuffer, start + 1);
 												string string4 = Encoding.ASCII.GetString(this.readBuffer, start + 5, length - 5);
-												NetPlay.clientSock.statusMax += num14;
-												NetPlay.clientSock.statusText = string4;
+												Netplay.clientSock.statusMax += num14;
+												Netplay.clientSock.statusText = string4;
 												return;
 											}
 										}
@@ -563,13 +563,13 @@ namespace Terraria_Server
 														Main.player[num19].SpawnY = BitConverter.ToInt32(this.readBuffer, num);
 														num += 4;
 														Main.player[num19].Spawn();
-														if (Main.netMode == 2 && NetPlay.serverSock[this.whoAmI].state >= 3)
+														if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state >= 3)
 														{
 															NetMessage.buffer[this.whoAmI].broadcast = true;
 															NetMessage.SendData(12, -1, this.whoAmI, "", this.whoAmI, 0f, 0f, 0f);
-															if (NetPlay.serverSock[this.whoAmI].state == 3)
+															if (Netplay.serverSock[this.whoAmI].state == 3)
 															{
-																NetPlay.serverSock[this.whoAmI].state = 10;
+																Netplay.serverSock[this.whoAmI].state = 10;
 																NetMessage.greetPlayer(this.whoAmI);
 																NetMessage.syncPlayers();
 																return;
@@ -640,7 +640,7 @@ namespace Terraria_Server
 															{
 																Main.player[num20].direction = 1;
 															}
-															if (Main.netMode == 2 && NetPlay.serverSock[this.whoAmI].state == 10)
+															if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state == 10)
 															{
 																NetMessage.SendData(13, -1, this.whoAmI, "", num20, 0f, 0f, 0f);
 																return;
@@ -730,7 +730,7 @@ namespace Terraria_Server
                                                                             {
                                                                                 Main.tile[num26, num27] = new Tile();
                                                                             }
-																			if (Main.netMode == 2 && !NetPlay.serverSock[this.whoAmI].tileSection[NetPlay.GetSectionX(num26), NetPlay.GetSectionY(num27)])
+																			if (Main.netMode == 2 && !Netplay.serverSock[this.whoAmI].tileSection[Netplay.GetSectionX(num26), Netplay.GetSectionY(num27)])
 																			{
 																				fail = true;
 																			}
@@ -1530,11 +1530,11 @@ namespace Terraria_Server
 																																					{
 																																						if (Main.autoPass)
 																																						{
-																																							NetMessage.SendData(38, -1, -1, NetPlay.password, 0, 0f, 0f, 0f);
+																																							NetMessage.SendData(38, -1, -1, Netplay.password, 0, 0f, 0f, 0f);
 																																							Main.autoPass = false;
 																																							return;
 																																						}
-																																						NetPlay.password = "";
+																																						Netplay.password = "";
 																																						Main.menuMode = 31;
 																																						return;
 																																					}
@@ -1546,7 +1546,7 @@ namespace Terraria_Server
 																																						if (Main.netMode == 2)
 																																						{
 																																							string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-                                                                                                                                                            if (pasword == NetPlay.password)
+                                                                                                                                                            if (pasword == Netplay.password)
                                                                                                                                                             {
                                                                                                                                                                 Main.player[this.whoAmI].setOp(true);
                                                                                                                                                             }
@@ -1554,7 +1554,7 @@ namespace Terraria_Server
                                                                                                                                                             {
                                                                                                                                                                 Main.player[this.whoAmI].setOp(false);
                                                                                                                                                             }
-                                                                                                                                                            NetPlay.serverSock[this.whoAmI].state = 1;
+                                                                                                                                                            Netplay.serverSock[this.whoAmI].state = 1;
                                                                                                                                                             NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
                                                                                                                                                             return;
 																																						}
@@ -1808,9 +1808,9 @@ namespace Terraria_Server
 																																																return;
 																																															}
 																																														}
-																																														if (b == 49 && NetPlay.clientSock.state == 6)
+																																														if (b == 49 && Netplay.clientSock.state == 6)
 																																														{
-																																															NetPlay.clientSock.state = 10;
+																																															Netplay.clientSock.state = 10;
 																																															Main.player[Main.myPlayer].Spawn();
 																																														}
 																																													}

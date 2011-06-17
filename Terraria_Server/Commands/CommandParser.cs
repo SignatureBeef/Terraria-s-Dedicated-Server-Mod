@@ -72,7 +72,8 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.NO_SUCH_COMMAND:
                     {
                         Console.WriteLine("No such command!");
-                        break;
+                        //break;
+                        return;
                     }
                 case (int)Commands.Command.CONSOLE_EXIT:
                     {
@@ -218,8 +219,21 @@ namespace Terraria_Server.Commands
                         Console.WriteLine("Uknown Command Issued.");
                         break;
                     }
-
             }
+
+            //if (sender is Player)
+            //{
+            //    Player player = (Player)sender;
+            //    foreach (Player ply in Main.player)
+            //    {
+            //        if (ply.whoAmi == player.whoAmi)
+            //        {
+            //            Main.player[player.whoAmi] = player;
+            //            break;
+            //        }
+            //    }
+            //}
+
         }
 
     }

@@ -29,6 +29,7 @@ namespace Terraria_Server
             setUsingCutomTiles(isUsingCutomTiles());
             setMaxTilesX(getMaxTilesX());
             setMaxTilesY(getMaxTilesY());
+            setDebugMode(debugMode());
         }
 
         public int getMaxPlayers()
@@ -332,6 +333,24 @@ namespace Terraria_Server
         public void setNPCDoorOpenCancel(bool NPCDoorOpen)
         {
             base.setValue("npc-cancelopendoor", NPCDoorOpen.ToString());
+        }
+
+        public bool debugMode()
+        {
+            string DebugMode = base.getValue("debugmode");
+            if (DebugMode == null || DebugMode.Trim().Length < 0)
+            {
+                return false;
+            }
+            else
+            {
+                return Boolean.Parse(DebugMode);
+            }
+        }
+
+        public void setDebugMode(bool DebugMode)
+        {
+            base.setValue("debugmode", DebugMode.ToString());
         }
     }
 }

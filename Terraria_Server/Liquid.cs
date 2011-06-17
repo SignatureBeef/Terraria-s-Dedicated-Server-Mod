@@ -741,7 +741,7 @@ namespace Terraria_Server
 									{
 										for (int k = 0; k < Main.maxSectionsY; k++)
 										{
-											NetPlay.serverSock[i].tileSection[j, k] = false;
+											Netplay.serverSock[i].tileSection[j, k] = false;
 										}
 									}
 								}
@@ -770,7 +770,7 @@ namespace Terraria_Server
 			if (num4 > Liquid.numLiquid)
 			{
 				num4 = Liquid.numLiquid;
-				int arg_19C_0 = Main.netMode;
+				//int arg_19C_0 = Main.netMode;
 				Liquid.wetCounter = Liquid.cycles;
 			}
 			if (Liquid.quickFall)

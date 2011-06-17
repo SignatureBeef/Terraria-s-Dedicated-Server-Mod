@@ -128,7 +128,7 @@ namespace Terraria_Server
 		public void ServerReadCallBack(IAsyncResult ar)
 		{
 			int num = 0;
-			if (!NetPlay.disconnect)
+			if (!Netplay.disconnect)
 			{
 				try
 				{

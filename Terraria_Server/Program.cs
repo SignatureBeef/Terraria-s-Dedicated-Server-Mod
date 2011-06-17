@@ -141,6 +141,12 @@ namespace Terraria_Server
                 Console.WriteLine("Setting up Properties.");
                 setupProperties();
 
+                Statics.debugMode = properties.debugMode();
+                if (Statics.debugMode)
+                {
+                    Console.WriteLine("CAUTION: Running Debug Mode! Unexpected errors may occur!");
+                }
+
                 Console.WriteLine("Preparing Server Data...");
 
                 string worldFile = properties.getInitialWorldPath();
@@ -250,11 +256,15 @@ namespace Terraria_Server
                 Console.WriteLine("You can now insert Commands.");
                 while (Statics.IsActive)
                 {
-                    string line = Console.ReadLine().Trim().ToLower();
-                    if (line.Length > 0)
-                    {
-                        commandParser.parseConsoleCommand(line, server);
-                    }
+                    try {
+						string line = Console.ReadLine().Trim().ToLower();
+	                    if (line.Length > 0)
+	                    {
+	                        commandParser.parseConsoleCommand(line, server);
+	                    }
+					} catch(Exception) {
+						
+					}
 
                 }
                 while (Statics.serverStarted) { }

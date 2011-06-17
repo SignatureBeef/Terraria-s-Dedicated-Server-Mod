@@ -22,7 +22,7 @@ namespace Terraria_Server
 
         public Server(World World, int PlayerCap, string WhiteList, string BanList)
         {
-            Main.maxNetPlayers = PlayerCap;
+            Main.maxNetplayers = PlayerCap;
             world = World;
             world.setServer(this);
             pluginManager = new PluginManager(Statics.getPluginPath, this);
@@ -58,27 +58,27 @@ namespace Terraria_Server
 
         public void setOpPassword(String Password)
         {
-            NetPlay.password = Password;
+            Netplay.password = Password;
         }
 
         public void setPort(int Port)
         {
-            NetPlay.serverPort = Port;
+            Netplay.serverPort = Port;
         }
 
         public void setIP(String IPAddress)
         {
-            NetPlay.serverSIP = IPAddress;
+            Netplay.serverSIP = IPAddress;
         }
 
         public void StopServer()
         {
-            NetPlay.StopServer();
+            Netplay.StopServer();
         }
 
         public void StartServer()
         {
-            NetPlay.StartServer();
+            Netplay.StartServer();
         }
         
         public void notifyOps(string Message)

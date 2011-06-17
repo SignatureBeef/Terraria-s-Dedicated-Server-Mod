@@ -44,14 +44,17 @@ namespace Terraria_Server.Commands
             COMMAND_TIME = 11,
             COMMAND_GIVE = 12,
             PLAYER_SPAWN_NPC = 13,
-            COMMAND_TELEPORT = 14
+            COMMAND_TELEPORT = 14,
+            PLAYER_TPHERE = 15
         }
 
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
                                                                     "players",      "me",           "say",          
                                                                     "save-all",     "help",         "whitelist",
                                                                     "ban",          "unban",        "time",
-                                                                    "give",         "spawnnpc",     "tp"};
+                                                                    "give",         "spawnnpc",     "tp",
+																	"tphere"};
+		
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
                                                                     "Reload Plugins", 
                                                                     "Show Online Players", 
@@ -66,7 +69,8 @@ namespace Terraria_Server.Commands
                                                                     "Set Time with: set:day:night",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
                                                                     "Spawn a NPC (/spawnnpc <amount> <name:id>)",
-                                                                    "Teleport Player to Player. (Currently Un-Usable)"};
+                                                                    "Teleport Player to Player. (Currently Un-Usable)",
+                                                                    "Teleport a Player to You. (Currently Un-Usable)"};
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -261,7 +265,7 @@ namespace Terraria_Server.Commands
                     {
                         case 0:
                             {
-                                Program.server.getBanList().addException(commands[1]);
+                                //Program.server.getBanList().addException(commands[1]); //Not sure if we should ban names...
 
                                 //We now should check to make sure they are off the server...
                                 Player banee = Program.server.GetPlayerByName(commands[1]);
@@ -270,7 +274,7 @@ namespace Terraria_Server.Commands
                                 {
                                     foreach (Player player in Program.server.getPlayerList())
                                     {
-                                        if (NetPlay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint.ToString()
+                                        if (Netplay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint.ToString()
                                             .Split(':')[0].Equals(commands[1]))
                                         {
                                             banee = player;
@@ -281,6 +285,8 @@ namespace Terraria_Server.Commands
                                 if (banee != null)
                                 {
                                     banee.Kick("You have been banned from this Server.");
+                                    Program.server.getBanList().addException(Netplay.serverSock[banee.whoAmi].
+                                        tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]);
                                 }
                                 break;
                             }
@@ -300,7 +306,7 @@ namespace Terraria_Server.Commands
                     Program.server.notifyOps(Message);
                     sender.sendMessage(Message);
 
-                    if (!Program.server.getWhiteList().Save())
+                    if (!Program.server.getBanList().Save())
                     {
                         Program.server.notifyOps("BanList Failed to Save due to " + sender.getName() + "'s command");
                     }
@@ -629,10 +635,15 @@ namespace Terraria_Server.Commands
                     return;
                 }
 
-                player.setLocation(toplayer.getLocation());
-                player.Update();
-                NetMessage.SendData((int)Packet.PLAYER_STATE_UPDATE, -1, player.whoAmi, "", player.whoAmi, 0f, 0f, 0f);
+                player.setLocation(new Vector2(toplayer.position.X, toplayer.position.Y));
+                //The issue with here is, The players keep getting reset after the last part of this code tree runs.
+                //I have no idea why, It DID work a few days ago, and she died *sad face
+                //Main.player[player.whoAmi].SpawnX = (int)toplayer.position.X;
+                //Main.player[player.whoAmi].SpawnY = (int)toplayer.position.Y;
+                //NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", Main.player[player.whoAmi].whoAmi, 0f, 0f, 0f);
                 NetMessage.SendData((int)Packet.PLAYER_STATE_UPDATE, -1, -1, "", player.whoAmi, 0f, 0f, 0f);
+                NetMessage.SendData((int)Packet.PLAYER_STATE_UPDATE, player.whoAmi, -1, "", ((Player)sender).whoAmi, 0f, 0f, 0f);
+
                 NetMessage.syncPlayers();
 
                 Program.server.notifyOps("Teleported " + player.name + " to " +
