@@ -1071,13 +1071,13 @@ namespace Terraria_Server
 																									num += 4;
 																									float y4 = BitConverter.ToSingle(this.readBuffer, num);
 																									num += 4;
-																									int target = (int)BitConverter.ToInt16(this.readBuffer, num);
+																									int target = BitConverter.ToInt32(this.readBuffer, num);
 																									num += 2;
 																									int direction2 = (int)(this.readBuffer[num] - 1);
 																									num++;
 																									byte arg_212E_0 = this.readBuffer[num];
 																									num++;
-																									int num42 = (int)BitConverter.ToInt16(this.readBuffer, num);
+																									int num42 = BitConverter.ToInt32(this.readBuffer, num);
 																									num += 2;
 																									float[] array = new float[NPC.maxAI];
 																									for (int num43 = 0; num43 < NPC.maxAI; num43++)
@@ -1146,7 +1146,6 @@ namespace Terraria_Server
                                                                                                                     Event.setMessage(Chat);
                                                                                                                     Event.setSender(Main.player[this.whoAmI]);
                                                                                                                     Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_COMMAND, Event);
-
                                                                                                                     if (Event.getCancelled())
                                                                                                                     {
                                                                                                                         return;
@@ -1195,16 +1194,11 @@ namespace Terraria_Server
 																											{
 																												pvp = true;
 																											}
-
-																											//if(
-                                                                                                                Main.player[(int)b15].Hurt((int)num50, num49, pvp, true); // <= 0.0) {
-                                                                                                            //    return;
-                                                                                                            //}
-																											if (Main.netMode == 2)
-																											{
-																												//NetMessage.SendData(26, -1, this.whoAmI, "", (int)b15, (float)num49, (float)num50, (float)b16);
-																												return;
-																											}
+                                                                                                            Main.player[(int)b15].Hurt((int)num50, num49, pvp, true);
+                                                                                                            if (Main.netMode == 2)
+                                                                                                            {
+                                                                                                                NetMessage.SendData(26, -1, this.whoAmI, "", (int)b15, (float)num49, (float)num50, (float)b16);
+                                                                                                            }
 																										}
 																										else
 																										{

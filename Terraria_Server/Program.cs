@@ -11,10 +11,10 @@ namespace Terraria_Server
     public class Program
     {
         public static Thread updateThread = null;
-        public static Properties properties = null;
+        public static ServerProperties properties = null;
         public static CommandParser commandParser = null;
 
-        static bool createDirectory(string dirPath)
+        public static bool createDirectory(string dirPath, bool Exit = false)
         {
             if (!System.IO.Directory.Exists(dirPath))
             {
@@ -24,16 +24,19 @@ namespace Terraria_Server
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey(true);
-                    return false;
+                    if (!Exit)
+                    {
+                        Console.WriteLine(exception.ToString());
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey(true);
+                        return false;
+                    }
                 }
             }
             return true;
         }
 
-        static bool createFile(string filePath)
+        public static bool createFile(string filePath, bool Exit = false)
         {
             if (!System.IO.File.Exists(filePath))
             {
@@ -43,10 +46,13 @@ namespace Terraria_Server
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine(exception.ToString());
-                    Console.WriteLine("Press any key to continue...");
-                    Console.ReadKey(true);
-                    return false;
+                    if (!Exit)
+                    {
+                        Console.WriteLine(exception.ToString());
+                        Console.WriteLine("Press any key to continue...");
+                        Console.ReadKey(true);
+                        return false;
+                    }
                 }
             }
             return true;
@@ -78,7 +84,7 @@ namespace Terraria_Server
 
         static void setupProperties()
         {
-            properties = new Properties("server.properties");
+            properties = new ServerProperties("server.properties");
             properties.Load();
             properties.pushData();
             properties.Save();
@@ -124,7 +130,7 @@ namespace Terraria_Server
         {
             try
             {
-                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
+                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" + Statics.build;
 
                 if (Statics.isLinux)
                 {

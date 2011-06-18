@@ -69,8 +69,8 @@ namespace Terraria_Server.Commands
                                                                     "Set Time with: set:day:night",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
                                                                     "Spawn a NPC (/spawnnpc <amount> <name:id>)",
-                                                                    "Teleport Player to Player. (Currently Un-Usable)",
-                                                                    "Teleport a Player to You. (Currently Un-Usable)"};
+                                                                    "Teleport Player to Player.",
+                                                                    "Teleport a Player to You."};
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -216,13 +216,11 @@ namespace Terraria_Server.Commands
 
                     }
 
-                    string Message = sender.getName() + " used WhiteList command " + caseType + " for: " + commands[2];
-                    Program.server.notifyOps(Message);
-                    sender.sendMessage(Message);
+                    Program.server.notifyOps(sender.getName() + " used WhiteList command " + caseType + " for: " + commands[2], true);
 
                     if (!Program.server.getWhiteList().Save())
                     {
-                        Program.server.notifyOps("WhiteList Failed to Save due to " + sender.getName() + "'s command");
+                        Program.server.notifyOps("WhiteList Failed to Save due to " + sender.getName() + "'s command", true);
                     }
                     return;
                 }
@@ -302,13 +300,11 @@ namespace Terraria_Server.Commands
 
                     }
 
-                    string Message = sender.getName() + " used Ban command case " + caseType + " for: " + commands[1];
-                    Program.server.notifyOps(Message);
-                    sender.sendMessage(Message);
+                    Program.server.notifyOps(sender.getName() + " used Ban command case " + caseType + " for: " + commands[1], true);
 
                     if (!Program.server.getBanList().Save())
                     {
-                        Program.server.notifyOps("BanList Failed to Save due to " + sender.getName() + "'s command");
+                        Program.server.notifyOps("BanList Failed to Save due to " + sender.getName() + "'s command", true);
                     }
                     return;
                 }
@@ -365,7 +361,6 @@ namespace Terraria_Server.Commands
                                 goto ERROR;
                             }
                     }
-
                     NetMessage.SendData((int)Packet.WORLD_DATA, -1, -1, "", 0, 0f, 0f, 0f); //Update Data
                     Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.getName());
                     return;
@@ -476,8 +471,7 @@ namespace Terraria_Server.Commands
 
                         Item.NewItem((int)player.position.X, (int)player.position.Y, player.width, player.height, itemType, stackSize, false);
 
-                        Program.server.notifyOps("Giving " + player.name + " some " + itemType.ToString() + " {" + sender.getName() + "}");
-                        Console.WriteLine("Giving " + player.name + " some " + itemType.ToString() + " {" + sender.getName() + "}");
+                        Program.server.notifyOps("Giving " + player.name + " some " + itemType.ToString() + " {" + sender.getName() + "}", true);
 
                         return;
                     }
@@ -594,9 +588,7 @@ namespace Terraria_Server.Commands
                         }
 
                         Program.server.notifyOps("Spawned " + amount.ToString() + " of " +
-                            npcType.ToString() + " {" + player.name + "}");
-                        Console.WriteLine("Spawned " + amount.ToString() + " of " +
-                            npcType.ToString() + " {" + player.name + "}");
+                            npcType.ToString() + " {" + player.name + "}", true);
                         return;
                     }
 
@@ -635,24 +627,45 @@ namespace Terraria_Server.Commands
                     return;
                 }
 
-                player.setLocation(new Vector2(toplayer.position.X, toplayer.position.Y));
-                //The issue with here is, The players keep getting reset after the last part of this code tree runs.
-                //I have no idea why, It DID work a few days ago, and she died *sad face
-                //Main.player[player.whoAmi].SpawnX = (int)toplayer.position.X;
-                //Main.player[player.whoAmi].SpawnY = (int)toplayer.position.Y;
-                //NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", Main.player[player.whoAmi].whoAmi, 0f, 0f, 0f);
-                NetMessage.SendData((int)Packet.PLAYER_STATE_UPDATE, -1, -1, "", player.whoAmi, 0f, 0f, 0f);
-                NetMessage.SendData((int)Packet.PLAYER_STATE_UPDATE, player.whoAmi, -1, "", ((Player)sender).whoAmi, 0f, 0f, 0f);
-
-                NetMessage.syncPlayers();
+                player.teleportTo(toplayer);
 
                 Program.server.notifyOps("Teleported " + player.name + " to " +
-                    toplayer.name + " {" + sender.getName() + "}");
-                Console.WriteLine("Teleported " + player.name + " to " +
-                    toplayer.name + " {" + sender.getName() + "}");
+                    toplayer.name + " {" + sender.getName() + "}", true);
 
+                return;
             }
         }
 
+        public static void TeleportHere(Sender sender, string[] commands)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+
+                // /tp <player> <toplayer>
+                if (commands.Length > 1 && commands[1] != null && commands[1].Trim().Length > 0)
+                {
+                    Player toplayer = Program.server.GetPlayerByName(commands[1].Trim());
+
+                    if (toplayer == null)
+                    {
+                        sender.sendMessage("Could not find a Player on the Server");
+                        return;
+                    }
+
+                    toplayer.teleportTo(player);
+
+                    Program.server.notifyOps("Teleported " + player.name + " to " +
+                        toplayer.name + " {" + sender.getName() + "}", true);
+
+                    return;
+                }
+            }
+        }
     }
 }

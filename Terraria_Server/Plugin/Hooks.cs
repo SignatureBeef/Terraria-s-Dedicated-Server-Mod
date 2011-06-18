@@ -16,6 +16,7 @@ namespace Terraria_Server.Plugin
         PLAYER_CHAT,
         TILE_BREAK,
         PLAYER_HURT,
-        PLAYER_CHEST
+        PLAYER_CHEST,
+        PLAYER_STATEUPDATE
     }
 }

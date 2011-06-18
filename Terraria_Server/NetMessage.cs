@@ -1290,7 +1290,8 @@ namespace Terraria_Server
 				if (Netplay.clientSock.tcpClient.Connected)
 				{
 					try
-					{
+                    {
+                        messageBuffer messageBuffer = NetMessage.buffer[num];
 						NetMessage.buffer[num].spamCount++;
                         if (Statics.debugMode)
                         {
@@ -1328,7 +1329,8 @@ namespace Terraria_Server
 						if (num11 != ignoreClient && (NetMessage.buffer[num11].broadcast || (Netplay.serverSock[num11].state >= 3 && msgType == 10)) && Netplay.serverSock[num11].tcpClient.Connected)
 						{
 							try
-							{
+                            {
+                                messageBuffer messageBuffer = NetMessage.buffer[num];
 								NetMessage.buffer[num11].spamCount++;
                                 if (Statics.debugMode)
                                 {
@@ -1349,7 +1351,8 @@ namespace Terraria_Server
 				if (Netplay.serverSock[remoteClient].tcpClient.Connected)
 				{
 					try
-					{
+                    {
+                        messageBuffer messageBuffer = NetMessage.buffer[num];
 						NetMessage.buffer[remoteClient].spamCount++;
                         if (Statics.debugMode)
                         {
@@ -1495,7 +1498,7 @@ namespace Terraria_Server
                 {
                     if (motd[i] != null && motd[i].Trim().Length > 0)
                     {
-                        NetMessage.SendData(25, plr, -1, motd[i], 255, 0f, 0f, 255f);
+                        NetMessage.SendData((int)Packet.PLAYER_CHAT, plr, -1, motd[i], 255, 0f, 0f, 255f);
                     }
                 }
             }
@@ -1594,7 +1597,6 @@ namespace Terraria_Server
 						{
 							Console.WriteLine(Main.player[i].name + " has joined.");
 
-
                             LoginEvent Event = new LoginEvent();
                             Event.setSocket(Netplay.serverSock[i]);
                             Event.setSender(Main.player[i]);
@@ -1623,7 +1625,6 @@ namespace Terraria_Server
 			}
 			if (Main.autoShutdown && !flag)
 			{
-                //WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
                 Commands.Commands.SaveAll();
 				Netplay.disconnect = true;
 			}

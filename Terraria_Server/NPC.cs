@@ -6579,7 +6579,6 @@ namespace Terraria_Server
                     break;
                 }
             }
-            int result;
             if (num >= 0)
             {
                 Main.npc[num] = new NPC();
@@ -6603,13 +6602,12 @@ namespace Terraria_Server
                         }
                     }
                 }
-                result = num;
+                return num;
             }
             else
             {
-                result = 1000;
+                return 1000;
             }
-            return result;
         }
         public void Transform(int newType)
         {

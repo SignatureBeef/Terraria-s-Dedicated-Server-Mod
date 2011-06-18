@@ -165,6 +165,11 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerOpenChest((ChestOpenEvent)Event);
                                     break;
                                 }
+                            case Hooks.PLAYER_STATEUPDATE:
+                                {
+                                    plugin.onPlayerStateUpdate((PlayerStateUpdateEvent)Event);
+                                    break;
+                                }
                         }
                     }
                 }

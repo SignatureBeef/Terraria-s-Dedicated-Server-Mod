@@ -81,7 +81,7 @@ namespace Terraria_Server
             Netplay.StartServer();
         }
         
-        public void notifyOps(string Message)
+        public void notifyOps(string Message, bool writeToConsole = false)
         {
             for (int i = 0; i < 255; i++)
             {
@@ -93,6 +93,7 @@ namespace Terraria_Server
                     }
                 }
             }
+            Console.WriteLine(Message);
         }
 
         public void notifyAll(string Message)

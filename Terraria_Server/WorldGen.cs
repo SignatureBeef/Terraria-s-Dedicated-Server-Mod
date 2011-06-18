@@ -9784,7 +9784,7 @@ namespace Terraria_Server
             result = false;
             return result;
         }
-        
+
         public static void UpdateWorld()
         {
             Liquid.skipCount++;
@@ -9851,15 +9851,12 @@ namespace Terraria_Server
                 {
                     if (Main.tile[i, num4].liquid > 32)
                     {
-                        if (Main.tile[i, num4].active)
+                        if (Main.tile[i, num4].active && (Main.tile[i, num4].type == 3 || Main.tile[i, num4].type == 20 || Main.tile[i, num4].type == 24 || Main.tile[i, num4].type == 27 || Main.tile[i, num4].type == 73))
                         {
-                            if (Main.tile[i, num4].type == 3 || Main.tile[i, num4].type == 20 || Main.tile[i, num4].type == 24 || Main.tile[i, num4].type == 27 || Main.tile[i, num4].type == 73)
+                            WorldGen.KillTile(i, num4, false, false, false);
+                            if (Main.netMode == 2)
                             {
-                                WorldGen.KillTile(i, num4, false, false, false);
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)num4, 0f);
-                                }
+                                NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)num4, 0f);
                             }
                         }
                     }
@@ -9904,26 +9901,23 @@ namespace Terraria_Server
                                     {
                                         for (int k = num7; k < num8; k++)
                                         {
-                                            if (i != j || num4 != k)
+                                            if ((i != j || num4 != k) && Main.tile[j, k].active)
                                             {
-                                                if (Main.tile[j, k].active)
+                                                if (num9 == 32)
                                                 {
-                                                    if (num9 == 32)
+                                                    num9 = 23;
+                                                }
+                                                if (Main.tile[j, k].type == 0 || (num9 == 23 && Main.tile[j, k].type == 2))
+                                                {
+                                                    WorldGen.SpreadGrass(j, k, 0, num9, false);
+                                                    if (num9 == 23)
                                                     {
-                                                        num9 = 23;
+                                                        WorldGen.SpreadGrass(j, k, 2, num9, false);
                                                     }
-                                                    if (Main.tile[j, k].type == 0 || (num9 == 23 && Main.tile[j, k].type == 2))
+                                                    if ((int)Main.tile[j, k].type == num9)
                                                     {
-                                                        WorldGen.SpreadGrass(j, k, 0, num9, false);
-                                                        if (num9 == 23)
-                                                        {
-                                                            WorldGen.SpreadGrass(j, k, 2, num9, false);
-                                                        }
-                                                        if ((int)Main.tile[j, k].type == num9)
-                                                        {
-                                                            WorldGen.SquareTileFrame(j, k, true);
-                                                            flag2 = true;
-                                                        }
+                                                        WorldGen.SquareTileFrame(j, k, true);
+                                                        flag2 = true;
                                                     }
                                                 }
                                             }
@@ -9936,24 +9930,18 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    if (Main.tile[i, num4].type == 20)
+                                    if (Main.tile[i, num4].type == 20 && !WorldGen.PlayerLOS(i, num4) && WorldGen.genRand.Next(5) == 0)
                                     {
-                                        if (!WorldGen.PlayerLOS(i, num4) && WorldGen.genRand.Next(10) == 0)
-                                        {
-                                            WorldGen.GrowTree(i, num4);
-                                        }
+                                        WorldGen.GrowTree(i, num4);
                                     }
                                 }
                             }
-                            if (Main.tile[i, num4].type == 3 && WorldGen.genRand.Next(10) == 0)
+                            if (Main.tile[i, num4].type == 3 && WorldGen.genRand.Next(10) == 0 && Main.tile[i, num4].frameX < 144)
                             {
-                                if (Main.tile[i, num4].frameX < 144)
+                                Main.tile[i, num4].type = 73;
+                                if (Main.netMode == 2)
                                 {
-                                    Main.tile[i, num4].type = 73;
-                                    if (Main.netMode == 2)
-                                    {
-                                        NetMessage.SendTileSquare(-1, i, num4, 3);
-                                    }
+                                    NetMessage.SendTileSquare(-1, i, num4, 3);
                                 }
                             }
                             if (Main.tile[i, num4].type == 32 && WorldGen.genRand.Next(3) == 0)
@@ -9979,31 +9967,28 @@ namespace Terraria_Server
                                 }
                                 if (num11 < 3 || Main.tile[i, num4].type == 23)
                                 {
-                                    int num12 = WorldGen.genRand.Next(4);
-                                    if (num12 == 0)
+                                    switch (WorldGen.genRand.Next(4))
                                     {
-                                        l--;
-                                    }
-                                    else
-                                    {
-                                        if (num12 == 1)
-                                        {
-                                            l++;
-                                        }
-                                        else
-                                        {
-                                            if (num12 == 2)
+                                        case 0:
+                                            {
+                                                l--;
+                                                break;
+                                            }
+                                        case 1:
+                                            {
+                                                l++;
+                                                break;
+                                            }
+                                        case 2:
                                             {
                                                 num10--;
+                                                break;
                                             }
-                                            else
+                                        case 3:
                                             {
-                                                if (num12 == 3)
-                                                {
-                                                    num10++;
-                                                }
+                                                num10++;
+                                                break;
                                             }
-                                        }
                                     }
                                     if (!Main.tile[num10, l].active)
                                     {
@@ -10026,26 +10011,20 @@ namespace Terraria_Server
                                         }
                                         if (num11 < 2)
                                         {
-                                            int num13 = 7;
-                                            int num14 = num10 - num13;
-                                            int num15 = num10 + num13;
-                                            int num16 = l - num13;
-                                            int num17 = l + num13;
+                                            int num12 = 7;
+                                            int num13 = num10 - num12;
+                                            int num14 = num10 + num12;
+                                            int num15 = l - num12;
+                                            int num16 = l + num12;
                                             bool flag3 = false;
-                                            for (int m = num14; m < num15; m++)
+                                            for (int m = num13; m < num14; m++)
                                             {
-                                                for (int n = num16; n < num17; n++)
+                                                for (int n = num15; n < num16; n++)
                                                 {
-                                                    if (Math.Abs(m - num10) * 2 + Math.Abs(n - l) < 9)
+                                                    if (Math.Abs(m - num10) * 2 + Math.Abs(n - l) < 9 && Main.tile[m, n].active && Main.tile[m, n].type == 23 && Main.tile[m, n - 1].active && Main.tile[m, n - 1].type == 32 && Main.tile[m, n - 1].liquid == 0)
                                                     {
-                                                        if (Main.tile[m, n].active && Main.tile[m, n].type == 23)
-                                                        {
-                                                            if (Main.tile[m, n - 1].active && Main.tile[m, n - 1].type == 32 && Main.tile[m, n - 1].liquid == 0)
-                                                            {
-                                                                flag3 = true;
-                                                                break;
-                                                            }
-                                                        }
+                                                        flag3 = true;
+                                                        break;
                                                     }
                                                 }
                                             }
@@ -10063,114 +10042,12 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            if (Main.tile[i, num4].type == 2 || Main.tile[i, num4].type == 52)
-                            {
-                                if (WorldGen.genRand.Next(5) == 0)
-                                {
-                                    if (!Main.tile[i, num4 + 1].active && !Main.tile[i, num4 + 1].lava)
-                                    {
-                                        bool flag3 = false;
-                                        for (int l = num4; l > num4 - 10; l--)
-                                        {
-                                            if (Main.tile[i, l].active && Main.tile[i, l].type == 2)
-                                            {
-                                                flag3 = true;
-                                                break;
-                                            }
-                                        }
-                                        if (flag3)
-                                        {
-                                            int num10 = i;
-                                            int l = num4 + 1;
-                                            Main.tile[num10, l].type = 52;
-                                            Main.tile[num10, l].active = true;
-                                            WorldGen.SquareTileFrame(num10, l, true);
-                                            if (Main.netMode == 2)
-                                            {
-                                                NetMessage.SendTileSquare(-1, num10, l, 3);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (flag && WorldGen.spawnNPC > 0)
-                            {
-                                WorldGen.SpawnNPC(i, num4);
-                            }
-                        }
-                    }
-                    if (Main.tile[i, num4].active && Main.tile[i, num4].type == 60)
-                    {
-                        int num9 = (int)Main.tile[i, num4].type;
-                        if (!Main.tile[i, num7].active && WorldGen.genRand.Next(7) == 0)
-                        {
-                            WorldGen.PlaceTile(i, num7, 61, true, false, -1);
-                            if (Main.netMode == 2 && Main.tile[i, num7].active)
-                            {
-                                NetMessage.SendTileSquare(-1, i, num7, 1);
-                            }
-                        }
-                        else
-                        {
-                            if (WorldGen.genRand.Next(50) == 0 && (!Main.tile[i, num7].active || Main.tile[i, num7].type == 61 || Main.tile[i, num7].type == 74 || Main.tile[i, num7].type == 69))
-                            {
-                                if (!WorldGen.PlayerLOS(i, num4))
-                                {
-                                    WorldGen.GrowTree(i, num4);
-                                }
-                            }
-                        }
-                        bool flag2 = false;
-                        for (int j = num5; j < num6; j++)
-                        {
-                            for (int k = num7; k < num8; k++)
-                            {
-                                if (i != j || num4 != k)
-                                {
-                                    if (Main.tile[j, k].active)
-                                    {
-                                        if (Main.tile[j, k].type == 59)
-                                        {
-                                            WorldGen.SpreadGrass(j, k, 59, num9, false);
-                                            if ((int)Main.tile[j, k].type == num9)
-                                            {
-                                                WorldGen.SquareTileFrame(j, k, true);
-                                                flag2 = true;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (Main.netMode == 2 && flag2)
-                        {
-                            NetMessage.SendTileSquare(-1, i, num4, 3);
-                        }
-                    }
-                    if (Main.tile[i, num4].type == 61 && WorldGen.genRand.Next(3) == 0)
-                    {
-                        if (Main.tile[i, num4].frameX < 144)
-                        {
-                            Main.tile[i, num4].type = 74;
-                            if (Main.netMode == 2)
-                            {
-                                NetMessage.SendTileSquare(-1, i, num4, 3);
-                            }
-                        }
-                    }
-                    if (Main.tile[i, num4].type == 60 || Main.tile[i, num4].type == 62)
-                    {
-                        if (WorldGen.genRand.Next(5) == 0)
-                        {
-                            if (!Main.tile[i, num4 + 1].active && !Main.tile[i, num4 + 1].lava)
+                            if ((Main.tile[i, num4].type == 2 || Main.tile[i, num4].type == 52) && WorldGen.genRand.Next(5) == 0 && !Main.tile[i, num4 + 1].active && !Main.tile[i, num4 + 1].lava)
                             {
                                 bool flag3 = false;
                                 for (int l = num4; l > num4 - 10; l--)
                                 {
-                                    if (Main.tile[i, l].active && Main.tile[i, l].type == 60)
+                                    if (Main.tile[i, l].active && Main.tile[i, l].type == 2)
                                     {
                                         flag3 = true;
                                         break;
@@ -10180,7 +10057,7 @@ namespace Terraria_Server
                                 {
                                     int num10 = i;
                                     int l = num4 + 1;
-                                    Main.tile[num10, l].type = 62;
+                                    Main.tile[num10, l].type = 52;
                                     Main.tile[num10, l].active = true;
                                     WorldGen.SquareTileFrame(num10, l, true);
                                     if (Main.netMode == 2)
@@ -10188,6 +10065,13 @@ namespace Terraria_Server
                                         NetMessage.SendTileSquare(-1, num10, l, 3);
                                     }
                                 }
+                            }
+                        }
+                        else
+                        {
+                            if (flag && WorldGen.spawnNPC > 0)
+                            {
+                                WorldGen.SpawnNPC(i, num4);
                             }
                         }
                     }
@@ -10221,7 +10105,18 @@ namespace Terraria_Server
                 }
                 if (Main.tile[i, num4] != null)
                 {
-                    if (Main.tile[i, num4].liquid <= 32)
+                    if (Main.tile[i, num4].liquid > 32)
+                    {
+                        if (Main.tile[i, num4].active && (Main.tile[i, num4].type == 61 || Main.tile[i, num4].type == 74))
+                        {
+                            WorldGen.KillTile(i, num4, false, false, false);
+                            if (Main.netMode == 2)
+                            {
+                                NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)num4, 0f);
+                            }
+                        }
+                    }
+                    else
                     {
                         if (Main.tile[i, num4].active)
                         {
@@ -10241,19 +10136,13 @@ namespace Terraria_Server
                                 {
                                     for (int k = num7; k < num8; k++)
                                     {
-                                        if (i != j || num4 != k)
+                                        if ((i != j || num4 != k) && Main.tile[j, k].active && Main.tile[j, k].type == 59)
                                         {
-                                            if (Main.tile[j, k].active)
+                                            WorldGen.SpreadGrass(j, k, 59, num9, false);
+                                            if ((int)Main.tile[j, k].type == num9)
                                             {
-                                                if (Main.tile[j, k].type == 59)
-                                                {
-                                                    WorldGen.SpreadGrass(j, k, 59, num9, false);
-                                                    if ((int)Main.tile[j, k].type == num9)
-                                                    {
-                                                        WorldGen.SquareTileFrame(j, k, true);
-                                                        flag2 = true;
-                                                    }
-                                                }
+                                                WorldGen.SquareTileFrame(j, k, true);
+                                                flag2 = true;
                                             }
                                         }
                                     }
@@ -10263,44 +10152,35 @@ namespace Terraria_Server
                                     NetMessage.SendTileSquare(-1, i, num4, 3);
                                 }
                             }
-                            if (Main.tile[i, num4].type == 61 && WorldGen.genRand.Next(3) == 0)
+                            if (Main.tile[i, num4].type == 61 && WorldGen.genRand.Next(3) == 0 && Main.tile[i, num4].frameX < 144)
                             {
-                                if (Main.tile[i, num4].frameX < 144)
+                                Main.tile[i, num4].type = 74;
+                                if (Main.netMode == 2)
                                 {
-                                    Main.tile[i, num4].type = 74;
-                                    if (Main.netMode == 2)
-                                    {
-                                        NetMessage.SendTileSquare(-1, i, num4, 3);
-                                    }
+                                    NetMessage.SendTileSquare(-1, i, num4, 3);
                                 }
                             }
-                            if (Main.tile[i, num4].type == 60 || Main.tile[i, num4].type == 62)
+                            if ((Main.tile[i, num4].type == 60 || Main.tile[i, num4].type == 62) && WorldGen.genRand.Next(5) == 0 && !Main.tile[i, num4 + 1].active && !Main.tile[i, num4 + 1].lava)
                             {
-                                if (WorldGen.genRand.Next(5) == 0)
+                                bool flag3 = false;
+                                for (int l = num4; l > num4 - 10; l--)
                                 {
-                                    if (!Main.tile[i, num4 + 1].active && !Main.tile[i, num4 + 1].lava)
+                                    if (Main.tile[i, l].active && Main.tile[i, l].type == 60)
                                     {
-                                        bool flag3 = false;
-                                        for (int l = num4; l > num4 - 10; l--)
-                                        {
-                                            if (Main.tile[i, l].active && Main.tile[i, l].type == 60)
-                                            {
-                                                flag3 = true;
-                                                break;
-                                            }
-                                        }
-                                        if (flag3)
-                                        {
-                                            int num10 = i;
-                                            int l = num4 + 1;
-                                            Main.tile[num10, l].type = 62;
-                                            Main.tile[num10, l].active = true;
-                                            WorldGen.SquareTileFrame(num10, l, true);
-                                            if (Main.netMode == 2)
-                                            {
-                                                NetMessage.SendTileSquare(-1, num10, l, 3);
-                                            }
-                                        }
+                                        flag3 = true;
+                                        break;
+                                    }
+                                }
+                                if (flag3)
+                                {
+                                    int num10 = i;
+                                    int l = num4 + 1;
+                                    Main.tile[num10, l].type = 62;
+                                    Main.tile[num10, l].active = true;
+                                    WorldGen.SquareTileFrame(num10, l, true);
+                                    if (Main.netMode == 2)
+                                    {
+                                        NetMessage.SendTileSquare(-1, num10, l, 3);
                                     }
                                 }
                             }
@@ -10327,31 +10207,28 @@ namespace Terraria_Server
                                 }
                                 if (num11 < 3 || Main.tile[i, num4].type == 60)
                                 {
-                                    int num12 = WorldGen.genRand.Next(4);
-                                    if (num12 == 0)
+                                    switch (WorldGen.genRand.Next(4))
                                     {
-                                        l--;
-                                    }
-                                    else
-                                    {
-                                        if (num12 == 1)
-                                        {
-                                            l++;
-                                        }
-                                        else
-                                        {
-                                            if (num12 == 2)
+                                        case 0:
+                                            {
+                                                l--;
+                                                break;
+                                            }
+                                        case 1:
+                                            {
+                                                l++;
+                                                break;
+                                            }
+                                        case 2:
                                             {
                                                 num10--;
+                                                break;
                                             }
-                                            else
+                                        case 3:
                                             {
-                                                if (num12 == 3)
-                                                {
-                                                    num10++;
-                                                }
+                                                num10++;
+                                                break;
                                             }
-                                        }
                                     }
                                     if (!Main.tile[num10, l].active)
                                     {
@@ -10374,26 +10251,20 @@ namespace Terraria_Server
                                         }
                                         if (num11 < 2)
                                         {
-                                            int num13 = 7;
-                                            int num14 = num10 - num13;
-                                            int num15 = num10 + num13;
-                                            int num16 = l - num13;
-                                            int num17 = l + num13;
+                                            int num12 = 7;
+                                            int num13 = num10 - num12;
+                                            int num14 = num10 + num12;
+                                            int num15 = l - num12;
+                                            int num16 = l + num12;
                                             bool flag3 = false;
-                                            for (int m = num14; m < num15; m++)
+                                            for (int m = num13; m < num14; m++)
                                             {
-                                                for (int n = num16; n < num17; n++)
+                                                for (int n = num15; n < num16; n++)
                                                 {
-                                                    if (Math.Abs(m - num10) * 2 + Math.Abs(n - l) < 9)
+                                                    if (Math.Abs(m - num10) * 2 + Math.Abs(n - l) < 9 && Main.tile[m, n].active && Main.tile[m, n].type == 60 && Main.tile[m, n - 1].active && Main.tile[m, n - 1].type == 69 && Main.tile[m, n - 1].liquid == 0)
                                                     {
-                                                        if (Main.tile[m, n].active && Main.tile[m, n].type == 60)
-                                                        {
-                                                            if (Main.tile[m, n - 1].active && Main.tile[m, n - 1].type == 69 && Main.tile[m, n - 1].liquid == 0)
-                                                            {
-                                                                flag3 = true;
-                                                                break;
-                                                            }
-                                                        }
+                                                        flag3 = true;
+                                                        break;
                                                     }
                                                 }
                                             }
@@ -10427,19 +10298,13 @@ namespace Terraria_Server
                                 {
                                     for (int k = num7; k < num8; k++)
                                     {
-                                        if (i != j || num4 != k)
+                                        if ((i != j || num4 != k) && Main.tile[j, k].active && Main.tile[j, k].type == 59)
                                         {
-                                            if (Main.tile[j, k].active)
+                                            WorldGen.SpreadGrass(j, k, 59, num9, false);
+                                            if ((int)Main.tile[j, k].type == num9)
                                             {
-                                                if (Main.tile[j, k].type == 59)
-                                                {
-                                                    WorldGen.SpreadGrass(j, k, 59, num9, false);
-                                                    if ((int)Main.tile[j, k].type == num9)
-                                                    {
-                                                        WorldGen.SquareTileFrame(j, k, true);
-                                                        flag2 = true;
-                                                    }
-                                                }
+                                                WorldGen.SquareTileFrame(j, k, true);
+                                                flag2 = true;
                                             }
                                         }
                                     }
@@ -10463,26 +10328,25 @@ namespace Terraria_Server
             }
             if (!Main.dayTime)
             {
-                float num18 = (float)(Main.maxTilesX / 4200);
-                if ((float)Main.rand.Next(8000) < 10f * num18)
+                float num17 = (float)(Main.maxTilesX / 4200);
+                if ((float)Main.rand.Next(8000) < 10f * num17)
                 {
-                    int num19 = 12;
-                    int num20 = Main.rand.Next(Main.maxTilesX - 50) + 100;
-                    num20 *= 16;
-                    int num21 = Main.rand.Next((int)((double)Main.maxTilesY * 0.05));
-                    num21 *= 16;
-                    Vector2 vector = new Vector2((float)num20, (float)num21);
-                    float num22 = (float)Main.rand.Next(-100, 101);
-                    float num23 = (float)(Main.rand.Next(200) + 100);
-                    float num24 = (float)Math.Sqrt((double)(num22 * num22 + num23 * num23));
-                    num24 = (float)num19 / num24;
-                    num22 *= num24;
-                    num23 *= num24;
-                    Projectile.NewProjectile(vector.X, vector.Y, num22, num23, 12, 1000, 10f, Main.myPlayer);
+                    int num18 = 12;
+                    int num19 = Main.rand.Next(Main.maxTilesX - 50) + 100;
+                    num19 *= 16;
+                    int num20 = Main.rand.Next((int)((double)Main.maxTilesY * 0.05)) * 16;
+                    Vector2 vector = new Vector2((float)num19, (float)num20);
+                    float num21 = (float)Main.rand.Next(-100, 101);
+                    float num22 = (float)(Main.rand.Next(200) + 100);
+                    float num23 = (float)Math.Sqrt((double)(num21 * num21 + num22 * num22));
+                    num23 = (float)num18 / num23;
+                    num21 *= num23;
+                    num22 *= num23;
+                    Projectile.NewProjectile(vector.X, vector.Y, num21, num22, 12, 1000, 10f, Main.myPlayer);
                 }
             }
         }
-        
+
         public static void PlaceWall(int i, int j, int type, bool mute = false)
         {
             if (Main.tile[i, j] == null)

@@ -5,12 +5,12 @@ using System.Text;
 
 namespace Terraria_Server
 {
-    public class Properties : PropertiesFile
+    public class ServerProperties : PropertiesFile
     {
 
         //PropertiesFile propFile;
 
-        public Properties(String pFile)
+        public ServerProperties(String pFile)
         {
             base.setFile(pFile);
         }
