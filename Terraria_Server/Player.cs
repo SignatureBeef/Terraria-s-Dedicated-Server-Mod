@@ -173,21 +173,21 @@ namespace Terraria_Server
 		public int talkNPC = -1;
 		public int fallStart;
 		public int slowCount;
-		
-        
-        public void HealEffect(int healAmount)
+
+
+        public void HealEffect(int healAmount, bool overrider = false, int remoteClient = -1)
 		{
 			//CombatText.NewText(new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height), new Color(100, 100, 255, 255), string.Concat(healAmount));
-			if (Main.netMode == 1 && this.whoAmi == Main.myPlayer)
+            if (overrider || (Main.netMode == 1 && this.whoAmi == Main.myPlayer))
 			{
-				NetMessage.SendData(35, -1, -1, "", this.whoAmi, (float)healAmount, 0f, 0f);
+                NetMessage.SendData(35, remoteClient, -1, "", this.whoAmi, (float)healAmount, 0f, 0f);
 			}
 		}
-		
-        public void ManaEffect(int manaAmount)
+
+        public void ManaEffect(int manaAmount, bool overrider = false)
 		{
 			//CombatText.NewText(new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height), new Color(180, 50, 255, 255), string.Concat(manaAmount));
-			if (Main.netMode == 1 && this.whoAmi == Main.myPlayer)
+			if (overrider || (Main.netMode == 1 && this.whoAmi == Main.myPlayer))
 			{
 				NetMessage.SendData(43, -1, -1, "", this.whoAmi, (float)manaAmount, 0f, 0f);
 			}
@@ -4823,30 +4823,29 @@ namespace Terraria_Server
             position = Location;
         }
 
-        //public void Update()
-        //{
-        //    Main.player[this.whoAmi].position = this.position;
-        //}
-
         public void teleportTo(float tileX, float tileY)
         {
+            //Preserve out Spawn point.
             int xPreserve = Main.spawnTileX;
             int yPreserve = Main.spawnTileY;
 
+            //The spawn the client wants is the from player Pos /16.
+            //This is because the Client reads frames, Not Tile Records.
             Main.spawnTileX = ((int)tileX / 16);
             Main.spawnTileY = ((int)tileY / 16);
 
-            Main.player[this.whoAmi].Spawn();
-            Main.player[this.whoAmi].UpdatePlayer(this.whoAmi);
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f);
-            NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", Main.player[this.whoAmi].whoAmi, 0f, 0f, 0f);
+            Main.player[this.whoAmi].Spawn(); //Tell the Client to Spawn (Sets Defaults)
+            Main.player[this.whoAmi].UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f); //Trigger Client Data Update (Updates Spawn Position)
+            NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", Main.player[this.whoAmi].whoAmi, 0f, 0f, 0f); //Trigger the player to spawn
 
-            NetMessage.syncPlayers();
-
+            //Return our preserved Spawn Point.
             Main.spawnTileX = xPreserve;
             Main.spawnTileY = yPreserve;
 
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f);
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f); //Trigger the Client Data Update again to reset the Spawn Point
+
+            NetMessage.syncPlayers(); //Sync the Players Position.
         }
 
         public void teleportTo(Player player)
