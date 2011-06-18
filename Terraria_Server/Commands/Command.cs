@@ -69,8 +69,8 @@ namespace Terraria_Server.Commands
                                                                     "Set Time with: set:day:night",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
                                                                     "Spawn a NPC (/spawnnpc <amount> <name:id>)",
-                                                                    "Teleport Player to Player. (Currently Un-Usable)",
-                                                                    "Teleport a Player to You. (Currently Un-Usable)"};
+                                                                    "Teleport Player to Player.",
+                                                                    "Teleport a Player to You."};
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -637,5 +637,36 @@ namespace Terraria_Server.Commands
             }
         }
 
+        public static void TeleportHere(Sender sender, string[] commands)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+
+                // /tp <player> <toplayer>
+                if (commands.Length > 1 && commands[1] != null && commands[1].Trim().Length > 0)
+                {
+                    Player toplayer = Program.server.GetPlayerByName(commands[1].Trim());
+
+                    if (toplayer == null)
+                    {
+                        sender.sendMessage("Could not find a Player on the Server");
+                        return;
+                    }
+
+                    toplayer.teleportTo(player);
+
+                    Program.server.notifyOps("Teleported " + player.name + " to " +
+                        toplayer.name + " {" + sender.getName() + "}", true);
+
+                    return;
+                }
+            }
+        }
     }
 }

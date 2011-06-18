@@ -7,6 +7,8 @@ namespace Terraria_Server
 {
     public static class Statics
     {
+        public static int build = 1;
+
         public static bool debugMode = false;
         public static int platform = 0;
         public static bool isLinux

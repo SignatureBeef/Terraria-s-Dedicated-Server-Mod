@@ -214,6 +214,11 @@ namespace Terraria_Server.Commands
                         Commands.Teleport(sender, commands);
                         break;
                     }
+                case (int)Commands.Command.PLAYER_TPHERE:
+                    {
+                        Commands.TeleportHere(sender, commands);
+                        break;
+                    }
                 default:
                     {
                         Console.WriteLine("Uknown Command Issued.");

@@ -130,7 +130,7 @@ namespace Terraria_Server
         {
             try
             {
-                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "})";
+                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" + Statics.build;
 
                 if (Statics.isLinux)
                 {
