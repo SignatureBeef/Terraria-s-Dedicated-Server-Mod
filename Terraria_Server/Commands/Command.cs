@@ -361,7 +361,6 @@ namespace Terraria_Server.Commands
                                 goto ERROR;
                             }
                     }
-                    ((Player)sender).ManaEffect(20, true);
                     NetMessage.SendData((int)Packet.WORLD_DATA, -1, -1, "", 0, 0f, 0f, 0f); //Update Data
                     Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.getName());
                     return;
