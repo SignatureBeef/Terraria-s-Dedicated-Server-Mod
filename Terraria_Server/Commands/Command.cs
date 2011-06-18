@@ -638,9 +638,12 @@ namespace Terraria_Server.Commands
                 player.setLocation(new Vector2(toplayer.position.X, toplayer.position.Y));
                 //The issue with here is, The players keep getting reset after the last part of this code tree runs.
                 //I have no idea why, It DID work a few days ago, and she died *sad face
+                //(Yes the code below is to spawn a player, and it gets reset too.
+
                 //Main.player[player.whoAmi].SpawnX = (int)toplayer.position.X;
                 //Main.player[player.whoAmi].SpawnY = (int)toplayer.position.Y;
                 //NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", Main.player[player.whoAmi].whoAmi, 0f, 0f, 0f);
+
                 NetMessage.SendData((int)Packet.PLAYER_STATE_UPDATE, -1, -1, "", player.whoAmi, 0f, 0f, 0f);
                 NetMessage.SendData((int)Packet.PLAYER_STATE_UPDATE, player.whoAmi, -1, "", ((Player)sender).whoAmi, 0f, 0f, 0f);
 

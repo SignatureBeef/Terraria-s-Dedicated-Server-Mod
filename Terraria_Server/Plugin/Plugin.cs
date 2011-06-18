@@ -16,6 +16,7 @@ namespace Terraria_Server.Plugin
         public string Description { get; set; }
         public string Author { get; set; }
         public string Version { get; set; }
+        public string ServerProtocol { get; set; }
 
         public bool Enabled { get; set; }
         public Server Server { get; set; }
@@ -35,6 +36,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
         public virtual void onTileBreak(TileBreakEvent Event) { }
         public virtual void onPlayerOpenChest(ChestOpenEvent Event) { }
+        public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { }
 
     	private ArrayList pluginHooks = new ArrayList();
 

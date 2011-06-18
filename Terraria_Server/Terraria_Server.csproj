@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -69,6 +69,7 @@
     <Compile Include="Events\ConsoleCommandEvent.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\PlayerHurtEvent.cs" />
+    <Compile Include="Events\PlayerStateUpdateEvent.cs" />
     <Compile Include="Events\TileBreakEvent.cs" />
     <Compile Include="Gore.cs" />
     <Compile Include="Item.cs" />
@@ -86,7 +87,7 @@
     <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
-    <Compile Include="Properties.cs" />
+    <Compile Include="ServerProperties.cs" />
     <Compile Include="PropertiesFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Recipe.cs" />

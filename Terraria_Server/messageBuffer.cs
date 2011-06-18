@@ -1071,13 +1071,13 @@ namespace Terraria_Server
 																									num += 4;
 																									float y4 = BitConverter.ToSingle(this.readBuffer, num);
 																									num += 4;
-																									int target = (int)BitConverter.ToInt16(this.readBuffer, num);
+																									int target = BitConverter.ToInt32(this.readBuffer, num);
 																									num += 2;
 																									int direction2 = (int)(this.readBuffer[num] - 1);
 																									num++;
 																									byte arg_212E_0 = this.readBuffer[num];
 																									num++;
-																									int num42 = (int)BitConverter.ToInt16(this.readBuffer, num);
+																									int num42 = BitConverter.ToInt32(this.readBuffer, num);
 																									num += 2;
 																									float[] array = new float[NPC.maxAI];
 																									for (int num43 = 0; num43 < NPC.maxAI; num43++)
