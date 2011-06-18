@@ -1290,7 +1290,8 @@ namespace Terraria_Server
 				if (Netplay.clientSock.tcpClient.Connected)
 				{
 					try
-					{
+                    {
+                        messageBuffer messageBuffer = NetMessage.buffer[num];
 						NetMessage.buffer[num].spamCount++;
                         if (Statics.debugMode)
                         {
@@ -1328,7 +1329,8 @@ namespace Terraria_Server
 						if (num11 != ignoreClient && (NetMessage.buffer[num11].broadcast || (Netplay.serverSock[num11].state >= 3 && msgType == 10)) && Netplay.serverSock[num11].tcpClient.Connected)
 						{
 							try
-							{
+                            {
+                                messageBuffer messageBuffer = NetMessage.buffer[num];
 								NetMessage.buffer[num11].spamCount++;
                                 if (Statics.debugMode)
                                 {
@@ -1349,7 +1351,8 @@ namespace Terraria_Server
 				if (Netplay.serverSock[remoteClient].tcpClient.Connected)
 				{
 					try
-					{
+                    {
+                        messageBuffer messageBuffer = NetMessage.buffer[num];
 						NetMessage.buffer[remoteClient].spamCount++;
                         if (Statics.debugMode)
                         {

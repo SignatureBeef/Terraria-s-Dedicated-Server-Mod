@@ -4828,5 +4828,31 @@ namespace Terraria_Server
         //    Main.player[this.whoAmi].position = this.position;
         //}
 
+        public void teleportTo(float tileX, float tileY)
+        {
+            int xPreserve = Main.spawnTileX;
+            int yPreserve = Main.spawnTileY;
+
+            Main.spawnTileX = ((int)tileX / 16);
+            Main.spawnTileY = ((int)tileY / 16);
+
+            Main.player[this.whoAmi].Spawn();
+            Main.player[this.whoAmi].UpdatePlayer(this.whoAmi);
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f);
+            NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", Main.player[this.whoAmi].whoAmi, 0f, 0f, 0f);
+
+            NetMessage.syncPlayers();
+
+            Main.spawnTileX = xPreserve;
+            Main.spawnTileY = yPreserve;
+
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f);
+        }
+
+        public void teleportTo(Player player)
+        {
+            teleportTo(player.position.X, player.position.Y);
+        }
+
     }
 }
