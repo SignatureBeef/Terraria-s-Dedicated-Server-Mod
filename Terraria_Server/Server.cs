@@ -17,10 +17,11 @@ namespace Terraria_Server
 
         private DataRegister whiteList = null;
         private DataRegister banList = null;
+        private DataRegister opList = null;
 
         public Server() { }
 
-        public Server(World World, int PlayerCap, string WhiteList, string BanList)
+        public Server(World World, int PlayerCap, string WhiteList, string BanList, string OpList)
         {
             Main.maxNetplayers = PlayerCap;
             world = World;
@@ -32,6 +33,8 @@ namespace Terraria_Server
             //joinedPlayerList.Load();
             banList = new DataRegister(BanList);
             banList.Load();
+            opList = new DataRegister(OpList);
+            opList.Load();
         }
 
         public Player GetPlayerByName(string name)
@@ -147,6 +150,16 @@ namespace Terraria_Server
         public void setBanList(DataRegister BanList)
         {
             banList = BanList;
+        }
+
+        public DataRegister getOpList()
+        {
+            return opList;
+        }
+
+        public void setOpList(DataRegister OpList)
+        {
+            opList = OpList;
         }
 
     }

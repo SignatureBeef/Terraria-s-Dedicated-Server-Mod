@@ -1539,7 +1539,7 @@ namespace Terraria_Server
 																																					{
 																																						if (Main.netMode == 2)
 																																						{
-																																							string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+																																							/*string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
                                                                                                                                                             if (pasword == Netplay.password)
                                                                                                                                                             {
                                                                                                                                                                 Main.player[this.whoAmI].setOp(true);
@@ -1550,6 +1550,17 @@ namespace Terraria_Server
                                                                                                                                                             }
                                                                                                                                                             Netplay.serverSock[this.whoAmI].state = 1;
                                                                                                                                                             NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                                                                                                                                                            return;*/
+                                                                                                                                                            string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                                                                            if (pasword == Netplay.password)
+                                                                                                                                                            {
+                                                                                                                                                                Netplay.serverSock[this.whoAmI].state = 1;
+                                                                                                                                                                NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                                                                                                                                                            }
+                                                                                                                                                            else
+                                                                                                                                                            {
+                                                                                                                                                                NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f);
+                                                                                                                                                            }
                                                                                                                                                             return;
 																																						}
 																																					}

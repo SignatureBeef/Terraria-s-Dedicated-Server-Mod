@@ -1062,7 +1062,7 @@ namespace Terraria_Server
 																																										}
 																																										else
 																																										{
-																																											if (packetId == 40)
+																																											if (packetId == ((int)Packet.NPC_TALK))
 																																											{
 																																												byte[] bytes169 = BitConverter.GetBytes(packetId);
 																																												byte b47 = (byte)number;

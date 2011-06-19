@@ -6,6 +6,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using System.Net;
+using System.Collections;
 
 namespace Terraria_Server
 {
@@ -4868,6 +4869,59 @@ namespace Terraria_Server
         public void teleportTo(Player player)
         {
             this.teleportTo(player.position.X, player.position.Y);
+        }
+
+        public static string getPassword(string server, Server Server)
+        {
+            foreach (string listee in Server.getOpList().getArrayList())
+            {
+                if (listee != null && listee.Trim().ToLower().Length > 0)
+                {
+                    string userPass = listee.Trim().ToLower();
+                    if (userPass.Contains(":"))
+                    {
+                        if (userPass.Split(':')[0] == server.Trim().ToLower())
+                        {
+                            return userPass.Split(':')[1];
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public string getPassword()
+        {
+            return Player.getPassword(this.name, this.getServer());
+        }
+
+        public static bool isInOpList(string Name, Server Server)
+        {
+            foreach (string listee in Server.getOpList().getArrayList())
+            {
+                if (listee != null && listee.Trim().ToLower().Length > 0)
+                {
+                    string userPass = listee.Trim().ToLower();
+                    if (userPass.Contains(":"))
+                    {
+                        if (userPass.Split(':')[0] == Name.Trim().ToLower())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool isInOpList()
+        {
+            return Player.isInOpList(this.name, this.getServer());
+        }
+
+        public string getOpListKey()
+        {
+            return this.name.Trim().ToLower() + getPassword();
         }
 
     }

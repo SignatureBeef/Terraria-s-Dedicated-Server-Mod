@@ -72,7 +72,6 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.NO_SUCH_COMMAND:
                     {
                         Console.WriteLine("No such command!");
-                        //break;
                         return;
                     }
                 case (int)Commands.Command.CONSOLE_EXIT:
@@ -222,6 +221,26 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.COMMAND_SETTLEWATER:
                     {
                         Commands.SettleWater(sender);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_OP:
+                    {
+                        Commands.OP(sender, commands);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_DEOP:
+                    {
+                        Commands.OP(sender, commands, true);
+                        break;
+                    }
+                case (int)Commands.Command.PLAYER_OPLOGIN:
+                    {
+                        Commands.OPLoginOut(sender, commands);
+                        break;
+                    }
+                case (int)Commands.Command.PLAYER_OPLOGOUT:
+                    {
+                        Commands.OPLoginOut(sender, commands, true);
                         break;
                     }
                 default:
