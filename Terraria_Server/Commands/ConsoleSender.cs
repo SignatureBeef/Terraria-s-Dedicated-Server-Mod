@@ -13,7 +13,6 @@ namespace Terraria_Server.Commands
         public ConsoleSender(Server server)
         {
             cCommand = new ConsoleCommandEvent();
-            //setServer(server);
         }
 
         public ConsoleCommandEvent getConsoleCommand()

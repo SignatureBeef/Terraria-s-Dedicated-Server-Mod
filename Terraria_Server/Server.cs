@@ -83,13 +83,16 @@ namespace Terraria_Server
         
         public void notifyOps(string Message, bool writeToConsole = false)
         {
-            for (int i = 0; i < 255; i++)
+            if (Statics.cmdMessages)
             {
-                if (Main.player[i].active)
+                for (int i = 0; i < 255; i++)
                 {
-                    if (Main.player[i].isOp())
+                    if (Main.player[i].active)
                     {
-                        NetMessage.SendData((int)Packet.PLAYER_CHAT, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
+                        if (Main.player[i].isOp())
+                        {
+                            NetMessage.SendData((int)Packet.PLAYER_CHAT, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
+                        }
                     }
                 }
             }

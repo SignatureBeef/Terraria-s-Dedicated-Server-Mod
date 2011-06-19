@@ -204,7 +204,7 @@ namespace Terraria_Server.Commands
                         Commands.Give(sender, commands);
                         break;
                     }
-                case (int)Commands.Command.PLAYER_SPAWN_NPC:
+                case (int)Commands.Command.PLAYER_SPAWNNPC:
                     {
                         Commands.SpawnNPC(sender, commands);
                         break;
@@ -217,6 +217,11 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.PLAYER_TPHERE:
                     {
                         Commands.TeleportHere(sender, commands);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_SETTLEWATER:
+                    {
+                        Commands.SettleWater(sender);
                         break;
                     }
                 default:

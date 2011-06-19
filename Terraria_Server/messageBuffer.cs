@@ -1180,13 +1180,13 @@ namespace Terraria_Server
 																									}
 																									else
 																									{
-																										if (b == 26)
+																										if (b == ((int)Packet.STRIKE_PLAYER))
 																										{
 																											byte b15 = this.readBuffer[num];
 																											num++;
 																											int num49 = (int)(this.readBuffer[num] - 1);
 																											num++;
-																											short num50 = BitConverter.ToInt16(this.readBuffer, num);
+																											int num50 = BitConverter.ToInt32(this.readBuffer, num);
 																											num += 2;
 																											byte b16 = this.readBuffer[num];
 																											bool pvp = false;
@@ -1194,7 +1194,7 @@ namespace Terraria_Server
 																											{
 																												pvp = true;
 																											}
-                                                                                                            Main.player[(int)b15].Hurt((int)num50, num49, pvp, true);
+                                                                                                            Main.player[(int)b15].Hurt(num50, num49, pvp, true);
                                                                                                             if (Main.netMode == 2)
                                                                                                             {
                                                                                                                 NetMessage.SendData(26, -1, this.whoAmI, "", (int)b15, (float)num49, (float)num50, (float)b16);
@@ -1202,7 +1202,7 @@ namespace Terraria_Server
 																										}
 																										else
 																										{
-																											if (b == 27)
+																											if (b == ((int)Packet.EXPLOSION))
 																											{
 																												short num51 = BitConverter.ToInt16(this.readBuffer, num);
 																												num += 2;
@@ -1566,7 +1566,7 @@ namespace Terraria_Server
 																																						{
 																																							byte b22 = this.readBuffer[num];
 																																							num++;
-																																							int talkNPC = (int)BitConverter.ToInt16(this.readBuffer, num);
+																																							int talkNPC = BitConverter.ToInt32(this.readBuffer, num);
 																																							num += 2;
 																																							Main.player[(int)b22].talkNPC = talkNPC;
 																																							if (Main.netMode == 2)

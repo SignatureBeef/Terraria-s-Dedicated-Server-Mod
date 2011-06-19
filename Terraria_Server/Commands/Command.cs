@@ -43,9 +43,10 @@ namespace Terraria_Server.Commands
             COMMAND_UNBAN = 10,
             COMMAND_TIME = 11,
             COMMAND_GIVE = 12,
-            PLAYER_SPAWN_NPC = 13,
+            PLAYER_SPAWNNPC = 13,
             COMMAND_TELEPORT = 14,
-            PLAYER_TPHERE = 15
+            PLAYER_TPHERE = 15,
+            COMMAND_SETTLEWATER = 16
         }
 
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
@@ -53,7 +54,7 @@ namespace Terraria_Server.Commands
                                                                     "save-all",     "help",         "whitelist",
                                                                     "ban",          "unban",        "time",
                                                                     "give",         "spawnnpc",     "tp",
-																	"tphere"};
+																	"tphere",       "settle"};
 		
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
                                                                     "Reload Plugins", 
@@ -66,11 +67,12 @@ namespace Terraria_Server.Commands
                                                                     "add:remove to the whitelist", 
                                                                     "Ban a Player", 
                                                                     "Un-Ban a Player", 
-                                                                    "Set Time with: set:day:night",
+                                                                    "Set Time with: set <time>:day:dawn:noon:night",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
                                                                     "Spawn a NPC (/spawnnpc <amount> <name:id>)",
                                                                     "Teleport Player to Player.",
-                                                                    "Teleport a Player to You."};
+                                                                    "Teleport a Player to You.",
+                                                                    "Settle Water."};
 
         public static int getCommandValue(string Command) {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -351,9 +353,19 @@ namespace Terraria_Server.Commands
                                 Program.server.getWorld().setTime(13500);
                                 break;
                             }
-                        case "night":
+                        case "dawn":
                             {
                                 Program.server.getWorld().setTime(0);
+                                break;
+                            }
+                        case "noon":
+                            {
+                                Program.server.getWorld().setTime(27000.0);
+                                break;
+                            }
+                        case "night":
+                            {
+                                Program.server.getWorld().setTime(16200.0);
                                 break;
                             }
                         default:
@@ -667,5 +679,30 @@ namespace Terraria_Server.Commands
                 }
             }
         }
+
+        public static void SettleWater(Sender sender)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (!Liquid.panicMode)
+            {
+                sender.sendMessage("Settling Water...");
+                Liquid.StartPanic();
+                sender.sendMessage("Complete.");
+            }
+            else
+            {
+                sender.sendMessage("Water is already settling");
+            }
+        }
+    
     }
 }

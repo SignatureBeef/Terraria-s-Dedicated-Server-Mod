@@ -15,7 +15,7 @@ namespace Terraria_Server
             NetMessage.SendData(2, plr, -1, msg, 0, 0f, 0f, 0f);
         }
 
-		public static void SendData(int msgType, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
+		public static void SendData(int packetId, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
 		{
 			int num = 256;
 			if (Main.netMode == 2 && remoteClient >= 0)
@@ -26,9 +26,9 @@ namespace Terraria_Server
 			{
 				int num2 = 5;
 				int num3 = num2;
-				if (msgType == 1)
+				if (packetId == (((int)Packet.CONNECTION_REQUEST)))
 				{
-					byte[] bytes = BitConverter.GetBytes(msgType);
+					byte[] bytes = BitConverter.GetBytes(packetId);
 					byte[] bytes2 = Encoding.ASCII.GetBytes("Terraria_Server" + Statics.currentRelease);
 					num2 += bytes2.Length;
 					byte[] bytes3 = BitConverter.GetBytes(num2 - 4);
@@ -38,9 +38,9 @@ namespace Terraria_Server
 				}
 				else
 				{
-					if (msgType == 2)
+                    if (packetId == ((int)Packet.DISCONNECT))
 					{
-						byte[] bytes4 = BitConverter.GetBytes(msgType);
+						byte[] bytes4 = BitConverter.GetBytes(packetId);
 						byte[] bytes5 = Encoding.ASCII.GetBytes(text);
 						num2 += bytes5.Length;
 						byte[] bytes6 = BitConverter.GetBytes(num2 - 4);
@@ -54,9 +54,9 @@ namespace Terraria_Server
 					}
 					else
 					{
-						if (msgType == 3)
+                        if (packetId == ((int)Packet.CONNECTION_RESPONSE))
 						{
-							byte[] bytes7 = BitConverter.GetBytes(msgType);
+							byte[] bytes7 = BitConverter.GetBytes(packetId);
 							byte[] bytes8 = BitConverter.GetBytes(remoteClient);
 							num2 += bytes8.Length;
 							byte[] bytes9 = BitConverter.GetBytes(num2 - 4);
@@ -66,9 +66,9 @@ namespace Terraria_Server
 						}
 						else
 						{
-							if (msgType == 4)
+                            if (packetId == ((int)Packet.PLAYER_DATA))
 							{
-								byte[] bytes10 = BitConverter.GetBytes(msgType);
+								byte[] bytes10 = BitConverter.GetBytes(packetId);
 								byte b = (byte)number;
 								byte b2 = (byte)Main.player[(int)b].hair;
 								byte[] bytes11 = Encoding.ASCII.GetBytes(text);
@@ -126,9 +126,9 @@ namespace Terraria_Server
 							}
 							else
 							{
-								if (msgType == 5)
+                                if (packetId == ((int)Packet.INVENTORY_DATA))
 								{
-									byte[] bytes13 = BitConverter.GetBytes(msgType);
+									byte[] bytes13 = BitConverter.GetBytes(packetId);
 									byte b3 = (byte)number;
 									byte b4 = (byte)number2;
 									byte b5;
@@ -168,18 +168,18 @@ namespace Terraria_Server
 								}
 								else
 								{
-									if (msgType == 6)
+                                    if (packetId == ((int)Packet.WORLD_REQUEST))
 									{
-										byte[] bytes16 = BitConverter.GetBytes(msgType);
+										byte[] bytes16 = BitConverter.GetBytes(packetId);
 										byte[] bytes17 = BitConverter.GetBytes(num2 - 4);
 										Buffer.BlockCopy(bytes17, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
 										Buffer.BlockCopy(bytes16, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
 									}
 									else
 									{
-										if (msgType == 7)
+                                        if (packetId == ((int)Packet.WORLD_DATA))
 										{
-											byte[] bytes18 = BitConverter.GetBytes(msgType);
+											byte[] bytes18 = BitConverter.GetBytes(packetId);
 											byte[] bytes19 = BitConverter.GetBytes((int)Main.time);
 											byte b6 = 0;
 											if (Main.dayTime)
@@ -231,9 +231,9 @@ namespace Terraria_Server
 										}
 										else
 										{
-											if (msgType == 8)
+                                            if (packetId == ((int)Packet.REQUEST_TILE_BLOCK))
 											{
-												byte[] bytes29 = BitConverter.GetBytes(msgType);
+												byte[] bytes29 = BitConverter.GetBytes(packetId);
 												byte[] bytes30 = BitConverter.GetBytes(number);
 												byte[] bytes31 = BitConverter.GetBytes((int)number2);
 												num2 += bytes30.Length + bytes31.Length;
@@ -246,9 +246,9 @@ namespace Terraria_Server
 											}
 											else
 											{
-												if (msgType == 9)
+                                                if (packetId == ((int)Packet.SEND_TILE_LOADING))
 												{
-													byte[] bytes33 = BitConverter.GetBytes(msgType);
+													byte[] bytes33 = BitConverter.GetBytes(packetId);
 													byte[] bytes34 = BitConverter.GetBytes(number);
 													byte[] bytes35 = Encoding.ASCII.GetBytes(text);
 													num2 += bytes34.Length + bytes35.Length;
@@ -261,12 +261,12 @@ namespace Terraria_Server
 												}
 												else
 												{
-													if (msgType == 10)
+                                                    if (packetId == ((int)Packet.SEND_TILE_LOADING_MESSAGE))
 													{
 														short num4 = (short)number;
 														int num5 = (int)number2;
 														int num6 = (int)number3;
-														byte[] bytes37 = BitConverter.GetBytes(msgType);
+														byte[] bytes37 = BitConverter.GetBytes(packetId);
 														Buffer.BlockCopy(bytes37, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
 														byte[] bytes38 = BitConverter.GetBytes(num4);
 														Buffer.BlockCopy(bytes38, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
@@ -337,9 +337,9 @@ namespace Terraria_Server
 													}
 													else
 													{
-														if (msgType == 11)
+                                                        if (packetId == ((int)Packet.SEND_TILE_CONFIRM))
 														{
-															byte[] bytes44 = BitConverter.GetBytes(msgType);
+															byte[] bytes44 = BitConverter.GetBytes(packetId);
 															byte[] bytes45 = BitConverter.GetBytes(number);
 															byte[] bytes46 = BitConverter.GetBytes((int)number2);
 															byte[] bytes47 = BitConverter.GetBytes((int)number3);
@@ -359,9 +359,9 @@ namespace Terraria_Server
 														}
 														else
 														{
-															if (msgType == 12)
+                                                            if (packetId == ((int)Packet.RECEIVING_PLAYER_JOINED))
 															{
-																byte[] bytes50 = BitConverter.GetBytes(msgType);
+																byte[] bytes50 = BitConverter.GetBytes(packetId);
 																byte b11 = (byte)number;
 																byte[] bytes51 = BitConverter.GetBytes(Main.player[(int)b11].SpawnX);
 																byte[] bytes52 = BitConverter.GetBytes(Main.player[(int)b11].SpawnY);
@@ -378,9 +378,9 @@ namespace Terraria_Server
 															}
 															else
 															{
-																if (msgType == 13)
+                                                                if (packetId == ((int)Packet.PLAYER_STATE_UPDATE))
 																{
-																	byte[] bytes54 = BitConverter.GetBytes(msgType);
+																	byte[] bytes54 = BitConverter.GetBytes(packetId);
 																	byte b12 = (byte)number;
 																	byte b13 = 0;
 																	if (Main.player[(int)b12].controlUp)
@@ -436,9 +436,9 @@ namespace Terraria_Server
 																}
 																else
 																{
-																	if (msgType == 14)
+                                                                    if (packetId == ((int)Packet.SYNCH_BEGIN))
 																	{
-																		byte[] bytes60 = BitConverter.GetBytes(msgType);
+																		byte[] bytes60 = BitConverter.GetBytes(packetId);
 																		byte b15 = (byte)number;
 																		byte b16 = (byte)number2;
 																		num2 += 2;
@@ -450,18 +450,18 @@ namespace Terraria_Server
 																	}
 																	else
 																	{
-																		if (msgType == 15)
+                                                                        if (packetId == ((int)Packet.UPDATE_PLAYERS))
 																		{
-																			byte[] bytes62 = BitConverter.GetBytes(msgType);
+																			byte[] bytes62 = BitConverter.GetBytes(packetId);
 																			byte[] bytes63 = BitConverter.GetBytes(num2 - 4);
 																			Buffer.BlockCopy(bytes63, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
 																			Buffer.BlockCopy(bytes62, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
 																		}
 																		else
 																		{
-																			if (msgType == 16)
+                                                                            if (packetId == ((int)Packet.PLAYER_HEALTH_UPDATE))
 																			{
-																				byte[] bytes64 = BitConverter.GetBytes(msgType);
+																				byte[] bytes64 = BitConverter.GetBytes(packetId);
 																				byte b17 = (byte)number;
 																				byte[] bytes65 = BitConverter.GetBytes((short)Main.player[(int)b17].statLife);
 																				byte[] bytes66 = BitConverter.GetBytes((short)Main.player[(int)b17].statLifeMax);
@@ -477,9 +477,9 @@ namespace Terraria_Server
 																			}
 																			else
 																			{
-																				if (msgType == 17)
+                                                                                if (packetId == ((int)Packet.TILE_BREAK))
 																				{
-																					byte[] bytes68 = BitConverter.GetBytes(msgType);
+																					byte[] bytes68 = BitConverter.GetBytes(packetId);
 																					byte b18 = (byte)number;
 																					byte[] bytes69 = BitConverter.GetBytes((int)number2);
 																					byte[] bytes70 = BitConverter.GetBytes((int)number3);
@@ -498,9 +498,9 @@ namespace Terraria_Server
 																				}
 																				else
 																				{
-																					if (msgType == 18)
+                                                                                    if (packetId == ((int)Packet.TIME_SUN_MOON_UPDATE))
 																					{
-																						byte[] bytes72 = BitConverter.GetBytes(msgType);
+																						byte[] bytes72 = BitConverter.GetBytes(packetId);
 																						BitConverter.GetBytes((int)Main.time);
 																						byte b20 = 0;
 																						if (Main.dayTime)
@@ -525,9 +525,9 @@ namespace Terraria_Server
 																					}
 																					else
 																					{
-																						if (msgType == 19)
+                                                                                        if (packetId == ((int)Packet.DOOR_UPDATE))
 																						{
-																							byte[] bytes77 = BitConverter.GetBytes(msgType);
+																							byte[] bytes77 = BitConverter.GetBytes(packetId);
 																							byte b21 = (byte)number;
 																							byte[] bytes78 = BitConverter.GetBytes((int)number2);
 																							byte[] bytes79 = BitConverter.GetBytes((int)number3);
@@ -550,12 +550,12 @@ namespace Terraria_Server
 																						}
 																						else
 																						{
-																							if (msgType == 20)
+                                                                                            if (packetId == ((int)Packet.TILE_SQUARE))
 																							{
 																								short num7 = (short)number;
 																								int num8 = (int)number2;
 																								int num9 = (int)number3;
-																								byte[] bytes81 = BitConverter.GetBytes(msgType);
+																								byte[] bytes81 = BitConverter.GetBytes(packetId);
 																								Buffer.BlockCopy(bytes81, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
 																								byte[] bytes82 = BitConverter.GetBytes(num7);
 																								Buffer.BlockCopy(bytes82, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
@@ -629,9 +629,9 @@ namespace Terraria_Server
 																							}
 																							else
 																							{
-																								if (msgType == 21)
+                                                                                                if (packetId == ((int)Packet.ITEM_INFO))
 																								{
-																									byte[] bytes88 = BitConverter.GetBytes(msgType);
+																									byte[] bytes88 = BitConverter.GetBytes(packetId);
 																									byte[] bytes89 = BitConverter.GetBytes((short)number);
 																									byte[] bytes90 = BitConverter.GetBytes(Main.item[number].position.X);
 																									byte[] bytes91 = BitConverter.GetBytes(Main.item[number].position.Y);
@@ -668,9 +668,9 @@ namespace Terraria_Server
 																								}
 																								else
 																								{
-																									if (msgType == 22)
+                                                                                                    if (packetId == ((int)Packet.ITEM_OWNER_INFO))
 																									{
-																										byte[] bytes96 = BitConverter.GetBytes(msgType);
+																										byte[] bytes96 = BitConverter.GetBytes(packetId);
 																										byte[] bytes97 = BitConverter.GetBytes((short)number);
 																										byte b26 = (byte)Main.item[number].owner;
 																										num2 += bytes97.Length + 1;
@@ -683,9 +683,9 @@ namespace Terraria_Server
 																									}
 																									else
 																									{
-																										if (msgType == 23)
+                                                                                                        if (packetId == ((int)Packet.NPC_INFO))
 																										{
-																											byte[] bytes99 = BitConverter.GetBytes(msgType);
+																											byte[] bytes99 = BitConverter.GetBytes(packetId);
 																											byte[] bytes100 = BitConverter.GetBytes((short)number);
 																											byte[] bytes101 = BitConverter.GetBytes(Main.npc[number].position.X);
 																											byte[] bytes102 = BitConverter.GetBytes(Main.npc[number].position.Y);
@@ -730,9 +730,9 @@ namespace Terraria_Server
 																										}
 																										else
 																										{
-																											if (msgType == 24)
+                                                                                                            if (packetId == (((int)Packet.STRIKE_NPC)))
 																											{
-																												byte[] bytes110 = BitConverter.GetBytes(msgType);
+																												byte[] bytes110 = BitConverter.GetBytes(packetId);
 																												byte[] bytes111 = BitConverter.GetBytes((short)number);
 																												byte b27 = (byte)number2;
 																												num2 += bytes111.Length + 1;
@@ -745,9 +745,9 @@ namespace Terraria_Server
 																											}
 																											else
 																											{
-																												if (msgType == 25)
+                                                                                                                if (packetId == ((int)Packet.PLAYER_CHAT))
 																												{
-																													byte[] bytes113 = BitConverter.GetBytes(msgType);
+																													byte[] bytes113 = BitConverter.GetBytes(packetId);
 																													byte b28 = (byte)number;
 																													byte[] bytes114 = Encoding.ASCII.GetBytes(text);
 																													byte b29 = (byte)number2;
@@ -769,9 +769,9 @@ namespace Terraria_Server
 																												}
 																												else
 																												{
-																													if (msgType == 26)
+                                                                                                                    if (packetId == ((int)Packet.STRIKE_PLAYER))
 																													{
-																														byte[] bytes116 = BitConverter.GetBytes(msgType);
+																														byte[] bytes116 = BitConverter.GetBytes(packetId);
 																														byte b32 = (byte)number;
 																														byte b33 = (byte)(number2 + 1f);
 																														byte[] bytes117 = BitConverter.GetBytes((short)number3);
@@ -790,9 +790,9 @@ namespace Terraria_Server
 																													}
 																													else
 																													{
-																														if (msgType == 27)
+                                                                                                                        if (packetId == ((int)Packet.EXPLOSION))
 																														{
-																															byte[] bytes119 = BitConverter.GetBytes(msgType);
+																															byte[] bytes119 = BitConverter.GetBytes(packetId);
 																															byte[] bytes120 = BitConverter.GetBytes((short)Main.projectile[number].identity);
 																															byte[] bytes121 = BitConverter.GetBytes(Main.projectile[number].position.X);
 																															byte[] bytes122 = BitConverter.GetBytes(Main.projectile[number].position.Y);
@@ -831,9 +831,9 @@ namespace Terraria_Server
 																														}
 																														else
 																														{
-																															if (msgType == 28)
+																															if (packetId == 28)
 																															{
-																																byte[] bytes129 = BitConverter.GetBytes(msgType);
+																																byte[] bytes129 = BitConverter.GetBytes(packetId);
 																																byte[] bytes130 = BitConverter.GetBytes((short)number);
 																																byte[] bytes131 = BitConverter.GetBytes((short)number2);
 																																byte[] bytes132 = BitConverter.GetBytes(number3);
@@ -852,9 +852,9 @@ namespace Terraria_Server
 																															}
 																															else
 																															{
-																																if (msgType == 29)
+																																if (packetId == 29)
 																																{
-																																	byte[] bytes134 = BitConverter.GetBytes(msgType);
+																																	byte[] bytes134 = BitConverter.GetBytes(packetId);
 																																	byte[] bytes135 = BitConverter.GetBytes((short)number);
 																																	byte b36 = (byte)number2;
 																																	num2 += bytes135.Length + 1;
@@ -867,9 +867,9 @@ namespace Terraria_Server
 																																}
 																																else
 																																{
-																																	if (msgType == 30)
+																																	if (packetId == 30)
 																																	{
-																																		byte[] bytes137 = BitConverter.GetBytes(msgType);
+																																		byte[] bytes137 = BitConverter.GetBytes(packetId);
 																																		byte b37 = (byte)number;
 																																		byte b38 = 0;
 																																		if (Main.player[(int)b37].hostile)
@@ -886,9 +886,9 @@ namespace Terraria_Server
 																																	}
 																																	else
 																																	{
-																																		if (msgType == 31)
+																																		if (packetId == 31)
 																																		{
-																																			byte[] bytes139 = BitConverter.GetBytes(msgType);
+																																			byte[] bytes139 = BitConverter.GetBytes(packetId);
 																																			byte[] bytes140 = BitConverter.GetBytes(number);
 																																			byte[] bytes141 = BitConverter.GetBytes((int)number2);
 																																			num2 += bytes140.Length + bytes141.Length;
@@ -901,9 +901,9 @@ namespace Terraria_Server
 																																		}
 																																		else
 																																		{
-																																			if (msgType == 32)
+																																			if (packetId == 32)
 																																			{
-																																				byte[] bytes143 = BitConverter.GetBytes(msgType);
+																																				byte[] bytes143 = BitConverter.GetBytes(packetId);
 																																				byte[] bytes144 = BitConverter.GetBytes((short)number);
 																																				byte b39 = (byte)number2;
 																																				byte b40 = (byte)Main.chest[number].item[(int)number2].stack;
@@ -930,9 +930,9 @@ namespace Terraria_Server
 																																			}
 																																			else
 																																			{
-																																				if (msgType == 33)
+																																				if (packetId == 33)
 																																				{
-																																					byte[] bytes147 = BitConverter.GetBytes(msgType);
+																																					byte[] bytes147 = BitConverter.GetBytes(packetId);
 																																					byte[] bytes148 = BitConverter.GetBytes((short)number);
 																																					byte[] bytes149;
 																																					byte[] bytes150;
@@ -958,9 +958,9 @@ namespace Terraria_Server
 																																				}
 																																				else
 																																				{
-																																					if (msgType == 34)
+																																					if (packetId == 34)
 																																					{
-																																						byte[] bytes152 = BitConverter.GetBytes(msgType);
+																																						byte[] bytes152 = BitConverter.GetBytes(packetId);
 																																						byte[] bytes153 = BitConverter.GetBytes(number);
 																																						byte[] bytes154 = BitConverter.GetBytes((int)number2);
 																																						num2 += bytes153.Length + bytes154.Length;
@@ -973,9 +973,9 @@ namespace Terraria_Server
 																																					}
 																																					else
 																																					{
-																																						if (msgType == 35)
+																																						if (packetId == 35)
 																																						{
-																																							byte[] bytes156 = BitConverter.GetBytes(msgType);
+																																							byte[] bytes156 = BitConverter.GetBytes(packetId);
 																																							byte b41 = (byte)number;
 																																							byte[] bytes157 = BitConverter.GetBytes((short)number2);
 																																							num2 += 1 + bytes157.Length;
@@ -988,9 +988,9 @@ namespace Terraria_Server
 																																						}
 																																						else
 																																						{
-																																							if (msgType == 36)
+																																							if (packetId == 36)
 																																							{
-																																								byte[] bytes159 = BitConverter.GetBytes(msgType);
+																																								byte[] bytes159 = BitConverter.GetBytes(packetId);
 																																								byte b42 = (byte)number;
 																																								byte b43 = 0;
 																																								if (Main.player[(int)b42].zoneEvil)
@@ -1029,18 +1029,18 @@ namespace Terraria_Server
 																																							}
 																																							else
 																																							{
-																																								if (msgType == 37)
+                                                                                                                                                                if (packetId == ((int)Packet.PASSWORD_REQUEST))
 																																								{
-																																									byte[] bytes161 = BitConverter.GetBytes(msgType);
+																																									byte[] bytes161 = BitConverter.GetBytes(packetId);
 																																									byte[] bytes162 = BitConverter.GetBytes(num2 - 4);
 																																									Buffer.BlockCopy(bytes162, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
 																																									Buffer.BlockCopy(bytes161, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
 																																								}
 																																								else
 																																								{
-																																									if (msgType == 38)
+                                                                                                                                                                    if (packetId == ((int)Packet.PASSWORD_RESPONSE))
 																																									{
-																																										byte[] bytes163 = BitConverter.GetBytes(msgType);
+																																										byte[] bytes163 = BitConverter.GetBytes(packetId);
 																																										byte[] bytes164 = Encoding.ASCII.GetBytes(text);
 																																										num2 += bytes164.Length;
 																																										byte[] bytes165 = BitConverter.GetBytes(num2 - 4);
@@ -1050,9 +1050,9 @@ namespace Terraria_Server
 																																									}
 																																									else
 																																									{
-																																										if (msgType == 39)
+																																										if (packetId == ((int)Packet.ITEM_OWNER_UPDATE))
 																																										{
-																																											byte[] bytes166 = BitConverter.GetBytes(msgType);
+																																											byte[] bytes166 = BitConverter.GetBytes(packetId);
 																																											byte[] bytes167 = BitConverter.GetBytes((short)number);
 																																											num2 += bytes167.Length;
 																																											byte[] bytes168 = BitConverter.GetBytes(num2 - 4);
@@ -1062,9 +1062,9 @@ namespace Terraria_Server
 																																										}
 																																										else
 																																										{
-																																											if (msgType == 40)
+																																											if (packetId == 40)
 																																											{
-																																												byte[] bytes169 = BitConverter.GetBytes(msgType);
+																																												byte[] bytes169 = BitConverter.GetBytes(packetId);
 																																												byte b47 = (byte)number;
 																																												byte[] bytes170 = BitConverter.GetBytes((short)Main.player[(int)b47].talkNPC);
 																																												num2 += 1 + bytes170.Length;
@@ -1078,9 +1078,9 @@ namespace Terraria_Server
 																																											}
 																																											else
 																																											{
-																																												if (msgType == 41)
+																																												if (packetId == 41)
 																																												{
-																																													byte[] bytes172 = BitConverter.GetBytes(msgType);
+																																													byte[] bytes172 = BitConverter.GetBytes(packetId);
 																																													byte b48 = (byte)number;
 																																													byte[] bytes173 = BitConverter.GetBytes(Main.player[(int)b48].itemRotation);
 																																													byte[] bytes174 = BitConverter.GetBytes((short)Main.player[(int)b48].itemAnimation);
@@ -1096,9 +1096,9 @@ namespace Terraria_Server
 																																												}
 																																												else
 																																												{
-																																													if (msgType == 42)
+                                                                                                                                                                                    if (packetId == ((int)Packet.PLAYER_MANA_UPDATE))
 																																													{
-																																														byte[] bytes176 = BitConverter.GetBytes(msgType);
+																																														byte[] bytes176 = BitConverter.GetBytes(packetId);
 																																														byte b49 = (byte)number;
 																																														byte[] bytes177 = BitConverter.GetBytes((short)Main.player[(int)b49].statMana);
 																																														byte[] bytes178 = BitConverter.GetBytes((short)Main.player[(int)b49].statManaMax);
@@ -1114,9 +1114,9 @@ namespace Terraria_Server
 																																													}
 																																													else
 																																													{
-																																														if (msgType == 43)
+																																														if (packetId == 43)
 																																														{
-																																															byte[] bytes180 = BitConverter.GetBytes(msgType);
+																																															byte[] bytes180 = BitConverter.GetBytes(packetId);
 																																															byte b50 = (byte)number;
 																																															byte[] bytes181 = BitConverter.GetBytes((short)number2);
 																																															num2 += 1 + bytes181.Length;
@@ -1129,9 +1129,9 @@ namespace Terraria_Server
 																																														}
 																																														else
 																																														{
-																																															if (msgType == 44)
+																																															if (packetId == 44)
 																																															{
-																																																byte[] bytes183 = BitConverter.GetBytes(msgType);
+																																																byte[] bytes183 = BitConverter.GetBytes(packetId);
 																																																byte b51 = (byte)number;
 																																																byte b52 = (byte)(number2 + 1f);
 																																																byte[] bytes184 = BitConverter.GetBytes((short)number3);
@@ -1150,9 +1150,9 @@ namespace Terraria_Server
 																																															}
 																																															else
 																																															{
-																																																if (msgType == 45)
+																																																if (packetId == 45)
 																																																{
-																																																	byte[] bytes186 = BitConverter.GetBytes(msgType);
+																																																	byte[] bytes186 = BitConverter.GetBytes(packetId);
 																																																	byte b54 = (byte)number;
 																																																	byte b55 = (byte)Main.player[(int)b54].team;
 																																																	num2 += 2;
@@ -1165,9 +1165,9 @@ namespace Terraria_Server
 																																																}
 																																																else
 																																																{
-																																																	if (msgType == 46)
+																																																	if (packetId == 46)
 																																																	{
-																																																		byte[] bytes188 = BitConverter.GetBytes(msgType);
+																																																		byte[] bytes188 = BitConverter.GetBytes(packetId);
 																																																		byte[] bytes189 = BitConverter.GetBytes(number);
 																																																		byte[] bytes190 = BitConverter.GetBytes((int)number2);
 																																																		num2 += bytes189.Length + bytes190.Length;
@@ -1180,9 +1180,9 @@ namespace Terraria_Server
 																																																	}
 																																																	else
 																																																	{
-																																																		if (msgType == 47)
+																																																		if (packetId == 47)
 																																																		{
-																																																			byte[] bytes192 = BitConverter.GetBytes(msgType);
+																																																			byte[] bytes192 = BitConverter.GetBytes(packetId);
 																																																			byte[] bytes193 = BitConverter.GetBytes((short)number);
 																																																			byte[] bytes194 = BitConverter.GetBytes(Main.sign[number].x);
 																																																			byte[] bytes195 = BitConverter.GetBytes(Main.sign[number].y);
@@ -1202,9 +1202,9 @@ namespace Terraria_Server
 																																																		}
 																																																		else
 																																																		{
-																																																			if (msgType == 48)
+																																																			if (packetId == 48)
 																																																			{
-																																																				byte[] bytes198 = BitConverter.GetBytes(msgType);
+																																																				byte[] bytes198 = BitConverter.GetBytes(packetId);
 																																																				byte[] bytes199 = BitConverter.GetBytes(number);
 																																																				byte[] bytes200 = BitConverter.GetBytes((int)number2);
 																																																				byte liquid = Main.tile[number, (int)number2].liquid;
@@ -1228,9 +1228,9 @@ namespace Terraria_Server
 																																																			}
 																																																			else
 																																																			{
-																																																				if (msgType == 49)
+                                                                                                                                                                                                                if (packetId == ((int)Packet.SEND_SPAWN))
 																																																				{
-																																																					byte[] bytes202 = BitConverter.GetBytes(msgType);
+																																																					byte[] bytes202 = BitConverter.GetBytes(packetId);
 																																																					byte[] bytes203 = BitConverter.GetBytes(num2 - 4);
 																																																					Buffer.BlockCopy(bytes203, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
 																																																					Buffer.BlockCopy(bytes202, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
@@ -1326,7 +1326,7 @@ namespace Terraria_Server
 				{
 					for (int num11 = 0; num11 < 256; num11++)
 					{
-						if (num11 != ignoreClient && (NetMessage.buffer[num11].broadcast || (Netplay.serverSock[num11].state >= 3 && msgType == 10)) && Netplay.serverSock[num11].tcpClient.Connected)
+						if (num11 != ignoreClient && (NetMessage.buffer[num11].broadcast || (Netplay.serverSock[num11].state >= 3 && packetId == 10)) && Netplay.serverSock[num11].tcpClient.Connected)
 						{
 							try
                             {
@@ -1371,12 +1371,12 @@ namespace Terraria_Server
 				goto IL_33DC;
 				IL_3425:
 				NetMessage.buffer[num].writeLocked = false;
-				if (msgType == 19 && Main.netMode == 1)
+				if (packetId == 19 && Main.netMode == 1)
 				{
 					int size = 5;
 					NetMessage.SendTileSquare(num, (int)number2, (int)number3, size);
 				}
-				if (msgType == 2 && Main.netMode == 2)
+				if (packetId == 2 && Main.netMode == 2)
 				{
 					Netplay.serverSock[num].kill = true;
 				}
@@ -1498,7 +1498,7 @@ namespace Terraria_Server
                 {
                     if (motd[i] != null && motd[i].Trim().Length > 0)
                     {
-                        NetMessage.SendData((int)Packet.PLAYER_CHAT, plr, -1, motd[i], 255, 0f, 0f, 255f);
+                        NetMessage.SendData(((int)Packet.PLAYER_CHAT), plr, -1, motd[i], 255, 0f, 0f, 255f);
                     }
                 }
             }
