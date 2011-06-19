@@ -32,7 +32,7 @@ namespace Terraria_Server.Commands
             string[] commands = Line.Trim().ToLower().Split(' ');
             if (commands == null || commands.Length <= 0)
             {
-                Console.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
+                Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
                 return;
             }
             switchCommands(commands, cSender.getConsoleCommand().getSender());
@@ -59,7 +59,7 @@ namespace Terraria_Server.Commands
             string[] commands = Line.Trim().ToLower().Split(' ');
             if (commands == null || commands.Length <= 0)
             {
-                Console.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.name);
+                Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.name);
                 return;
             }
             switchCommands(commands, player);
@@ -71,7 +71,7 @@ namespace Terraria_Server.Commands
             {
                 case (int)Commands.Command.NO_SUCH_COMMAND:
                     {
-                        Console.WriteLine("No such command!");
+                        Program.tConsole.WriteLine("No such command!");
                         return;
                     }
                 case (int)Commands.Command.CONSOLE_EXIT:
@@ -87,7 +87,7 @@ namespace Terraria_Server.Commands
                         }
 
                         Program.server.notifyOps("Stopping Server...");
-                        Console.WriteLine("Stopping Server...");
+                        Program.tConsole.WriteLine("Stopping Server...");
                         Commands.Exit(sender.getServer());
                         break;
                     }
@@ -104,7 +104,7 @@ namespace Terraria_Server.Commands
                         }
 
                         Program.server.notifyOps("Reloading Plugins.");
-                        Console.WriteLine("Reloading Plugins.");
+                        Program.tConsole.WriteLine("Reloading Plugins.");
                         Commands.Reload(sender.getServer());
                         break;
                     }
@@ -116,7 +116,7 @@ namespace Terraria_Server.Commands
                         }
                         else
                         {
-                            Console.WriteLine(Commands.List(0, false));
+                            Program.tConsole.WriteLine(Commands.List(0, false));
                         }
                         break;
                     }
@@ -170,7 +170,7 @@ namespace Terraria_Server.Commands
                         Program.server.setGodMode(!Program.server.getGodMode());
                         Program.server.notifyAll("God Mode is now " + Program.server.getGodMode().ToString());
                         Program.server.notifyOps("Gode Mod Toggled by " + sender.getName());
-                        Console.WriteLine(sender.getName() + " toggled God Mode to: " + Program.server.getGodMode().ToString());
+                        Program.tConsole.WriteLine(sender.getName() + " toggled God Mode to: " + Program.server.getGodMode().ToString());
                         break;
                     }*/
                 case (int)Commands.Command.COMMAND_HELP:
@@ -245,7 +245,7 @@ namespace Terraria_Server.Commands
                     }
                 default:
                     {
-                        Console.WriteLine("Uknown Command Issued.");
+                        Program.tConsole.WriteLine("Uknown Command Issued.");
                         break;
                     }
             }

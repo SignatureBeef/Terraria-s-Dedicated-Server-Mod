@@ -49,7 +49,7 @@ namespace Terraria_Server
 						Buffer.BlockCopy(bytes5, 0, NetMessage.buffer[num].writeBuffer, 5, bytes5.Length);
 						if (Main.dedServ)
 						{
-							Console.WriteLine(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint.ToString() + " was booted: " + text);
+							Program.tConsole.WriteLine(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint.ToString() + " was booted: " + text);
 						}
 					}
 					else
@@ -1595,7 +1595,7 @@ namespace Terraria_Server
 						NetMessage.SendData(25, -1, i, Main.player[i].name + " has joined.", 255, 255f, 240f, 20f);
 						if (Main.dedServ)
 						{
-							Console.WriteLine(Main.player[i].name + " has joined.");
+							Program.tConsole.WriteLine(Main.player[i].name + " has joined.");
 
                             LoginEvent Event = new LoginEvent();
                             Event.setSocket(Netplay.serverSock[i]);
@@ -1613,7 +1613,7 @@ namespace Terraria_Server
 						NetMessage.SendData(25, -1, i, Netplay.serverSock[i].oldName + " has left.", 255, 255f, 240f, 20f);
 						if (Main.dedServ)
 						{
-							Console.WriteLine(Netplay.serverSock[i].oldName + " has left.");
+							Program.tConsole.WriteLine(Netplay.serverSock[i].oldName + " has left.");
 
                             LogoutEvent Event = new LogoutEvent();
                             Event.setSocket(Netplay.serverSock[i]);

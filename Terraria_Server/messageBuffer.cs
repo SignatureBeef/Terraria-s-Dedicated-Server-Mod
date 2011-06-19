@@ -1151,7 +1151,7 @@ namespace Terraria_Server
                                                                                                                         return;
                                                                                                                     }
 
-                                                                                                                    Console.WriteLine(Main.player[this.whoAmI].name + " Sent Command: " + string7);
+                                                                                                                    Program.tConsole.WriteLine(Main.player[this.whoAmI].name + " Sent Command: " + string7);
 
                                                                                                                     Program.commandParser.parsePlayerCommand(Main.player[this.whoAmI], Chat);
                                                                                                                     return;
@@ -1171,7 +1171,7 @@ namespace Terraria_Server
                                                                                                                 NetMessage.SendData(25, -1, -1, string7, num46, (float)b12, (float)b13, (float)b14);
                                                                                                                 if (Main.dedServ)
                                                                                                                 {
-                                                                                                                    Console.WriteLine("<" + Main.player[this.whoAmI].name + "> " + string7);
+                                                                                                                    Program.tConsole.WriteLine("<" + Main.player[this.whoAmI].name + "> " + string7);
                                                                                                                     return;
                                                                                                                 }
                                                                                                             }

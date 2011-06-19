@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Terraria_Server;
+
 namespace Terraria_Server.Commands
 {
     public class Commands
@@ -143,7 +145,7 @@ namespace Terraria_Server.Commands
 
         public static void SaveAll()
         {
-            Console.WriteLine("Saving World");
+            Program.tConsole.WriteLine("Saving World");
             Program.server.notifyOps("Saving World...");
 
             WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
@@ -151,14 +153,14 @@ namespace Terraria_Server.Commands
             {
             }
 
-            Console.WriteLine("Saving Data");
+            Program.tConsole.WriteLine("Saving Data");
             Program.server.notifyOps("Saving Data...");
 
             Program.server.getBanList().Save();
             Program.server.getWhiteList().Save();
 
             Program.server.notifyOps("Saving Complete.");
-            Console.WriteLine("Saving Complete.");
+            Program.tConsole.WriteLine("Saving Complete.");
         }
 
         public static bool getGodMode()
@@ -184,7 +186,7 @@ namespace Terraria_Server.Commands
             {
                 for (int i = 0; i < CommandDefinition.Length; i++)
                 {
-                    Console.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
+                    Program.tConsole.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
                 }
             }
         }

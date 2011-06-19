@@ -99,7 +99,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine(Message);
+            Program.tConsole.WriteLine(Message);
         }
 
         public void notifyAll(string Message)
