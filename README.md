@@ -11,12 +11,13 @@ If you like TDSM or want to help support us, we simply ask you to tell your frie
 
 TDSM IS NOT tMod. TDSM was actually under development before tMod was released.
 
--	TDSM has been tested on a Ubuntu System with the Latest Mono installed. It was proven to be working! All you need to do is set debugmode to True in the server properties
+	- TDSM has been tested on a Ubuntu System with the Latest Mono installed. It was proven to be working! All you need to do is set debugmode to True in the server properties
 
 
 Status
 -------------
 TDSM is currently runnable as a server, You may also find that Developers can also now make plugins for it if they feel so.
+Current Protocol Version: 9 (1.04)
 
 How To Use
 -------------
