@@ -14,7 +14,7 @@ namespace Terraria_Server
         {
             base.setFile(pFile);
         }
-
+        
         public void pushData()
         {
             setMaxPlayers(getMaxPlayers());
@@ -29,6 +29,9 @@ namespace Terraria_Server
             setUsingCutomTiles(isUsingCutomTiles());
             setMaxTilesX(getMaxTilesX());
             setMaxTilesY(getMaxTilesY());
+            setUsingCustomGenOpts(getUsingCustomGenOpts());
+            setDungeonAmount(getDungeonAmount());
+            setFloatingIslandAmount(getFloatingIslandAmount());
             setDebugMode(debugMode());
         }
 
@@ -335,6 +338,53 @@ namespace Terraria_Server
             base.setValue("npc-cancelopendoor", NPCDoorOpen.ToString());
         }
 
+        public void setDungeonAmount(int amount)
+        {
+            base.setValue("opt-numdungeons", amount.ToString());
+        }
+
+        public int getDungeonAmount()
+        {
+            string numDungeons = base.getValue("opt-numdungeons");
+            if (numDungeons == null || numDungeons.Trim().Length < 0)
+                return 1;
+            else if (Int32.Parse(numDungeons) <= 0)
+                return 1;
+            else if (Int32.Parse(numDungeons) >= 10)
+                return 10;
+            else
+                return Int32.Parse(numDungeons);
+        }
+
+        public void setUsingCustomGenOpts(bool customGen)
+        {
+            base.setValue("opt-custom-worldgen", customGen.ToString());
+        }
+
+        public bool getUsingCustomGenOpts()
+        {
+            string customGen = base.getValue("opt-custom-worldgen");
+            if (customGen == null || customGen.Trim().Length < 0)
+                return false;
+            else
+                return Boolean.Parse(customGen);
+        }
+
+        public void setFloatingIslandAmount(int ficount)
+        {
+            base.setValue("opt-num-floating-islands", ficount.ToString());
+        }
+
+        public int getFloatingIslandAmount()
+        {
+            string ficount = base.getValue("opt-num-floating-islands");
+            if (ficount == null || ficount.Trim().Length < 0)
+                return (int)((double)Main.maxTilesX * 0.0008);
+            else if (Int32.Parse(ficount) > (int)((double)Main.maxTilesX * 0.0008) * 3)
+                return (int)((double)Main.maxTilesX * 0.0008) * 3;
+            else
+                return Int32.Parse(ficount);
+        }
         public bool debugMode()
         {
             string DebugMode = base.getValue("debugmode");
