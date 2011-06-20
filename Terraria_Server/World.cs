@@ -129,17 +129,21 @@ namespace Terraria_Server
             return Main.time;
         }
 
-        public void setTime(double Time)
+        public void setTime(double Time, bool baseDay = false, bool dayTime = true)
         {
             Main.time = Time;
+            Main.dayTime = dayTime;
 
-            if (Main.time >= 13500)
+            if (baseDay)
             {
-                Main.dayTime = true;
-            }
-            else
-            {
-                Main.dayTime = false;
+                if (Main.time > Main.dayLength)
+                {
+                    Main.dayTime = true;
+                }
+                else
+                {
+                    Main.dayTime = false;
+                }
             }
         }
 

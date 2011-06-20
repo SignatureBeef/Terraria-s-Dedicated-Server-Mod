@@ -1151,7 +1151,7 @@ namespace Terraria_Server
                                                                                                                         return;
                                                                                                                     }
 
-                                                                                                                    Console.WriteLine(Main.player[this.whoAmI].name + " Sent Command: " + string7);
+                                                                                                                    Program.tConsole.WriteLine(Main.player[this.whoAmI].name + " Sent Command: " + string7);
 
                                                                                                                     Program.commandParser.parsePlayerCommand(Main.player[this.whoAmI], Chat);
                                                                                                                     return;
@@ -1171,7 +1171,7 @@ namespace Terraria_Server
                                                                                                                 NetMessage.SendData(25, -1, -1, string7, num46, (float)b12, (float)b13, (float)b14);
                                                                                                                 if (Main.dedServ)
                                                                                                                 {
-                                                                                                                    Console.WriteLine("<" + Main.player[this.whoAmI].name + "> " + string7);
+                                                                                                                    Program.tConsole.WriteLine("<" + Main.player[this.whoAmI].name + "> " + string7);
                                                                                                                     return;
                                                                                                                 }
                                                                                                             }
@@ -1180,13 +1180,13 @@ namespace Terraria_Server
 																									}
 																									else
 																									{
-																										if (b == 26)
+																										if (b == ((int)Packet.STRIKE_PLAYER))
 																										{
 																											byte b15 = this.readBuffer[num];
 																											num++;
 																											int num49 = (int)(this.readBuffer[num] - 1);
 																											num++;
-																											short num50 = BitConverter.ToInt16(this.readBuffer, num);
+																											int num50 = BitConverter.ToInt32(this.readBuffer, num);
 																											num += 2;
 																											byte b16 = this.readBuffer[num];
 																											bool pvp = false;
@@ -1194,7 +1194,7 @@ namespace Terraria_Server
 																											{
 																												pvp = true;
 																											}
-                                                                                                            Main.player[(int)b15].Hurt((int)num50, num49, pvp, true);
+                                                                                                            Main.player[(int)b15].Hurt(num50, num49, pvp, true);
                                                                                                             if (Main.netMode == 2)
                                                                                                             {
                                                                                                                 NetMessage.SendData(26, -1, this.whoAmI, "", (int)b15, (float)num49, (float)num50, (float)b16);
@@ -1202,7 +1202,7 @@ namespace Terraria_Server
 																										}
 																										else
 																										{
-																											if (b == 27)
+																											if (b == ((int)Packet.EXPLOSION))
 																											{
 																												short num51 = BitConverter.ToInt16(this.readBuffer, num);
 																												num += 2;
@@ -1539,7 +1539,7 @@ namespace Terraria_Server
 																																					{
 																																						if (Main.netMode == 2)
 																																						{
-																																							string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+																																							/*string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
                                                                                                                                                             if (pasword == Netplay.password)
                                                                                                                                                             {
                                                                                                                                                                 Main.player[this.whoAmI].setOp(true);
@@ -1550,6 +1550,17 @@ namespace Terraria_Server
                                                                                                                                                             }
                                                                                                                                                             Netplay.serverSock[this.whoAmI].state = 1;
                                                                                                                                                             NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                                                                                                                                                            return;*/
+                                                                                                                                                            string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                                                                            if (pasword == Netplay.password)
+                                                                                                                                                            {
+                                                                                                                                                                Netplay.serverSock[this.whoAmI].state = 1;
+                                                                                                                                                                NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                                                                                                                                                            }
+                                                                                                                                                            else
+                                                                                                                                                            {
+                                                                                                                                                                NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f);
+                                                                                                                                                            }
                                                                                                                                                             return;
 																																						}
 																																					}
@@ -1566,7 +1577,7 @@ namespace Terraria_Server
 																																						{
 																																							byte b22 = this.readBuffer[num];
 																																							num++;
-																																							int talkNPC = (int)BitConverter.ToInt16(this.readBuffer, num);
+																																							int talkNPC = BitConverter.ToInt32(this.readBuffer, num);
 																																							num += 2;
 																																							Main.player[(int)b22].talkNPC = talkNPC;
 																																							if (Main.netMode == 2)

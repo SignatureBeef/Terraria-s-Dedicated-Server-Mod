@@ -48,7 +48,7 @@ namespace Terraria_Server.Commands
             }
             else
             {
-                Console.WriteLine(Message);
+                Program.tConsole.WriteLine(Message);
             }
         }
 

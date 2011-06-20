@@ -13,6 +13,7 @@ namespace Terraria_Server
         public static Thread updateThread = null;
         public static ServerProperties properties = null;
         public static CommandParser commandParser = null;
+        public static TConsole tConsole = null;
 
         public static bool createDirectory(string dirPath, bool Exit = false)
         {
@@ -26,8 +27,8 @@ namespace Terraria_Server
                 {
                     if (!Exit)
                     {
-                        Console.WriteLine(exception.ToString());
-                        Console.WriteLine("Press any key to continue...");
+                        Program.tConsole.WriteLine(exception.ToString());
+                        Program.tConsole.WriteLine("Press any key to continue...");
                         Console.ReadKey(true);
                         return false;
                     }
@@ -48,8 +49,8 @@ namespace Terraria_Server
                 {
                     if (!Exit)
                     {
-                        Console.WriteLine(exception.ToString());
-                        Console.WriteLine("Press any key to continue...");
+                        Program.tConsole.WriteLine(exception.ToString());
+                        Program.tConsole.WriteLine("Press any key to continue...");
                         Console.ReadKey(true);
                         return false;
                     }
@@ -79,6 +80,8 @@ namespace Terraria_Server
             createFile(Statics.getDataPath + Statics.systemSeperator + "whitelist.txt");
             //createFile(Statics.getDataPath + Statics.systemSeperator + "joinedplayers.txt");
             createFile(Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
+            createFile(Statics.getDataPath + Statics.systemSeperator + "oplist.txt");
+            createFile(Statics.getDataPath + Statics.systemSeperator + "server.log");
             return true;
         }
 
@@ -95,7 +98,7 @@ namespace Terraria_Server
         {
             if (Statics.platform > 0)
             {
-                Console.WriteLine(dataText);
+                Program.tConsole.WriteLine(dataText);
             }
             else
             {
@@ -131,6 +134,14 @@ namespace Terraria_Server
             try
             {
                 Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" + Statics.build;
+                
+                Console.WriteLine("Setting up Paths.");
+                if (!setupPaths())
+                {
+                    return;
+                }
+
+                Console.WriteLine("Initializing...");
 
                 if (Statics.isLinux)
                 {
@@ -139,21 +150,32 @@ namespace Terraria_Server
                     Statics.platform = 1;
                 } //if mac...erm i've never used it, Google later?
 
-                Console.WriteLine("Setting up Paths.");
-                if (!setupPaths())
+                tConsole = new TConsole(Statics.getDataPath + Statics.systemSeperator + "server.log");
+
+                if (args != null && args.Length > 0)
                 {
-                    return;
+                    string CmdMessage = args[0].Trim();
+                    if (CmdMessage.Length > 0)
+                    {
+                        // 0 for Ops
+                        if (CmdMessage.ToLower().Equals("-ignoremessages:0"))
+                        {
+                            Statics.cmdMessages = false;
+                        }
+                    }
                 }
-                Console.WriteLine("Setting up Properties.");
+                //Console.WriteLine("Ok");
+
+                Program.tConsole.WriteLine("Setting up Properties.");
                 setupProperties();
 
                 Statics.debugMode = properties.debugMode();
                 if (Statics.debugMode)
                 {
-                    Console.WriteLine("CAUTION: Running Debug Mode! Unexpected errors may occur!");
+                    Program.tConsole.WriteLine("CAUTION: Running Debug Mode! Unexpected errors may occur!");
                 }
 
-                Console.WriteLine("Preparing Server Data...");
+                Program.tConsole.WriteLine("Preparing Server Data...");
 
                 string worldFile = properties.getInitialWorldPath();
                 FileInfo file = new FileInfo(worldFile);
@@ -167,12 +189,12 @@ namespace Terraria_Server
                     }
                     catch (Exception exception)
                     {
-                        Console.WriteLine(exception.ToString());
-                        Console.WriteLine("Press any key to continue...");
+                        Program.tConsole.WriteLine(exception.ToString());
+                        Program.tConsole.WriteLine("Press any key to continue...");
                         Console.ReadKey(true);
                         return;
                     }
-                    Console.WriteLine("Generating World '" + worldFile + "'");
+                    Program.tConsole.WriteLine("Generating World '" + worldFile + "'");
 
                     int seed = properties.getSeed();
                     if (seed == -1)
@@ -196,12 +218,12 @@ namespace Terraria_Server
 
                         if (worldX < (int)World.MAP_SIZE.SMALL_X || worldY < (int)World.MAP_SIZE.SMALL_Y)
                         {
-                            Console.WriteLine("World dimensions need to be equal to or larger than " + (int)World.MAP_SIZE.SMALL_X + " by " + (int)World.MAP_SIZE.SMALL_Y + "; using built-in 'small'");
-                            worldX = (int)(((double)(int)World.MAP_SIZE.SMALL_Y) * 3.5);
+                            Program.tConsole.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
+                            worldX = (int)((int)World.MAP_SIZE.SMALL_Y * 3.5);
                             worldY = (int)World.MAP_SIZE.SMALL_Y;
                         }
 
-                        Console.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
+                        Program.tConsole.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
                             ", " + worldY.ToString() + " }");
                     }
 
@@ -211,16 +233,6 @@ namespace Terraria_Server
 
                     WorldGen.clearWorld();
                     (new Server()).Initialize();
-                    if (properties.getUsingCustomGenOpts())
-                    {
-                        WorldGen.numDungeons = properties.getDungeonAmount();
-                        WorldGen.ficount = properties.getFloatingIslandAmount();
-                    }
-                    else
-                    {
-                        WorldGen.numDungeons = 1;
-                        WorldGen.ficount = Statics.fidefault;
-                    }
                     WorldGen.generateWorld(seed);
                     WorldGen.saveWorld(worldFile, true);
                 }
@@ -239,12 +251,12 @@ namespace Terraria_Server
 
                     if (worldXtiles < (int)World.MAP_SIZE.SMALL_X || worldYtiles < (int)World.MAP_SIZE.SMALL_Y)
                     {
-                        Console.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
-                        worldXtiles = (int)(((double)(int)World.MAP_SIZE.SMALL_Y) * 3.5);
+                        Program.tConsole.WriteLine("Tiles need to be bigger than " + (int)World.MAP_SIZE.SMALL_Y + ", Assuming 3.5 Ratio");
+                        worldXtiles = (int)((int)World.MAP_SIZE.SMALL_Y * 3.5);
                         worldYtiles = (int)World.MAP_SIZE.SMALL_Y;
                     }
 
-                    Console.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
+                    Program.tConsole.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
                         ", " + worldYtiles.ToString() + " }");
                 }
 
@@ -254,7 +266,8 @@ namespace Terraria_Server
 
                 server = new Server(world, properties.getMaxPlayers(),
                     Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
-                    Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
+                    Statics.getDataPath + Statics.systemSeperator + "banlist.txt",
+                    Statics.getDataPath + Statics.systemSeperator + "oplist.txt");
                 server.setOpPassword(properties.getOpPassword());
                 server.setPort(properties.getPort());
                 server.setIP(properties.getServerIP());
@@ -269,7 +282,7 @@ namespace Terraria_Server
                 while (!Statics.serverStarted) { }
 
                 commandParser = new CommandParser(server);
-                Console.WriteLine("You can now insert Commands.");
+                Program.tConsole.WriteLine("You can now insert Commands.");
                 while (Statics.IsActive)
                 {
                     try {
@@ -284,7 +297,7 @@ namespace Terraria_Server
 
                 }
                 while (Statics.serverStarted) { }
-                Console.WriteLine("Exiting...");
+                Program.tConsole.WriteLine("Exiting...");
             }
             catch (Exception e)
             {
@@ -293,25 +306,31 @@ namespace Terraria_Server
                     using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
                     {
                         streamWriter.WriteLine(DateTime.Now);
+                        streamWriter.WriteLine("Crash Log Generated by TDSM #" + Statics.build + " for " +
+                            Statics.versionNumber + " {" + Statics.currentRelease + "}");
                         streamWriter.WriteLine(e);
                         streamWriter.WriteLine("");
                     }
-                    Console.WriteLine("Server crash: " + DateTime.Now);
-                    Console.WriteLine(e);
-                    Console.WriteLine("");
-                    Console.WriteLine("Please send crashlog.txt to http://tdsm.org/");
+                    Debug.WriteLine("Server crash: " + DateTime.Now);
+                    Program.tConsole.WriteLine(e.Message);
+                    Program.tConsole.WriteLine(e.StackTrace);
+                    Program.tConsole.WriteLine(e.InnerException.Message);
+                    Program.tConsole.WriteLine("");
+                    Program.tConsole.WriteLine("Please send crashlog.txt to http://tdsm.org/");
                 }
                 catch
                 {
+                    //Program.tConsole.WriteLine("Lol You crashed your crash log, Good work.");
                 }
             }
+            Program.tConsole.Close();
         }
 
         public static void Updater()
         {
             if (server == null)
             {
-                Console.WriteLine("Issue in updater thread!");
+                Program.tConsole.WriteLine("Issue in updater thread!");
                 return;
             }
 
@@ -348,5 +367,6 @@ namespace Terraria_Server
 		        }
 	        }
         }
+    
     }
 }

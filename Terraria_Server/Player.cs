@@ -6,6 +6,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using System.Net;
+using System.Collections;
 
 namespace Terraria_Server
 {
@@ -184,12 +185,12 @@ namespace Terraria_Server
 			}
 		}
 
-        public void ManaEffect(int manaAmount, bool overrider = false)
+        public void ManaEffect(int manaAmount, bool overrider = false, int remoteClient = -1)
 		{
 			//CombatText.NewText(new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height), new Color(180, 50, 255, 255), string.Concat(manaAmount));
 			if (overrider || (Main.netMode == 1 && this.whoAmi == Main.myPlayer))
 			{
-				NetMessage.SendData(43, -1, -1, "", this.whoAmi, (float)manaAmount, 0f, 0f);
+                NetMessage.SendData(43, remoteClient, -1, "", this.whoAmi, (float)manaAmount, 0f, 0f);
 			}
 		}
 		
@@ -1838,8 +1839,8 @@ namespace Terraria_Server
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error In UpdatePlayer: " + e.Message);
-                Console.WriteLine("Stack: " + e.StackTrace);
+                Program.tConsole.WriteLine("Error In UpdatePlayer: " + e.Message);
+                Program.tConsole.WriteLine("Stack: " + e.StackTrace);
             }
 		}
 		
@@ -4834,23 +4835,93 @@ namespace Terraria_Server
             Main.spawnTileX = ((int)tileX / 16);
             Main.spawnTileY = ((int)tileY / 16);
 
-            Main.player[this.whoAmi].Spawn(); //Tell the Client to Spawn (Sets Defaults)
-            Main.player[this.whoAmi].UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
             NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f); //Trigger Client Data Update (Updates Spawn Position)
-            NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", Main.player[this.whoAmi].whoAmi, 0f, 0f, 0f); //Trigger the player to spawn
+            NetMessage.SendData((int)Packet.WORLD_DATA, -1, -1, "", 0, 0f, 0f, 0f); //Trigger Client Data Update (Updates Spawn Position)
+            NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", this.whoAmi, 0f, 0f, 0f); //Trigger the player to spawn
+
+            this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
+
+            this.position.X = tileX;
+            this.position.Y = tileY;
+
+            //NetMessage.syncPlayers(); //Sync the Players Position.
 
             //Return our preserved Spawn Point.
             Main.spawnTileX = xPreserve;
             Main.spawnTileY = yPreserve;
 
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f); //Trigger the Client Data Update again to reset the Spawn Point
+            //NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f); //Trigger the Client Data Update again to reset the Spawn Point
+            //NetMessage.SendData((int)Packet.WORLD_DATA, -1, this.whoAmi, "", 0, 0f, 0f, 0f); //Trigger the Client Data Update again to reset the Spawn Point
+
+            this.SpawnX = Main.spawnTileX;
+            this.SpawnY = Main.spawnTileY;
+
+            this.Spawn(); //Tell the Client to Spawn (Sets Defaults)
+            this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
+
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi, -1, "", 0, 0f, 0f, 0f); //Trigger Client Data Update (Updates Spawn Position)
+            //NetMessage.SendData((int)Packet.WORLD_DATA, -1, -1, "", 0, 0f, 0f, 0f); //Trigger Client Data Update (Updates Spawn Position)
+            //NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", this.whoAmi, 0f, 0f, 0f); //Trigger the player to spawn
 
             NetMessage.syncPlayers(); //Sync the Players Position.
         }
 
         public void teleportTo(Player player)
         {
-            teleportTo(player.position.X, player.position.Y);
+            this.teleportTo(player.position.X, player.position.Y);
+        }
+
+        public static string getPassword(string server, Server Server)
+        {
+            foreach (string listee in Server.getOpList().getArrayList())
+            {
+                if (listee != null && listee.Trim().ToLower().Length > 0)
+                {
+                    string userPass = listee.Trim().ToLower();
+                    if (userPass.Contains(":"))
+                    {
+                        if (userPass.Split(':')[0] == server.Trim().ToLower())
+                        {
+                            return userPass.Split(':')[1];
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public string getPassword()
+        {
+            return Player.getPassword(this.name, this.getServer());
+        }
+
+        public static bool isInOpList(string Name, Server Server)
+        {
+            foreach (string listee in Server.getOpList().getArrayList())
+            {
+                if (listee != null && listee.Trim().ToLower().Length > 0)
+                {
+                    string userPass = listee.Trim().ToLower();
+                    if (userPass.Contains(":"))
+                    {
+                        if (userPass.Split(':')[0] == Name.Trim().ToLower())
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool isInOpList()
+        {
+            return Player.isInOpList(this.name, this.getServer());
+        }
+
+        public string getOpListKey()
+        {
+            return this.name.Trim().ToLower() + getPassword();
         }
 
     }
