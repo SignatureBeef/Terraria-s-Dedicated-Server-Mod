@@ -3,9 +3,9 @@
   <MonoDevelop.Ide.DebuggingService>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService>
-  <MonoDevelop.Ide.Workbench ActiveDocument="Commands\Command.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Program.cs">
     <Files>
-      <File FileName="Program.cs" Line="252" Column="18" />
+      <File FileName="Program.cs" Line="154" Column="17" />
       <File FileName="Plugin\Hooks.cs" Line="1" Column="1" />
       <File FileName="Commands\Command.cs" Line="48" Column="19" />
     </Files>
@@ -13,13 +13,12 @@
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Terraria_Server" expanded="True">
-            <Node name="Commands" expanded="True">
-              <Node name="Command.cs" selected="True" />
-            </Node>
+            <Node name="Commands" expanded="True" />
             <Node name="Events" expanded="True" />
             <Node name="Plugin" expanded="True" />
             <Node name="Properties" expanded="True" />
             <Node name="Server" expanded="True" />
+            <Node name="Program.cs" selected="True" />
           </Node>
         </State>
       </Pad>

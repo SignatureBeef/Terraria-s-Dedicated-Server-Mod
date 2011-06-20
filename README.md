@@ -1,7 +1,7 @@
 Terraria's Dedicated Server Mod
 -------------
 
-Aims to provide a stable Server + API.
+Aims to provide a stable Server + API which is compatible with Mono.
 
 If you like TDSM or want to help support us, we simply ask you to tell your friends about it, and help spread the word!.
 
@@ -11,9 +11,7 @@ If you like TDSM or want to help support us, we simply ask you to tell your frie
 
 TDSM IS NOT tMod. TDSM was actually under development before tMod was released.
 
--
-	Apparently Asyncronous Sockets are not acheived in Mono yet, I was aware of this, But not as much as I am now.
-	I cannot say how long or when Mono will support it.
+-	TDSM has been tested on a Ubuntu System with the Latest Mono installed. It was proven to be working! All you need to do is set debugmode to True in the server properties
 
 
 Status
