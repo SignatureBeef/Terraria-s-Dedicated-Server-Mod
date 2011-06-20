@@ -23,7 +23,7 @@ How To Use
 To use TDSM place the executable in the location you wish, Then run it. It will generate a properties file & start generating a world!
 This properties file contains server properties such as Max Players, Greeting (MOTD) and the port to use.
 
-TDSM has included the use for Operators. To use this feature simply set a password in the server properties and when you log into the server, Enter your password and you ill be set to an OP. This OP can do commands such as /exit & /reload etc.
+TDSM has included the use for Operators. To use this feature simply set a password in the server properties and when you log into the server, enter your password and you will be given OP status. This allows you to use commands such as /exit & /reload etc.
 
 TODO
 -------------

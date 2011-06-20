@@ -1,0 +1,4 @@
+obj/**/*
+bin/Debug/**/*
+bin/Release/**/*
+!bin/Release/Terraria_Server.exe
