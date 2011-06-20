@@ -243,6 +243,11 @@ namespace Terraria_Server.Commands
                         Commands.OPLoginOut(sender, commands, true);
                         break;
                     }
+                case (int)Commands.Command.COMMAND_NPCSPAWN:
+                    {
+                        Commands.NPCSpawns(sender);
+                        break;
+                    }
                 default:
                     {
                         Program.tConsole.WriteLine("Uknown Command Issued.");

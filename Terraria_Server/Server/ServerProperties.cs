@@ -23,9 +23,9 @@ namespace Terraria_Server
             setGreeting(getGreeting());
             setInitialWorldPath(getInitialWorldPath());
             setOpPassword(getOpPassword());
+            setNPCDoorOpenCancel(isNPCDoorOpenCancelled());
             setSeed(getSeed());
             setMapSize(getMapSize());
-            setNPCDoorOpenCancel(isNPCDoorOpenCancelled());
             setUsingCutomTiles(isUsingCutomTiles());
             setMaxTilesX(getMaxTilesX());
             setMaxTilesY(getMaxTilesY());
@@ -163,7 +163,7 @@ namespace Terraria_Server
 
         public int getSeed()
         {
-            string Seed = base.getValue("optional-seed");
+            string Seed = base.getValue("opt-seed");
             if (Seed == null || Seed.Trim().Length < 0)
             {
                 return -1;
@@ -176,12 +176,12 @@ namespace Terraria_Server
 
         public void setSeed(int Seed)
         {
-            base.setValue("optional-seed", Seed.ToString());
+            base.setValue("opt-seed", Seed.ToString());
         }
 
         public int getMaxTilesX()
         {
-            string MaxTilesX = base.getValue("optional-maxtilesx");
+            string MaxTilesX = base.getValue("opt-maxtilesx");
             if (MaxTilesX == null || MaxTilesX.Trim().Length < 0 || Int32.Parse(MaxTilesX) <= -1)
             {
                 return (int)World.MAP_SIZE.SMALL_X;
@@ -194,12 +194,12 @@ namespace Terraria_Server
 
         public void setMaxTilesX(int MaxTilesX)
         {
-            base.setValue("optional-maxtilesx", MaxTilesX.ToString());
+            base.setValue("opt-maxtilesx", MaxTilesX.ToString());
         }
 
         public int getMaxTilesY()
         {
-            string MaxTilesY = base.getValue("optional-maxtilesy");
+            string MaxTilesY = base.getValue("opt-maxtilesy");
             if (MaxTilesY == null || MaxTilesY.Trim().Length < 0 || Int32.Parse(MaxTilesY) <= -1)
             {
                 return (int)World.MAP_SIZE.SMALL_Y;
@@ -212,12 +212,12 @@ namespace Terraria_Server
 
         public void setMaxTilesY(int MaxTilesY)
         {
-            base.setValue("optional-maxtilesy", MaxTilesY.ToString());
+            base.setValue("opt-maxtilesy", MaxTilesY.ToString());
         }
 
         public bool isUsingCutomTiles()
         {
-            string CustomTiles = base.getValue("usecustomtiles");
+            string CustomTiles = base.getValue("opt-usecustomtiles");
             if (CustomTiles == null || CustomTiles.Trim().Length < 0)
             {
                 return false;
@@ -230,12 +230,12 @@ namespace Terraria_Server
 
         public void setUsingCutomTiles(bool CustomTiles)
         {
-            base.setValue("usecustomtiles", CustomTiles.ToString());
+            base.setValue("opt-usecustomtiles", CustomTiles.ToString());
         }
 
         public int[] getMapSizes()
         {
-            string CustomTiles = base.getValue("optional-mapsize");
+            string CustomTiles = base.getValue("opt-mapsize");
             /*if (CustomTiles == null || CustomTiles.Trim().Length < 0)
             {
                 return false;
@@ -271,7 +271,7 @@ namespace Terraria_Server
 
         public string getMapSize()
         {
-            string CustomTiles = base.getValue("optional-mapsize");
+            string CustomTiles = base.getValue("opt-mapsize");
             if (CustomTiles == null)
             {
                 return "small";
@@ -299,7 +299,7 @@ namespace Terraria_Server
 
         public void setMapSize(string MapSize)
         {
-            base.setValue("optional-mapsize", MapSize);
+            base.setValue("opt-mapsize", MapSize);
         }
 
         public bool isUsingWhiteList()
@@ -385,6 +385,7 @@ namespace Terraria_Server
             else
                 return Int32.Parse(ficount);
         }
+
         public bool debugMode()
         {
             string DebugMode = base.getValue("debugmode");

@@ -52,7 +52,8 @@ namespace Terraria_Server.Commands
             COMMAND_OP = 17,
             COMMAND_DEOP = 18,
             PLAYER_OPLOGIN = 19,
-            PLAYER_OPLOGOUT = 20
+            PLAYER_OPLOGOUT = 20,
+            COMMAND_NPCSPAWN = 21
         }
 
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
@@ -61,19 +62,20 @@ namespace Terraria_Server.Commands
                                                                     "ban",          "unban",        "time",
                                                                     "give",         "spawnnpc",     "tp",
 																	"tphere",       "settle",       "op",
-                                                                    "deop",         "oplogin",      "oplogout"};
+                                                                    "deop",         "oplogin",      "oplogout",
+                                                                    "npcspawns"};
 
-        public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
-                                                                    "Reload Plugins", 
-                                                                    "Show Online Players", 
-                                                                    "Show Online Players", 
-                                                                    "Talk in 3rd Person", 
-                                                                    "Send A Console Message To Online Players", 
-                                                                    "Trigger a World Save", 
-                                                                    "Show this Help", 
-                                                                    "add:remove to the whitelist", 
-                                                                    "Ban a Player", 
-                                                                    "Un-Ban a Player", 
+        public static string[] CommandInformation = new string[] {  "Stop & Close The Server.", 
+                                                                    "Reload Plugins.", 
+                                                                    "Show Online Players.", 
+                                                                    "Show Online Players.", 
+                                                                    "Talk in 3rd Person.", 
+                                                                    "Send A Console Message To Online Players.", 
+                                                                    "Trigger a World Save.", 
+                                                                    "Show this Help.", 
+                                                                    "add:remove to the whitelist.", 
+                                                                    "Ban a Player.", 
+                                                                    "Un-Ban a Player.", 
                                                                     "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
                                                                     "Spawn a NPC (/spawnnpc <amount> <name:id>)",
@@ -83,7 +85,8 @@ namespace Terraria_Server.Commands
                                                                     "Set a player to OP",
                                                                     "De-OP a player.",
                                                                     "Log in as OP: /oplogin <poassword>",
-                                                                    "Log out of OP status"};
+                                                                    "Log out of OP status.",
+                                                                    "Toggle the state of NPC Spawning."};
 
         public static int getCommandValue(string Command)
         {
@@ -880,5 +883,30 @@ namespace Terraria_Server.Commands
                 sender.sendMessage("Command Error!");
             }
         }
+
+        public static void NPCSpawns(Sender sender)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            Main.stopSpawns = !Main.stopSpawns;
+
+            if (Main.stopSpawns)
+            {
+                sender.sendMessage("NPC Spawning is now off!");
+            }
+            else
+            {
+                sender.sendMessage("NPC Spawning is now on!");
+            }
+        }
+        
     }
 }

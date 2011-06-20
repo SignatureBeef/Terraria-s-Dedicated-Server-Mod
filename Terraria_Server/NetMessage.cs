@@ -1078,7 +1078,7 @@ namespace Terraria_Server
 																																											}
 																																											else
 																																											{
-																																												if (packetId == 41)
+																																												if (packetId == ((int)Packet.PLAYER_BALLSWING))
 																																												{
 																																													byte[] bytes172 = BitConverter.GetBytes(packetId);
 																																													byte b48 = (byte)number;

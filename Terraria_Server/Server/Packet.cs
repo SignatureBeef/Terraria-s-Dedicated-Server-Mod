@@ -38,6 +38,7 @@ namespace Terraria_Server
         PASSWORD_RESPONSE = 0x26,
         ITEM_OWNER_UPDATE = 0x27,
         NPC_TALK = 0x28,
+        PLAYER_BALLSWING = 0x29,
         PLAYER_MANA_UPDATE = 0x2A,
         SEND_SPAWN = 0x31,
     }
