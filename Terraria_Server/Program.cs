@@ -81,6 +81,7 @@ namespace Terraria_Server
             //createFile(Statics.getDataPath + Statics.systemSeperator + "joinedplayers.txt");
             createFile(Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
             createFile(Statics.getDataPath + Statics.systemSeperator + "oplist.txt");
+            createFile(Statics.getDataPath + Statics.systemSeperator + "server.log");
             return true;
         }
 
@@ -133,26 +134,23 @@ namespace Terraria_Server
             try
             {
                 Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" + Statics.build;
-
                 
-
                 Console.WriteLine("Setting up Paths.");
                 if (!setupPaths())
                 {
                     return;
                 }
 
-                Console.Write("Initializing...");
+                Console.WriteLine("Initializing...");
 
                 if (Statics.isLinux)
                 {
-                    Program.tConsole.WriteLine("Detected Linux OS.");
+                    Console.WriteLine("Detected Linux OS.");
                     Statics.systemSeperator = "/";
                     Statics.platform = 1;
                 } //if mac...erm i've never used it, Google later?
 
                 tConsole = new TConsole(Statics.getDataPath + Statics.systemSeperator + "server.log");
-
 
                 if (args != null && args.Length > 0)
                 {
@@ -166,7 +164,7 @@ namespace Terraria_Server
                         }
                     }
                 }
-                Console.WriteLine("Ok");
+                //Console.WriteLine("Ok");
 
                 Program.tConsole.WriteLine("Setting up Properties.");
                 setupProperties();
