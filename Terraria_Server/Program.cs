@@ -134,6 +134,14 @@ namespace Terraria_Server
             {
                 Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" + Statics.build;
 
+                
+
+                Console.WriteLine("Setting up Paths.");
+                if (!setupPaths())
+                {
+                    return;
+                }
+
                 Console.Write("Initializing...");
 
                 if (Statics.isLinux)
@@ -158,13 +166,8 @@ namespace Terraria_Server
                         }
                     }
                 }
-               Console.WriteLine("Ok");
+                Console.WriteLine("Ok");
 
-                Program.tConsole.WriteLine("Setting up Paths.");
-                if (!setupPaths())
-                {
-                    return;
-                }
                 Program.tConsole.WriteLine("Setting up Properties.");
                 setupProperties();
 
