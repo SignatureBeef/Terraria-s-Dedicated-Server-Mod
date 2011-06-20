@@ -17,10 +17,11 @@ namespace Terraria_Server
 
         private DataRegister whiteList = null;
         private DataRegister banList = null;
+        private DataRegister opList = null;
 
         public Server() { }
 
-        public Server(World World, int PlayerCap, string WhiteList, string BanList)
+        public Server(World World, int PlayerCap, string WhiteList, string BanList, string OpList)
         {
             Main.maxNetplayers = PlayerCap;
             world = World;
@@ -32,6 +33,8 @@ namespace Terraria_Server
             //joinedPlayerList.Load();
             banList = new DataRegister(BanList);
             banList.Load();
+            opList = new DataRegister(OpList);
+            opList.Load();
         }
 
         public Player GetPlayerByName(string name)
@@ -83,17 +86,20 @@ namespace Terraria_Server
         
         public void notifyOps(string Message, bool writeToConsole = false)
         {
-            for (int i = 0; i < 255; i++)
+            if (Statics.cmdMessages)
             {
-                if (Main.player[i].active)
+                for (int i = 0; i < 255; i++)
                 {
-                    if (Main.player[i].isOp())
+                    if (Main.player[i].active)
                     {
-                        NetMessage.SendData((int)Packet.PLAYER_CHAT, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
+                        if (Main.player[i].isOp())
+                        {
+                            NetMessage.SendData((int)Packet.PLAYER_CHAT, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
+                        }
                     }
                 }
             }
-            Console.WriteLine(Message);
+            Program.tConsole.WriteLine(Message);
         }
 
         public void notifyAll(string Message)
@@ -144,6 +150,16 @@ namespace Terraria_Server
         public void setBanList(DataRegister BanList)
         {
             banList = BanList;
+        }
+
+        public DataRegister getOpList()
+        {
+            return opList;
+        }
+
+        public void setOpList(DataRegister OpList)
+        {
+            opList = OpList;
         }
 
     }

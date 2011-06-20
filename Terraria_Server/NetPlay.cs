@@ -267,7 +267,7 @@ namespace Terraria_Server
 				ThreadPool.QueueUserWorkItem(new WaitCallback(Netplay.ListenForClients), 1);
                 Program.updateThread.Start();
                 Statics.serverStarted = true;
-                Console.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString() + "\nLoading Plugins.");
+                Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString() + "\nLoading Plugins.");
                 Program.server.getPluginManager().ReloadPlugins();
 			}
 			while (!Netplay.disconnect)
@@ -489,7 +489,7 @@ namespace Terraria_Server
 					{
 						Netplay.serverSock[num].tcpClient = Netplay.tcpListener.AcceptTcpClient();
 						Netplay.serverSock[num].tcpClient.NoDelay = true;
-						Console.WriteLine(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
+						Program.tConsole.WriteLine(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
                         Main.player[num].setIPAddress(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint.ToString());
 						continue;
 					}
@@ -523,9 +523,9 @@ namespace Terraria_Server
         public static void StopServer()
         {
             Statics.IsActive = false;
-            Console.WriteLine("Disabling Plugins");
+            Program.tConsole.WriteLine("Disabling Plugins");
             Program.server.getPluginManager().DisablePlugins();
-            Console.WriteLine("Closing Connections...");
+            Program.tConsole.WriteLine("Closing Connections...");
             //foreach(Player player in Main.player) {
             //    NetMessage.SendData(2, player.whoAmi, -1, "Disconnected By Server", 0, 0f, 0f, 0f);
             //}

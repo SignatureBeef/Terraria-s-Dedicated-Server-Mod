@@ -55,8 +55,8 @@ namespace Terraria_Server.Plugin
             }
             catch (Exception exception)
             {
-                Console.WriteLine("Error Loading Plugin '" + PluginPath + "'. Is it up to Date?");
-                Console.WriteLine("Plugin Load Exception '" + PluginPath + "' : "
+                Program.tConsole.WriteLine("Error Loading Plugin '" + PluginPath + "'. Is it up to Date?");
+                Program.tConsole.WriteLine("Plugin Load Exception '" + PluginPath + "' : "
                     + exception.ToString());
             }
 
@@ -175,8 +175,8 @@ namespace Terraria_Server.Plugin
                 }
                 catch (Exception exception)
                 {
-                    Console.WriteLine("Error Passing Event " + Hook.ToString() + " to " + plugin.Name);
-                    Console.WriteLine(exception.ToString());
+                    Program.tConsole.WriteLine("Error Passing Event " + Hook.ToString() + " to " + plugin.Name);
+                    Program.tConsole.WriteLine(exception.ToString());
                 }
             }
         }

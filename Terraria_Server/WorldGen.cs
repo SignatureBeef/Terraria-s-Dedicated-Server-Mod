@@ -890,7 +890,7 @@ namespace Terraria_Server
                     }
                     if (!WorldGen.worldBackup)
                     {
-                        Console.WriteLine("Load failed!  No backup found.");
+                        Program.tConsole.WriteLine("Load failed!  No backup found.");
                         return;
                     }
                     File.Copy(Program.server.getWorld().getSavePath() + ".bak", Program.server.getWorld().getSavePath(), true);
@@ -901,7 +901,7 @@ namespace Terraria_Server
                         WorldGen.loadWorld();
                         if (WorldGen.loadFailed || !WorldGen.loadSuccess)
                         {
-                            Console.WriteLine("Load failed!");
+                            Program.tConsole.WriteLine("Load failed!");
                             return;
                         }
                     }
@@ -977,7 +977,7 @@ namespace Terraria_Server
                     }
                     if (!WorldGen.worldBackup)
                     {
-                        Console.WriteLine("Load failed!  No backup found.");
+                        Program.tConsole.WriteLine("Load failed!  No backup found.");
                         return;
                     }
                     File.Copy(Program.server.getWorld().getSavePath() + ".bak", Program.server.getWorld().getSavePath(), true);
@@ -988,7 +988,7 @@ namespace Terraria_Server
                         WorldGen.loadWorld();
                         if (WorldGen.loadFailed || !WorldGen.loadSuccess)
                         {
-                            Console.WriteLine("Load failed!");
+                            Program.tConsole.WriteLine("Load failed!");
                             return;
                         }
                     }
@@ -1252,7 +1252,7 @@ namespace Terraria_Server
                                     string destFileName = savePath + ".bak";
                                     File.Copy(savePath, destFileName, true);
                                 }
-                                Console.WriteLine();
+                                Program.tConsole.WriteLine();
                                 File.Copy(text, savePath, true);
                                 File.Delete(text);
                             }
@@ -1298,7 +1298,7 @@ namespace Terraria_Server
                         int num = binaryReader.ReadInt32();
                         if (num > Statics.currentRelease)
                         {
-                            Console.WriteLine("Incompatible World File!");
+                            Program.tConsole.WriteLine("Incompatible World File!");
                             WorldGen.loadFailed = true;
                             WorldGen.loadSuccess = false;
                             try
@@ -1313,7 +1313,7 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            Console.WriteLine("Compatible World File");
+                            Program.tConsole.WriteLine("Compatible World File");
                             Main.worldName = binaryReader.ReadString();
                             Main.worldID = binaryReader.ReadInt32();
                             Main.leftWorld = (float)binaryReader.ReadInt32();

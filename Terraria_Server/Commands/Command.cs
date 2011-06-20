@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Terraria_Server;
+
 namespace Terraria_Server.Commands
 {
     public class Commands
@@ -43,9 +45,14 @@ namespace Terraria_Server.Commands
             COMMAND_UNBAN = 10,
             COMMAND_TIME = 11,
             COMMAND_GIVE = 12,
-            PLAYER_SPAWN_NPC = 13,
+            PLAYER_SPAWNNPC = 13,
             COMMAND_TELEPORT = 14,
-            PLAYER_TPHERE = 15
+            PLAYER_TPHERE = 15,
+            COMMAND_SETTLEWATER = 16,
+            COMMAND_OP = 17,
+            COMMAND_DEOP = 18,
+            PLAYER_OPLOGIN = 19,
+            PLAYER_OPLOGOUT = 20
         }
 
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
@@ -53,8 +60,9 @@ namespace Terraria_Server.Commands
                                                                     "save-all",     "help",         "whitelist",
                                                                     "ban",          "unban",        "time",
                                                                     "give",         "spawnnpc",     "tp",
-																	"tphere"};
-		
+																	"tphere",       "settle",       "op",
+                                                                    "deop",         "oplogin",      "oplogout"};
+
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server", 
                                                                     "Reload Plugins", 
                                                                     "Show Online Players", 
@@ -66,16 +74,23 @@ namespace Terraria_Server.Commands
                                                                     "add:remove to the whitelist", 
                                                                     "Ban a Player", 
                                                                     "Un-Ban a Player", 
-                                                                    "Set Time with: set:day:night",
+                                                                    "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
                                                                     "Spawn a NPC (/spawnnpc <amount> <name:id>)",
                                                                     "Teleport Player to Player.",
-                                                                    "Teleport a Player to You."};
+                                                                    "Teleport a Player to You.",
+                                                                    "Settle Water.",
+                                                                    "Set a player to OP",
+                                                                    "De-OP a player.",
+                                                                    "Log in as OP: /oplogin <poassword>",
+                                                                    "Log out of OP status"};
 
-        public static int getCommandValue(string Command) {
+        public static int getCommandValue(string Command)
+        {
             for (int i = 0; i < CommandDefinition.Length; i++)
             {
-                if(CommandDefinition[i] != null && CommandDefinition[i].Equals(Command.ToLower().Trim())) {
+                if (CommandDefinition[i] != null && CommandDefinition[i].Equals(Command.ToLower().Trim()))
+                {
                     return i;
                 }
             }
@@ -130,7 +145,7 @@ namespace Terraria_Server.Commands
 
         public static void SaveAll()
         {
-            Console.WriteLine("Saving World");
+            Program.tConsole.WriteLine("Saving World");
             Program.server.notifyOps("Saving World...");
 
             WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
@@ -138,14 +153,14 @@ namespace Terraria_Server.Commands
             {
             }
 
-            Console.WriteLine("Saving Data");
+            Program.tConsole.WriteLine("Saving Data");
             Program.server.notifyOps("Saving Data...");
 
             Program.server.getBanList().Save();
             Program.server.getWhiteList().Save();
 
             Program.server.notifyOps("Saving Complete.");
-            Console.WriteLine("Saving Complete.");
+            Program.tConsole.WriteLine("Saving Complete.");
         }
 
         public static bool getGodMode()
@@ -171,7 +186,7 @@ namespace Terraria_Server.Commands
             {
                 for (int i = 0; i < CommandDefinition.Length; i++)
                 {
-                    Console.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
+                    Program.tConsole.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
                 }
             }
         }
@@ -338,7 +353,12 @@ namespace Terraria_Server.Commands
                             {
                                 if (commands.Length > 2 && commands[2] != null && commands[2].Length > 0)
                                 {
-                                    Program.server.getWorld().setTime(Double.Parse(commands[2]));
+                                    try
+                                    {
+                                    Program.server.getWorld().setTime(Double.Parse(commands[2]), true);
+                                    } catch(Exception) {
+                                        goto ERROR;
+                                    }
                                 }
                                 else
                                 {
@@ -348,13 +368,69 @@ namespace Terraria_Server.Commands
                             }
                         case "day":
                             {
-                                Program.server.getWorld().setTime(13500);
+                                Program.server.getWorld().setTime(13500.0);
+                                break;
+                            }
+                        case "dawn":
+                            {
+                                Program.server.getWorld().setTime(0);
+                                break;
+                            }
+                        case "dusk":
+                            {
+                                Program.server.getWorld().setTime(0, false, false);
+                                break;
+                            }
+                        case "noon":
+                            {
+                                Program.server.getWorld().setTime(27000.0);
                                 break;
                             }
                         case "night":
                             {
-                                Program.server.getWorld().setTime(0);
+                                Program.server.getWorld().setTime(16200.0, false, false);
                                 break;
+                            }
+                        case "now":
+                            {
+                                string AP = "AM";
+                                double time = Main.time;
+                                if (!Main.dayTime)
+                                {
+                                    time += 54000.0;
+                                }
+                                time = time / 86400.0 * 24.0;
+                                double num2 = 7.5; //stuffs me at this stage
+                                time = time - num2 - 12.0;
+                                if (time < 0.0)
+                                {
+                                    time += 24.0;
+                                }
+                                if (time >= 12.0)
+                                {
+                                    AP = "PM";
+                                }
+                                int Hours = (int)time;
+                                double Minutes = time - (double)Hours;
+                                string MinuteString = (Minutes * 60.0).ToString();
+                                if (Minutes < 10.0)
+                                {
+                                    MinuteString = "0" + MinuteString;
+                                }
+                                if (Hours > 12)
+                                {
+                                    Hours -= 12;
+                                }
+                                if (Hours == 0)
+                                {
+                                    Hours = 12;
+                                }
+                                if (MinuteString.Length > 2)
+                                {
+                                    MinuteString = MinuteString.Substring(0, 2);
+                                }
+                                sender.sendMessage("Current Time: " + Hours + ":" + MinuteString + " " + AP);
+                                return;
                             }
                         default:
                             {
@@ -457,7 +533,8 @@ namespace Terraria_Server.Commands
                     }
                     items = null;
 
-                    if(itemType != -1) {
+                    if (itemType != -1)
+                    {
 
                         int stackSize;
                         try
@@ -544,7 +621,7 @@ namespace Terraria_Server.Commands
                             sender.sendMessage("NPC Type '" + npcName + "' not found!");
                             return;
                         }
-                    
+
                         bool assumed = false;
                         for (int i = 0; i < Main.maxNPCTypes; i++)
                         {
@@ -582,7 +659,7 @@ namespace Terraria_Server.Commands
 
                     if (amount >= 0)
                     {
-                        for (int i = 0; i < amount; i++ )
+                        for (int i = 0; i < amount; i++)
                         {
                             NPC.NewNPC((int)player.position.X + 3, (int)player.position.Y, npcType);
                         }
@@ -634,6 +711,13 @@ namespace Terraria_Server.Commands
 
                 return;
             }
+            else
+            {
+                goto ERROR;
+            }
+
+        ERROR:
+            sender.sendMessage("Command Error!");
         }
 
         public static void TeleportHere(Sender sender, string[] commands)
@@ -665,6 +749,135 @@ namespace Terraria_Server.Commands
 
                     return;
                 }
+            }
+            else
+            {
+                goto ERROR;
+            }
+
+        ERROR:
+            sender.sendMessage("Command Error!");
+        }
+
+        public static void SettleWater(Sender sender)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (!Liquid.panicMode)
+            {
+                sender.sendMessage("Settling Water...");
+                Liquid.StartPanic();
+                sender.sendMessage("Complete.");
+            }
+            else
+            {
+                sender.sendMessage("Water is already settling");
+            }
+        }
+
+        public static void OP(Sender sender, string[] commands, bool deop = false)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (((deop && commands.Length > 1) || (!deop && commands.Length > 2)) 
+                && commands[1] != null 
+                && (deop || commands[2] != null) 
+                && commands[1].Trim().Length > 0 
+                && (deop || commands[2].Trim().Length > 0))
+            {
+                string player_OP = commands[1].Trim().ToLower();
+
+                if (deop)
+                {
+                    Program.server.notifyOps("De-Opping " + player_OP + " {" + sender.getName() + "}", true);
+
+                    if (Player.isInOpList(player_OP, Program.server))
+                    {
+                        Program.server.getOpList().removeException(player_OP + ":" + Player.getPassword(player_OP, Program.server));
+                    }
+                }
+                else
+                {
+                    string player_Password = commands[2].Trim().ToLower();
+                    Program.server.notifyOps("Opping " + player_OP + " {" + sender.getName() + "}", true);
+                    Program.server.getOpList().addException(player_OP + ":" + player_Password);
+                }
+
+                if (!Program.server.getOpList().Save())
+                {
+                    Program.server.notifyOps("OpList Failed to Save due to " + sender.getName() + "'s command", true);
+                } 
+                return;
+            }
+            else
+            {
+                goto ERROR;
+            }
+
+        ERROR:
+            sender.sendMessage("Command Error!");
+        }
+
+        public static void OPLoginOut(Sender sender, string[] commands, bool logout = false)
+        {
+            if (sender is Player)
+            {
+                if (logout)
+                {
+                    if (sender.isOp())
+                    {
+                        sender.setOp(false);
+                        sender.sendMessage("Successfully Logged Out.");
+                    }
+                    return;
+                }
+
+                if (commands.Length > 1 && commands[1] != null && commands[1].Trim().Length > 0)
+                {
+                    string player_Password = commands[1].Trim().ToLower();
+
+                    if (Player.isInOpList(sender.getName(), Program.server))
+                    {
+                        if (((Player)sender).getPassword().Trim().ToLower() == player_Password)
+                        {
+                            sender.setOp(true);
+                            sender.sendMessage("Successfully Logged in as OP.");
+                        }
+                        else
+                        {
+                            sender.sendMessage("Incorrect OP Password.");
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        sender.sendMessage("You need to be Assiged OP Privledges.");
+                        return;
+                    }
+                    return;
+                }
+                else
+                {
+                    goto ERROR;
+                }
+            ERROR:
+                sender.sendMessage("Command Error!");
             }
         }
     }
