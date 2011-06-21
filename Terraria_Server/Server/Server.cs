@@ -212,7 +212,7 @@ namespace Terraria_Server
 
         public void setMaxNPCs(int Max)
         {
-            NPC.defaultMaxSpawns = maxBackgrounds;
+            NPC.defaultMaxSpawns = Max;
             NPC.maxSpawns = Max;
         }
 
