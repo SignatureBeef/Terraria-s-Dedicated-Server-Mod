@@ -21,58 +21,7 @@ namespace Terraria_Server
 		public static bool disconnect = false;
 		public static string password = "";
         public static bool ServerUp = false;
-        
-        //public static void AddBan(int plr)
-        //{
-        //    string text = Netplay.serverSock[plr].tcpClient.Client.RemoteEndPoint.ToString();
-        //    string value = text;
-        //    for (int i = 0; i < text.Length; i++)
-        //    {
-        //        if (text.Substring(i, 1) == ":")
-        //        {
-        //            value = text.Substring(0, i);
-        //        }
-        //    }
-        //    using (StreamWriter streamWriter = new StreamWriter("banlist.txt", true))
-        //    {
-        //        streamWriter.WriteLine("//" + Main.player[plr].name);
-        //        streamWriter.WriteLine(value);
-        //    }
-        //}
-		
-        //public static bool CheckBan(string ip)
-        //{
-        //    try
-        //    {
-        //        string b = ip;
-        //        for (int i = 0; i < ip.Length; i++)
-        //        {
-        //            if (ip.Substring(i, 1) == ":")
-        //            {
-        //                b = ip.Substring(0, i);
-        //            }
-        //        }
-        //        if (File.Exists("banlist.txt"))
-        //        {
-        //            using (StreamReader streamReader = new StreamReader("banlist.txt"))
-        //            {
-        //                string a;
-        //                while ((a = streamReader.ReadLine()) != null)
-        //                {
-        //                    if (a == b)
-        //                    {
-        //                        return true;
-        //                    }
-        //                }
-        //            }
-        //        }
-        //    }
-        //    catch
-        //    {
-        //    }
-        //    return false;
-        //}
-		
+        		
         public static void ClientLoop(object threadContext)
 		{
 			if (Main.rand == null)
@@ -304,35 +253,37 @@ namespace Terraria_Server
 					}
 					else
 					{
-						if (Netplay.serverSock[k].tcpClient.Connected)
-						{
-							if (!Netplay.serverSock[k].active)
-							{
-								Netplay.serverSock[k].state = 0;
-							}
-							Netplay.serverSock[k].active = true;
-							num2++;
-							if (!Netplay.serverSock[k].locked)
-							{
-								try
-								{
-									Netplay.serverSock[k].networkStream = Netplay.serverSock[k].tcpClient.GetStream();
-									if (Netplay.serverSock[k].networkStream.DataAvailable)
-									{
-										Netplay.serverSock[k].locked = true;
-										Netplay.serverSock[k].networkStream.BeginRead(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length, new AsyncCallback(Netplay.serverSock[k].ServerReadCallBack), Netplay.serverSock[k].networkStream);
-									}
-								}
-								catch
-								{
-									Netplay.serverSock[k].kill = true;
-								}
-							}
-							if (Netplay.serverSock[k].statusMax > 0 && Netplay.serverSock[k].statusText2 != "")
-							{
-								if (Netplay.serverSock[k].statusCount >= Netplay.serverSock[k].statusMax)
-								{
-									Netplay.serverSock[k].statusText = string.Concat(new object[]
+                        try
+                        {
+                            if (Netplay.serverSock[k].tcpClient.Connected)
+                            {
+                                if (!Netplay.serverSock[k].active)
+                                {
+                                    Netplay.serverSock[k].state = 0;
+                                }
+                                Netplay.serverSock[k].active = true;
+                                num2++;
+                                if (!Netplay.serverSock[k].locked)
+                                {
+                                    try
+                                    {
+                                        Netplay.serverSock[k].networkStream = Netplay.serverSock[k].tcpClient.GetStream();
+                                        if (Netplay.serverSock[k].networkStream.DataAvailable)
+                                        {
+                                            Netplay.serverSock[k].locked = true;
+                                            Netplay.serverSock[k].networkStream.BeginRead(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length, new AsyncCallback(Netplay.serverSock[k].ServerReadCallBack), Netplay.serverSock[k].networkStream);
+                                        }
+                                    }
+                                    catch
+                                    {
+                                        Netplay.serverSock[k].kill = true;
+                                    }
+                                }
+                                if (Netplay.serverSock[k].statusMax > 0 && Netplay.serverSock[k].statusText2 != "")
+                                {
+                                    if (Netplay.serverSock[k].statusCount >= Netplay.serverSock[k].statusMax)
+                                    {
+                                        Netplay.serverSock[k].statusText = string.Concat(new object[]
 									{
 										"(", 
 										Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -342,13 +293,13 @@ namespace Terraria_Server
 										Netplay.serverSock[k].statusText2, 
 										": Complete!"
 									});
-									Netplay.serverSock[k].statusText2 = "";
-									Netplay.serverSock[k].statusMax = 0;
-									Netplay.serverSock[k].statusCount = 0;
-								}
-								else
-								{
-									Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                        Netplay.serverSock[k].statusText2 = "";
+                                        Netplay.serverSock[k].statusMax = 0;
+                                        Netplay.serverSock[k].statusCount = 0;
+                                    }
+                                    else
+                                    {
+                                        Netplay.serverSock[k].statusText = string.Concat(new object[]
 									{
 										"(", 
 										Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -360,13 +311,13 @@ namespace Terraria_Server
 										(int)((float)Netplay.serverSock[k].statusCount / (float)Netplay.serverSock[k].statusMax * 100f), 
 										"%"
 									});
-								}
-							}
-							else
-							{
-								if (Netplay.serverSock[k].state == 0)
-								{
-									Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                    }
+                                }
+                                else
+                                {
+                                    if (Netplay.serverSock[k].state == 0)
+                                    {
+                                        Netplay.serverSock[k].statusText = string.Concat(new object[]
 									{
 										"(", 
 										Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -375,12 +326,12 @@ namespace Terraria_Server
 										" is connecting..."
 									});
 
-								}
-								else
-								{
-									if (Netplay.serverSock[k].state == 1)
-									{
-										Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                    }
+                                    else
+                                    {
+                                        if (Netplay.serverSock[k].state == 1)
+                                        {
+                                            Netplay.serverSock[k].statusText = string.Concat(new object[]
 										{
 											"(", 
 											Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -388,12 +339,12 @@ namespace Terraria_Server
 											Netplay.serverSock[k].name, 
 											" is sending player data..."
 										});
-									}
-									else
-									{
-										if (Netplay.serverSock[k].state == 2)
-										{
-											Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                        }
+                                        else
+                                        {
+                                            if (Netplay.serverSock[k].state == 2)
+                                            {
+                                                Netplay.serverSock[k].statusText = string.Concat(new object[]
 											{
 												"(", 
 												Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -401,12 +352,12 @@ namespace Terraria_Server
 												Netplay.serverSock[k].name, 
 												" requested world information"
 											});
-										}
-										else
-										{
-											if (Netplay.serverSock[k].state != 3 && Netplay.serverSock[k].state == 10)
-											{
-												Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                            }
+                                            else
+                                            {
+                                                if (Netplay.serverSock[k].state != 3 && Netplay.serverSock[k].state == 10)
+                                                {
+                                                    Netplay.serverSock[k].statusText = string.Concat(new object[]
 												{
 													"(", 
 													Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -414,27 +365,36 @@ namespace Terraria_Server
 													Netplay.serverSock[k].name, 
 													" is playing"
 												});
-											}
-										}
-									}
-								}
-							}
-						}
-						else
-						{
-							if (Netplay.serverSock[k].active)
-							{
-								Netplay.serverSock[k].kill = true;
-							}
-							else
-							{
-								Netplay.serverSock[k].statusText2 = "";
-								if (k < 255)
-								{
-									Main.player[k].active = false;
-								}
-							}
-						}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if (Netplay.serverSock[k].active)
+                                {
+                                    Netplay.serverSock[k].kill = true;
+                                }
+                                else
+                                {
+                                    Netplay.serverSock[k].statusText2 = "";
+                                    if (k < 255)
+                                    {
+                                        Main.player[k].active = false;
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Program.tConsole.WriteLine("Exception in Server Loop Thread: Index-" + k.ToString());
+                            Program.tConsole.WriteLine(e.Message);
+                            Program.tConsole.WriteLine(e.StackTrace);
+                            Program.tConsole.WriteLine(e.ToString());
+                            Program.tConsole.WriteLine("If this persists please file a Bug thread at http://tdsm.org/");
+                        }
 					}
 				}
 				Thread.Sleep(1);
@@ -495,11 +455,10 @@ namespace Terraria_Server
 					}
 					catch (Exception arg_81_0)
 					{
-						Exception exception = arg_81_0;
 						if (!Netplay.disconnect)
 						{
 							Main.menuMode = 15;
-							Main.statusText = exception.ToString();
+                            Program.tConsole.WriteLine(arg_81_0.ToString());
 							Netplay.disconnect = true;
 						}
 						continue;

@@ -133,7 +133,8 @@ namespace Terraria_Server
         {
             try
             {
-                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" + Statics.build;
+                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" 
+                    + Statics.build + " r" + Statics.revision;
                 
                 Console.WriteLine("Setting up Paths.");
                 if (!setupPaths())
@@ -146,7 +147,6 @@ namespace Terraria_Server
                 if (Statics.isLinux)
                 {
                     Console.WriteLine("Detected Linux OS.");
-                    Statics.systemSeperator = "/";
                     Statics.platform = 1;
                 } //if mac...erm i've never used it, Google later?
 
