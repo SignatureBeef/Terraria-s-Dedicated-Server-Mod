@@ -162,5 +162,71 @@ namespace Terraria_Server
             opList = OpList;
         }
 
+        public NPC[] getActiveNPCs()
+        {
+            NPC[] npcs = null;
+
+            int npcCount = 0;
+            for (int i = 0; i < Main.npc.Length-1; i++)
+            {
+                if (Main.npc[i].active)
+                {
+                    npcCount++;
+                }
+            }
+
+            if (npcCount > 0)
+            {
+                npcs = new NPC[npcCount];
+                npcCount = 0;
+                for (int i = 0; i < Main.npc.Length-1; i++)
+                {
+                    if (Main.npc[i].active)
+                    {
+                        npcs[npcCount] = Main.npc[i];
+                        npcCount++;
+                    }
+                }
+            }
+            
+            return npcs;
+        }
+
+        public int getActiveNPCCount()
+        {
+            int npcCount = 0;
+            for (int i = 0; i < Main.npc.Length - 1; i++)
+            {
+                if (Main.npc[i].active)
+                {
+                    npcCount++;
+                }
+            }
+            return npcCount;
+        }
+
+        public int getMaxNPCs()
+        {
+            return NPC.maxSpawns;
+        }
+
+        public void setMaxNPCs(int Max)
+        {
+            NPC.defaultMaxSpawns = maxBackgrounds;
+            NPC.maxSpawns = Max;
+        }
+
+        public int getSpawnRate()
+        {
+            return NPC.spawnRate;
+        }
+
+        public void setSpawnRate(int Max)
+        {
+            NPC.defaultSpawnRate = Max;
+            NPC.spawnRate = Max;
+        }
+
+
     }
 }

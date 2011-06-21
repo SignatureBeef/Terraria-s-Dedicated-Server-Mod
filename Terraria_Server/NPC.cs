@@ -20,16 +20,16 @@ namespace Terraria_Server
         private static int townRangeY = NPC.sHeight;
         private static bool noSpawnCycle = false;
         private static int activeTime = 750;
-        private static int defaultSpawnRate = 600;
-        private static int defaultMaxSpawns = 5;
+        public static int defaultSpawnRate = 600;
+        public static int defaultMaxSpawns = 5;
         public bool wet = false;
         public byte wetCount = 0;
         public bool lavaWet = false;
         public static bool downedBoss1 = false;
         public static bool downedBoss2 = false;
         public static bool downedBoss3 = false;
-        private static int spawnRate = NPC.defaultSpawnRate;
-        private static int maxSpawns = NPC.defaultMaxSpawns;
+        public static int spawnRate = NPC.defaultSpawnRate;
+        public static int maxSpawns = NPC.defaultMaxSpawns;
         public int soundDelay = 0;
         public Vector2 position;
         public Vector2 velocity;
@@ -5583,8 +5583,9 @@ namespace Terraria_Server
         }
         public static void SpawnNPC()
         {
-            if (!Main.stopSpawns)
+            if (!Main.stopSpawns && !(Program.server.getActiveNPCCount() >= Program.server.getMaxNPCs()))
             {
+
                 if (NPC.noSpawnCycle)
                 {
                     NPC.noSpawnCycle = false;
