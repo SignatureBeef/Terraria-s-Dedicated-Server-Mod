@@ -287,7 +287,7 @@ namespace Terraria_Server
                 server.StartServer();
 
                 updateThread = new Thread(Program.Updater);
-                server.setMaxNPCs(2);
+
                 Statics.IsActive = true;
                 while (!Statics.serverStarted) { }
 
