@@ -174,9 +174,19 @@ namespace Terraria_Server
                         }
                     }
                 }
-                //Console.WriteLine("Ok");
 
                 Program.tConsole.WriteLine("Setting up Properties.");
+                if (!System.IO.File.Exists("server.properties"))
+                {
+                    Console.Write("Properties not found, Create and exit? [Y/n]: ");
+                    if (Console.ReadLine().ToLower() == "y")
+                    {
+                        setupProperties();
+                        Console.WriteLine("Complete, Press any Key to Exit...");
+                        Console.ReadKey(true);
+                        return;
+                    }
+                }
                 setupProperties();
 
                 Statics.debugMode = properties.debugMode();
