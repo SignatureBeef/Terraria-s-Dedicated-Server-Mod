@@ -148,7 +148,17 @@ namespace Terraria_Server
                 {
                     Console.WriteLine("Detected Linux OS.");
                     Statics.platform = 1;
-                } //if mac...erm i've never used it, Google later?
+                }
+                else if (Statics.isMac)
+                {
+                    Console.WriteLine("Detected Mac OS.");
+                    Statics.platform = 2;
+                }
+                else if (Statics.isWindows == false)
+                {
+                    Console.WriteLine("Unknown OS.");
+                    Statics.platform = 3;
+                }
 
                 tConsole = new TConsole(Statics.getDataPath + Statics.systemSeperator + "server.log");
 

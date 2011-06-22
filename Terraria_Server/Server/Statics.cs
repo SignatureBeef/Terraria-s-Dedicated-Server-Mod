@@ -23,6 +23,22 @@ namespace Terraria_Server
                 return (p == 4) || (p == 6) || (p == 128);
             }
         }
+        public static bool isWindows
+        {
+            get
+            {
+                PlatformID p = Environment.OSVersion.Platform;
+                return (p == PlatformID.Win32NT) || (p == PlatformID.Win32S) || (p == PlatformID.Win32Windows) || (p == PlatformID.WinCE);
+            }
+        }
+        public static bool isMac
+        {
+            get
+            {
+                PlatformID p = Environment.OSVersion.Platform;
+                return (p == PlatformID.MacOSX);
+            }
+        }
 
         public static string getWorldPath
         {

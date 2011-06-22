@@ -1465,8 +1465,10 @@ namespace Terraria_Server
 		
         public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
 		{
-			int num = (size - 1) / 2;
-			NetMessage.SendData(20, whoAmi, -1, "", size, (float)(tileX - num), (float)(tileY - num), 0f);
+            int num = (size - 1) / 2;
+            float x = (int)tileX - num;
+            float y = (int)tileY - num;
+			NetMessage.SendData(20, whoAmi, -1, "", size, x, y, 0f);
 		}
 		
         public static void SendSection(int whoAmi, int sectionX, int sectionY)

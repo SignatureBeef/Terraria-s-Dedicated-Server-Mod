@@ -11,6 +11,7 @@ using Terraria_Server.Events;
 
 namespace TDSMExamplePlugin
 {
+    /// <include file='E:\Terraria_Server\Terraria_Server\bin\Debug\API.xml'
     public class TDSMPlugin : Plugin
     {
         /*

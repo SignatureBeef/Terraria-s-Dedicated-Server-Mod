@@ -9,6 +9,9 @@ using Terraria_Server.Plugin;
 
 namespace Terraria_Server
 {
+    ///<Summary>
+    /// Provides access to the majority of Server Data
+    ///</Summary>
     public class Server : Main
     {
         private PluginManager pluginManager = null;
@@ -29,16 +32,15 @@ namespace Terraria_Server
             pluginManager = new PluginManager(Statics.getPluginPath, this);
             whiteList = new DataRegister(WhiteList);
             whiteList.Load();
-            //joinedPlayerList = new DataRegister(JoinedPlayers);
-            //joinedPlayerList.Load();
             banList = new DataRegister(BanList);
             banList.Load();
             opList = new DataRegister(OpList);
             opList.Load();
         }
-
-        // Summary:
-        //       Gets a specified Online Player
+    
+        ///<Summary>
+        /// Gets a specified Online Player
+        ///</Summary>
         public Player GetPlayerByName(string name)
         {
             for (int i = 0; i < Main.player.Length; i++)
