@@ -37,6 +37,8 @@ namespace Terraria_Server
             opList.Load();
         }
 
+        // Summary:
+        //       Gets a specified Online Player
         public Player GetPlayerByName(string name)
         {
             for (int i = 0; i < Main.player.Length; i++)
@@ -49,41 +51,57 @@ namespace Terraria_Server
             return null;
         }
 
+        // Summary:
+        //       Gets the Plugin Manager
         public PluginManager getPluginManager()
         {
             return pluginManager;
         }
-        
+
+        // Summary:
+        //       Gets the World Loaded for the Server
         public World getWorld()
         {
             return world;
         }
 
+        // Summary:
+        //       Sets the Server Password
         public void setOpPassword(String Password)
         {
             Netplay.password = Password;
         }
 
+        // Summary:
+        //       Sets the Terraria Binding Port
         public void setPort(int Port)
         {
             Netplay.serverPort = Port;
         }
 
+        // Summary:
+        //       Sets the Terraria Binding IP
         public void setIP(String IPAddress)
         {
             Netplay.serverSIP = IPAddress;
         }
 
+        // Summary:
+        //       Stops the Terraria Server
         public void StopServer()
         {
             Netplay.StopServer();
         }
 
+        // Summary:
+        //       Starts the Terraria Server
         public void StartServer()
         {
             Netplay.StartServer();
         }
-        
+
+        // Summary:
+        //       Send a message to all online OPs
         public void notifyOps(string Message, bool writeToConsole = false)
         {
             if (Statics.cmdMessages)
@@ -102,66 +120,78 @@ namespace Terraria_Server
             Program.tConsole.WriteLine(Message);
         }
 
+        // Summary:
+        //       Sends a Message to all Connected Clients
         public void notifyAll(string Message)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
         }
 
+        // Summary:
+        //       Gets Terraria's God mode (Un-Usable?)
         public bool getGodMode()
         {
             return Main.godMode;
         }
 
+        // Summary:
+        //       Sets Terraria's God mode (Un-Usable?)
         public void setGodMode(bool Status)
         {
             Main.godMode = Status;
         }
 
-        public DataRegister getWhiteList()
-        {
-            return whiteList;
-        }
-
+        // Summary:
+        //       Gets the Servers Player List
         public Player[] getPlayerList()
         {
             return Main.player;
         }
 
+        // Summary:
+        //      Gets the White list 
+        public DataRegister getWhiteList()
+        {
+            return whiteList;
+        }
+
+        // Summary:
+        //       Sets the White list
         public void setWhiteList(DataRegister WhiteList)
         {
             whiteList = WhiteList;
         }
 
-        /*public DataRegister getJoinedPlayerList()
-        {
-            return joinedPlayerList;
-        }
-
-        public void setJoinedPlayerList(DataRegister JoinedPlayerList)
-        {
-            joinedPlayerList = JoinedPlayerList;
-        }*/
-
+        // Summary:
+        //       Gets the Ban list
         public DataRegister getBanList()
         {
             return banList;
         }
 
+        // Summary:
+        //       Sets the Ban list
         public void setBanList(DataRegister BanList)
         {
             banList = BanList;
         }
 
+        // Summary:
+        //       Gets the OP list
         public DataRegister getOpList()
         {
             return opList;
         }
 
+        // Summary:
+        //       Sets the OP list
         public void setOpList(DataRegister OpList)
         {
             opList = OpList;
         }
 
+        // Summary:
+        //       Get the array of Active NPCs
         public NPC[] getActiveNPCs()
         {
             NPC[] npcs = null;
@@ -192,6 +222,8 @@ namespace Terraria_Server
             return npcs;
         }
 
+        // Summary:
+        //       Gets the total of all active NPCs
         public int getActiveNPCCount()
         {
             int npcCount = 0;
@@ -205,22 +237,30 @@ namespace Terraria_Server
             return npcCount;
         }
 
+        // Summary:
+        //       Gets the maximum allowed NPCs
         public int getMaxNPCs()
         {
             return NPC.maxSpawns;
         }
 
+        // Summary:
+        //       Sets the maximum allowed NPCs
         public void setMaxNPCs(int Max)
         {
             NPC.defaultMaxSpawns = Max;
             NPC.maxSpawns = Max;
         }
 
+        // Summary:
+        //       Gets the max spawn rat eof NPCs
         public int getSpawnRate()
         {
             return NPC.spawnRate;
         }
 
+        // Summary:
+        //       Sets the max spawn rate of NPCs
         public void setSpawnRate(int Max)
         {
             NPC.defaultSpawnRate = Max;
