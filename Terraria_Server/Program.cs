@@ -343,7 +343,10 @@ namespace Terraria_Server
                     //Program.tConsole.WriteLine("Lol You crashed your crash log, Good work.");
                 }
             }
-            Program.tConsole.Close();
+            if (Program.tConsole != null)
+            {
+                Program.tConsole.Close();
+            }
         }
 
         public static void Updater()

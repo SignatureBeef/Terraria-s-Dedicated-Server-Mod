@@ -9,7 +9,7 @@ namespace Terraria_Server
     public static class Statics
     {
         public static int build = 5;
-        public static double revision = 2;        
+        public static double revision = 3;        
 
         public static bool cmdMessages = true;
         public static bool debugMode = false;

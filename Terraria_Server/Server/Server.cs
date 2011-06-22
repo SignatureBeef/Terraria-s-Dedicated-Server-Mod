@@ -37,10 +37,9 @@ namespace Terraria_Server
             opList = new DataRegister(OpList);
             opList.Load();
         }
-    
-        ///<Summary>
-        /// Gets a specified Online Player
-        ///</Summary>
+
+        // Summary:
+        //       Gets a specified Online Player
         public Player GetPlayerByName(string name)
         {
             for (int i = 0; i < Main.player.Length; i++)
