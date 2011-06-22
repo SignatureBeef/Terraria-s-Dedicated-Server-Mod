@@ -19,6 +19,8 @@ namespace Terraria_Server
         }
 
 
+        //public static int fidefault = 0; // need to find better place for this?
+
         /*public static int[] getWorldSize(String size) {
             string nSize = size.ToLower().Trim();
             if (nSize.Equals("small"))

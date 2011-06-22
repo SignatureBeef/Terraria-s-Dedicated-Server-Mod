@@ -9,7 +9,7 @@ namespace Terraria_Server
     public static class Statics
     {
         public static int build = 5;
-        public static double revision = 1;        
+        public static double revision = 2;        
 
         public static bool cmdMessages = true;
         public static bool debugMode = false;
@@ -66,6 +66,5 @@ namespace Terraria_Server
         public static bool IsFixedTimeStep = false;
         public static bool serverStarted = false;
 
-        public static int fidefault = (int)((double)Main.maxTilesX * 0.0008); // need to find better place for this?
     }
 }
