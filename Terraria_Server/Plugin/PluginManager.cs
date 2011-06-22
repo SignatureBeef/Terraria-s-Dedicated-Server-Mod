@@ -9,6 +9,12 @@ using Terraria_Server.Events;
 
 namespace Terraria_Server.Plugin
 {
+    /*
+     * Handles all Plugins
+     *  - I would love to be able to unload a plugin from memory :3 (Todo?...Someone? xD)
+     * 
+     */
+
     public class PluginManager
     {
         private string pluginPath = "";
@@ -103,6 +109,49 @@ namespace Terraria_Server.Plugin
 
                 pluginList.Clear();
             }
+        }
+        
+        //Returns true on plugin successfully Enabling
+        public bool EnablePlugin(string Name)
+        {
+            foreach (Plugin plugin in pluginList)
+            {
+                if (plugin.Name == Name)
+                {
+                    plugin.Enabled = true;
+                    plugin.Enable();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        //Returns true on plugin successfully Disabling
+        public bool DisablePlugin(string Name)
+        {
+            if (pluginList != null)
+            {
+                Plugin dPlugin = null;
+                foreach (Plugin plugin in pluginList)
+                {
+                    if (plugin.Name == Name)
+                    {
+                        dPlugin = plugin;
+                        break;
+                    }
+                }
+
+                if (dPlugin != null) 
+                {
+                    dPlugin.Enabled = false;
+                    dPlugin.Disable();
+
+                    //pluginList.Remove(dPlugin); //Not sure if i should remove it from the list.
+
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void processHook(Hooks Hook, Event Event)
