@@ -9,10 +9,12 @@ namespace Terraria_Server
     public class TConsole
     {
         StreamWriter streamWriter = null;
+        int platform = 0;
 
-        public TConsole(string serverLog)
+        public TConsole(string serverLog, int Platform)
         {
             streamWriter = new StreamWriter(serverLog);
+            platform = Platform;
         }
 
         public void WriteLine(string Line)
@@ -24,9 +26,12 @@ namespace Terraria_Server
 
         public void WriteLine()
         {
-            Console.WriteLine();
-            streamWriter.WriteLine();
-            streamWriter.Flush();
+            if (platform == 0)
+            {
+                Console.WriteLine();
+                streamWriter.WriteLine();
+                streamWriter.Flush();
+            }
         }
 
         public void Write(string Message)

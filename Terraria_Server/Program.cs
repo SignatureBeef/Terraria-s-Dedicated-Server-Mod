@@ -103,7 +103,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    Program.tConsole.WriteLine(dataText);
+                    Console.WriteLine(dataText);
                 }
             }
             else
@@ -139,16 +139,17 @@ namespace Terraria_Server
         {
             try
             {
-                Console.Title = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" 
+                string MODInfo = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #" 
                     + Statics.build + " r" + Statics.revision;
+                Console.Title = MODInfo;
+
+                Console.WriteLine("Initializing " + MODInfo);
                 
                 Console.WriteLine("Setting up Paths.");
                 if (!setupPaths())
                 {
                     return;
                 }
-
-                Console.WriteLine("Initializing...");
 
                 if (Statics.isLinux)
                 {
@@ -166,7 +167,7 @@ namespace Terraria_Server
                     Statics.platform = 3;
                 }
 
-                tConsole = new TConsole(Statics.getDataPath + Statics.systemSeperator + "server.log");
+                tConsole = new TConsole(Statics.getDataPath + Statics.systemSeperator + "server.log", Statics.platform);
 
                 if (args != null && args.Length > 0)
                 {

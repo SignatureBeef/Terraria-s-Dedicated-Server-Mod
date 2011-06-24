@@ -1006,7 +1006,7 @@ namespace Terraria_Server
                         Main.tile[i, j] = null;
                     }
                 }
-                Console.WriteLine();
+                Program.tConsole.WriteLine();
             }
             WorldGen.lastMaxTilesX = Main.maxTilesX;
             WorldGen.lastMaxTilesY = Main.maxTilesY;
@@ -1060,7 +1060,7 @@ namespace Terraria_Server
             }
             WorldGen.setWorldSize();
             WorldGen.worldCleared = true;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
         }
         public static void saveWorld(string savePath, bool resetTime = false)
         {
@@ -1415,7 +1415,7 @@ namespace Terraria_Server
                             }
                             binaryReader.Close();
                             fileStream.Close();
-                            Console.WriteLine();
+                            Program.tConsole.WriteLine();
                             if (!WorldGen.loadFailed && WorldGen.loadSuccess)
                             {
                                 WorldGen.gen = true;
@@ -1446,11 +1446,11 @@ namespace Terraria_Server
                                     Liquid.UpdateLiquid();
                                 }
                                 Liquid.quickSettle = false;
-                                Console.WriteLine();
+                                Program.tConsole.WriteLine();
                                 Program.printData("Performing Water Check", true);
                                 WorldGen.WaterCheck();
                                 WorldGen.gen = false;
-                                Console.WriteLine();
+                                Program.tConsole.WriteLine();
                             }
                         }
                     }
@@ -1515,7 +1515,7 @@ namespace Terraria_Server
             {
                 num9 = 1;
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int i = 0; i < Main.maxTilesX; i++)
             {
                 float num10 = (float)i / (float)Main.maxTilesX;
@@ -1674,7 +1674,7 @@ namespace Terraria_Server
             WorldGen.waterLine += WorldGen.genRand.Next(-100, 20);
             WorldGen.lavaLine = WorldGen.waterLine + WorldGen.genRand.Next(50, 80);
             int num13 = 0;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Adding sand...");
             int num14 = WorldGen.genRand.Next((int)((double)Main.maxTilesX * 0.0007), (int)((double)Main.maxTilesX * 0.002));
             num14 += 2;
@@ -1787,7 +1787,7 @@ namespace Terraria_Server
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)Main.worldSurface, (int)Main.rockLayer), (double)WorldGen.genRand.Next(15, 70), WorldGen.genRand.Next(20, 130), 53, false, 0f, 0f, false, true);
             }
             WorldGen.numMCaves = 0;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Generating hills...");
             for (int num23 = 0; num23 < (int)((double)Main.maxTilesX * 0.0008); num23++)
             {
@@ -1834,11 +1834,11 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num28 = 1; num28 < Main.maxTilesX - 1; num28++)
             {
                 float num29 = (float)num28 / (float)Main.maxTilesX;
-                Program.printData("Puttin dirt behind dirt: " + (int)(num29 * 100f + 1f) + "%", true);
+                Program.printData("Putting dirt behind dirt: " + (int)(num29 * 100f + 1f) + "%", true);
                 bool flag3 = false;
                 num13 += WorldGen.genRand.Next(-1, 2);
                 if (num13 < 0)
@@ -1863,7 +1863,7 @@ namespace Terraria_Server
                     num30++;
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Placing rocks in the dirt...", true);
             for (int num31 = 0; num31 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0002); num31++)
             {
@@ -1877,13 +1877,13 @@ namespace Terraria_Server
             {
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num6, (int)num8 + 1), (double)WorldGen.genRand.Next(2, 7), WorldGen.genRand.Next(2, 23), 1, false, 0f, 0f, false, true);
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Placing dirt in the rocks...", true);
             for (int num34 = 0; num34 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.005); num34++)
             {
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num7, Main.maxTilesY), (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(2, 40), 0, false, 0f, 0f, false, true);
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Adding clay...", true);
             for (int num35 = 0; num35 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05); num35++)
             {
@@ -1916,7 +1916,7 @@ namespace Terraria_Server
                     num39++;
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num41 = 0; num41 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0015); num41++)
             {
                 float num42 = (float)((double)num41 / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.0015));
@@ -1929,7 +1929,7 @@ namespace Terraria_Server
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num6, Main.maxTilesY), (double)WorldGen.genRand.Next(2, 5), WorldGen.genRand.Next(2, 20), type, false, 0f, 0f, false, true);
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num6, Main.maxTilesY), (double)WorldGen.genRand.Next(8, 15), WorldGen.genRand.Next(7, 30), type, false, 0f, 0f, false, true);
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num43 = 0; num43 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 3E-05); num43++)
             {
                 float num44 = (float)((double)num43 / ((double)(Main.maxTilesX * Main.maxTilesY) * 3E-05));
@@ -1944,7 +1944,7 @@ namespace Terraria_Server
                     WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num5, (int)num8 + 1), (double)WorldGen.genRand.Next(5, 15), WorldGen.genRand.Next(30, 200), type2, false, 0f, 0f, false, true);
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num45 = 0; num45 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.00015); num45++)
             {
                 float num46 = (float)((double)num45 / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.00015));
@@ -1959,7 +1959,7 @@ namespace Terraria_Server
                     WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num8, Main.maxTilesY), (double)WorldGen.genRand.Next(6, 20), WorldGen.genRand.Next(50, 300), type3, false, 0f, 0f, false, true);
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Generating surface caves...", true);
             for (int num47 = 0; num47 < (int)((double)Main.maxTilesX * 0.0025); num47++)
             {
@@ -2044,7 +2044,7 @@ namespace Terraria_Server
                     Main.tile[num57, num58].type = 2;
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Generating jungle: 0%", true);
             float num59 = (float)(Main.maxTilesX / 4200);
             num59 *= 1.5f;
@@ -2246,7 +2246,7 @@ namespace Terraria_Server
             }
             WorldGen.numIslandHouses = 0;
             WorldGen.houseCount = 0;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Generating floating islands...", true);
             for (int num98 = 0; num98 < ficount; num98++)
             {
@@ -2299,7 +2299,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Adding mushroom patches...", true);
             for (int num105 = 0; num105 < Main.maxTilesX / 300; num105++)
             {
@@ -2317,13 +2317,13 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Placing mud in the dirt...", true);
             for (int num108 = 0; num108 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001); num108++)
             {
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num7, Main.maxTilesY), (double)WorldGen.genRand.Next(2, 6), WorldGen.genRand.Next(2, 40), 59, false, 0f, 0f, false, true);
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Adding shinies...", true);
             for (int num109 = 0; num109 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 6E-05); num109++)
             {
@@ -2373,7 +2373,7 @@ namespace Terraria_Server
             {
                 WorldGen.TileRunner(WorldGen.genRand.Next(0, Main.maxTilesX), WorldGen.genRand.Next((int)num7, Main.maxTilesY), (double)WorldGen.genRand.Next(2, 4), WorldGen.genRand.Next(3, 6), 22, false, 0f, 0f, false, true);
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Adding webs...", true);
             for (int num121 = 0; num121 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001); num121++)
             {
@@ -2415,7 +2415,7 @@ namespace Terraria_Server
                 }
             IL_2C05: ;
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Creating underworld: 0%", true);
             int num125 = Main.maxTilesY - WorldGen.genRand.Next(150, 190);
             for (int num126 = 0; num126 < Main.maxTilesX; num126++)
@@ -2533,7 +2533,7 @@ namespace Terraria_Server
             }
             WorldGen.AddHellHouses();
             int num139 = WorldGen.genRand.Next(2, (int)((double)Main.maxTilesX * 0.005));
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num140 = 0; num140 < num139; num140++)
             {
                 float num141 = (float)num140 / (float)num139;
@@ -2561,14 +2561,14 @@ namespace Terraria_Server
                 x = WorldGen.genRand.Next((int)((double)Main.maxTilesX * 0.8), (int)((double)Main.maxTilesX * 0.95));
                 num9 = 1;
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             int y = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldGen.genRand.Next(-200, 200);
             for (int dnum = 0; dnum < numDungeons; dnum++)
             {
                 WorldGen.MakeDungeon(x, y, 41, 7);
             }
             int num144 = 0;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             while ((double)num144 < (double)Main.maxTilesX * 0.00045)
             {
                 float num145 = (float)((double)num144 / ((double)Main.maxTilesX * 0.00045));
@@ -2757,7 +2757,7 @@ namespace Terraria_Server
                 }
                 num144++;
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Generating mountain caves...", true);
             for (int num171 = 0; num171 < WorldGen.numMCaves; num171++)
             {
@@ -2770,7 +2770,7 @@ namespace Terraria_Server
             int num173 = 0;
             int num174 = 20;
             int num175 = Main.maxTilesX - 20;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Creating beaches...", true);
             for (int num176 = 0; num176 < 2; num176++)
             {
@@ -3121,7 +3121,7 @@ namespace Terraria_Server
                 num173++;
             }
             num173++;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Adding gems...", true);
             for (int num191 = 63; num191 <= 68; num191++)
             {
@@ -3180,7 +3180,7 @@ namespace Terraria_Server
                     num193++;
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num196 = 0; num196 < Main.maxTilesX; num196++)
             {
                 float num197 = (float)num196 / (float)(Main.maxTilesX - 1);
@@ -3199,7 +3199,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num200 = 3; num200 < Main.maxTilesX - 3; num200++)
             {
                 float num201 = (float)num200 / (float)Main.maxTilesX;
@@ -3256,7 +3256,7 @@ namespace Terraria_Server
                     num202++;
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num203 = 0; num203 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05); num203++)
             {
                 float num204 = (float)((double)num203 / ((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05));
@@ -3330,7 +3330,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Liquid.QuickWater(3, -1, -1);
             WorldGen.WaterCheck();
             int num213 = 0;
@@ -3371,7 +3371,7 @@ namespace Terraria_Server
                 Program.printData("Settling liquids: " + (int)((float)num213 * 10f / 3f + 66f) + "%", true);
             }
             Liquid.quickSettle = false;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num218 = 0; num218 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2.2E-05); num218++)
             {
                 float num219 = (float)((double)num218 / ((double)(Main.maxTilesX * Main.maxTilesY) * 2.2E-05));
@@ -3394,7 +3394,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num221 = 0; num221 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 1.7E-05); num221++)
             {
                 float num222 = (float)((double)num221 / ((double)(Main.maxTilesX * Main.maxTilesY) * 1.7E-05));
@@ -3424,7 +3424,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num226 = 0; num226 < (int)((double)Main.maxTilesX * 0.005); num226++)
             {
                 float num227 = (float)((double)num226 / ((double)Main.maxTilesX * 0.005));
@@ -3534,7 +3534,7 @@ namespace Terraria_Server
             {
                 WorldGen.IslandHouse(WorldGen.fihX[num240], WorldGen.fihY[num240]);
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num241 = 0; num241 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008); num241++)
             {
                 float num242 = (float)((double)num241 / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008));
@@ -3583,7 +3583,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             for (int num247 = 0; num247 < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0001); num247++)
             {
                 float num248 = (float)((double)num247 / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.0001));
@@ -3623,7 +3623,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Spreading grass...", true);
             for (int num252 = 0; num252 < Main.maxTilesX; num252++)
             {
@@ -3654,7 +3654,7 @@ namespace Terraria_Server
                     num253++;
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Growing cacti...", true);
             for (int num254 = 5; num254 < Main.maxTilesX - 5; num254++)
             {
@@ -3731,7 +3731,7 @@ namespace Terraria_Server
             Main.npc[num262].homeTileY = Main.spawnTileY;
             Main.npc[num262].direction = 1;
             Main.npc[num262].homeless = true;
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Planting sunflowers...", true);
             int num263 = 0;
             while ((double)num263 < (double)Main.maxTilesX * 0.002)
@@ -3768,7 +3768,7 @@ namespace Terraria_Server
                 }
                 num263++;
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Planting trees...", true);
             int num269 = 0;
             while ((double)num269 < (double)Main.maxTilesX * 0.003)
@@ -3787,13 +3787,13 @@ namespace Terraria_Server
                 num269++;
             }
             WorldGen.AddTrees();
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Planting herbs...", true);
             for (int num274 = 0; num274 < Main.maxTilesX * 2; num274++)
             {
                 WorldGen.PlantAlch();
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Planting weeds...", true);
             WorldGen.AddPlants();
             for (int num275 = 0; num275 < Main.maxTilesX; num275++)
@@ -3817,7 +3817,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Growing vines...", true);
             for (int num277 = 0; num277 < Main.maxTilesX; num277++)
             {
@@ -3860,7 +3860,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Planting flowers...", true);
             int num281 = 0;
             while ((double)num281 < (double)Main.maxTilesX * 0.005)
@@ -3889,7 +3889,7 @@ namespace Terraria_Server
                 }
                 num281++;
             }
-            Console.WriteLine();
+            Program.tConsole.WriteLine();
             Program.printData("Planting mushrooms...", true);
             int num288 = 0;
             while ((double)num288 < (double)Main.maxTilesX * 0.002)

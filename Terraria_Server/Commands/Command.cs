@@ -664,9 +664,10 @@ namespace Terraria_Server.Commands
                     {
                         for (int i = 0; i < amount; i++)
                         {
-                            int rand = (int)player.position.X + (int)(new Random().Next(3, 40));
-                            Tile t = sender.getServer().getWorld().getHighestTile(rand / 16);
-                            NPC.NewNPC(rand, (int)(t.tileY * 16), npcType);
+                            //int rand = (int)player.position.X + (int)(new Random().Next(3, 40));
+                            //Tile t = sender.getServer().getWorld().getHighestTile(rand / 16);
+                            //NPC.NewNPC(rand, (int)(t.tileY * 16), npcType);
+                            NPC.NewNPC((int)player.position.X + 3, (int)player.position.Y, npcType);
                         }
 
                         //player.teleportTo();
