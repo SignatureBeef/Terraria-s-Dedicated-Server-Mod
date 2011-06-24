@@ -113,7 +113,7 @@
     <Compile Include="Chest.cs" />
     <Compile Include="ClientSock.cs" />
     <Compile Include="Collision.cs" />
-    <Compile Include="Color.cs" />
+    <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Dust.cs" />

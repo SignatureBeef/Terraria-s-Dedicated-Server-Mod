@@ -29,6 +29,13 @@ namespace Terraria_Server
             streamWriter.Flush();
         }
 
+        public void Write(string Message)
+        {
+            Console.Write(Message);
+            streamWriter.Write(Message);
+            streamWriter.Flush();
+        }
+
         public void Close()
         {
             streamWriter.Close();

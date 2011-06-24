@@ -78,7 +78,6 @@ namespace Terraria_Server
                 return false;
             }
             createFile(Statics.getDataPath + Statics.systemSeperator + "whitelist.txt");
-            //createFile(Statics.getDataPath + Statics.systemSeperator + "joinedplayers.txt");
             createFile(Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
             createFile(Statics.getDataPath + Statics.systemSeperator + "oplist.txt");
             createFile(Statics.getDataPath + Statics.systemSeperator + "server.log");
@@ -94,11 +93,18 @@ namespace Terraria_Server
         }
 
         static int preserve = 0;
-        public static void printData(string dataText)
+        public static void printData(string dataText, bool console = false)
         {
             if (Statics.platform > 0)
             {
-                Program.tConsole.WriteLine(dataText);
+                if (console == false)
+                {
+                    tConsole.WriteLine(dataText);
+                }
+                else
+                {
+                    Program.tConsole.WriteLine(dataText);
+                }
             }
             else
             {
@@ -298,12 +304,14 @@ namespace Terraria_Server
                     Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
                     Statics.getDataPath + Statics.systemSeperator + "banlist.txt",
                     Statics.getDataPath + Statics.systemSeperator + "oplist.txt");
-                server.setOpPassword(properties.getOpPassword());
+                server.setOpPassword(properties.getServerPassword());
                 server.setPort(properties.getPort());
                 server.setIP(properties.getServerIP());
                 server.Initialize();
 
                 WorldGen.loadWorld();
+
+                tConsole.WriteLine("Starting the Server");
                 server.StartServer();
 
                 updateThread = new Thread(Program.Updater);

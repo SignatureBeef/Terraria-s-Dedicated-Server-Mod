@@ -8,8 +8,8 @@ namespace Terraria_Server
 {
     public static class Statics
     {
-        public static int build = 5;
-        public static double revision = 4;        
+        public static int build = 6;
+        public static double revision = 1;        
 
         public static bool cmdMessages = true;
         public static bool debugMode = false;
@@ -75,8 +75,8 @@ namespace Terraria_Server
         public static string systemSeperator = Path.DirectorySeparatorChar.ToString();
         public static string SavePath = Environment.CurrentDirectory;
 
-        public static int currentRelease = 9;
-        public static string versionNumber = "v1.0.4";
+        public static int currentRelease = 12;
+        public static string versionNumber = "v1.0.5";
 
         public static bool IsActive = false;
         public static bool IsFixedTimeStep = false;

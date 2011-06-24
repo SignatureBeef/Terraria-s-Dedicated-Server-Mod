@@ -19,7 +19,8 @@ namespace Terraria_Server
         public static int serverPort = 7777;
         public static string serverSIP = "0.0.0.0";
 		public static bool disconnect = false;
-		public static string password = "";
+        public static string password = "";
+        public static bool spamCheck = false;
         public static bool ServerUp = false;
         		
         public static void ClientLoop(object threadContext)
@@ -185,8 +186,8 @@ namespace Terraria_Server
 			Main.myPlayer = 255;
 			Netplay.serverIP = IPAddress.Parse(serverSIP);
 			Netplay.serverListenIP = Netplay.serverIP;
-			Main.menuMode = 14;
-			Main.statusText = "Starting server...";
+			//Main.menuMode = 14;
+			//Main.statusText = "Starting server...";
 			Main.netMode = 2;
 			Netplay.disconnect = false;
 			for (int i = 0; i < 256; i++)
@@ -216,7 +217,8 @@ namespace Terraria_Server
 				ThreadPool.QueueUserWorkItem(new WaitCallback(Netplay.ListenForClients), 1);
                 Program.updateThread.Start();
                 Statics.serverStarted = true;
-                Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString() + "\nLoading Plugins.");
+                Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
+                Program.tConsole.WriteLine("Loading Plugins...");
                 Program.server.getPluginManager().ReloadPlugins();
 			}
 			while (!Netplay.disconnect)
@@ -387,13 +389,29 @@ namespace Terraria_Server
                                 }
                             }
                         }
-                        catch (Exception e)
+                        catch (Exception)
                         {
-                            Program.tConsole.WriteLine("Exception in Server Loop Thread: Index-" + k.ToString());
-                            Program.tConsole.WriteLine(e.Message);
-                            Program.tConsole.WriteLine(e.StackTrace);
-                            Program.tConsole.WriteLine(e.ToString());
-                            Program.tConsole.WriteLine("If this persists please file a Bug thread at http://tdsm.org/");
+                            //Program.tConsole.WriteLine("Exception in Server Loop Thread: Index-" + k.ToString());
+                            //Program.tConsole.WriteLine(e.Message);
+                            //Program.tConsole.WriteLine(e.StackTrace);
+                            //Program.tConsole.WriteLine(e.ToString());
+                            //Program.tConsole.WriteLine("If this persists please file a Bug thread at http://tdsm.org/");
+                            try
+                            {
+                                Netplay.serverSock[k].tcpClient.Client.Close();
+                            }
+                            catch (Exception)
+                            {
+
+                            }
+                            try
+                            {
+                                Netplay.serverSock[k].tcpClient.Close();
+                            }
+                            catch (Exception)
+                            {
+
+                            }
                         }
 					}
 				}

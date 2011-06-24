@@ -15,8 +15,8 @@ namespace Terraria_Server
             NetMessage.SendData(2, plr, -1, msg, 0, 0f, 0f, 0f);
         }
 
-		public static void SendData(int packetId, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f)
-		{
+        public static void SendData(int packetId, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
+        {
 			int num = 256;
 			if (Main.netMode == 2 && remoteClient >= 0)
 			{
@@ -121,7 +121,16 @@ namespace Terraria_Server
                                 NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.player[(int)b].shoeColor.G;
 								num3++;
                                 NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.player[(int)b].shoeColor.B;
-								num3++;
+                                num3++;
+                                if (!Main.player[(int)b].hardCore)
+                                {
+                                    NetMessage.buffer[num].writeBuffer[num3] = 0;
+                                }
+                                else
+                                {
+                                    NetMessage.buffer[num].writeBuffer[num3] = 1;
+                                }
+                                num3++;
 								Buffer.BlockCopy(bytes11, 0, NetMessage.buffer[num].writeBuffer, num3, bytes11.Length);
 							}
 							else
@@ -200,34 +209,53 @@ namespace Terraria_Server
 											byte[] bytes25 = BitConverter.GetBytes((int)Main.rockLayer);
 											byte[] bytes26 = BitConverter.GetBytes(Main.worldID);
 											byte[] bytes27 = Encoding.ASCII.GetBytes(Main.worldName);
-											num2 += bytes19.Length + 1 + 1 + 1 + bytes20.Length + bytes21.Length + bytes22.Length + bytes23.Length + bytes24.Length + bytes25.Length + bytes26.Length + bytes27.Length;
-											byte[] bytes28 = BitConverter.GetBytes(num2 - 4);
-											Buffer.BlockCopy(bytes28, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-											Buffer.BlockCopy(bytes18, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-											Buffer.BlockCopy(bytes19, 0, NetMessage.buffer[num].writeBuffer, 5, bytes19.Length);
-											num3 += bytes19.Length;
-											NetMessage.buffer[num].writeBuffer[num3] = b6;
-											num3++;
-											NetMessage.buffer[num].writeBuffer[num3] = b7;
-											num3++;
-											NetMessage.buffer[num].writeBuffer[num3] = b8;
-											num3++;
-											Buffer.BlockCopy(bytes20, 0, NetMessage.buffer[num].writeBuffer, num3, bytes20.Length);
-											num3 += bytes20.Length;
-											Buffer.BlockCopy(bytes21, 0, NetMessage.buffer[num].writeBuffer, num3, bytes21.Length);
-											num3 += bytes21.Length;
-											Buffer.BlockCopy(bytes22, 0, NetMessage.buffer[num].writeBuffer, num3, bytes22.Length);
-											num3 += bytes22.Length;
-											Buffer.BlockCopy(bytes23, 0, NetMessage.buffer[num].writeBuffer, num3, bytes23.Length);
-											num3 += bytes23.Length;
-											Buffer.BlockCopy(bytes24, 0, NetMessage.buffer[num].writeBuffer, num3, bytes24.Length);
-											num3 += bytes24.Length;
-											Buffer.BlockCopy(bytes25, 0, NetMessage.buffer[num].writeBuffer, num3, bytes25.Length);
-											num3 += bytes25.Length;
-											Buffer.BlockCopy(bytes26, 0, NetMessage.buffer[num].writeBuffer, num3, bytes26.Length);
-											num3 += bytes26.Length;
-											Buffer.BlockCopy(bytes27, 0, NetMessage.buffer[num].writeBuffer, num3, bytes27.Length);
-											num3 += bytes27.Length;
+                                            byte b9 = 0;
+                                            if (WorldGen.shadowOrbSmashed)
+                                            {
+                                                b9 += 1;
+                                            }
+                                            if (NPC.downedBoss1)
+                                            {
+                                                b9 += 2;
+                                            }
+                                            if (NPC.downedBoss2)
+                                            {
+                                                b9 += 4;
+                                            }
+                                            if (NPC.downedBoss3)
+                                            {
+                                                b9 += 8;
+                                            }
+                                            num2 += bytes19.Length + 1 + 1 + 1 + bytes20.Length + bytes21.Length + bytes22.Length + bytes23.Length + bytes24.Length + bytes25.Length + bytes26.Length + 1 + bytes27.Length;
+                                            byte[] bytes28 = BitConverter.GetBytes(num2 - 4);
+                                            Buffer.BlockCopy(bytes28, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                            Buffer.BlockCopy(bytes18, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                            Buffer.BlockCopy(bytes19, 0, NetMessage.buffer[num].writeBuffer, 5, bytes19.Length);
+                                            num3 += bytes19.Length;
+                                            NetMessage.buffer[num].writeBuffer[num3] = b6;
+                                            num3++;
+                                            NetMessage.buffer[num].writeBuffer[num3] = b7;
+                                            num3++;
+                                            NetMessage.buffer[num].writeBuffer[num3] = b8;
+                                            num3++;
+                                            Buffer.BlockCopy(bytes20, 0, NetMessage.buffer[num].writeBuffer, num3, bytes20.Length);
+                                            num3 += bytes20.Length;
+                                            Buffer.BlockCopy(bytes21, 0, NetMessage.buffer[num].writeBuffer, num3, bytes21.Length);
+                                            num3 += bytes21.Length;
+                                            Buffer.BlockCopy(bytes22, 0, NetMessage.buffer[num].writeBuffer, num3, bytes22.Length);
+                                            num3 += bytes22.Length;
+                                            Buffer.BlockCopy(bytes23, 0, NetMessage.buffer[num].writeBuffer, num3, bytes23.Length);
+                                            num3 += bytes23.Length;
+                                            Buffer.BlockCopy(bytes24, 0, NetMessage.buffer[num].writeBuffer, num3, bytes24.Length);
+                                            num3 += bytes24.Length;
+                                            Buffer.BlockCopy(bytes25, 0, NetMessage.buffer[num].writeBuffer, num3, bytes25.Length);
+                                            num3 += bytes25.Length;
+                                            Buffer.BlockCopy(bytes26, 0, NetMessage.buffer[num].writeBuffer, num3, bytes26.Length);
+                                            num3 += bytes26.Length;
+                                            NetMessage.buffer[num].writeBuffer[num3] = b9;
+                                            num3++;
+                                            Buffer.BlockCopy(bytes27, 0, NetMessage.buffer[num].writeBuffer, num3, bytes27.Length);
+                                            num3 += bytes27.Length;
 										}
 										else
 										{
@@ -264,76 +292,76 @@ namespace Terraria_Server
                                                     if (packetId == ((int)Packet.SEND_TILE_LOADING_MESSAGE))
 													{
 														short num4 = (short)number;
-														int num5 = (int)number2;
-														int num6 = (int)number3;
-														byte[] bytes37 = BitConverter.GetBytes(packetId);
-														Buffer.BlockCopy(bytes37, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-														byte[] bytes38 = BitConverter.GetBytes(num4);
-														Buffer.BlockCopy(bytes38, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-														num3 += 2;
-														byte[] bytes39 = BitConverter.GetBytes(num5);
-														Buffer.BlockCopy(bytes39, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-														num3 += 4;
-														byte[] bytes40 = BitConverter.GetBytes(num6);
-														Buffer.BlockCopy(bytes40, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-														num3 += 4;
-														for (int i = num5; i < num5 + (int)num4; i++)
-														{
-															byte b9 = 0;
-															if (Main.tile[i, num6].active)
-															{
-																b9 += 1;
-															}
-															if (Main.tile[i, num6].lighted)
-															{
-																b9 += 2;
-															}
-															if (Main.tile[i, num6].wall > 0)
-															{
-																b9 += 4;
-															}
-															if (Main.tile[i, num6].liquid > 0)
-															{
-																b9 += 8;
-															}
-															NetMessage.buffer[num].writeBuffer[num3] = b9;
-															num3++;
-															byte[] bytes41 = BitConverter.GetBytes(Main.tile[i, num6].frameX);
-															byte[] bytes42 = BitConverter.GetBytes(Main.tile[i, num6].frameY);
-															byte wall = Main.tile[i, num6].wall;
-															if (Main.tile[i, num6].active)
-															{
-																NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].type;
-																num3++;
-																if (Main.tileFrameImportant[(int)Main.tile[i, num6].type])
-																{
-																	Buffer.BlockCopy(bytes41, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																	num3 += 2;
-																	Buffer.BlockCopy(bytes42, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																	num3 += 2;
-																}
-															}
-															if (wall > 0)
-															{
-																NetMessage.buffer[num].writeBuffer[num3] = wall;
-																num3++;
-															}
-															if (Main.tile[i, num6].liquid > 0)
-															{
-																NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].liquid;
-																num3++;
-																byte b10 = 0;
-																if (Main.tile[i, num6].lava)
-																{
-																	b10 = 1;
-																}
-																NetMessage.buffer[num].writeBuffer[num3] = b10;
-																num3++;
-															}
-														}
-														byte[] bytes43 = BitConverter.GetBytes(num3 - 4);
-														Buffer.BlockCopy(bytes43, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-														num2 = num3;
+												        int num5 = (int)number2;
+												        int num6 = (int)number3;
+												        byte[] bytes37 = BitConverter.GetBytes(packetId);
+												        Buffer.BlockCopy(bytes37, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+												        byte[] bytes38 = BitConverter.GetBytes(num4);
+												        Buffer.BlockCopy(bytes38, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+												        num3 += 2;
+												        byte[] bytes39 = BitConverter.GetBytes(num5);
+												        Buffer.BlockCopy(bytes39, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+												        num3 += 4;
+												        byte[] bytes40 = BitConverter.GetBytes(num6);
+												        Buffer.BlockCopy(bytes40, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+												        num3 += 4;
+												        for (int i = num5; i < num5 + (int)num4; i++)
+												        {
+													        byte b10 = 0;
+													        if (Main.tile[i, num6].active)
+													        {
+														        b10 += 1;
+													        }
+													        if (Main.tile[i, num6].lighted)
+													        {
+														        b10 += 2;
+													        }
+													        if (Main.tile[i, num6].wall > 0)
+													        {
+														        b10 += 4;
+													        }
+													        if (Main.tile[i, num6].liquid > 0)
+													        {
+														        b10 += 8;
+													        }
+													        NetMessage.buffer[num].writeBuffer[num3] = b10;
+													        num3++;
+													        byte[] bytes41 = BitConverter.GetBytes(Main.tile[i, num6].frameX);
+													        byte[] bytes42 = BitConverter.GetBytes(Main.tile[i, num6].frameY);
+													        byte wall = Main.tile[i, num6].wall;
+													        if (Main.tile[i, num6].active)
+													        {
+														        NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].type;
+														        num3++;
+														        if (Main.tileFrameImportant[(int)Main.tile[i, num6].type])
+														        {
+															        Buffer.BlockCopy(bytes41, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+															        num3 += 2;
+															        Buffer.BlockCopy(bytes42, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+															        num3 += 2;
+														        }
+													        }
+													        if (wall > 0)
+													        {
+														        NetMessage.buffer[num].writeBuffer[num3] = wall;
+														        num3++;
+													        }
+													        if (Main.tile[i, num6].liquid > 0)
+													        {
+														        NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].liquid;
+														        num3++;
+														        byte b11 = 0;
+														        if (Main.tile[i, num6].lava)
+														        {
+															        b11 = 1;
+														        }
+														        NetMessage.buffer[num].writeBuffer[num3] = b11;
+														        num3++;
+													        }
+												        }
+												        byte[] bytes43 = BitConverter.GetBytes(num3 - 4);
+												        Buffer.BlockCopy(bytes43, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+												        num2 = num3;
 													}
 													else
 													{
@@ -479,49 +507,51 @@ namespace Terraria_Server
 																			{
                                                                                 if (packetId == ((int)Packet.TILE_BREAK))
 																				{
-																					byte[] bytes68 = BitConverter.GetBytes(packetId);
-																					byte b18 = (byte)number;
-																					byte[] bytes69 = BitConverter.GetBytes((int)number2);
-																					byte[] bytes70 = BitConverter.GetBytes((int)number3);
-																					byte b19 = (byte)number4;
-																					num2 += 1 + bytes69.Length + bytes70.Length + 1;
-																					byte[] bytes71 = BitConverter.GetBytes(num2 - 4);
-																					Buffer.BlockCopy(bytes71, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																					Buffer.BlockCopy(bytes68, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																					NetMessage.buffer[num].writeBuffer[num3] = b18;
-																					num3++;
-																					Buffer.BlockCopy(bytes69, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																					num3 += 4;
-																					Buffer.BlockCopy(bytes70, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																					num3 += 4;
-																					NetMessage.buffer[num].writeBuffer[num3] = b19;
+                                                                                    byte[] bytes68 = BitConverter.GetBytes(packetId);
+                                                                                    byte b19 = (byte)number;
+                                                                                    byte[] bytes69 = BitConverter.GetBytes((int)number2);
+                                                                                    byte[] bytes70 = BitConverter.GetBytes((int)number3);
+                                                                                    byte b20 = (byte)number4;
+                                                                                    num2 += 1 + bytes69.Length + bytes70.Length + 1 + 1;
+                                                                                    byte[] bytes71 = BitConverter.GetBytes(num2 - 4);
+                                                                                    Buffer.BlockCopy(bytes71, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                    Buffer.BlockCopy(bytes68, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b19;
+                                                                                    num3++;
+                                                                                    Buffer.BlockCopy(bytes69, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                                    num3 += 4;
+                                                                                    Buffer.BlockCopy(bytes70, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                                    num3 += 4;
+                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b20;
+                                                                                    num3++;
+                                                                                    NetMessage.buffer[num].writeBuffer[num3] = (byte)number5;
 																				}
 																				else
 																				{
                                                                                     if (packetId == ((int)Packet.TIME_SUN_MOON_UPDATE))
 																					{
-																						byte[] bytes72 = BitConverter.GetBytes(packetId);
-																						BitConverter.GetBytes((int)Main.time);
-																						byte b20 = 0;
-																						if (Main.dayTime)
-																						{
-																							b20 = 1;
-																						}
-																						byte[] bytes73 = BitConverter.GetBytes((int)Main.time);
-																						byte[] bytes74 = BitConverter.GetBytes(Main.sunModY);
-																						byte[] bytes75 = BitConverter.GetBytes(Main.moonModY);
-																						num2 += 1 + bytes73.Length + bytes74.Length + bytes75.Length;
-																						byte[] bytes76 = BitConverter.GetBytes(num2 - 4);
-																						Buffer.BlockCopy(bytes76, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																						Buffer.BlockCopy(bytes72, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																						NetMessage.buffer[num].writeBuffer[num3] = b20;
-																						num3++;
-																						Buffer.BlockCopy(bytes73, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																						num3 += 4;
-																						Buffer.BlockCopy(bytes74, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																						num3 += 2;
-																						Buffer.BlockCopy(bytes75, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																						num3 += 2;
+                                                                                        byte[] bytes72 = BitConverter.GetBytes(packetId);
+                                                                                        BitConverter.GetBytes((int)Main.time);
+                                                                                        byte b21 = 0;
+                                                                                        if (Main.dayTime)
+                                                                                        {
+                                                                                            b21 = 1;
+                                                                                        }
+                                                                                        byte[] bytes73 = BitConverter.GetBytes((int)Main.time);
+                                                                                        byte[] bytes74 = BitConverter.GetBytes(Main.sunModY);
+                                                                                        byte[] bytes75 = BitConverter.GetBytes(Main.moonModY);
+                                                                                        num2 += 1 + bytes73.Length + bytes74.Length + bytes75.Length;
+                                                                                        byte[] bytes76 = BitConverter.GetBytes(num2 - 4);
+                                                                                        Buffer.BlockCopy(bytes76, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                        Buffer.BlockCopy(bytes72, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                        NetMessage.buffer[num].writeBuffer[num3] = b21;
+                                                                                        num3++;
+                                                                                        Buffer.BlockCopy(bytes73, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                                        num3 += 4;
+                                                                                        Buffer.BlockCopy(bytes74, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                        num3 += 2;
+                                                                                        Buffer.BlockCopy(bytes75, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                        num3 += 2;
 																					}
 																					else
 																					{
@@ -552,119 +582,119 @@ namespace Terraria_Server
 																						{
                                                                                             if (packetId == ((int)Packet.TILE_SQUARE))
 																							{
-																								short num7 = (short)number;
-																								int num8 = (int)number2;
-																								int num9 = (int)number3;
-																								byte[] bytes81 = BitConverter.GetBytes(packetId);
-																								Buffer.BlockCopy(bytes81, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																								byte[] bytes82 = BitConverter.GetBytes(num7);
-																								Buffer.BlockCopy(bytes82, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																								num3 += 2;
-																								byte[] bytes83 = BitConverter.GetBytes(num8);
-																								Buffer.BlockCopy(bytes83, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																								num3 += 4;
-																								byte[] bytes84 = BitConverter.GetBytes(num9);
-																								Buffer.BlockCopy(bytes84, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																								num3 += 4;
-																								for (int j = num8; j < num8 + (int)num7; j++)
-																								{
-																									for (int k = num9; k < num9 + (int)num7; k++)
-																									{
-																										byte b23 = 0;
-																										if (Main.tile[j, k].active)
-																										{
-																											b23 += 1;
-																										}
-																										if (Main.tile[j, k].lighted)
-																										{
-																											b23 += 2;
-																										}
-																										if (Main.tile[j, k].wall > 0)
-																										{
-																											b23 += 4;
-																										}
-																										if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
-																										{
-																											b23 += 8;
-																										}
-																										NetMessage.buffer[num].writeBuffer[num3] = b23;
-																										num3++;
-																										byte[] bytes85 = BitConverter.GetBytes(Main.tile[j, k].frameX);
-																										byte[] bytes86 = BitConverter.GetBytes(Main.tile[j, k].frameY);
-																										byte wall2 = Main.tile[j, k].wall;
-																										if (Main.tile[j, k].active)
-																										{
-																											NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].type;
-																											num3++;
-																											if (Main.tileFrameImportant[(int)Main.tile[j, k].type])
-																											{
-																												Buffer.BlockCopy(bytes85, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																												num3 += 2;
-																												Buffer.BlockCopy(bytes86, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																												num3 += 2;
-																											}
-																										}
-																										if (wall2 > 0)
-																										{
-																											NetMessage.buffer[num].writeBuffer[num3] = wall2;
-																											num3++;
-																										}
-																										if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
-																										{
-																											NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].liquid;
-																											num3++;
-																											byte b24 = 0;
-																											if (Main.tile[j, k].lava)
-																											{
-																												b24 = 1;
-																											}
-																											NetMessage.buffer[num].writeBuffer[num3] = b24;
-																											num3++;
-																										}
-																									}
-																								}
-																								byte[] bytes87 = BitConverter.GetBytes(num3 - 4);
-																								Buffer.BlockCopy(bytes87, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																								num2 = num3;
+                                                                                                short num7 = (short)number;
+                                                                                                int num8 = (int)number2;
+                                                                                                int num9 = (int)number3;
+                                                                                                byte[] bytes81 = BitConverter.GetBytes(packetId);
+                                                                                                Buffer.BlockCopy(bytes81, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                byte[] bytes82 = BitConverter.GetBytes(num7);
+                                                                                                Buffer.BlockCopy(bytes82, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                                num3 += 2;
+                                                                                                byte[] bytes83 = BitConverter.GetBytes(num8);
+                                                                                                Buffer.BlockCopy(bytes83, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                                                num3 += 4;
+                                                                                                byte[] bytes84 = BitConverter.GetBytes(num9);
+                                                                                                Buffer.BlockCopy(bytes84, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                                                num3 += 4;
+                                                                                                for (int j = num8; j < num8 + (int)num7; j++)
+                                                                                                {
+                                                                                                    for (int k = num9; k < num9 + (int)num7; k++)
+                                                                                                    {
+                                                                                                        byte b24 = 0;
+                                                                                                        if (Main.tile[j, k].active)
+                                                                                                        {
+                                                                                                            b24 += 1;
+                                                                                                        }
+                                                                                                        if (Main.tile[j, k].lighted)
+                                                                                                        {
+                                                                                                            b24 += 2;
+                                                                                                        }
+                                                                                                        if (Main.tile[j, k].wall > 0)
+                                                                                                        {
+                                                                                                            b24 += 4;
+                                                                                                        }
+                                                                                                        if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
+                                                                                                        {
+                                                                                                            b24 += 8;
+                                                                                                        }
+                                                                                                        NetMessage.buffer[num].writeBuffer[num3] = b24;
+                                                                                                        num3++;
+                                                                                                        byte[] bytes85 = BitConverter.GetBytes(Main.tile[j, k].frameX);
+                                                                                                        byte[] bytes86 = BitConverter.GetBytes(Main.tile[j, k].frameY);
+                                                                                                        byte wall2 = Main.tile[j, k].wall;
+                                                                                                        if (Main.tile[j, k].active)
+                                                                                                        {
+                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].type;
+                                                                                                            num3++;
+                                                                                                            if (Main.tileFrameImportant[(int)Main.tile[j, k].type])
+                                                                                                            {
+                                                                                                                Buffer.BlockCopy(bytes85, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                                                num3 += 2;
+                                                                                                                Buffer.BlockCopy(bytes86, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                                                num3 += 2;
+                                                                                                            }
+                                                                                                        }
+                                                                                                        if (wall2 > 0)
+                                                                                                        {
+                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = wall2;
+                                                                                                            num3++;
+                                                                                                        }
+                                                                                                        if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
+                                                                                                        {
+                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].liquid;
+                                                                                                            num3++;
+                                                                                                            byte b25 = 0;
+                                                                                                            if (Main.tile[j, k].lava)
+                                                                                                            {
+                                                                                                                b25 = 1;
+                                                                                                            }
+                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = b25;
+                                                                                                            num3++;
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                                byte[] bytes87 = BitConverter.GetBytes(num3 - 4);
+                                                                                                Buffer.BlockCopy(bytes87, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                num2 = num3;
 																							}
 																							else
 																							{
                                                                                                 if (packetId == ((int)Packet.ITEM_INFO))
 																								{
-																									byte[] bytes88 = BitConverter.GetBytes(packetId);
-																									byte[] bytes89 = BitConverter.GetBytes((short)number);
-																									byte[] bytes90 = BitConverter.GetBytes(Main.item[number].position.X);
-																									byte[] bytes91 = BitConverter.GetBytes(Main.item[number].position.Y);
-																									byte[] bytes92 = BitConverter.GetBytes(Main.item[number].velocity.X);
-																									byte[] bytes93 = BitConverter.GetBytes(Main.item[number].velocity.Y);
-																									byte b25 = (byte)Main.item[number].stack;
-																									string text3 = "0";
-																									if (Main.item[number].active && Main.item[number].stack > 0)
-																									{
-																										text3 = Main.item[number].name;
-																									}
-																									if (text3 == null)
-																									{
-																										text3 = "0";
-																									}
-																									byte[] bytes94 = Encoding.ASCII.GetBytes(text3);
-																									num2 += bytes89.Length + bytes90.Length + bytes91.Length + bytes92.Length + bytes93.Length + 1 + bytes94.Length;
-																									byte[] bytes95 = BitConverter.GetBytes(num2 - 4);
-																									Buffer.BlockCopy(bytes95, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																									Buffer.BlockCopy(bytes88, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																									Buffer.BlockCopy(bytes89, 0, NetMessage.buffer[num].writeBuffer, num3, bytes89.Length);
-																									num3 += 2;
-																									Buffer.BlockCopy(bytes90, 0, NetMessage.buffer[num].writeBuffer, num3, bytes90.Length);
-																									num3 += 4;
-																									Buffer.BlockCopy(bytes91, 0, NetMessage.buffer[num].writeBuffer, num3, bytes91.Length);
-																									num3 += 4;
-																									Buffer.BlockCopy(bytes92, 0, NetMessage.buffer[num].writeBuffer, num3, bytes92.Length);
-																									num3 += 4;
-																									Buffer.BlockCopy(bytes93, 0, NetMessage.buffer[num].writeBuffer, num3, bytes93.Length);
-																									num3 += 4;
-																									NetMessage.buffer[num].writeBuffer[num3] = b25;
-																									num3++;
-																									Buffer.BlockCopy(bytes94, 0, NetMessage.buffer[num].writeBuffer, num3, bytes94.Length);
+                                                                                                    byte[] bytes88 = BitConverter.GetBytes(packetId);
+                                                                                                    byte[] bytes89 = BitConverter.GetBytes((short)number);
+                                                                                                    byte[] bytes90 = BitConverter.GetBytes(Main.item[number].position.X);
+                                                                                                    byte[] bytes91 = BitConverter.GetBytes(Main.item[number].position.Y);
+                                                                                                    byte[] bytes92 = BitConverter.GetBytes(Main.item[number].velocity.X);
+                                                                                                    byte[] bytes93 = BitConverter.GetBytes(Main.item[number].velocity.Y);
+                                                                                                    byte b26 = (byte)Main.item[number].stack;
+                                                                                                    string text3 = "0";
+                                                                                                    if (Main.item[number].active && Main.item[number].stack > 0)
+                                                                                                    {
+                                                                                                        text3 = Main.item[number].name;
+                                                                                                    }
+                                                                                                    if (text3 == null)
+                                                                                                    {
+                                                                                                        text3 = "0";
+                                                                                                    }
+                                                                                                    byte[] bytes94 = Encoding.ASCII.GetBytes(text3);
+                                                                                                    num2 += bytes89.Length + bytes90.Length + bytes91.Length + bytes92.Length + bytes93.Length + 1 + bytes94.Length;
+                                                                                                    byte[] bytes95 = BitConverter.GetBytes(num2 - 4);
+                                                                                                    Buffer.BlockCopy(bytes95, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                    Buffer.BlockCopy(bytes88, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                    Buffer.BlockCopy(bytes89, 0, NetMessage.buffer[num].writeBuffer, num3, bytes89.Length);
+                                                                                                    num3 += 2;
+                                                                                                    Buffer.BlockCopy(bytes90, 0, NetMessage.buffer[num].writeBuffer, num3, bytes90.Length);
+                                                                                                    num3 += 4;
+                                                                                                    Buffer.BlockCopy(bytes91, 0, NetMessage.buffer[num].writeBuffer, num3, bytes91.Length);
+                                                                                                    num3 += 4;
+                                                                                                    Buffer.BlockCopy(bytes92, 0, NetMessage.buffer[num].writeBuffer, num3, bytes92.Length);
+                                                                                                    num3 += 4;
+                                                                                                    Buffer.BlockCopy(bytes93, 0, NetMessage.buffer[num].writeBuffer, num3, bytes93.Length);
+                                                                                                    num3 += 4;
+                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b26;
+                                                                                                    num3++;
+                                                                                                    Buffer.BlockCopy(bytes94, 0, NetMessage.buffer[num].writeBuffer, num3, bytes94.Length);
 																								}
 																								else
 																								{
@@ -685,49 +715,49 @@ namespace Terraria_Server
 																									{
                                                                                                         if (packetId == ((int)Packet.NPC_INFO))
 																										{
-																											byte[] bytes99 = BitConverter.GetBytes(packetId);
-																											byte[] bytes100 = BitConverter.GetBytes((short)number);
-																											byte[] bytes101 = BitConverter.GetBytes(Main.npc[number].position.X);
-																											byte[] bytes102 = BitConverter.GetBytes(Main.npc[number].position.Y);
-																											byte[] bytes103 = BitConverter.GetBytes(Main.npc[number].velocity.X);
-																											byte[] bytes104 = BitConverter.GetBytes(Main.npc[number].velocity.Y);
-																											byte[] bytes105 = BitConverter.GetBytes((short)Main.npc[number].target);
-																											byte[] bytes106 = BitConverter.GetBytes((short)Main.npc[number].life);
-																											if (!Main.npc[number].active)
-																											{
-																												bytes106 = BitConverter.GetBytes(0);
-																											}
-																											byte[] bytes107 = Encoding.ASCII.GetBytes(Main.npc[number].name);
-																											num2 += bytes100.Length + bytes101.Length + bytes102.Length + bytes103.Length + bytes104.Length + bytes105.Length + bytes106.Length + NPC.maxAI * 4 + bytes107.Length + 1 + 1;
-																											byte[] bytes108 = BitConverter.GetBytes(num2 - 4);
-																											Buffer.BlockCopy(bytes108, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																											Buffer.BlockCopy(bytes99, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																											Buffer.BlockCopy(bytes100, 0, NetMessage.buffer[num].writeBuffer, num3, bytes100.Length);
-																											num3 += 2;
-																											Buffer.BlockCopy(bytes101, 0, NetMessage.buffer[num].writeBuffer, num3, bytes101.Length);
-																											num3 += 4;
-																											Buffer.BlockCopy(bytes102, 0, NetMessage.buffer[num].writeBuffer, num3, bytes102.Length);
-																											num3 += 4;
-																											Buffer.BlockCopy(bytes103, 0, NetMessage.buffer[num].writeBuffer, num3, bytes103.Length);
-																											num3 += 4;
-																											Buffer.BlockCopy(bytes104, 0, NetMessage.buffer[num].writeBuffer, num3, bytes104.Length);
-																											num3 += 4;
-																											Buffer.BlockCopy(bytes105, 0, NetMessage.buffer[num].writeBuffer, num3, bytes105.Length);
-																											num3 += 2;
-																											NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npc[number].direction + 1);
-																											num3++;
-																											NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npc[number].directionY + 1);
-																											num3++;
-																											Buffer.BlockCopy(bytes106, 0, NetMessage.buffer[num].writeBuffer, num3, bytes106.Length);
-																											num3 += 2;
-																											for (int l = 0; l < NPC.maxAI; l++)
-																											{
-																												byte[] bytes109 = BitConverter.GetBytes(Main.npc[number].ai[l]);
-																												Buffer.BlockCopy(bytes109, 0, NetMessage.buffer[num].writeBuffer, num3, bytes109.Length);
-																												num3 += 4;
-																											}
-																											Buffer.BlockCopy(bytes107, 0, NetMessage.buffer[num].writeBuffer, num3, bytes107.Length);
-																										}
+                                                                                                            byte[] bytes99 = BitConverter.GetBytes(packetId);
+                                                                                                            byte[] bytes100 = BitConverter.GetBytes((short)number);
+                                                                                                            byte[] bytes101 = BitConverter.GetBytes(Main.npc[number].position.X);
+                                                                                                            byte[] bytes102 = BitConverter.GetBytes(Main.npc[number].position.Y);
+                                                                                                            byte[] bytes103 = BitConverter.GetBytes(Main.npc[number].velocity.X);
+                                                                                                            byte[] bytes104 = BitConverter.GetBytes(Main.npc[number].velocity.Y);
+                                                                                                            byte[] bytes105 = BitConverter.GetBytes((short)Main.npc[number].target);
+                                                                                                            byte[] bytes106 = BitConverter.GetBytes((short)Main.npc[number].life);
+                                                                                                            if (!Main.npc[number].active)
+                                                                                                            {
+                                                                                                                bytes106 = BitConverter.GetBytes(0);
+                                                                                                            }
+                                                                                                            byte[] bytes107 = Encoding.ASCII.GetBytes(Main.npc[number].name);
+                                                                                                            num2 += bytes100.Length + bytes101.Length + bytes102.Length + bytes103.Length + bytes104.Length + bytes105.Length + bytes106.Length + NPC.maxAI * 4 + bytes107.Length + 1 + 1;
+                                                                                                            byte[] bytes108 = BitConverter.GetBytes(num2 - 4);
+                                                                                                            Buffer.BlockCopy(bytes108, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                            Buffer.BlockCopy(bytes99, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                            Buffer.BlockCopy(bytes100, 0, NetMessage.buffer[num].writeBuffer, num3, bytes100.Length);
+                                                                                                            num3 += 2;
+                                                                                                            Buffer.BlockCopy(bytes101, 0, NetMessage.buffer[num].writeBuffer, num3, bytes101.Length);
+                                                                                                            num3 += 4;
+                                                                                                            Buffer.BlockCopy(bytes102, 0, NetMessage.buffer[num].writeBuffer, num3, bytes102.Length);
+                                                                                                            num3 += 4;
+                                                                                                            Buffer.BlockCopy(bytes103, 0, NetMessage.buffer[num].writeBuffer, num3, bytes103.Length);
+                                                                                                            num3 += 4;
+                                                                                                            Buffer.BlockCopy(bytes104, 0, NetMessage.buffer[num].writeBuffer, num3, bytes104.Length);
+                                                                                                            num3 += 4;
+                                                                                                            Buffer.BlockCopy(bytes105, 0, NetMessage.buffer[num].writeBuffer, num3, bytes105.Length);
+                                                                                                            num3 += 2;
+                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npc[number].direction + 1);
+                                                                                                            num3++;
+                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npc[number].directionY + 1);
+                                                                                                            num3++;
+                                                                                                            Buffer.BlockCopy(bytes106, 0, NetMessage.buffer[num].writeBuffer, num3, bytes106.Length);
+                                                                                                            num3 += 2;
+                                                                                                            for (int l = 0; l < NPC.maxAI; l++)
+                                                                                                            {
+                                                                                                                byte[] bytes109 = BitConverter.GetBytes(Main.npc[number].ai[l]);
+                                                                                                                Buffer.BlockCopy(bytes109, 0, NetMessage.buffer[num].writeBuffer, num3, bytes109.Length);
+                                                                                                                num3 += 4;
+                                                                                                            }
+                                                                                                            Buffer.BlockCopy(bytes107, 0, NetMessage.buffer[num].writeBuffer, num3, bytes107.Length);
+                                                                                                        }
 																										else
 																										{
                                                                                                             if (packetId == (((int)Packet.STRIKE_NPC)))
@@ -747,127 +777,130 @@ namespace Terraria_Server
 																											{
                                                                                                                 if (packetId == ((int)Packet.PLAYER_CHAT))
 																												{
-																													byte[] bytes113 = BitConverter.GetBytes(packetId);
-																													byte b28 = (byte)number;
-																													byte[] bytes114 = Encoding.ASCII.GetBytes(text);
-																													byte b29 = (byte)number2;
-																													byte b30 = (byte)number3;
-																													byte b31 = (byte)number4;
-																													num2 += 1 + bytes114.Length + 3;
-																													byte[] bytes115 = BitConverter.GetBytes(num2 - 4);
-																													Buffer.BlockCopy(bytes115, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																													Buffer.BlockCopy(bytes113, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																													NetMessage.buffer[num].writeBuffer[num3] = b28;
-																													num3++;
-																													NetMessage.buffer[num].writeBuffer[num3] = b29;
-																													num3++;
-																													NetMessage.buffer[num].writeBuffer[num3] = b30;
-																													num3++;
-																													NetMessage.buffer[num].writeBuffer[num3] = b31;
-																													num3++;
-																													Buffer.BlockCopy(bytes114, 0, NetMessage.buffer[num].writeBuffer, num3, bytes114.Length);
-																												}
+                                                                                                                    byte[] bytes113 = BitConverter.GetBytes(packetId);
+                                                                                                                    byte b29 = (byte)number;
+                                                                                                                    byte[] bytes114 = Encoding.ASCII.GetBytes(text);
+                                                                                                                    byte b30 = (byte)number2;
+                                                                                                                    byte b31 = (byte)number3;
+                                                                                                                    byte b32 = (byte)number4;
+                                                                                                                    num2 += 1 + bytes114.Length + 3;
+                                                                                                                    byte[] bytes115 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                    Buffer.BlockCopy(bytes115, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                    Buffer.BlockCopy(bytes113, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b29;
+                                                                                                                    num3++;
+                                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b30;
+                                                                                                                    num3++;
+                                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b31;
+                                                                                                                    num3++;
+                                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b32;
+                                                                                                                    num3++;
+                                                                                                                    Buffer.BlockCopy(bytes114, 0, NetMessage.buffer[num].writeBuffer, num3, bytes114.Length);
+                                                                                                                }
 																												else
 																												{
                                                                                                                     if (packetId == ((int)Packet.STRIKE_PLAYER))
 																													{
-																														byte[] bytes116 = BitConverter.GetBytes(packetId);
-																														byte b32 = (byte)number;
-																														byte b33 = (byte)(number2 + 1f);
-																														byte[] bytes117 = BitConverter.GetBytes((short)number3);
-																														byte b34 = (byte)number4;
-																														num2 += 2 + bytes117.Length + 1;
-																														byte[] bytes118 = BitConverter.GetBytes(num2 - 4);
-																														Buffer.BlockCopy(bytes118, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																														Buffer.BlockCopy(bytes116, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																														NetMessage.buffer[num].writeBuffer[num3] = b32;
-																														num3++;
-																														NetMessage.buffer[num].writeBuffer[num3] = b33;
-																														num3++;
-																														Buffer.BlockCopy(bytes117, 0, NetMessage.buffer[num].writeBuffer, num3, bytes117.Length);
-																														num3 += 2;
-																														NetMessage.buffer[num].writeBuffer[num3] = b34;
-																													}
+                                                                                                                        byte[] bytes116 = BitConverter.GetBytes(packetId);
+                                                                                                                        byte b33 = (byte)number;
+                                                                                                                        byte b34 = (byte)(number2 + 1f);
+                                                                                                                        byte[] bytes117 = BitConverter.GetBytes((short)number3);
+                                                                                                                        byte[] bytes118 = Encoding.ASCII.GetBytes(text);
+                                                                                                                        byte b35 = (byte)number4;
+                                                                                                                        num2 += 2 + bytes117.Length + 1 + bytes118.Length;
+                                                                                                                        byte[] bytes119 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                        Buffer.BlockCopy(bytes119, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                        Buffer.BlockCopy(bytes116, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                        NetMessage.buffer[num].writeBuffer[num3] = b33;
+                                                                                                                        num3++;
+                                                                                                                        NetMessage.buffer[num].writeBuffer[num3] = b34;
+                                                                                                                        num3++;
+                                                                                                                        Buffer.BlockCopy(bytes117, 0, NetMessage.buffer[num].writeBuffer, num3, bytes117.Length);
+                                                                                                                        num3 += 2;
+                                                                                                                        NetMessage.buffer[num].writeBuffer[num3] = b35;
+                                                                                                                        num3++;
+                                                                                                                        Buffer.BlockCopy(bytes118, 0, NetMessage.buffer[num].writeBuffer, num3, bytes118.Length);
+                                                                                                                    }
 																													else
 																													{
-                                                                                                                        if (packetId == ((int)Packet.EXPLOSION))
+                                                                                                                        if (packetId == ((int)Packet.PROJECTILE))
 																														{
-																															byte[] bytes119 = BitConverter.GetBytes(packetId);
-																															byte[] bytes120 = BitConverter.GetBytes((short)Main.projectile[number].identity);
-																															byte[] bytes121 = BitConverter.GetBytes(Main.projectile[number].position.X);
-																															byte[] bytes122 = BitConverter.GetBytes(Main.projectile[number].position.Y);
-																															byte[] bytes123 = BitConverter.GetBytes(Main.projectile[number].velocity.X);
-																															byte[] bytes124 = BitConverter.GetBytes(Main.projectile[number].velocity.Y);
-																															byte[] bytes125 = BitConverter.GetBytes(Main.projectile[number].knockBack);
-																															byte[] bytes126 = BitConverter.GetBytes((short)Main.projectile[number].damage);
-																															Buffer.BlockCopy(bytes119, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																															Buffer.BlockCopy(bytes120, 0, NetMessage.buffer[num].writeBuffer, num3, bytes120.Length);
-																															num3 += 2;
-																															Buffer.BlockCopy(bytes121, 0, NetMessage.buffer[num].writeBuffer, num3, bytes121.Length);
-																															num3 += 4;
-																															Buffer.BlockCopy(bytes122, 0, NetMessage.buffer[num].writeBuffer, num3, bytes122.Length);
-																															num3 += 4;
-																															Buffer.BlockCopy(bytes123, 0, NetMessage.buffer[num].writeBuffer, num3, bytes123.Length);
-																															num3 += 4;
-																															Buffer.BlockCopy(bytes124, 0, NetMessage.buffer[num].writeBuffer, num3, bytes124.Length);
-																															num3 += 4;
-																															Buffer.BlockCopy(bytes125, 0, NetMessage.buffer[num].writeBuffer, num3, bytes125.Length);
-																															num3 += 4;
-																															Buffer.BlockCopy(bytes126, 0, NetMessage.buffer[num].writeBuffer, num3, bytes126.Length);
-																															num3 += 2;
-																															NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.projectile[number].owner;
-																															num3++;
-																															NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.projectile[number].type;
-																															num3++;
-																															for (int m = 0; m < Projectile.maxAI; m++)
-																															{
-																																byte[] bytes127 = BitConverter.GetBytes(Main.projectile[number].ai[m]);
-																																Buffer.BlockCopy(bytes127, 0, NetMessage.buffer[num].writeBuffer, num3, bytes127.Length);
-																																num3 += 4;
-																															}
-																															num2 += num3;
-																															byte[] bytes128 = BitConverter.GetBytes(num2 - 4);
-																															Buffer.BlockCopy(bytes128, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																														}
+                                                                                                                            byte[] bytes120 = BitConverter.GetBytes(packetId);
+                                                                                                                            byte[] bytes121 = BitConverter.GetBytes((short)Main.projectile[number].identity);
+                                                                                                                            byte[] bytes122 = BitConverter.GetBytes(Main.projectile[number].position.X);
+                                                                                                                            byte[] bytes123 = BitConverter.GetBytes(Main.projectile[number].position.Y);
+                                                                                                                            byte[] bytes124 = BitConverter.GetBytes(Main.projectile[number].velocity.X);
+                                                                                                                            byte[] bytes125 = BitConverter.GetBytes(Main.projectile[number].velocity.Y);
+                                                                                                                            byte[] bytes126 = BitConverter.GetBytes(Main.projectile[number].knockBack);
+                                                                                                                            byte[] bytes127 = BitConverter.GetBytes((short)Main.projectile[number].damage);
+                                                                                                                            Buffer.BlockCopy(bytes120, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                            Buffer.BlockCopy(bytes121, 0, NetMessage.buffer[num].writeBuffer, num3, bytes121.Length);
+                                                                                                                            num3 += 2;
+                                                                                                                            Buffer.BlockCopy(bytes122, 0, NetMessage.buffer[num].writeBuffer, num3, bytes122.Length);
+                                                                                                                            num3 += 4;
+                                                                                                                            Buffer.BlockCopy(bytes123, 0, NetMessage.buffer[num].writeBuffer, num3, bytes123.Length);
+                                                                                                                            num3 += 4;
+                                                                                                                            Buffer.BlockCopy(bytes124, 0, NetMessage.buffer[num].writeBuffer, num3, bytes124.Length);
+                                                                                                                            num3 += 4;
+                                                                                                                            Buffer.BlockCopy(bytes125, 0, NetMessage.buffer[num].writeBuffer, num3, bytes125.Length);
+                                                                                                                            num3 += 4;
+                                                                                                                            Buffer.BlockCopy(bytes126, 0, NetMessage.buffer[num].writeBuffer, num3, bytes126.Length);
+                                                                                                                            num3 += 4;
+                                                                                                                            Buffer.BlockCopy(bytes127, 0, NetMessage.buffer[num].writeBuffer, num3, bytes127.Length);
+                                                                                                                            num3 += 2;
+                                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.projectile[number].owner;
+                                                                                                                            num3++;
+                                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.projectile[number].type;
+                                                                                                                            num3++;
+                                                                                                                            for (int m = 0; m < Projectile.maxAI; m++)
+                                                                                                                            {
+                                                                                                                                byte[] bytes128 = BitConverter.GetBytes(Main.projectile[number].ai[m]);
+                                                                                                                                Buffer.BlockCopy(bytes128, 0, NetMessage.buffer[num].writeBuffer, num3, bytes128.Length);
+                                                                                                                                num3 += 4;
+                                                                                                                            }
+                                                                                                                            num2 += num3;
+                                                                                                                            byte[] bytes129 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                            Buffer.BlockCopy(bytes129, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                        }
 																														else
 																														{
-																															if (packetId == 28)
+																															if (packetId == ((int)Packet.DAMAGE_NPC))
 																															{
-																																byte[] bytes129 = BitConverter.GetBytes(packetId);
-																																byte[] bytes130 = BitConverter.GetBytes((short)number);
-																																byte[] bytes131 = BitConverter.GetBytes((short)number2);
-																																byte[] bytes132 = BitConverter.GetBytes(number3);
-																																byte b35 = (byte)(number4 + 1f);
-																																num2 += bytes130.Length + bytes131.Length + bytes132.Length + 1;
-																																byte[] bytes133 = BitConverter.GetBytes(num2 - 4);
-																																Buffer.BlockCopy(bytes133, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																Buffer.BlockCopy(bytes129, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																Buffer.BlockCopy(bytes130, 0, NetMessage.buffer[num].writeBuffer, num3, bytes130.Length);
-																																num3 += 2;
-																																Buffer.BlockCopy(bytes131, 0, NetMessage.buffer[num].writeBuffer, num3, bytes131.Length);
-																																num3 += 2;
-																																Buffer.BlockCopy(bytes132, 0, NetMessage.buffer[num].writeBuffer, num3, bytes132.Length);
-																																num3 += 4;
-																																NetMessage.buffer[num].writeBuffer[num3] = b35;
-																															}
+                                                                                                                                byte[] bytes130 = BitConverter.GetBytes(packetId);
+                                                                                                                                byte[] bytes131 = BitConverter.GetBytes((short)number);
+                                                                                                                                byte[] bytes132 = BitConverter.GetBytes((short)number2);
+                                                                                                                                byte[] bytes133 = BitConverter.GetBytes(number3);
+                                                                                                                                byte b36 = (byte)(number4 + 1f);
+                                                                                                                                num2 += bytes131.Length + bytes132.Length + bytes133.Length + 1;
+                                                                                                                                byte[] bytes134 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                Buffer.BlockCopy(bytes134, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                Buffer.BlockCopy(bytes130, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                Buffer.BlockCopy(bytes131, 0, NetMessage.buffer[num].writeBuffer, num3, bytes131.Length);
+                                                                                                                                num3 += 2;
+                                                                                                                                Buffer.BlockCopy(bytes132, 0, NetMessage.buffer[num].writeBuffer, num3, bytes132.Length);
+                                                                                                                                num3 += 2;
+                                                                                                                                Buffer.BlockCopy(bytes133, 0, NetMessage.buffer[num].writeBuffer, num3, bytes133.Length);
+                                                                                                                                num3 += 4;
+                                                                                                                                NetMessage.buffer[num].writeBuffer[num3] = b36;
+                                                                                                                            }
 																															else
 																															{
-																																if (packetId == 29)
+																																if (packetId == ((int)Packet.KILL_PROJECTILE))
 																																{
-																																	byte[] bytes134 = BitConverter.GetBytes(packetId);
-																																	byte[] bytes135 = BitConverter.GetBytes((short)number);
-																																	byte b36 = (byte)number2;
-																																	num2 += bytes135.Length + 1;
-																																	byte[] bytes136 = BitConverter.GetBytes(num2 - 4);
-																																	Buffer.BlockCopy(bytes136, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																	Buffer.BlockCopy(bytes134, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																	Buffer.BlockCopy(bytes135, 0, NetMessage.buffer[num].writeBuffer, num3, bytes135.Length);
-																																	num3 += 2;
-																																	NetMessage.buffer[num].writeBuffer[num3] = b36;
-																																}
+                                                                                                                                    byte[] bytes135 = BitConverter.GetBytes(packetId);
+                                                                                                                                    byte[] bytes136 = BitConverter.GetBytes((short)number);
+                                                                                                                                    byte b37 = (byte)number2;
+                                                                                                                                    num2 += bytes136.Length + 1;
+                                                                                                                                    byte[] bytes137 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                    Buffer.BlockCopy(bytes137, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                    Buffer.BlockCopy(bytes135, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                    Buffer.BlockCopy(bytes136, 0, NetMessage.buffer[num].writeBuffer, num3, bytes136.Length);
+                                                                                                                                    num3 += 2;
+                                                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b37;
+                                                                                                                                }
 																																else
 																																{
-																																	if (packetId == 30)
+																																	if (packetId == ((int)Packet.PLAYER_PVP_CHANGE))
 																																	{
 																																		byte[] bytes137 = BitConverter.GetBytes(packetId);
 																																		byte b37 = (byte)number;
@@ -886,7 +919,7 @@ namespace Terraria_Server
 																																	}
 																																	else
 																																	{
-																																		if (packetId == 31)
+                                                                                                                                        if (packetId == ((int)Packet.OPEN_CHEST))
 																																		{
 																																			byte[] bytes139 = BitConverter.GetBytes(packetId);
 																																			byte[] bytes140 = BitConverter.GetBytes(number);
@@ -901,7 +934,7 @@ namespace Terraria_Server
 																																		}
 																																		else
 																																		{
-																																			if (packetId == 32)
+																																			if (packetId == ((int)Packet.CHEST_ITEM))
 																																			{
 																																				byte[] bytes143 = BitConverter.GetBytes(packetId);
 																																				byte[] bytes144 = BitConverter.GetBytes((short)number);
@@ -930,7 +963,7 @@ namespace Terraria_Server
 																																			}
 																																			else
 																																			{
-																																				if (packetId == 33)
+																																				if (packetId == ((int)Packet.PLAYER_CHEST_UPDATE))
 																																				{
 																																					byte[] bytes147 = BitConverter.GetBytes(packetId);
 																																					byte[] bytes148 = BitConverter.GetBytes((short)number);
@@ -1080,89 +1113,93 @@ namespace Terraria_Server
 																																											{
 																																												if (packetId == ((int)Packet.PLAYER_BALLSWING))
 																																												{
-																																													byte[] bytes172 = BitConverter.GetBytes(packetId);
-																																													byte b48 = (byte)number;
-																																													byte[] bytes173 = BitConverter.GetBytes(Main.player[(int)b48].itemRotation);
-																																													byte[] bytes174 = BitConverter.GetBytes((short)Main.player[(int)b48].itemAnimation);
-																																													num2 += 1 + bytes173.Length + bytes174.Length;
-																																													byte[] bytes175 = BitConverter.GetBytes(num2 - 4);
-																																													Buffer.BlockCopy(bytes175, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																													Buffer.BlockCopy(bytes172, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																													NetMessage.buffer[num].writeBuffer[num3] = b48;
-																																													num3++;
-																																													Buffer.BlockCopy(bytes173, 0, NetMessage.buffer[num].writeBuffer, num3, bytes173.Length);
-																																													num3 += 4;
-																																													Buffer.BlockCopy(bytes174, 0, NetMessage.buffer[num].writeBuffer, num3, bytes174.Length);
-																																												}
+                                                                                                                                                                                    byte[] bytes173 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                    byte b49 = (byte)number;
+                                                                                                                                                                                    byte[] bytes174 = BitConverter.GetBytes(Main.player[(int)b49].itemRotation);
+                                                                                                                                                                                    byte[] bytes175 = BitConverter.GetBytes((short)Main.player[(int)b49].itemAnimation);
+                                                                                                                                                                                    num2 += 1 + bytes174.Length + bytes175.Length;
+                                                                                                                                                                                    byte[] bytes176 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                    Buffer.BlockCopy(bytes176, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                    Buffer.BlockCopy(bytes173, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b49;
+                                                                                                                                                                                    num3++;
+                                                                                                                                                                                    Buffer.BlockCopy(bytes174, 0, NetMessage.buffer[num].writeBuffer, num3, bytes174.Length);
+                                                                                                                                                                                    num3 += 4;
+                                                                                                                                                                                    Buffer.BlockCopy(bytes175, 0, NetMessage.buffer[num].writeBuffer, num3, bytes175.Length);
+                                                                                                                                                                                }
 																																												else
 																																												{
                                                                                                                                                                                     if (packetId == ((int)Packet.PLAYER_MANA_UPDATE))
 																																													{
-																																														byte[] bytes176 = BitConverter.GetBytes(packetId);
-																																														byte b49 = (byte)number;
-																																														byte[] bytes177 = BitConverter.GetBytes((short)Main.player[(int)b49].statMana);
-																																														byte[] bytes178 = BitConverter.GetBytes((short)Main.player[(int)b49].statManaMax);
-																																														num2 += 1 + bytes177.Length + bytes178.Length;
-																																														byte[] bytes179 = BitConverter.GetBytes(num2 - 4);
-																																														Buffer.BlockCopy(bytes179, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																														Buffer.BlockCopy(bytes176, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																														NetMessage.buffer[num].writeBuffer[5] = b49;
-																																														num3++;
-																																														Buffer.BlockCopy(bytes177, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																																														num3 += 2;
-																																														Buffer.BlockCopy(bytes178, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																																													}
+                                                                                                                                                                                        byte[] bytes177 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                        byte b50 = (byte)number;
+                                                                                                                                                                                        byte[] bytes178 = BitConverter.GetBytes((short)Main.player[(int)b50].statMana);
+                                                                                                                                                                                        byte[] bytes179 = BitConverter.GetBytes((short)Main.player[(int)b50].statManaMax);
+                                                                                                                                                                                        num2 += 1 + bytes178.Length + bytes179.Length;
+                                                                                                                                                                                        byte[] bytes180 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                        Buffer.BlockCopy(bytes180, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                        Buffer.BlockCopy(bytes177, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                        NetMessage.buffer[num].writeBuffer[5] = b50;
+                                                                                                                                                                                        num3++;
+                                                                                                                                                                                        Buffer.BlockCopy(bytes178, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                                                                                                                        num3 += 2;
+                                                                                                                                                                                        Buffer.BlockCopy(bytes179, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                                                                                                                    }
 																																													else
 																																													{
 																																														if (packetId == 43)
 																																														{
-																																															byte[] bytes180 = BitConverter.GetBytes(packetId);
-																																															byte b50 = (byte)number;
-																																															byte[] bytes181 = BitConverter.GetBytes((short)number2);
-																																															num2 += 1 + bytes181.Length;
-																																															byte[] bytes182 = BitConverter.GetBytes(num2 - 4);
-																																															Buffer.BlockCopy(bytes182, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																															Buffer.BlockCopy(bytes180, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																															NetMessage.buffer[num].writeBuffer[5] = b50;
-																																															num3++;
-																																															Buffer.BlockCopy(bytes181, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
-																																														}
+                                                                                                                                                                                            byte[] bytes181 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                            byte b51 = (byte)number;
+                                                                                                                                                                                            byte[] bytes182 = BitConverter.GetBytes((short)number2);
+                                                                                                                                                                                            num2 += 1 + bytes182.Length;
+                                                                                                                                                                                            byte[] bytes183 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                            Buffer.BlockCopy(bytes183, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                            Buffer.BlockCopy(bytes181, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                            NetMessage.buffer[num].writeBuffer[5] = b51;
+                                                                                                                                                                                            num3++;
+                                                                                                                                                                                            Buffer.BlockCopy(bytes182, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
+                                                                                                                                                                                        }
 																																														else
 																																														{
 																																															if (packetId == 44)
 																																															{
-																																																byte[] bytes183 = BitConverter.GetBytes(packetId);
-																																																byte b51 = (byte)number;
-																																																byte b52 = (byte)(number2 + 1f);
-																																																byte[] bytes184 = BitConverter.GetBytes((short)number3);
-																																																byte b53 = (byte)number4;
-																																																num2 += 2 + bytes184.Length + 1;
-																																																byte[] bytes185 = BitConverter.GetBytes(num2 - 4);
-																																																Buffer.BlockCopy(bytes185, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																																Buffer.BlockCopy(bytes183, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																																NetMessage.buffer[num].writeBuffer[num3] = b51;
-																																																num3++;
-																																																NetMessage.buffer[num].writeBuffer[num3] = b52;
-																																																num3++;
-																																																Buffer.BlockCopy(bytes184, 0, NetMessage.buffer[num].writeBuffer, num3, bytes184.Length);
-																																																num3 += 2;
-																																																NetMessage.buffer[num].writeBuffer[num3] = b53;
-																																															}
+                                                                                                                                                                                                byte[] bytes184 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                                byte b52 = (byte)number;
+                                                                                                                                                                                                byte b53 = (byte)(number2 + 1f);
+                                                                                                                                                                                                byte[] bytes185 = BitConverter.GetBytes((short)number3);
+                                                                                                                                                                                                byte b54 = (byte)number4;
+                                                                                                                                                                                                byte[] bytes186 = Encoding.ASCII.GetBytes(text);
+                                                                                                                                                                                                num2 += 2 + bytes185.Length + 1 + bytes186.Length;
+                                                                                                                                                                                                byte[] bytes187 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                                Buffer.BlockCopy(bytes187, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                                Buffer.BlockCopy(bytes184, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                                NetMessage.buffer[num].writeBuffer[num3] = b52;
+                                                                                                                                                                                                num3++;
+                                                                                                                                                                                                NetMessage.buffer[num].writeBuffer[num3] = b53;
+                                                                                                                                                                                                num3++;
+                                                                                                                                                                                                Buffer.BlockCopy(bytes185, 0, NetMessage.buffer[num].writeBuffer, num3, bytes185.Length);
+                                                                                                                                                                                                num3 += 2;
+                                                                                                                                                                                                NetMessage.buffer[num].writeBuffer[num3] = b54;
+                                                                                                                                                                                                num3++;
+                                                                                                                                                                                                Buffer.BlockCopy(bytes186, 0, NetMessage.buffer[num].writeBuffer, num3, bytes186.Length);
+                                                                                                                                                                                                num3 += bytes186.Length;
+                                                                                                                                                                                            }
 																																															else
 																																															{
 																																																if (packetId == 45)
 																																																{
-																																																	byte[] bytes186 = BitConverter.GetBytes(packetId);
-																																																	byte b54 = (byte)number;
-																																																	byte b55 = (byte)Main.player[(int)b54].team;
-																																																	num2 += 2;
-																																																	byte[] bytes187 = BitConverter.GetBytes(num2 - 4);
-																																																	Buffer.BlockCopy(bytes187, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																																	Buffer.BlockCopy(bytes186, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																																	NetMessage.buffer[num].writeBuffer[5] = b54;
-																																																	num3++;
-																																																	NetMessage.buffer[num].writeBuffer[num3] = b55;
-																																																}
+                                                                                                                                                                                                    byte[] bytes188 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                                    byte b55 = (byte)number;
+                                                                                                                                                                                                    byte b56 = (byte)Main.player[(int)b55].team;
+                                                                                                                                                                                                    num2 += 2;
+                                                                                                                                                                                                    byte[] bytes189 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                                    Buffer.BlockCopy(bytes189, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                                    Buffer.BlockCopy(bytes188, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                                    NetMessage.buffer[num].writeBuffer[5] = b55;
+                                                                                                                                                                                                    num3++;
+                                                                                                                                                                                                    NetMessage.buffer[num].writeBuffer[num3] = b56;
+                                                                                                                                                                                                }
 																																																else
 																																																{
 																																																	if (packetId == 46)
@@ -1182,50 +1219,50 @@ namespace Terraria_Server
 																																																	{
 																																																		if (packetId == 47)
 																																																		{
-																																																			byte[] bytes192 = BitConverter.GetBytes(packetId);
-																																																			byte[] bytes193 = BitConverter.GetBytes((short)number);
-																																																			byte[] bytes194 = BitConverter.GetBytes(Main.sign[number].x);
-																																																			byte[] bytes195 = BitConverter.GetBytes(Main.sign[number].y);
-																																																			byte[] bytes196 = Encoding.ASCII.GetBytes(Main.sign[number].text);
-																																																			num2 += bytes193.Length + bytes194.Length + bytes195.Length + bytes196.Length;
-																																																			byte[] bytes197 = BitConverter.GetBytes(num2 - 4);
-																																																			Buffer.BlockCopy(bytes197, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																																			Buffer.BlockCopy(bytes192, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																																			Buffer.BlockCopy(bytes193, 0, NetMessage.buffer[num].writeBuffer, num3, bytes193.Length);
-																																																			num3 += bytes193.Length;
-																																																			Buffer.BlockCopy(bytes194, 0, NetMessage.buffer[num].writeBuffer, num3, bytes194.Length);
-																																																			num3 += bytes194.Length;
-																																																			Buffer.BlockCopy(bytes195, 0, NetMessage.buffer[num].writeBuffer, num3, bytes195.Length);
-																																																			num3 += bytes195.Length;
-																																																			Buffer.BlockCopy(bytes196, 0, NetMessage.buffer[num].writeBuffer, num3, bytes196.Length);
-																																																			num3 += bytes196.Length;
-																																																		}
+                                                                                                                                                                                                            byte[] bytes194 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                                            byte[] bytes195 = BitConverter.GetBytes((short)number);
+                                                                                                                                                                                                            byte[] bytes196 = BitConverter.GetBytes(Main.sign[number].x);
+                                                                                                                                                                                                            byte[] bytes197 = BitConverter.GetBytes(Main.sign[number].y);
+                                                                                                                                                                                                            byte[] bytes198 = Encoding.ASCII.GetBytes(Main.sign[number].text);
+                                                                                                                                                                                                            num2 += bytes195.Length + bytes196.Length + bytes197.Length + bytes198.Length;
+                                                                                                                                                                                                            byte[] bytes199 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                                            Buffer.BlockCopy(bytes199, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                                            Buffer.BlockCopy(bytes194, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                                            Buffer.BlockCopy(bytes195, 0, NetMessage.buffer[num].writeBuffer, num3, bytes195.Length);
+                                                                                                                                                                                                            num3 += bytes195.Length;
+                                                                                                                                                                                                            Buffer.BlockCopy(bytes196, 0, NetMessage.buffer[num].writeBuffer, num3, bytes196.Length);
+                                                                                                                                                                                                            num3 += bytes196.Length;
+                                                                                                                                                                                                            Buffer.BlockCopy(bytes197, 0, NetMessage.buffer[num].writeBuffer, num3, bytes197.Length);
+                                                                                                                                                                                                            num3 += bytes197.Length;
+                                                                                                                                                                                                            Buffer.BlockCopy(bytes198, 0, NetMessage.buffer[num].writeBuffer, num3, bytes198.Length);
+                                                                                                                                                                                                            num3 += bytes198.Length;
+                                                                                                                                                                                                        }
 																																																		else
 																																																		{
 																																																			if (packetId == 48)
 																																																			{
-																																																				byte[] bytes198 = BitConverter.GetBytes(packetId);
-																																																				byte[] bytes199 = BitConverter.GetBytes(number);
-																																																				byte[] bytes200 = BitConverter.GetBytes((int)number2);
-																																																				byte liquid = Main.tile[number, (int)number2].liquid;
-																																																				byte b56 = 0;
-																																																				if (Main.tile[number, (int)number2].lava)
-																																																				{
-																																																					b56 = 1;
-																																																				}
-																																																				num2 += bytes199.Length + bytes200.Length + 1 + 1;
-																																																				byte[] bytes201 = BitConverter.GetBytes(num2 - 4);
-																																																				Buffer.BlockCopy(bytes201, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																																																				Buffer.BlockCopy(bytes198, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																																																				Buffer.BlockCopy(bytes199, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																																																				num3 += 4;
-																																																				Buffer.BlockCopy(bytes200, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																																																				num3 += 4;
-																																																				NetMessage.buffer[num].writeBuffer[num3] = liquid;
-																																																				num3++;
-																																																				NetMessage.buffer[num].writeBuffer[num3] = b56;
-																																																				num3++;
-																																																			}
+                                                                                                                                                                                                                byte[] bytes200 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                                                byte[] bytes201 = BitConverter.GetBytes(number);
+                                                                                                                                                                                                                byte[] bytes202 = BitConverter.GetBytes((int)number2);
+                                                                                                                                                                                                                byte liquid = Main.tile[number, (int)number2].liquid;
+                                                                                                                                                                                                                byte b57 = 0;
+                                                                                                                                                                                                                if (Main.tile[number, (int)number2].lava)
+                                                                                                                                                                                                                {
+                                                                                                                                                                                                                    b57 = 1;
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                num2 += bytes201.Length + bytes202.Length + 1 + 1;
+                                                                                                                                                                                                                byte[] bytes203 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                                                Buffer.BlockCopy(bytes203, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                                                Buffer.BlockCopy(bytes200, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                                                Buffer.BlockCopy(bytes201, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                                                                                                                                                                num3 += 4;
+                                                                                                                                                                                                                Buffer.BlockCopy(bytes202, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                                                                                                                                                                num3 += 4;
+                                                                                                                                                                                                                NetMessage.buffer[num].writeBuffer[num3] = liquid;
+                                                                                                                                                                                                                num3++;
+                                                                                                                                                                                                                NetMessage.buffer[num].writeBuffer[num3] = b57;
+                                                                                                                                                                                                                num3++;
+                                                                                                                                                                                                            }
 																																																			else
 																																																			{
                                                                                                                                                                                                                 if (packetId == ((int)Packet.SEND_SPAWN))
@@ -1235,6 +1272,38 @@ namespace Terraria_Server
 																																																					Buffer.BlockCopy(bytes203, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
 																																																					Buffer.BlockCopy(bytes202, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
 																																																				}
+                                                                                                                                                                                                                else
+                                                                                                                                                                                                                {
+                                                                                                                                                                                                                    if (packetId == 50)
+                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                        byte[] bytes206 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                                                        byte b58 = (byte)number;
+                                                                                                                                                                                                                        num2 += 11;
+                                                                                                                                                                                                                        byte[] bytes207 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                                                        Buffer.BlockCopy(bytes207, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                                                        Buffer.BlockCopy(bytes206, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                                                        NetMessage.buffer[num].writeBuffer[num3] = b58;
+                                                                                                                                                                                                                        num3++;
+                                                                                                                                                                                                                        for (int n = 0; n < 10; n++)
+                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.player[(int)b58].buffType[n];
+                                                                                                                                                                                                                            num3++;
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                    else
+                                                                                                                                                                                                                    {
+                                                                                                                                                                                                                        if (packetId == 51)
+                                                                                                                                                                                                                        {
+                                                                                                                                                                                                                            byte[] bytes208 = BitConverter.GetBytes(packetId);
+                                                                                                                                                                                                                            num2++;
+                                                                                                                                                                                                                            byte b59 = (byte)number;
+                                                                                                                                                                                                                            byte[] bytes209 = BitConverter.GetBytes(num2 - 4);
+                                                                                                                                                                                                                            Buffer.BlockCopy(bytes209, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                                                                                                                                                                            Buffer.BlockCopy(bytes208, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                                                                                                                                                                            NetMessage.buffer[num].writeBuffer[num3] = b59;
+                                                                                                                                                                                                                        }
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
 																																																			}
 																																																		}
 																																																	}
@@ -1466,11 +1535,11 @@ namespace Terraria_Server
         public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
 		{
             int num = (size - 1) / 2;
-            float x = (int)tileX - num;
-            float y = (int)tileY - num;
+            float x = tileX - num;
+            float y = tileY - num;
 			NetMessage.SendData(20, whoAmi, -1, "", size, x, y, 0f);
 		}
-		
+
         public static void SendSection(int whoAmi, int sectionX, int sectionY)
 		{
 			try
@@ -1572,26 +1641,30 @@ namespace Terraria_Server
 							flag = true;
 						}
 					}
-					NetMessage.SendData(14, -1, i, "", i, (float)num, 0f, 0f);
-					NetMessage.SendData(13, -1, i, "", i, 0f, 0f, 0f);
-					NetMessage.SendData(16, -1, i, "", i, 0f, 0f, 0f);
-					NetMessage.SendData(30, -1, i, "", i, 0f, 0f, 0f);
-					NetMessage.SendData(45, -1, i, "", i, 0f, 0f, 0f);
-					NetMessage.SendData(42, -1, i, "", i, 0f, 0f, 0f);
-					NetMessage.SendData(4, -1, i, Main.player[i].name, i, 0f, 0f, 0f);
-					for (int k = 0; k < 44; k++)
-					{
-						NetMessage.SendData(5, -1, i, Main.player[i].inventory[k].name, i, (float)k, 0f, 0f);
-					}
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[0].name, i, 44f, 0f, 0f);
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[1].name, i, 45f, 0f, 0f);
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[2].name, i, 46f, 0f, 0f);
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[3].name, i, 47f, 0f, 0f);
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[4].name, i, 48f, 0f, 0f);
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[5].name, i, 49f, 0f, 0f);
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[6].name, i, 50f, 0f, 0f);
-					NetMessage.SendData(5, -1, i, Main.player[i].armor[7].name, i, 51f, 0f, 0f);
-					if (!Netplay.serverSock[i].announced)
+                    NetMessage.SendData(14, -1, i, "", i, (float)num, 0f, 0f, 0);
+                    NetMessage.SendData(13, -1, i, "", i, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(16, -1, i, "", i, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(30, -1, i, "", i, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(45, -1, i, "", i, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(42, -1, i, "", i, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(50, -1, i, "", i, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(4, -1, i, Main.player[i].name, i, 0f, 0f, 0f, 0);
+                    for (int k = 0; k < 44; k++)
+                    {
+                        NetMessage.SendData(5, -1, i, Main.player[i].inventory[k].name, i, (float)k, 0f, 0f, 0);
+                    }
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[0].name, i, 44f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[1].name, i, 45f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[2].name, i, 46f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[3].name, i, 47f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[4].name, i, 48f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[5].name, i, 49f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[6].name, i, 50f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[7].name, i, 51f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[8].name, i, 52f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[9].name, i, 53f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[10].name, i, 54f, 0f, 0f, 0);
+                    if (!Netplay.serverSock[i].announced)
 					{
 						Netplay.serverSock[i].announced = true;
 						NetMessage.SendData(25, -1, i, Main.player[i].name + " has joined.", 255, 255f, 240f, 20f);

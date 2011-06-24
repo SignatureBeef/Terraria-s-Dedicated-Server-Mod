@@ -11,7 +11,6 @@ using Terraria_Server.Events;
 
 namespace TDSMExamplePlugin
 {
-    /// <include file='E:\Terraria_Server\Terraria_Server\bin\Debug\API.xml'
     public class TDSMPlugin : Plugin
     {
         /*
@@ -22,6 +21,8 @@ namespace TDSMExamplePlugin
          * 
          * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
          */
+
+        // tConsole is used for when logging Output to the console & a log file.
 
         public Properties properties;
         public bool spawningAllowed = false;
@@ -37,18 +38,20 @@ namespace TDSMExamplePlugin
             ServerProtocol = "1.04 {9}";
 
             string pluginFolder = Statics.getPluginPath + Statics.systemSeperator + "TDSM";
-
+            //Create fodler if it doesn't exist
             if (!Program.createDirectory(pluginFolder, true))
             {
-                Console.WriteLine("[TSDM Plugin] Failed to create crucial Folder");
+                Program.tConsole.WriteLine("[TSDM Plugin] Failed to create crucial Folder");
                 return;
             }
 
+            //setup a new properties file
             properties = new Properties(pluginFolder + Statics.systemSeperator + "tdsmplugin.properties");
             properties.Load();
             properties.pushData(); //Creates default values if needed.
             properties.Save();
 
+            //read properties data
             spawningAllowed = properties.isSpawningCancelled();
             tileBreakageAllowed = properties.getTileBreakage();
 
@@ -57,20 +60,21 @@ namespace TDSMExamplePlugin
 
         public override void Enable()
         {
-            Console.WriteLine(base.Name + " enabled.");
+            Program.tConsole.WriteLine(base.Name + " enabled.");
+            //Register Hooks
             this.registerHook(Hooks.TILE_BREAK);
             this.registerHook(Hooks.PLAYER_COMMAND);
-            Main.stopSpawns = isEnabled;
 
+            Main.stopSpawns = isEnabled;
             if (isEnabled)
             {
-                Console.WriteLine("Disabled NPC Spawning");
+                Program.tConsole.WriteLine("Disabled NPC Spawning");
             }
         }
 
         public override void Disable()
         {
-            Console.WriteLine(base.Name + " disabled.");
+            Program.tConsole.WriteLine(base.Name + " disabled.");
             isEnabled = false;
         }
 
@@ -84,10 +88,10 @@ namespace TDSMExamplePlugin
                 {
                     if (commands[0].Equals("/tdsmpluginexample"))
                     {
-                        Console.WriteLine("[TSDM Plugin] Player used Plugin Command: " + Event.getPlayer().name);
+                        Program.tConsole.WriteLine("[TSDM Plugin] Player used Plugin Command: " + Event.getPlayer().name);
 
                         Player sendingPlayer = Event.getPlayer();
-                        sendingPlayer.sendMessage("TDSM Pligin Example, For Build: #" + ServerProtocol, 255, 255f, 255f, 255f);
+                        sendingPlayer.sendMessage("TDSM Plugin Example, For Build: #" + ServerProtocol, 255, 255f, 255f, 255f);
 
                         Event.setCancelled(true);
                     }
@@ -99,7 +103,7 @@ namespace TDSMExamplePlugin
         {
             if (isEnabled == false || tileBreakageAllowed == false) { return; }
             Event.setCancelled(true);
-            Console.WriteLine("[TSDM Plugin] Cancelled Tile change of Player: " + ((Player)Event.getSender()).name);
+            Program.tConsole.WriteLine("[TSDM Plugin] Cancelled Tile change of Player: " + ((Player)Event.getSender()).name);
         }
         
     }

@@ -84,7 +84,7 @@ namespace Terraria_Server.Commands
                                                                     "Settle Water.",
                                                                     "Set a player to OP",
                                                                     "De-OP a player.",
-                                                                    "Log in as OP: /oplogin <poassword>",
+                                                                    "Log in as OP: /oplogin <password>",
                                                                     "Log out of OP status.",
                                                                     "Toggle the state of NPC Spawning."};
 
@@ -148,7 +148,7 @@ namespace Terraria_Server.Commands
 
         public static void SaveAll()
         {
-            Program.tConsole.WriteLine("Saving World");
+           // Program.tConsole.WriteLine("Saving World");
             Program.server.notifyOps("Saving World...");
 
             WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
@@ -156,13 +156,13 @@ namespace Terraria_Server.Commands
             {
             }
 
-            Program.tConsole.WriteLine("Saving Data");
+            //Program.tConsole.WriteLine("Saving Data");
             Program.server.notifyOps("Saving Data...");
 
             Program.server.getBanList().Save();
             Program.server.getWhiteList().Save();
 
-            Program.server.notifyOps("Saving Complete.");
+            //Program.server.notifyOps("Saving Complete.");
             Program.tConsole.WriteLine("Saving Complete.");
         }
 
@@ -664,8 +664,14 @@ namespace Terraria_Server.Commands
                     {
                         for (int i = 0; i < amount; i++)
                         {
-                            NPC.NewNPC((int)player.position.X + 3, (int)player.position.Y, npcType);
+                            int rand = (int)player.position.X + (int)(new Random().Next(3, 40));
+                            Tile t = sender.getServer().getWorld().getHighestTile(rand / 16);
+                            NPC.NewNPC(rand, (int)(t.tileY * 16), npcType);
                         }
+
+                        //player.teleportTo();
+
+                        NPC.SpawnNPC();
 
                         Program.server.notifyOps("Spawned " + amount.ToString() + " of " +
                             npcType.ToString() + " {" + player.name + "}", true);
@@ -895,6 +901,12 @@ namespace Terraria_Server.Commands
                     return;
                 }
             }
+
+            //1128 420
+
+            //Vector2 pos = new Vector2(1128 * 16, 420 * 16); //Packet crap
+            //((Player)sender).teleportTo(pos.X, pos.Y);
+            //return;
 
             Main.stopSpawns = !Main.stopSpawns;
 

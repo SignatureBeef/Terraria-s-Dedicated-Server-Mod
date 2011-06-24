@@ -247,13 +247,14 @@ namespace Terraria_Server
             leftWorld = LeftWorld;
         }
 
-        public Tile getHighestTile(int axisX)
+        public Tile getHighestTile(int axisX) //tile format?
         {
             int tallest = -1;
 
             for (int i = 0; i < maxTilesY; i++)
             {
-                if (Server.maxTilesY > axisX && Server.tile[axisX, i] != null && Server.tile[axisX, i].active)
+                //if (Server.maxTilesY > axisX && Server.tile[axisX, i] != null)// && Server.tile[axisX, i].active)
+                if (Server.tile[axisX, i] != null && Server.tile[axisX, i].active)
                 {
                     if (i > tallest)
                     {

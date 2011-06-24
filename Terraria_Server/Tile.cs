@@ -16,8 +16,13 @@ namespace Terraria_Server
 		public bool lava;
 		public byte frameNumber;
 		public short frameX;
-		public short frameY;
+        public short frameY;
         public int tileX;
         public int tileY;
+
+		public object Clone()
+		{
+			return base.MemberwiseClone();
+		}
 	}
 }

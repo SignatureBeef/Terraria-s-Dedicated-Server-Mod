@@ -62,7 +62,11 @@ namespace Terraria_Server
 			{
 				NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f);
 				return;
-			}
+            }
+            if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state < 10 && b > 12 && b != 16 && b != 42 && b != 50 && b != 38)
+            {
+                NetMessage.BootPlayer(this.whoAmI, "Invalid operation at this state.");
+            }
 			if (b == 1 && Main.netMode == 2)
 			{
                 LoginEvent Event = new LoginEvent();
@@ -127,126 +131,151 @@ namespace Terraria_Server
 						Main.player[num2].whoAmi = num2;
 						Main.myPlayer = num2;
 					}
-					NetMessage.SendData(4, -1, -1, Main.player[Main.myPlayer].name, Main.myPlayer, 0f, 0f, 0f);
-					NetMessage.SendData(16, -1, -1, "", Main.myPlayer, 0f, 0f, 0f);
-					NetMessage.SendData(42, -1, -1, "", Main.myPlayer, 0f, 0f, 0f);
-					for (int k = 0; k < 44; k++)
-					{
-						NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].inventory[k].name, Main.myPlayer, (float)k, 0f, 0f);
-					}
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[0].name, Main.myPlayer, 44f, 0f, 0f);
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[1].name, Main.myPlayer, 45f, 0f, 0f);
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[2].name, Main.myPlayer, 46f, 0f, 0f);
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[3].name, Main.myPlayer, 47f, 0f, 0f);
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[4].name, Main.myPlayer, 48f, 0f, 0f);
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[5].name, Main.myPlayer, 49f, 0f, 0f);
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[6].name, Main.myPlayer, 50f, 0f, 0f);
-					NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[7].name, Main.myPlayer, 51f, 0f, 0f);
-					NetMessage.SendData(6, -1, -1, "", 0, 0f, 0f, 0f);
-					if (Netplay.clientSock.state == 2)
-					{
-						Netplay.clientSock.state = 3;
-						return;
-					}
+                    NetMessage.SendData(4, -1, -1, Main.player[Main.myPlayer].name, Main.myPlayer, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(16, -1, -1, "", Main.myPlayer, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(42, -1, -1, "", Main.myPlayer, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(50, -1, -1, "", Main.myPlayer, 0f, 0f, 0f, 0);
+                    for (int k = 0; k < 44; k++)
+                    {
+                        NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].inventory[k].name, Main.myPlayer, (float)k, 0f, 0f, 0);
+                    }
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[0].name, Main.myPlayer, 44f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[1].name, Main.myPlayer, 45f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[2].name, Main.myPlayer, 46f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[3].name, Main.myPlayer, 47f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[4].name, Main.myPlayer, 48f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[5].name, Main.myPlayer, 49f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[6].name, Main.myPlayer, 50f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[7].name, Main.myPlayer, 51f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[8].name, Main.myPlayer, 52f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[9].name, Main.myPlayer, 53f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[10].name, Main.myPlayer, 54f, 0f, 0f, 0);
+                    NetMessage.SendData(6, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                    if (Netplay.clientSock.state == 2)
+                    {
+                        Netplay.clientSock.state = 3;
+                        return;
+                    }
 				}
 				else
 				{
 					if (b == 4)
 					{
-						//bool flag = false;
-						int num3 = (int)this.readBuffer[start + 1];
-						if (Main.netMode == 2)
-						{
-							num3 = this.whoAmI;
-						}
-						if (num3 == Main.myPlayer)
-						{
-							return;
-						}
-						int hair = (int)this.readBuffer[start + 2];
-						Main.player[num3].hair = hair;
-						Main.player[num3].whoAmi = num3;
-						num += 2;
-						Main.player[num3].hairColor.R = this.readBuffer[num];
-						num++;
-						Main.player[num3].hairColor.G = this.readBuffer[num];
-						num++;
-						Main.player[num3].hairColor.B = this.readBuffer[num];
-						num++;
-						Main.player[num3].skinColor.R = this.readBuffer[num];
-						num++;
-						Main.player[num3].skinColor.G = this.readBuffer[num];
-						num++;
-						Main.player[num3].skinColor.B = this.readBuffer[num];
-						num++;
-						Main.player[num3].eyeColor.R = this.readBuffer[num];
-						num++;
-						Main.player[num3].eyeColor.G = this.readBuffer[num];
-						num++;
-						Main.player[num3].eyeColor.B = this.readBuffer[num];
-						num++;
-						Main.player[num3].shirtColor.R = this.readBuffer[num];
-						num++;
-						Main.player[num3].shirtColor.G = this.readBuffer[num];
-						num++;
-						Main.player[num3].shirtColor.B = this.readBuffer[num];
-						num++;
-						Main.player[num3].underShirtColor.R = this.readBuffer[num];
-						num++;
-						Main.player[num3].underShirtColor.G = this.readBuffer[num];
-						num++;
-						Main.player[num3].underShirtColor.B = this.readBuffer[num];
-						num++;
-						Main.player[num3].pantsColor.R = this.readBuffer[num];
-						num++;
-						Main.player[num3].pantsColor.G = this.readBuffer[num];
-						num++;
-						Main.player[num3].pantsColor.B = this.readBuffer[num];
-						num++;
-						Main.player[num3].shoeColor.R = this.readBuffer[num];
-						num++;
-						Main.player[num3].shoeColor.G = this.readBuffer[num];
-						num++;
-						Main.player[num3].shoeColor.B = this.readBuffer[num];
-						num++;
-						string string2 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-						Main.player[num3].name = string2;
-						if (Main.netMode == 2)
-                        {
+						
                             //if (Netplay.serverSock[this.whoAmI].state < 10)
                             //{
                             //    for (int l = 0; l < 255; l++)
                             //    {
-                            //        if (l != num3 && string2 == Main.player[l].name && Netplay.serverSock[l].active)
+                            //        if (l != num3 && playerName == Main.player[l].name && Netplay.serverSock[l].active)
                             //        {
-                            //            flag = true;
+                            //            NetMessage.SendData(2, Main.player[l].whoAmi, -1, playerName + " Logged in from a Different Location.", 0, 0f, 0f, 0f);
                             //        }
                             //    }
                             //}
-                            //if (flag)
-                            //{
-                            //    NetMessage.SendData(2, this.whoAmI, -1, string2 + " is already on this server.", 0, 0f, 0f, 0f);
-                            //    return;
-                            //}
-                            if (Netplay.serverSock[this.whoAmI].state < 10)
-                            {
-                                for (int l = 0; l < 255; l++)
-                                {
-                                    if (l != num3 && string2 == Main.player[l].name && Netplay.serverSock[l].active)
-                                    {
-                                        NetMessage.SendData(2, Main.player[l].whoAmi, -1, string2 + " Logged in from a Different Location.", 0, 0f, 0f, 0f);
-                                    }
-                                }
-                            }
-                            if (string2.Length > 20)
-                            {
-                                NetMessage.SendData(2, this.whoAmI, -1, "Name is too long.", 0, 0f, 0f, 0f);
-                            }
-							Netplay.serverSock[this.whoAmI].oldName = string2;
-							Netplay.serverSock[this.whoAmI].name = string2;
-							NetMessage.SendData(4, -1, this.whoAmI, string2, num3, 0f, 0f, 0f);
-							return;
-						}
+                            bool flag = false;
+				            int num3 = (int)this.readBuffer[start + 1];
+				            if (Main.netMode == 2)
+				            {
+					            num3 = this.whoAmI;
+				            }
+				            if (num3 == Main.myPlayer)
+				            {
+					            return;
+				            }
+				            int num4 = (int)this.readBuffer[start + 2];
+				            if (num4 >= 17)
+				            {
+					            num4 = 0;
+				            }
+				            Main.player[num3].hair = num4;
+				            Main.player[num3].whoAmi = num3;
+				            num += 2;
+				            Main.player[num3].hairColor.R = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].hairColor.G = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].hairColor.B = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].skinColor.R = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].skinColor.G = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].skinColor.B = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].eyeColor.R = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].eyeColor.G = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].eyeColor.B = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].shirtColor.R = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].shirtColor.G = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].shirtColor.B = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].underShirtColor.R = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].underShirtColor.G = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].underShirtColor.B = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].pantsColor.R = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].pantsColor.G = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].pantsColor.B = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].shoeColor.R = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].shoeColor.G = this.readBuffer[num];
+				            num++;
+				            Main.player[num3].shoeColor.B = this.readBuffer[num];
+				            num++;
+				            if (this.readBuffer[num] == 0)
+				            {
+					            Main.player[num3].hardCore = false;
+				            }
+				            else
+				            {
+					            Main.player[num3].hardCore = true;
+				            }
+				            num++;
+				            string text = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+				            text = text.Trim();
+				            Main.player[num3].name = text.Trim();
+				            if (Main.netMode == 2)
+				            {
+					            if (Netplay.serverSock[this.whoAmI].state < 10)
+					            {
+						            for (int l = 0; l < 255; l++)
+						            {
+							            if (l != num3 && text == Main.player[l].name && Netplay.serverSock[l].active)
+							            {
+								            flag = true;
+							            }
+						            }
+					            }
+					            if (flag)
+					            {
+						            NetMessage.SendData(2, this.whoAmI, -1, text + " is already on this server.", 0, 0f, 0f, 0f, 0);
+						            return;
+					            }
+					            if (text.Length > 20)
+					            {
+						            NetMessage.SendData(2, this.whoAmI, -1, "Name is too long.", 0, 0f, 0f, 0f, 0);
+						            return;
+					            }
+					            if (text == "")
+					            {
+						            NetMessage.SendData(2, this.whoAmI, -1, "Empty name.", 0, 0f, 0f, 0f, 0);
+						            return;
+					            }
+					            Netplay.serverSock[this.whoAmI].oldName = text;
+					            Netplay.serverSock[this.whoAmI].name = text;
+					            NetMessage.SendData(4, -1, this.whoAmI, text, num3, 0f, 0f, 0f, 0);
+					            return;
+				            }
 					}
 					else
 					{
@@ -278,7 +307,7 @@ namespace Terraria_Server
                                     }
                                     if (Main.netMode == 2 && num2 == this.whoAmI)
                                     {
-                                        NetMessage.SendData(5, -1, this.whoAmI, string3, num2, (float)num3, 0f, 0f);
+                                        NetMessage.SendData(5, -1, this.whoAmI, string3, num2, (float)num3, 0f, 0f, 0);
                                     }
                                 }
                             }
@@ -337,6 +366,24 @@ namespace Terraria_Server
 										num += 4;
 										Main.worldID = BitConverter.ToInt32(this.readBuffer, num);
 										num += 4;
+                                        byte b2 = this.readBuffer[num];
+                                        if ((b2 & 1) == 1)
+                                        {
+                                            WorldGen.shadowOrbSmashed = true;
+                                        }
+                                        if ((b2 & 2) == 2)
+                                        {
+                                            NPC.downedBoss1 = true;
+                                        }
+                                        if ((b2 & 4) == 4)
+                                        {
+                                            NPC.downedBoss2 = true;
+                                        }
+                                        if ((b2 & 8) == 8)
+                                        {
+                                            NPC.downedBoss3 = true;
+                                        }
+                                        num++;
 										Main.worldName = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
 										if (Netplay.clientSock.state == 3)
 										{
@@ -349,84 +396,84 @@ namespace Terraria_Server
 								{
 									if (b == 8)
 									{
-										if (Main.netMode == 2)
-										{
-											int num7 = BitConverter.ToInt32(this.readBuffer, num);
-											num += 4;
-											int num8 = BitConverter.ToInt32(this.readBuffer, num);
-											num += 4;
-											bool flag2 = true;
-											if (num7 == -1 || num8 == -1)
-											{
-												flag2 = false;
-											}
-											else
-											{
-												if (num7 < 10 || num7 > Main.maxTilesX - 10)
-												{
-													flag2 = false;
-												}
-												else
-												{
-													if (num8 < 10 || num8 > Main.maxTilesY - 10)
-													{
-														flag2 = false;
-													}
-												}
-											}
-											int num9 = 1350;
-											if (flag2)
-											{
-												num9 *= 2;
-											}
-											if (Netplay.serverSock[this.whoAmI].state == 2)
-											{
-												Netplay.serverSock[this.whoAmI].state = 3;
-											}
-											NetMessage.SendData(9, this.whoAmI, -1, "Receiving tile data", num9, 0f, 0f, 0f);
-											Netplay.serverSock[this.whoAmI].statusText2 = "is receiving tile data";
-											Netplay.serverSock[this.whoAmI].statusMax += num9;
-											int sectionX = Netplay.GetSectionX(Main.spawnTileX);
-											int sectionY = Netplay.GetSectionY(Main.spawnTileY);
-											for (int m = sectionX - 2; m < sectionX + 3; m++)
-											{
-												for (int n = sectionY - 1; n < sectionY + 2; n++)
-												{
-													NetMessage.SendSection(this.whoAmI, m, n);
-												}
-											}
-											if (flag2)
-											{
-												num7 = Netplay.GetSectionX(num7);
-												num8 = Netplay.GetSectionY(num8);
-												for (int num10 = num7 - 2; num10 < num7 + 3; num10++)
-												{
-													for (int num11 = num8 - 1; num11 < num8 + 2; num11++)
-													{
-														NetMessage.SendSection(this.whoAmI, num10, num11);
-													}
-												}
-												NetMessage.SendData(11, this.whoAmI, -1, "", num7 - 2, (float)(num8 - 1), (float)(num7 + 2), (float)(num8 + 1));
-											}
-											NetMessage.SendData(11, this.whoAmI, -1, "", sectionX - 2, (float)(sectionY - 1), (float)(sectionX + 2), (float)(sectionY + 1));
-											NetMessage.SendData(49, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
-											for (int num12 = 0; num12 < 200; num12++)
-											{
-												if (Main.item[num12].active)
-												{
-													NetMessage.SendData(21, this.whoAmI, -1, "", num12, 0f, 0f, 0f);
-													NetMessage.SendData(22, this.whoAmI, -1, "", num12, 0f, 0f, 0f);
-												}
-											}
-											for (int num13 = 0; num13 < 1000; num13++)
-											{
-												if (Main.npc[num13].active)
-												{
-													NetMessage.SendData(23, this.whoAmI, -1, "", num13, 0f, 0f, 0f);
-												}
-											}
-											return;
-										}
+                                        if (Main.netMode == 2)
+                                        {
+                                            int num8 = BitConverter.ToInt32(this.readBuffer, num);
+                                            num += 4;
+                                            int num9 = BitConverter.ToInt32(this.readBuffer, num);
+                                            num += 4;
+                                            bool flag3 = true;
+                                            if (num8 == -1 || num9 == -1)
+                                            {
+                                                flag3 = false;
+                                            }
+                                            else
+                                            {
+                                                if (num8 < 10 || num8 > Main.maxTilesX - 10)
+                                                {
+                                                    flag3 = false;
+                                                }
+                                                else
+                                                {
+                                                    if (num9 < 10 || num9 > Main.maxTilesY - 10)
+                                                    {
+                                                        flag3 = false;
+                                                    }
+                                                }
+                                            }
+                                            int num10 = 1350;
+                                            if (flag3)
+                                            {
+                                                num10 *= 2;
+                                            }
+                                            if (Netplay.serverSock[this.whoAmI].state == 2)
+                                            {
+                                                Netplay.serverSock[this.whoAmI].state = 3;
+                                            }
+                                            NetMessage.SendData(9, this.whoAmI, -1, "Receiving tile data", num10, 0f, 0f, 0f, 0);
+                                            Netplay.serverSock[this.whoAmI].statusText2 = "is receiving tile data";
+                                            Netplay.serverSock[this.whoAmI].statusMax += num10;
+                                            int sectionX = Netplay.GetSectionX(Main.spawnTileX);
+                                            int sectionY = Netplay.GetSectionY(Main.spawnTileY);
+                                            for (int m = sectionX - 2; m < sectionX + 3; m++)
+                                            {
+                                                for (int n = sectionY - 1; n < sectionY + 2; n++)
+                                                {
+                                                    NetMessage.SendSection(this.whoAmI, m, n);
+                                                }
+                                            }
+                                            if (flag3)
+                                            {
+                                                num8 = Netplay.GetSectionX(num8);
+                                                num9 = Netplay.GetSectionY(num9);
+                                                for (int num11 = num8 - 2; num11 < num8 + 3; num11++)
+                                                {
+                                                    for (int num12 = num9 - 1; num12 < num9 + 2; num12++)
+                                                    {
+                                                        NetMessage.SendSection(this.whoAmI, num11, num12);
+                                                    }
+                                                }
+                                                NetMessage.SendData(11, this.whoAmI, -1, "", num8 - 2, (float)(num9 - 1), (float)(num8 + 2), (float)(num9 + 1), 0);
+                                            }
+                                            NetMessage.SendData(11, this.whoAmI, -1, "", sectionX - 2, (float)(sectionY - 1), (float)(sectionX + 2), (float)(sectionY + 1), 0);
+                                            for (int num13 = 0; num13 < 200; num13++)
+                                            {
+                                                if (Main.item[num13].active)
+                                                {
+                                                    NetMessage.SendData(21, this.whoAmI, -1, "", num13, 0f, 0f, 0f, 0);
+                                                    NetMessage.SendData(22, this.whoAmI, -1, "", num13, 0f, 0f, 0f, 0);
+                                                }
+                                            }
+                                            for (int num14 = 0; num14 < 1000; num14++)
+                                            {
+                                                if (Main.npc[num14].active)
+                                                {
+                                                    NetMessage.SendData(23, this.whoAmI, -1, "", num14, 0f, 0f, 0f, 0);
+                                                }
+                                            }
+                                            NetMessage.SendData(49, this.whoAmI, -1, "", 0, 0f, 0f, 0f, 0);
+                                            return;
+                                        }
 									}
 									else
 									{
@@ -443,96 +490,96 @@ namespace Terraria_Server
 										}
 										else
 										{
-											if (b == 10)
-											{
-												short num15 = BitConverter.ToInt16(this.readBuffer, start + 1);
-												int num16 = BitConverter.ToInt32(this.readBuffer, start + 3);
-												int num17 = BitConverter.ToInt32(this.readBuffer, start + 7);
-												num = start + 11;
-												for (int num18 = num16; num18 < num16 + (int)num15; num18++)
-												{
-													if (Main.tile[num18, num17] == null)
-													{
-														Main.tile[num18, num17] = new Tile();
-													}
-													byte b2 = this.readBuffer[num];
-													num++;
-													bool active = Main.tile[num18, num17].active;
-													if ((b2 & 1) == 1)
-													{
-														Main.tile[num18, num17].active = true;
-													}
-													else
-													{
-														Main.tile[num18, num17].active = false;
-													}
-													if ((b2 & 2) == 2)
-													{
-														Main.tile[num18, num17].lighted = true;
-													}
-													if ((b2 & 4) == 4)
-													{
-														Main.tile[num18, num17].wall = 1;
-													}
-													else
-													{
-														Main.tile[num18, num17].wall = 0;
-													}
-													if ((b2 & 8) == 8)
-													{
-														Main.tile[num18, num17].liquid = 1;
-													}
-													else
-													{
-														Main.tile[num18, num17].liquid = 0;
-													}
-													if (Main.tile[num18, num17].active)
-													{
-														int type = (int)Main.tile[num18, num17].type;
-														Main.tile[num18, num17].type = this.readBuffer[num];
-														num++;
-														if (Main.tileFrameImportant[(int)Main.tile[num18, num17].type])
-														{
-															Main.tile[num18, num17].frameX = BitConverter.ToInt16(this.readBuffer, num);
-															num += 2;
-															Main.tile[num18, num17].frameY = BitConverter.ToInt16(this.readBuffer, num);
-															num += 2;
-														}
-														else
-														{
-															if (!active || (int)Main.tile[num18, num17].type != type)
-															{
-																Main.tile[num18, num17].frameX = -1;
-																Main.tile[num18, num17].frameY = -1;
-															}
-														}
-													}
-													if (Main.tile[num18, num17].wall > 0)
-													{
-														Main.tile[num18, num17].wall = this.readBuffer[num];
-														num++;
-													}
-													if (Main.tile[num18, num17].liquid > 0)
-													{
-														Main.tile[num18, num17].liquid = this.readBuffer[num];
-														num++;
-														byte b3 = this.readBuffer[num];
-														num++;
-														if (b3 == 1)
-														{
-															Main.tile[num18, num17].lava = true;
-														}
-														else
-														{
-															Main.tile[num18, num17].lava = false;
-														}
-													}
-												}
-												if (Main.netMode == 2)
-												{
-													NetMessage.SendData((int)b, -1, this.whoAmI, "", (int)num15, (float)num16, (float)num17, 0f);
-													return;
-												}
+                                            if (b == 10 && Main.netMode == 1)
+                                            {
+                                                short num16 = BitConverter.ToInt16(this.readBuffer, start + 1);
+                                                int num17 = BitConverter.ToInt32(this.readBuffer, start + 3);
+                                                int num18 = BitConverter.ToInt32(this.readBuffer, start + 7);
+                                                num = start + 11;
+                                                for (int num19 = num17; num19 < num17 + (int)num16; num19++)
+                                                {
+                                                    if (Main.tile[num19, num18] == null)
+                                                    {
+                                                        Main.tile[num19, num18] = new Tile();
+                                                    }
+                                                    byte b3 = this.readBuffer[num];
+                                                    num++;
+                                                    bool active = Main.tile[num19, num18].active;
+                                                    if ((b3 & 1) == 1)
+                                                    {
+                                                        Main.tile[num19, num18].active = true;
+                                                    }
+                                                    else
+                                                    {
+                                                        Main.tile[num19, num18].active = false;
+                                                    }
+                                                    if ((b3 & 2) == 2)
+                                                    {
+                                                        Main.tile[num19, num18].lighted = true;
+                                                    }
+                                                    if ((b3 & 4) == 4)
+                                                    {
+                                                        Main.tile[num19, num18].wall = 1;
+                                                    }
+                                                    else
+                                                    {
+                                                        Main.tile[num19, num18].wall = 0;
+                                                    }
+                                                    if ((b3 & 8) == 8)
+                                                    {
+                                                        Main.tile[num19, num18].liquid = 1;
+                                                    }
+                                                    else
+                                                    {
+                                                        Main.tile[num19, num18].liquid = 0;
+                                                    }
+                                                    if (Main.tile[num19, num18].active)
+                                                    {
+                                                        int type = (int)Main.tile[num19, num18].type;
+                                                        Main.tile[num19, num18].type = this.readBuffer[num];
+                                                        num++;
+                                                        if (Main.tileFrameImportant[(int)Main.tile[num19, num18].type])
+                                                        {
+                                                            Main.tile[num19, num18].frameX = BitConverter.ToInt16(this.readBuffer, num);
+                                                            num += 2;
+                                                            Main.tile[num19, num18].frameY = BitConverter.ToInt16(this.readBuffer, num);
+                                                            num += 2;
+                                                        }
+                                                        else
+                                                        {
+                                                            if (!active || (int)Main.tile[num19, num18].type != type)
+                                                            {
+                                                                Main.tile[num19, num18].frameX = -1;
+                                                                Main.tile[num19, num18].frameY = -1;
+                                                            }
+                                                        }
+                                                    }
+                                                    if (Main.tile[num19, num18].wall > 0)
+                                                    {
+                                                        Main.tile[num19, num18].wall = this.readBuffer[num];
+                                                        num++;
+                                                    }
+                                                    if (Main.tile[num19, num18].liquid > 0)
+                                                    {
+                                                        Main.tile[num19, num18].liquid = this.readBuffer[num];
+                                                        num++;
+                                                        byte b4 = this.readBuffer[num];
+                                                        num++;
+                                                        if (b4 == 1)
+                                                        {
+                                                            Main.tile[num19, num18].lava = true;
+                                                        }
+                                                        else
+                                                        {
+                                                            Main.tile[num19, num18].lava = false;
+                                                        }
+                                                    }
+                                                }
+                                                if (Main.netMode == 2)
+                                                {
+                                                    NetMessage.SendData((int)b, -1, this.whoAmI, "", (int)num16, (float)num17, (float)num18, 0f, 0);
+                                                    return;
+                                                }
 											}
 											else
 											{
@@ -556,118 +603,132 @@ namespace Terraria_Server
 												{
 													if (b == 12)
 													{
-														int num19 = (int)this.readBuffer[num];
-														num++;
-														Main.player[num19].SpawnX = BitConverter.ToInt32(this.readBuffer, num);
-														num += 4;
-														Main.player[num19].SpawnY = BitConverter.ToInt32(this.readBuffer, num);
-														num += 4;
-														Main.player[num19].Spawn();
-														if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state >= 3)
-														{
-															NetMessage.buffer[this.whoAmI].broadcast = true;
-															NetMessage.SendData(12, -1, this.whoAmI, "", this.whoAmI, 0f, 0f, 0f);
-															if (Netplay.serverSock[this.whoAmI].state == 3)
-															{
-																Netplay.serverSock[this.whoAmI].state = 10;
-																NetMessage.greetPlayer(this.whoAmI);
-																NetMessage.syncPlayers();
-																return;
-															}
-														}
+                                                        int num20 = (int)this.readBuffer[num];
+                                                        if (Main.netMode == 2)
+                                                        {
+                                                            num20 = this.whoAmI;
+                                                        }
+                                                        num++;
+                                                        Main.player[num20].SpawnX = BitConverter.ToInt32(this.readBuffer, num);
+                                                        num += 4;
+                                                        Main.player[num20].SpawnY = BitConverter.ToInt32(this.readBuffer, num);
+                                                        num += 4;
+                                                        Main.player[num20].Spawn();
+                                                        if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state >= 3)
+                                                        {
+                                                            if (Netplay.serverSock[this.whoAmI].state == 3)
+                                                            {
+                                                                Netplay.serverSock[this.whoAmI].state = 10;
+                                                                NetMessage.greetPlayer(this.whoAmI);
+                                                                NetMessage.syncPlayers();
+                                                                NetMessage.buffer[this.whoAmI].broadcast = true;
+                                                                NetMessage.SendData(12, -1, this.whoAmI, "", this.whoAmI, 0f, 0f, 0f, 0);
+                                                                return;
+                                                            }
+                                                            NetMessage.SendData(12, -1, this.whoAmI, "", this.whoAmI, 0f, 0f, 0f, 0);
+                                                            return;
+                                                        }
 													}
 													else
 													{
-														if (b == 13)
-														{
-															int num20 = (int)this.readBuffer[num];
-															if (Main.netMode == 1 && !Main.player[num20].active)
-															{
-																NetMessage.SendData(15, -1, -1, "", 0, 0f, 0f, 0f);
-															}
-															num++;
-															int num21 = (int)this.readBuffer[num];
-															num++;
-															int selectedItem = (int)this.readBuffer[num];
-															num++;
-															float x = BitConverter.ToSingle(this.readBuffer, num);
-															num += 4;
-															float num22 = BitConverter.ToSingle(this.readBuffer, num);
-															num += 4;
-															float x2 = BitConverter.ToSingle(this.readBuffer, num);
-															num += 4;
-															float y = BitConverter.ToSingle(this.readBuffer, num);
-															num += 4;
-															Main.player[num20].selectedItem = selectedItem;
-															Main.player[num20].position.X = x;
-															Main.player[num20].position.Y = num22;
-															Main.player[num20].velocity.X = x2;
-															Main.player[num20].velocity.Y = y;
-															Main.player[num20].oldVelocity = Main.player[num20].velocity;
-															Main.player[num20].fallStart = (int)(num22 / 16f);
-															Main.player[num20].controlUp = false;
-															Main.player[num20].controlDown = false;
-															Main.player[num20].controlLeft = false;
-															Main.player[num20].controlRight = false;
-															Main.player[num20].controlJump = false;
-															Main.player[num20].controlUseItem = false;
-															Main.player[num20].direction = -1;
-															if ((num21 & 1) == 1)
-															{
-																Main.player[num20].controlUp = true;
-															}
-															if ((num21 & 2) == 2)
-															{
-																Main.player[num20].controlDown = true;
-															}
-															if ((num21 & 4) == 4)
-															{
-																Main.player[num20].controlLeft = true;
-															}
-															if ((num21 & 8) == 8)
-															{
-																Main.player[num20].controlRight = true;
-															}
-															if ((num21 & 16) == 16)
-															{
-																Main.player[num20].controlJump = true;
-															}
-															if ((num21 & 32) == 32)
-															{
-																Main.player[num20].controlUseItem = true;
-															}
-															if ((num21 & 64) == 64)
-															{
-																Main.player[num20].direction = 1;
-															}
-															if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state == 10)
-															{
-																NetMessage.SendData(13, -1, this.whoAmI, "", num20, 0f, 0f, 0f);
-																return;
-															}
-														}
-														else
-														{
-															if (b == 14)
-															{
-																if (Main.netMode == 1)
-																{
-																	int num23 = (int)this.readBuffer[num];
-																	num++;
-																	int num24 = (int)this.readBuffer[num];
-																	if (num24 == 1)
-																	{
-																		if (Main.player[num23].active)
-																		{
-																			Main.player[num23] = new Player();
-																		}
-																		Main.player[num23].active = true;
-																		return;
-																	}
-																	Main.player[num23].active = false;
-																	return;
-																}
-															}
+                                                        if (b == 13)
+                                                        {
+                                                            int num21 = (int)this.readBuffer[num];
+                                                            if (num21 == Main.myPlayer)
+                                                            {
+                                                                return;
+                                                            }
+                                                            if (Main.netMode == 1 && !Main.player[num21].active)
+                                                            {
+                                                                NetMessage.SendData(15, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                                                            }
+                                                            if (Main.netMode == 2)
+                                                            {
+                                                                num21 = this.whoAmI;
+                                                            }
+                                                            num++;
+                                                            int num22 = (int)this.readBuffer[num];
+                                                            num++;
+                                                            int selectedItem = (int)this.readBuffer[num];
+                                                            num++;
+                                                            float x = BitConverter.ToSingle(this.readBuffer, num);
+                                                            num += 4;
+                                                            float num23 = BitConverter.ToSingle(this.readBuffer, num);
+                                                            num += 4;
+                                                            float x2 = BitConverter.ToSingle(this.readBuffer, num);
+                                                            num += 4;
+                                                            float y = BitConverter.ToSingle(this.readBuffer, num);
+                                                            num += 4;
+                                                            Main.player[num21].selectedItem = selectedItem;
+                                                            Main.player[num21].position.X = x;
+                                                            Main.player[num21].position.Y = num23;
+                                                            Main.player[num21].velocity.X = x2;
+                                                            Main.player[num21].velocity.Y = y;
+                                                            Main.player[num21].oldVelocity = Main.player[num21].velocity;
+                                                            Main.player[num21].fallStart = (int)(num23 / 16f);
+                                                            Main.player[num21].controlUp = false;
+                                                            Main.player[num21].controlDown = false;
+                                                            Main.player[num21].controlLeft = false;
+                                                            Main.player[num21].controlRight = false;
+                                                            Main.player[num21].controlJump = false;
+                                                            Main.player[num21].controlUseItem = false;
+                                                            Main.player[num21].direction = -1;
+                                                            if ((num22 & 1) == 1)
+                                                            {
+                                                                Main.player[num21].controlUp = true;
+                                                            }
+                                                            if ((num22 & 2) == 2)
+                                                            {
+                                                                Main.player[num21].controlDown = true;
+                                                            }
+                                                            if ((num22 & 4) == 4)
+                                                            {
+                                                                Main.player[num21].controlLeft = true;
+                                                            }
+                                                            if ((num22 & 8) == 8)
+                                                            {
+                                                                Main.player[num21].controlRight = true;
+                                                            }
+                                                            if ((num22 & 16) == 16)
+                                                            {
+                                                                Main.player[num21].controlJump = true;
+                                                            }
+                                                            if ((num22 & 32) == 32)
+                                                            {
+                                                                Main.player[num21].controlUseItem = true;
+                                                            }
+                                                            if ((num22 & 64) == 64)
+                                                            {
+                                                                Main.player[num21].direction = 1;
+                                                            }
+                                                            if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state == 10)
+                                                            {
+                                                                NetMessage.SendData(13, -1, this.whoAmI, "", num21, 0f, 0f, 0f, 0);
+                                                                return;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            if (b == 14)
+                                                            {
+                                                                if (Main.netMode == 1)
+                                                                {
+                                                                    int num24 = (int)this.readBuffer[num];
+                                                                    num++;
+                                                                    int num25 = (int)this.readBuffer[num];
+                                                                    if (num25 == 1)
+                                                                    {
+                                                                        if (!Main.player[num24].active)
+                                                                        {
+                                                                            Main.player[num24] = new Player();
+                                                                        }
+                                                                        Main.player[num24].active = true;
+                                                                        return;
+                                                                    }
+                                                                    Main.player[num24].active = false;
+                                                                    return;
+                                                                }
+                                                            }
 															else
 															{
 																if (b == 15)
@@ -682,445 +743,476 @@ namespace Terraria_Server
 																{
 																	if (b == 16)
 																	{
-																		int num25 = (int)this.readBuffer[num];
-																		num++;
-																		int statLife = (int)BitConverter.ToInt16(this.readBuffer, num);
-																		num += 2;
-																		int statLifeMax = (int)BitConverter.ToInt16(this.readBuffer, num);
-																		if (Main.netMode == 2)
-																		{
-																			num25 = this.whoAmI;
-																		}
-																		Main.player[num25].statLife = statLife;
-																		Main.player[num25].statLifeMax = statLifeMax;
-																		if (Main.player[num25].statLife <= 0)
-																		{
-																			Main.player[num25].dead = true;
-																		}
-																		if (Main.netMode == 2)
-																		{
-																			NetMessage.SendData(16, -1, this.whoAmI, "", num25, 0f, 0f, 0f);
-																			return;
-																		}
+                                                                        int num26 = (int)this.readBuffer[num];
+                                                                        num++;
+                                                                        if (num26 == Main.myPlayer)
+                                                                        {
+                                                                            return;
+                                                                        }
+                                                                        int statLife = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                        num += 2;
+                                                                        int statLifeMax = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                        if (Main.netMode == 2)
+                                                                        {
+                                                                            num26 = this.whoAmI;
+                                                                        }
+                                                                        Main.player[num26].statLife = statLife;
+                                                                        Main.player[num26].statLifeMax = statLifeMax;
+                                                                        if (Main.player[num26].statLife <= 0)
+                                                                        {
+                                                                            Main.player[num26].dead = true;
+                                                                        }
+                                                                        if (Main.netMode == 2)
+                                                                        {
+                                                                            NetMessage.SendData(16, -1, this.whoAmI, "", num26, 0f, 0f, 0f, 0);
+                                                                            return;
+                                                                        }
 																	}
 																	else
 																	{
 																		if (b == 17)
 																		{
-																			byte b4 = this.readBuffer[num];
-																			num++;
-																			int num26 = BitConverter.ToInt32(this.readBuffer, num);
-																			num += 4;
-																			int num27 = BitConverter.ToInt32(this.readBuffer, num);
-																			num += 4;
-																			byte b5 = this.readBuffer[num];
-																			bool fail = false;
-																			if (b5 == 1)
-																			{
-																				fail = true;
-																			}
+                                                                            byte b5 = this.readBuffer[num];
+                                                                            num++;
+                                                                            int num27 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                            num += 4;
+                                                                            int num28 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                            num += 4;
+                                                                            byte b6 = this.readBuffer[num];
+                                                                            num++;
+                                                                            int style = (int)this.readBuffer[num];
+                                                                            bool flag4 = false;
+                                                                            if (b6 == 1)
+                                                                            {
+                                                                                flag4 = true;
+                                                                            }
+
                                                                             Tile tile = new Tile();
 
-
-                                                                            if (Main.tile[num26, num27] != null)
+                                                                            if (Main.tile[num27, num28] != null)
                                                                             {
-                                                                                tile = WorldGen.cloneTile(Main.tile[num26, num27]);
+                                                                                tile = WorldGen.cloneTile(Main.tile[num27, num28]);
                                                                             }
-                                                                            if (Main.tile[num26, num27] == null)
+                                                                            if (Main.tile[num27, num28] == null)
                                                                             {
-                                                                                Main.tile[num26, num27] = new Tile();
+                                                                                Main.tile[num27, num28] = new Tile();
                                                                             }
-																			if (Main.netMode == 2 && !Netplay.serverSock[this.whoAmI].tileSection[Netplay.GetSectionX(num26), Netplay.GetSectionY(num27)])
-																			{
-																				fail = true;
-																			}
 
-                                                                            tile.tileX = num26;
-                                                                            tile.tileY = num27;
+                                                                            tile.tileX = num27;
+                                                                            tile.tileY = num28;
 
-                                                                            TileBreakEvent Event = new TileBreakEvent(); 
+                                                                            TileBreakEvent Event = new TileBreakEvent();
                                                                             Event.setSender(Main.player[this.whoAmI]);
                                                                             Event.setTile(tile);
-                                                                            Event.setTileType(b5);
-                                                                            Event.setTilePos(new Vector2(num26, num27));
+                                                                            Event.setTileType(b6);
+                                                                            Event.setTilePos(new Vector2(num27, num28));
                                                                             Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, Event);
                                                                             if (Event.getCancelled())
                                                                             {
-                                                                                NetMessage.SendTileSquare(this.whoAmI, num26, num27, 1);
+                                                                                NetMessage.SendTileSquare(this.whoAmI, num27, num28, 1);
                                                                                 return;
                                                                             }
 
-																			if (b4 == 0)
-																			{
-																				WorldGen.KillTile(num26, num27, fail, false, false);
-																			}
-																			else
-																			{
-																				if (b4 == 1)
-																				{
-																					WorldGen.PlaceTile(num26, num27, (int)b5, false, true, -1);
-																				}
-																				else
-																				{
-																					if (b4 == 2)
-																					{
-																						WorldGen.KillWall(num26, num27, fail);
-																					}
-																					else
-																					{
-																						if (b4 == 3)
-																						{
-																							WorldGen.PlaceWall(num26, num27, (int)b5, false);
-																						}
-																						else
-																						{
-																							if (b4 == 4)
-																							{
-																								WorldGen.KillTile(num26, num27, fail, false, true);
-																							}
-																						}
-																					}
-																				}
-																			}
-																			if (Main.netMode == 2)
-																			{
-																				NetMessage.SendData(17, -1, this.whoAmI, "", (int)b4, (float)num26, (float)num27, (float)b5);
-																				if (b4 == 1 && b5 == 53)
-																				{
-																					NetMessage.SendTileSquare(-1, num26, num27, 1);
-																					return;
-																				}
-																			}
+                                                                            if (Main.netMode == 2)
+                                                                            {
+                                                                                if (!flag4)
+                                                                                {
+                                                                                    if (b5 == 0 || b5 == 2 || b5 == 4)
+                                                                                    {
+                                                                                        Netplay.serverSock[this.whoAmI].spamDelBlock += 1f;
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        if (b5 == 1 || b5 == 3)
+                                                                                        {
+                                                                                            Netplay.serverSock[this.whoAmI].spamAddBlock += 1f;
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                                if (!Netplay.serverSock[this.whoAmI].tileSection[Netplay.GetSectionX(num27), Netplay.GetSectionY(num28)])
+                                                                                {
+                                                                                    flag4 = true;
+                                                                                }
+                                                                            }
+                                                                            if (b5 == 0)
+                                                                            {
+                                                                                WorldGen.KillTile(num27, num28, flag4, false, false);
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                if (b5 == 1)
+                                                                                {
+                                                                                    WorldGen.PlaceTile(num27, num28, (int)b6, false, true, -1, style);
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (b5 == 2)
+                                                                                    {
+                                                                                        WorldGen.KillWall(num27, num28, flag4);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        if (b5 == 3)
+                                                                                        {
+                                                                                            WorldGen.PlaceWall(num27, num28, (int)b6, false);
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            if (b5 == 4)
+                                                                                            {
+                                                                                                WorldGen.KillTile(num27, num28, flag4, false, true);
+                                                                                            }
+                                                                                        }
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            if (Main.netMode == 2)
+                                                                            {
+                                                                                NetMessage.SendData(17, -1, this.whoAmI, "", (int)b5, (float)num27, (float)num28, (float)b6, 0);
+                                                                                if (b5 == 1 && b6 == 53)
+                                                                                {
+                                                                                    NetMessage.SendTileSquare(-1, num27, num28, 1);
+                                                                                    return;
+                                                                                }
+                                                                            }
 																		}
 																		else
 																		{
 																			if (b == 18)
 																			{
-																				if (Main.netMode == 1)
-																				{
-																					byte b6 = this.readBuffer[num];
-																					num++;
-																					int num28 = BitConverter.ToInt32(this.readBuffer, num);
-																					num += 4;
-																					short sunModY = BitConverter.ToInt16(this.readBuffer, num);
-																					num += 2;
-																					short moonModY = BitConverter.ToInt16(this.readBuffer, num);
-																					num += 2;
-																					if (b6 == 1)
-																					{
-																						Main.dayTime = true;
-																					}
-																					else
-																					{
-																						Main.dayTime = false;
-																					}
-																					Main.time = (double)num28;
-																					Main.sunModY = sunModY;
-																					Main.moonModY = moonModY;
-																					if (Main.netMode == 2)
-																					{
-																						NetMessage.SendData(18, -1, this.whoAmI, "", 0, 0f, 0f, 0f);
-																						return;
-																					}
-																				}
+                                                                                //if (Main.netMode == 1)
+                                                                                //{
+                                                                                //    byte b7 = this.readBuffer[num];
+                                                                                //    num++;
+                                                                                //    int num29 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                //    num += 4;
+                                                                                //    short sunModY = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                //    num += 2;
+                                                                                //    short moonModY = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                //    num += 2;
+                                                                                //    if (b7 == 1)
+                                                                                //    {
+                                                                                //        Main.dayTime = true;
+                                                                                //    }
+                                                                                //    else
+                                                                                //    {
+                                                                                //        Main.dayTime = false;
+                                                                                //    }
+                                                                                //    Main.time = (double)num29;
+                                                                                //    Main.sunModY = sunModY;
+                                                                                //    Main.moonModY = moonModY;
+                                                                                //    if (Main.netMode == 2)
+                                                                                //    {
+                                                                                //        NetMessage.SendData(18, -1, this.whoAmI, "", 0, 0f, 0f, 0f, 0);
+                                                                                //        return;
+                                                                                //    }
+                                                                                //}
 																			}
 																			else
 																			{
-																				if (b == 19)
-																				{
-																					byte b7 = this.readBuffer[num];
-																					num++;
-																					int num29 = BitConverter.ToInt32(this.readBuffer, num);
-																					num += 4;
-																					int num30 = BitConverter.ToInt32(this.readBuffer, num);
-																					num += 4;
-																					int num31 = (int)this.readBuffer[num];
-																					int direction = 0;
-																					if (num31 == 0)
-																					{
-																						direction = -1;
-																					}
-																					if (b7 == 0)
-																					{
-																						WorldGen.OpenDoor(num29, num30, direction);
-																					}
+                                                                                if (b == 19)
+                                                                                {
+                                                                                    byte b8 = this.readBuffer[num];
+                                                                                    num++;
+                                                                                    int num30 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                    num += 4;
+                                                                                    int num31 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                    num += 4;
+                                                                                    int num32 = (int)this.readBuffer[num];
+                                                                                    int direction = 0;
+                                                                                    if (num32 == 0)
+                                                                                    {
+                                                                                        direction = -1;
+                                                                                    }
+                                                                                    if (b8 == 0)
+                                                                                    {
+                                                                                        WorldGen.OpenDoor(num30, num31, direction);
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        if (b8 == 1)
+                                                                                        {
+                                                                                            WorldGen.CloseDoor(num30, num31, true);
+                                                                                        }
+                                                                                    }
+                                                                                    if (Main.netMode == 2)
+                                                                                    {
+                                                                                        NetMessage.SendData(19, -1, this.whoAmI, "", (int)b8, (float)num30, (float)num31, (float)num32, 0);
+                                                                                        return;
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    if (b == 20)
+                                                                                    {
+                                                                                        short num33 = BitConverter.ToInt16(this.readBuffer, start + 1);
+                                                                                        int num34 = BitConverter.ToInt32(this.readBuffer, start + 3);
+                                                                                        int num35 = BitConverter.ToInt32(this.readBuffer, start + 7);
+                                                                                        num = start + 11;
+                                                                                        for (int num36 = num34; num36 < num34 + (int)num33; num36++)
+                                                                                        {
+                                                                                            for (int num37 = num35; num37 < num35 + (int)num33; num37++)
+                                                                                            {
+                                                                                                if (Main.tile[num36, num37] == null)
+                                                                                                {
+                                                                                                    Main.tile[num36, num37] = new Tile();
+                                                                                                }
+                                                                                                byte b9 = this.readBuffer[num];
+                                                                                                num++;
+                                                                                                bool active2 = Main.tile[num36, num37].active;
+                                                                                                if ((b9 & 1) == 1)
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].active = true;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].active = false;
+                                                                                                }
+                                                                                                if ((b9 & 2) == 2)
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].lighted = true;
+                                                                                                }
+                                                                                                if ((b9 & 4) == 4)
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].wall = 1;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].wall = 0;
+                                                                                                }
+                                                                                                if ((b9 & 8) == 8)
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].liquid = 1;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].liquid = 0;
+                                                                                                }
+                                                                                                if (Main.tile[num36, num37].active)
+                                                                                                {
+                                                                                                    int type2 = (int)Main.tile[num36, num37].type;
+                                                                                                    Main.tile[num36, num37].type = this.readBuffer[num];
+                                                                                                    num++;
+                                                                                                    if (Main.tileFrameImportant[(int)Main.tile[num36, num37].type])
+                                                                                                    {
+                                                                                                        Main.tile[num36, num37].frameX = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                        num += 2;
+                                                                                                        Main.tile[num36, num37].frameY = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                        num += 2;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        if (!active2 || (int)Main.tile[num36, num37].type != type2)
+                                                                                                        {
+                                                                                                            Main.tile[num36, num37].frameX = -1;
+                                                                                                            Main.tile[num36, num37].frameY = -1;
+                                                                                                        }
+                                                                                                    }
+                                                                                                }
+                                                                                                if (Main.tile[num36, num37].wall > 0)
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].wall = this.readBuffer[num];
+                                                                                                    num++;
+                                                                                                }
+                                                                                                if (Main.tile[num36, num37].liquid > 0)
+                                                                                                {
+                                                                                                    Main.tile[num36, num37].liquid = this.readBuffer[num];
+                                                                                                    num++;
+                                                                                                    byte b10 = this.readBuffer[num];
+                                                                                                    num++;
+                                                                                                    if (b10 == 1)
+                                                                                                    {
+                                                                                                        Main.tile[num36, num37].lava = true;
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        Main.tile[num36, num37].lava = false;
+                                                                                                    }
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        WorldGen.RangeFrame(num34, num35, num34 + (int)num33, num35 + (int)num33);
+                                                                                        if (Main.netMode == 2)
+                                                                                        {
+                                                                                            NetMessage.SendData((int)b, -1, this.whoAmI, "", (int)num33, (float)num34, (float)num35, 0f, 0);
+                                                                                            return;
+                                                                                        }
+                                                                                    }
 																					else
 																					{
-																						if (b7 == 1)
-																						{
-																							WorldGen.CloseDoor(num29, num30, true);
-																						}
-																					}
-																					if (Main.netMode == 2)
-																					{
-																						NetMessage.SendData(19, -1, this.whoAmI, "", (int)b7, (float)num29, (float)num30, (float)num31);
-																						return;
-																					}
-																				}
-																				else
-																				{
-																					if (b == 20)
-																					{
-																						short num32 = BitConverter.ToInt16(this.readBuffer, start + 1);
-																						int num33 = BitConverter.ToInt32(this.readBuffer, start + 3);
-																						int num34 = BitConverter.ToInt32(this.readBuffer, start + 7);
-																						num = start + 11;
-																						for (int num35 = num33; num35 < num33 + (int)num32; num35++)
-																						{
-																							for (int num36 = num34; num36 < num34 + (int)num32; num36++)
-																							{
-																								if (Main.tile[num35, num36] == null)
-																								{
-																									Main.tile[num35, num36] = new Tile();
-																								}
-																								byte b8 = this.readBuffer[num];
-																								num++;
-																								bool active2 = Main.tile[num35, num36].active;
-																								if ((b8 & 1) == 1)
-																								{
-																									Main.tile[num35, num36].active = true;
-																								}
-																								else
-																								{
-																									Main.tile[num35, num36].active = false;
-																								}
-																								if ((b8 & 2) == 2)
-																								{
-																									Main.tile[num35, num36].lighted = true;
-																								}
-																								if ((b8 & 4) == 4)
-																								{
-																									Main.tile[num35, num36].wall = 1;
-																								}
-																								else
-																								{
-																									Main.tile[num35, num36].wall = 0;
-																								}
-																								if ((b8 & 8) == 8)
-																								{
-																									Main.tile[num35, num36].liquid = 1;
-																								}
-																								else
-																								{
-																									Main.tile[num35, num36].liquid = 0;
-																								}
-																								if (Main.tile[num35, num36].active)
-																								{
-																									int type2 = (int)Main.tile[num35, num36].type;
-																									Main.tile[num35, num36].type = this.readBuffer[num];
-																									num++;
-																									if (Main.tileFrameImportant[(int)Main.tile[num35, num36].type])
-																									{
-																										Main.tile[num35, num36].frameX = BitConverter.ToInt16(this.readBuffer, num);
-																										num += 2;
-																										Main.tile[num35, num36].frameY = BitConverter.ToInt16(this.readBuffer, num);
-																										num += 2;
-																									}
-																									else
-																									{
-																										if (!active2 || (int)Main.tile[num35, num36].type != type2)
-																										{
-																											Main.tile[num35, num36].frameX = -1;
-																											Main.tile[num35, num36].frameY = -1;
-																										}
-																									}
-																								}
-																								if (Main.tile[num35, num36].wall > 0)
-																								{
-																									Main.tile[num35, num36].wall = this.readBuffer[num];
-																									num++;
-																								}
-																								if (Main.tile[num35, num36].liquid > 0)
-																								{
-																									Main.tile[num35, num36].liquid = this.readBuffer[num];
-																									num++;
-																									byte b9 = this.readBuffer[num];
-																									num++;
-																									if (b9 == 1)
-																									{
-																										Main.tile[num35, num36].lava = true;
-																									}
-																									else
-																									{
-																										Main.tile[num35, num36].lava = false;
-																									}
-																								}
-																							}
-																						}
-																						WorldGen.RangeFrame(num33, num34, num33 + (int)num32, num34 + (int)num32);
-																						if (Main.netMode == 2)
-																						{
-																							NetMessage.SendData((int)b, -1, this.whoAmI, "", (int)num32, (float)num33, (float)num34, 0f);
-																							return;
-																						}
-																					}
-																					else
-																					{
-																						if (b == 21)
-																						{
-																							short num37 = BitConverter.ToInt16(this.readBuffer, num);
-																							num += 2;
-																							float num38 = BitConverter.ToSingle(this.readBuffer, num);
-																							num += 4;
-																							float num39 = BitConverter.ToSingle(this.readBuffer, num);
-																							num += 4;
-																							float x3 = BitConverter.ToSingle(this.readBuffer, num);
-																							num += 4;
-																							float y2 = BitConverter.ToSingle(this.readBuffer, num);
-																							num += 4;
-																							byte stack2 = this.readBuffer[num];
-																							num++;
-																							string string5 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-																							if (Main.netMode == 1)
-																							{
-																								if (string5 == "0")
-																								{
-																									Main.item[(int)num37].active = false;
-																									return;
-																								}
-																								Main.item[(int)num37].SetDefaults(string5);
-																								Main.item[(int)num37].stack = (int)stack2;
-																								Main.item[(int)num37].position.X = num38;
-																								Main.item[(int)num37].position.Y = num39;
-																								Main.item[(int)num37].velocity.X = x3;
-																								Main.item[(int)num37].velocity.Y = y2;
-																								Main.item[(int)num37].active = true;
-																								Main.item[(int)num37].wet = Collision.WetCollision(Main.item[(int)num37].position, Main.item[(int)num37].width, Main.item[(int)num37].height);
-																								return;
-																							}
-																							else
-																							{
-																								if (string5 == "0")
-																								{
-																									if (num37 < 200)
-																									{
-																										Main.item[(int)num37].active = false;
-																										NetMessage.SendData(21, -1, -1, "", (int)num37, 0f, 0f, 0f);
-																										return;
-																									}
-																								}
-																								else
-																								{
-																									bool flag3 = false;
-																									if (num37 == 200)
-																									{
-																										flag3 = true;
-																									}
-																									if (flag3)
-																									{
-																										Item item = new Item();
-																										item.SetDefaults(string5);
-																										num37 = (short)Item.NewItem((int)num38, (int)num39, item.width, item.height, item.type, (int)stack2, true);
-																									}
-																									Main.item[(int)num37].SetDefaults(string5);
-																									Main.item[(int)num37].stack = (int)stack2;
-																									Main.item[(int)num37].position.X = num38;
-																									Main.item[(int)num37].position.Y = num39;
-																									Main.item[(int)num37].velocity.X = x3;
-																									Main.item[(int)num37].velocity.Y = y2;
-																									Main.item[(int)num37].active = true;
-																									Main.item[(int)num37].owner = Main.myPlayer;
-																									if (flag3)
-																									{
-																										NetMessage.SendData(21, -1, -1, "", (int)num37, 0f, 0f, 0f);
-																										Main.item[(int)num37].ownIgnore = this.whoAmI;
-																										Main.item[(int)num37].ownTime = 100;
-																										Main.item[(int)num37].FindOwner((int)num37);
-																										return;
-																									}
-																									NetMessage.SendData(21, -1, this.whoAmI, "", (int)num37, 0f, 0f, 0f);
-																									return;
-																								}
-																							}
-																						}
-																						else
-																						{
-																							if (b == 22)
-																							{
-																								short num40 = BitConverter.ToInt16(this.readBuffer, num);
-																								num += 2;
-																								byte b10 = this.readBuffer[num];
-																								Main.item[(int)num40].owner = (int)b10;
-																								if ((int)b10 == Main.myPlayer)
-																								{
-																									Main.item[(int)num40].keepTime = 15;
-																								}
-																								else
-																								{
-																									Main.item[(int)num40].keepTime = 0;
-																								}
-																								if (Main.netMode == 2)
-																								{
-																									Main.item[(int)num40].owner = 255;
-																									Main.item[(int)num40].keepTime = 15;
-																									NetMessage.SendData(22, -1, -1, "", (int)num40, 0f, 0f, 0f);
-																									return;
-																								}
-																							}
-																							else
-																							{
-																								if (b == 23)
-																								{
-																									short num41 = BitConverter.ToInt16(this.readBuffer, num);
-																									num += 2;
-																									float x4 = BitConverter.ToSingle(this.readBuffer, num);
-																									num += 4;
-																									float y3 = BitConverter.ToSingle(this.readBuffer, num);
-																									num += 4;
-																									float x5 = BitConverter.ToSingle(this.readBuffer, num);
-																									num += 4;
-																									float y4 = BitConverter.ToSingle(this.readBuffer, num);
-																									num += 4;
-																									int target = BitConverter.ToInt32(this.readBuffer, num);
-																									num += 2;
-																									int direction2 = (int)(this.readBuffer[num] - 1);
-																									num++;
-																									byte arg_212E_0 = this.readBuffer[num];
-																									num++;
-																									int num42 = BitConverter.ToInt32(this.readBuffer, num);
-																									num += 2;
-																									float[] array = new float[NPC.maxAI];
-																									for (int num43 = 0; num43 < NPC.maxAI; num43++)
-																									{
-																										array[num43] = BitConverter.ToSingle(this.readBuffer, num);
-																										num += 4;
-																									}
-																									string string6 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-																									if (!Main.npc[(int)num41].active || Main.npc[(int)num41].name != string6)
-																									{
-																										Main.npc[(int)num41].active = true;
-																										Main.npc[(int)num41].SetDefaults(string6);
-																									}
-																									Main.npc[(int)num41].position.X = x4;
-																									Main.npc[(int)num41].position.Y = y3;
-																									Main.npc[(int)num41].velocity.X = x5;
-																									Main.npc[(int)num41].velocity.Y = y4;
-																									Main.npc[(int)num41].target = target;
-																									Main.npc[(int)num41].direction = direction2;
-																									Main.npc[(int)num41].life = num42;
-																									if (num42 <= 0)
-																									{
-																										Main.npc[(int)num41].active = false;
-																									}
-																									for (int num44 = 0; num44 < NPC.maxAI; num44++)
-																									{
-																										Main.npc[(int)num41].ai[num44] = array[num44];
-																									}
-																									return;
-																								}
-																								if (b == 24)
-																								{
-																									short num45 = BitConverter.ToInt16(this.readBuffer, num);
-																									num += 2;
-																									byte b11 = this.readBuffer[num];
-																									Main.npc[(int)num45].StrikeNPC(Main.player[(int)b11].inventory[Main.player[(int)b11].selectedItem].damage, Main.player[(int)b11].inventory[Main.player[(int)b11].selectedItem].knockBack, Main.player[(int)b11].direction);
-																									if (Main.netMode == 2)
-																									{
-																										NetMessage.SendData(24, -1, this.whoAmI, "", (int)num45, (float)b11, 0f, 0f);
-																										NetMessage.SendData(23, -1, -1, "", (int)num45, 0f, 0f, 0f);
-																										return;
-																									}
-																								}
+                                                                                        if (b == 21)
+                                                                                        {
+                                                                                            short num38 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                            num += 2;
+                                                                                            float num39 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                            num += 4;
+                                                                                            float num40 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                            num += 4;
+                                                                                            float x3 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                            num += 4;
+                                                                                            float y2 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                            num += 4;
+                                                                                            byte stack2 = this.readBuffer[num];
+                                                                                            num++;
+                                                                                            string string4 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                            if (Main.netMode == 1)
+                                                                                            {
+                                                                                                if (string4 == "0")
+                                                                                                {
+                                                                                                    Main.item[(int)num38].active = false;
+                                                                                                    return;
+                                                                                                }
+                                                                                                Main.item[(int)num38].SetDefaults(string4);
+                                                                                                Main.item[(int)num38].stack = (int)stack2;
+                                                                                                Main.item[(int)num38].position.X = num39;
+                                                                                                Main.item[(int)num38].position.Y = num40;
+                                                                                                Main.item[(int)num38].velocity.X = x3;
+                                                                                                Main.item[(int)num38].velocity.Y = y2;
+                                                                                                Main.item[(int)num38].active = true;
+                                                                                                Main.item[(int)num38].wet = Collision.WetCollision(Main.item[(int)num38].position, Main.item[(int)num38].width, Main.item[(int)num38].height);
+                                                                                                return;
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                if (string4 == "0")
+                                                                                                {
+                                                                                                    if (num38 < 200)
+                                                                                                    {
+                                                                                                        Main.item[(int)num38].active = false;
+                                                                                                        NetMessage.SendData(21, -1, -1, "", (int)num38, 0f, 0f, 0f, 0);
+                                                                                                        return;
+                                                                                                    }
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    bool flag5 = false;
+                                                                                                    if (num38 == 200)
+                                                                                                    {
+                                                                                                        flag5 = true;
+                                                                                                    }
+                                                                                                    if (flag5)
+                                                                                                    {
+                                                                                                        Item item = new Item();
+                                                                                                        item.SetDefaults(string4);
+                                                                                                        num38 = (short)Item.NewItem((int)num39, (int)num40, item.width, item.height, item.type, (int)stack2, true);
+                                                                                                    }
+                                                                                                    Main.item[(int)num38].SetDefaults(string4);
+                                                                                                    Main.item[(int)num38].stack = (int)stack2;
+                                                                                                    Main.item[(int)num38].position.X = num39;
+                                                                                                    Main.item[(int)num38].position.Y = num40;
+                                                                                                    Main.item[(int)num38].velocity.X = x3;
+                                                                                                    Main.item[(int)num38].velocity.Y = y2;
+                                                                                                    Main.item[(int)num38].active = true;
+                                                                                                    Main.item[(int)num38].owner = Main.myPlayer;
+                                                                                                    if (flag5)
+                                                                                                    {
+                                                                                                        NetMessage.SendData(21, -1, -1, "", (int)num38, 0f, 0f, 0f, 0);
+                                                                                                        Main.item[(int)num38].ownIgnore = this.whoAmI;
+                                                                                                        Main.item[(int)num38].ownTime = 100;
+                                                                                                        Main.item[(int)num38].FindOwner((int)num38);
+                                                                                                        return;
+                                                                                                    }
+                                                                                                    NetMessage.SendData(21, -1, this.whoAmI, "", (int)num38, 0f, 0f, 0f, 0);
+                                                                                                    return;
+                                                                                                }
+                                                                                            }
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            if (b == 22)
+                                                                                            {
+                                                                                                short num41 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                num += 2;
+                                                                                                byte b11 = this.readBuffer[num];
+                                                                                                if (Main.netMode == 2 && Main.item[(int)num41].owner != this.whoAmI)
+                                                                                                {
+                                                                                                    return;
+                                                                                                }
+                                                                                                Main.item[(int)num41].owner = (int)b11;
+                                                                                                if ((int)b11 == Main.myPlayer)
+                                                                                                {
+                                                                                                    Main.item[(int)num41].keepTime = 15;
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    Main.item[(int)num41].keepTime = 0;
+                                                                                                }
+                                                                                                if (Main.netMode == 2)
+                                                                                                {
+                                                                                                    Main.item[(int)num41].owner = 255;
+                                                                                                    Main.item[(int)num41].keepTime = 15;
+                                                                                                    NetMessage.SendData(22, -1, -1, "", (int)num41, 0f, 0f, 0f, 0);
+                                                                                                    return;
+                                                                                                }
+                                                                                            }
+                                                                                            else
+                                                                                            {
+                                                                                                if (b == 23 && Main.netMode == 1)
+                                                                                                {
+                                                                                                    short num42 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                    num += 2;
+                                                                                                    float x4 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                                    num += 4;
+                                                                                                    float y3 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                                    num += 4;
+                                                                                                    float x5 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                                    num += 4;
+                                                                                                    float y4 = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                                    num += 4;
+                                                                                                    int target = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                    num += 2;
+                                                                                                    int direction2 = (int)(this.readBuffer[num] - 1);
+                                                                                                    num++;
+                                                                                                    byte arg_2465_0 = this.readBuffer[num];
+                                                                                                    num++;
+                                                                                                    int num43 = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                    num += 2;
+                                                                                                    float[] array = new float[NPC.maxAI];
+                                                                                                    for (int num44 = 0; num44 < NPC.maxAI; num44++)
+                                                                                                    {
+                                                                                                        array[num44] = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                                        num += 4;
+                                                                                                    }
+                                                                                                    string string5 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                    if (!Main.npc[(int)num42].active || Main.npc[(int)num42].name != string5)
+                                                                                                    {
+                                                                                                        Main.npc[(int)num42].active = true;
+                                                                                                        Main.npc[(int)num42].SetDefaults(string5);
+                                                                                                    }
+                                                                                                    Main.npc[(int)num42].position.X = x4;
+                                                                                                    Main.npc[(int)num42].position.Y = y3;
+                                                                                                    Main.npc[(int)num42].velocity.X = x5;
+                                                                                                    Main.npc[(int)num42].velocity.Y = y4;
+                                                                                                    Main.npc[(int)num42].target = target;
+                                                                                                    Main.npc[(int)num42].direction = direction2;
+                                                                                                    Main.npc[(int)num42].life = num43;
+                                                                                                    if (num43 <= 0)
+                                                                                                    {
+                                                                                                        Main.npc[(int)num42].active = false;
+                                                                                                    }
+                                                                                                    for (int num45 = 0; num45 < NPC.maxAI; num45++)
+                                                                                                    {
+                                                                                                        Main.npc[(int)num42].ai[num45] = array[num45];
+                                                                                                    }
+                                                                                                    return;
+                                                                                                }
+                                                                                                if (b == 24)
+                                                                                                {
+                                                                                                    short num46 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                    num += 2;
+                                                                                                    byte b12 = this.readBuffer[num];
+                                                                                                    if (Main.netMode == 2)
+                                                                                                    {
+                                                                                                        b12 = (byte)this.whoAmI;
+                                                                                                    }
+                                                                                                    Main.npc[(int)num46].StrikeNPC(Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].damage, Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].knockBack, Main.player[(int)b12].direction);
+                                                                                                    if (Main.netMode == 2)
+                                                                                                    {
+                                                                                                        NetMessage.SendData(24, -1, this.whoAmI, "", (int)num46, (float)b12, 0f, 0f, 0);
+                                                                                                        NetMessage.SendData(23, -1, -1, "", (int)num46, 0f, 0f, 0f, 0);
+                                                                                                        return;
+                                                                                                    }
+                                                                                                }
 																								else
 																								{
 																									if (b == 25)
@@ -1133,6 +1225,11 @@ namespace Terraria_Server
 																										byte b12 = this.readBuffer[start + 2];
 																										byte b13 = this.readBuffer[start + 3];
 																										byte b14 = this.readBuffer[start + 4];
+
+                                                                                                        b12 = 255;
+                                                                                                        b13 = 255;
+                                                                                                        b14 = 255;
+
 																										string string7 = Encoding.ASCII.GetString(this.readBuffer, start + 5, length - 5);
 																										
 																										if (Main.netMode == 2)
@@ -1182,27 +1279,33 @@ namespace Terraria_Server
 																									{
 																										if (b == ((int)Packet.STRIKE_PLAYER))
 																										{
-																											byte b15 = this.readBuffer[num];
-																											num++;
-																											int num49 = (int)(this.readBuffer[num] - 1);
-																											num++;
-																											int num50 = BitConverter.ToInt32(this.readBuffer, num);
-																											num += 2;
-																											byte b16 = this.readBuffer[num];
-																											bool pvp = false;
-																											if (b16 != 0)
-																											{
-																												pvp = true;
-																											}
-                                                                                                            Main.player[(int)b15].Hurt(num50, num49, pvp, true);
-                                                                                                            if (Main.netMode == 2)
+                                                                                                            byte b16 = this.readBuffer[num];
+                                                                                                            if (Main.netMode == 2 && this.whoAmI != (int)b16 && (!Main.player[(int)b16].hostile || !Main.player[this.whoAmI].hostile))
                                                                                                             {
-                                                                                                                NetMessage.SendData(26, -1, this.whoAmI, "", (int)b15, (float)num49, (float)num50, (float)b16);
+                                                                                                                return;
+                                                                                                            }
+                                                                                                            num++;
+                                                                                                            int num50 = (int)(this.readBuffer[num] - 1);
+                                                                                                            num++;
+                                                                                                            short num51 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                            num += 2;
+                                                                                                            byte b17 = this.readBuffer[num];
+                                                                                                            num++;
+                                                                                                            bool pvp = false;
+                                                                                                            string string7 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                            if (b17 != 0)
+                                                                                                            {
+                                                                                                                pvp = true;
+                                                                                                            }
+                                                                                                            if (Main.player[(int)b16].Hurt((int)num51, num50, pvp, true, string7) > 0.0)
+                                                                                                            {
+                                                                                                                NetMessage.SendData(26, -1, this.whoAmI, string7, (int)b16, (float)num50, (float)num51, (float)b17, 0);
+                                                                                                                return;
                                                                                                             }
 																										}
 																										else
 																										{
-																											if (b == ((int)Packet.EXPLOSION))
+                                                                                                            if (b == ((int)Packet.PROJECTILE))
 																											{
 																												short num51 = BitConverter.ToInt16(this.readBuffer, num);
 																												num += 2;
@@ -1251,6 +1354,10 @@ namespace Terraria_Server
 																												if (!Main.projectile[num53].active || Main.projectile[num53].type != (int)b18)
 																												{
 																													Main.projectile[num53].SetDefaults((int)b18);
+                                                                                                                    if (Main.netMode == 2)
+                                                                                                                    {
+                                                                                                                        Netplay.serverSock[this.whoAmI].spamProjectile += 1f;
+                                                                                                                    }
 																												}
 																												Main.projectile[num53].identity = (int)num51;
 																												Main.projectile[num53].position.X = x6;
@@ -1303,49 +1410,57 @@ namespace Terraria_Server
 																												{
 																													if (b == 29)
 																													{
-																														short num61 = BitConverter.ToInt16(this.readBuffer, num);
-																														num += 2;
-																														byte b19 = this.readBuffer[num];
-																														for (int num62 = 0; num62 < 1000; num62++)
-																														{
-																															if (Main.projectile[num62].owner == (int)b19 && Main.projectile[num62].identity == (int)num61 && Main.projectile[num62].active)
-																															{
-																																Main.projectile[num62].Kill();
-																																break;
-																															}
-																														}
-																														if (Main.netMode == 2)
-																														{
-																															NetMessage.SendData(29, -1, this.whoAmI, "", (int)num61, (float)b19, 0f, 0f);
-																															return;
-																														}
+                                                                                                                        short num62 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                        num += 2;
+                                                                                                                        byte b20 = this.readBuffer[num];
+                                                                                                                        if (Main.netMode == 2)
+                                                                                                                        {
+                                                                                                                            b20 = (byte)this.whoAmI;
+                                                                                                                        }
+                                                                                                                        for (int num63 = 0; num63 < 1000; num63++)
+                                                                                                                        {
+                                                                                                                            if (Main.projectile[num63].owner == (int)b20 && Main.projectile[num63].identity == (int)num62 && Main.projectile[num63].active)
+                                                                                                                            {
+                                                                                                                                Main.projectile[num63].Kill();
+                                                                                                                                break;
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                        if (Main.netMode == 2)
+                                                                                                                        {
+                                                                                                                            NetMessage.SendData(29, -1, this.whoAmI, "", (int)num62, (float)b20, 0f, 0f, 0);
+                                                                                                                            return;
+                                                                                                                        }
 																													}
 																													else
 																													{
 																														if (b == 30)
 																														{
-																															byte b20 = this.readBuffer[num];
-																															num++;
-																															byte b21 = this.readBuffer[num];
-																															if (b21 == 1)
-																															{
-																																Main.player[(int)b20].hostile = true;
-																															}
-																															else
-																															{
-																																Main.player[(int)b20].hostile = false;
-																															}
-																															if (Main.netMode == 2)
-																															{
-																																NetMessage.SendData(30, -1, this.whoAmI, "", (int)b20, 0f, 0f, 0f);
-																																string str = " has enabled PvP!";
-																																if (b21 == 0)
-																																{
-																																	str = " has disabled PvP!";
-																																}
-																																NetMessage.SendData(25, -1, -1, Main.player[(int)b20].name + str, 255, (float)Main.teamColor[Main.player[(int)b20].team].R, (float)Main.teamColor[Main.player[(int)b20].team].G, (float)Main.teamColor[Main.player[(int)b20].team].B);
-																																return;
-																															}
+                                                                                                                            byte b21 = this.readBuffer[num];
+                                                                                                                            if (Main.netMode == 2)
+                                                                                                                            {
+                                                                                                                                b21 = (byte)this.whoAmI;
+                                                                                                                            }
+                                                                                                                            num++;
+                                                                                                                            byte b22 = this.readBuffer[num];
+                                                                                                                            if (b22 == 1)
+                                                                                                                            {
+                                                                                                                                Main.player[(int)b21].hostile = true;
+                                                                                                                            }
+                                                                                                                            else
+                                                                                                                            {
+                                                                                                                                Main.player[(int)b21].hostile = false;
+                                                                                                                            }
+                                                                                                                            if (Main.netMode == 2)
+                                                                                                                            {
+                                                                                                                                NetMessage.SendData(30, -1, this.whoAmI, "", (int)b21, 0f, 0f, 0f, 0);
+                                                                                                                                string str = " has enabled PvP!";
+                                                                                                                                if (b22 == 0)
+                                                                                                                                {
+                                                                                                                                    str = " has disabled PvP!";
+                                                                                                                                }
+                                                                                                                                NetMessage.SendData(25, -1, -1, Main.player[(int)b21].name + str, 255, (float)Main.teamColor[Main.player[(int)b21].team].R, (float)Main.teamColor[Main.player[(int)b21].team].G, (float)Main.teamColor[Main.player[(int)b21].team].B, 0);
+                                                                                                                                return;
+                                                                                                                            }
 																														}
 																														else
 																														{
@@ -1400,7 +1515,7 @@ namespace Terraria_Server
 																																}
 																																if (b == 33)
 																																{
-																																	int num67 = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                    int num67 = BitConverter.ToInt32(this.readBuffer, num);
 																																	num += 2;
 																																	int chestX = BitConverter.ToInt32(this.readBuffer, num);
 																																	num += 4;
@@ -1410,20 +1525,20 @@ namespace Terraria_Server
 																																		if (Main.player[Main.myPlayer].chest == -1)
 																																		{
 																																			Main.playerInventory = true;
-																																			//Main.PlaySound(10, -1, -1, 1);
+																																			//////////////Main.PlaySound10, -1, -1, 1);
 																																		}
 																																		else
 																																		{
 																																			if (Main.player[Main.myPlayer].chest != num67 && num67 != -1)
 																																			{
 																																				Main.playerInventory = true;
-																																				//Main.PlaySound(12, -1, -1, 1);
+																																				//////////////Main.PlaySound12, -1, -1, 1);
 																																			}
 																																			else
 																																			{
 																																				if (Main.player[Main.myPlayer].chest != -1 && num67 == -1)
 																																				{
-																																					//Main.PlaySound(11, -1, -1, 1);
+																																					//////////////Main.PlaySound11, -1, -1, 1);
 																																				}
 																																			}
 																																		}
@@ -1439,241 +1554,274 @@ namespace Terraria_Server
 																																{
 																																	if (b == 34)
 																																	{
-																																		if (Main.netMode == 2)
-																																		{
-																																			int num68 = BitConverter.ToInt32(this.readBuffer, num);
-																																			num += 4;
-																																			int num69 = BitConverter.ToInt32(this.readBuffer, num);
-																																			WorldGen.KillTile(num68, num69, false, false, false);
-																																			if (!Main.tile[num68, num69].active)
-																																			{
-																																				NetMessage.SendData(17, -1, -1, "", 0, (float)num68, (float)num69, 0f);
-																																				return;
-																																			}
-																																		}
+                                                                                                                                        if (Main.netMode == 2)
+                                                                                                                                        {
+                                                                                                                                            int num69 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                            num += 4;
+                                                                                                                                            int num70 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                            if (Main.tile[num69, num70].type == 21)
+                                                                                                                                            {
+                                                                                                                                                WorldGen.KillTile(num69, num70, false, false, false);
+                                                                                                                                                if (!Main.tile[num69, num70].active)
+                                                                                                                                                {
+                                                                                                                                                    NetMessage.SendData(17, -1, -1, "", 0, (float)num69, (float)num70, 0f, 0);
+                                                                                                                                                    return;
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                        }
 																																	}
 																																	else
 																																	{
-																																		if (b == 35)
-																																		{
-																																			int num70 = (int)this.readBuffer[num];
-																																			num++;
-																																			int num71 = (int)BitConverter.ToInt16(this.readBuffer, num);
-																																			num += 2;
-																																			if (num70 != Main.myPlayer)
-																																			{
-																																				Main.player[num70].HealEffect(num71);
-																																			}
-																																			if (Main.netMode == 2)
-																																			{
-																																				NetMessage.SendData(35, -1, this.whoAmI, "", num70, (float)num71, 0f, 0f);
-																																				return;
-																																			}
-																																		}
-																																		else
-																																		{
-																																			if (b == 36)
-																																			{
-																																				int num72 = (int)this.readBuffer[num];
-																																				num++;
-																																				int num73 = (int)this.readBuffer[num];
-																																				num++;
-																																				int num74 = (int)this.readBuffer[num];
-																																				num++;
-																																				int num75 = (int)this.readBuffer[num];
-																																				num++;
-																																				int num76 = (int)this.readBuffer[num];
-																																				num++;
-																																				if (num73 == 0)
-																																				{
-																																					Main.player[num72].zoneEvil = false;
-																																				}
-																																				else
-																																				{
-																																					Main.player[num72].zoneEvil = true;
-																																				}
-																																				if (num74 == 0)
-																																				{
-																																					Main.player[num72].zoneMeteor = false;
-																																				}
-																																				else
-																																				{
-																																					Main.player[num72].zoneMeteor = true;
-																																				}
-																																				if (num75 == 0)
-																																				{
-																																					Main.player[num72].zoneDungeon = false;
-																																				}
-																																				else
-																																				{
-																																					Main.player[num72].zoneDungeon = true;
-																																				}
-																																				if (num76 == 0)
-																																				{
-																																					Main.player[num72].zoneJungle = false;
-																																					return;
-																																				}
-																																				Main.player[num72].zoneJungle = true;
-																																				return;
-																																			}
-																																			else
-																																			{
-																																				if (b == 37)
-																																				{
-																																					if (Main.netMode == 1)
-																																					{
-																																						if (Main.autoPass)
-																																						{
-																																							NetMessage.SendData(38, -1, -1, Netplay.password, 0, 0f, 0f, 0f);
-																																							Main.autoPass = false;
-																																							return;
-																																						}
-																																						Netplay.password = "";
-																																						Main.menuMode = 31;
-																																						return;
-																																					}
-																																				}
-																																				else
-																																				{
-																																					if (b == 38)
-																																					{
-																																						if (Main.netMode == 2)
-																																						{
-																																							/*string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-                                                                                                                                                            if (pasword == Netplay.password)
-                                                                                                                                                            {
-                                                                                                                                                                Main.player[this.whoAmI].setOp(true);
-                                                                                                                                                            }
-                                                                                                                                                            else
-                                                                                                                                                            {
-                                                                                                                                                                Main.player[this.whoAmI].setOp(false);
-                                                                                                                                                            }
-                                                                                                                                                            Netplay.serverSock[this.whoAmI].state = 1;
-                                                                                                                                                            NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
-                                                                                                                                                            return;*/
-                                                                                                                                                            string pasword = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-                                                                                                                                                            if (pasword == Netplay.password)
+                                                                                                                                        if (b == 35)
+                                                                                                                                        {
+                                                                                                                                            int num71 = (int)this.readBuffer[num];
+                                                                                                                                            if (Main.netMode == 2)
+                                                                                                                                            {
+                                                                                                                                                num71 = this.whoAmI;
+                                                                                                                                            }
+                                                                                                                                            num++;
+                                                                                                                                            int num72 = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                            num += 2;
+                                                                                                                                            if (num71 != Main.myPlayer)
+                                                                                                                                            {
+                                                                                                                                                Main.player[num71].HealEffect(num72);
+                                                                                                                                            }
+                                                                                                                                            if (Main.netMode == 2)
+                                                                                                                                            {
+                                                                                                                                                NetMessage.SendData(35, -1, this.whoAmI, "", num71, (float)num72, 0f, 0f, 0);
+                                                                                                                                                return;
+                                                                                                                                            }
+                                                                                                                                        }
+                                                                                                                                        else
+                                                                                                                                        {
+                                                                                                                                            if (b == 36)
+                                                                                                                                            {
+                                                                                                                                                int num73 = (int)this.readBuffer[num];
+                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                {
+                                                                                                                                                    num73 = this.whoAmI;
+                                                                                                                                                }
+                                                                                                                                                num++;
+                                                                                                                                                int num74 = (int)this.readBuffer[num];
+                                                                                                                                                num++;
+                                                                                                                                                int num75 = (int)this.readBuffer[num];
+                                                                                                                                                num++;
+                                                                                                                                                int num76 = (int)this.readBuffer[num];
+                                                                                                                                                num++;
+                                                                                                                                                int num77 = (int)this.readBuffer[num];
+                                                                                                                                                num++;
+                                                                                                                                                if (num74 == 0)
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneEvil = false;
+                                                                                                                                                }
+                                                                                                                                                else
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneEvil = true;
+                                                                                                                                                }
+                                                                                                                                                if (num75 == 0)
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneMeteor = false;
+                                                                                                                                                }
+                                                                                                                                                else
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneMeteor = true;
+                                                                                                                                                }
+                                                                                                                                                if (num76 == 0)
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneDungeon = false;
+                                                                                                                                                }
+                                                                                                                                                else
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneDungeon = true;
+                                                                                                                                                }
+                                                                                                                                                if (num77 == 0)
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneJungle = false;
+                                                                                                                                                }
+                                                                                                                                                else
+                                                                                                                                                {
+                                                                                                                                                    Main.player[num73].zoneJungle = true;
+                                                                                                                                                }
+                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                {
+                                                                                                                                                    NetMessage.SendData(36, -1, this.whoAmI, "", num73, 0f, 0f, 0f, 0);
+                                                                                                                                                    return;
+                                                                                                                                                }
+                                                                                                                                            }
+                                                                                                                                            else
+                                                                                                                                            {
+                                                                                                                                                if (b == 37)
+                                                                                                                                                {
+                                                                                                                                                    if (Main.netMode == 1)
+                                                                                                                                                    {
+                                                                                                                                                        if (Main.autoPass)
+                                                                                                                                                        {
+                                                                                                                                                            NetMessage.SendData(38, -1, -1, Netplay.password, 0, 0f, 0f, 0f, 0);
+                                                                                                                                                            Main.autoPass = false;
+                                                                                                                                                            return;
+                                                                                                                                                        }
+                                                                                                                                                        Netplay.password = "";
+                                                                                                                                                        Main.menuMode = 31;
+                                                                                                                                                        return;
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                                else
+                                                                                                                                                {
+                                                                                                                                                    if (b == 38)
+                                                                                                                                                    {
+                                                                                                                                                        if (Main.netMode == 2)
+                                                                                                                                                        {
+                                                                                                                                                            string string9 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                                                                            if (string9 == Netplay.password)
                                                                                                                                                             {
                                                                                                                                                                 Netplay.serverSock[this.whoAmI].state = 1;
-                                                                                                                                                                NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                                                                                                                                                                NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f, 0);
+                                                                                                                                                                return;
+                                                                                                                                                            }
+                                                                                                                                                            NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f, 0);
+                                                                                                                                                            return;
+                                                                                                                                                        }
+                                                                                                                                                    }
+                                                                                                                                                    else
+                                                                                                                                                    {
+                                                                                                                                                        if (b == 39 && Main.netMode == 1)
+                                                                                                                                                        {
+                                                                                                                                                            short num78 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                            Main.item[(int)num78].owner = 255;
+                                                                                                                                                            NetMessage.SendData(22, -1, -1, "", (int)num78, 0f, 0f, 0f, 0);
+                                                                                                                                                            return;
+                                                                                                                                                        }
+                                                                                                                                                        if (b == 40)
+                                                                                                                                                        {
+                                                                                                                                                            byte b23 = this.readBuffer[num];
+                                                                                                                                                            if (Main.netMode == 2)
+                                                                                                                                                            {
+                                                                                                                                                                b23 = (byte)this.whoAmI;
+                                                                                                                                                            }
+                                                                                                                                                            num++;
+                                                                                                                                                            int talkNPC = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                            num += 2;
+                                                                                                                                                            Main.player[(int)b23].talkNPC = talkNPC;
+                                                                                                                                                            if (Main.netMode == 2)
+                                                                                                                                                            {
+                                                                                                                                                                NetMessage.SendData(40, -1, this.whoAmI, "", (int)b23, 0f, 0f, 0f, 0);
+                                                                                                                                                                return;
+                                                                                                                                                            }
+                                                                                                                                                        }
+                                                                                                                                                        else
+                                                                                                                                                        {
+                                                                                                                                                            if (b == 41)
+                                                                                                                                                            {
+                                                                                                                                                                byte b24 = this.readBuffer[num];
+                                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                                {
+                                                                                                                                                                    b24 = (byte)this.whoAmI;
+                                                                                                                                                                }
+                                                                                                                                                                num++;
+                                                                                                                                                                float itemRotation = BitConverter.ToSingle(this.readBuffer, num);
+                                                                                                                                                                num += 4;
+                                                                                                                                                                int itemAnimation = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                                Main.player[(int)b24].itemRotation = itemRotation;
+                                                                                                                                                                Main.player[(int)b24].itemAnimation = itemAnimation;
+                                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                                {
+                                                                                                                                                                    NetMessage.SendData(41, -1, this.whoAmI, "", (int)b24, 0f, 0f, 0f, 0);
+                                                                                                                                                                    return;
+                                                                                                                                                                }
                                                                                                                                                             }
                                                                                                                                                             else
                                                                                                                                                             {
-                                                                                                                                                                NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f);
-                                                                                                                                                            }
-                                                                                                                                                            return;
-																																						}
-																																					}
-																																					else
-																																					{
-																																						if (b == 39 && Main.netMode == 1)
-																																						{
-																																							short num77 = BitConverter.ToInt16(this.readBuffer, num);
-																																							Main.item[(int)num77].owner = 255;
-																																							NetMessage.SendData(22, -1, -1, "", (int)num77, 0f, 0f, 0f);
-																																							return;
-																																						}
-																																						if (b == 40)
-																																						{
-																																							byte b22 = this.readBuffer[num];
-																																							num++;
-																																							int talkNPC = BitConverter.ToInt32(this.readBuffer, num);
-																																							num += 2;
-																																							Main.player[(int)b22].talkNPC = talkNPC;
-																																							if (Main.netMode == 2)
-																																							{
-																																								NetMessage.SendData(40, -1, this.whoAmI, "", (int)b22, 0f, 0f, 0f);
-																																								return;
-																																							}
-																																						}
-																																						else
-																																						{
-																																							if (b == 41)
-																																							{
-																																								byte b23 = this.readBuffer[num];
-																																								num++;
-																																								float itemRotation = BitConverter.ToSingle(this.readBuffer, num);
-																																								num += 4;
-																																								int itemAnimation = (int)BitConverter.ToInt16(this.readBuffer, num);
-																																								Main.player[(int)b23].itemRotation = itemRotation;
-																																								Main.player[(int)b23].itemAnimation = itemAnimation;
-																																								if (Main.netMode == 2)
-																																								{
-																																									NetMessage.SendData(41, -1, this.whoAmI, "", (int)b23, 0f, 0f, 0f);
-																																									return;
-																																								}
-																																							}
-																																							else
-																																							{
-																																								if (b == 42)
-																																								{
-																																									int num78 = (int)this.readBuffer[num];
-																																									num++;
-																																									int statMana = (int)BitConverter.ToInt16(this.readBuffer, num);
-																																									num += 2;
-																																									int statManaMax = (int)BitConverter.ToInt16(this.readBuffer, num);
-																																									if (Main.netMode == 2)
-																																									{
-																																										num78 = this.whoAmI;
-																																									}
-																																									Main.player[num78].statMana = statMana;
-																																									Main.player[num78].statManaMax = statManaMax;
-																																									if (Main.netMode == 2)
-																																									{
-																																										NetMessage.SendData(42, -1, this.whoAmI, "", num78, 0f, 0f, 0f);
-																																										return;
-																																									}
-																																								}
-																																								else
-																																								{
-																																									if (b == 43)
-																																									{
-																																										int num79 = (int)this.readBuffer[num];
-																																										num++;
-																																										int num80 = (int)BitConverter.ToInt16(this.readBuffer, num);
-																																										num += 2;
-																																										if (num79 != Main.myPlayer)
-																																										{
-																																											Main.player[num79].ManaEffect(num80);
-																																										}
-																																										if (Main.netMode == 2)
-																																										{
-																																											NetMessage.SendData(43, -1, this.whoAmI, "", num79, (float)num80, 0f, 0f);
-																																											return;
-																																										}
-																																									}
-																																									else
-																																									{
-																																										if (b == 44)
-																																										{
-																																											byte b24 = this.readBuffer[num];
-																																											num++;
-																																											int num81 = (int)(this.readBuffer[num] - 1);
-																																											num++;
-																																											short num82 = BitConverter.ToInt16(this.readBuffer, num);
-																																											num += 2;
-																																											byte b25 = this.readBuffer[num];
-																																											bool pvp2 = false;
-																																											if (b25 != 0)
-																																											{
-																																												pvp2 = true;
-																																											}
-																																											Main.player[(int)b24].KillMe((double)num82, num81, pvp2);
-																																											if (Main.netMode == 2)
-																																											{
-																																												NetMessage.SendData(44, -1, this.whoAmI, "", (int)b24, (float)num81, (float)num82, (float)b25);
-																																												return;
-																																											}
-																																										}
-																																										else
-																																										{
-																																											if (b == 45)
+                                                                                                                                                                if (b == 42)
+                                                                                                                                                                {
+                                                                                                                                                                    int num79 = (int)this.readBuffer[num];
+                                                                                                                                                                    if (Main.netMode == 2)
+                                                                                                                                                                    {
+                                                                                                                                                                        num79 = this.whoAmI;
+                                                                                                                                                                    }
+                                                                                                                                                                    num++;
+                                                                                                                                                                    int statMana = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                                    num += 2;
+                                                                                                                                                                    int statManaMax = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                                    if (Main.netMode == 2)
+                                                                                                                                                                    {
+                                                                                                                                                                        num79 = this.whoAmI;
+                                                                                                                                                                    }
+                                                                                                                                                                    Main.player[num79].statMana = statMana;
+                                                                                                                                                                    Main.player[num79].statManaMax = statManaMax;
+                                                                                                                                                                    if (Main.netMode == 2)
+                                                                                                                                                                    {
+                                                                                                                                                                        NetMessage.SendData(42, -1, this.whoAmI, "", num79, 0f, 0f, 0f, 0);
+                                                                                                                                                                        return;
+                                                                                                                                                                    }
+                                                                                                                                                                }
+                                                                                                                                                                else
+                                                                                                                                                                {
+                                                                                                                                                                    if (b == 43)
+                                                                                                                                                                    {
+                                                                                                                                                                        int num80 = (int)this.readBuffer[num];
+                                                                                                                                                                        if (Main.netMode == 2)
+                                                                                                                                                                        {
+                                                                                                                                                                            num80 = this.whoAmI;
+                                                                                                                                                                        }
+                                                                                                                                                                        num++;
+                                                                                                                                                                        int num81 = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                                        num += 2;
+                                                                                                                                                                        if (num80 != Main.myPlayer)
+                                                                                                                                                                        {
+                                                                                                                                                                            Main.player[num80].ManaEffect(num81);
+                                                                                                                                                                        }
+                                                                                                                                                                        if (Main.netMode == 2)
+                                                                                                                                                                        {
+                                                                                                                                                                            NetMessage.SendData(43, -1, this.whoAmI, "", num80, (float)num81, 0f, 0f, 0);
+                                                                                                                                                                            return;
+                                                                                                                                                                        }
+                                                                                                                                                                    }
+                                                                                                                                                                    else
+                                                                                                                                                                    {
+                                                                                                                                                                        if (b == 44)
+                                                                                                                                                                        {
+                                                                                                                                                                            byte b25 = this.readBuffer[num];
+                                                                                                                                                                            if ((int)b25 == Main.myPlayer)
+                                                                                                                                                                            {
+                                                                                                                                                                                return;
+                                                                                                                                                                            }
+                                                                                                                                                                            if (Main.netMode == 2)
+                                                                                                                                                                            {
+                                                                                                                                                                                b25 = (byte)this.whoAmI;
+                                                                                                                                                                            }
+                                                                                                                                                                            num++;
+                                                                                                                                                                            int num82 = (int)(this.readBuffer[num] - 1);
+                                                                                                                                                                            num++;
+                                                                                                                                                                            short num83 = BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                                            num += 2;
+                                                                                                                                                                            byte b26 = this.readBuffer[num];
+                                                                                                                                                                            num++;
+                                                                                                                                                                            string string10 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                                                                                            bool pvp2 = false;
+                                                                                                                                                                            if (b26 != 0)
+                                                                                                                                                                            {
+                                                                                                                                                                                pvp2 = true;
+                                                                                                                                                                            }
+                                                                                                                                                                            Main.player[(int)b25].KillMe((double)num83, num82, pvp2, string10);
+                                                                                                                                                                            if (Main.netMode == 2)
+                                                                                                                                                                            {
+                                                                                                                                                                                NetMessage.SendData(44, -1, this.whoAmI, string10, (int)b25, (float)num82, (float)num83, (float)b26, 0);
+                                                                                                                                                                                return;
+                                                                                                                                                                            }
+                                                                                                                                                                        }
+                                                                                                                                                                        else
+                                                                                                                                                                        {
+                                                                                                                                                                            if (b == 45)
 																																											{
 																																												int num83 = (int)this.readBuffer[num];
+                                                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                                                {
+                                                                                                                                                                                    num83 = this.whoAmI;
+                                                                                                                                                                                }
 																																												num++;
 																																												int num84 = (int)this.readBuffer[num];
-																																												num++;
-																																												int team = Main.player[num83].team;
+                                                                                                                                                                                num++;
+                                                                                                                                                                                int team = Main.player[num83].team;
 																																												if (Main.netMode == 2)
 																																												{
 																																													NetMessage.SendData(45, -1, this.whoAmI, "", num83, 0f, 0f, 0f);
@@ -1737,89 +1885,157 @@ namespace Terraria_Server
 																																											}
 																																											else
 																																											{
-																																												if (b == 46)
-																																												{
-																																													if (Main.netMode == 2)
-																																													{
-																																														int i2 = BitConverter.ToInt32(this.readBuffer, num);
-																																														num += 4;
-																																														int j2 = BitConverter.ToInt32(this.readBuffer, num);
-																																														num += 4;
-																																														int num86 = Sign.ReadSign(i2, j2);
-																																														if (num86 >= 0)
-																																														{
-																																															NetMessage.SendData(47, this.whoAmI, -1, "", num86, 0f, 0f, 0f);
-																																															return;
-																																														}
-																																													}
-																																												}
-																																												else
-																																												{
-																																													if (b == 47)
-																																													{
-																																														int num87 = (int)BitConverter.ToInt16(this.readBuffer, num);
-																																														num += 2;
-																																														int x9 = BitConverter.ToInt32(this.readBuffer, num);
-																																														num += 4;
-																																														int y8 = BitConverter.ToInt32(this.readBuffer, num);
-																																														num += 4;
-																																														string string10 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-																																														Main.sign[num87] = new Sign();
-																																														Main.sign[num87].x = x9;
-																																														Main.sign[num87].y = y8;
-																																														Sign.TextSign(num87, string10);
-																																														if (Main.netMode == 1 && Main.sign[num87] != null && num87 != Main.player[Main.myPlayer].sign)
-																																														{
-																																															Main.playerInventory = false;
-																																															Main.player[Main.myPlayer].talkNPC = -1;
-																																															Main.editSign = false;
-																																															//Main.PlaySound(10, -1, -1, 1);
-																																															Main.player[Main.myPlayer].sign = num87;
-																																															Main.npcChatText = Main.sign[num87].text;
-																																															return;
-																																														}
-																																													}
-																																													else
-																																													{
-																																														if (b == 48)
-																																														{
-																																															int num88 = BitConverter.ToInt32(this.readBuffer, num);
-																																															num += 4;
-																																															int num89 = BitConverter.ToInt32(this.readBuffer, num);
-																																															num += 4;
-																																															byte liquid = this.readBuffer[num];
-																																															num++;
-																																															byte b26 = this.readBuffer[num];
-																																															num++;
-																																															if (Main.tile[num88, num89] == null)
-																																															{
-																																																Main.tile[num88, num89] = new Tile();
-																																															}
-																																															lock (Main.tile[num88, num89])
-																																															{
-																																																Main.tile[num88, num89].liquid = liquid;
-																																																if (b26 == 1)
-																																																{
-																																																	Main.tile[num88, num89].lava = true;
-																																																}
-																																																else
-																																																{
-																																																	Main.tile[num88, num89].lava = false;
-																																																}
-																																																if (Main.netMode == 2)
-																																																{
-																																																	WorldGen.SquareTileFrame(num88, num89, true);
-																																																}
-																																																return;
-																																															}
-																																														}
-																																														if (b == 49 && Netplay.clientSock.state == 6)
-																																														{
-																																															Netplay.clientSock.state = 10;
-																																															Main.player[Main.myPlayer].Spawn();
-																																														}
-																																													}
-																																												}
+                                                                                                                                                                                if (b == 46)
+                                                                                                                                                                                {
+                                                                                                                                                                                    if (Main.netMode == 2)
+                                                                                                                                                                                    {
+                                                                                                                                                                                        int i2 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                                                                        num += 4;
+                                                                                                                                                                                        int j2 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                                                                        num += 4;
+                                                                                                                                                                                        int num87 = Sign.ReadSign(i2, j2);
+                                                                                                                                                                                        if (num87 >= 0)
+                                                                                                                                                                                        {
+                                                                                                                                                                                            NetMessage.SendData(47, this.whoAmI, -1, "", num87, 0f, 0f, 0f, 0);
+                                                                                                                                                                                            return;
+                                                                                                                                                                                        }
+                                                                                                                                                                                    }
+                                                                                                                                                                                }
+                                                                                                                                                                                else
+                                                                                                                                                                                {
+                                                                                                                                                                                    if (b == 47)
+                                                                                                                                                                                    {
+                                                                                                                                                                                        int num88 = (int)BitConverter.ToInt16(this.readBuffer, num);
+                                                                                                                                                                                        num += 2;
+                                                                                                                                                                                        int x9 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                                                                        num += 4;
+                                                                                                                                                                                        int y8 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                                                                        num += 4;
+                                                                                                                                                                                        string string11 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+                                                                                                                                                                                        Main.sign[num88] = new Sign();
+                                                                                                                                                                                        Main.sign[num88].x = x9;
+                                                                                                                                                                                        Main.sign[num88].y = y8;
+                                                                                                                                                                                        Sign.TextSign(num88, string11);
+                                                                                                                                                                                        if (Main.netMode == 1 && Main.sign[num88] != null && num88 != Main.player[Main.myPlayer].sign)
+                                                                                                                                                                                        {
+                                                                                                                                                                                            Main.playerInventory = false;
+                                                                                                                                                                                            Main.player[Main.myPlayer].talkNPC = -1;
+                                                                                                                                                                                            Main.editSign = false;
+                                                                                                                                                                                            //////////Main.PlaySound10, -1, -1, 1);
+                                                                                                                                                                                            Main.player[Main.myPlayer].sign = num88;
+                                                                                                                                                                                            Main.npcChatText = Main.sign[num88].text;
+                                                                                                                                                                                            return;
+                                                                                                                                                                                        }
+                                                                                                                                                                                    }
+                                                                                                                                                                                    else
+                                                                                                                                                                                    {
+                                                                                                                                                                                        if (b == 48)
+                                                                                                                                                                                        {
+                                                                                                                                                                                            int num89 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                                                                            num += 4;
+                                                                                                                                                                                            int num90 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                                                                                                                            num += 4;
+                                                                                                                                                                                            byte liquid = this.readBuffer[num];
+                                                                                                                                                                                            num++;
+                                                                                                                                                                                            byte b27 = this.readBuffer[num];
+                                                                                                                                                                                            num++;
+                                                                                                                                                                                            if (Main.netMode == 2 && Netplay.spamCheck)
+                                                                                                                                                                                            {
+                                                                                                                                                                                                int num91 = this.whoAmI;
+                                                                                                                                                                                                int num92 = (int)(Main.player[num91].position.X + (float)(Main.player[num91].width / 2));
+                                                                                                                                                                                                int num93 = (int)(Main.player[num91].position.Y + (float)(Main.player[num91].height / 2));
+                                                                                                                                                                                                int num94 = 10;
+                                                                                                                                                                                                int num95 = num92 - num94;
+                                                                                                                                                                                                int num96 = num92 + num94;
+                                                                                                                                                                                                int num97 = num93 - num94;
+                                                                                                                                                                                                int num98 = num93 + num94;
+                                                                                                                                                                                                if (num92 < num95 || num92 > num96 || num93 < num97 || num93 > num98)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    NetMessage.BootPlayer(this.whoAmI, "Cheating attempt detected: Liquid spam");
+                                                                                                                                                                                                    return;
+                                                                                                                                                                                                }
+                                                                                                                                                                                            }
+                                                                                                                                                                                            if (Main.tile[num89, num90] == null)
+                                                                                                                                                                                            {
+                                                                                                                                                                                                Main.tile[num89, num90] = new Tile();
+                                                                                                                                                                                            }
+                                                                                                                                                                                            lock (Main.tile[num89, num90])
+                                                                                                                                                                                            {
+                                                                                                                                                                                                Main.tile[num89, num90].liquid = liquid;
+                                                                                                                                                                                                if (b27 == 1)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    Main.tile[num89, num90].lava = true;
+                                                                                                                                                                                                }
+                                                                                                                                                                                                else
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    Main.tile[num89, num90].lava = false;
+                                                                                                                                                                                                }
+                                                                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    WorldGen.SquareTileFrame(num89, num90, true);
+                                                                                                                                                                                                }
+                                                                                                                                                                                                return;
+                                                                                                                                                                                            }
+                                                                                                                                                                                        }
+                                                                                                                                                                                        if (b == 49)
+                                                                                                                                                                                        {
+                                                                                                                                                                                            if (Netplay.clientSock.state == 6)
+                                                                                                                                                                                            {
+                                                                                                                                                                                                Netplay.clientSock.state = 10;
+                                                                                                                                                                                                Main.player[Main.myPlayer].Spawn();
+                                                                                                                                                                                                return;
+                                                                                                                                                                                            }
+                                                                                                                                                                                        }
+                                                                                                                                                                                        else
+                                                                                                                                                                                        {
+                                                                                                                                                                                            if (b == 50)
+                                                                                                                                                                                            {
+                                                                                                                                                                                                int num99 = (int)this.readBuffer[num];
+                                                                                                                                                                                                num++;
+                                                                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    num99 = this.whoAmI;
+                                                                                                                                                                                                }
+                                                                                                                                                                                                else
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    if (num99 == Main.myPlayer)
+                                                                                                                                                                                                    {
+                                                                                                                                                                                                        return;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                }
+                                                                                                                                                                                                for (int num100 = 0; num100 < 10; num100++)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    Main.player[num99].buffType[num100] = (int)this.readBuffer[num];
+                                                                                                                                                                                                    if (Main.player[num99].buffType[num100] > 0)
+                                                                                                                                                                                                    {
+                                                                                                                                                                                                        Main.player[num99].buffTime[num100] = 60;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    else
+                                                                                                                                                                                                    {
+                                                                                                                                                                                                        Main.player[num99].buffTime[num100] = 0;
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                    num++;
+                                                                                                                                                                                                }
+                                                                                                                                                                                                if (Main.netMode == 2)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    NetMessage.SendData(50, -1, this.whoAmI, "", num99, 0f, 0f, 0f, 0);
+                                                                                                                                                                                                    return;
+                                                                                                                                                                                                }
+                                                                                                                                                                                            }
+                                                                                                                                                                                            else
+                                                                                                                                                                                            {
+                                                                                                                                                                                                if (b == 51)
+                                                                                                                                                                                                {
+                                                                                                                                                                                                    byte b28 = this.readBuffer[num];
+                                                                                                                                                                                                    if (b28 == 1)
+                                                                                                                                                                                                    {
+                                                                                                                                                                                                        NPC.SpawnSkeletron();
+                                                                                                                                                                                                    }
+                                                                                                                                                                                                }
+                                                                                                                                                                                            }
+                                                                                                                                                                                        }
+                                                                                                                                                                                    }
+                                                                                                                                                                                }
 																																											}
 																																										}
 																																									}

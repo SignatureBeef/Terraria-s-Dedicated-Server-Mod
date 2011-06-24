@@ -22,7 +22,7 @@ namespace Terraria_Server
             setPort(getPort());
             setGreeting(getGreeting());
             setInitialWorldPath(getInitialWorldPath());
-            setOpPassword(getOpPassword());
+            setServerPassword(getServerPassword());
             setNPCDoorOpenCancel(isNPCDoorOpenCancelled());
             setSeed(getSeed());
             setMapSize(getMapSize());
@@ -143,9 +143,9 @@ namespace Terraria_Server
             base.setValue("worldpath", Path);
         }
         
-        public string getOpPassword()
+        public string getServerPassword()
         {
-            string Password = base.getValue("op-password");
+            string Password = base.getValue("server-password");
             if (Password == null || Password.Trim().Length < 0)
             {
                 return ""; //None?
@@ -156,9 +156,9 @@ namespace Terraria_Server
             }
         }
 
-        public void setOpPassword(string Password)
+        public void setServerPassword(string Password)
         {
-            base.setValue("op-password", Password);
+            base.setValue("server-password", Password);
         }
 
         public int getSeed()

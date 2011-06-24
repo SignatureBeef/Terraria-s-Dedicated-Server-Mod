@@ -90,7 +90,7 @@ namespace Terraria_Server
 				}
 				if (this.light > 0f)
 				{
-					//Lighting.addLight((int)((this.position.X + (float)Main.goreTexture[this.type].Width * this.scale / 2f) / 16f), (int)((this.position.Y + (float)Main.goreTexture[this.type].Height * this.scale / 2f) / 16f), this.light);
+					////////////Lighting.addLight((int)((this.position.X + (float)Main.goreTexture[this.type].Width * this.scale / 2f) / 16f), (int)((this.position.Y + (float)Main.goreTexture[this.type].Height * this.scale / 2f) / 16f), this.light);
 				}
 			}
 		}
