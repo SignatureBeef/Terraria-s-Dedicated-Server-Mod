@@ -55,9 +55,9 @@ namespace Terraria_Server.Commands
             PLAYER_OPLOGOUT = 20,
             COMMAND_NPCSPAWN = 21
         }
-
-        public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
-                                                                    "players",      "me",           "say",          
+ 
+        public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",
+                                                                    "players",      "me",           "say",
                                                                     "save-all",     "help",         "whitelist",
                                                                     "ban",          "unban",        "time",
                                                                     "give",         "spawnnpc",     "tp",
@@ -65,14 +65,14 @@ namespace Terraria_Server.Commands
                                                                     "deop",         "oplogin",      "oplogout",
                                                                     "npcspawns"};
 
-        public static string[] CommandInformation = new string[] {  "Stop & Close The Server.", 
-                                                                    "Reload Plugins.", 
-                                                                    "Show Online Players.", 
-                                                                    "Show Online Players.", 
-                                                                    "Talk in 3rd Person.", 
+        public static string[] CommandInformation = new string[] {  "Stop & Close The Server.",
+                                                                    "Reload Plugins.",
+                                                                    "Show Online Players.",
+                                                                    "Show Online Players.",
+                                                                    "Talk in 3rd Person.",
                                                                     "Send A Console Message To Online Players.", 
                                                                     "Trigger a World Save.", 
-                                                                    "Show this Help.", 
+                                                                    "Show this Help. (Also /help <page>)", 
                                                                     "add:remove to the whitelist.", 
                                                                     "Ban a Player.", 
                                                                     "Un-Ban a Player.", 
@@ -238,7 +238,7 @@ namespace Terraria_Server.Commands
             {
                 for (int i = 0; i < CommandDefinition.Length; i++)
                 {
-                    Program.tConsole.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
+                    Program.tConsole.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i].Replace("/", ""));
                 }
             }
         }
