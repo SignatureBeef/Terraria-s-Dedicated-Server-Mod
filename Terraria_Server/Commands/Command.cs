@@ -176,13 +176,62 @@ namespace Terraria_Server.Commands
             Program.server.setGodMode(GodMode);
         }
 
-        public static void ShowHelp(Sender sender)
+        public static void ShowHelp(Sender sender, string[] commands = null)
         {
             if (sender is Player)
             {
-                for (int i = 0; i < CommandDefinition.Length; i++)
+                if (commands == null)
                 {
-                    ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                    for (int i = 0; i < CommandDefinition.Length; i++)
+                    {
+                        ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                    }
+                }
+                else
+                {
+                    int maxPages = (CommandDefinition.Length / 5) + 1;
+                    if (maxPages > 0 && commands.Length > 1 && commands[1] != null)
+                    {
+                        try
+                        {
+                            int selectingPage = Int32.Parse(commands[1].Trim());
+
+                            if (selectingPage < maxPages)
+                            {
+                                for (int i = 0; i < maxPages; i++)
+                                {
+                                    if ((selectingPage <= i))
+                                    {
+                                        selectingPage = i * ((CommandDefinition.Length / 5) + 1);
+                                        break;
+                                    }
+                                }
+                                
+                                int toPage = CommandDefinition.Length;
+                                if (selectingPage + 5 < toPage)
+                                {
+                                    toPage = selectingPage + 5;
+                                }
+
+                                for (int i = selectingPage; i < toPage; i++)
+                                {
+                                    ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("Invalid page! Use: 0 -> " + (maxPages - 1).ToString());
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            ShowHelp(sender);
+                        }
+                    }
+                    else
+                    {
+                        ShowHelp(sender);
+                    }
                 }
             }
             else
