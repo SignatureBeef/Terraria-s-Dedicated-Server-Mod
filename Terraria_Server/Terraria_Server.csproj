@@ -148,6 +148,7 @@
     <Compile Include="ServerSock.cs" />
     <Compile Include="Server\Packet.cs" />
     <Compile Include="Server\TConsole.cs" />
+    <Compile Include="Server\UpdateManager.cs" />
     <Compile Include="Sign.cs" />
     <Compile Include="Server\Statics.cs" />
     <Compile Include="Tile.cs" />

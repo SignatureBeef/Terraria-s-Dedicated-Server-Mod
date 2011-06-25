@@ -23,6 +23,7 @@ namespace Terraria_Server
             setGreeting(getGreeting());
             setInitialWorldPath(getInitialWorldPath());
             setServerPassword(getServerPassword());
+            setAutomaticUpdates(automaticUpdates());
             setNPCDoorOpenCancel(isNPCDoorOpenCancelled());
             setSeed(getSeed());
             setMapSize(getMapSize());
@@ -402,6 +403,24 @@ namespace Terraria_Server
         public void setDebugMode(bool DebugMode)
         {
             base.setValue("debugmode", DebugMode.ToString());
+        }
+
+        public bool automaticUpdates()
+        {
+            string AutomaticUpdates = base.getValue("allowupdates");
+            if (AutomaticUpdates == null || AutomaticUpdates.Trim().Length < 0)
+            {
+                return true;
+            }
+            else
+            {
+                return Boolean.Parse(AutomaticUpdates);
+            }
+        }
+
+        public void setAutomaticUpdates(bool AutomaticUpdates)
+        {
+            base.setValue("allowupdates", AutomaticUpdates.ToString());
         }
     }
 }

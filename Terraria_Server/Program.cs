@@ -196,6 +196,12 @@ namespace Terraria_Server
                 }
                 setupProperties();
 
+                if (UpdateManager.performProcess())
+                {
+                    Program.tConsole.WriteLine("Restarting into new update!");
+                    return;
+                }
+
                 Statics.debugMode = properties.debugMode();
                 if (Statics.debugMode)
                 {
