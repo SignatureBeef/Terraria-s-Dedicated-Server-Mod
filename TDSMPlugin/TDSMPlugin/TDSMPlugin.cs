@@ -35,7 +35,7 @@ namespace TDSMExamplePlugin
             Description = "Plugin Example for TDSM.";
             Author = "DeathCradle";
             Version = "1";
-            ServerProtocol = "1.04 {9}";
+            TDSMBuild = 9;
 
             string pluginFolder = Statics.getPluginPath + Statics.systemSeperator + "TDSM";
             //Create fodler if it doesn't exist
