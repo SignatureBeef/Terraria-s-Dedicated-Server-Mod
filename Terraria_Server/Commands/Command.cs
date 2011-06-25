@@ -290,13 +290,18 @@ namespace Terraria_Server.Commands
                                 {
                                     foreach (Player player in Program.server.getPlayerList())
                                     {
-                                        if (Netplay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint.ToString()
-                                            .Split(':')[0].Equals(commands[1]))
+                                        if (Netplay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint != null)
                                         {
-                                            banee = player;
+                                            if (Netplay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint.ToString()
+                                            .Split(':')[0].Equals(commands[1]))
+                                            {
+                                                banee = player;
+                                            }
                                         }
                                     }
                                 }
+
+                                Program.server.getBanList().addException(commands[1]);
 
                                 if (banee != null)
                                 {
