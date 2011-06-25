@@ -2626,7 +2626,7 @@ namespace Terraria_Server
                 PlayerHurtEvent playerEvent = new PlayerHurtEvent();
                 playerEvent.setSender(new Sender());
                 playerEvent.setDamage(Damage);
-                Program.server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, playerEvent);
+                Program.server.getPluginManager().processHook(Hooks.PLAYER_HURT, playerEvent);
                 if (playerEvent.getCancelled())
                 {
                     return 0.0;
@@ -2754,6 +2754,16 @@ namespace Terraria_Server
             {
                 this.pvpDeath = true;
             }
+
+            PlayerDeathEvent pDeath = new PlayerDeathEvent();
+            pDeath.setDeathMessage(deathText);
+            pDeath.setSender(this);
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_DEATH, pDeath);
+            if (pDeath.getCancelled())
+            {
+                return;
+            }
+
             if (this.hardCore)
             {
                 if (Main.netMode != 1)

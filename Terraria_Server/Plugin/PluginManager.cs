@@ -154,6 +154,17 @@ namespace Terraria_Server.Plugin
             return false;
         }
 
+        public Plugin getPlugin(string Name)
+        {
+            foreach (Plugin plugin in pluginList)
+            {
+                if(plugin.Name.Trim().ToLower().Equals(Name.Trim().ToLower())) {
+                    return plugin;
+                }
+            }
+            return null;
+        }
+        
         public void processHook(Hooks Hook, Event Event)
 		{
             foreach (Plugin plugin in pluginList)
@@ -217,6 +228,11 @@ namespace Terraria_Server.Plugin
                             case Hooks.PLAYER_STATEUPDATE:
                                 {
                                     plugin.onPlayerStateUpdate((PlayerStateUpdateEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_DEATH:
+                                {
+                                    plugin.onPlayerDeath((PlayerDeathEvent)Event);
                                     break;
                                 }
                         }

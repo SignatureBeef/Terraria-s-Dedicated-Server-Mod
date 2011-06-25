@@ -17,6 +17,7 @@ namespace Terraria_Server.Plugin
         TILE_BREAK,
         PLAYER_HURT,
         PLAYER_CHEST,
-        PLAYER_STATEUPDATE
+        PLAYER_STATEUPDATE,
+        PLAYER_DEATH
     }
 }

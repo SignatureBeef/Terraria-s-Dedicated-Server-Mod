@@ -859,6 +859,7 @@ namespace Terraria_Server
             }
             return num;
         }
+
         public void Damage()
         {
             Rectangle rectangle = new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height);

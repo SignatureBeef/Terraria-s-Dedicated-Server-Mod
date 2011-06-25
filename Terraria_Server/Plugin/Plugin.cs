@@ -16,13 +16,14 @@ namespace Terraria_Server.Plugin
         public string Description { get; set; }
         public string Author { get; set; }
         public string Version { get; set; }
-        public string ServerProtocol { get; set; }
+        public string ServerProtocol { get; set; } //Soon to be removed. ~‎Saturday, ‎June ‎25, ‎2011
+        public int TDSMBuild { get; set; } //Thinking about adding a warning for out of date plugins.
 
         public bool Enabled { get; set; }
         public Server Server { get; set; }
 
         public abstract void Load();
-        //public void abstract UnLoad();
+        //public void abstract UnLoad(); //I have high hopes :3
         public abstract void Enable();
         public abstract void Disable();
 
@@ -37,6 +38,7 @@ namespace Terraria_Server.Plugin
         public virtual void onTileBreak(TileBreakEvent Event) { }
         public virtual void onPlayerOpenChest(ChestOpenEvent Event) { }
         public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { }
+        public virtual void onPlayerDeath(PlayerDeathEvent Event) { }
 
     	private ArrayList pluginHooks = new ArrayList();
 
