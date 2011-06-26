@@ -53,7 +53,8 @@ namespace Terraria_Server.Commands
             COMMAND_DEOP = 18,
             PLAYER_OPLOGIN = 19,
             PLAYER_OPLOGOUT = 20,
-            COMMAND_NPCSPAWN = 21
+            COMMAND_NPCSPAWN = 21,
+            COMMAND_KICK = 22
         }
  
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",
@@ -63,7 +64,7 @@ namespace Terraria_Server.Commands
                                                                     "give",         "spawnnpc",     "tp",
 																	"tphere",       "settle",       "op",
                                                                     "deop",         "oplogin",      "oplogout",
-                                                                    "npcspawns"};
+                                                                    "npcspawns",    "kick"};
 
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server.",
                                                                     "Reload Plugins.",
@@ -86,7 +87,8 @@ namespace Terraria_Server.Commands
                                                                     "De-OP a player.",
                                                                     "Log in as OP: /oplogin <password>",
                                                                     "Log out of OP status.",
-                                                                    "Toggle the state of NPC Spawning."};
+                                                                    "Toggle the state of NPC Spawning.",
+                                                                    "Kicks a player from the server."};
 
         public static int getCommandValue(string Command)
         {
@@ -974,6 +976,41 @@ namespace Terraria_Server.Commands
                 sender.sendMessage("NPC Spawning is now on!");
             }
         }
-        
+
+        public static void Kick(Sender sender, string[] commands)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (commands != null && commands.Length > 1)
+            {
+                if (commands[0] != null && commands[0].Length > 0)
+                {
+                    Player banee = Program.server.GetPlayerByName(commands[1]);
+
+                    if (banee != null)
+                    {
+                        banee.Kick("You have been kicked from this Server.");
+                    }
+                    else
+                    {
+                        sender.sendMessage("Cannot find player online!.");
+                    }
+
+
+                    Program.server.notifyOps(sender.getName() + " has kicked " + commands[1], true);
+
+                    return;
+                }
+            }
+            sender.sendMessage("Command Error!");
+        }
     }
 }

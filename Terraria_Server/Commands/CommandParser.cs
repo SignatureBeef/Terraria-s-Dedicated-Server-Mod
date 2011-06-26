@@ -255,6 +255,11 @@ namespace Terraria_Server.Commands
                         Commands.NPCSpawns(sender);
                         break;
                     }
+                case (int)Commands.Command.COMMAND_KICK:
+                    {
+                        Commands.Kick(sender, commands);
+                        break;
+                    }
                 default:
                     {
                         Program.tConsole.WriteLine("Uknown Command Issued.");
