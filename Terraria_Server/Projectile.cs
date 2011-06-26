@@ -2989,7 +2989,7 @@ namespace Terraria_Server
                                                                             this.ai[0] = 3f;
                                                                             this.netUpdate = true;
                                                                         }
-                                                                        if (Main.player[this.owner].itemAnimation < Main.player[this.owner].inventory[Main.player[this.owner].selectedItem].useAnimation / 3)
+                                                                        if (Main.player[this.owner].itemAnimation < Main.player[this.owner].inventory[Main.player[this.owner].selectedItem].UseAnimation / 3)
                                                                         {
                                                                             this.ai[0] -= 1.6f;
                                                                         }
@@ -3007,7 +3007,7 @@ namespace Terraria_Server
                                                                                 this.ai[0] = 4f;
                                                                                 this.netUpdate = true;
                                                                             }
-                                                                            if (Main.player[this.owner].itemAnimation < Main.player[this.owner].inventory[Main.player[this.owner].selectedItem].useAnimation / 3)
+                                                                            if (Main.player[this.owner].itemAnimation < Main.player[this.owner].inventory[Main.player[this.owner].selectedItem].UseAnimation / 3)
                                                                             {
                                                                                 this.ai[0] -= 1.2f;
                                                                             }
@@ -3025,7 +3025,7 @@ namespace Terraria_Server
                                                                                     this.ai[0] = 4f;
                                                                                     this.netUpdate = true;
                                                                                 }
-                                                                                if (Main.player[this.owner].itemAnimation < Main.player[this.owner].inventory[Main.player[this.owner].selectedItem].useAnimation / 3)
+                                                                                if (Main.player[this.owner].itemAnimation < Main.player[this.owner].inventory[Main.player[this.owner].selectedItem].UseAnimation / 3)
                                                                                 {
                                                                                     this.ai[0] -= 1.1f;
                                                                                 }

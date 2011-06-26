@@ -546,9 +546,9 @@ namespace Terraria_Server.Commands
                     itemName = itemName.Replace(" ", "").ToLower();
                     for (int i = 0; i < Main.maxItemTypes; i++)
                     {
-                        if (items[i].name != null)
+                        if (items[i].Name != null)
                         {
-                            string genItemName = items[i].name.Replace(" ", "").Trim().ToLower();
+                            string genItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
                             if (genItemName == itemName)
                             {
                                 item = items[i];
@@ -560,7 +560,7 @@ namespace Terraria_Server.Commands
                     bool assumed = false;
                     if (item != null)
                     {
-                        itemType = item.type;
+                        itemType = item.Type;
                     }
                     else
                     {
@@ -577,9 +577,9 @@ namespace Terraria_Server.Commands
 
                         for (int i = 0; i < Main.maxItemTypes; i++)
                         {
-                            if (items[i].type == assumedItem)
+                            if (items[i].Type == assumedItem)
                             {
-                                itemType = items[i].type;
+                                itemType = items[i].Type;
                                 assumed = true;
                                 break;
                             }

@@ -4,6 +4,7 @@ using System.Text;
 using System;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
+using Terraria_Server.Shops;
 namespace Terraria_Server
 {
 	public class MessageBuffer
@@ -138,19 +139,19 @@ namespace Terraria_Server
                     NetMessage.SendData(50, -1, -1, "", Main.myPlayer, 0f, 0f, 0f, 0);
                     for (int k = 0; k < 44; k++)
                     {
-                        NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].inventory[k].name, Main.myPlayer, (float)k, 0f, 0f, 0);
+                        NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].inventory[k].Name, Main.myPlayer, (float)k, 0f, 0f, 0);
                     }
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[0].name, Main.myPlayer, 44f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[1].name, Main.myPlayer, 45f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[2].name, Main.myPlayer, 46f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[3].name, Main.myPlayer, 47f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[4].name, Main.myPlayer, 48f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[5].name, Main.myPlayer, 49f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[6].name, Main.myPlayer, 50f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[7].name, Main.myPlayer, 51f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[8].name, Main.myPlayer, 52f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[9].name, Main.myPlayer, 53f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[10].name, Main.myPlayer, 54f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[0].Name, Main.myPlayer, 44f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[1].Name, Main.myPlayer, 45f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[2].Name, Main.myPlayer, 46f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[3].Name, Main.myPlayer, 47f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[4].Name, Main.myPlayer, 48f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[5].Name, Main.myPlayer, 49f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[6].Name, Main.myPlayer, 50f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[7].Name, Main.myPlayer, 51f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[8].Name, Main.myPlayer, 52f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[9].Name, Main.myPlayer, 53f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[10].Name, Main.myPlayer, 54f, 0f, 0f, 0);
                     NetMessage.SendData(6, -1, -1, "", 0, 0f, 0f, 0f, 0);
                     if (Netplay.clientSock.state == 2)
                     {
@@ -287,13 +288,13 @@ namespace Terraria_Server
                                     {
                                         Main.player[num2].inventory[num3] = new Item();
                                         Main.player[num2].inventory[num3].SetDefaults(string3);
-                                        Main.player[num2].inventory[num3].stack = stack;
+                                        Main.player[num2].inventory[num3].Stack = stack;
                                     }
                                     else
                                     {
                                         Main.player[num2].armor[num3 - 44] = new Item();
                                         Main.player[num2].armor[num3 - 44].SetDefaults(string3);
-                                        Main.player[num2].armor[num3 - 44].stack = stack;
+                                        Main.player[num2].armor[num3 - 44].Stack = stack;
                                     }
                                     if (Main.netMode == 2 && num2 == this.whoAmI)
                                     {
@@ -448,7 +449,7 @@ namespace Terraria_Server
                                             NetMessage.SendData(11, this.whoAmI, -1, "", sectionX - 2, (float)(sectionY - 1), (float)(sectionX + 2), (float)(sectionY + 1), 0);
                                             for (int num13 = 0; num13 < 200; num13++)
                                             {
-                                                if (Main.item[num13].active)
+                                                if (Main.item[num13].Active)
                                                 {
                                                     NetMessage.SendData(21, this.whoAmI, -1, "", num13, 0f, 0f, 0f, 0);
                                                     NetMessage.SendData(22, this.whoAmI, -1, "", num13, 0f, 0f, 0f, 0);
@@ -1019,17 +1020,17 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 if (string4 == "0")
                                                                                                 {
-                                                                                                    Main.item[(int)num38].active = false;
+                                                                                                    Main.item[(int)num38].Active = false;
                                                                                                     return;
                                                                                                 }
                                                                                                 Main.item[(int)num38].SetDefaults(string4);
-                                                                                                Main.item[(int)num38].stack = (int)stack2;
-                                                                                                Main.item[(int)num38].position.X = num39;
-                                                                                                Main.item[(int)num38].position.Y = num40;
-                                                                                                Main.item[(int)num38].velocity.X = x3;
-                                                                                                Main.item[(int)num38].velocity.Y = y2;
-                                                                                                Main.item[(int)num38].active = true;
-                                                                                                Main.item[(int)num38].wet = Collision.WetCollision(Main.item[(int)num38].position, Main.item[(int)num38].width, Main.item[(int)num38].height);
+                                                                                                Main.item[(int)num38].Stack = (int)stack2;
+                                                                                                Main.item[(int)num38].Position.X = num39;
+                                                                                                Main.item[(int)num38].Position.Y = num40;
+                                                                                                Main.item[(int)num38].Velocity.X = x3;
+                                                                                                Main.item[(int)num38].Velocity.Y = y2;
+                                                                                                Main.item[(int)num38].Active = true;
+                                                                                                Main.item[(int)num38].Wet = Collision.WetCollision(Main.item[(int)num38].Position, Main.item[(int)num38].Width, Main.item[(int)num38].Height);
                                                                                                 return;
                                                                                             }
                                                                                             else
@@ -1038,7 +1039,7 @@ namespace Terraria_Server
                                                                                                 {
                                                                                                     if (num38 < 200)
                                                                                                     {
-                                                                                                        Main.item[(int)num38].active = false;
+                                                                                                        Main.item[(int)num38].Active = false;
                                                                                                         NetMessage.SendData(21, -1, -1, "", (int)num38, 0f, 0f, 0f, 0);
                                                                                                         return;
                                                                                                     }
@@ -1054,21 +1055,21 @@ namespace Terraria_Server
                                                                                                     {
                                                                                                         Item item = new Item();
                                                                                                         item.SetDefaults(string4);
-                                                                                                        num38 = (short)Item.NewItem((int)num39, (int)num40, item.width, item.height, item.type, (int)stack2, true);
+                                                                                                        num38 = (short)Item.NewItem((int)num39, (int)num40, item.Width, item.Height, item.Type, (int)stack2, true);
                                                                                                     }
                                                                                                     Main.item[(int)num38].SetDefaults(string4);
-                                                                                                    Main.item[(int)num38].stack = (int)stack2;
-                                                                                                    Main.item[(int)num38].position.X = num39;
-                                                                                                    Main.item[(int)num38].position.Y = num40;
-                                                                                                    Main.item[(int)num38].velocity.X = x3;
-                                                                                                    Main.item[(int)num38].velocity.Y = y2;
-                                                                                                    Main.item[(int)num38].active = true;
-                                                                                                    Main.item[(int)num38].owner = Main.myPlayer;
+                                                                                                    Main.item[(int)num38].Stack = (int)stack2;
+                                                                                                    Main.item[(int)num38].Position.X = num39;
+                                                                                                    Main.item[(int)num38].Position.Y = num40;
+                                                                                                    Main.item[(int)num38].Velocity.X = x3;
+                                                                                                    Main.item[(int)num38].Velocity.Y = y2;
+                                                                                                    Main.item[(int)num38].Active = true;
+                                                                                                    Main.item[(int)num38].Owner = Main.myPlayer;
                                                                                                     if (flag5)
                                                                                                     {
                                                                                                         NetMessage.SendData(21, -1, -1, "", (int)num38, 0f, 0f, 0f, 0);
-                                                                                                        Main.item[(int)num38].ownIgnore = this.whoAmI;
-                                                                                                        Main.item[(int)num38].ownTime = 100;
+                                                                                                        Main.item[(int)num38].OwnIgnore = this.whoAmI;
+                                                                                                        Main.item[(int)num38].OwnTime = 100;
                                                                                                         Main.item[(int)num38].FindOwner((int)num38);
                                                                                                         return;
                                                                                                     }
@@ -1084,23 +1085,23 @@ namespace Terraria_Server
                                                                                                 short num41 = BitConverter.ToInt16(this.readBuffer, num);
                                                                                                 num += 2;
                                                                                                 byte b11 = this.readBuffer[num];
-                                                                                                if (Main.netMode == 2 && Main.item[(int)num41].owner != this.whoAmI)
+                                                                                                if (Main.netMode == 2 && Main.item[(int)num41].Owner != this.whoAmI)
                                                                                                 {
                                                                                                     return;
                                                                                                 }
-                                                                                                Main.item[(int)num41].owner = (int)b11;
+                                                                                                Main.item[(int)num41].Owner = (int)b11;
                                                                                                 if ((int)b11 == Main.myPlayer)
                                                                                                 {
-                                                                                                    Main.item[(int)num41].keepTime = 15;
+                                                                                                    Main.item[(int)num41].KeepTime = 15;
                                                                                                 }
                                                                                                 else
                                                                                                 {
-                                                                                                    Main.item[(int)num41].keepTime = 0;
+                                                                                                    Main.item[(int)num41].KeepTime = 0;
                                                                                                 }
                                                                                                 if (Main.netMode == 2)
                                                                                                 {
-                                                                                                    Main.item[(int)num41].owner = 255;
-                                                                                                    Main.item[(int)num41].keepTime = 15;
+                                                                                                    Main.item[(int)num41].Owner = 255;
+                                                                                                    Main.item[(int)num41].KeepTime = 15;
                                                                                                     NetMessage.SendData(22, -1, -1, "", (int)num41, 0f, 0f, 0f, 0);
                                                                                                     return;
                                                                                                 }
@@ -1165,7 +1166,7 @@ namespace Terraria_Server
                                                                                                     {
                                                                                                         b12 = (byte)this.whoAmI;
                                                                                                     }
-                                                                                                    Main.npc[(int)num46].StrikeNPC(Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].damage, Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].knockBack, Main.player[(int)b12].direction);
+                                                                                                    Main.npc[(int)num46].StrikeNPC(Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].Damage, Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].KnockBack, Main.player[(int)b12].direction);
                                                                                                     if (Main.netMode == 2)
                                                                                                     {
                                                                                                         NetMessage.SendData(24, -1, this.whoAmI, "", (int)num46, (float)b12, 0f, 0f, 0);
@@ -1465,12 +1466,12 @@ namespace Terraria_Server
 																																	{
 																																		Main.chest[num65] = new Chest();
 																																	}
-																																	if (Main.chest[num65].item[num66] == null)
+																																	if (Main.chest[num65].contents[num66] == null)
 																																	{
-																																		Main.chest[num65].item[num66] = new Item();
+																																		Main.chest[num65].contents[num66] = new Item();
 																																	}
-																																	Main.chest[num65].item[num66].SetDefaults(string8);
-																																	Main.chest[num65].item[num66].stack = stack3;
+																																	Main.chest[num65].contents[num66].SetDefaults(string8);
+																																	Main.chest[num65].contents[num66].Stack = stack3;
 																																	return;
 																																}
 																																if (b == 33)
@@ -1637,7 +1638,7 @@ namespace Terraria_Server
                                                                                                                                                         if (b == 39 && Main.netMode == 1)
                                                                                                                                                         {
                                                                                                                                                             short num78 = BitConverter.ToInt16(this.readBuffer, num);
-                                                                                                                                                            Main.item[(int)num78].owner = 255;
+                                                                                                                                                            Main.item[(int)num78].Owner = 255;
                                                                                                                                                             NetMessage.SendData(22, -1, -1, "", (int)num78, 0f, 0f, 0f, 0);
                                                                                                                                                             return;
                                                                                                                                                         }

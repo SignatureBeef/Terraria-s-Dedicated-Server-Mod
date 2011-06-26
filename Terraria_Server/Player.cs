@@ -6,6 +6,7 @@ using System.Text;
 using System.IO;
 using System.Security.Cryptography;
 using Terraria_Server.Misc;
+using Terraria_Server.Shops;
 
 namespace Terraria_Server
 {
@@ -462,76 +463,76 @@ namespace Terraria_Server
                         this.doubleJump = false;
                         for (int l = 0; l < 8; l++)
                         {
-                            this.statDefense += this.armor[l].defense;
-                            this.lifeRegen += this.armor[l].lifeRegen;
-                            this.manaRegen += this.armor[l].manaRegen;
-                            if (this.armor[l].type == 193)
+                            this.statDefense += this.armor[l].Defense;
+                            this.lifeRegen += this.armor[l].LifeRegen;
+                            this.manaRegen += this.armor[l].ManaRegen;
+                            if (this.armor[l].Type == 193)
                             {
                                 this.fireWalk = true;
                             }
-                            if (this.armor[l].type == 238)
+                            if (this.armor[l].Type == 238)
                             {
                                 this.magicBoost *= 1.15f;
                             }
                         }
-                        this.head = this.armor[0].headSlot;
-                        this.body = this.armor[1].bodySlot;
-                        this.legs = this.armor[2].legSlot;
+                        this.head = this.armor[0].HeadSlot;
+                        this.body = this.armor[1].BodySlot;
+                        this.legs = this.armor[2].LegSlot;
                         for (int m = 3; m < 8; m++)
                         {
-                            if (this.armor[m].type == 15 && this.accWatch < 1)
+                            if (this.armor[m].Type == 15 && this.accWatch < 1)
                             {
                                 this.accWatch = 1;
                             }
-                            if (this.armor[m].type == 16 && this.accWatch < 2)
+                            if (this.armor[m].Type == 16 && this.accWatch < 2)
                             {
                                 this.accWatch = 2;
                             }
-                            if (this.armor[m].type == 17 && this.accWatch < 3)
+                            if (this.armor[m].Type == 17 && this.accWatch < 3)
                             {
                                 this.accWatch = 3;
                             }
-                            if (this.armor[m].type == 18 && this.accDepthMeter < 1)
+                            if (this.armor[m].Type == 18 && this.accDepthMeter < 1)
                             {
                                 this.accDepthMeter = 1;
                             }
-                            if (this.armor[m].type == 53)
+                            if (this.armor[m].Type == 53)
                             {
                                 this.doubleJump = true;
                             }
-                            if (this.armor[m].type == 54)
+                            if (this.armor[m].Type == 54)
                             {
                                 num6 = 6f;
                             }
-                            if (this.armor[m].type == 128)
+                            if (this.armor[m].Type == 128)
                             {
                                 this.rocketBoots = true;
                             }
-                            if (this.armor[m].type == 156)
+                            if (this.armor[m].Type == 156)
                             {
                                 this.noKnockback = true;
                             }
-                            if (this.armor[m].type == 158)
+                            if (this.armor[m].Type == 158)
                             {
                                 this.noFallDmg = true;
                             }
-                            if (this.armor[m].type == 159)
+                            if (this.armor[m].Type == 159)
                             {
                                 this.jumpBoost = true;
                             }
-                            if (this.armor[m].type == 187)
+                            if (this.armor[m].Type == 187)
                             {
                                 this.accFlipper = true;
                             }
-                            if (this.armor[m].type == 211)
+                            if (this.armor[m].Type == 211)
                             {
                                 this.meleeSpeed *= 0.9f;
                             }
-                            if (this.armor[m].type == 223)
+                            if (this.armor[m].Type == 223)
                             {
                                 this.spawnMax = true;
                             }
-                            if (this.armor[m].type == 212)
+                            if (this.armor[m].Type == 212)
                             {
                                 num4 *= 1.1f;
                                 num3 *= 1.1f;
@@ -703,7 +704,7 @@ namespace Terraria_Server
                                     this.velocity.X = this.velocity.X - num5;
                                 }
                                 this.velocity.X = this.velocity.X - num4;
-                                if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                if (this.itemAnimation == 0 || this.inventory[this.selectedItem].UseTurn)
                                 {
                                     this.direction = -1;
                                 }
@@ -717,7 +718,7 @@ namespace Terraria_Server
                                         this.velocity.X = this.velocity.X + num5;
                                     }
                                     this.velocity.X = this.velocity.X + num4;
-                                    if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                    if (this.itemAnimation == 0 || this.inventory[this.selectedItem].UseTurn)
                                     {
                                         this.direction = 1;
                                     }
@@ -726,7 +727,7 @@ namespace Terraria_Server
                                 {
                                     if (this.controlLeft && this.velocity.X > -num6)
                                     {
-                                        if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                        if (this.itemAnimation == 0 || this.inventory[this.selectedItem].UseTurn)
                                         {
                                             this.direction = -1;
                                         }
@@ -761,7 +762,7 @@ namespace Terraria_Server
                                     {
                                         if (this.controlRight && this.velocity.X < num6)
                                         {
-                                            if (this.itemAnimation == 0 || this.inventory[this.selectedItem].useTurn)
+                                            if (this.itemAnimation == 0 || this.inventory[this.selectedItem].UseTurn)
                                             {
                                                 this.direction = 1;
                                             }
@@ -1017,14 +1018,14 @@ namespace Terraria_Server
                         }
                         for (int num29 = 0; num29 < 200; num29++)
                         {
-                            if (Main.item[num29].active && Main.item[num29].noGrabDelay == 0 && Main.item[num29].owner == i)
+                            if (Main.item[num29].Active && Main.item[num29].NoGrabDelay == 0 && Main.item[num29].Owner == i)
                             {
                                 Rectangle rectangle = new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height);
-                                if (rectangle.Intersects(new Rectangle((int)Main.item[num29].position.X, (int)Main.item[num29].position.Y, Main.item[num29].width, Main.item[num29].height)))
+                                if (rectangle.Intersects(new Rectangle((int)Main.item[num29].Position.X, (int)Main.item[num29].Position.Y, Main.item[num29].Width, Main.item[num29].Height)))
                                 {
-                                    if (i == Main.myPlayer && (this.inventory[this.selectedItem].type != 0 || this.itemAnimation <= 0))
+                                    if (i == Main.myPlayer && (this.inventory[this.selectedItem].Type != 0 || this.itemAnimation <= 0))
                                     {
-                                        if (Main.item[num29].type == 58)
+                                        if (Main.item[num29].Type == 58)
                                         {
                                             this.statLife += 20;
                                             if (Main.myPlayer == this.whoAmi)
@@ -1043,7 +1044,7 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            if (Main.item[num29].type == 184)
+                                            if (Main.item[num29].Type == 184)
                                             {
                                                 this.statMana += 20;
                                                 if (Main.myPlayer == this.whoAmi)
@@ -1074,59 +1075,59 @@ namespace Terraria_Server
                                 else
                                 {
                                     rectangle = new Rectangle((int)this.position.X - Player.itemGrabRange, (int)this.position.Y - Player.itemGrabRange, this.width + Player.itemGrabRange * 2, this.height + Player.itemGrabRange * 2);
-                                    if (rectangle.Intersects(new Rectangle((int)Main.item[num29].position.X, (int)Main.item[num29].position.Y, Main.item[num29].width, Main.item[num29].height)) && this.ItemSpace(Main.item[num29]))
+                                    if (rectangle.Intersects(new Rectangle((int)Main.item[num29].Position.X, (int)Main.item[num29].Position.Y, Main.item[num29].Width, Main.item[num29].Height)) && this.ItemSpace(Main.item[num29]))
                                     {
-                                        Main.item[num29].beingGrabbed = true;
-                                        if ((double)this.position.X + (double)this.width * 0.5 > (double)Main.item[num29].position.X + (double)Main.item[num29].width * 0.5)
+                                        Main.item[num29].BeingGrabbed = true;
+                                        if ((double)this.position.X + (double)this.width * 0.5 > (double)Main.item[num29].Position.X + (double)Main.item[num29].Width * 0.5)
                                         {
-                                            if (Main.item[num29].velocity.X < Player.itemGrabSpeedMax + this.velocity.X)
+                                            if (Main.item[num29].Velocity.X < Player.itemGrabSpeedMax + this.velocity.X)
                                             {
                                                 Item expr_2C5D_cp_0 = Main.item[num29];
-                                                expr_2C5D_cp_0.velocity.X = expr_2C5D_cp_0.velocity.X + Player.itemGrabSpeed;
+                                                expr_2C5D_cp_0.Velocity.X = expr_2C5D_cp_0.Velocity.X + Player.itemGrabSpeed;
                                             }
-                                            if (Main.item[num29].velocity.X < 0f)
+                                            if (Main.item[num29].Velocity.X < 0f)
                                             {
                                                 Item expr_2C97_cp_0 = Main.item[num29];
-                                                expr_2C97_cp_0.velocity.X = expr_2C97_cp_0.velocity.X + Player.itemGrabSpeed * 0.75f;
+                                                expr_2C97_cp_0.Velocity.X = expr_2C97_cp_0.Velocity.X + Player.itemGrabSpeed * 0.75f;
                                             }
                                         }
                                         else
                                         {
-                                            if (Main.item[num29].velocity.X > -Player.itemGrabSpeedMax + this.velocity.X)
+                                            if (Main.item[num29].Velocity.X > -Player.itemGrabSpeedMax + this.velocity.X)
                                             {
                                                 Item expr_2CE6_cp_0 = Main.item[num29];
-                                                expr_2CE6_cp_0.velocity.X = expr_2CE6_cp_0.velocity.X - Player.itemGrabSpeed;
+                                                expr_2CE6_cp_0.Velocity.X = expr_2CE6_cp_0.Velocity.X - Player.itemGrabSpeed;
                                             }
-                                            if (Main.item[num29].velocity.X > 0f)
+                                            if (Main.item[num29].Velocity.X > 0f)
                                             {
                                                 Item expr_2D1D_cp_0 = Main.item[num29];
-                                                expr_2D1D_cp_0.velocity.X = expr_2D1D_cp_0.velocity.X - Player.itemGrabSpeed * 0.75f;
+                                                expr_2D1D_cp_0.Velocity.X = expr_2D1D_cp_0.Velocity.X - Player.itemGrabSpeed * 0.75f;
                                             }
                                         }
-                                        if ((double)this.position.Y + (double)this.height * 0.5 > (double)Main.item[num29].position.Y + (double)Main.item[num29].height * 0.5)
+                                        if ((double)this.position.Y + (double)this.height * 0.5 > (double)Main.item[num29].Position.Y + (double)Main.item[num29].Height * 0.5)
                                         {
-                                            if (Main.item[num29].velocity.Y < Player.itemGrabSpeedMax)
+                                            if (Main.item[num29].Velocity.Y < Player.itemGrabSpeedMax)
                                             {
                                                 Item expr_2DA6_cp_0 = Main.item[num29];
-                                                expr_2DA6_cp_0.velocity.Y = expr_2DA6_cp_0.velocity.Y + Player.itemGrabSpeed;
+                                                expr_2DA6_cp_0.Velocity.Y = expr_2DA6_cp_0.Velocity.Y + Player.itemGrabSpeed;
                                             }
-                                            if (Main.item[num29].velocity.Y < 0f)
+                                            if (Main.item[num29].Velocity.Y < 0f)
                                             {
                                                 Item expr_2DE0_cp_0 = Main.item[num29];
-                                                expr_2DE0_cp_0.velocity.Y = expr_2DE0_cp_0.velocity.Y + Player.itemGrabSpeed * 0.75f;
+                                                expr_2DE0_cp_0.Velocity.Y = expr_2DE0_cp_0.Velocity.Y + Player.itemGrabSpeed * 0.75f;
                                             }
                                         }
                                         else
                                         {
-                                            if (Main.item[num29].velocity.Y > -Player.itemGrabSpeedMax)
+                                            if (Main.item[num29].Velocity.Y > -Player.itemGrabSpeedMax)
                                             {
                                                 Item expr_2E20_cp_0 = Main.item[num29];
-                                                expr_2E20_cp_0.velocity.Y = expr_2E20_cp_0.velocity.Y - Player.itemGrabSpeed;
+                                                expr_2E20_cp_0.Velocity.Y = expr_2E20_cp_0.Velocity.Y - Player.itemGrabSpeed;
                                             }
-                                            if (Main.item[num29].velocity.Y > 0f)
+                                            if (Main.item[num29].Velocity.Y > 0f)
                                             {
                                                 Item expr_2E57_cp_0 = Main.item[num29];
-                                                expr_2E57_cp_0.velocity.Y = expr_2E57_cp_0.velocity.Y - Player.itemGrabSpeed * 0.75f;
+                                                expr_2E57_cp_0.Velocity.Y = expr_2E57_cp_0.Velocity.Y - Player.itemGrabSpeed * 0.75f;
                                             }
                                         }
                                     }
@@ -1542,7 +1543,7 @@ namespace Terraria_Server
                             }
                         }
                         bool flag6 = Collision.DrownCollision(this.position, this.width, this.height);
-                        if (this.inventory[this.selectedItem].type == 186)
+                        if (this.inventory[this.selectedItem].Type == 186)
                         {
                             try
                             {
@@ -1570,7 +1571,7 @@ namespace Terraria_Server
                             {
                                 this.breathCD++;
                                 int num57 = 7;
-                                if (this.inventory[this.selectedItem].type == 186)
+                                if (this.inventory[this.selectedItem].Type == 186)
                                 {
                                     num57 *= 2;
                                 }
@@ -1602,7 +1603,7 @@ namespace Terraria_Server
                         }
                         if (flag6 && Main.rand.Next(20) == 0)
                         {
-                            if (this.inventory[this.selectedItem].type == 186)
+                            if (this.inventory[this.selectedItem].Type == 186)
                             {
                                 Vector2 arg_4204_0 = new Vector2(this.position.X + (float)(10 * this.direction) + 4f, this.position.Y - 54f);
                                 int arg_4204_1 = this.width - 8;
@@ -1850,16 +1851,16 @@ namespace Terraria_Server
 				int num = -1;
 				for (int k = 43; k >= 0; k--)
 				{
-					if (num == -1 && (this.inventory[k].type == 0 || this.inventory[k].stack == 0))
+					if (num == -1 && (this.inventory[k].Type == 0 || this.inventory[k].Stack == 0))
 					{
 						num = k;
 					}
-					while (this.inventory[k].type == 74 && this.inventory[k].stack < this.inventory[k].maxStack && j >= 1000000)
+					while (this.inventory[k].Type == 74 && this.inventory[k].Stack < this.inventory[k].MaxStack && j >= 1000000)
 					{
-						this.inventory[k].stack++;
+						this.inventory[k].Stack++;
 						j -= 1000000;
 						this.DoCoins(k);
-						if (this.inventory[k].stack == 0 && num == -1)
+						if (this.inventory[k].Stack == 0 && num == -1)
 						{
 							num = k;
 						}
@@ -1887,16 +1888,16 @@ namespace Terraria_Server
 				int num2 = -1;
 				for (int l = 43; l >= 0; l--)
 				{
-					if (num2 == -1 && (this.inventory[l].type == 0 || this.inventory[l].stack == 0))
+					if (num2 == -1 && (this.inventory[l].Type == 0 || this.inventory[l].Stack == 0))
 					{
 						num2 = l;
 					}
-					while (this.inventory[l].type == 73 && this.inventory[l].stack < this.inventory[l].maxStack && j >= 10000)
+					while (this.inventory[l].Type == 73 && this.inventory[l].Stack < this.inventory[l].MaxStack && j >= 10000)
 					{
-						this.inventory[l].stack++;
+						this.inventory[l].Stack++;
 						j -= 10000;
 						this.DoCoins(l);
-						if (this.inventory[l].stack == 0 && num2 == -1)
+						if (this.inventory[l].Stack == 0 && num2 == -1)
 						{
 							num2 = l;
 						}
@@ -1924,16 +1925,16 @@ namespace Terraria_Server
 				int num3 = -1;
 				for (int m = 43; m >= 0; m--)
 				{
-					if (num3 == -1 && (this.inventory[m].type == 0 || this.inventory[m].stack == 0))
+					if (num3 == -1 && (this.inventory[m].Type == 0 || this.inventory[m].Stack == 0))
 					{
 						num3 = m;
 					}
-					while (this.inventory[m].type == 72 && this.inventory[m].stack < this.inventory[m].maxStack && j >= 100)
+					while (this.inventory[m].Type == 72 && this.inventory[m].Stack < this.inventory[m].MaxStack && j >= 100)
 					{
-						this.inventory[m].stack++;
+						this.inventory[m].Stack++;
 						j -= 100;
 						this.DoCoins(m);
-						if (this.inventory[m].stack == 0 && num3 == -1)
+						if (this.inventory[m].Stack == 0 && num3 == -1)
 						{
 							num3 = m;
 						}
@@ -1957,16 +1958,16 @@ namespace Terraria_Server
 				int num4 = -1;
 				for (int n = 43; n >= 0; n--)
 				{
-					if (num4 == -1 && (this.inventory[n].type == 0 || this.inventory[n].stack == 0))
+					if (num4 == -1 && (this.inventory[n].Type == 0 || this.inventory[n].Stack == 0))
 					{
 						num4 = n;
 					}
-					while (this.inventory[n].type == 71 && this.inventory[n].stack < this.inventory[n].maxStack && j >= 1)
+					while (this.inventory[n].Type == 71 && this.inventory[n].Stack < this.inventory[n].MaxStack && j >= 1)
 					{
-						this.inventory[n].stack++;
+						this.inventory[n].Stack++;
 						j--;
 						this.DoCoins(n);
-						if (this.inventory[n].stack == 0 && num4 == -1)
+						if (this.inventory[n].Stack == 0 && num4 == -1)
 						{
 							num4 = n;
 						}
@@ -2009,21 +2010,21 @@ namespace Terraria_Server
 			{
 				array[j] = new Item();
 				array[j] = (Item)this.inventory[j].Clone();
-				if (this.inventory[j].type == 71)
+				if (this.inventory[j].Type == 71)
 				{
-					num += this.inventory[j].stack;
+					num += this.inventory[j].Stack;
 				}
-				if (this.inventory[j].type == 72)
+				if (this.inventory[j].Type == 72)
 				{
-					num += this.inventory[j].stack * 100;
+					num += this.inventory[j].Stack * 100;
 				}
-				if (this.inventory[j].type == 73)
+				if (this.inventory[j].Type == 73)
 				{
-					num += this.inventory[j].stack * 10000;
+					num += this.inventory[j].Stack * 10000;
 				}
-				if (this.inventory[j].type == 74)
+				if (this.inventory[j].Type == 74)
 				{
-					num += this.inventory[j].stack * 1000000;
+					num += this.inventory[j].Stack * 1000000;
 				}
 			}
 			if (num >= price)
@@ -2035,15 +2036,15 @@ namespace Terraria_Server
 					{
 						for (int k = 0; k < 44; k++)
 						{
-							if (this.inventory[k].type == 74)
+							if (this.inventory[k].Type == 74)
 							{
-								while (this.inventory[k].stack > 0 && i >= 1000000)
+								while (this.inventory[k].Stack > 0 && i >= 1000000)
 								{
 									i -= 1000000;
-									this.inventory[k].stack--;
-									if (this.inventory[k].stack == 0)
+									this.inventory[k].Stack--;
+									if (this.inventory[k].Stack == 0)
 									{
-										this.inventory[k].type = 0;
+										this.inventory[k].Type = 0;
 									}
 								}
 							}
@@ -2053,15 +2054,15 @@ namespace Terraria_Server
 					{
 						for (int l = 0; l < 44; l++)
 						{
-							if (this.inventory[l].type == 73)
+							if (this.inventory[l].Type == 73)
 							{
-								while (this.inventory[l].stack > 0 && i >= 10000)
+								while (this.inventory[l].Stack > 0 && i >= 10000)
 								{
 									i -= 10000;
-									this.inventory[l].stack--;
-									if (this.inventory[l].stack == 0)
+									this.inventory[l].Stack--;
+									if (this.inventory[l].Stack == 0)
 									{
-										this.inventory[l].type = 0;
+										this.inventory[l].Type = 0;
 									}
 								}
 							}
@@ -2071,15 +2072,15 @@ namespace Terraria_Server
 					{
 						for (int m = 0; m < 44; m++)
 						{
-							if (this.inventory[m].type == 72)
+							if (this.inventory[m].Type == 72)
 							{
-								while (this.inventory[m].stack > 0 && i >= 100)
+								while (this.inventory[m].Stack > 0 && i >= 100)
 								{
 									i -= 100;
-									this.inventory[m].stack--;
-									if (this.inventory[m].stack == 0)
+									this.inventory[m].Stack--;
+									if (this.inventory[m].Stack == 0)
 									{
-										this.inventory[m].type = 0;
+										this.inventory[m].Type = 0;
 									}
 								}
 							}
@@ -2089,15 +2090,15 @@ namespace Terraria_Server
 					{
 						for (int n = 0; n < 44; n++)
 						{
-							if (this.inventory[n].type == 71)
+							if (this.inventory[n].Type == 71)
 							{
-								while (this.inventory[n].stack > 0 && i >= 1)
+								while (this.inventory[n].Stack > 0 && i >= 1)
 								{
 									i--;
-									this.inventory[n].stack--;
-									if (this.inventory[n].stack == 0)
+									this.inventory[n].Stack--;
+									if (this.inventory[n].Stack == 0)
 									{
-										this.inventory[n].type = 0;
+										this.inventory[n].Type = 0;
 									}
 								}
 							}
@@ -2108,7 +2109,7 @@ namespace Terraria_Server
 						int num2 = -1;
 						for (int num3 = 43; num3 >= 0; num3--)
 						{
-							if (this.inventory[num3].type == 0 || this.inventory[num3].stack == 0)
+							if (this.inventory[num3].Type == 0 || this.inventory[num3].Stack == 0)
 							{
 								num2 = num3;
 								break;
@@ -2127,15 +2128,15 @@ namespace Terraria_Server
 						{
 							for (int num5 = 0; num5 < 44; num5++)
 							{
-								if (this.inventory[num5].type == 74 && this.inventory[num5].stack >= 1)
+								if (this.inventory[num5].Type == 74 && this.inventory[num5].Stack >= 1)
 								{
-									this.inventory[num5].stack--;
-									if (this.inventory[num5].stack == 0)
+									this.inventory[num5].Stack--;
+									if (this.inventory[num5].Stack == 0)
 									{
-										this.inventory[num5].type = 0;
+										this.inventory[num5].Type = 0;
 									}
 									this.inventory[num2].SetDefaults(73);
-									this.inventory[num2].stack = 100;
+									this.inventory[num2].Stack = 100;
 									flag = false;
 									break;
 								}
@@ -2147,15 +2148,15 @@ namespace Terraria_Server
 							{
 								for (int num6 = 0; num6 < 44; num6++)
 								{
-									if (this.inventory[num6].type == 73 && this.inventory[num6].stack >= 1)
+									if (this.inventory[num6].Type == 73 && this.inventory[num6].Stack >= 1)
 									{
-										this.inventory[num6].stack--;
-										if (this.inventory[num6].stack == 0)
+										this.inventory[num6].Stack--;
+										if (this.inventory[num6].Stack == 0)
 										{
-											this.inventory[num6].type = 0;
+											this.inventory[num6].Type = 0;
 										}
 										this.inventory[num2].SetDefaults(72);
-										this.inventory[num2].stack = 100;
+										this.inventory[num2].Stack = 100;
 										flag = false;
 										break;
 									}
@@ -2167,15 +2168,15 @@ namespace Terraria_Server
 								{
 									for (int num7 = 0; num7 < 44; num7++)
 									{
-										if (this.inventory[num7].type == 72 && this.inventory[num7].stack >= 1)
+										if (this.inventory[num7].Type == 72 && this.inventory[num7].Stack >= 1)
 										{
-											this.inventory[num7].stack--;
-											if (this.inventory[num7].stack == 0)
+											this.inventory[num7].Stack--;
+											if (this.inventory[num7].Stack == 0)
 											{
-												this.inventory[num7].type = 0;
+												this.inventory[num7].Type = 0;
 											}
 											this.inventory[num2].SetDefaults(71);
-											this.inventory[num2].stack = 100;
+											this.inventory[num2].Stack = 100;
 											flag = false;
 											break;
 										}
@@ -2189,15 +2190,15 @@ namespace Terraria_Server
 							{
 								for (int num8 = 0; num8 < 44; num8++)
 								{
-									if (this.inventory[num8].type == 73 && this.inventory[num8].stack >= 1)
+									if (this.inventory[num8].Type == 73 && this.inventory[num8].Stack >= 1)
 									{
-										this.inventory[num8].stack--;
-										if (this.inventory[num8].stack == 0)
+										this.inventory[num8].Stack--;
+										if (this.inventory[num8].Stack == 0)
 										{
-											this.inventory[num8].type = 0;
+											this.inventory[num8].Type = 0;
 										}
 										this.inventory[num2].SetDefaults(72);
-										this.inventory[num2].stack = 100;
+										this.inventory[num2].Stack = 100;
 										flag = false;
 										break;
 									}
@@ -2207,15 +2208,15 @@ namespace Terraria_Server
 							{
 								for (int num9 = 0; num9 < 44; num9++)
 								{
-									if (this.inventory[num9].type == 74 && this.inventory[num9].stack >= 1)
+									if (this.inventory[num9].Type == 74 && this.inventory[num9].Stack >= 1)
 									{
-										this.inventory[num9].stack--;
-										if (this.inventory[num9].stack == 0)
+										this.inventory[num9].Stack--;
+										if (this.inventory[num9].Stack == 0)
 										{
-											this.inventory[num9].type = 0;
+											this.inventory[num9].Type = 0;
 										}
 										this.inventory[num2].SetDefaults(73);
-										this.inventory[num2].stack = 100;
+										this.inventory[num2].Stack = 100;
 										flag = false;
 										break;
 									}
@@ -2282,18 +2283,18 @@ namespace Terraria_Server
 					this.swimTime = 0;
 				}
 			}
-			this.head = this.armor[0].headSlot;
-			this.body = this.armor[1].bodySlot;
-			this.legs = this.armor[2].legSlot;
+			this.head = this.armor[0].HeadSlot;
+			this.body = this.armor[1].BodySlot;
+			this.legs = this.armor[2].LegSlot;
 			this.bodyFrame.Width = 40;
 			this.bodyFrame.Height = 56;
 			this.legFrame.Width = 40;
 			this.legFrame.Height = 56;
 			this.bodyFrame.X = 0;
 			this.legFrame.X = 0;
-			if (this.itemAnimation > 0 && this.inventory[this.selectedItem].useStyle != 10)
+			if (this.itemAnimation > 0 && this.inventory[this.selectedItem].UseStyle != 10)
 			{
-				if (this.inventory[this.selectedItem].useStyle == 1 || this.inventory[this.selectedItem].type == 0)
+				if (this.inventory[this.selectedItem].UseStyle == 1 || this.inventory[this.selectedItem].Type == 0)
 				{
 					if ((double)this.itemAnimation < (double)this.itemAnimationMax * 0.333)
 					{
@@ -2313,7 +2314,7 @@ namespace Terraria_Server
 				}
 				else
 				{
-					if (this.inventory[this.selectedItem].useStyle == 2)
+					if (this.inventory[this.selectedItem].UseStyle == 2)
 					{
 						if ((double)this.itemAnimation < (double)this.itemAnimationMax * 0.5)
 						{
@@ -2326,7 +2327,7 @@ namespace Terraria_Server
 					}
 					else
 					{
-						if (this.inventory[this.selectedItem].useStyle == 3)
+						if (this.inventory[this.selectedItem].UseStyle == 3)
 						{
 							if ((double)this.itemAnimation > (double)this.itemAnimationMax * 0.666)
 							{
@@ -2339,13 +2340,13 @@ namespace Terraria_Server
 						}
 						else
 						{
-							if (this.inventory[this.selectedItem].useStyle == 4)
+							if (this.inventory[this.selectedItem].UseStyle == 4)
 							{
 								this.bodyFrame.Y = this.bodyFrame.Height * 2;
 							}
 							else
 							{
-								if (this.inventory[this.selectedItem].useStyle == 5)
+								if (this.inventory[this.selectedItem].UseStyle == 5)
 								{
 									float num = this.itemRotation * (float)this.direction;
 									this.bodyFrame.Y = this.bodyFrame.Height * 3;
@@ -2365,13 +2366,13 @@ namespace Terraria_Server
 			}
 			else
 			{
-				if (this.inventory[this.selectedItem].holdStyle == 1)
+				if (this.inventory[this.selectedItem].HoldStyle == 1)
 				{
 					this.bodyFrame.Y = this.bodyFrame.Height * 3;
 				}
 				else
 				{
-					if (this.inventory[this.selectedItem].holdStyle == 2)
+					if (this.inventory[this.selectedItem].HoldStyle == 2)
 					{
 						this.bodyFrame.Y = this.bodyFrame.Height * 2;
 					}
@@ -2674,20 +2675,20 @@ namespace Terraria_Server
         {
             for (int i = 0; i < 44; i++)
             {
-                if (this.inventory[i].type >= 71 && this.inventory[i].type <= 74)
+                if (this.inventory[i].Type >= 71 && this.inventory[i].Type <= 74)
                 {
-                    int num = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.inventory[i].type, 1, false);
-                    int num2 = this.inventory[i].stack / 2;
-                    num2 = this.inventory[i].stack - num2;
-                    this.inventory[i].stack -= num2;
-                    if (this.inventory[i].stack <= 0)
+                    int num = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.inventory[i].Type, 1, false);
+                    int num2 = this.inventory[i].Stack / 2;
+                    num2 = this.inventory[i].Stack - num2;
+                    this.inventory[i].Stack -= num2;
+                    if (this.inventory[i].Stack <= 0)
                     {
                         this.inventory[i] = new Item();
                     }
-                    Main.item[num].stack = num2;
-                    Main.item[num].velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
-                    Main.item[num].velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
-                    Main.item[num].noGrabDelay = 100;
+                    Main.item[num].Stack = num2;
+                    Main.item[num].Velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
+                    Main.item[num].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
+                    Main.item[num].NoGrabDelay = 100;
                     if (Main.netMode == 1)
                     {
                         NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f, 0);
@@ -2792,29 +2793,29 @@ namespace Terraria_Server
 
         public bool ItemSpace(Item newItem)
 		{
-			if (newItem.type == 58)
+			if (newItem.Type == 58)
 			{
 				return true;
 			}
-			if (newItem.type == 184)
+			if (newItem.Type == 184)
 			{
 				return true;
 			}
 			int num = 40;
-			if (newItem.type == 71 || newItem.type == 72 || newItem.type == 73 || newItem.type == 74)
+			if (newItem.Type == 71 || newItem.Type == 72 || newItem.Type == 73 || newItem.Type == 74)
 			{
 				num = 44;
 			}
 			for (int i = 0; i < num; i++)
 			{
-				if (this.inventory[i].type == 0)
+				if (this.inventory[i].Type == 0)
 				{
 					return true;
 				}
 			}
 			for (int j = 0; j < num; j++)
 			{
-				if (this.inventory[j].type > 0 && this.inventory[j].stack < this.inventory[j].maxStack && newItem.IsTheSameAs(this.inventory[j]))
+				if (this.inventory[j].Type > 0 && this.inventory[j].Stack < this.inventory[j].MaxStack && newItem.IsTheSameAs(this.inventory[j]))
 				{
 					return true;
 				}
@@ -2824,19 +2825,19 @@ namespace Terraria_Server
 		
         public void DoCoins(int i)
 		{
-			if (this.inventory[i].stack == 100 && (this.inventory[i].type == 71 || this.inventory[i].type == 72 || this.inventory[i].type == 73))
+			if (this.inventory[i].Stack == 100 && (this.inventory[i].Type == 71 || this.inventory[i].Type == 72 || this.inventory[i].Type == 73))
 			{
-				this.inventory[i].SetDefaults(this.inventory[i].type + 1);
+				this.inventory[i].SetDefaults(this.inventory[i].Type + 1);
 				for (int j = 0; j < 44; j++)
 				{
-					if (this.inventory[j].IsTheSameAs(this.inventory[i]) && j != i && this.inventory[j].stack < this.inventory[j].maxStack)
+					if (this.inventory[j].IsTheSameAs(this.inventory[i]) && j != i && this.inventory[j].Stack < this.inventory[j].MaxStack)
 					{
-						this.inventory[j].stack++;
+						this.inventory[j].Stack++;
 						this.inventory[i].SetDefaults("");
-						this.inventory[i].active = false;
-						this.inventory[i].name = "";
-						this.inventory[i].type = 0;
-						this.inventory[i].stack = 0;
+						this.inventory[i].Active = false;
+						this.inventory[i].Name = "";
+						this.inventory[i].Type = 0;
+						this.inventory[i].Stack = 0;
 						this.DoCoins(j);
 					}
 				}
@@ -2845,12 +2846,12 @@ namespace Terraria_Server
 		
         public Item GetItem(int plr, Item newItem)
 		{
-			if (newItem.noGrabDelay > 0)
+			if (newItem.NoGrabDelay > 0)
 			{
 				return newItem;
 			}
 			int num = 0;
-			if (newItem.type == 71 || newItem.type == 72 || newItem.type == 73 || newItem.type == 74)
+			if (newItem.Type == 71 || newItem.Type == 72 || newItem.Type == 73 || newItem.Type == 74)
 			{
 				num = -4;
 			}
@@ -2861,11 +2862,11 @@ namespace Terraria_Server
 				{
 					num2 = 44 + i;
 				}
-				if (this.inventory[num2].type > 0 && this.inventory[num2].stack < this.inventory[num2].maxStack && newItem.IsTheSameAs(this.inventory[num2]))
+				if (this.inventory[num2].Type > 0 && this.inventory[num2].Stack < this.inventory[num2].MaxStack && newItem.IsTheSameAs(this.inventory[num2]))
 				{
-					if (newItem.stack + this.inventory[num2].stack <= this.inventory[num2].maxStack)
+					if (newItem.Stack + this.inventory[num2].Stack <= this.inventory[num2].MaxStack)
 					{
-						this.inventory[num2].stack += newItem.stack;
+						this.inventory[num2].Stack += newItem.Stack;
 						this.DoCoins(num2);
 						if (plr == Main.myPlayer)
 						{
@@ -2873,8 +2874,8 @@ namespace Terraria_Server
 						}
 						return new Item();
 					}
-					newItem.stack -= this.inventory[num2].maxStack - this.inventory[num2].stack;
-					this.inventory[num2].stack = this.inventory[num2].maxStack;
+					newItem.Stack -= this.inventory[num2].MaxStack - this.inventory[num2].Stack;
+					this.inventory[num2].Stack = this.inventory[num2].MaxStack;
 					this.DoCoins(num2);
 					if (plr == Main.myPlayer)
 					{
@@ -2889,7 +2890,7 @@ namespace Terraria_Server
 				{
 					num3 = 44 + j;
 				}
-				if (this.inventory[num3].type == 0)
+				if (this.inventory[num3].Type == 0)
 				{
 					this.inventory[num3] = newItem;
 					this.DoCoins(num3);
@@ -2905,28 +2906,28 @@ namespace Terraria_Server
 
         public void ItemCheck(int i)
         {
-            if (this.inventory[this.selectedItem].autoReuse)
+            if (this.inventory[this.selectedItem].AutoReuse)
             {
                 this.releaseUseItem = true;
-                if (this.itemAnimation == 1 && this.inventory[this.selectedItem].stack > 0)
+                if (this.itemAnimation == 1 && this.inventory[this.selectedItem].Stack > 0)
                 {
                     this.itemAnimation = 0;
                 }
             }
-            if (this.controlUseItem && this.itemAnimation == 0 && this.releaseUseItem && this.inventory[this.selectedItem].useStyle > 0)
+            if (this.controlUseItem && this.itemAnimation == 0 && this.releaseUseItem && this.inventory[this.selectedItem].UseStyle > 0)
             {
                 bool flag = true;
-                if (this.inventory[this.selectedItem].shoot == 6 || this.inventory[this.selectedItem].shoot == 19 || this.inventory[this.selectedItem].shoot == 33)
+                if (this.inventory[this.selectedItem].Shoot == 6 || this.inventory[this.selectedItem].Shoot == 19 || this.inventory[this.selectedItem].Shoot == 33)
                 {
                     for (int j = 0; j < 1000; j++)
                     {
-                        if (Main.projectile[j].active && Main.projectile[j].owner == Main.myPlayer && Main.projectile[j].type == this.inventory[this.selectedItem].shoot)
+                        if (Main.projectile[j].active && Main.projectile[j].owner == Main.myPlayer && Main.projectile[j].type == this.inventory[this.selectedItem].Shoot)
                         {
                             flag = false;
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].potion)
+                if (this.inventory[this.selectedItem].Potion)
                 {
                     if (this.potionDelay <= 0)
                     {
@@ -2937,13 +2938,13 @@ namespace Terraria_Server
                         flag = false;
                     }
                 }
-                if (this.inventory[this.selectedItem].mana > 0)
+                if (this.inventory[this.selectedItem].Mana > 0)
                 {
-                    if (this.inventory[this.selectedItem].type != 127 || !this.spaceGun)
+                    if (this.inventory[this.selectedItem].Type != 127 || !this.spaceGun)
                     {
-                        if (this.statMana >= (int)((float)this.inventory[this.selectedItem].mana * this.manaCost))
+                        if (this.statMana >= (int)((float)this.inventory[this.selectedItem].Mana * this.manaCost))
                         {
-                            this.statMana -= (int)((float)this.inventory[this.selectedItem].mana * this.manaCost);
+                            this.statMana -= (int)((float)this.inventory[this.selectedItem].Mana * this.manaCost);
                         }
                         else
                         {
@@ -2951,23 +2952,23 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].type == 43 && Main.dayTime)
+                if (this.inventory[this.selectedItem].Type == 43 && Main.dayTime)
                 {
                     flag = false;
                 }
-                if (this.inventory[this.selectedItem].type == 70 && !this.zoneEvil)
+                if (this.inventory[this.selectedItem].Type == 70 && !this.zoneEvil)
                 {
                     flag = false;
                 }
                
                 if (flag)
                 {
-                    if (this.inventory[this.selectedItem].useAmmo > 0)
+                    if (this.inventory[this.selectedItem].UseAmmo > 0)
                     {
                         flag = false;
                         for (int j = 0; j < 44; j++)
                         {
-                            if (this.inventory[j].ammo == this.inventory[this.selectedItem].useAmmo && this.inventory[j].stack > 0)
+                            if (this.inventory[j].Ammo == this.inventory[this.selectedItem].UseAmmo && this.inventory[j].Stack > 0)
                             {
                                 flag = true;
                                 break;
@@ -2991,20 +2992,20 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    this.channel = this.inventory[this.selectedItem].channel;
+                    this.channel = this.inventory[this.selectedItem].Channel;
                     this.attackCD = 0;
-                    if (this.inventory[this.selectedItem].shoot > 0 || this.inventory[this.selectedItem].damage == 0)
+                    if (this.inventory[this.selectedItem].Shoot > 0 || this.inventory[this.selectedItem].Damage == 0)
                     {
                         this.meleeSpeed = 1f;
                     }
-                    this.itemAnimation = (int)((float)this.inventory[this.selectedItem].useAnimation * this.meleeSpeed);
-                    this.itemAnimationMax = (int)((float)this.inventory[this.selectedItem].useAnimation * this.meleeSpeed);
+                    this.itemAnimation = (int)((float)this.inventory[this.selectedItem].UseAnimation * this.meleeSpeed);
+                    this.itemAnimationMax = (int)((float)this.inventory[this.selectedItem].UseAnimation * this.meleeSpeed);
                 }
-                if (flag && this.inventory[this.selectedItem].shoot == 18)
+                if (flag && this.inventory[this.selectedItem].Shoot == 18)
                 {
                     for (int j = 0; j < 1000; j++)
                     {
-                        if (Main.projectile[j].active && Main.projectile[j].owner == i && Main.projectile[j].type == this.inventory[this.selectedItem].shoot)
+                        if (Main.projectile[j].active && Main.projectile[j].owner == i && Main.projectile[j].type == this.inventory[this.selectedItem].Shoot)
                         {
                             Main.projectile[j].Kill();
                         }
@@ -3017,21 +3018,21 @@ namespace Terraria_Server
             }
             if (this.itemAnimation > 0)
             {
-                if (this.inventory[this.selectedItem].mana > 0)
+                if (this.inventory[this.selectedItem].Mana > 0)
                 {
                     this.manaRegenDelay = 180;
                 }
                 if (Main.dedServ)
                 {
-                    this.itemHeight = this.inventory[this.selectedItem].height;
-                    this.itemWidth = this.inventory[this.selectedItem].width;
+                    this.itemHeight = this.inventory[this.selectedItem].Height;
+                    this.itemWidth = this.inventory[this.selectedItem].Width;
                 }
                 this.itemAnimation--;
                 
             }
             else
             {
-                if (this.inventory[this.selectedItem].holdStyle == 1)
+                if (this.inventory[this.selectedItem].HoldStyle == 1)
                 {
                     if (Main.dedServ)
                     {
@@ -3042,7 +3043,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (this.inventory[this.selectedItem].holdStyle == 2)
+                    if (this.inventory[this.selectedItem].HoldStyle == 2)
                     {
                         this.itemLocation.X = this.position.X + (float)this.width * 0.5f + (float)(6 * this.direction);
                         this.itemLocation.Y = this.position.Y + 16f;
@@ -3050,7 +3051,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.inventory[this.selectedItem].type == 8)
+            if (this.inventory[this.selectedItem].Type == 8)
             {
                 int maxValue = 20;
                 if (this.itemAnimation > 0)
@@ -3090,7 +3091,7 @@ namespace Terraria_Server
             }
             else
             {
-                if (this.inventory[this.selectedItem].type == 105)
+                if (this.inventory[this.selectedItem].Type == 105)
                 {
                     int maxValue = 20;
                     if (this.itemAnimation > 0)
@@ -3130,7 +3131,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (this.inventory[this.selectedItem].type == 148)
+                    if (this.inventory[this.selectedItem].Type == 148)
                     {
                         int maxValue = 10;
                         if (this.itemAnimation > 0)
@@ -3184,13 +3185,13 @@ namespace Terraria_Server
             }
             if (i == Main.myPlayer)
             {
-                if (this.inventory[this.selectedItem].shoot > 0 && this.itemAnimation > 0 && this.itemTime == 0)
+                if (this.inventory[this.selectedItem].Shoot > 0 && this.itemAnimation > 0 && this.itemTime == 0)
                 {
-                    int num3 = this.inventory[this.selectedItem].shoot;
-                    float num4 = this.inventory[this.selectedItem].shootSpeed;
+                    int num3 = this.inventory[this.selectedItem].Shoot;
+                    float num4 = this.inventory[this.selectedItem].ShootSpeed;
                     bool flag2 = false;
-                    int num5 = this.inventory[this.selectedItem].damage;
-                    float num6 = this.inventory[this.selectedItem].knockBack;
+                    int num5 = this.inventory[this.selectedItem].Damage;
+                    float num6 = this.inventory[this.selectedItem].KnockBack;
                     if (num3 == 13 || num3 == 32)
                     {
                         this.grappling[0] = -1;
@@ -3206,25 +3207,25 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (this.inventory[this.selectedItem].useAmmo > 0)
+                    if (this.inventory[this.selectedItem].UseAmmo > 0)
                     {
                         for (int j = 0; j < 44; j++)
                         {
-                            if (this.inventory[j].ammo == this.inventory[this.selectedItem].useAmmo && this.inventory[j].stack > 0)
+                            if (this.inventory[j].Ammo == this.inventory[this.selectedItem].UseAmmo && this.inventory[j].Stack > 0)
                             {
-                                if (this.inventory[j].shoot > 0)
+                                if (this.inventory[j].Shoot > 0)
                                 {
-                                    num3 = this.inventory[j].shoot;
+                                    num3 = this.inventory[j].Shoot;
                                 }
-                                num4 += this.inventory[j].shootSpeed;
-                                num5 += this.inventory[j].damage;
-                                num6 += this.inventory[j].knockBack;
-                                this.inventory[j].stack--;
-                                if (this.inventory[j].stack <= 0)
+                                num4 += this.inventory[j].ShootSpeed;
+                                num5 += this.inventory[j].Damage;
+                                num6 += this.inventory[j].KnockBack;
+                                this.inventory[j].Stack--;
+                                if (this.inventory[j].Stack <= 0)
                                 {
-                                    this.inventory[j].active = false;
-                                    this.inventory[j].name = "";
-                                    this.inventory[j].type = 0;
+                                    this.inventory[j].Active = false;
+                                    this.inventory[j].Name = "";
+                                    this.inventory[j].Type = 0;
                                 }
                                 flag2 = true;
                                 break;
@@ -3241,15 +3242,15 @@ namespace Terraria_Server
                     }
                     if (flag2)
                     {
-                        if (this.inventory[this.selectedItem].mana > 0)
+                        if (this.inventory[this.selectedItem].Mana > 0)
                         {
                             num5 = (int)Math.Round((double)((float)num5 * this.magicBoost));
                         }
-                        if (num3 == 1 && this.inventory[this.selectedItem].type == 120)
+                        if (num3 == 1 && this.inventory[this.selectedItem].Type == 120)
                         {
                             num3 = 2;
                         }
-                        this.itemTime = this.inventory[this.selectedItem].useTime;
+                        this.itemTime = this.inventory[this.selectedItem].UseTime;
                         this.direction = -1;
                         Vector2 vector = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
                         if (num3 == 9)
@@ -3260,21 +3261,21 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (this.inventory[this.selectedItem].useStyle == 5)
+                        if (this.inventory[this.selectedItem].UseStyle == 5)
                         {
                             this.itemRotation = 0f;
                             NetMessage.SendData(41, -1, -1, "", this.whoAmi, 0f, 0f, 0f);
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].type >= 205 && this.inventory[this.selectedItem].type <= 207)
+                if (this.inventory[this.selectedItem].Type >= 205 && this.inventory[this.selectedItem].Type <= 207)
                 {
-                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].tileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].tileBoost - 2f >= (float)Player.tileTargetY)
+                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].TileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].TileBoost - 2f >= (float)Player.tileTargetY)
                     {
                         this.showItemIcon = true;
                         if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
                         {
-                            if (this.inventory[this.selectedItem].type == 205)
+                            if (this.inventory[this.selectedItem].Type == 205)
                             {
                                 bool lava = Main.tile[Player.tileTargetX, Player.tileTargetY].lava;
                                 int num10 = 0;
@@ -3299,7 +3300,7 @@ namespace Terraria_Server
                                     {
                                         this.inventory[this.selectedItem].SetDefaults(207);
                                     }
-                                    this.itemTime = this.inventory[this.selectedItem].useTime;
+                                    this.itemTime = this.inventory[this.selectedItem].UseTime;
                                     int num11 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquid;
                                     Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 0;
                                     Main.tile[Player.tileTargetX, Player.tileTargetY].lava = false;
@@ -3351,7 +3352,7 @@ namespace Terraria_Server
                                 {
                                     if (!Main.tile[Player.tileTargetX, Player.tileTargetY].active || !Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] || !Main.tileSolidTop[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type])
                                     {
-                                        if (this.inventory[this.selectedItem].type == 207)
+                                        if (this.inventory[this.selectedItem].Type == 207)
                                         {
                                             if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].lava)
                                             {
@@ -3359,7 +3360,7 @@ namespace Terraria_Server
                                                 Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
                                                 WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                                 this.inventory[this.selectedItem].SetDefaults(205);
-                                                this.itemTime = this.inventory[this.selectedItem].useTime;
+                                                this.itemTime = this.inventory[this.selectedItem].UseTime;
                                                 if (Main.netMode == 1)
                                                 {
                                                     NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
@@ -3374,7 +3375,7 @@ namespace Terraria_Server
                                                 Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
                                                 WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                                 this.inventory[this.selectedItem].SetDefaults(205);
-                                                this.itemTime = this.inventory[this.selectedItem].useTime;
+                                                this.itemTime = this.inventory[this.selectedItem].UseTime;
                                                 if (Main.netMode == 1)
                                                 {
                                                     NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
@@ -3387,9 +3388,9 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].pick > 0 || this.inventory[this.selectedItem].axe > 0 || this.inventory[this.selectedItem].hammer > 0)
+                if (this.inventory[this.selectedItem].Pick > 0 || this.inventory[this.selectedItem].Axe > 0 || this.inventory[this.selectedItem].Hammer > 0)
                 {
-                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].tileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].tileBoost - 2f >= (float)Player.tileTargetY)
+                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].TileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].TileBoost - 2f >= (float)Player.tileTargetY)
                     {
                         this.showItemIcon = true;
                         if (Main.tile[Player.tileTargetX, Player.tileTargetY].active)
@@ -3412,17 +3413,17 @@ namespace Terraria_Server
                                     {
                                         if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 48)
                                         {
-                                            this.hitTile += this.inventory[this.selectedItem].hammer / 3;
+                                            this.hitTile += this.inventory[this.selectedItem].Hammer / 3;
                                         }
                                         else
                                         {
-                                            this.hitTile += this.inventory[this.selectedItem].hammer;
+                                            this.hitTile += this.inventory[this.selectedItem].Hammer;
                                         }
-                                        if ((double)Player.tileTargetY > Main.rockLayer && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 77 && this.inventory[this.selectedItem].hammer < 60)
+                                        if ((double)Player.tileTargetY > Main.rockLayer && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 77 && this.inventory[this.selectedItem].Hammer < 60)
                                         {
                                             this.hitTile = 0;
                                         }
-                                        if (this.inventory[this.selectedItem].hammer > 0)
+                                        if (this.inventory[this.selectedItem].Hammer > 0)
                                         {
                                             if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 26)
                                             {
@@ -3462,7 +3463,7 @@ namespace Terraria_Server
                                                     }
                                                 }
                                             }
-                                            this.itemTime = this.inventory[this.selectedItem].useTime;
+                                            this.itemTime = this.inventory[this.selectedItem].UseTime;
                                         }
                                     }
                                     else
@@ -3471,13 +3472,13 @@ namespace Terraria_Server
                                         {
                                             if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 30)
                                             {
-                                                this.hitTile += this.inventory[this.selectedItem].axe * 5;
+                                                this.hitTile += this.inventory[this.selectedItem].Axe * 5;
                                             }
                                             else
                                             {
-                                                this.hitTile += this.inventory[this.selectedItem].axe;
+                                                this.hitTile += this.inventory[this.selectedItem].Axe;
                                             }
-                                            if (this.inventory[this.selectedItem].axe > 0)
+                                            if (this.inventory[this.selectedItem].Axe > 0)
                                             {
                                                 if (this.hitTile >= 100)
                                                 {
@@ -3496,46 +3497,46 @@ namespace Terraria_Server
                                                         NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
                                                     }
                                                 }
-                                                this.itemTime = this.inventory[this.selectedItem].useTime;
+                                                this.itemTime = this.inventory[this.selectedItem].UseTime;
                                             }
                                         }
                                         else
                                         {
-                                            if (this.inventory[this.selectedItem].pick > 0)
+                                            if (this.inventory[this.selectedItem].Pick > 0)
                                             {
                                                 if (Main.tileDungeon[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 37 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 25 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 58)
                                                 {
-                                                    this.hitTile += this.inventory[this.selectedItem].pick / 2;
+                                                    this.hitTile += this.inventory[this.selectedItem].Pick / 2;
                                                 }
                                                 else
                                                 {
-                                                    this.hitTile += this.inventory[this.selectedItem].pick;
+                                                    this.hitTile += this.inventory[this.selectedItem].Pick;
                                                 }
-                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 25 && this.inventory[this.selectedItem].pick < 65)
+                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 25 && this.inventory[this.selectedItem].Pick < 65)
                                                 {
                                                     this.hitTile = 0;
                                                 }
                                                 else
                                                 {
-                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 37 && this.inventory[this.selectedItem].pick < 55)
+                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 37 && this.inventory[this.selectedItem].Pick < 55)
                                                     {
                                                         this.hitTile = 0;
                                                     }
                                                     else
                                                     {
-                                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 56 && this.inventory[this.selectedItem].pick < 65)
+                                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 56 && this.inventory[this.selectedItem].Pick < 65)
                                                         {
                                                             this.hitTile = 0;
                                                         }
                                                         else
                                                         {
-                                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 58 && this.inventory[this.selectedItem].pick < 65)
+                                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 58 && this.inventory[this.selectedItem].Pick < 65)
                                                             {
                                                                 this.hitTile = 0;
                                                             }
                                                             else
                                                             {
-                                                                if (Main.tileDungeon[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] && this.inventory[this.selectedItem].pick < 65)
+                                                                if (Main.tileDungeon[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] && this.inventory[this.selectedItem].Pick < 65)
                                                                 {
                                                                     if ((double)Player.tileTargetX < (double)Main.maxTilesX * 0.25 || (double)Player.tileTargetX > (double)Main.maxTilesX * 0.75)
                                                                     {
@@ -3548,7 +3549,7 @@ namespace Terraria_Server
                                                 }
                                                 if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 40 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 53 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 59)
                                                 {
-                                                    this.hitTile += this.inventory[this.selectedItem].pick;
+                                                    this.hitTile += this.inventory[this.selectedItem].Pick;
                                                 }
                                                 if (this.hitTile >= 100)
                                                 {
@@ -3567,7 +3568,7 @@ namespace Terraria_Server
                                                         NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
                                                     }
                                                 }
-                                                this.itemTime = this.inventory[this.selectedItem].useTime;
+                                                this.itemTime = this.inventory[this.selectedItem].UseTime;
                                             }
                                         }
                                     }
@@ -3578,7 +3579,7 @@ namespace Terraria_Server
                         {
                             if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
                             {
-                                if (this.inventory[this.selectedItem].hammer > 0)
+                                if (this.inventory[this.selectedItem].Hammer > 0)
                                 {
                                     bool flag3 = true;
                                     if (!Main.wallHouse[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall])
@@ -3604,7 +3605,7 @@ namespace Terraria_Server
                                             this.hitTileX = Player.tileTargetX;
                                             this.hitTileY = Player.tileTargetY;
                                         }
-                                        this.hitTile += this.inventory[this.selectedItem].hammer;
+                                        this.hitTile += this.inventory[this.selectedItem].Hammer;
                                         if (this.hitTile >= 100)
                                         {
                                             this.hitTile = 0;
@@ -3622,18 +3623,18 @@ namespace Terraria_Server
                                                 NetMessage.SendData(17, -1, -1, "", 2, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
                                             }
                                         }
-                                        this.itemTime = this.inventory[this.selectedItem].useTime;
+                                        this.itemTime = this.inventory[this.selectedItem].UseTime;
                                     }
                                 }
                             }
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].type == 29 && this.itemAnimation > 0 && this.statLifeMax < 400)
+                if (this.inventory[this.selectedItem].Type == 29 && this.itemAnimation > 0 && this.statLifeMax < 400)
                 {
                     if (this.itemTime == 0)
                     {
-                        this.itemTime = this.inventory[this.selectedItem].useTime;
+                        this.itemTime = this.inventory[this.selectedItem].UseTime;
                         this.statLifeMax += 20;
                         this.statLife += 20;
                         if (Main.myPlayer == this.whoAmi)
@@ -3642,11 +3643,11 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].type == 109 && this.itemAnimation > 0 && this.statManaMax < 200)
+                if (this.inventory[this.selectedItem].Type == 109 && this.itemAnimation > 0 && this.statManaMax < 200)
                 {
                     if (this.itemTime == 0)
                     {
-                        this.itemTime = this.inventory[this.selectedItem].useTime;
+                        this.itemTime = this.inventory[this.selectedItem].UseTime;
                         this.statManaMax += 20;
                         this.statMana += 20;
                         if (Main.myPlayer == this.whoAmi)
@@ -3655,17 +3656,17 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].createTile >= 0)
+                if (this.inventory[this.selectedItem].CreateTile >= 0)
                 {
-                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].tileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].tileBoost - 2f >= (float)Player.tileTargetY)
+                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].TileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].TileBoost - 2f >= (float)Player.tileTargetY)
                     {
                         this.showItemIcon = true;
-                        if (!Main.tile[Player.tileTargetX, Player.tileTargetY].active || this.inventory[this.selectedItem].createTile == 23 || this.inventory[this.selectedItem].createTile == 2 || this.inventory[this.selectedItem].createTile == 60 || this.inventory[this.selectedItem].createTile == 70)
+                        if (!Main.tile[Player.tileTargetX, Player.tileTargetY].active || this.inventory[this.selectedItem].CreateTile == 23 || this.inventory[this.selectedItem].CreateTile == 2 || this.inventory[this.selectedItem].CreateTile == 60 || this.inventory[this.selectedItem].CreateTile == 70)
                         {
                             if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
                             {
                                 bool flag4 = false;
-                                if (this.inventory[this.selectedItem].createTile == 23 || this.inventory[this.selectedItem].createTile == 2)
+                                if (this.inventory[this.selectedItem].CreateTile == 23 || this.inventory[this.selectedItem].CreateTile == 2)
                                 {
                                     if (Main.tile[Player.tileTargetX, Player.tileTargetY].active && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 0)
                                     {
@@ -3674,7 +3675,7 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    if (this.inventory[this.selectedItem].createTile == 60 || this.inventory[this.selectedItem].createTile == 70)
+                                    if (this.inventory[this.selectedItem].CreateTile == 60 || this.inventory[this.selectedItem].CreateTile == 70)
                                     {
                                         if (Main.tile[Player.tileTargetX, Player.tileTargetY].active && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 59)
                                         {
@@ -3683,7 +3684,7 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (this.inventory[this.selectedItem].createTile == 4)
+                                        if (this.inventory[this.selectedItem].CreateTile == 4)
                                         {
                                             int num13 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type;
                                             int num14 = (int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY].type;
@@ -3741,7 +3742,7 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            if (this.inventory[this.selectedItem].createTile == 78)
+                                            if (this.inventory[this.selectedItem].CreateTile == 78)
                                             {
                                                 if (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].active && (Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type] || Main.tileTable[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type]))
                                                 {
@@ -3750,7 +3751,7 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if (this.inventory[this.selectedItem].createTile == 13 || this.inventory[this.selectedItem].createTile == 29 || this.inventory[this.selectedItem].createTile == 33 || this.inventory[this.selectedItem].createTile == 49)
+                                                if (this.inventory[this.selectedItem].CreateTile == 13 || this.inventory[this.selectedItem].CreateTile == 29 || this.inventory[this.selectedItem].CreateTile == 33 || this.inventory[this.selectedItem].CreateTile == 49)
                                                 {
                                                     if (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].active && Main.tileTable[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type])
                                                     {
@@ -3759,7 +3760,7 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    if (this.inventory[this.selectedItem].createTile == 51)
+                                                    if (this.inventory[this.selectedItem].CreateTile == 51)
                                                     {
                                                         if (Main.tile[Player.tileTargetX + 1, Player.tileTargetY].active || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].active || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].active || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].active || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].wall > 0)
                                                         {
@@ -3780,14 +3781,14 @@ namespace Terraria_Server
                                 }
                                 if (flag4)
                                 {
-                                    if (WorldGen.PlaceTile(Player.tileTargetX, Player.tileTargetY, this.inventory[this.selectedItem].createTile, false, false, this.whoAmi))
+                                    if (WorldGen.PlaceTile(Player.tileTargetX, Player.tileTargetY, this.inventory[this.selectedItem].CreateTile, false, false, this.whoAmi))
                                     {
-                                        this.itemTime = this.inventory[this.selectedItem].useTime;
+                                        this.itemTime = this.inventory[this.selectedItem].UseTime;
                                         if (Main.netMode == 1)
                                         {
-                                            NetMessage.SendData(17, -1, -1, "", 1, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.inventory[this.selectedItem].createTile);
+                                            NetMessage.SendData(17, -1, -1, "", 1, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.inventory[this.selectedItem].CreateTile);
                                         }
-                                        if (this.inventory[this.selectedItem].createTile == 15)
+                                        if (this.inventory[this.selectedItem].CreateTile == 15)
                                         {
                                             if (this.direction == 1)
                                             {
@@ -3803,7 +3804,7 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            if (this.inventory[this.selectedItem].createTile == 79)
+                                            if (this.inventory[this.selectedItem].CreateTile == 79)
                                             {
                                                 if (Main.netMode == 1)
                                                 {
@@ -3817,24 +3818,24 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.inventory[this.selectedItem].createWall >= 0)
+                if (this.inventory[this.selectedItem].CreateWall >= 0)
                 {
-                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].tileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].tileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].tileBoost - 2f >= (float)Player.tileTargetY)
+                    if (this.position.X / 16f - (float)Player.tileRangeX - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetX && (this.position.X + (float)this.width) / 16f + (float)Player.tileRangeX + (float)this.inventory[this.selectedItem].TileBoost - 1f >= (float)Player.tileTargetX && this.position.Y / 16f - (float)Player.tileRangeY - (float)this.inventory[this.selectedItem].TileBoost <= (float)Player.tileTargetY && (this.position.Y + (float)this.height) / 16f + (float)Player.tileRangeY + (float)this.inventory[this.selectedItem].TileBoost - 2f >= (float)Player.tileTargetY)
                     {
                         this.showItemIcon = true;
                         if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
                         {
                             if (Main.tile[Player.tileTargetX + 1, Player.tileTargetY].active || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].active || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].active || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].active || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].wall > 0)
                             {
-                                if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall != this.inventory[this.selectedItem].createWall)
+                                if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall != this.inventory[this.selectedItem].CreateWall)
                                 {
-                                    WorldGen.PlaceWall(Player.tileTargetX, Player.tileTargetY, this.inventory[this.selectedItem].createWall, false);
-                                    if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall == this.inventory[this.selectedItem].createWall)
+                                    WorldGen.PlaceWall(Player.tileTargetX, Player.tileTargetY, this.inventory[this.selectedItem].CreateWall, false);
+                                    if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall == this.inventory[this.selectedItem].CreateWall)
                                     {
-                                        this.itemTime = this.inventory[this.selectedItem].useTime;
+                                        this.itemTime = this.inventory[this.selectedItem].UseTime;
                                         if (Main.netMode == 1)
                                         {
-                                            NetMessage.SendData(17, -1, -1, "", 3, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.inventory[this.selectedItem].createWall);
+                                            NetMessage.SendData(17, -1, -1, "", 3, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.inventory[this.selectedItem].CreateWall);
                                         }
                                     }
                                 }
@@ -3843,20 +3844,20 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.inventory[this.selectedItem].damage >= 0 && this.inventory[this.selectedItem].type > 0 && !this.inventory[this.selectedItem].noMelee)
+            if (this.inventory[this.selectedItem].Damage >= 0 && this.inventory[this.selectedItem].Type > 0 && !this.inventory[this.selectedItem].NoMelee)
             {
                 if (this.itemAnimation > 0)
                 {
                     bool flag5 = false;
                     Rectangle rectangle = new Rectangle((int)this.itemLocation.X, (int)this.itemLocation.Y, 32, 32);
-                    rectangle.Width = (int)((float)rectangle.Width * this.inventory[this.selectedItem].scale);
-                    rectangle.Height = (int)((float)rectangle.Height * this.inventory[this.selectedItem].scale);
+                    rectangle.Width = (int)((float)rectangle.Width * this.inventory[this.selectedItem].Scale);
+                    rectangle.Height = (int)((float)rectangle.Height * this.inventory[this.selectedItem].Scale);
                     if (this.direction == -1)
                     {
                         rectangle.X -= rectangle.Width;
                     }
                     rectangle.Y -= rectangle.Height;
-                    if (this.inventory[this.selectedItem].useStyle == 1)
+                    if (this.inventory[this.selectedItem].UseStyle == 1)
                     {
                         if ((double)this.itemAnimation < (double)this.itemAnimationMax * 0.333)
                         {
@@ -3884,7 +3885,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (this.inventory[this.selectedItem].useStyle == 3)
+                        if (this.inventory[this.selectedItem].UseStyle == 3)
                         {
                             if ((double)this.itemAnimation > (double)this.itemAnimationMax * 0.666)
                             {
@@ -3904,7 +3905,7 @@ namespace Terraria_Server
                     }
                     if (!flag5)
                     {
-                        if (this.inventory[this.selectedItem].type == 44 || this.inventory[this.selectedItem].type == 45 || this.inventory[this.selectedItem].type == 46 || this.inventory[this.selectedItem].type == 103 || this.inventory[this.selectedItem].type == 104)
+                        if (this.inventory[this.selectedItem].Type == 44 || this.inventory[this.selectedItem].Type == 45 || this.inventory[this.selectedItem].Type == 46 || this.inventory[this.selectedItem].Type == 103 || this.inventory[this.selectedItem].Type == 104)
                         {
                             if (Main.rand.Next(15) == 0)
                             {
@@ -3919,7 +3920,7 @@ namespace Terraria_Server
                                 Dust.NewDust(arg_49D5_0, arg_49D5_1, arg_49D5_2, arg_49D5_3, arg_49D5_4, arg_49D5_5, arg_49D5_6, newColor, 1.3f);
                             }
                         }
-                        if (this.inventory[this.selectedItem].type == 65)
+                        if (this.inventory[this.selectedItem].Type == 65)
                         {
                             if (Main.rand.Next(5) == 0)
                             {
@@ -3938,7 +3939,7 @@ namespace Terraria_Server
                                 Gore.NewGore(new Vector2((float)rectangle.X, (float)rectangle.Y), default(Vector2), Main.rand.Next(16, 18));
                             }
                         }
-                        if (this.inventory[this.selectedItem].type == 190 || this.inventory[this.selectedItem].type == 213)
+                        if (this.inventory[this.selectedItem].Type == 190 || this.inventory[this.selectedItem].Type == 213)
                         {
                             Vector2 arg_4B50_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
                             int arg_4B50_1 = rectangle.Width;
@@ -3951,7 +3952,7 @@ namespace Terraria_Server
                             int num20 = Dust.NewDust(arg_4B50_0, arg_4B50_1, arg_4B50_2, arg_4B50_3, arg_4B50_4, arg_4B50_5, arg_4B50_6, newColor, 1.2f);
                             Main.dust[num20].noGravity = true;
                         }
-                        if (this.inventory[this.selectedItem].type == 121)
+                        if (this.inventory[this.selectedItem].Type == 121)
                         {
                             for (int j = 0; j < 2; j++)
                             {
@@ -3971,7 +3972,7 @@ namespace Terraria_Server
                                 expr_4C32_cp_0.velocity.Y = expr_4C32_cp_0.velocity.Y * 2f;
                             }
                         }
-                        if (this.inventory[this.selectedItem].type == 122 || this.inventory[this.selectedItem].type == 217)
+                        if (this.inventory[this.selectedItem].Type == 122 || this.inventory[this.selectedItem].Type == 217)
                         {
                             Vector2 arg_4CF3_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
                             int arg_4CF3_1 = rectangle.Width;
@@ -3984,7 +3985,7 @@ namespace Terraria_Server
                             int num20 = Dust.NewDust(arg_4CF3_0, arg_4CF3_1, arg_4CF3_2, arg_4CF3_3, arg_4CF3_4, arg_4CF3_5, arg_4CF3_6, newColor, 1.9f);
                             Main.dust[num20].noGravity = true;
                         }
-                        if (this.inventory[this.selectedItem].type == 155)
+                        if (this.inventory[this.selectedItem].Type == 155)
                         {
                             Vector2 arg_4D91_0 = new Vector2((float)rectangle.X, (float)rectangle.Y);
                             int arg_4D91_1 = rectangle.Width;
@@ -4031,7 +4032,7 @@ namespace Terraria_Server
                                     {
                                         if (Main.npc[j].noTileCollide || Collision.CanHit(this.position, this.width, this.height, Main.npc[j].position, Main.npc[j].width, Main.npc[j].height))
                                         {
-                                            Main.npc[j].StrikeNPC(this.inventory[this.selectedItem].damage, this.inventory[this.selectedItem].knockBack, this.direction);
+                                            Main.npc[j].StrikeNPC(this.inventory[this.selectedItem].Damage, this.inventory[this.selectedItem].KnockBack, this.direction);
                                             if (Main.netMode == 1)
                                             {
                                                 NetMessage.SendData(24, -1, -1, "", j, (float)i, 0f, 0f);
@@ -4055,10 +4056,10 @@ namespace Terraria_Server
                                             {
                                                 if (Collision.CanHit(this.position, this.width, this.height, Main.player[j].position, Main.player[j].width, Main.player[j].height))
                                                 {
-                                                    Main.player[j].Hurt(this.inventory[this.selectedItem].damage, this.direction, true, false);
+                                                    Main.player[j].Hurt(this.inventory[this.selectedItem].Damage, this.direction, true, false);
                                                     if (Main.netMode != 0)
                                                     {
-                                                        NetMessage.SendData(26, -1, -1, "", j, (float)this.direction, (float)this.inventory[this.selectedItem].damage, 1f);
+                                                        NetMessage.SendData(26, -1, -1, "", j, (float)this.direction, (float)this.inventory[this.selectedItem].Damage, 1f);
                                                     }
                                                     this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
                                                 }
@@ -4073,37 +4074,37 @@ namespace Terraria_Server
             }
             if (this.itemTime == 0 && this.itemAnimation > 0)
             {
-                if (this.inventory[this.selectedItem].healLife > 0)
+                if (this.inventory[this.selectedItem].HealLife > 0)
                 {
-                    this.statLife += this.inventory[this.selectedItem].healLife;
-                    this.itemTime = this.inventory[this.selectedItem].useTime;
+                    this.statLife += this.inventory[this.selectedItem].HealLife;
+                    this.itemTime = this.inventory[this.selectedItem].UseTime;
                     if (Main.myPlayer == this.whoAmi)
                     {
-                        this.HealEffect(this.inventory[this.selectedItem].healLife);
+                        this.HealEffect(this.inventory[this.selectedItem].HealLife);
                     }
                 }
-                if (this.inventory[this.selectedItem].healMana > 0)
+                if (this.inventory[this.selectedItem].HealMana > 0)
                 {
-                    this.statMana += this.inventory[this.selectedItem].healMana;
-                    this.itemTime = this.inventory[this.selectedItem].useTime;
+                    this.statMana += this.inventory[this.selectedItem].HealMana;
+                    this.itemTime = this.inventory[this.selectedItem].UseTime;
                     if (Main.myPlayer == this.whoAmi)
                     {
-                        this.ManaEffect(this.inventory[this.selectedItem].healMana);
+                        this.ManaEffect(this.inventory[this.selectedItem].HealMana);
                     }
                 }
             }
-            if (this.itemTime == 0 && this.itemAnimation > 0 && (this.inventory[this.selectedItem].type == 43 || this.inventory[this.selectedItem].type == 70))
+            if (this.itemTime == 0 && this.itemAnimation > 0 && (this.inventory[this.selectedItem].Type == 43 || this.inventory[this.selectedItem].Type == 70))
             {
-                this.itemTime = this.inventory[this.selectedItem].useTime;
+                this.itemTime = this.inventory[this.selectedItem].UseTime;
                 bool flag6 = false;
                 int num25 = 4;
-                if (this.inventory[this.selectedItem].type == 43)
+                if (this.inventory[this.selectedItem].Type == 43)
                 {
                     num25 = 4;
                 }
                 else
                 {
-                    if (this.inventory[this.selectedItem].type == 70)
+                    if (this.inventory[this.selectedItem].Type == 70)
                     {
                         num25 = 13;
                     }
@@ -4125,7 +4126,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (this.inventory[this.selectedItem].type == 43)
+                    if (this.inventory[this.selectedItem].Type == 43)
                     {
                         if (!Main.dayTime)
                         {
@@ -4137,7 +4138,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (this.inventory[this.selectedItem].type == 70)
+                        if (this.inventory[this.selectedItem].Type == 70)
                         {
                             if (this.zoneEvil)
                             {
@@ -4150,7 +4151,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.inventory[this.selectedItem].type == 50 && this.itemAnimation > 0)
+            if (this.inventory[this.selectedItem].Type == 50 && this.itemAnimation > 0)
             {
                 if (Main.rand.Next(2) == 0)
                 {
@@ -4166,11 +4167,11 @@ namespace Terraria_Server
                 }
                 if (this.itemTime == 0)
                 {
-                    this.itemTime = this.inventory[this.selectedItem].useTime;
+                    this.itemTime = this.inventory[this.selectedItem].UseTime;
                 }
                 else
                 {
-                    if (this.itemTime == this.inventory[this.selectedItem].useTime / 2)
+                    if (this.itemTime == this.inventory[this.selectedItem].UseTime / 2)
                     {
                         for (int j = 0; j < 70; j++)
                         {
@@ -4214,15 +4215,15 @@ namespace Terraria_Server
             }
             if (i == Main.myPlayer)
             {
-                if (this.itemTime == this.inventory[this.selectedItem].useTime && this.inventory[this.selectedItem].consumable)
+                if (this.itemTime == this.inventory[this.selectedItem].UseTime && this.inventory[this.selectedItem].Consumable)
                 {
-                    this.inventory[this.selectedItem].stack--;
-                    if (this.inventory[this.selectedItem].stack <= 0)
+                    this.inventory[this.selectedItem].Stack--;
+                    if (this.inventory[this.selectedItem].Stack <= 0)
                     {
                         this.itemTime = this.itemAnimation;
                     }
                 }
-                if (this.inventory[this.selectedItem].stack <= 0 && this.itemAnimation == 0)
+                if (this.inventory[this.selectedItem].Stack <= 0 && this.itemAnimation == 0)
                 {
                     this.inventory[this.selectedItem] = new Item();
                 }
@@ -4272,20 +4273,20 @@ namespace Terraria_Server
 		{
 			for (int i = 0; i < 44; i++)
 			{
-				if (this.inventory[i].type >= 71 && this.inventory[i].type <= 74)
+				if (this.inventory[i].Type >= 71 && this.inventory[i].Type <= 74)
 				{
-					int num = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.inventory[i].type, 1, false);
-					int num2 = this.inventory[i].stack / 2;
-					num2 = this.inventory[i].stack - num2;
-					this.inventory[i].stack -= num2;
-					if (this.inventory[i].stack <= 0)
+					int num = Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, this.inventory[i].Type, 1, false);
+					int num2 = this.inventory[i].Stack / 2;
+					num2 = this.inventory[i].Stack - num2;
+					this.inventory[i].Stack -= num2;
+					if (this.inventory[i].Stack <= 0)
 					{
 						this.inventory[i] = new Item();
 					}
-					Main.item[num].stack = num2;
-					Main.item[num].velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
-					Main.item[num].velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
-					Main.item[num].noGrabDelay = 100;
+					Main.item[num].Stack = num2;
+					Main.item[num].Velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
+					Main.item[num].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
+					Main.item[num].NoGrabDelay = 100;
 					if (Main.netMode == 1)
 					{
 						NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
@@ -4474,7 +4475,7 @@ namespace Terraria_Server
         {
             for (int i = 0; i < 44; i++)
             {
-                if (type == this.inventory[i].type)
+                if (type == this.inventory[i].Type)
                 {
                     return true;
                 }
@@ -4536,29 +4537,29 @@ namespace Terraria_Server
 					binaryWriter.Write(newPlayer.shoeColor.B);
 					for (int i = 0; i < 8; i++)
 					{
-						if (newPlayer.armor[i].name == null)
+						if (newPlayer.armor[i].Name == null)
 						{
-							newPlayer.armor[i].name = "";
+							newPlayer.armor[i].Name = "";
 						}
-						binaryWriter.Write(newPlayer.armor[i].name);
+						binaryWriter.Write(newPlayer.armor[i].Name);
 					}
 					for (int j = 0; j < 44; j++)
 					{
-						if (newPlayer.inventory[j].name == null)
+						if (newPlayer.inventory[j].Name == null)
 						{
-							newPlayer.inventory[j].name = "";
+							newPlayer.inventory[j].Name = "";
 						}
-						binaryWriter.Write(newPlayer.inventory[j].name);
-						binaryWriter.Write(newPlayer.inventory[j].stack);
+						binaryWriter.Write(newPlayer.inventory[j].Name);
+						binaryWriter.Write(newPlayer.inventory[j].Stack);
 					}
 					for (int k = 0; k < Chest.maxItems; k++)
 					{
-						if (newPlayer.bank[k].name == null)
+						if (newPlayer.bank[k].Name == null)
 						{
-							newPlayer.bank[k].name = "";
+							newPlayer.bank[k].Name = "";
 						}
-						binaryWriter.Write(newPlayer.bank[k].name);
-						binaryWriter.Write(newPlayer.bank[k].stack);
+						binaryWriter.Write(newPlayer.bank[k].Name);
+						binaryWriter.Write(newPlayer.bank[k].Stack);
 					}
 					for (int l = 0; l < 200; l++)
 					{
@@ -4640,12 +4641,12 @@ namespace Terraria_Server
 							for (int j = 0; j < 44; j++)
 							{
 								player.inventory[j].SetDefaults(Item.VersionName(binaryReader.ReadString(), release));
-								player.inventory[j].stack = binaryReader.ReadInt32();
+								player.inventory[j].Stack = binaryReader.ReadInt32();
 							}
 							for (int k = 0; k < Chest.maxItems; k++)
 							{
 								player.bank[k].SetDefaults(Item.VersionName(binaryReader.ReadString(), release));
-								player.bank[k].stack = binaryReader.ReadInt32();
+								player.bank[k].Stack = binaryReader.ReadInt32();
 							}
 							for (int l = 0; l < 200; l++)
 							{
@@ -4692,15 +4693,15 @@ namespace Terraria_Server
 				if (i < 8)
 				{
 					this.armor[i] = new Item();
-					this.armor[i].name = "";
+					this.armor[i].Name = "";
 				}
 				this.inventory[i] = new Item();
-				this.inventory[i].name = "";
+				this.inventory[i].Name = "";
 			}
 			for (int j = 0; j < Chest.maxItems; j++)
 			{
 				this.bank[j] = new Item();
-				this.bank[j].name = "";
+				this.bank[j].Name = "";
 			}
 			this.grappling[0] = -1;
 			this.inventory[0].SetDefaults("Copper Pickaxe");
@@ -4813,7 +4814,7 @@ namespace Terraria_Server
 				" by ", 
 				Main.player[plr].name, 
 				"'s ", 
-				Main.player[plr].inventory[Main.player[plr].selectedItem].name, 
+				Main.player[plr].inventory[Main.player[plr].selectedItem].Name, 
 				"."
 			});
                 }

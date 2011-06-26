@@ -3,6 +3,7 @@ using Terraria_Server.Commands;
 using System;
 using System.IO;
 using System.Diagnostics;
+using Terraria_Server.Items;
 
 namespace Terraria_Server
 {
@@ -22,6 +23,7 @@ namespace Terraria_Server
         {
             try
             {
+                ItemRepository item = ItemRepository.Instance;
                 string MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_RELEASE + "}) #"
                     + Statics.BUILD;
                 Console.Title = MODInfo;

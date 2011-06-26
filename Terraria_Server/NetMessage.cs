@@ -141,16 +141,16 @@ namespace Terraria_Server
 									byte b5;
 									if (number2 < 44f)
 									{
-										b5 = (byte)Main.player[number].inventory[(int)number2].stack;
-										if (Main.player[number].inventory[(int)number2].stack < 0)
+										b5 = (byte)Main.player[number].inventory[(int)number2].Stack;
+										if (Main.player[number].inventory[(int)number2].Stack < 0)
 										{
 											b5 = 0;
 										}
 									}
 									else
 									{
-										b5 = (byte)Main.player[number].armor[(int)number2 - 44].stack;
-										if (Main.player[number].armor[(int)number2 - 44].stack < 0)
+										b5 = (byte)Main.player[number].armor[(int)number2 - 44].Stack;
+										if (Main.player[number].armor[(int)number2 - 44].Stack < 0)
 										{
 											b5 = 0;
 										}
@@ -661,15 +661,15 @@ namespace Terraria_Server
 																								{
                                                                                                     byte[] bytes88 = BitConverter.GetBytes(packetId);
                                                                                                     byte[] bytes89 = BitConverter.GetBytes((short)number);
-                                                                                                    byte[] bytes90 = BitConverter.GetBytes(Main.item[number].position.X);
-                                                                                                    byte[] bytes91 = BitConverter.GetBytes(Main.item[number].position.Y);
-                                                                                                    byte[] bytes92 = BitConverter.GetBytes(Main.item[number].velocity.X);
-                                                                                                    byte[] bytes93 = BitConverter.GetBytes(Main.item[number].velocity.Y);
-                                                                                                    byte b26 = (byte)Main.item[number].stack;
+                                                                                                    byte[] bytes90 = BitConverter.GetBytes(Main.item[number].Position.X);
+                                                                                                    byte[] bytes91 = BitConverter.GetBytes(Main.item[number].Position.Y);
+                                                                                                    byte[] bytes92 = BitConverter.GetBytes(Main.item[number].Velocity.X);
+                                                                                                    byte[] bytes93 = BitConverter.GetBytes(Main.item[number].Velocity.Y);
+                                                                                                    byte b26 = (byte)Main.item[number].Stack;
                                                                                                     string text3 = "0";
-                                                                                                    if (Main.item[number].active && Main.item[number].stack > 0)
+                                                                                                    if (Main.item[number].Active && Main.item[number].Stack > 0)
                                                                                                     {
-                                                                                                        text3 = Main.item[number].name;
+                                                                                                        text3 = Main.item[number].Name;
                                                                                                     }
                                                                                                     if (text3 == null)
                                                                                                     {
@@ -700,7 +700,7 @@ namespace Terraria_Server
 																									{
 																										byte[] bytes96 = BitConverter.GetBytes(packetId);
 																										byte[] bytes97 = BitConverter.GetBytes((short)number);
-																										byte b26 = (byte)Main.item[number].owner;
+																										byte b26 = (byte)Main.item[number].Owner;
 																										num2 += bytes97.Length + 1;
 																										byte[] bytes98 = BitConverter.GetBytes(num2 - 4);
 																										Buffer.BlockCopy(bytes98, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
@@ -937,15 +937,15 @@ namespace Terraria_Server
 																																				byte[] bytes143 = BitConverter.GetBytes(packetId);
 																																				byte[] bytes144 = BitConverter.GetBytes((short)number);
 																																				byte b39 = (byte)number2;
-																																				byte b40 = (byte)Main.chest[number].item[(int)number2].stack;
+																																				byte b40 = (byte)Main.chest[number].contents[(int)number2].Stack;
 																																				byte[] bytes145;
-																																				if (Main.chest[number].item[(int)number2].name == null)
+																																				if (Main.chest[number].contents[(int)number2].Name == null)
 																																				{
 																																					bytes145 = Encoding.ASCII.GetBytes("");
 																																				}
 																																				else
 																																				{
-																																					bytes145 = Encoding.ASCII.GetBytes(Main.chest[number].item[(int)number2].name);
+																																					bytes145 = Encoding.ASCII.GetBytes(Main.chest[number].contents[(int)number2].Name);
 																																				}
 																																				num2 += bytes144.Length + 1 + 1 + bytes145.Length;
 																																				byte[] bytes146 = BitConverter.GetBytes(num2 - 4);
@@ -1649,19 +1649,19 @@ namespace Terraria_Server
                     NetMessage.SendData(4, -1, i, Main.player[i].name, i, 0f, 0f, 0f, 0);
                     for (int k = 0; k < 44; k++)
                     {
-                        NetMessage.SendData(5, -1, i, Main.player[i].inventory[k].name, i, (float)k, 0f, 0f, 0);
+                        NetMessage.SendData(5, -1, i, Main.player[i].inventory[k].Name, i, (float)k, 0f, 0f, 0);
                     }
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[0].name, i, 44f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[1].name, i, 45f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[2].name, i, 46f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[3].name, i, 47f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[4].name, i, 48f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[5].name, i, 49f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[6].name, i, 50f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[7].name, i, 51f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[8].name, i, 52f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[9].name, i, 53f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.player[i].armor[10].name, i, 54f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[0].Name, i, 44f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[1].Name, i, 45f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[2].Name, i, 46f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[3].Name, i, 47f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[4].Name, i, 48f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[5].Name, i, 49f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[6].Name, i, 50f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[7].Name, i, 51f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[8].Name, i, 52f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[9].Name, i, 53f, 0f, 0f, 0);
+                    NetMessage.SendData(5, -1, i, Main.player[i].armor[10].Name, i, 54f, 0f, 0f, 0);
                     if (!Netplay.serverSock[i].announced)
 					{
 						Netplay.serverSock[i].announced = true;

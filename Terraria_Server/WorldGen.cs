@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading;
 using System.Diagnostics;
 using Terraria_Server.Misc;
+using Terraria_Server.Shops;
 namespace Terraria_Server
 {
     internal class WorldGen
@@ -1161,10 +1162,10 @@ namespace Terraria_Server
                                         binaryWriter.Write(chest.y);
                                         for (int l = 0; l < Chest.maxItems; l++)
                                         {
-                                            binaryWriter.Write((byte)chest.item[l].stack);
-                                            if (chest.item[l].stack > 0)
+                                            binaryWriter.Write((byte)chest.contents[l].Stack);
+                                            if (chest.contents[l].Stack > 0)
                                             {
-                                                binaryWriter.Write(chest.item[l].name);
+                                                binaryWriter.Write(chest.contents[l].Name);
                                             }
                                         }
                                     }
@@ -1337,13 +1338,13 @@ namespace Terraria_Server
                                     Main.chest[l].y = binaryReader.ReadInt32();
                                     for (int m = 0; m < Chest.maxItems; m++)
                                     {
-                                        Main.chest[l].item[m] = new Item();
+                                        Main.chest[l].contents[m] = new Item();
                                         byte b = binaryReader.ReadByte();
                                         if (b > 0)
                                         {
                                             string defaults = Item.VersionName(binaryReader.ReadString(), num);
-                                            Main.chest[l].item[m].SetDefaults(defaults);
-                                            Main.chest[l].item[m].stack = (int)b;
+                                            Main.chest[l].contents[m].SetDefaults(defaults);
+                                            Main.chest[l].contents[m].Stack = (int)b;
                                         }
                                     }
                                 }
@@ -7189,7 +7190,7 @@ namespace Terraria_Server
                             {
                                 if (contain > 0)
                                 {
-                                    Main.chest[num2].item[num3].SetDefaults(contain, false);
+                                    Main.chest[num2].contents[num3].SetDefaults(contain, false);
                                     num3++;
                                 }
                                 else
@@ -7197,36 +7198,36 @@ namespace Terraria_Server
                                     int num4 = WorldGen.genRand.Next(6);
                                     if (num4 == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(280, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(280, false);
                                     }
                                     if (num4 == 1)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(281, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(281, false);
                                     }
                                     if (num4 == 2)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(284, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(284, false);
                                     }
                                     if (num4 == 3)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(282, false);
-                                        Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(50, 75);
+                                        Main.chest[num2].contents[num3].SetDefaults(282, false);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(50, 75);
                                     }
                                     if (num4 == 4)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(279, false);
-                                        Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(25, 50);
+                                        Main.chest[num2].contents[num3].SetDefaults(279, false);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(25, 50);
                                     }
                                     if (num4 == 5)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(285, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(285, false);
                                     }
                                     num3++;
                                 }
                                 if (WorldGen.genRand.Next(3) == 0)
                                 {
-                                    Main.chest[num2].item[num3].SetDefaults(168, false);
-                                    Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(3, 6);
+                                    Main.chest[num2].contents[num3].SetDefaults(168, false);
+                                    Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(3, 6);
                                     num3++;
                                 }
                                 if (WorldGen.genRand.Next(2) == 0)
@@ -7235,13 +7236,13 @@ namespace Terraria_Server
                                     int stack = WorldGen.genRand.Next(8) + 3;
                                     if (num5 == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(20, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(20, false);
                                     }
                                     if (num5 == 1)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(22, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(22, false);
                                     }
-                                    Main.chest[num2].item[num3].stack = stack;
+                                    Main.chest[num2].contents[num3].Stack = stack;
                                     num3++;
                                 }
                                 if (WorldGen.genRand.Next(2) == 0)
@@ -7250,13 +7251,13 @@ namespace Terraria_Server
                                     int stack2 = WorldGen.genRand.Next(26) + 25;
                                     if (num6 == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(40, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(40, false);
                                     }
                                     if (num6 == 1)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(42, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(42, false);
                                     }
-                                    Main.chest[num2].item[num3].stack = stack2;
+                                    Main.chest[num2].contents[num3].Stack = stack2;
                                     num3++;
                                 }
                                 if (WorldGen.genRand.Next(2) == 0)
@@ -7265,9 +7266,9 @@ namespace Terraria_Server
                                     int stack3 = WorldGen.genRand.Next(3) + 3;
                                     if (num7 == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(28, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(28, false);
                                     }
-                                    Main.chest[num2].item[num3].stack = stack3;
+                                    Main.chest[num2].contents[num3].Stack = stack3;
                                     num3++;
                                 }
                                 if (WorldGen.genRand.Next(3) > 0)
@@ -7276,21 +7277,21 @@ namespace Terraria_Server
                                     int stack4 = WorldGen.genRand.Next(1, 3);
                                     if (num8 == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(292, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(292, false);
                                     }
                                     if (num8 == 1)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(298, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(298, false);
                                     }
                                     if (num8 == 2)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(299, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(299, false);
                                     }
                                     if (num8 == 3)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(290, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(290, false);
                                     }
-                                    Main.chest[num2].item[num3].stack = stack4;
+                                    Main.chest[num2].contents[num3].Stack = stack4;
                                     num3++;
                                 }
                                 if (WorldGen.genRand.Next(2) == 0)
@@ -7299,19 +7300,19 @@ namespace Terraria_Server
                                     int stack5 = WorldGen.genRand.Next(11) + 10;
                                     if (num9 == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(8, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(8, false);
                                     }
                                     if (num9 == 1)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(31, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(31, false);
                                     }
-                                    Main.chest[num2].item[num3].stack = stack5;
+                                    Main.chest[num2].contents[num3].Stack = stack5;
                                     num3++;
                                 }
                                 if (WorldGen.genRand.Next(2) == 0)
                                 {
-                                    Main.chest[num2].item[num3].SetDefaults(72, false);
-                                    Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(10, 30);
+                                    Main.chest[num2].contents[num3].SetDefaults(72, false);
+                                    Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(10, 30);
                                     num3++;
                                 }
                             }
@@ -7321,7 +7322,7 @@ namespace Terraria_Server
                                 {
                                     if (contain > 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(contain, false);
+                                        Main.chest[num2].contents[num3].SetDefaults(contain, false);
                                         num3++;
                                     }
                                     else
@@ -7329,39 +7330,39 @@ namespace Terraria_Server
                                         int num10 = WorldGen.genRand.Next(7);
                                         if (num10 == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(49, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(49, false);
                                         }
                                         if (num10 == 1)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(50, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(50, false);
                                         }
                                         if (num10 == 2)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(52, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(52, false);
                                         }
                                         if (num10 == 3)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(53, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(53, false);
                                         }
                                         if (num10 == 4)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(54, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(54, false);
                                         }
                                         if (num10 == 5)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(55, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(55, false);
                                         }
                                         if (num10 == 6)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(51, false);
-                                            Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(26) + 25;
+                                            Main.chest[num2].contents[num3].SetDefaults(51, false);
+                                            Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(26) + 25;
                                         }
                                         num3++;
                                     }
                                     if (WorldGen.genRand.Next(3) == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(166, false);
-                                        Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(10, 20);
+                                        Main.chest[num2].contents[num3].SetDefaults(166, false);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(10, 20);
                                         num3++;
                                     }
                                     if (WorldGen.genRand.Next(2) == 0)
@@ -7370,13 +7371,13 @@ namespace Terraria_Server
                                         int stack6 = WorldGen.genRand.Next(10) + 5;
                                         if (num11 == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(22, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(22, false);
                                         }
                                         if (num11 == 1)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(21, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(21, false);
                                         }
-                                        Main.chest[num2].item[num3].stack = stack6;
+                                        Main.chest[num2].contents[num3].Stack = stack6;
                                         num3++;
                                     }
                                     if (WorldGen.genRand.Next(2) == 0)
@@ -7385,13 +7386,13 @@ namespace Terraria_Server
                                         int stack7 = WorldGen.genRand.Next(25) + 25;
                                         if (num12 == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(40, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(40, false);
                                         }
                                         if (num12 == 1)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(42, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(42, false);
                                         }
-                                        Main.chest[num2].item[num3].stack = stack7;
+                                        Main.chest[num2].contents[num3].Stack = stack7;
                                         num3++;
                                     }
                                     if (WorldGen.genRand.Next(2) == 0)
@@ -7400,9 +7401,9 @@ namespace Terraria_Server
                                         int stack8 = WorldGen.genRand.Next(3) + 3;
                                         if (num13 == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(28, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(28, false);
                                         }
-                                        Main.chest[num2].item[num3].stack = stack8;
+                                        Main.chest[num2].contents[num3].Stack = stack8;
                                         num3++;
                                     }
                                     if (WorldGen.genRand.Next(3) > 0)
@@ -7411,46 +7412,46 @@ namespace Terraria_Server
                                         int stack9 = WorldGen.genRand.Next(1, 3);
                                         if (num14 == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(289, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(289, false);
                                         }
                                         if (num14 == 1)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(298, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(298, false);
                                         }
                                         if (num14 == 2)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(299, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(299, false);
                                         }
                                         if (num14 == 3)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(290, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(290, false);
                                         }
                                         if (num14 == 4)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(303, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(303, false);
                                         }
                                         if (num14 == 5)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(291, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(291, false);
                                         }
                                         if (num14 == 6)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(304, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(304, false);
                                         }
-                                        Main.chest[num2].item[num3].stack = stack9;
+                                        Main.chest[num2].contents[num3].Stack = stack9;
                                         num3++;
                                     }
                                     if (WorldGen.genRand.Next(2) == 0)
                                     {
                                         int stack10 = WorldGen.genRand.Next(11) + 10;
-                                        Main.chest[num2].item[num3].SetDefaults(8, false);
-                                        Main.chest[num2].item[num3].stack = stack10;
+                                        Main.chest[num2].contents[num3].SetDefaults(8, false);
+                                        Main.chest[num2].contents[num3].Stack = stack10;
                                         num3++;
                                     }
                                     if (WorldGen.genRand.Next(2) == 0)
                                     {
-                                        Main.chest[num2].item[num3].SetDefaults(72, false);
-                                        Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(50, 90);
+                                        Main.chest[num2].contents[num3].SetDefaults(72, false);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(50, 90);
                                         num3++;
                                     }
                                 }
@@ -7460,7 +7461,7 @@ namespace Terraria_Server
                                     {
                                         if (contain > 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(contain, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(contain, false);
                                             num3++;
                                         }
                                         else
@@ -7472,38 +7473,38 @@ namespace Terraria_Server
                                             }
                                             if (num15 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(49, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(49, false);
                                             }
                                             if (num15 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(50, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(50, false);
                                             }
                                             if (num15 == 2)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(52, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(52, false);
                                             }
                                             if (num15 == 3)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(53, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(53, false);
                                             }
                                             if (num15 == 4)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(54, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(54, false);
                                             }
                                             if (num15 == 5)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(55, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(55, false);
                                             }
                                             if (num15 == 6)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(51, false);
-                                                Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(26) + 25;
+                                                Main.chest[num2].contents[num3].SetDefaults(51, false);
+                                                Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(26) + 25;
                                             }
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(3) == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(167, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(167, false);
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7512,13 +7513,13 @@ namespace Terraria_Server
                                             int stack11 = WorldGen.genRand.Next(8) + 3;
                                             if (num16 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(19, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(19, false);
                                             }
                                             if (num16 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(21, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(21, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack11;
+                                            Main.chest[num2].contents[num3].Stack = stack11;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7527,13 +7528,13 @@ namespace Terraria_Server
                                             int stack12 = WorldGen.genRand.Next(26) + 25;
                                             if (num17 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(41, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(41, false);
                                             }
                                             if (num17 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(279, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(279, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack12;
+                                            Main.chest[num2].contents[num3].Stack = stack12;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7542,9 +7543,9 @@ namespace Terraria_Server
                                             int stack13 = WorldGen.genRand.Next(3) + 3;
                                             if (num18 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(188, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(188, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack13;
+                                            Main.chest[num2].contents[num3].Stack = stack13;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(3) > 0)
@@ -7553,29 +7554,29 @@ namespace Terraria_Server
                                             int stack14 = WorldGen.genRand.Next(1, 3);
                                             if (num19 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(296, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(296, false);
                                             }
                                             if (num19 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(295, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(295, false);
                                             }
                                             if (num19 == 2)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(299, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(299, false);
                                             }
                                             if (num19 == 3)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(302, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(302, false);
                                             }
                                             if (num19 == 4)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(303, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(303, false);
                                             }
                                             if (num19 == 5)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(305, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(305, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack14;
+                                            Main.chest[num2].contents[num3].Stack = stack14;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(3) > 1)
@@ -7584,21 +7585,21 @@ namespace Terraria_Server
                                             int stack15 = WorldGen.genRand.Next(1, 3);
                                             if (num20 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(301, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(301, false);
                                             }
                                             if (num20 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(302, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(302, false);
                                             }
                                             if (num20 == 2)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(297, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(297, false);
                                             }
                                             if (num20 == 3)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(304, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(304, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack15;
+                                            Main.chest[num2].contents[num3].Stack = stack15;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7607,19 +7608,19 @@ namespace Terraria_Server
                                             int stack16 = WorldGen.genRand.Next(15) + 15;
                                             if (num21 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(8, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(8, false);
                                             }
                                             if (num21 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(282, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(282, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack16;
+                                            Main.chest[num2].contents[num3].Stack = stack16;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(73, false);
-                                            Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(1, 3);
+                                            Main.chest[num2].contents[num3].SetDefaults(73, false);
+                                            Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(1, 3);
                                             num3++;
                                         }
                                     }
@@ -7627,33 +7628,33 @@ namespace Terraria_Server
                                     {
                                         if (contain > 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(contain, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(contain, false);
                                             num3++;
                                         }
                                         else
                                         {
                                             if (WorldGen.hellChest == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(274, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(274, false);
                                             }
                                             else
                                             {
                                                 int num22 = WorldGen.genRand.Next(4);
                                                 if (num22 == 0)
                                                 {
-                                                    Main.chest[num2].item[num3].SetDefaults(49, false);
+                                                    Main.chest[num2].contents[num3].SetDefaults(49, false);
                                                 }
                                                 if (num22 == 1)
                                                 {
-                                                    Main.chest[num2].item[num3].SetDefaults(50, false);
+                                                    Main.chest[num2].contents[num3].SetDefaults(50, false);
                                                 }
                                                 if (num22 == 2)
                                                 {
-                                                    Main.chest[num2].item[num3].SetDefaults(53, false);
+                                                    Main.chest[num2].contents[num3].SetDefaults(53, false);
                                                 }
                                                 if (num22 == 3)
                                                 {
-                                                    Main.chest[num2].item[num3].SetDefaults(54, false);
+                                                    Main.chest[num2].contents[num3].SetDefaults(54, false);
                                                 }
                                             }
                                             num3++;
@@ -7661,7 +7662,7 @@ namespace Terraria_Server
                                         }
                                         if (WorldGen.genRand.Next(3) == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(167, false);
+                                            Main.chest[num2].contents[num3].SetDefaults(167, false);
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7670,13 +7671,13 @@ namespace Terraria_Server
                                             int stack17 = WorldGen.genRand.Next(15) + 15;
                                             if (num23 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(117, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(117, false);
                                             }
                                             if (num23 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(19, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(19, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack17;
+                                            Main.chest[num2].contents[num3].Stack = stack17;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7685,13 +7686,13 @@ namespace Terraria_Server
                                             int stack18 = WorldGen.genRand.Next(25) + 50;
                                             if (num24 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(265, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(265, false);
                                             }
                                             if (num24 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(278, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(278, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack18;
+                                            Main.chest[num2].contents[num3].Stack = stack18;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7700,13 +7701,13 @@ namespace Terraria_Server
                                             int stack19 = WorldGen.genRand.Next(15) + 15;
                                             if (num25 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(226, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(226, false);
                                             }
                                             if (num25 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(227, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(227, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack19;
+                                            Main.chest[num2].contents[num3].Stack = stack19;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(4) > 0)
@@ -7715,33 +7716,33 @@ namespace Terraria_Server
                                             int stack20 = WorldGen.genRand.Next(1, 3);
                                             if (num26 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(296, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(296, false);
                                             }
                                             if (num26 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(295, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(295, false);
                                             }
                                             if (num26 == 2)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(293, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(293, false);
                                             }
                                             if (num26 == 3)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(288, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(288, false);
                                             }
                                             if (num26 == 4)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(294, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(294, false);
                                             }
                                             if (num26 == 5)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(297, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(297, false);
                                             }
                                             if (num26 == 6)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(304, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(304, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack20;
+                                            Main.chest[num2].contents[num3].Stack = stack20;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(3) > 0)
@@ -7750,25 +7751,25 @@ namespace Terraria_Server
                                             int stack21 = WorldGen.genRand.Next(1, 3);
                                             if (num27 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(305, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(305, false);
                                             }
                                             if (num27 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(301, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(301, false);
                                             }
                                             if (num27 == 2)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(302, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(302, false);
                                             }
                                             if (num27 == 3)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(288, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(288, false);
                                             }
                                             if (num27 == 4)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(300, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(300, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack21;
+                                            Main.chest[num2].contents[num3].Stack = stack21;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
@@ -7777,19 +7778,19 @@ namespace Terraria_Server
                                             int stack22 = WorldGen.genRand.Next(15) + 15;
                                             if (num28 == 0)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(8, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(8, false);
                                             }
                                             if (num28 == 1)
                                             {
-                                                Main.chest[num2].item[num3].SetDefaults(282, false);
+                                                Main.chest[num2].contents[num3].SetDefaults(282, false);
                                             }
-                                            Main.chest[num2].item[num3].stack = stack22;
+                                            Main.chest[num2].contents[num3].Stack = stack22;
                                             num3++;
                                         }
                                         if (WorldGen.genRand.Next(2) == 0)
                                         {
-                                            Main.chest[num2].item[num3].SetDefaults(73, false);
-                                            Main.chest[num2].item[num3].stack = WorldGen.genRand.Next(2, 5);
+                                            Main.chest[num2].contents[num3].SetDefaults(73, false);
+                                            Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(2, 5);
                                             num3++;
                                         }
                                     }

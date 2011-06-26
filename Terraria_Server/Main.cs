@@ -5,6 +5,7 @@ using System.Text;
 using System.Net;
 using System.IO;
 using Terraria_Server.Misc;
+using Terraria_Server.Shops;
 namespace Terraria_Server
 {
 	public class Main
@@ -641,7 +642,7 @@ namespace Terraria_Server
             {
                 Item item = new Item();
                 item.SetDefaults(num7, false);
-                Main.itemName[num7] = item.name;
+                Main.itemName[num7] = item.Name;
             }
             for (int num8 = 0; num8 < Recipe.maxRecipes; num8++)
             {
@@ -658,16 +659,11 @@ namespace Terraria_Server
                 Main.liquidBuffer[num11] = new LiquidBuffer();
             }
             this.shops[0] = new Chest();
-            this.shops[1] = new Chest();
-            this.shops[1].SetupShop(Chest.ShopType.MERCHANT);
-            this.shops[2] = new Chest();
-            this.shops[2].SetupShop(Chest.ShopType.ARMS_DEALER);
-            this.shops[3] = new Chest();
-            this.shops[3].SetupShop(Chest.ShopType.DRYAD);
-            this.shops[4] = new Chest();
-            this.shops[4].SetupShop(Chest.ShopType.DEMOLITIONIST);
-            this.shops[5] = new Chest();
-            this.shops[5].SetupShop(Chest.ShopType.CLOTHIER);
+            this.shops[1] = new MerchantShop();
+            this.shops[2] = new ArmsDealerShop();
+            this.shops[3] = new DryadShop();
+            this.shops[4] = new DemolitionistShop();
+            this.shops[5] = new ClothierShop();
             Main.teamColor[0] = new Color(255, 255, 255);
             Main.teamColor[1] = new Color(230, 40, 20);
             Main.teamColor[2] = new Color(20, 200, 30);
@@ -828,7 +824,7 @@ namespace Terraria_Server
                         num = 0;
                     }
                     num2++;
-                    if (!Main.item[num].active || Main.item[num].owner == 255)
+                    if (!Main.item[num].Active || Main.item[num].Owner == 255)
                     {
                         NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
                     }
@@ -841,7 +837,7 @@ namespace Terraria_Server
             }
             for (int i = 0; i < 200; i++)
             {
-                if (Main.item[i].active && (Main.item[i].owner == 255 || !Main.player[Main.item[i].owner].active))
+                if (Main.item[i].Active && (Main.item[i].Owner == 255 || !Main.player[Main.item[i].Owner].active))
                 {
                     Main.item[i].FindOwner(i);
                 }
@@ -1103,29 +1099,29 @@ namespace Terraria_Server
                                 {
                                     for (int j = 0; j < 44; j++)
                                     {
-                                        if (Main.player[i].inventory[j] != null & Main.player[i].inventory[j].stack > 0)
+                                        if (Main.player[i].inventory[j] != null & Main.player[i].inventory[j].Stack > 0)
                                         {
-                                            if (Main.player[i].inventory[j].type == 71)
+                                            if (Main.player[i].inventory[j].Type == 71)
                                             {
-                                                num12 += Main.player[i].inventory[j].stack;
+                                                num12 += Main.player[i].inventory[j].Stack;
                                             }
-                                            if (Main.player[i].inventory[j].type == 72)
+                                            if (Main.player[i].inventory[j].Type == 72)
                                             {
-                                                num12 += Main.player[i].inventory[j].stack * 100;
+                                                num12 += Main.player[i].inventory[j].Stack * 100;
                                             }
-                                            if (Main.player[i].inventory[j].type == 73)
+                                            if (Main.player[i].inventory[j].Type == 73)
                                             {
-                                                num12 += Main.player[i].inventory[j].stack * 10000;
+                                                num12 += Main.player[i].inventory[j].Stack * 10000;
                                             }
-                                            if (Main.player[i].inventory[j].type == 74)
+                                            if (Main.player[i].inventory[j].Type == 74)
                                             {
-                                                num12 += Main.player[i].inventory[j].stack * 1000000;
+                                                num12 += Main.player[i].inventory[j].Stack * 1000000;
                                             }
-                                            if (Main.player[i].inventory[j].type == 95 || Main.player[i].inventory[j].type == 96 || Main.player[i].inventory[j].type == 97 || Main.player[i].inventory[j].type == 98 || Main.player[i].inventory[j].useAmmo == 14)
+                                            if (Main.player[i].inventory[j].Type == 95 || Main.player[i].inventory[j].Type == 96 || Main.player[i].inventory[j].Type == 97 || Main.player[i].inventory[j].Type == 98 || Main.player[i].inventory[j].UseAmmo == 14)
                                             {
                                                 flag3 = true;
                                             }
-                                            if (Main.player[i].inventory[j].type == 166 || Main.player[i].inventory[j].type == 167 || Main.player[i].inventory[j].type == 168 || Main.player[i].inventory[j].type == 235)
+                                            if (Main.player[i].inventory[j].Type == 166 || Main.player[i].inventory[j].Type == 167 || Main.player[i].inventory[j].Type == 168 || Main.player[i].inventory[j].Type == 235)
                                             {
                                                 flag4 = true;
                                             }

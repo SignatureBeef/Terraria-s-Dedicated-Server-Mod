@@ -6978,7 +6978,7 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (Main.player[j].inventory[Main.player[j].selectedItem].type == 148)
+                    if (Main.player[j].inventory[Main.player[j].selectedItem].Type == 148)
                     {
                         NPC.spawnRate = (int)((double)NPC.spawnRate * 0.75);
                         NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.5f);

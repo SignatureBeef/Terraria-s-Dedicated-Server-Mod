@@ -94,7 +94,7 @@ namespace Terraria_Server
             }
             for (int l = 0; l < 200; l++)
             {
-                if (Main.item[l].active && rectangle.Intersects(new Rectangle((int)Main.item[l].position.X, (int)Main.item[l].position.Y, Main.item[l].width, Main.item[l].height)))
+                if (Main.item[l].Active && rectangle.Intersects(new Rectangle((int)Main.item[l].Position.X, (int)Main.item[l].Position.Y, Main.item[l].Width, Main.item[l].Height)))
                 {
                     return false;
                 }
