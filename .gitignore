@@ -2,3 +2,13 @@
 *.csproj.user
 *.pidb
 *.userprefs
+/Terraria_Server/bin/Debug/Terraria_Server.bak
+/Terraria_Server/bin/Debug/Terraria_Server.exe
+/Terraria_Server/bin/Debug/Terraria_Server.exe.config
+/Terraria_Server/bin/Debug/Terraria_Server.pdb
+/Terraria_Server/bin/Debug/Terraria_Server.vshost.exe
+/Terraria_Server/bin/Debug/Terraria_Server.vshost.exe.config
+/Terraria_Server/bin/Debug/server.properties
+/Terraria_Server/bin/Release/Terraria_Server.exe
+/Terraria_Server/bin/Release/Terraria_Server.exe.config
+/Terraria_Server/bin/Release/Terraria_Server.pdb

@@ -48,26 +48,27 @@ namespace Terraria_Server.Commands
             COMMAND_DEOP = 18,
             PLAYER_OPLOGIN = 19,
             PLAYER_OPLOGOUT = 20,
-            COMMAND_NPCSPAWN = 21
+            COMMAND_NPCSPAWN = 21,
+            COMMAND_KICK = 22
         }
-
-        public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",         
-                                                                    "players",      "me",           "say",          
+ 
+        public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",
+                                                                    "players",      "me",           "say",
                                                                     "save-all",     "help",         "whitelist",
                                                                     "ban",          "unban",        "time",
                                                                     "give",         "spawnnpc",     "tp",
 																	"tphere",       "settle",       "op",
                                                                     "deop",         "oplogin",      "oplogout",
-                                                                    "npcspawns"};
+                                                                    "npcspawns",    "kick"};
 
-        public static string[] CommandInformation = new string[] {  "Stop & Close The Server.", 
-                                                                    "Reload Plugins.", 
-                                                                    "Show Online Players.", 
-                                                                    "Show Online Players.", 
-                                                                    "Talk in 3rd Person.", 
+        public static string[] CommandInformation = new string[] {  "Stop & Close The Server.",
+                                                                    "Reload Plugins.",
+                                                                    "Show Online Players.",
+                                                                    "Show Online Players.",
+                                                                    "Talk in 3rd Person.",
                                                                     "Send A Console Message To Online Players.", 
                                                                     "Trigger a World Save.", 
-                                                                    "Show this Help.", 
+                                                                    "Show this Help. (Also /help <page>)", 
                                                                     "add:remove to the whitelist.", 
                                                                     "Ban a Player.", 
                                                                     "Un-Ban a Player.", 
@@ -81,7 +82,8 @@ namespace Terraria_Server.Commands
                                                                     "De-OP a player.",
                                                                     "Log in as OP: /oplogin <password>",
                                                                     "Log out of OP status.",
-                                                                    "Toggle the state of NPC Spawning."};
+                                                                    "Toggle the state of NPC Spawning.",
+                                                                    "Kicks a player from the server."};
 
         public static int getCommandValue(string Command)
         {
@@ -168,20 +170,69 @@ namespace Terraria_Server.Commands
             Program.server.GodMode = GodMode;
         }
 
-        public static void ShowHelp(Sender sender)
+        public static void ShowHelp(Sender sender, string[] commands = null)
         {
             if (sender is Player)
             {
-                for (int i = 0; i < CommandDefinition.Length; i++)
+                if (commands == null)
                 {
-                    ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                    for (int i = 0; i < CommandDefinition.Length; i++)
+                    {
+                        ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                    }
+                }
+                else
+                {
+                    int maxPages = (CommandDefinition.Length / 5) + 1;
+                    if (maxPages > 0 && commands.Length > 1 && commands[1] != null)
+                    {
+                        try
+                        {
+                            int selectingPage = Int32.Parse(commands[1].Trim());
+
+                            if (selectingPage < maxPages)
+                            {
+                                for (int i = 0; i < maxPages; i++)
+                                {
+                                    if ((selectingPage <= i))
+                                    {
+                                        selectingPage = i * ((CommandDefinition.Length / 5) + 1);
+                                        break;
+                                    }
+                                }
+                                
+                                int toPage = CommandDefinition.Length;
+                                if (selectingPage + 5 < toPage)
+                                {
+                                    toPage = selectingPage + 5;
+                                }
+
+                                for (int i = selectingPage; i < toPage; i++)
+                                {
+                                    ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("Invalid page! Use: 0 -> " + (maxPages - 1).ToString());
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            ShowHelp(sender);
+                        }
+                    }
+                    else
+                    {
+                        ShowHelp(sender);
+                    }
                 }
             }
             else
             {
                 for (int i = 0; i < CommandDefinition.Length; i++)
                 {
-                    Program.tConsole.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i]);
+                    Program.tConsole.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i].Replace("/", ""));
                 }
             }
         }
@@ -903,6 +954,41 @@ namespace Terraria_Server.Commands
                 sender.sendMessage("NPC Spawning is now on!");
             }
         }
-        
+
+        public static void Kick(Sender sender, string[] commands)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.isOp())
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (commands != null && commands.Length > 1)
+            {
+                if (commands[0] != null && commands[0].Length > 0)
+                {
+                    Player banee = Program.server.GetPlayerByName(commands[1]);
+
+                    if (banee != null)
+                    {
+                        banee.Kick("You have been kicked from this Server.");
+                    }
+                    else
+                    {
+                        sender.sendMessage("Cannot find player online!.");
+                    }
+
+
+                    Program.server.notifyOps(sender.getName() + " has kicked " + commands[1], true);
+
+                    return;
+                }
+            }
+            sender.sendMessage("Command Error!");
+        }
     }
 }

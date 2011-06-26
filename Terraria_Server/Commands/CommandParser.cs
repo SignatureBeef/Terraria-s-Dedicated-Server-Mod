@@ -139,7 +139,14 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.COMMAND_HELP:
                     {
-                        Commands.ShowHelp(sender);
+                        if (commands.Length > 1)
+                        {
+                            Commands.ShowHelp(sender, commands);
+                        }
+                        else
+                        {
+                            Commands.ShowHelp(sender);
+                        }
                         break;
                     }
                 case (int)Commands.Command.COMMAND_WHITELIST:
@@ -210,6 +217,11 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.COMMAND_NPCSPAWN:
                     {
                         Commands.NPCSpawns(sender);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_KICK:
+                    {
+                        Commands.Kick(sender, commands);
                         break;
                     }
                 default:

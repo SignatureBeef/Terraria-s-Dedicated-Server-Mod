@@ -86,6 +86,7 @@ namespace Terraria_Server
         public int doorX;
         public int doorY;
         public int friendlyRegen;
+        
         public void SetDefaults(string Name)
         {
             this.SetDefaults(0);
@@ -314,6 +315,7 @@ namespace Terraria_Server
             }
             this.lifeMax = this.life;
         }
+       
         public void SetDefaults(int Type)
         {
             NPC.npcSlots = 1f;
@@ -1638,6 +1640,7 @@ namespace Terraria_Server
             this.height = (int)((float)this.height * this.scale);
             this.life = this.lifeMax;
         }
+        
         public void AI()
         {
             if (this.aiStyle == 0)
@@ -5968,6 +5971,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public void FindFrame()
         {
             int num = 1;
@@ -6729,6 +6733,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public void TargetClosest(bool faceTarget = true)
         {
             float num = -1f;
@@ -6763,6 +6768,7 @@ namespace Terraria_Server
                 this.netUpdate = true;
             }
         }
+        
         public void CheckActive()
         {
             if (this.active)
@@ -6832,6 +6838,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static void SpawnNPC()
         {
             if (NPC.noSpawnCycle)
@@ -7632,6 +7639,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static void SpawnOnPlayer(int plr, int Type)
         {
             if (Main.netMode == 1)
@@ -7796,6 +7804,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public static int NewNPC(int X, int Y, int Type, int Start = 0)
         {
             int num = -1;
@@ -7827,6 +7836,7 @@ namespace Terraria_Server
             }
             return 1000;
         }
+        
         public void Transform(int newType)
         {
             if (Main.netMode != 1)
@@ -7844,6 +7854,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public double StrikeNPC(int Damage, float knockBack, int hitDirection)
         {
             if (!this.active || this.life <= 0)
@@ -7908,6 +7919,7 @@ namespace Terraria_Server
             }
             return 0.0;
         }
+        
         public void NPCLoot()
         {
             if (this.type == 1 || this.type == 16)
@@ -8262,6 +8274,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public void HitEffect(int hitDirection = 0, double dmg = 10.0)
         {
             if (this.type == 1 || this.type == 16)
@@ -9821,6 +9834,7 @@ namespace Terraria_Server
                 Dust.NewDust(this.position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 0, newColor2, 1f);
             }
         }
+        
         public static bool AnyNPCs(int Type)
         {
             for (int i = 0; i < 1000; i++)
@@ -9832,6 +9846,7 @@ namespace Terraria_Server
             }
             return false;
         }
+        
         public static void SpawnSkeletron()
         {
             bool flag = true;
@@ -9877,6 +9892,7 @@ namespace Terraria_Server
                 }
             }
         }
+        
         public void UpdateNPC(int i)
         {
             this.whoAmI = i;
@@ -10149,6 +10165,7 @@ namespace Terraria_Server
                 this.netUpdate = false;
             }
         }
+        
         public Color GetAlpha(Color newColor)
         {
             int r = (int)newColor.R - this.alpha;
@@ -10171,6 +10188,7 @@ namespace Terraria_Server
             }
             return new Color(r, g, b, num);
         }
+        
         public Color GetColor(Color newColor)
         {
             int num = (int)(this.color.R - (255 - newColor.R));
@@ -10211,6 +10229,7 @@ namespace Terraria_Server
             }
             return new Color(num, num2, num3, num4);
         }
+       
         public string GetChat()
         {
             bool flag = false;
@@ -10787,6 +10806,7 @@ namespace Terraria_Server
             }
             return result;
         }
+        
         public object Clone()
         {
             return base.MemberwiseClone();
