@@ -121,28 +121,5 @@ namespace Terraria_Server
                 UpdateWorldCoords(false);
             }
         }
-
-        public Tile getHighestTile(int axisX) //tile format?
-        {
-            int tallest = -1;
-
-            for (int i = 0; i < maxTilesY; i++)
-            {
-                if (Server.tile[axisX, i] != null && Server.tile[axisX, i].active)
-                {
-                    if (i > tallest)
-                    {
-                        tallest = i;
-                    }
-                }
-            }
-            if (tallest >= 0)
-            {
-                return WorldGen.cloneTile(Server.tile[axisX, tallest], axisX, tallest);
-            }
-            return null;
-        }
-
     }
-
 }

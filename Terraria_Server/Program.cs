@@ -8,191 +8,60 @@ namespace Terraria_Server
 {
     public class Program
     {
+        public const String VERSION_NUMBER = "v1.0.5";
+
         public static Thread updateThread = null;
         public static ServerProperties properties = null;
         public static CommandParser commandParser = null;
         public static TConsole tConsole = null;
-
-        public static bool createDirectory(string dirPath, bool Exit = false)
-        {
-            if (!System.IO.Directory.Exists(dirPath))
-            {
-                try
-                {
-                    System.IO.Directory.CreateDirectory(dirPath);
-                }
-                catch (Exception exception)
-                {
-                    if (!Exit)
-                    {
-                        Program.tConsole.WriteLine(exception.ToString());
-                        Program.tConsole.WriteLine("Press any key to continue...");
-                        Console.ReadKey(true);
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        public static bool createFile(string filePath, bool Exit = false)
-        {
-            if (!System.IO.File.Exists(filePath))
-            {
-                try
-                {
-                    System.IO.File.Create(filePath).Close();
-                }
-                catch (Exception exception)
-                {
-                    if (!Exit)
-                    {
-                        Program.tConsole.WriteLine(exception.ToString());
-                        Program.tConsole.WriteLine("Press any key to continue...");
-                        Console.ReadKey(true);
-                        return false;
-                    }
-                }
-            }
-            return true;
-        }
-
-        static bool setupPaths()
-        {
-            if (!createDirectory(Statics.getWorldPath))
-            {
-                return false;
-            }
-            if (!createDirectory(Statics.getPlayerPath))
-            {
-                return false;
-            }
-            if (!createDirectory(Statics.getPluginPath))
-            {
-                return false;
-            }
-            if (!createDirectory(Statics.getDataPath))
-            {
-                return false;
-            }
-            createFile(Statics.getDataPath + Statics.systemSeperator + "whitelist.txt");
-            createFile(Statics.getDataPath + Statics.systemSeperator + "banlist.txt");
-            createFile(Statics.getDataPath + Statics.systemSeperator + "oplist.txt");
-            createFile(Statics.getDataPath + Statics.systemSeperator + "server.log");
-            return true;
-        }
-
-        static void setupProperties()
-        {
-            properties = new ServerProperties("server.properties");
-            properties.Load();
-            properties.pushData();
-            properties.Save();
-        }
-
-        static int preserve = 0;
-        public static void printData(string dataText, bool console = false)
-        {
-            if (Statics.platform > 0)
-            {
-                if (console == false)
-                {
-                    tConsole.WriteLine(dataText);
-                }
-                else
-                {
-                    Console.WriteLine(dataText);
-                }
-            }
-            else
-            {
-                for (int i_ = 0; i_ < preserve; i_++)
-                {
-                    Console.Write("\b");
-                }
-                Console.Write(dataText);
-                preserve = dataText.Length;
-            }
-        }
-
-        public static string mergeStrArray(string[] Array)
-        {
-            string ReT = "";
-            if (Array != null && Array.Length > 0)
-            {
-                for (int i = 0; i < Array.Length; i++)
-                {
-                    if (Array[i] != null)
-                    {
-                        ReT += " " + Array[i];
-                    }
-                }
-            }
-            return ReT.Trim();
-        }
+        private static int preserve = 0;
 
         public static Server server;
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             try
             {
-                string MODInfo = "Terraria's Dedicated Server Mod. (" + Statics.versionNumber + " {" + Statics.currentRelease + "}) #"
-                    + Statics.build; //+ " r" + Statics.revision;
+                string MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_RELEASE + "}) #"
+                    + Statics.BUILD;
                 Console.Title = MODInfo;
 
                 Console.WriteLine("Initializing " + MODInfo);
-                
+
+                if (args != null && args.Length > 0)
+                {
+                    string commandMessage = args[0].ToLower().Trim();
+                    // 0 for Ops
+                    if (commandMessage.Equals("-ignoremessages:0"))
+                    {
+                        Statics.cmdMessages = false;
+                    }
+                }
+
                 Console.WriteLine("Setting up Paths.");
-                if (!setupPaths())
+                if (!SetupPaths())
                 {
                     return;
                 }
 
-                if (Statics.isLinux)
-                {
-                    Console.WriteLine("Detected Linux OS.");
-                    Statics.platform = 1;
-                }
-                else if (Statics.isMac)
-                {
-                    Console.WriteLine("Detected Mac OS.");
-                    Statics.platform = 2;
-                }
-                else if (Statics.isWindows == false)
-                {
-                    Console.WriteLine("Unknown OS.");
-                    Statics.platform = 3;
-                }
-
-                tConsole = new TConsole(Statics.getDataPath + Statics.systemSeperator + "server.log", Statics.platform);
-
-                if (args != null && args.Length > 0)
-                {
-                    string CmdMessage = args[0].Trim();
-                    if (CmdMessage.Length > 0)
-                    {
-                        // 0 for Ops
-                        if (CmdMessage.ToLower().Equals("-ignoremessages:0"))
-                        {
-                            Statics.cmdMessages = false;
-                        }
-                    }
-                }
+                Platform.InitPlatform();
+                tConsole = new TConsole(Statics.DataPath + Path.DirectorySeparatorChar + "server.log", Platform.Type);
 
                 Program.tConsole.WriteLine("Setting up Properties.");
-                if (!System.IO.File.Exists("server.properties"))
+                bool propertiesExist = File.Exists("server.properties");
+                SetupProperties();
+                
+                if(!propertiesExist)
                 {
-                    Console.Write("Properties not found, Create and exit? [Y/n]: ");
+                    Console.Write("New properties file created. Would you like to exit for editing? [Y/n]: ");
                     if (Console.ReadLine().ToLower() == "y")
                     {
-                        setupProperties();
                         Console.WriteLine("Complete, Press any Key to Exit...");
                         Console.ReadKey(true);
                         return;
                     }
                 }
-                setupProperties();
+                
 
                 try
                 {
@@ -207,9 +76,9 @@ namespace Terraria_Server
                     Program.tConsole.WriteLine("Error updating!");
                     Program.tConsole.WriteLine(e.Message);
                 }
-                
 
-                Statics.debugMode = properties.debugMode();
+
+                Statics.debugMode = properties.DebugMode;
                 if (Statics.debugMode)
                 {
                     Program.tConsole.WriteLine("CAUTION: Running Debug Mode! Unexpected errors may occur!");
@@ -217,7 +86,7 @@ namespace Terraria_Server
 
                 Program.tConsole.WriteLine("Preparing Server Data...");
 
-                string worldFile = properties.getInitialWorldPath();
+                string worldFile = properties.InitialWorldPath;
                 FileInfo file = new FileInfo(worldFile);
 
                 if (!file.Exists)
@@ -236,7 +105,7 @@ namespace Terraria_Server
                     }
                     Program.tConsole.WriteLine("Generating World '" + worldFile + "'");
 
-                    int seed = properties.getSeed();
+                    int seed = properties.Seed;
                     if (seed == -1)
                     {
                         Console.Write("Generating Seed...");
@@ -246,10 +115,10 @@ namespace Terraria_Server
 
                     int worldX = properties.getMapSizes()[0];
                     int worldY = properties.getMapSizes()[1];
-                    if (properties.isUsingCutomTiles())
+                    if (properties.UseCustomTiles)
                     {
-                        int X = properties.getMaxTilesX();
-                        int Y = properties.getMaxTilesY();
+                        int X = properties.MaxTilesX;
+                        int Y = properties.MaxTilesY;
                         if (X > 0 && Y > 0)
                         {
                             worldX = X;
@@ -273,10 +142,10 @@ namespace Terraria_Server
 
                     WorldGen.clearWorld();
                     (new Server()).Initialize();
-                    if (properties.getUsingCustomGenOpts())
+                    if (properties.UseCustomGenOpts)
                     {
-                        WorldGen.numDungeons = properties.getDungeonAmount();
-                        WorldGen.ficount = properties.getFloatingIslandAmount();
+                        WorldGen.numDungeons = properties.DungeonAmount;
+                        WorldGen.ficount = properties.FloatingIslandAmount;
                     }
                     else
                     {
@@ -289,10 +158,10 @@ namespace Terraria_Server
 
                 int worldXtiles = properties.getMapSizes()[0];
                 int worldYtiles = properties.getMapSizes()[1];
-                if (properties.isUsingCutomTiles())
+                if (properties.UseCustomTiles)
                 {
-                    int X = properties.getMaxTilesX();
-                    int Y = properties.getMaxTilesY();
+                    int X = properties.MaxTilesX;
+                    int Y = properties.MaxTilesY;
                     if (X > 0 && Y > 0)
                     {
                         worldXtiles = X;
@@ -314,13 +183,13 @@ namespace Terraria_Server
                 World world = new World(worldXtiles, worldYtiles);
                 world.SavePath = worldFile;
 
-                server = new Server(world, properties.getMaxPlayers(),
-                    Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
-                    Statics.getDataPath + Statics.systemSeperator + "banlist.txt",
-                    Statics.getDataPath + Statics.systemSeperator + "oplist.txt");
-                server.setOpPassword(properties.getServerPassword());
-                server.setPort(properties.getPort());
-                server.setIP(properties.getServerIP());
+                server = new Server(world, properties.MaxPlayers,
+                    Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt",
+                    Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt",
+                    Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
+                server.setOpPassword(properties.Password);
+                server.setPort(properties.Port);
+                server.setIP(properties.ServerIP);
                 server.Initialize();
 
                 WorldGen.loadWorld();
@@ -337,17 +206,18 @@ namespace Terraria_Server
                 Program.tConsole.WriteLine("You can now insert Commands.");
                 while (Statics.IsActive)
                 {
-                    try {
-						string line = Console.ReadLine().Trim().ToLower();
-	                    if (line.Length > 0)
-	                    {
-	                        commandParser.parseConsoleCommand(line, server);
-	                    }
+                    try
+                    {
+                        string line = Console.ReadLine().Trim().ToLower();
+                        if (line.Length > 0)
+                        {
+                            commandParser.parseConsoleCommand(line, server);
+                        }
                     }
                     catch (Exception)
                     {
                         Program.tConsole.WriteLine("Issue parsing Console Command");
-					}
+                    }
 
                 }
                 while (Statics.serverStarted) { }
@@ -357,11 +227,11 @@ namespace Terraria_Server
             {
                 try
                 {
-                    using (StreamWriter streamWriter = new StreamWriter(Statics.getDataPath + Statics.systemSeperator + "crashlog.txt", true))
+                    using (StreamWriter streamWriter = new StreamWriter(Statics.DataPath + Path.DirectorySeparatorChar + "crashlog.txt", true))
                     {
                         streamWriter.WriteLine(DateTime.Now);
-                        streamWriter.WriteLine("Crash Log Generated by TDSM #" + Statics.build + " for " + //+ " r" + Statics.revision + " for " +
-                            Statics.versionNumber + " {" + Statics.currentRelease + "}");
+                        streamWriter.WriteLine("Crash Log Generated by TDSM #" + Statics.BUILD + " for " + //+ " r" + Statics.revision + " for " +
+                            VERSION_NUMBER + " {" + Statics.CURRENT_RELEASE + "}");
                         streamWriter.WriteLine(e);
                         streamWriter.WriteLine("");
                     }
@@ -382,7 +252,90 @@ namespace Terraria_Server
             }
         }
 
-        public static void Updater()
+        private static bool SetupPaths()
+        {
+            try
+            {
+                CreateDirectory(Statics.WorldPath);
+                CreateDirectory(Statics.PlayerPath);
+                CreateDirectory(Statics.PluginPath);
+                CreateDirectory(Statics.DataPath);
+            }
+            catch (Exception exception)
+            {
+                Program.tConsole.WriteLine(exception.ToString());
+                Program.tConsole.WriteLine("Press any key to continue...");
+                Console.ReadKey(true);
+                return false;
+            }
+
+            CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt");
+            CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt");
+            CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
+            CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "server.log");
+            return true;
+        }
+
+        private static void CreateDirectory(string dirPath)
+        {
+            if (!Directory.Exists(dirPath))
+            {
+                Directory.CreateDirectory(dirPath);
+            }
+        }
+
+        private static bool CreateFile(string filePath)
+        {
+            if (!File.Exists(filePath))
+            {
+                try
+                {
+                    File.Create(filePath).Close();
+                }
+                catch (Exception exception)
+                {
+                    Program.tConsole.WriteLine(exception.ToString());
+                    Program.tConsole.WriteLine("Press any key to continue...");
+                    Console.ReadKey(true);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private static void SetupProperties()
+        {
+            properties = new ServerProperties("server.properties");
+            properties.Load();
+            properties.pushData();
+            properties.Save();
+        }
+
+        public static void printData(string dataText, bool console = false)
+        {
+            if (Platform.Type != Platform.PlatformType.UNKNOWN)
+            {
+                if (console == false)
+                {
+                    tConsole.WriteLine(dataText);
+                }
+                else
+                {
+                    Console.WriteLine(dataText);
+                }
+            }
+            else
+            {
+                for (int i_ = 0; i_ < preserve; i_++)
+                {
+                    Console.Write("\b");
+                }
+                Console.Write(dataText);
+                preserve = dataText.Length;
+            }
+        }
+
+        private static void Updater()
         {
             if (server == null)
             {

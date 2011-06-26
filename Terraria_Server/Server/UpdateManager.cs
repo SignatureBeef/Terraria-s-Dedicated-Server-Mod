@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.Diagnostics;
+using System.IO;
 namespace Terraria_Server
 {
     public class UpdateManager
@@ -20,7 +21,7 @@ namespace Terraria_Server
             //b-r
             if (updateList.Contains("b"))
             {
-                string myBuild = "b" + Statics.build.ToString();
+                string myBuild = "b" + Statics.BUILD.ToString();
                 uList = updateList;
                 return updateList.Equals(myBuild);
             }
@@ -29,24 +30,24 @@ namespace Terraria_Server
 
         public static bool performProcess()
         {
-            if (!Program.properties.automaticUpdates())
+            if (!Program.properties.AutomaticUpdates)
             {
                 return false;
             }
             Program.tConsole.Write("Checking for Updates...");
             if (!isUptoDate())
             {
-                Program.tConsole.WriteLine("Update found, Performing b" + Statics.build.ToString() + " -> " + uList);
+                Program.tConsole.WriteLine("Update found, Performing b" + Statics.BUILD.ToString() + " -> " + uList);
                 
                 string savePath = "Terraria_Server.upd";
                 string backupPath = "Terraria_Server.bak";
                 string myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
-                if (System.IO.File.Exists(savePath))
+                if (File.Exists(savePath))
                 {
                     try
                     {
-                        System.IO.File.Delete(savePath);
+                        File.Delete(savePath);
                     }
                     catch (Exception e)
                     {
@@ -55,11 +56,11 @@ namespace Terraria_Server
                         return false;
                     }
                 }
-                if (System.IO.File.Exists(backupPath))
+                if (File.Exists(backupPath))
                 {
                     try
                     {
-                        System.IO.File.Delete(backupPath);
+                        File.Delete(backupPath);
                     }
                     catch (Exception e)
                     {
@@ -70,7 +71,7 @@ namespace Terraria_Server
                 }
                 try
                 {
-                    System.IO.File.Move(myFile, backupPath);
+                    File.Move(myFile, backupPath);
                 }
                 catch (Exception e)
                 {
@@ -87,7 +88,7 @@ namespace Terraria_Server
                 Program.tConsole.Write("Finishing Update...");
                 try
                 {
-                    System.IO.File.Move(savePath, myFile);
+                    File.Move(savePath, myFile);
                 }
                 catch (Exception e)
                 {

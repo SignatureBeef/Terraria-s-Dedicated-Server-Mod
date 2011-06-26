@@ -1,126 +1,125 @@
-﻿
-using System.IO;
+﻿using System.IO;
 using System.Threading;
-namespace Terraria_Server
+using System.Collections.Generic;
+using System;
+
+namespace Terraria_Server.Misc
 {
     public class PropertiesFile
     {
-        string pPath = "";
-        public string[] data = null;
-        private bool createIfNeeded = false;
+        private const char EQUALS = '=';
+
+        private Dictionary<String, String> propertiesMap;
         
-        public void setFile(string propertiesPath, bool createIN = true)
+        private string propertiesPath = String.Empty;
+
+        public PropertiesFile(String propertiesPath)
         {
-            createIfNeeded = createIN;
-            pPath = propertiesPath;
+            propertiesMap = new Dictionary<string, string>();
+            this.propertiesPath = propertiesPath;
         }
 
         public void Load() {
-            if (createIfNeeded)
+            //Verify that the properties file exists and we can create it if it doesn't.
+            if (!File.Exists(propertiesPath))
             {
-                if (!File.Exists(pPath))
-                {
-                    File.WriteAllText(pPath, "");
-                }
-                Thread.Sleep(1000);
+                File.WriteAllText(propertiesPath, String.Empty);
             }
-            data = File.ReadAllLines(pPath);
+
+            propertiesMap.Clear();
+            StreamReader reader = new StreamReader(propertiesPath);
+            try
+            {
+                String line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    line = line.Trim();
+                    int setterIndex = line.IndexOf(EQUALS);
+                    if (setterIndex > 0 && setterIndex < line.Length)
+                    {
+                        propertiesMap.Add(line.Substring(0, setterIndex), line.Substring(setterIndex + 1));
+                    }
+                }
+            }
+            finally
+            {
+                reader.Close();
+            }
         }
 
         public void Save()
         {
-            int lCount = 0;
-            for (int i = 0; i < data.Length; i++)
+            StreamWriter writer = new StreamWriter(propertiesPath);
+            try
             {
-                if (data[i].Trim().Length > 0)
+                foreach (KeyValuePair<String, String> pair in propertiesMap)
                 {
-                    lCount++;
+                    writer.WriteLine(pair.Key + EQUALS + pair.Value);
                 }
             }
-            string[] Data = new string[lCount];
-            lCount = 0;
-            for (int i = 0; i < data.Length; i++)
+            finally
             {
-                if (data[i].Trim().Length > 0)
-                {
-                    Data[lCount] = data[i];
-                    lCount++;
-                }
+                writer.Close();
             }
-            System.IO.File.WriteAllLines(pPath, Data);
         }
 
-        public string getValue(string Key)
+        public string getValue(string key)
         {
-            for (int i = 0; i < data.Length; i++)
+            if (propertiesMap.ContainsKey(key))
             {
-                string line = data[i].Trim();
-                if (line.ToLower().StartsWith(Key.ToLower().Trim() + "="))
-                {
-                    return line.Remove(0, Key.Trim().Length + 1);
-                }
+                return propertiesMap[key];
             }
             return null;
         }
 
-        public bool setValue(string Key, string Value)
+        public string getValue(string key, string defaultValue)
         {
-            for (int i = 0; i < data.Length; i++)
+            String value = getValue(key);
+            if (value == null || value.Trim().Length < 0)
             {
-                string line = data[i].Trim();
-                if (line.ToLower().StartsWith(Key.ToLower().Trim() + "="))
-                {
-                    data[i] = Key.Trim().ToLower() + "=" + Value.Trim();
-                    return true;
-                }
+                setValue(key, defaultValue);
+                return defaultValue;
             }
-            addValue(Key, Value);
-            return false;
+            return value;
         }
 
-        public void addValue(string Key, string Value)
+        public int getValue(string key, int defaultValue)
         {
-            string[] Data = new string[data.Length + 1];
-            for (int i = 0; i < data.Length; i++)
+            int result;
+            if (int.TryParse(getValue(key), out result))
             {
-                Data[i] = data[i];
+                return result;
             }
-            Data[data.Length] = Key.Trim().ToLower() + "=" + Value.Trim();
-            data = Data;
+
+            setValue(key, defaultValue);
+            return defaultValue;
         }
 
-        public bool deleteKey(string Key)
+        public bool getValue(string key, bool defaultValue)
         {
-            if (containsKey(Key))
+            bool result;
+            if (bool.TryParse(getValue(key), out result))
             {
-                string[] Data = new string[data.Length-1];
-                int count = 0;
-                for (int i = 0; i < data.Length; i++)
-                {
-                    string line = data[i].Trim();
-                    if (!line.ToLower().StartsWith(Key.ToLower().Trim() + "="))
-                    {
-                        Data[i] = data[i];
-                        count++;
-                    }
-                }
-                data = Data;
+                return result;
             }
-            return false;
+
+            setValue(key, defaultValue);
+            return defaultValue;
         }
 
-        public bool containsKey(string Key)
+        private void setValue(string key, string value)
         {
-            for (int i = 0; i < data.Length; i++)
-            {
-                string line = data[i].Trim();
-                if (line.ToLower().StartsWith(Key.ToLower().Trim() + "="))
-                {
-                    return true;
-                }
-            }
-            return false;
+            propertiesMap[key] = value;
         }
 
+        protected void setValue(string key, int value)
+        {
+            setValue(key, value.ToString());
+        }
+
+        private void setValue(string key, bool value)
+        {
+            setValue(key, value.ToString());
+        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Terraria_Server.Commands
 {
@@ -84,6 +85,22 @@ namespace Terraria_Server.Commands
                                                                     "Log out of OP status.",
                                                                     "Toggle the state of NPC Spawning.",
                                                                     "Kicks a player from the server."};
+
+        public static string MergeStringArray(string[] Array)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (Array != null && Array.Length > 0)
+            {
+                for (int i = 0; i < Array.Length; i++)
+                {
+                    if (Array[i] != null)
+                    {
+                        sb.Append(Array[i]);
+                    }
+                }
+            }
+            return sb.ToString().Trim();
+        }
 
         public static int getCommandValue(string Command)
         {
@@ -512,7 +529,7 @@ namespace Terraria_Server.Commands
                 commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0 && commands[3].Trim().Length > 0)
             {
                 string playerName = commands[1].Trim();
-                string itemName = Program.mergeStrArray(commands);
+                string itemName = MergeStringArray(commands);
                 itemName = itemName.Remove(0, itemName.IndexOf(" " + commands[3]));
 
                 Player player = Program.server.GetPlayerByName(playerName);
@@ -632,7 +649,7 @@ namespace Terraria_Server.Commands
                 if (commands.Length > 2 && commands[1] != null && commands[2] != null
                     && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
                 {
-                    string npcName = Program.mergeStrArray(commands);
+                    string npcName = MergeStringArray(commands);
                     npcName = npcName.Remove(0, npcName.IndexOf(" " + commands[2])).Replace(" ", "").ToLower();
 
                     NPC[] npcs = new NPC[Main.maxItemTypes];
@@ -960,7 +977,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;

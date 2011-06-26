@@ -1,5 +1,5 @@
 ﻿
-namespace Terraria_Server
+namespace Terraria_Server.Misc
 {
     public class Color
     {

@@ -5,7 +5,7 @@ namespace Terraria_Server
     public class Chest
     {
         public static int maxItems = 20;
-        public Item[] item = new Item[Chest.maxItems];
+        public Item[] item = new Item[maxItems];
         public int x;
         public int y;
 
@@ -89,156 +89,181 @@ namespace Terraria_Server
             return true;
         }
 
-        public void SetupShop(int type)
+        public enum ShopType
         {
-            for (int i = 0; i < Chest.maxItems; i++)
+            ARMS_DEALER,
+            CLOTHIER,
+            DEMOLITIONIST,
+            DRYAD,
+            MERCHANT
+        }
+
+        private void SetupMerchant()
+        {
+            int num = 0;
+            this.item[num].SetDefaults("Mining Helmet");
+            num++;
+            this.item[num].SetDefaults("Piggy Bank");
+            num++;
+            this.item[num].SetDefaults("Iron Anvil");
+            num++;
+            this.item[num].SetDefaults("Copper Pickaxe");
+            num++;
+            this.item[num].SetDefaults("Copper Axe");
+            num++;
+            this.item[num].SetDefaults("Torch");
+            num++;
+            this.item[num].SetDefaults("Lesser Healing Potion");
+            num++;
+            if (Main.player[Main.myPlayer].statManaMax == 200)
             {
-                this.item[i] = new Item();
+                this.item[num].SetDefaults("Lesser Mana Potion");
+                num++;
             }
-            if (type == 1)
+            this.item[num].SetDefaults("Wooden Arrow");
+            num++;
+            this.item[num].SetDefaults("Shuriken");
+            num++;
+            if (Main.bloodMoon)
             {
-                int num = 0;
-                this.item[num].SetDefaults("Mining Helmet");
+                this.item[num].SetDefaults("Throwing Knife");
                 num++;
-                this.item[num].SetDefaults("Piggy Bank");
+            }
+            if (!Main.dayTime)
+            {
+                this.item[num].SetDefaults("Glowstick");
                 num++;
-                this.item[num].SetDefaults("Iron Anvil");
-                num++;
-                this.item[num].SetDefaults("Copper Pickaxe");
-                num++;
-                this.item[num].SetDefaults("Copper Axe");
-                num++;
-                this.item[num].SetDefaults("Torch");
-                num++;
-                this.item[num].SetDefaults("Lesser Healing Potion");
-                num++;
-                if (Main.player[Main.myPlayer].statManaMax == 200)
-                {
-                    this.item[num].SetDefaults("Lesser Mana Potion");
-                    num++;
-                }
-                this.item[num].SetDefaults("Wooden Arrow");
-                num++;
-                this.item[num].SetDefaults("Shuriken");
-                num++;
-                if (Main.bloodMoon)
-                {
-                    this.item[num].SetDefaults("Throwing Knife");
-                    num++;
-                }
-                if (!Main.dayTime)
-                {
-                    this.item[num].SetDefaults("Glowstick");
-                    num++;
-                    return;
-                }
+            }
+        }
+
+        private void SetupArmsDealer()
+        {
+            int num2 = 0;
+            this.item[num2].SetDefaults("Musket Ball");
+            num2++;
+            if (Main.bloodMoon)
+            {
+                this.item[num2].SetDefaults("Silver Bullet");
+                num2++;
+            }
+            if (NPC.downedBoss2 && !Main.dayTime)
+            {
+                this.item[num2].SetDefaults(47, false);
+                num2++;
+            }
+            this.item[num2].SetDefaults("Flintlock Pistol");
+            num2++;
+            this.item[num2].SetDefaults("Minishark");
+            num2++;
+            if (Main.moonPhase == 4)
+            {
+                this.item[num2].SetDefaults(324, false);
+                num2++;
+                return;
+            }
+        }
+
+        public void SetupDryad()
+        {
+            int num3 = 0;
+            if (Main.bloodMoon)
+            {
+                this.item[num3].SetDefaults(67, false);
+                num3++;
+                this.item[num3].SetDefaults(59, false);
+                num3++;
             }
             else
             {
-                if (type == 2)
+                this.item[num3].SetDefaults("Purification Powder");
+                num3++;
+                this.item[num3].SetDefaults("Grass Seeds");
+                num3++;
+                this.item[num3].SetDefaults("Sunflower");
+                num3++;
+            }
+            this.item[num3].SetDefaults("Acorn");
+            num3++;
+            this.item[num3].SetDefaults(114, false);
+            num3++;
+            return;
+        }
+
+        public void SetupDemolitionist()
+        {
+            int num4 = 0;
+            this.item[num4].SetDefaults("Grenade");
+            num4++;
+            this.item[num4].SetDefaults("Bomb");
+            num4++;
+            this.item[num4].SetDefaults("Dynamite");
+            num4++;
+        }
+
+        public void SetupClothier()
+        {
+            int num5 = 0;
+            this.item[num5].SetDefaults(254, false);
+            num5++;
+            if (Main.dayTime)
+            {
+                this.item[num5].SetDefaults(242, false);
+                num5++;
+            }
+            if (Main.moonPhase == 0)
+            {
+                this.item[num5].SetDefaults(245, false);
+                num5++;
+                this.item[num5].SetDefaults(246, false);
+                num5++;
+            }
+            else
+            {
+                if (Main.moonPhase == 1)
                 {
-                    int num2 = 0;
-                    this.item[num2].SetDefaults("Musket Ball");
-                    num2++;
-                    if (Main.bloodMoon)
-                    {
-                        this.item[num2].SetDefaults("Silver Bullet");
-                        num2++;
-                    }
-                    if (NPC.downedBoss2 && !Main.dayTime)
-                    {
-                        this.item[num2].SetDefaults(47, false);
-                        num2++;
-                    }
-                    this.item[num2].SetDefaults("Flintlock Pistol");
-                    num2++;
-                    this.item[num2].SetDefaults("Minishark");
-                    num2++;
-                    if (Main.moonPhase == 4)
-                    {
-                        this.item[num2].SetDefaults(324, false);
-                        num2++;
-                        return;
-                    }
+                    this.item[num5].SetDefaults(325, false);
+                    num5++;
+                    this.item[num5].SetDefaults(326, false);
+                    num5++;
                 }
-                else
-                {
-                    if (type == 3)
-                    {
-                        int num3 = 0;
-                        if (Main.bloodMoon)
-                        {
-                            this.item[num3].SetDefaults(67, false);
-                            num3++;
-                            this.item[num3].SetDefaults(59, false);
-                            num3++;
-                        }
-                        else
-                        {
-                            this.item[num3].SetDefaults("Purification Powder");
-                            num3++;
-                            this.item[num3].SetDefaults("Grass Seeds");
-                            num3++;
-                            this.item[num3].SetDefaults("Sunflower");
-                            num3++;
-                        }
-                        this.item[num3].SetDefaults("Acorn");
-                        num3++;
-                        this.item[num3].SetDefaults(114, false);
-                        num3++;
-                        return;
-                    }
-                    if (type == 4)
-                    {
-                        int num4 = 0;
-                        this.item[num4].SetDefaults("Grenade");
-                        num4++;
-                        this.item[num4].SetDefaults("Bomb");
-                        num4++;
-                        this.item[num4].SetDefaults("Dynamite");
-                        num4++;
-                        return;
-                    }
-                    if (type == 5)
-                    {
-                        int num5 = 0;
-                        this.item[num5].SetDefaults(254, false);
-                        num5++;
-                        if (Main.dayTime)
-                        {
-                            this.item[num5].SetDefaults(242, false);
-                            num5++;
-                        }
-                        if (Main.moonPhase == 0)
-                        {
-                            this.item[num5].SetDefaults(245, false);
-                            num5++;
-                            this.item[num5].SetDefaults(246, false);
-                            num5++;
-                        }
-                        else
-                        {
-                            if (Main.moonPhase == 1)
-                            {
-                                this.item[num5].SetDefaults(325, false);
-                                num5++;
-                                this.item[num5].SetDefaults(326, false);
-                                num5++;
-                            }
-                        }
-                        this.item[num5].SetDefaults(269, false);
-                        num5++;
-                        this.item[num5].SetDefaults(270, false);
-                        num5++;
-                        this.item[num5].SetDefaults(271, false);
-                        num5++;
-                        if (Main.bloodMoon)
-                        {
-                            this.item[num5].SetDefaults(322, false);
-                            num5++;
-                        }
-                    }
-                }
+            }
+            this.item[num5].SetDefaults(269, false);
+            num5++;
+            this.item[num5].SetDefaults(270, false);
+            num5++;
+            this.item[num5].SetDefaults(271, false);
+            num5++;
+            if (Main.bloodMoon)
+            {
+                this.item[num5].SetDefaults(322, false);
+                num5++;
+            }
+        }
+
+        public void SetupShop(ShopType type)
+        {
+            for (int i = 0; i < maxItems; i++)
+            {
+                this.item[i] = new Item();
+            }
+
+            switch(type)
+            {
+                case ShopType.MERCHANT:
+                    SetupMerchant();
+                    break;
+                case ShopType.ARMS_DEALER:
+                    SetupArmsDealer();
+                    break;
+                case ShopType.DRYAD:
+                    SetupDryad();
+                    break;
+                case ShopType.DEMOLITIONIST:
+                    SetupDemolitionist();
+                    break;
+                case ShopType.CLOTHIER:
+                    SetupClothier();
+                    break;
             }
         }
     }

@@ -1,10 +1,9 @@
-﻿
-
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Collections;
 using Terraria_Server.Events;
+
 namespace Terraria_Server.Plugin
 {
     /*
@@ -15,15 +14,16 @@ namespace Terraria_Server.Plugin
 
     public class PluginManager
     {
-        private string pluginPath = "";
+        private string pluginPath = String.Empty;
         private ArrayList pluginList = null;
         private Server server = null;
 
-        public PluginManager(string PluginPath, Server Server)
+        public PluginManager(string pluginPath, Server server)
         {
-            pluginPath = PluginPath;
+            this.pluginPath = pluginPath;
+            this.server = server;
+
             pluginList = new ArrayList();
-            server = Server;
         }
 
         public Plugin loadPlugin(string PluginPath)
@@ -110,11 +110,11 @@ namespace Terraria_Server.Plugin
         }
         
         //Returns true on plugin successfully Enabling
-        public bool EnablePlugin(string Name)
+        public bool EnablePlugin(string name)
         {
             foreach (Plugin plugin in pluginList)
             {
-                if (plugin.Name == Name)
+                if (plugin.Name == name)
                 {
                     plugin.Enabled = true;
                     plugin.Enable();
@@ -125,14 +125,14 @@ namespace Terraria_Server.Plugin
         }
 
         //Returns true on plugin successfully Disabling
-        public bool DisablePlugin(string Name)
+        public bool DisablePlugin(string name)
         {
             if (pluginList != null)
             {
                 Plugin dPlugin = null;
                 foreach (Plugin plugin in pluginList)
                 {
-                    if (plugin.Name == Name)
+                    if (plugin.Name == name)
                     {
                         dPlugin = plugin;
                         break;
@@ -150,85 +150,85 @@ namespace Terraria_Server.Plugin
             return false;
         }
 
-        public Plugin getPlugin(string Name)
+        public Plugin getPlugin(string name)
         {
             foreach (Plugin plugin in pluginList)
             {
-                if(plugin.Name.Trim().ToLower().Equals(Name.Trim().ToLower())) {
+                if(plugin.Name.Trim().ToLower().Equals(name.Trim().ToLower())) {
                     return plugin;
                 }
             }
             return null;
         }
         
-        public void processHook(Hooks Hook, Event Event)
+        public void processHook(Hooks hook, Event hookEvent)
 		{
             foreach (Plugin plugin in pluginList)
 			{
 				try
 				{
-                    if (plugin.containsHook(Hook))
+                    if (plugin.containsHook(hook))
 					{
-                        switch (Hook)
+                        switch (hook)
                         {
                             case Hooks.CONSOLE_COMMAND:
                                 {
-                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent)Event);
+                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_COMMAND:
                                 {
-                                    plugin.onPlayerCommand((PlayerCommandEvent)Event);
+                                    plugin.onPlayerCommand((PlayerCommandEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_CHAT:
                                 {
-                                    plugin.onPlayerChat((PlayerChatEvent)Event);
+                                    plugin.onPlayerChat((PlayerChatEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_PRELOGIN:
                                 {
-                                    plugin.onPlayerPreLogin((LoginEvent)Event);
+                                    plugin.onPlayerPreLogin((LoginEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_LOGIN:
                                 {
-                                    plugin.onPlayerJoin((LoginEvent)Event);
+                                    plugin.onPlayerJoin((LoginEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_LOGOUT:
                                 {
-                                    plugin.onPlayerLogout((LogoutEvent)Event);
+                                    plugin.onPlayerLogout((LogoutEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_PARTYCHANGE:
                                 {
-                                    plugin.onPlayerPartyChange((PartyChangeEvent)Event);
+                                    plugin.onPlayerPartyChange((PartyChangeEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.TILE_BREAK:
                                 {
-                                    plugin.onTileBreak((TileBreakEvent)Event);
+                                    plugin.onTileBreak((TileBreakEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_HURT:
                                 {
-                                    plugin.onPlayerHurt((PlayerHurtEvent)Event);
+                                    plugin.onPlayerHurt((PlayerHurtEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_CHEST:
                                 {
-                                    plugin.onPlayerOpenChest((ChestOpenEvent)Event);
+                                    plugin.onPlayerOpenChest((ChestOpenEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_STATEUPDATE:
                                 {
-                                    plugin.onPlayerStateUpdate((PlayerStateUpdateEvent)Event);
+                                    plugin.onPlayerStateUpdate((PlayerStateUpdateEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_DEATH:
                                 {
-                                    plugin.onPlayerDeath((PlayerDeathEvent)Event);
+                                    plugin.onPlayerDeath((PlayerDeathEvent)hookEvent);
                                     break;
                                 }
                         }
@@ -236,7 +236,7 @@ namespace Terraria_Server.Plugin
                 }
                 catch (Exception exception)
                 {
-                    Program.tConsole.WriteLine("Error Passing Event " + Hook.ToString() + " to " + plugin.Name);
+                    Program.tConsole.WriteLine("Error Passing Event " + hook.ToString() + " to " + plugin.Name);
                     Program.tConsole.WriteLine(exception.ToString());
                 }
             }

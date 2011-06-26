@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using Terraria_Server.Misc;
 namespace Terraria_Server
 {
     internal class WorldGen
@@ -1078,7 +1079,7 @@ namespace Terraria_Server
                         {
                             using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
                             {
-                                binaryWriter.Write(Statics.currentRelease);
+                                binaryWriter.Write(Statics.CURRENT_RELEASE);
                                 binaryWriter.Write(Main.worldName);
                                 binaryWriter.Write(Main.worldID);
                                 binaryWriter.Write((int)Main.leftWorld);
@@ -1250,7 +1251,7 @@ namespace Terraria_Server
                         WorldGen.loadFailed = false;
                         WorldGen.loadSuccess = false;
                         int num = binaryReader.ReadInt32();
-                        if (num > Statics.currentRelease)
+                        if (num > Statics.CURRENT_RELEASE)
                         {
                             WorldGen.loadFailed = true;
                             WorldGen.loadSuccess = false;

@@ -5,13 +5,13 @@ namespace Terraria_Server
 {
     public class TConsole
     {
-        StreamWriter streamWriter = null;
-        int platform = 0;
+        private StreamWriter streamWriter = null;
+        private Platform.PlatformType platformType;
 
-        public TConsole(string serverLog, int Platform)
+        public TConsole(string serverLog, Platform.PlatformType platformType)
         {
             streamWriter = new StreamWriter(serverLog);
-            platform = Platform;
+            this.platformType = platformType;
         }
 
         public void WriteLine(string Line)
@@ -23,7 +23,7 @@ namespace Terraria_Server
 
         public void WriteLine()
         {
-            if (platform == 0)
+            if (platformType == Platform.PlatformType.UNKNOWN)
             {
                 Console.WriteLine();
                 streamWriter.WriteLine();

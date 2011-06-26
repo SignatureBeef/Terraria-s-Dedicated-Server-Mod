@@ -5,6 +5,7 @@ using Terraria_Server.Plugin;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server
 {
@@ -180,6 +181,15 @@ namespace Terraria_Server
 		public int fallStart;
 		public int slowCount;
 
+        public override string getName()
+        {
+            return name;
+        }
+
+        public override void sendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        {
+            NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, A, R, G, B);
+        }
 
         public void HealEffect(int healAmount, bool overrider = false, int remoteClient = -1)
 		{
@@ -4474,10 +4484,10 @@ namespace Terraria_Server
 		
         public static void SavePlayer(Player newPlayer)
 		{
-            string playerPath = Statics.getPlayerPath + "\\" + newPlayer.name;
+            string playerPath = Statics.PlayerPath + "\\" + newPlayer.name;
             try
             {
-                Directory.CreateDirectory(Statics.getPlayerPath);
+                Directory.CreateDirectory(Statics.PlayerPath);
             }
             catch
             {
@@ -4496,7 +4506,7 @@ namespace Terraria_Server
 			{
 				using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
 				{
-					binaryWriter.Write(Statics.currentRelease);
+					binaryWriter.Write(Statics.CURRENT_RELEASE);
 					binaryWriter.Write(newPlayer.name);
 					binaryWriter.Write(newPlayer.hair);
 					binaryWriter.Write(newPlayer.statLife);

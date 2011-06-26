@@ -3,9 +3,10 @@ using Terraria_Server.Events;
 using System.Text;
 using System;
 using Terraria_Server.Plugin;
+using Terraria_Server.Misc;
 namespace Terraria_Server
 {
-	public class messageBuffer
+	public class MessageBuffer
 	{
 		public const int readBufferMax = 65535;
 		public const int writeBufferMax = 65535;
@@ -85,7 +86,7 @@ namespace Terraria_Server
 					return;
 				}
 
-                if(Program.properties.isUsingWhiteList() && !Program.server.WhiteList.containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
+                if(Program.properties.UseWhiteList && !Program.server.WhiteList.containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
                     NetMessage.SendData(2, this.whoAmI, -1, "You are not on the WhiteList.", 0, 0f, 0f, 0f);
 					return;
                 }
@@ -93,7 +94,7 @@ namespace Terraria_Server
 				if (Netplay.serverSock[this.whoAmI].state == 0)
 				{
                     string version = Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
-					if (!(version == "Terraria" + Statics.currentRelease))
+					if (!(version == "Terraria" + Statics.CURRENT_RELEASE))
 					{
 						NetMessage.SendData(2, this.whoAmI, -1, "You are not using the same version as this Server.", 0, 0f, 0f, 0f);
 						return;

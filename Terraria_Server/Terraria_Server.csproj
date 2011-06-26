@@ -116,7 +116,7 @@
     <Compile Include="Collision.cs" />
     <Compile Include="Events\PlayerDeathEvent.cs" />
     <Compile Include="Misc\Color.cs" />
-    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\Commands.cs" />
     <Compile Include="Commands\CommandParser.cs" />
     <Compile Include="Dust.cs" />
     <Compile Include="Events\ConsoleCommandEvent.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="messageBuffer.cs" />
+    <Compile Include="MessageBuffer.cs" />
     <Compile Include="NetMessage.cs" />
     <Compile Include="Netplay.cs" />
     <Compile Include="NPC.cs" />
@@ -140,6 +140,7 @@
     <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
+    <Compile Include="Server\Platform.cs" />
     <Compile Include="Server\ServerProperties.cs" />
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

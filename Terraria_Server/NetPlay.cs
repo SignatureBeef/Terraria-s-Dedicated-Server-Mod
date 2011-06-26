@@ -547,7 +547,7 @@ namespace Terraria_Server
 					Netplay.serverSock[i] = new ServerSock();
 					Netplay.serverSock[i].tcpClient.NoDelay = true;
 				}
-				NetMessage.buffer[i] = new messageBuffer();
+				NetMessage.buffer[i] = new MessageBuffer();
 				NetMessage.buffer[i].whoAmI = i;
 			}
 			Netplay.clientSock.tcpClient.NoDelay = true;

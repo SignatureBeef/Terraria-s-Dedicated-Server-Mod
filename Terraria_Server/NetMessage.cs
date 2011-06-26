@@ -6,7 +6,7 @@ namespace Terraria_Server
 {
 	public class NetMessage
 	{
-		public static messageBuffer[] buffer = new messageBuffer[257];
+		public static MessageBuffer[] buffer = new MessageBuffer[257];
 
         public static void BootPlayer(int plr, string msg)
         {
@@ -27,7 +27,7 @@ namespace Terraria_Server
 				if (packetId == (((int)Packet.CONNECTION_REQUEST)))
 				{
 					byte[] bytes = BitConverter.GetBytes(packetId);
-					byte[] bytes2 = Encoding.ASCII.GetBytes("Terraria_Server" + Statics.currentRelease);
+					byte[] bytes2 = Encoding.ASCII.GetBytes("Terraria_Server" + Statics.CURRENT_RELEASE);
 					num2 += bytes2.Length;
 					byte[] bytes3 = BitConverter.GetBytes(num2 - 4);
 					Buffer.BlockCopy(bytes3, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
@@ -1358,7 +1358,7 @@ namespace Terraria_Server
 				{
 					try
                     {
-                        messageBuffer messageBuffer = NetMessage.buffer[num];
+                        MessageBuffer messageBuffer = NetMessage.buffer[num];
 						NetMessage.buffer[num].spamCount++;
                         if (Statics.debugMode)
                         {
@@ -1397,7 +1397,7 @@ namespace Terraria_Server
 						{
 							try
                             {
-                                messageBuffer messageBuffer = NetMessage.buffer[num];
+                                MessageBuffer messageBuffer = NetMessage.buffer[num];
 								NetMessage.buffer[num11].spamCount++;
                                 if (Statics.debugMode)
                                 {
@@ -1419,7 +1419,7 @@ namespace Terraria_Server
 				{
 					try
                     {
-                        messageBuffer messageBuffer = NetMessage.buffer[num];
+                        MessageBuffer messageBuffer = NetMessage.buffer[num];
 						NetMessage.buffer[remoteClient].spamCount++;
                         if (Statics.debugMode)
                         {
@@ -1560,7 +1560,7 @@ namespace Terraria_Server
 		
         public static void greetPlayer(int plr)
 		{
-            string[] motd = Program.properties.getGreeting().Split('@');
+            string[] motd = Program.properties.Greeting.Split('@');
             for (int i = 0; i < motd.Length; i++)
             {
                 if (motd != null && motd.Length > 0)

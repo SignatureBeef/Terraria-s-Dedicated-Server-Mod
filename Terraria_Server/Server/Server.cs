@@ -1,6 +1,8 @@
-﻿
+﻿using System;
+using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
-using System;
+using System.Collections.Generic;
+
 namespace Terraria_Server
 {
     ///<Summary>
@@ -19,7 +21,7 @@ namespace Terraria_Server
             Main.maxNetplayers = PlayerCap;
             world = World;
             world.Server = this;
-            pluginManager = new PluginManager(Statics.getPluginPath, this);
+            pluginManager = new PluginManager(Statics.PluginPath, this);
             WhiteList = new DataRegister(myWhiteList);
             WhiteList.Load();
             BanList = new DataRegister(myBanList);
@@ -94,22 +96,19 @@ namespace Terraria_Server
 
         // Summary:
         //       Send a message to all online OPs
-        public void notifyOps(string Message, bool writeToConsole = false)
+        public void notifyOps(string message, bool writeToConsole = false)
         {
             if (Statics.cmdMessages)
             {
-                for (int i = 0; i < 255; i++)
+                foreach (Player player in Main.player)
                 {
-                    if (Main.player[i].active)
+                    if (player.active && player.Op)
                     {
-                        if (Main.player[i].Op)
-                        {
-                            NetMessage.SendData((int)Packet.PLAYER_CHAT, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
-                        }
+                        NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255, 176f, 196, 222f);
                     }
                 }
             }
-            Program.tConsole.WriteLine(Message);
+            Program.tConsole.WriteLine(message);
         }
 
         // Summary:
@@ -151,75 +150,5 @@ namespace Terraria_Server
         // Summary:
         //       Gets the OP list
         public DataRegister OpList { get; set; }
-
-        // Summary:
-        //       Get the array of Active NPCs
-        public NPC[] getActiveNPCs()
-        {
-            NPC[] npcs = null;
-
-            int npcCount = getActiveNPCCount();
-            if (npcCount > 0)
-            {
-                npcs = new NPC[npcCount];
-                npcCount = 0;
-                for (int i = 0; i < Main.npc.Length-1; i++)
-                {
-                    if (Main.npc[i].active)
-                    {
-                        npcs[npcCount] = Main.npc[i];
-                        npcCount++;
-                    }
-                }
-            }
-            
-            return npcs;
-        }
-
-        // Summary:
-        //       Gets the total of all active NPCs
-        public int getActiveNPCCount()
-        {
-            int npcCount = 0;
-            foreach (NPC npc in Main.npc)
-            {
-                if (npc.active)
-                {
-                    npcCount++;
-                }
-            }
-            return npcCount;
-        }
-
-        // Summary:
-        //       Gets the maximum allowed NPCs
-        public int MaxNPCs
-        {
-            get
-            {
-                return NPC.maxSpawns;
-            }
-
-            set
-            {
-                NPC.defaultMaxSpawns = value;
-                NPC.maxSpawns = value;
-            }
-        }
-
-        // Summary:
-        //       Gets the max spawn rat eof NPCs
-        public int SpawnRate
-        {
-            get
-            {
-                return NPC.spawnRate;
-            }
-            set
-            {
-                NPC.defaultSpawnRate = value;
-                NPC.spawnRate = value;
-            }
-        }
     }
 }

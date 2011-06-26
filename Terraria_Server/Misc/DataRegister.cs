@@ -1,41 +1,39 @@
-﻿
-using System.IO;
+﻿using System.IO;
 using System.Collections;
-namespace Terraria_Server
+
+namespace Terraria_Server.Misc
 {
     public class DataRegister
     {
-        private string filePath = "";
-
         public DataRegister(string Location)
         {
             FilePath = Location;
         }
 
-
         public ArrayList WhiteList { get; set; }
 
         public string FilePath { get; set; }
 
-        public bool containsException(string Exception)
+        public bool containsException(string exception)
         {
-            return WhiteList.Contains(Exception.Trim().ToLower());
+            return WhiteList.Contains(exception.Trim().ToLower());
         }
 
-        public void addException(string Exception)
+        public void addException(string exception)
         {
-            if (!WhiteList.Contains(Exception.Trim().ToLower()))
+
+            if (!WhiteList.Contains(exception.Trim().ToLower()))
             {
-                WhiteList.Add(Exception.Trim().ToLower());
+                WhiteList.Add(exception.Trim().ToLower());
             }
         }
 
-        public bool removeException(string Exception)
+        public bool removeException(string exception)
         {
             bool pass = false;
-            if (WhiteList.Contains(Exception.Trim().ToLower()))
+            if (WhiteList.Contains(exception.Trim().ToLower()))
             {
-                WhiteList.Remove(Exception.Trim().ToLower());
+                WhiteList.Remove(exception.Trim().ToLower());
             }
             return pass;
         }
@@ -44,9 +42,9 @@ namespace Terraria_Server
         {
             WhiteList = new ArrayList();
 
-            if (System.IO.File.Exists(filePath))
+            if (File.Exists(FilePath))
             {
-                string[] list = System.IO.File.ReadAllLines(filePath);
+                string[] list = File.ReadAllLines(FilePath);
                 if (list != null)
                 {
                     foreach (string listee in list)
@@ -62,17 +60,17 @@ namespace Terraria_Server
 
         public bool Save()
         {
-            if (File.Exists(filePath))
+            if (File.Exists(FilePath))
             {
                 try
                 {
-                    File.Delete(filePath);
+                    File.Delete(FilePath);
                 } catch {
                     return false;
                 }
             }
 
-            File.WriteAllLines(filePath, WhiteList.ToArray(typeof(string)) as string[]);
+            File.WriteAllLines(FilePath, WhiteList.ToArray(typeof(string)) as string[]);
 
             return true;
         }

@@ -4,6 +4,7 @@ using System;
 using System.Text;
 using System.Net;
 using System.IO;
+using Terraria_Server.Misc;
 namespace Terraria_Server
 {
 	public class Main
@@ -204,7 +205,7 @@ namespace Terraria_Server
 		public static bool npcChatFocus1 = false;
 		public static bool npcChatFocus2 = false;
 		public static int npcShop = 0;
-		public Chest[] shop = new Chest[6];
+		public Chest[] shops = new Chest[6];
 		private static Item toolTip = new Item();
 		public static string motd = "";
 		public bool toggleFullscreen;
@@ -656,17 +657,17 @@ namespace Terraria_Server
             {
                 Main.liquidBuffer[num11] = new LiquidBuffer();
             }
-            this.shop[0] = new Chest();
-            this.shop[1] = new Chest();
-            this.shop[1].SetupShop(1);
-            this.shop[2] = new Chest();
-            this.shop[2].SetupShop(2);
-            this.shop[3] = new Chest();
-            this.shop[3].SetupShop(3);
-            this.shop[4] = new Chest();
-            this.shop[4].SetupShop(4);
-            this.shop[5] = new Chest();
-            this.shop[5].SetupShop(5);
+            this.shops[0] = new Chest();
+            this.shops[1] = new Chest();
+            this.shops[1].SetupShop(Chest.ShopType.MERCHANT);
+            this.shops[2] = new Chest();
+            this.shops[2].SetupShop(Chest.ShopType.ARMS_DEALER);
+            this.shops[3] = new Chest();
+            this.shops[3].SetupShop(Chest.ShopType.DRYAD);
+            this.shops[4] = new Chest();
+            this.shops[4].SetupShop(Chest.ShopType.DEMOLITIONIST);
+            this.shops[5] = new Chest();
+            this.shops[5].SetupShop(Chest.ShopType.CLOTHIER);
             Main.teamColor[0] = new Color(255, 255, 255);
             Main.teamColor[1] = new Color(230, 40, 20);
             Main.teamColor[2] = new Color(20, 200, 30);
