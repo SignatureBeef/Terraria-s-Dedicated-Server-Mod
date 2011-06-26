@@ -42,6 +42,7 @@ namespace Terraria_Server
         public bool ownerHitCheck;
         public int[] playerImmune = new int[255];
         public string miscText = "";
+
         public void SetDefaults(int Type)
         {
             for (int i = 0; i < Projectile.maxAI; i++)
@@ -1211,7 +1212,6 @@ namespace Terraria_Server
                                         Main.dust[num].alpha = 100;
                                         Main.dust[num].noGravity = true;
                                     }
-                                    //////Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                                 else
                                 {
@@ -1226,7 +1226,6 @@ namespace Terraria_Server
                                         Main.dust[num2].alpha = 100;
                                         Main.dust[num2].noGravity = true;
                                     }
-                                    //////Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                             }
                             this.wet = true;
@@ -1253,7 +1252,6 @@ namespace Terraria_Server
                                         Main.dust[num3].alpha = 100;
                                         Main.dust[num3].noGravity = true;
                                     }
-                                    //////Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                                 else
                                 {
@@ -1268,7 +1266,6 @@ namespace Terraria_Server
                                         Main.dust[num4].alpha = 100;
                                         Main.dust[num4].noGravity = true;
                                     }
-                                    //////Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                             }
                         }
@@ -1339,7 +1336,6 @@ namespace Terraria_Server
                             if (this.penetrate > 1)
                             {
                                 Collision.HitTiles(this.position, this.velocity, this.width, this.height);
-                                //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                 this.penetrate--;
                                 if (this.velocity.X != value2.X)
                                 {
@@ -1394,13 +1390,11 @@ namespace Terraria_Server
                                         }
                                     }
                                     this.netUpdate = true;
-                                    //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                                 else
                                 {
                                     if (this.aiStyle == 8)
                                     {
-                                        //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                         this.ai[0] += 1f;
                                         if (this.ai[0] >= 5f)
                                         {
@@ -1505,10 +1499,7 @@ namespace Terraria_Server
                 {
                     return;
                 }
-                if (this.light > 0f)
-                {
-                    ////////Lighting.addLight((int)((this.position.X + (float)(this.width / 2)) / 16f), (int)((this.position.Y + (float)(this.height / 2)) / 16f), this.light);
-                }
+
                 if (this.type == 2)
                 {
                     Dust.NewDust(new Vector2(this.position.X, this.position.Y), this.width, this.height, 6, 0f, 0f, 100, default(Color), 1f);
@@ -1656,7 +1647,6 @@ namespace Terraria_Server
                         if (this.soundDelay == 0)
                         {
                             this.soundDelay = 8;
-                            //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 7);
                         }
                         if (this.type == 19)
                         {
@@ -1870,7 +1860,6 @@ namespace Terraria_Server
                             if (this.soundDelay == 0)
                             {
                                 this.soundDelay = 20 + Main.rand.Next(40);
-                                //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 9);
                             }
                             if (this.ai[0] == 0f)
                             {
@@ -2069,7 +2058,6 @@ namespace Terraria_Server
                                                         }
                                                     }
                                                     WorldGen.KillTile(n, num22, true, true, false);
-                                                    //////Main.PlaySound0, n * 16, num22 * 16, 1);
                                                     this.velocity.X = 0f;
                                                     this.velocity.Y = 0f;
                                                     this.ai[0] = 2f;
@@ -2261,7 +2249,6 @@ namespace Terraria_Server
                                                 if (this.soundDelay == 0 && Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y) > 2f)
                                                 {
                                                     this.soundDelay = 10;
-                                                    //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 9);
                                                 }
                                                 Vector2 arg_1B4F_0 = new Vector2(this.position.X, this.position.Y);
                                                 int arg_1B4F_1 = this.width;
@@ -2280,37 +2267,7 @@ namespace Terraria_Server
                                             }
                                             if (Main.myPlayer == this.owner && this.ai[0] == 0f)
                                             {
-                                                if (Main.player[this.owner].channel)
-                                                {
-                                                    //float num39 = 12f;
-                                                    //Vector2 vector6 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                    //float num40 = (float)Main.mouseState.X + Main.screenPosition.X - vector6.X;
-                                                    //float num41 = (float)Main.mouseState.Y + Main.screenPosition.Y - vector6.Y;
-                                                    //float num42 = (float)Math.Sqrt((double)(num40 * num40 + num41 * num41));
-                                                    //num42 = (float)Math.Sqrt((double)(num40 * num40 + num41 * num41));
-                                                    //if (num42 > num39)
-                                                    //{
-                                                    //    num42 = num39 / num42;
-                                                    //    num40 *= num42;
-                                                    //    num41 *= num42;
-                                                    //    if (num40 != this.velocity.X || num41 != this.velocity.Y)
-                                                    //    {
-                                                    //        this.netUpdate = true;
-                                                    //    }
-                                                    //    this.velocity.X = num40;
-                                                    //    this.velocity.Y = num41;
-                                                    //}
-                                                    //else
-                                                    //{
-                                                    //    if (num40 != this.velocity.X || num41 != this.velocity.Y)
-                                                    //    {
-                                                    //        this.netUpdate = true;
-                                                    //    }
-                                                    //    this.velocity.X = num40;
-                                                    //    this.velocity.Y = num41;
-                                                    //}
-                                                }
-                                                else
+                                                if (!Main.player[this.owner].channel)
                                                 {
                                                     this.Kill();
                                                 }
@@ -2430,37 +2387,7 @@ namespace Terraria_Server
                                                 }
                                                 if (Main.myPlayer == this.owner && this.ai[0] == 0f)
                                                 {
-                                                    if (Main.player[this.owner].channel)
-                                                    {
-                                                        //float num47 = 12f;
-                                                        //Vector2 vector7 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                        //float num48 = (float)Main.mouseState.X + Main.screenPosition.X - vector7.X;
-                                                        //float num49 = (float)Main.mouseState.Y + Main.screenPosition.Y - vector7.Y;
-                                                        //float num50 = (float)Math.Sqrt((double)(num48 * num48 + num49 * num49));
-                                                        //num50 = (float)Math.Sqrt((double)(num48 * num48 + num49 * num49));
-                                                        //if (num50 > num47)
-                                                        //{
-                                                        //    num50 = num47 / num50;
-                                                        //    num48 *= num50;
-                                                        //    num49 *= num50;
-                                                        //    if (num48 != this.velocity.X || num49 != this.velocity.Y)
-                                                        //    {
-                                                        //        this.netUpdate = true;
-                                                        //    }
-                                                        //    this.velocity.X = num48;
-                                                        //    this.velocity.Y = num49;
-                                                        //}
-                                                        //else
-                                                        //{
-                                                        //    if (num48 != this.velocity.X || num49 != this.velocity.Y)
-                                                        //    {
-                                                        //        this.netUpdate = true;
-                                                        //    }
-                                                        //    this.velocity.X = num48;
-                                                        //    this.velocity.Y = num49;
-                                                        //}
-                                                    }
-                                                    else
+                                                    if (!Main.player[this.owner].channel)
                                                     {
                                                         this.ai[0] = 1f;
                                                         this.netUpdate = true;
@@ -3019,7 +2946,6 @@ namespace Terraria_Server
                                                                     if (this.ai[1] == 0f && this.type == 44)
                                                                     {
                                                                         this.ai[1] = 1f;
-                                                                        //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 8);
                                                                     }
                                                                     this.rotation += (float)this.direction * 0.8f;
                                                                     this.ai[0] += 1f;
@@ -3182,7 +3108,6 @@ namespace Terraria_Server
             this.timeLeft = 0;
             if (this.type == 1)
             {
-                //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                 for (int i = 0; i < 10; i++)
                 {
                     Vector2 arg_7E_0 = new Vector2(this.position.X, this.position.Y);
@@ -3200,7 +3125,6 @@ namespace Terraria_Server
             {
                 if (this.type == 51)
                 {
-                    //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                     for (int j = 0; j < 5; j++)
                     {
                         Vector2 arg_101_0 = new Vector2(this.position.X, this.position.Y);
@@ -3218,7 +3142,6 @@ namespace Terraria_Server
                 {
                     if (this.type == 2)
                     {
-                        //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                         for (int k = 0; k < 20; k++)
                         {
                             Vector2 arg_183_0 = new Vector2(this.position.X, this.position.Y);
@@ -3236,7 +3159,6 @@ namespace Terraria_Server
                     {
                         if (this.type == 3 || this.type == 48 || this.type == 54)
                         {
-                            //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                             for (int l = 0; l < 10; l++)
                             {
                                 Vector2 arg_234_0 = new Vector2(this.position.X, this.position.Y);
@@ -3254,7 +3176,6 @@ namespace Terraria_Server
                         {
                             if (this.type == 4)
                             {
-                                //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                                 for (int m = 0; m < 10; m++)
                                 {
                                     Vector2 arg_2BF_0 = new Vector2(this.position.X, this.position.Y);
@@ -3272,7 +3193,6 @@ namespace Terraria_Server
                             {
                                 if (this.type == 5)
                                 {
-                                    //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                     for (int n = 0; n < 60; n++)
                                     {
                                         Vector2 arg_351_0 = this.position;
@@ -3290,7 +3210,6 @@ namespace Terraria_Server
                                 {
                                     if (this.type == 9 || this.type == 12)
                                     {
-                                        //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                         for (int num = 0; num < 10; num++)
                                         {
                                             Vector2 arg_3EE_0 = this.position;
@@ -3332,13 +3251,11 @@ namespace Terraria_Server
                                         if (this.type == 14 || this.type == 20 || this.type == 36)
                                         {
                                             Collision.HitTiles(this.position, this.velocity, this.width, this.height);
-                                            //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                         }
                                         else
                                         {
                                             if (this.type == 15 || this.type == 34)
                                             {
-                                                //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                                 for (int num5 = 0; num5 < 20; num5++)
                                                 {
                                                     Vector2 arg_61E_0 = new Vector2(this.position.X, this.position.Y);
@@ -3370,7 +3287,6 @@ namespace Terraria_Server
                                             {
                                                 if (this.type == 16)
                                                 {
-                                                    //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                                     for (int num7 = 0; num7 < 20; num7++)
                                                     {
                                                         Vector2 arg_776_0 = new Vector2(this.position.X - this.velocity.X, this.position.Y - this.velocity.Y);
@@ -3400,7 +3316,6 @@ namespace Terraria_Server
                                                 {
                                                     if (this.type == 17)
                                                     {
-                                                        //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                                                         for (int num9 = 0; num9 < 5; num9++)
                                                         {
                                                             Vector2 arg_88F_0 = new Vector2(this.position.X, this.position.Y);
@@ -3418,7 +3333,6 @@ namespace Terraria_Server
                                                     {
                                                         if (this.type == 31 || this.type == 42)
                                                         {
-                                                            //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                                                             for (int num10 = 0; num10 < 5; num10++)
                                                             {
                                                                 Vector2 arg_923_0 = new Vector2(this.position.X, this.position.Y);
@@ -3438,7 +3352,6 @@ namespace Terraria_Server
                                                         {
                                                             if (this.type == 39)
                                                             {
-                                                                //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                                                                 for (int num12 = 0; num12 < 5; num12++)
                                                                 {
                                                                     Vector2 arg_9CB_0 = new Vector2(this.position.X, this.position.Y);
@@ -3458,7 +3371,6 @@ namespace Terraria_Server
                                                             {
                                                                 if (this.type == 40)
                                                                 {
-                                                                    //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                                                                     for (int num14 = 0; num14 < 5; num14++)
                                                                     {
                                                                         Vector2 arg_A73_0 = new Vector2(this.position.X, this.position.Y);
@@ -3478,7 +3390,6 @@ namespace Terraria_Server
                                                                 {
                                                                     if (this.type == 21)
                                                                     {
-                                                                        //////Main.PlaySound0, (int)this.position.X, (int)this.position.Y, 1);
                                                                         for (int num16 = 0; num16 < 10; num16++)
                                                                         {
                                                                             Vector2 arg_B18_0 = new Vector2(this.position.X, this.position.Y);
@@ -3513,7 +3424,6 @@ namespace Terraria_Server
                                                                         {
                                                                             if (this.type == 27)
                                                                             {
-                                                                                //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                                                                 for (int num18 = 0; num18 < 30; num18++)
                                                                                 {
                                                                                     Vector2 arg_C40_0 = new Vector2(this.position.X, this.position.Y);
@@ -3558,7 +3468,6 @@ namespace Terraria_Server
                                                                                 {
                                                                                     if (this.type == 44 || this.type == 45)
                                                                                     {
-                                                                                        //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                                                                         for (int num21 = 0; num21 < 30; num21++)
                                                                                         {
                                                                                             Vector2 arg_DDB_0 = new Vector2(this.position.X, this.position.Y);
@@ -3586,7 +3495,6 @@ namespace Terraria_Server
                                                                                     {
                                                                                         if (this.type == 41)
                                                                                         {
-                                                                                            //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 14);
                                                                                             for (int num23 = 0; num23 < 10; num23++)
                                                                                             {
                                                                                                 Vector2 arg_ED0_0 = new Vector2(this.position.X, this.position.Y);
@@ -3659,7 +3567,6 @@ namespace Terraria_Server
                                                                                         {
                                                                                             if (this.type == 28 || this.type == 30 || this.type == 37)
                                                                                             {
-                                                                                                //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 14);
                                                                                                 this.position.X = this.position.X + (float)(this.width / 2);
                                                                                                 this.position.Y = this.position.Y + (float)(this.height / 2);
                                                                                                 this.width = 22;
@@ -3747,7 +3654,6 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 if (this.type == 29)
                                                                                                 {
-                                                                                                    //////Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 14);
                                                                                                     this.position.X = this.position.X + (float)(this.width / 2);
                                                                                                     this.position.Y = this.position.Y + (float)(this.height / 2);
                                                                                                     this.width = 200;
@@ -4067,6 +3973,7 @@ namespace Terraria_Server
             }
             this.active = false;
         }
+
         public Color GetAlpha(Color newColor)
         {
             int r;

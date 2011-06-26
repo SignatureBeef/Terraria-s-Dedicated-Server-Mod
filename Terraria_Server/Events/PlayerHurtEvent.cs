@@ -1,29 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Terraria_Server.Events
+﻿namespace Terraria_Server.Events
 {
-    public class PlayerHurtEvent : Event
+    public class PlayerHurtEvent : BasePlayerEvent
     {
-
-        int damage;
-
-        public Player getPlayer()
-        {
-            return (Player)getSender();
-        }
-
-        public int getDamage() 
-        {
-            return damage;
-        }
-
-        public void setDamage(int Damage)
-        {
-            damage = Damage;
-        }
-
+        public int Damage { get; set; }
     }
 }

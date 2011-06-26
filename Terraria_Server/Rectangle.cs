@@ -1,6 +1,6 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Globalization;
+
 namespace Terraria_Server
 {
 	public struct Rectangle : IEquatable<Rectangle>

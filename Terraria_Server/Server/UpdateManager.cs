@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
+using System;
 using System.Diagnostics;
-
 namespace Terraria_Server
 {
     public class UpdateManager
@@ -21,9 +18,9 @@ namespace Terraria_Server
         {
             string updateList = getUpdateList();
             //b-r
-            if (updateList.Contains("b")) // && updateList.Contains("-") && updateList.Contains("r"))
+            if (updateList.Contains("b"))
             {
-                string myBuild = "b" + Statics.build.ToString(); //+ "-r" + Statics.revision.ToString();
+                string myBuild = "b" + Statics.build.ToString();
                 uList = updateList;
                 return updateList.Equals(myBuild);
             }

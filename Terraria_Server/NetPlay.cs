@@ -1,9 +1,8 @@
-using System;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Threading;
 
+using System.Net.Sockets;
+using System.Net;
+using System;
+using System.Threading;
 namespace Terraria_Server
 {
     public class Netplay
@@ -186,8 +185,6 @@ namespace Terraria_Server
 			Main.myPlayer = 255;
 			Netplay.serverIP = IPAddress.Parse(serverSIP);
 			Netplay.serverListenIP = Netplay.serverIP;
-			//Main.menuMode = 14;
-			//Main.statusText = "Starting server...";
 			Main.netMode = 2;
 			Netplay.disconnect = false;
 			for (int i = 0; i < 256; i++)
@@ -391,11 +388,6 @@ namespace Terraria_Server
                         }
                         catch (Exception)
                         {
-                            //Program.tConsole.WriteLine("Exception in Server Loop Thread: Index-" + k.ToString());
-                            //Program.tConsole.WriteLine(e.Message);
-                            //Program.tConsole.WriteLine(e.StackTrace);
-                            //Program.tConsole.WriteLine(e.ToString());
-                            //Program.tConsole.WriteLine("If this persists please file a Bug thread at http://tdsm.org/");
                             try
                             {
                                 Netplay.serverSock[k].tcpClient.Client.Close();
@@ -438,7 +430,7 @@ namespace Terraria_Server
 			{
 				Main.netMode = 0;
 				Main.menuMode = 10;
-                WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
+                WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
                 while (WorldGen.saveLock)
                 {
                 }
@@ -503,9 +495,6 @@ namespace Terraria_Server
             Program.tConsole.WriteLine("Disabling Plugins");
             Program.server.getPluginManager().DisablePlugins();
             Program.tConsole.WriteLine("Closing Connections...");
-            //foreach(Player player in Main.player) {
-            //    NetMessage.SendData(2, player.whoAmi, -1, "Disconnected By Server", 0, 0f, 0f, 0f);
-            //}
             disconnect = true;
         }
 

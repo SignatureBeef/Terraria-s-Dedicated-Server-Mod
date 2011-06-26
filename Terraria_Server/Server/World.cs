@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
+using System;
 namespace Terraria_Server
 {
     public class World
@@ -18,112 +15,60 @@ namespace Terraria_Server
             LARGE_Y = 2400
         }
 
+        private const float DEFAULT_LEFT_WORLD = 0.0f;
+        private const float DEFAULT_RIGHT_WORLD = 134400f;
+        private const float DEFAULT_TOP_WORLD = 0.0f;
+        private const float DEFAULT_BOTTOM_WORLD = 38400f;
+        
+        private int maxTilesX;
+        private int maxTilesY;
 
-        //public static int fidefault = 0; // need to find better place for this?
+        public World(int MaxTilesX, int MaxTilesY) : this(null, MaxTilesX, MaxTilesY){}
 
-        /*public static int[] getWorldSize(String size) {
-            string nSize = size.ToLower().Trim();
-            if (nSize.Equals("small"))
-            {
-                return new int[] { 4200, };
-            }
-            else if (nSize.Equals("medium"))
-            {
-                
-                return new int[] { 6300, 1800};
-            }
-            else if (nSize.Equals("large"))
-            {
-                return new int[] { 8400, 2400};
-            }
-            else
-            {
-                return null;
-            }
-        }*/
-
-
-        public string name = "";
-        public string savePath = "";
-        public Server server = null;
-        public int seed = -1; //default
-        public int id = 0;
-
-        public float leftWorld = 0.0f;
-        public float rightWorld = 134400f;
-        public float topWorld = 0.0f;
-        public float bottomWorld = 38400f;
-        public int maxTilesX;
-        public int maxTilesY;
-        public int maxSectionsX;
-        public int maxSectionsY;
-
-        public World(int MaxTilesX, int MaxTilesY)
+        public World(Server server, int MaxTilesX, int MaxTilesY)
         {
+            BottomWorld = DEFAULT_BOTTOM_WORLD;
+            TopWorld = DEFAULT_TOP_WORLD;
+            LeftWorld = DEFAULT_LEFT_WORLD;
+            RightWorld = DEFAULT_RIGHT_WORLD;
             maxTilesY = MaxTilesY;
             maxTilesX = MaxTilesX;
+
+            Server = server;
 
             UpdateWorldCoords(false);
         }
 
-        public World(Server Server, int MaxTilesX, int MaxTilesY)
-        {
-            maxTilesY = MaxTilesY;
-            maxTilesX = MaxTilesX;
+        public String Name { get; set; }
 
-            server = Server;
+        public Server Server { get; set; }
 
-            UpdateWorldCoords(false);
-        }
+        public int Seed { get; set; }
+
+        public int Id { get; set; }
+
+        public string SavePath { get; set; }
+
+        public int MaxSectionsY { get; set; }
+
+        public int MaxSectionsX { get; set; }
+
+        public float BottomWorld { get; set; }
+
+        public float TopWorld { get; set; }
+
+        public float RightWorld { get; set; }
+
+        public float LeftWorld { get; set; }
 
         public void UpdateWorldCoords(bool useWorld) {
             if (useWorld)
             {
-                maxTilesX = (int)rightWorld / 16 + 1;
-                maxTilesY = (int)bottomWorld / 16 + 1;
+                maxTilesX = (int)RightWorld / 16 + 1;
+                maxTilesY = (int)BottomWorld / 16 + 1;
             }
-            maxSectionsX = maxTilesX / 200;
-            maxSectionsY = maxTilesY / 150;
-        }
-
-        public string getName()
-        {
-            return name;
-        }
-
-        public void setName(string Name)
-        {
-            name = Name;
-        }
-    
-        public Server getServer()
-        {
-            return server;
-        }
-
-        public void setServer(Server Server)
-        {
-            server = Server;
-        }
-
-        public int getSeed()
-        {
-            return seed;
-        }
-
-        public void setSeed(int Seed)
-        {
-            seed = Seed;
-        }
-
-        public int getId()
-        {
-            return id;
-        }
-
-        public void setId(int ID)
-        {
-            id = ID;
+            MaxSectionsX = maxTilesX / 200;
+            MaxSectionsY = maxTilesY / 150;
         }
 
         public double getTime()
@@ -147,36 +92,6 @@ namespace Terraria_Server
                     Main.dayTime = false;
                 }
             }
-        }
-
-        public string getSavePath()
-        {
-            return savePath;
-        }
-
-        public void setSavePath(string SavePath)
-        {
-            savePath = SavePath;
-        }
-
-        public int getMaxSectionsY()
-        {
-            return maxSectionsY;
-        }
-
-        public void setMaxSectionsY(int MaxSectionsY)
-        {
-            maxSectionsY = MaxSectionsY;
-        }
-
-        public int getMaxSectionsX()
-        {
-            return maxSectionsX;
-        }
-
-        public void setMaxSectionsX(int MaxSectionsX)
-        {
-            maxSectionsX = MaxSectionsX;
         }
 
         public int getMaxTilesY()
@@ -207,53 +122,12 @@ namespace Terraria_Server
             }
         }
 
-        public float getBottomWorld()
-        {
-            return bottomWorld;
-        }
-
-        public void setBottomWorld(float BottomWorld)
-        {
-            bottomWorld = BottomWorld;
-        }
-
-        public float getTopWorld()
-        {
-            return topWorld;
-        }
-
-        public void setTopWorld(float TopWorld)
-        {
-            topWorld = TopWorld;
-        }
-
-        public float getRightWorld()
-        {
-            return rightWorld;
-        }
-
-        public void setRightWorld(float RightWorld)
-        {
-            rightWorld = RightWorld;
-        }
-
-        public float getLeftWorld()
-        {
-            return leftWorld;
-        }
-
-        public void setLeftWorld(float LeftWorld)
-        {
-            leftWorld = LeftWorld;
-        }
-
         public Tile getHighestTile(int axisX) //tile format?
         {
             int tallest = -1;
 
             for (int i = 0; i < maxTilesY; i++)
             {
-                //if (Server.maxTilesY > axisX && Server.tile[axisX, i] != null)// && Server.tile[axisX, i].active)
                 if (Server.tile[axisX, i] != null && Server.tile[axisX, i].active)
                 {
                     if (i > tallest)

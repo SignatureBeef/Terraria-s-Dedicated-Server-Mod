@@ -1634,10 +1634,6 @@ namespace Terraria_Server
             {
                 this.frame = default(Rectangle);
             }
-            //else
-            //{
-            //    this.frame = new Rectangle(0, 0, Main.npcTexture[this.type].Width, Main.npcTexture[this.type].Height / Main.npcFrameCount[this.type]);
-            //}
             this.width = (int)((float)this.width * this.scale);
             this.height = (int)((float)this.height * this.scale);
             this.life = this.lifeMax;
@@ -1984,10 +1980,6 @@ namespace Terraria_Server
                             }
                             if ((!Main.dayTime || (double)this.position.Y > Main.worldSurface * 16.0 || this.type == 26 || this.type == 27 || this.type == 28 || this.type == 31 || this.type == 47 || this.type == 67) && this.ai[3] < (float)num3)
                             {
-                                if ((this.type == 3 || this.type == 21 || this.type == 31) && Main.rand.Next(1000) == 0)
-                                {
-                                    //Main.PlaySound14, (int)this.position.X, (int)this.position.Y, 1);
-                                }
                                 this.TargetClosest(true);
                             }
                             else
@@ -2519,7 +2511,6 @@ namespace Terraria_Server
                                                                 NetMessage.SendData(23, -1, -1, "", num21, 0f, 0f, 0f, 0);
                                                             }
                                                         }
-                                                        //Main.PlaySound3, (int)vector2.X, (int)vector2.Y, 1);
                                                         for (int i = 0; i < 10; i++)
                                                         {
                                                             Vector2 arg_2324_0 = vector2;
@@ -2635,7 +2626,6 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    //Main.PlaySound3, (int)this.position.X, (int)this.position.Y, 1);
                                                     for (int j = 0; j < 2; j++)
                                                     {
                                                         Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 8);
@@ -2654,7 +2644,6 @@ namespace Terraria_Server
                                                         newColor = default(Color);
                                                         Dust.NewDust(arg_28B3_0, arg_28B3_1, arg_28B3_2, arg_28B3_3, arg_28B3_4, arg_28B3_5, arg_28B3_6, newColor, 1f);
                                                     }
-                                                    //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 0);
                                                 }
                                             }
                                             Vector2 arg_2932_0 = this.position;
@@ -2746,7 +2735,6 @@ namespace Terraria_Server
                                             {
                                                 if (this.ai[1] == 1f)
                                                 {
-                                                    //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 0);
                                                     this.rotation = num8;
                                                     float num31 = 8f;
                                                     Vector2 vector6 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
@@ -3316,7 +3304,6 @@ namespace Terraria_Server
                                                     num60 = 20f;
                                                 }
                                                 this.soundDelay = (int)num60;
-                                                //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 1);
                                             }
                                             num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
                                             float num61 = Math.Abs(num57);
@@ -3463,10 +3450,6 @@ namespace Terraria_Server
                                                 this.life = -1;
                                                 this.HitEffect(0, 10.0);
                                                 this.active = false;
-                                                if (this.type == 37)
-                                                {
-                                                    //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 0);
-                                                }
                                             }
                                             if (this.type == 37 && Main.netMode != 1)
                                             {
@@ -3941,7 +3924,6 @@ namespace Terraria_Server
                                                 }
                                                 if (this.ai[2] != 0f && this.ai[3] != 0f)
                                                 {
-                                                    //Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 8);
                                                     for (int num70 = 0; num70 < 50; num70++)
                                                     {
                                                         if (this.type == 29 || this.type == 45)
@@ -4002,7 +3984,6 @@ namespace Terraria_Server
                                                     this.velocity.Y = 0f;
                                                     this.ai[2] = 0f;
                                                     this.ai[3] = 0f;
-                                                    //Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 8);
                                                     for (int num74 = 0; num74 < 50; num74++)
                                                     {
                                                         if (this.type == 29 || this.type == 45)
@@ -4121,7 +4102,6 @@ namespace Terraria_Server
                                                     this.ai[1] -= 1f;
                                                     if (this.ai[1] == 25f)
                                                     {
-                                                        //Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 8);
                                                         if (Main.netMode != 1)
                                                         {
                                                             if (this.type == 29 || this.type == 45)
@@ -4426,7 +4406,6 @@ namespace Terraria_Server
                                                         }
                                                         if (this.type == 68 && this.ai[1] != 3f && this.ai[1] != 2f)
                                                         {
-                                                            //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 0);
                                                             this.ai[1] = 2f;
                                                         }
                                                         if (Main.player[this.target].dead || Math.Abs(this.position.X - Main.player[this.target].position.X) > 2000f || Math.Abs(this.position.Y - Main.player[this.target].position.Y) > 2000f)
@@ -4440,7 +4419,6 @@ namespace Terraria_Server
                                                         if (Main.dayTime && this.ai[1] != 3f && this.ai[1] != 2f)
                                                         {
                                                             this.ai[1] = 2f;
-                                                            //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 0);
                                                         }
                                                         if (this.ai[1] == 0f)
                                                         {
@@ -4510,10 +4488,6 @@ namespace Terraria_Server
                                                             if (this.ai[1] == 1f)
                                                             {
                                                                 this.ai[2] += 1f;
-                                                                if (this.ai[2] == 2f)
-                                                                {
-                                                                    //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 0);
-                                                                }
                                                                 if (this.ai[2] >= 400f)
                                                                 {
                                                                     this.ai[2] = 0f;
@@ -5721,7 +5695,6 @@ namespace Terraria_Server
                                                                             {
                                                                                 if (this.aiStyle == 18)
                                                                                 {
-                                                                                    ////Lighting.addLight((int)(this.position.X + (float)(this.height / 2)) / 16, (int)(this.position.Y + (float)(this.height / 2)) / 16, 0.4f);
                                                                                     if (this.direction == 0)
                                                                                     {
                                                                                         this.TargetClosest(true);
@@ -5902,10 +5875,6 @@ namespace Terraria_Server
                                                                                         }
                                                                                         if (this.ai[0] > 0f)
                                                                                         {
-                                                                                            if (this.ai[0] == 200f)
-                                                                                            {
-                                                                                                //Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 5);
-                                                                                            }
                                                                                             this.ai[0] -= 1f;
                                                                                         }
                                                                                         if (Main.netMode != 1 && flag15 && this.ai[0] == 0f && Collision.CanHit(this.position, this.width, this.height, Main.player[this.target].position, Main.player[this.target].width, Main.player[this.target].height))
@@ -6002,10 +5971,6 @@ namespace Terraria_Server
         public void FindFrame()
         {
             int num = 1;
-            //if (!Main.dedServ)
-            //{
-            //    num = Main.npcTexture[this.type].Height / Main.npcFrameCount[this.type];
-            //}
             int num2 = 0;
             if (this.aiAction == 0)
             {
@@ -7823,7 +7788,6 @@ namespace Terraria_Server
                 }
                 if (Main.netMode == 0)
                 {
-                    //Main.NewText(str + " has awoken!", 175, 75, 255);
                     return;
                 }
                 if (Main.netMode == 2)
@@ -7854,16 +7818,9 @@ namespace Terraria_Server
                 Main.npc[num].wet = Collision.WetCollision(Main.npc[num].position, Main.npc[num].width, Main.npc[num].height);
                 if (Type == 50)
                 {
-                    if (Main.netMode == 0)
+                    if (Main.netMode == 2)
                     {
-                        //Main.NewText(Main.npc[num].name + " has awoken!", 175, 75, 255);
-                    }
-                    else
-                    {
-                        if (Main.netMode == 2)
-                        {
-                            NetMessage.SendData(25, -1, -1, Main.npc[num].name + " has awoken!", 255, 175f, 75f, 255f, 0);
-                        }
+                        NetMessage.SendData(25, -1, -1, Main.npc[num].name + " has awoken!", 255, 175f, 75f, 255f, 0);
                     }
                 }
                 return num;
@@ -7894,17 +7851,7 @@ namespace Terraria_Server
                 return 0.0;
             }
             double num = Main.CalculateDamage(Damage, this.defense);
-            if (this.damage != 9999)
-            {
-                if (this.friendly)
-                {
-                    //CombatText.NewText(new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height), new Color(255, 80, 90, 255), string.Concat((int)num));
-                }
-                else
-                {
-                    //CombatText.NewText(new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height), new Color(255, 160, 80, 255), string.Concat((int)num));
-                }
-            }
+
             if (num >= 1.0)
             {
                 if (this.townNPC)
@@ -7934,35 +7881,22 @@ namespace Terraria_Server
                     this.velocity.X = knockBack * (float)hitDirection * this.knockBackResist;
                 }
                 this.HitEffect(hitDirection, num);
-                if (this.soundHit > 0)
-                {
-                    //Main.PlaySound3, (int)this.position.X, (int)this.position.Y, this.soundHit);
-                }
+
                 if (this.life <= 0)
                 {
                     NPC.noSpawnCycle = true;
                     if (this.townNPC && this.type != 37)
                     {
-                        if (Main.netMode == 0)
+                        if (Main.netMode == 2)
                         {
-                            //Main.NewText(this.name + " was slain...", 255, 25, 25);
-                        }
-                        else
-                        {
-                            if (Main.netMode == 2)
-                            {
-                                NetMessage.SendData(25, -1, -1, this.name + " was slain...", 255, 255f, 25f, 25f, 0);
-                            }
+                            NetMessage.SendData(25, -1, -1, this.name + " was slain...", 255, 255f, 25f, 25f, 0);
                         }
                     }
                     if (this.townNPC && Main.netMode != 1 && this.homeless && WorldGen.spawnNPC == this.type)
                     {
                         WorldGen.spawnNPC = 0;
                     }
-                    if (this.soundKilled > 0)
-                    {
-                        //Main.PlaySound4, (int)this.position.X, (int)this.position.Y, this.soundKilled);
-                    }
+
                     this.NPCLoot();
                     this.active = false;
                     if (this.type == 26 || this.type == 27 || this.type == 28 || this.type == 29)
@@ -8220,16 +8154,10 @@ namespace Terraria_Server
                 {
                     Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 58, 1, false);
                 }
-                if (Main.netMode == 0)
+
+                if (Main.netMode == 2)
                 {
-                    //Main.NewText(this.name + " has been defeated!", 175, 75, 255);
-                }
-                else
-                {
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendData(25, -1, -1, this.name + " has been defeated!", 255, 175f, 75f, 255f, 0);
-                    }
+                    NetMessage.SendData(25, -1, -1, this.name + " has been defeated!", 255, 175f, 75f, 255f, 0);
                 }
             }
             if (Main.rand.Next(7) == 0 && this.lifeMax > 1)
@@ -8835,7 +8763,6 @@ namespace Terraria_Server
                                                                 Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 9);
                                                                 Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 10);
                                                             }
-                                                            //Main.PlaySound15, (int)this.position.X, (int)this.position.Y, 0);
                                                             return;
                                                         }
                                                         else
@@ -9592,7 +9519,6 @@ namespace Terraria_Server
                                                                                                                                 {
                                                                                                                                     if (this.type == 25)
                                                                                                                                     {
-                                                                                                                                        //Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                                                                                                                         for (int num75 = 0; num75 < 20; num75++)
                                                                                                                                         {
                                                                                                                                             Vector2 arg_2C6A_0 = new Vector2(this.position.X, this.position.Y);
@@ -9623,7 +9549,6 @@ namespace Terraria_Server
                                                                                                                                     }
                                                                                                                                     if (this.type == 33)
                                                                                                                                     {
-                                                                                                                                        //Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                                                                                                                         for (int num77 = 0; num77 < 20; num77++)
                                                                                                                                         {
                                                                                                                                             Vector2 arg_2DC0_0 = new Vector2(this.position.X, this.position.Y);
@@ -9695,7 +9620,6 @@ namespace Terraria_Server
                                                                                                                                     {
                                                                                                                                         if (this.type == 30)
                                                                                                                                         {
-                                                                                                                                            //Main.PlaySound2, (int)this.position.X, (int)this.position.Y, 10);
                                                                                                                                             for (int num81 = 0; num81 < 20; num81++)
                                                                                                                                             {
                                                                                                                                                 Vector2 arg_30B7_0 = new Vector2(this.position.X, this.position.Y);
@@ -9945,7 +9869,6 @@ namespace Terraria_Server
                 string str = "Skeletron";
                 if (Main.netMode == 0)
                 {
-                    //Main.NewText(str + " has awoken!", 175, 75, 255);
                     return;
                 }
                 if (Main.netMode == 2)
@@ -9992,10 +9915,7 @@ namespace Terraria_Server
                 this.oldDirection = this.direction;
                 this.oldDirectionY = this.directionY;
                 this.AI();
-                if (this.type == 44)
-                {
-                    ////Lighting.addLight((int)(this.position.X + (float)(this.width / 2)) / 16, (int)(this.position.Y + 4f) / 16, 0.6f);
-                }
+
                 for (int j = 0; j < 256; j++)
                 {
                     if (this.immune[j] > 0)
@@ -10091,10 +10011,7 @@ namespace Terraria_Server
                                     Main.dust[num6].alpha = 100;
                                     Main.dust[num6].noGravity = true;
                                 }
-                                if (this.type != 1 && this.type != 59 && !this.noGravity)
-                                {
-                                    //Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 0);
-                                }
+
                             }
                             else
                             {
@@ -10108,10 +10025,6 @@ namespace Terraria_Server
                                     Main.dust[num7].scale = 1.3f;
                                     Main.dust[num7].alpha = 100;
                                     Main.dust[num7].noGravity = true;
-                                }
-                                if (this.type != 1 && this.type != 59 && !this.noGravity)
-                                {
-                                    //Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                             }
                         }
@@ -10139,10 +10052,6 @@ namespace Terraria_Server
                                         Main.dust[num8].alpha = 100;
                                         Main.dust[num8].noGravity = true;
                                     }
-                                    if (this.type != 1 && this.type != 59 && !this.noGravity)
-                                    {
-                                        //Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 0);
-                                    }
                                 }
                                 else
                                 {
@@ -10156,10 +10065,6 @@ namespace Terraria_Server
                                         Main.dust[num10].scale = 1.3f;
                                         Main.dust[num10].alpha = 100;
                                         Main.dust[num10].noGravity = true;
-                                    }
-                                    if (this.type != 1 && this.type != 59 && !this.noGravity)
-                                    {
-                                        //Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                     }
                                 }
                             }

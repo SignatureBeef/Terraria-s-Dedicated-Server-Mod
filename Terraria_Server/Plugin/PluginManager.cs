@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Collections;
-using System.Reflection;
-using Terraria_Server.Events;
+﻿
 
+using System;
+using System.IO;
+using System.Reflection;
+using System.Collections;
+using Terraria_Server.Events;
 namespace Terraria_Server.Plugin
 {
     /*
@@ -145,8 +143,6 @@ namespace Terraria_Server.Plugin
                 {
                     dPlugin.Enabled = false;
                     dPlugin.Disable();
-
-                    //pluginList.Remove(dPlugin); //Not sure if i should remove it from the list.
 
                     return true;
                 }

@@ -1,8 +1,8 @@
-using System;
-using System.Text;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
 
+using Terraria_Server.Events;
+using System.Text;
+using System;
+using Terraria_Server.Plugin;
 namespace Terraria_Server
 {
 	public class messageBuffer
@@ -70,22 +70,22 @@ namespace Terraria_Server
 			if (b == 1 && Main.netMode == 2)
 			{
                 LoginEvent Event = new LoginEvent();
-                Event.setSocket(Netplay.serverSock[this.whoAmI]);
-                Event.setSender(Main.player[this.whoAmI]);
+                Event.Socket = Netplay.serverSock[this.whoAmI];
+                Event.Sender = Main.player[this.whoAmI];
                 Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, Event);
-                if (Event.getCancelled())
+                if (Event.Cancelled)
                 {
                     NetMessage.SendData(2, this.whoAmI, -1, "Disconnected By Server.", 0, 0f, 0f, 0f);
                     return;
                 }
 
-				if (Program.server.getBanList().containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]))
+				if (Program.server.BanList.containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]))
 				{
 					NetMessage.SendData(2, this.whoAmI, -1, "You are banned from this Server.", 0, 0f, 0f, 0f);
 					return;
 				}
 
-                if(Program.properties.isUsingWhiteList() && !Program.server.getWhiteList().containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
+                if(Program.properties.isUsingWhiteList() && !Program.server.WhiteList.containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0])) {
                     NetMessage.SendData(2, this.whoAmI, -1, "You are not on the WhiteList.", 0, 0f, 0f, 0f);
 					return;
                 }
@@ -161,17 +161,6 @@ namespace Terraria_Server
 				{
 					if (b == 4)
 					{
-						
-                            //if (Netplay.serverSock[this.whoAmI].state < 10)
-                            //{
-                            //    for (int l = 0; l < 255; l++)
-                            //    {
-                            //        if (l != num3 && playerName == Main.player[l].name && Netplay.serverSock[l].active)
-                            //        {
-                            //            NetMessage.SendData(2, Main.player[l].whoAmi, -1, playerName + " Logged in from a Different Location.", 0, 0f, 0f, 0f);
-                            //        }
-                            //    }
-                            //}
                             bool flag = false;
 				            int num3 = (int)this.readBuffer[start + 1];
 				            if (Main.netMode == 2)
@@ -802,12 +791,12 @@ namespace Terraria_Server
                                                                             tile.tileY = num28;
 
                                                                             TileBreakEvent Event = new TileBreakEvent();
-                                                                            Event.setSender(Main.player[this.whoAmI]);
-                                                                            Event.setTile(tile);
-                                                                            Event.setTileType(b6);
-                                                                            Event.setTilePos(new Vector2(num27, num28));
+                                                                            Event.Sender = Main.player[this.whoAmI];
+                                                                            Event.Tile = tile;
+                                                                            Event.Type = b6;
+                                                                            Event.Position = new Vector2(num27, num28);
                                                                             Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, Event);
-                                                                            if (Event.getCancelled())
+                                                                            if (Event.Cancelled)
                                                                             {
                                                                                 NetMessage.SendTileSquare(this.whoAmI, num27, num28, 1);
                                                                                 return;
@@ -878,37 +867,7 @@ namespace Terraria_Server
 																		}
 																		else
 																		{
-																			if (b == 18)
-																			{
-                                                                                //if (Main.netMode == 1)
-                                                                                //{
-                                                                                //    byte b7 = this.readBuffer[num];
-                                                                                //    num++;
-                                                                                //    int num29 = BitConverter.ToInt32(this.readBuffer, num);
-                                                                                //    num += 4;
-                                                                                //    short sunModY = BitConverter.ToInt16(this.readBuffer, num);
-                                                                                //    num += 2;
-                                                                                //    short moonModY = BitConverter.ToInt16(this.readBuffer, num);
-                                                                                //    num += 2;
-                                                                                //    if (b7 == 1)
-                                                                                //    {
-                                                                                //        Main.dayTime = true;
-                                                                                //    }
-                                                                                //    else
-                                                                                //    {
-                                                                                //        Main.dayTime = false;
-                                                                                //    }
-                                                                                //    Main.time = (double)num29;
-                                                                                //    Main.sunModY = sunModY;
-                                                                                //    Main.moonModY = moonModY;
-                                                                                //    if (Main.netMode == 2)
-                                                                                //    {
-                                                                                //        NetMessage.SendData(18, -1, this.whoAmI, "", 0, 0f, 0f, 0f, 0);
-                                                                                //        return;
-                                                                                //    }
-                                                                                //}
-																			}
-																			else
+																			if (b != 18)
 																			{
                                                                                 if (b == 19)
                                                                                 {
@@ -1240,10 +1199,10 @@ namespace Terraria_Server
                                                                                                             {
                                                                                                                 if(Chat.Substring(0, 1).Equals("/")) {
                                                                                                                     PlayerCommandEvent Event = new PlayerCommandEvent();
-                                                                                                                    Event.setMessage(Chat);
-                                                                                                                    Event.setSender(Main.player[this.whoAmI]);
+                                                                                                                    Event.Message = Chat;
+                                                                                                                    Event.Sender = Main.player[this.whoAmI];
                                                                                                                     Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_COMMAND, Event);
-                                                                                                                    if (Event.getCancelled())
+                                                                                                                    if (Event.Cancelled)
                                                                                                                     {
                                                                                                                         return;
                                                                                                                     }
@@ -1255,11 +1214,11 @@ namespace Terraria_Server
                                                                                                                 } else {
 
                                                                                                                     PlayerChatEvent Event = new PlayerChatEvent();
-                                                                                                                    Event.setMessage(Chat);
-                                                                                                                    Event.setSender(Main.player[this.whoAmI]);
+                                                                                                                    Event.Message = Chat;
+                                                                                                                    Event.Sender = Main.player[this.whoAmI];
                                                                                                                     Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_CHAT, Event);
 
-                                                                                                                    if (Event.getCancelled())
+                                                                                                                    if (Event.Cancelled)
                                                                                                                     {
                                                                                                                         return;
                                                                                                                     }
@@ -1474,10 +1433,10 @@ namespace Terraria_Server
 																																	num += 4;
 																																	int num63 = Chest.FindChest(x8, y7);
                                                                                                                                     var Event = new ChestOpenEvent();
-                                                                                                                                    Event.setSender(Main.player[whoAmI]);
-                                                                                                                                    Event.setChestID(num63);
+                                                                                                                                    Event.Sender = Main.player[whoAmI];
+                                                                                                                                    Event.ID = num63;
                                                                                                                                     Program.server.getPluginManager().processHook(Hooks.PLAYER_CHEST, Event);
-                                                                                                                                    if (Event.getCancelled()) return;
+                                                                                                                                    if (Event.Cancelled) return;
 																																	if (num63 > -1 && Chest.UsingChest(num63) == -1)
 																																	{
 																																		for (int num64 = 0; num64 < Chest.maxItems; num64++)
@@ -1524,22 +1483,12 @@ namespace Terraria_Server
 																																	{
 																																		if (Main.player[Main.myPlayer].chest == -1)
 																																		{
-																																			Main.playerInventory = true;
-																																			//////////////Main.PlaySound10, -1, -1, 1);
-																																		}
+																																			Main.playerInventory = true;																																		}
 																																		else
 																																		{
 																																			if (Main.player[Main.myPlayer].chest != num67 && num67 != -1)
 																																			{
 																																				Main.playerInventory = true;
-																																				//////////////Main.PlaySound12, -1, -1, 1);
-																																			}
-																																			else
-																																			{
-																																				if (Main.player[Main.myPlayer].chest != -1 && num67 == -1)
-																																				{
-																																					//////////////Main.PlaySound11, -1, -1, 1);
-																																				}
 																																			}
 																																		}
 																																		Main.player[Main.myPlayer].chest = num67;
@@ -1864,10 +1813,10 @@ namespace Terraria_Server
 																																														}
                                                                                                                                                                                     }
                                                                                                                                                                                     PartyChangeEvent Event = new PartyChangeEvent();
-                                                                                                                                                                                    Event.setPartyType(party);
-                                                                                                                                                                                    Event.setSender(Main.player[this.whoAmI]);
+                                                                                                                                                                                    Event.PartyType = party;
+                                                                                                                                                                                    Event.Sender = Main.player[this.whoAmI];
                                                                                                                                                                                     Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PARTYCHANGE, Event);
-                                                                                                                                                                                    if (Event.getCancelled())
+                                                                                                                                                                                    if (Event.Cancelled)
                                                                                                                                                                                     {
                                                                                                                                                                                         return;
                                                                                                                                                                                     }
@@ -1921,7 +1870,6 @@ namespace Terraria_Server
                                                                                                                                                                                             Main.playerInventory = false;
                                                                                                                                                                                             Main.player[Main.myPlayer].talkNPC = -1;
                                                                                                                                                                                             Main.editSign = false;
-                                                                                                                                                                                            //////////Main.PlaySound10, -1, -1, 1);
                                                                                                                                                                                             Main.player[Main.myPlayer].sign = num88;
                                                                                                                                                                                             Main.npcChatText = Main.sign[num88].text;
                                                                                                                                                                                             return;

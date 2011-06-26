@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿using System.Collections;
 using Terraria_Server.Events;
-using Terraria_Server.Commands;
-using System.Collections;
 
 namespace Terraria_Server.Plugin
 {
@@ -23,7 +17,6 @@ namespace Terraria_Server.Plugin
         public Server Server { get; set; }
 
         public abstract void Load();
-        //public void abstract UnLoad(); //I have high hopes :3
         public abstract void Enable();
         public abstract void Disable();
 

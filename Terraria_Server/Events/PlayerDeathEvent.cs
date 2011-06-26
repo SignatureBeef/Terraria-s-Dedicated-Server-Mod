@@ -1,27 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class PlayerDeathEvent : Event
+    public class PlayerDeathEvent : BasePlayerEvent
     {
-        string deathMessage = "";
-
-        public string getDeathMessage()
-        {
-            return deathMessage;
-        }
-
-        public void setDeathMessage(string DeathMessage)
-        {
-            deathMessage = DeathMessage;
-        }
-
-        public Player getPlayer()
-        {
-            return (Player)base.getSender();
-        }
+        public String DeathMessage { get; set; }
     }
 }

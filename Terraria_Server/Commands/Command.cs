@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Terraria_Server;
 
 namespace Terraria_Server.Commands
 {
@@ -148,32 +143,29 @@ namespace Terraria_Server.Commands
 
         public static void SaveAll()
         {
-           // Program.tConsole.WriteLine("Saving World");
             Program.server.notifyOps("Saving World...");
 
-            WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
+            WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
             while (WorldGen.saveLock)
             {
             }
 
-            //Program.tConsole.WriteLine("Saving Data");
             Program.server.notifyOps("Saving Data...");
 
-            Program.server.getBanList().Save();
-            Program.server.getWhiteList().Save();
+            Program.server.BanList.Save();
+            Program.server.WhiteList.Save();
 
-            //Program.server.notifyOps("Saving Complete.");
             Program.tConsole.WriteLine("Saving Complete.");
         }
 
         public static bool getGodMode()
         {
-            return Program.server.getGodMode();
+            return Program.server.GodMode;
         }
 
         public static void setGodMode(bool GodMode)
         {
-            Program.server.setGodMode(GodMode);
+            Program.server.GodMode = GodMode;
         }
 
         public static void ShowHelp(Sender sender)
@@ -201,7 +193,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -218,12 +210,12 @@ namespace Terraria_Server.Commands
                     {
                         case "ADD":
                             {
-                                Program.server.getWhiteList().addException(commands[2]);
+                                Program.server.WhiteList.addException(commands[2]);
                                 break;
                             }
                         case "REMOVE":
                             {
-                                Program.server.getWhiteList().removeException(commands[2]);
+                                Program.server.WhiteList.removeException(commands[2]);
                                 caseType = "REMOVE";
                                 break;
                             }
@@ -236,7 +228,7 @@ namespace Terraria_Server.Commands
 
                     Program.server.notifyOps(sender.getName() + " used WhiteList command " + caseType + " for: " + commands[2], true);
 
-                    if (!Program.server.getWhiteList().Save())
+                    if (!Program.server.WhiteList.Save())
                     {
                         Program.server.notifyOps("WhiteList Failed to Save due to " + sender.getName() + "'s command", true);
                     }
@@ -255,7 +247,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -281,8 +273,6 @@ namespace Terraria_Server.Commands
                     {
                         case 0:
                             {
-                                //Program.server.getBanList().addException(commands[1]); //Not sure if we should ban names...
-
                                 //We now should check to make sure they are off the server...
                                 Player banee = Program.server.GetPlayerByName(commands[1]);
 
@@ -301,19 +291,19 @@ namespace Terraria_Server.Commands
                                     }
                                 }
 
-                                Program.server.getBanList().addException(commands[1]);
+                                Program.server.BanList.addException(commands[1]);
 
                                 if (banee != null)
                                 {
                                     banee.Kick("You have been banned from this Server.");
-                                    Program.server.getBanList().addException(Netplay.serverSock[banee.whoAmi].
+                                    Program.server.BanList.addException(Netplay.serverSock[banee.whoAmi].
                                         tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]);
                                 }
                                 break;
                             }
                         case 1:
                             {
-                                Program.server.getBanList().removeException(commands[1]);
+                                Program.server.BanList.removeException(commands[1]);
                                 break;
                             }
                         default:
@@ -325,7 +315,7 @@ namespace Terraria_Server.Commands
 
                     Program.server.notifyOps(sender.getName() + " used Ban command case " + caseType + " for: " + commands[1], true);
 
-                    if (!Program.server.getBanList().Save())
+                    if (!Program.server.BanList.Save())
                     {
                         Program.server.notifyOps("BanList Failed to Save due to " + sender.getName() + "'s command", true);
                     }
@@ -342,7 +332,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -460,7 +450,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -581,7 +571,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -669,14 +659,8 @@ namespace Terraria_Server.Commands
                     {
                         for (int i = 0; i < amount; i++)
                         {
-                            //int rand = (int)player.position.X + (int)(new Random().Next(3, 40));
-                            //Tile t = sender.getServer().getWorld().getHighestTile(rand / 16);
-                            //NPC.NewNPC(rand, (int)(t.tileY * 16), npcType);
                             NPC.NewNPC((int)player.position.X + 3, (int)player.position.Y, npcType);
                         }
-
-                        //player.teleportTo();
-
                         NPC.SpawnNPC();
 
                         Program.server.notifyOps("Spawned " + amount.ToString() + " of " +
@@ -700,7 +684,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -740,7 +724,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -779,7 +763,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -803,7 +787,7 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
@@ -824,17 +808,17 @@ namespace Terraria_Server.Commands
 
                     if (Player.isInOpList(player_OP, Program.server))
                     {
-                        Program.server.getOpList().removeException(player_OP + ":" + Player.getPassword(player_OP, Program.server));
+                        Program.server.OpList.removeException(player_OP + ":" + Player.getPassword(player_OP, Program.server));
                     }
                 }
                 else
                 {
                     string player_Password = commands[2].Trim().ToLower();
                     Program.server.notifyOps("Opping " + player_OP + " {" + sender.getName() + "}", true);
-                    Program.server.getOpList().addException(player_OP + ":" + player_Password);
+                    Program.server.OpList.addException(player_OP + ":" + player_Password);
                 }
 
-                if (!Program.server.getOpList().Save())
+                if (!Program.server.OpList.Save())
                 {
                     Program.server.notifyOps("OpList Failed to Save due to " + sender.getName() + "'s command", true);
                 } 
@@ -855,9 +839,9 @@ namespace Terraria_Server.Commands
             {
                 if (logout)
                 {
-                    if (sender.isOp())
+                    if (sender.Op)
                     {
-                        sender.setOp(false);
+                        sender.Op = false;
                         sender.sendMessage("Successfully Logged Out.");
                     }
                     return;
@@ -871,7 +855,7 @@ namespace Terraria_Server.Commands
                     {
                         if (((Player)sender).getPassword().Trim().ToLower() == player_Password)
                         {
-                            sender.setOp(true);
+                            sender.Op = true;
                             sender.sendMessage("Successfully Logged in as OP.");
                         }
                         else
@@ -901,18 +885,12 @@ namespace Terraria_Server.Commands
             if (sender is Player)
             {
                 Player player = ((Player)sender);
-                if (!player.isOp())
+                if (!player.Op)
                 {
                     player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
                 }
             }
-
-            //1128 420
-
-            //Vector2 pos = new Vector2(1128 * 16, 420 * 16); //Packet crap
-            //((Player)sender).teleportTo(pos.X, pos.Y);
-            //return;
 
             Main.stopSpawns = !Main.stopSpawns;
 

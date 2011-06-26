@@ -1,4 +1,5 @@
 using System;
+
 namespace Terraria_Server
 {
 	public class Recipe
@@ -10,6 +11,7 @@ namespace Terraria_Server
 		public Item createItem = new Item();
 		public Item[] requiredItem = new Item[Recipe.maxRequirements];
 		public int[] requiredTile = new int[Recipe.maxRequirements];
+
 		public Recipe()
 		{
 			for (int i = 0; i < Recipe.maxRequirements; i++)
@@ -18,6 +20,7 @@ namespace Terraria_Server
 				this.requiredTile[i] = -1;
 			}
 		}
+
 		public void Create()
 		{
 			int num = 0;
@@ -48,6 +51,7 @@ namespace Terraria_Server
 			}
 			Recipe.FindRecipes();
 		}
+
 		public static void FindRecipes()
 		{
 			int num = Main.availableRecipe[Main.focusRecipe];
@@ -126,6 +130,7 @@ namespace Terraria_Server
 				Main.availableRecipeY[l] -= num7;
 			}
 		}
+
 		public static void SetupRecipes()
 		{
             Recipe.numRecipes = 0;
@@ -977,6 +982,7 @@ namespace Terraria_Server
 			Recipe.newRecipe.requiredItem[0].stack = 100;
 			Recipe.addRecipe();
 		}
+
 		private static void addRecipe()
 		{
 			Main.recipe[Recipe.numRecipes] = Recipe.newRecipe;

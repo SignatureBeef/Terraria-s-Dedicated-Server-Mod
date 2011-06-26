@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Terraria_Server
 {
     public class Color
@@ -16,7 +12,6 @@ namespace Terraria_Server
 
         public Color(int r, int g, int b)
         {
-            // TODO: Complete member initialization
             this.R = r;
             this.G = g;
             this.B = b;
@@ -24,7 +19,6 @@ namespace Terraria_Server
 
         public Color(int r, int g, int b, int a)
         {
-            // TODO: Complete member initialization
             this.R = r;
             this.G = g;
             this.B = b;

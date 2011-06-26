@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
+using System.IO;
+using System.Threading;
 namespace Terraria_Server
 {
     public class PropertiesFile
@@ -20,15 +18,13 @@ namespace Terraria_Server
         public void Load() {
             if (createIfNeeded)
             {
-                //System.IO.FileInfo fI = new System.IO.FileInfo(pPath);
-                if (!System.IO.File.Exists(pPath))
+                if (!File.Exists(pPath))
                 {
-                    //fI.Directory.Create();
-                    System.IO.File.WriteAllText(pPath, "");
+                    File.WriteAllText(pPath, "");
                 }
-                System.Threading.Thread.Sleep(1000);
+                Thread.Sleep(1000);
             }
-            data = System.IO.File.ReadAllLines(pPath);
+            data = File.ReadAllLines(pPath);
         }
 
         public void Save()

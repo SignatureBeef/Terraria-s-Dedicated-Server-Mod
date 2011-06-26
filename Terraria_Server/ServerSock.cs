@@ -1,5 +1,6 @@
-using System;
+
 using System.Net.Sockets;
+using System;
 namespace Terraria_Server
 {
 	public class ServerSock

@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using System.IO;
-
+﻿
 using Terraria_Server.Plugin;
-
+using System;
 namespace Terraria_Server
 {
     ///<Summary>
@@ -18,35 +12,32 @@ namespace Terraria_Server
         
         private World world = null;
 
-        private DataRegister whiteList = null;
-        private DataRegister banList = null;
-        private DataRegister opList = null;
-
         public Server() { }
 
-        public Server(World World, int PlayerCap, string WhiteList, string BanList, string OpList)
+        public Server(World World, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
         {
             Main.maxNetplayers = PlayerCap;
             world = World;
-            world.setServer(this);
+            world.Server = this;
             pluginManager = new PluginManager(Statics.getPluginPath, this);
-            whiteList = new DataRegister(WhiteList);
-            whiteList.Load();
-            banList = new DataRegister(BanList);
-            banList.Load();
-            opList = new DataRegister(OpList);
-            opList.Load();
+            WhiteList = new DataRegister(myWhiteList);
+            WhiteList.Load();
+            BanList = new DataRegister(myBanList);
+            BanList.Load();
+            OpList = new DataRegister(myOpList);
+            OpList.Load();
         }
 
         // Summary:
         //       Gets a specified Online Player
         public Player GetPlayerByName(string name)
         {
-            for (int i = 0; i < Main.player.Length; i++)
+            String lowercaseName = name.ToLower();
+            foreach (Player player in Main.player)
             {
-                if (Main.player[i].name.ToLower() == name.ToLower())
+                if (player.name.ToLower().Equals(lowercaseName))
                 {
-                    return Main.player[i];
+                    return player;
                 }
             }
             return null;
@@ -111,7 +102,7 @@ namespace Terraria_Server
                 {
                     if (Main.player[i].active)
                     {
-                        if (Main.player[i].isOp())
+                        if (Main.player[i].Op)
                         {
                             NetMessage.SendData((int)Packet.PLAYER_CHAT, Main.player[i].whoAmi, -1, Message, 255, 176f, 196, 222f);
                         }
@@ -130,16 +121,16 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets Terraria's God mode (Un-Usable?)
-        public bool getGodMode()
+        public bool GodMode
         {
-            return Main.godMode;
-        }
-
-        // Summary:
-        //       Sets Terraria's God mode (Un-Usable?)
-        public void setGodMode(bool Status)
-        {
-            Main.godMode = Status;
+            get
+            {
+                return Main.godMode;
+            }
+            set
+            {
+                Main.godMode = value;
+            }
         }
 
         // Summary:
@@ -151,45 +142,15 @@ namespace Terraria_Server
 
         // Summary:
         //      Gets the White list 
-        public DataRegister getWhiteList()
-        {
-            return whiteList;
-        }
-
-        // Summary:
-        //       Sets the White list
-        public void setWhiteList(DataRegister WhiteList)
-        {
-            whiteList = WhiteList;
-        }
+        public DataRegister WhiteList { get; set; }
 
         // Summary:
         //       Gets the Ban list
-        public DataRegister getBanList()
-        {
-            return banList;
-        }
-
-        // Summary:
-        //       Sets the Ban list
-        public void setBanList(DataRegister BanList)
-        {
-            banList = BanList;
-        }
+        public DataRegister BanList { get; set; }
 
         // Summary:
         //       Gets the OP list
-        public DataRegister getOpList()
-        {
-            return opList;
-        }
-
-        // Summary:
-        //       Sets the OP list
-        public void setOpList(DataRegister OpList)
-        {
-            opList = OpList;
-        }
+        public DataRegister OpList { get; set; }
 
         // Summary:
         //       Get the array of Active NPCs
@@ -197,15 +158,7 @@ namespace Terraria_Server
         {
             NPC[] npcs = null;
 
-            int npcCount = 0;
-            for (int i = 0; i < Main.npc.Length-1; i++)
-            {
-                if (Main.npc[i].active)
-                {
-                    npcCount++;
-                }
-            }
-
+            int npcCount = getActiveNPCCount();
             if (npcCount > 0)
             {
                 npcs = new NPC[npcCount];
@@ -228,9 +181,9 @@ namespace Terraria_Server
         public int getActiveNPCCount()
         {
             int npcCount = 0;
-            for (int i = 0; i < Main.npc.Length - 1; i++)
+            foreach (NPC npc in Main.npc)
             {
-                if (Main.npc[i].active)
+                if (npc.active)
                 {
                     npcCount++;
                 }
@@ -240,34 +193,33 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets the maximum allowed NPCs
-        public int getMaxNPCs()
+        public int MaxNPCs
         {
-            return NPC.maxSpawns;
-        }
+            get
+            {
+                return NPC.maxSpawns;
+            }
 
-        // Summary:
-        //       Sets the maximum allowed NPCs
-        public void setMaxNPCs(int Max)
-        {
-            NPC.defaultMaxSpawns = Max;
-            NPC.maxSpawns = Max;
+            set
+            {
+                NPC.defaultMaxSpawns = value;
+                NPC.maxSpawns = value;
+            }
         }
 
         // Summary:
         //       Gets the max spawn rat eof NPCs
-        public int getSpawnRate()
+        public int SpawnRate
         {
-            return NPC.spawnRate;
+            get
+            {
+                return NPC.spawnRate;
+            }
+            set
+            {
+                NPC.defaultSpawnRate = value;
+                NPC.spawnRate = value;
+            }
         }
-
-        // Summary:
-        //       Sets the max spawn rate of NPCs
-        public void setSpawnRate(int Max)
-        {
-            NPC.defaultSpawnRate = Max;
-            NPC.spawnRate = Max;
-        }
-
-
     }
 }

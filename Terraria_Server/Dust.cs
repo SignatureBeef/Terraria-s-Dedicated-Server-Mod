@@ -1,5 +1,5 @@
-
 using System;
+
 namespace Terraria_Server
 {
     public class Dust
@@ -136,7 +136,6 @@ namespace Terraria_Server
                                 {
                                     num = 1f;
                                 }
-                                //Lighting.addLight((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f), num);
                             }
                         }
                         else
@@ -160,285 +159,239 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    //if (Main.dust[i].type == 43)
-                                    //{
-                                    //    Main.dust[i].rotation += 0.1f * Main.dust[i].scale;
-                                    //    float num2 = (float)//Lighting.GetColor((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f)).R;
-                                    //    num2 = num2 / 256f * Main.dust[i].scale * 1.09f;
-                                    //    if (num2 > 1f)
-                                    //    {
-                                    //        num2 = 1f;
-                                    //    }
-                                    //    if (Main.dust[i].alpha < 255)
-                                    //    {
-                                    //        Main.dust[i].scale += 0.09f;
-                                    //        if (Main.dust[i].scale >= 1f)
-                                    //        {
-                                    //            Main.dust[i].scale = 1f;
-                                    //            Main.dust[i].alpha = 255;
-                                    //        }
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        if ((double)Main.dust[i].scale < 0.8)
-                                    //        {
-                                    //            Main.dust[i].scale -= 0.01f;
-                                    //        }
-                                    //        if ((double)Main.dust[i].scale < 0.5)
-                                    //        {
-                                    //            Main.dust[i].scale -= 0.01f;
-                                    //        }
-                                    //    }
-                                    //    if (num2 == 0f)
-                                    //    {
-                                    //        Main.dust[i].active = false;
-                                    //    }
-                                    //    else
-                                    //    {
-                                    //        //Lighting.addLight((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f), num2);
-                                    //    }
-                                    //}
-                                    //else
-                                    //{
-                                        if (Main.dust[i].type == 15)
-                                        {
-                                            Dust expr_3EA_cp_0 = Main.dust[i];
-                                            expr_3EA_cp_0.velocity.Y = expr_3EA_cp_0.velocity.Y * 0.98f;
-                                            Dust expr_407_cp_0 = Main.dust[i];
-                                            expr_407_cp_0.velocity.X = expr_407_cp_0.velocity.X * 0.98f;
-                                            float num3 = Main.dust[i].scale;
-                                            if (num3 > 1f)
-                                            {
-                                                num3 = 1f;
-                                            }
-                                            if (Main.dust[i].noLight)
-                                            {
-                                                num3 *= 0.5f;
-                                            }
-                                            //Lighting.addLight((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f), num3);
-                                        }
-                                        else
-                                        {
-                                            if (Main.dust[i].type == 20 || Main.dust[i].type == 21)
-                                            {
-                                                Main.dust[i].scale += 0.005f;
-                                                Dust expr_4CB_cp_0 = Main.dust[i];
-                                                expr_4CB_cp_0.velocity.Y = expr_4CB_cp_0.velocity.Y * 0.94f;
-                                                Dust expr_4E8_cp_0 = Main.dust[i];
-                                                expr_4E8_cp_0.velocity.X = expr_4E8_cp_0.velocity.X * 0.94f;
-                                                float num4 = Main.dust[i].scale * 0.8f;
-                                                if (Main.dust[i].type == 21)
-                                                {
-                                                    num4 = Main.dust[i].scale * 0.4f;
-                                                }
-                                                if (num4 > 1f)
-                                                {
-                                                    num4 = 1f;
-                                                }
-                                                //Lighting.addLight((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f), num4);
-                                            }
-                                            else
-                                            {
-                                                if (Main.dust[i].type == 27)
-                                                {
-                                                    Dust expr_597 = Main.dust[i];
-                                                    expr_597.velocity *= 0.94f;
-                                                    Main.dust[i].scale += 0.002f;
-                                                    float num5 = Main.dust[i].scale;
-                                                    if (num5 > 1f)
-                                                    {
-                                                        num5 = 1f;
-                                                    }
-                                                    //Lighting.addLight((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f), num5);
-                                                }
-                                                else
-                                                {
-                                                    if (!Main.dust[i].noGravity && Main.dust[i].type != 41)
-                                                    {
-                                                        Dust expr_645_cp_0 = Main.dust[i];
-                                                        expr_645_cp_0.velocity.Y = expr_645_cp_0.velocity.Y + 0.1f;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (Main.dust[i].type == 5 && Main.dust[i].noGravity)
-                        {
-                            Main.dust[i].scale -= 0.04f;
-                        }
-                        if (Main.dust[i].type == 33)
-                        {
-                            bool flag = Collision.WetCollision(new Vector2(Main.dust[i].position.X, Main.dust[i].position.Y), 4, 4);
-                            if (flag)
-                            {
-                                Main.dust[i].alpha += 20;
-                                Main.dust[i].scale -= 0.1f;
-                            }
-                            Main.dust[i].alpha += 2;
-                            Main.dust[i].scale -= 0.005f;
-                            if (Main.dust[i].alpha > 255)
-                            {
-                                Main.dust[i].scale = 0f;
-                            }
-                            Dust expr_75B_cp_0 = Main.dust[i];
-                            expr_75B_cp_0.velocity.X = expr_75B_cp_0.velocity.X * 0.93f;
-                            if (Main.dust[i].velocity.Y > 4f)
-                            {
-                                Main.dust[i].velocity.Y = 4f;
-                            }
-                            if (Main.dust[i].noGravity)
-                            {
-                                if (Main.dust[i].velocity.X < 0f)
-                                {
-                                    Main.dust[i].rotation -= 0.2f;
-                                }
-                                else
-                                {
-                                    Main.dust[i].rotation += 0.2f;
-                                }
-                                Main.dust[i].scale += 0.03f;
-                                Dust expr_819_cp_0 = Main.dust[i];
-                                expr_819_cp_0.velocity.X = expr_819_cp_0.velocity.X * 1.05f;
-                                Dust expr_836_cp_0 = Main.dust[i];
-                                expr_836_cp_0.velocity.Y = expr_836_cp_0.velocity.Y + 0.15f;
-                            }
-                        }
-                        if (Main.dust[i].type == 35 && Main.dust[i].noGravity)
-                        {
-                            Main.dust[i].scale += 0.02f;
-                            if (Main.dust[i].scale < 1f)
-                            {
-                                Dust expr_8A2_cp_0 = Main.dust[i];
-                                expr_8A2_cp_0.velocity.Y = expr_8A2_cp_0.velocity.Y + 0.075f;
-                            }
-                            Dust expr_8BF_cp_0 = Main.dust[i];
-                            expr_8BF_cp_0.velocity.X = expr_8BF_cp_0.velocity.X * 1.08f;
-                            if (Main.dust[i].velocity.X > 0f)
-                            {
-                                Main.dust[i].rotation += 0.01f;
-                            }
-                            else
-                            {
-                                Main.dust[i].rotation -= 0.01f;
-                            }
-                        }
-                        else
-                        {
-                            if (Main.dust[i].type == 34 || Main.dust[i].type == 35)
-                            {
-                                if (!Collision.WetCollision(new Vector2(Main.dust[i].position.X, Main.dust[i].position.Y - 8f), 4, 4))
-                                {
-                                    Main.dust[i].scale = 0f;
-                                }
-                                else
-                                {
-                                    Main.dust[i].alpha += Main.rand.Next(2);
-                                    if (Main.dust[i].alpha > 255)
+                                    if (Main.dust[i].type == 15)
                                     {
-                                        Main.dust[i].scale = 0f;
-                                    }
-                                    Main.dust[i].velocity.Y = -0.5f;
-                                    if (Main.dust[i].type == 34)
-                                    {
-                                        Main.dust[i].scale += 0.005f;
+                                        Dust expr_3EA_cp_0 = Main.dust[i];
+                                        expr_3EA_cp_0.velocity.Y = expr_3EA_cp_0.velocity.Y * 0.98f;
+                                        Dust expr_407_cp_0 = Main.dust[i];
+                                        expr_407_cp_0.velocity.X = expr_407_cp_0.velocity.X * 0.98f;
+                                        float num3 = Main.dust[i].scale;
+                                        if (num3 > 1f)
+                                        {
+                                            num3 = 1f;
+                                        }
+                                        if (Main.dust[i].noLight)
+                                        {
+                                            num3 *= 0.5f;
+                                        }
                                     }
                                     else
                                     {
-                                        Main.dust[i].alpha++;
-                                        Main.dust[i].scale -= 0.01f;
-                                        Main.dust[i].velocity.Y = -0.2f;
-                                    }
-                                    Dust expr_A65_cp_0 = Main.dust[i];
-                                    expr_A65_cp_0.velocity.X = expr_A65_cp_0.velocity.X + (float)Main.rand.Next(-10, 10) * 0.002f;
-                                    if ((double)Main.dust[i].velocity.X < -0.25)
-                                    {
-                                        Main.dust[i].velocity.X = -0.25f;
-                                    }
-                                    if ((double)Main.dust[i].velocity.X > 0.25)
-                                    {
-                                        Main.dust[i].velocity.X = 0.25f;
+                                        if (Main.dust[i].type == 20 || Main.dust[i].type == 21)
+                                        {
+                                            Main.dust[i].scale += 0.005f;
+                                            Dust expr_4CB_cp_0 = Main.dust[i];
+                                            expr_4CB_cp_0.velocity.Y = expr_4CB_cp_0.velocity.Y * 0.94f;
+                                            Dust expr_4E8_cp_0 = Main.dust[i];
+                                            expr_4E8_cp_0.velocity.X = expr_4E8_cp_0.velocity.X * 0.94f;
+                                            float num4 = Main.dust[i].scale * 0.8f;
+                                            if (Main.dust[i].type == 21)
+                                            {
+                                                num4 = Main.dust[i].scale * 0.4f;
+                                            }
+                                            if (num4 > 1f)
+                                            {
+                                                num4 = 1f;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (Main.dust[i].type == 27)
+                                            {
+                                                Dust expr_597 = Main.dust[i];
+                                                expr_597.velocity *= 0.94f;
+                                                Main.dust[i].scale += 0.002f;
+                                                float num5 = Main.dust[i].scale;
+                                                if (num5 > 1f)
+                                                {
+                                                    num5 = 1f;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (!Main.dust[i].noGravity && Main.dust[i].type != 41)
+                                                {
+                                                    Dust expr_645_cp_0 = Main.dust[i];
+                                                    expr_645_cp_0.velocity.Y = expr_645_cp_0.velocity.Y + 0.1f;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
-                                if (Main.dust[i].type == 35)
-                                {
-                                    float num6 = Main.dust[i].scale * 1.6f;
-                                    if (num6 > 1f)
-                                    {
-                                        num6 = 1f;
-                                    }
-                                    //Lighting.addLight((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f), num6);
-                                }
                             }
                         }
-                        if (Main.dust[i].type == 41)
+                    }
+                    if (Main.dust[i].type == 5 && Main.dust[i].noGravity)
+                    {
+                        Main.dust[i].scale -= 0.04f;
+                    }
+                    if (Main.dust[i].type == 33)
+                    {
+                        bool flag = Collision.WetCollision(new Vector2(Main.dust[i].position.X, Main.dust[i].position.Y), 4, 4);
+                        if (flag)
                         {
-                            Dust expr_B76_cp_0 = Main.dust[i];
-                            expr_B76_cp_0.velocity.X = expr_B76_cp_0.velocity.X + (float)Main.rand.Next(-10, 11) * 0.01f;
-                            Dust expr_BA3_cp_0 = Main.dust[i];
-                            expr_BA3_cp_0.velocity.Y = expr_BA3_cp_0.velocity.Y + (float)Main.rand.Next(-10, 11) * 0.01f;
-                            if ((double)Main.dust[i].velocity.X > 0.75)
-                            {
-                                Main.dust[i].velocity.X = 0.75f;
-                            }
-                            if ((double)Main.dust[i].velocity.X < -0.75)
-                            {
-                                Main.dust[i].velocity.X = -0.75f;
-                            }
-                            if ((double)Main.dust[i].velocity.Y > 0.75)
-                            {
-                                Main.dust[i].velocity.Y = 0.75f;
-                            }
-                            if ((double)Main.dust[i].velocity.Y < -0.75)
-                            {
-                                Main.dust[i].velocity.Y = -0.75f;
-                            }
-                            Main.dust[i].scale += 0.007f;
-                            float num7 = Main.dust[i].scale * 0.7f;
-                            if (num7 > 1f)
-                            {
-                                num7 = 1f;
-                            }
-                            //Lighting.addLight((int)(Main.dust[i].position.X / 16f), (int)(Main.dust[i].position.Y / 16f), num7);
+                            Main.dust[i].alpha += 20;
+                            Main.dust[i].scale -= 0.1f;
                         }
-                        else
+                        Main.dust[i].alpha += 2;
+                        Main.dust[i].scale -= 0.005f;
+                        if (Main.dust[i].alpha > 255)
                         {
-                            Dust expr_D11_cp_0 = Main.dust[i];
-                            expr_D11_cp_0.velocity.X = expr_D11_cp_0.velocity.X * 0.99f;
+                            Main.dust[i].scale = 0f;
                         }
-                        Main.dust[i].rotation += Main.dust[i].velocity.X * 0.5f;
-                        if (Main.dust[i].fadeIn > 0f)
+                        Dust expr_75B_cp_0 = Main.dust[i];
+                        expr_75B_cp_0.velocity.X = expr_75B_cp_0.velocity.X * 0.93f;
+                        if (Main.dust[i].velocity.Y > 4f)
                         {
-                            Main.dust[i].scale += 0.03f;
-                            if (Main.dust[i].scale > Main.dust[i].fadeIn)
-                            {
-                                Main.dust[i].fadeIn = 0f;
-                            }
-                        }
-                        else
-                        {
-                            Main.dust[i].scale -= 0.01f;
+                            Main.dust[i].velocity.Y = 4f;
                         }
                         if (Main.dust[i].noGravity)
                         {
-                            Dust expr_DD1 = Main.dust[i];
-                            expr_DD1.velocity *= 0.92f;
-                            if (Main.dust[i].fadeIn == 0f)
+                            if (Main.dust[i].velocity.X < 0f)
                             {
-                                Main.dust[i].scale -= 0.04f;
+                                Main.dust[i].rotation -= 0.2f;
+                            }
+                            else
+                            {
+                                Main.dust[i].rotation += 0.2f;
+                            }
+                            Main.dust[i].scale += 0.03f;
+                            Dust expr_819_cp_0 = Main.dust[i];
+                            expr_819_cp_0.velocity.X = expr_819_cp_0.velocity.X * 1.05f;
+                            Dust expr_836_cp_0 = Main.dust[i];
+                            expr_836_cp_0.velocity.Y = expr_836_cp_0.velocity.Y + 0.15f;
+                        }
+                    }
+                    if (Main.dust[i].type == 35 && Main.dust[i].noGravity)
+                    {
+                        Main.dust[i].scale += 0.02f;
+                        if (Main.dust[i].scale < 1f)
+                        {
+                            Dust expr_8A2_cp_0 = Main.dust[i];
+                            expr_8A2_cp_0.velocity.Y = expr_8A2_cp_0.velocity.Y + 0.075f;
+                        }
+                        Dust expr_8BF_cp_0 = Main.dust[i];
+                        expr_8BF_cp_0.velocity.X = expr_8BF_cp_0.velocity.X * 1.08f;
+                        if (Main.dust[i].velocity.X > 0f)
+                        {
+                            Main.dust[i].rotation += 0.01f;
+                        }
+                        else
+                        {
+                            Main.dust[i].rotation -= 0.01f;
+                        }
+                    }
+                    else
+                    {
+                        if (Main.dust[i].type == 34 || Main.dust[i].type == 35)
+                        {
+                            if (!Collision.WetCollision(new Vector2(Main.dust[i].position.X, Main.dust[i].position.Y - 8f), 4, 4))
+                            {
+                                Main.dust[i].scale = 0f;
+                            }
+                            else
+                            {
+                                Main.dust[i].alpha += Main.rand.Next(2);
+                                if (Main.dust[i].alpha > 255)
+                                {
+                                    Main.dust[i].scale = 0f;
+                                }
+                                Main.dust[i].velocity.Y = -0.5f;
+                                if (Main.dust[i].type == 34)
+                                {
+                                    Main.dust[i].scale += 0.005f;
+                                }
+                                else
+                                {
+                                    Main.dust[i].alpha++;
+                                    Main.dust[i].scale -= 0.01f;
+                                    Main.dust[i].velocity.Y = -0.2f;
+                                }
+                                Dust expr_A65_cp_0 = Main.dust[i];
+                                expr_A65_cp_0.velocity.X = expr_A65_cp_0.velocity.X + (float)Main.rand.Next(-10, 10) * 0.002f;
+                                if ((double)Main.dust[i].velocity.X < -0.25)
+                                {
+                                    Main.dust[i].velocity.X = -0.25f;
+                                }
+                                if ((double)Main.dust[i].velocity.X > 0.25)
+                                {
+                                    Main.dust[i].velocity.X = 0.25f;
+                                }
+                            }
+                            if (Main.dust[i].type == 35)
+                            {
+                                float num6 = Main.dust[i].scale * 1.6f;
+                                if (num6 > 1f)
+                                {
+                                    num6 = 1f;
+                                }
                             }
                         }
-                        if (Main.dust[i].position.Y > Main.screenPosition.Y + (float)Main.screenHeight)
+                    }
+                    if (Main.dust[i].type == 41)
+                    {
+                        Dust expr_B76_cp_0 = Main.dust[i];
+                        expr_B76_cp_0.velocity.X = expr_B76_cp_0.velocity.X + (float)Main.rand.Next(-10, 11) * 0.01f;
+                        Dust expr_BA3_cp_0 = Main.dust[i];
+                        expr_BA3_cp_0.velocity.Y = expr_BA3_cp_0.velocity.Y + (float)Main.rand.Next(-10, 11) * 0.01f;
+                        if ((double)Main.dust[i].velocity.X > 0.75)
                         {
-                            Main.dust[i].active = false;
+                            Main.dust[i].velocity.X = 0.75f;
                         }
-                        if ((double)Main.dust[i].scale < 0.1)
+                        if ((double)Main.dust[i].velocity.X < -0.75)
                         {
-                            Main.dust[i].active = false;
+                            Main.dust[i].velocity.X = -0.75f;
                         }
-                    //}
+                        if ((double)Main.dust[i].velocity.Y > 0.75)
+                        {
+                            Main.dust[i].velocity.Y = 0.75f;
+                        }
+                        if ((double)Main.dust[i].velocity.Y < -0.75)
+                        {
+                            Main.dust[i].velocity.Y = -0.75f;
+                        }
+                        Main.dust[i].scale += 0.007f;
+                        float num7 = Main.dust[i].scale * 0.7f;
+                        if (num7 > 1f)
+                        {
+                            num7 = 1f;
+                        }
+                    }
+                    else
+                    {
+                        Dust expr_D11_cp_0 = Main.dust[i];
+                        expr_D11_cp_0.velocity.X = expr_D11_cp_0.velocity.X * 0.99f;
+                    }
+                    Main.dust[i].rotation += Main.dust[i].velocity.X * 0.5f;
+                    if (Main.dust[i].fadeIn > 0f)
+                    {
+                        Main.dust[i].scale += 0.03f;
+                        if (Main.dust[i].scale > Main.dust[i].fadeIn)
+                        {
+                            Main.dust[i].fadeIn = 0f;
+                        }
+                    }
+                    else
+                    {
+                        Main.dust[i].scale -= 0.01f;
+                    }
+                    if (Main.dust[i].noGravity)
+                    {
+                        Dust expr_DD1 = Main.dust[i];
+                        expr_DD1.velocity *= 0.92f;
+                        if (Main.dust[i].fadeIn == 0f)
+                        {
+                            Main.dust[i].scale -= 0.04f;
+                        }
+                    }
+                    if (Main.dust[i].position.Y > Main.screenPosition.Y + (float)Main.screenHeight)
+                    {
+                        Main.dust[i].active = false;
+                    }
+                    if ((double)Main.dust[i].scale < 0.1)
+                    {
+                        Main.dust[i].active = false;
+                    }
                 }
                 else
                 {
@@ -446,6 +399,7 @@ namespace Terraria_Server
                 }
             }
         }
+
         public Color GetAlpha(Color newColor)
         {
             int r;
@@ -483,6 +437,7 @@ namespace Terraria_Server
             }
             return new Color(r, g, b, num);
         }
+
         public Color GetColor(Color newColor)
         {
             int num = (int)(this.color.R - (255 - newColor.R));

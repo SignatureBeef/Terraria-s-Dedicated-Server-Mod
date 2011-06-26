@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿
+using System;
 using System.IO;
-
 namespace Terraria_Server
 {
     public static class Statics
     {
-        public static int build = 9;
-        //public static double revision = 3;   
+        public static int build = 9;  
 
         public static bool cmdMessages = true;
         public static bool debugMode = false;

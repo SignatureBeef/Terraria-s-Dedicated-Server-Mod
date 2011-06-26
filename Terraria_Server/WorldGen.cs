@@ -1,8 +1,8 @@
+
 using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
-
 namespace Terraria_Server
 {
     internal class WorldGen
@@ -254,16 +254,9 @@ namespace Terraria_Server
                         }
                     }
                     Main.npc[num7].netUpdate = true;
-                    if (Main.netMode == 0)
+                    if (Main.netMode == 2)
                     {
-                        ////Main.NewText(Main.npc[num7].name + " has arrived!", 50, 125, 255);
-                    }
-                    else
-                    {
-                        if (Main.netMode == 2)
-                        {
-                            NetMessage.SendData(25, -1, -1, Main.npc[num7].name + " has arrived!", 255, 50f, 125f, 255f, 0);
-                        }
+                        NetMessage.SendData(25, -1, -1, Main.npc[num7].name + " has arrived!", 255, 50f, 125f, 255f, 0);
                     }
                 }
                 else
@@ -758,16 +751,9 @@ namespace Terraria_Server
                 }
             }
             WorldGen.stopDrops = false;
-            if (Main.netMode == 0)
+            if (Main.netMode == 2)
             {
-                ////Main.NewText("A meteorite has landed!", 50, 255, 130);
-            }
-            else
-            {
-                if (Main.netMode == 2)
-                {
-                    NetMessage.SendData(25, -1, -1, "A meteorite has landed!", 255, 50f, 255f, 130f, 0);
-                }
+                NetMessage.SendData(25, -1, -1, "A meteorite has landed!", 255, 50f, 255f, 130f, 0);
             }
             if (Main.netMode != 1)
             {
@@ -782,23 +768,7 @@ namespace Terraria_Server
             Main.maxSectionsX = Main.maxTilesX / 200;
             Main.maxSectionsY = Main.maxTilesY / 150;
         }
-        //public static void worldGenCallBack(object threadContext)
-        //{
-        //    ////Main.PlaySound10, -1, -1, 1);
-        //    WorldGen.clearWorld();
-        //    WorldGen.generateWorld(-1);
-        //    WorldGen.saveWorld(true);
-        //    Main.LoadWorlds();
-        //    if (Main.menuMode == 10)
-        //    {
-        //        Main.menuMode = 6;
-        //    }
-        //    ////Main.PlaySound10, -1, -1, 1);
-        //}
-        //public static void CreateNewWorld()
-        //{
-        //    ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.worldGenCallBack), 1);
-        //}
+
         public static void SaveAndQuitCallBack(object threadContext)
         {
             Main.menuMode = 10;
@@ -806,8 +776,7 @@ namespace Terraria_Server
             Player.SavePlayer(Main.player[Main.myPlayer]);
             if (Main.netMode == 0)
             {
-                WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
-                ////Main.PlaySound10, -1, -1, 1);
+                WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
             }
             else
             {
@@ -816,11 +785,12 @@ namespace Terraria_Server
             }
             Main.menuMode = 0;
         }
+
         public static void SaveAndQuit()
         {
-            ////Main.PlaySound11, -1, -1, 1);
             ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.SaveAndQuitCallBack), 1);
         }
+
         public static void playWorldCallBack(object threadContext)
         {
             if (Main.rand == null)
@@ -840,7 +810,7 @@ namespace Terraria_Server
                 WorldGen.loadWorld();
                 if (WorldGen.loadFailed || !WorldGen.loadSuccess)
                 {
-                    if (File.Exists(Program.server.getWorld().getSavePath() + ".bak"))
+                    if (File.Exists(Program.server.getWorld().SavePath + ".bak"))
                     {
                         WorldGen.worldBackup = true;
                     }
@@ -865,8 +835,8 @@ namespace Terraria_Server
                             Console.WriteLine("Load failed!  No backup found.");
                             return;
                         }
-                        File.Copy(Program.server.getWorld().getSavePath() + ".bak", Program.server.getWorld().getSavePath(), true);
-                        File.Delete(Program.server.getWorld().getSavePath() + ".bak");
+                        File.Copy(Program.server.getWorld().SavePath + ".bak", Program.server.getWorld().SavePath, true);
+                        File.Delete(Program.server.getWorld().SavePath + ".bak");
                         WorldGen.loadWorld();
                         if (WorldGen.loadFailed || !WorldGen.loadSuccess)
                         {
@@ -891,7 +861,6 @@ namespace Terraria_Server
             Main.time = WorldGen.tempTime;
             Main.moonPhase = WorldGen.tempMoonPhase;
             Main.bloodMoon = WorldGen.tempBloodMoon;
-            ////Main.PlaySound11, -1, -1, 1);
             Main.resetClouds = true;
         }
         public static void playWorld()
@@ -900,7 +869,7 @@ namespace Terraria_Server
         }
         public static void saveAndPlayCallBack(object threadContext)
         {
-            WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
+            WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
         }
         public static void saveAndPlay()
         {
@@ -922,7 +891,7 @@ namespace Terraria_Server
                 WorldGen.loadWorld();
                 if (WorldGen.loadFailed || !WorldGen.loadSuccess)
                 {
-                    if (File.Exists(Program.server.getWorld().getSavePath() + ".bak"))
+                    if (File.Exists(Program.server.getWorld().SavePath + ".bak"))
                     {
                         WorldGen.worldBackup = true;
                     }
@@ -947,8 +916,8 @@ namespace Terraria_Server
                             Console.WriteLine("Load failed!  No backup found.");
                             return;
                         }
-                        File.Copy(Program.server.getWorld().getSavePath() + ".bak", Program.server.getWorld().getSavePath(), true);
-                        File.Delete(Program.server.getWorld().getSavePath() + ".bak");
+                        File.Copy(Program.server.getWorld().SavePath + ".bak", Program.server.getWorld().SavePath, true);
+                        File.Delete(Program.server.getWorld().SavePath + ".bak");
                         WorldGen.loadWorld();
                         if (WorldGen.loadFailed || !WorldGen.loadSuccess)
                         {
@@ -962,7 +931,6 @@ namespace Terraria_Server
                     }
                 }
             }
-            ////Main.PlaySound10, -1, -1, 1);
             Netplay.StartServer();
             Main.dayTime = WorldGen.tempDayTime;
             Main.time = WorldGen.tempTime;
@@ -1064,10 +1032,6 @@ namespace Terraria_Server
         }
         public static void saveWorld(string savePath, bool resetTime = false)
         {
-            //if (Main.worldName == "")
-            //{
-            //    Main.worldName = "World";
-            //}
             if (WorldGen.saveLock)
             {
                 return;
@@ -1240,26 +1204,26 @@ namespace Terraria_Server
         }
         public static void loadWorld()
         {
-            if (!File.Exists(Program.server.getWorld().getSavePath()) && Main.autoGen)
+            if (!File.Exists(Program.server.getWorld().SavePath) && Main.autoGen)
             {
-                for (int i = Program.server.getWorld().getSavePath().Length - 1; i >= 0; i--)
+                for (int i = Program.server.getWorld().SavePath.Length - 1; i >= 0; i--)
                 {
-                    if (Program.server.getWorld().getSavePath().Substring(i, 1) == "\\")
+                    if (Program.server.getWorld().SavePath.Substring(i, 1) == "\\")
                     {
-                        string path = Program.server.getWorld().getSavePath().Substring(0, i);
+                        string path = Program.server.getWorld().SavePath.Substring(0, i);
                         Directory.CreateDirectory(path);
                         break;
                     }
                 }
                 WorldGen.clearWorld();
                 WorldGen.generateWorld(-1);
-                WorldGen.saveWorld(Program.server.getWorld().getSavePath(), false);
+                WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
             }
             if (WorldGen.genRand == null)
             {
                 WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
             }
-            using (FileStream fileStream = new FileStream(Program.server.getWorld().getSavePath(), FileMode.Open))
+            using (FileStream fileStream = new FileStream(Program.server.getWorld().SavePath, FileMode.Open))
             {
                 using (BinaryReader binaryReader = new BinaryReader(fileStream))
                 {
@@ -5049,7 +5013,6 @@ namespace Terraria_Server
                     WorldGen.TileFrame(n, num5, false, false);
                 }
             }
-            ////Main.PlaySound9, i * 16, j * 16, 1);
             return true;
         }
         public static bool AddLifeCrystal(int i, int j)
@@ -7879,7 +7842,6 @@ namespace Terraria_Server
             }
             if (flag)
             {
-                ////Main.PlaySound8, i * 16, j * 16, 1);
                 Main.tile[num2, num].active = true;
                 Main.tile[num2, num].type = 11;
                 Main.tile[num2, num].frameY = 0;
@@ -8816,7 +8778,6 @@ namespace Terraria_Server
                 if (type == 29)
                 {
                     Item.NewItem(num * 16, y * 16, 32, 32, 87, 1, false);
-                    ////Main.PlaySound13, i * 16, y * 16, 1);
                 }
                 WorldGen.destroyObject = false;
             }
@@ -10069,7 +10030,6 @@ namespace Terraria_Server
             if (flag)
             {
                 WorldGen.destroyObject = true;
-                ////Main.PlaySound13, i * 16, j * 16, 1);
                 for (int num2 = k; num2 < k + 2; num2++)
                 {
                     for (int num3 = num; num3 < num + 2; num3++)
@@ -10946,7 +10906,6 @@ namespace Terraria_Server
                     {
                         WorldGen.SquareTileFrame(i, j, true);
                         result = true;
-                        ////Main.PlaySound0, i * 16, j * 16, 1);
                         if (type == 22)
                         {
                             for (int k = 0; k < 3; k++)
@@ -10970,7 +10929,6 @@ namespace Terraria_Server
                 if (Main.tile[i, j].wall > 0)
                 {
                     WorldGen.genRand.Next(3);
-                    ////Main.PlaySound0, i * 16, j * 16, 1);
                     int num = 10;
                     if (fail)
                     {
@@ -11089,7 +11047,6 @@ namespace Terraria_Server
                     {
                         if (Main.tile[i, j].type == 3)
                         {
-                            ////Main.PlaySound6, i * 16, j * 16, 1);
                             if (Main.tile[i, j].frameX == 144)
                             {
                                 Item.NewItem(i * 16, j * 16, 16, 16, 5, 1, false);
@@ -11099,28 +11056,9 @@ namespace Terraria_Server
                         {
                             if (Main.tile[i, j].type == 24)
                             {
-                                ////Main.PlaySound6, i * 16, j * 16, 1);
                                 if (Main.tile[i, j].frameX == 144)
                                 {
                                     Item.NewItem(i * 16, j * 16, 16, 16, 60, 1, false);
-                                }
-                            }
-                            else
-                            {
-                                if (Main.tileAlch[(int)Main.tile[i, j].type] || Main.tile[i, j].type == 32 || Main.tile[i, j].type == 51 || Main.tile[i, j].type == 52 || Main.tile[i, j].type == 61 || Main.tile[i, j].type == 62 || Main.tile[i, j].type == 69 || Main.tile[i, j].type == 71 || Main.tile[i, j].type == 73 || Main.tile[i, j].type == 74)
-                                {
-                                    ////Main.PlaySound6, i * 16, j * 16, 1);
-                                }
-                                else
-                                {
-                                    if (Main.tile[i, j].type == 1 || Main.tile[i, j].type == 6 || Main.tile[i, j].type == 7 || Main.tile[i, j].type == 8 || Main.tile[i, j].type == 9 || Main.tile[i, j].type == 22 || Main.tile[i, j].type == 25 || Main.tile[i, j].type == 37 || Main.tile[i, j].type == 38 || Main.tile[i, j].type == 39 || Main.tile[i, j].type == 41 || Main.tile[i, j].type == 43 || Main.tile[i, j].type == 44 || Main.tile[i, j].type == 45 || Main.tile[i, j].type == 46 || Main.tile[i, j].type == 47 || Main.tile[i, j].type == 48 || Main.tile[i, j].type == 56 || Main.tile[i, j].type == 58 || Main.tile[i, j].type == 63 || Main.tile[i, j].type == 64 || Main.tile[i, j].type == 65 || Main.tile[i, j].type == 66 || Main.tile[i, j].type == 67 || Main.tile[i, j].type == 68 || Main.tile[i, j].type == 75 || Main.tile[i, j].type == 76)
-                                    {
-                                        ////Main.PlaySound21, i * 16, j * 16, 1);
-                                    }
-                                    else
-                                    {
-                                        ////Main.PlaySound0, i * 16, j * 16, 1);
-                                    }
                                 }
                             }
                         }
@@ -11513,7 +11451,6 @@ namespace Terraria_Server
                                                         {
                                                             if (Main.tile[i, j].type == 13)
                                                             {
-                                                                ////Main.PlaySound13, i * 16, j * 16, 1);
                                                                 if (Main.tile[i, j].frameX == 18)
                                                                 {
                                                                     num4 = 28;
@@ -11652,11 +11589,7 @@ namespace Terraria_Server
                                                                                                                                             }
                                                                                                                                             else
                                                                                                                                             {
-                                                                                                                                                if (Main.tile[i, j].type == 54)
-                                                                                                                                                {
-                                                                                                                                                    ////Main.PlaySound13, i * 16, j * 16, 1);
-                                                                                                                                                }
-                                                                                                                                                else
+                                                                                                                                                if (Main.tile[i, j].type != 54)
                                                                                                                                                 {
                                                                                                                                                     if (Main.tile[i, j].type == 56)
                                                                                                                                                     {
@@ -12600,10 +12533,6 @@ namespace Terraria_Server
                 }
                 Main.tile[i, j].wall = (byte)type;
                 WorldGen.SquareWallFrame(i, j, true);
-                if (!mute)
-                {
-                    ////Main.PlaySound0, i * 16, j * 16, 1);
-                }
             }
         }
         public static void AddPlants()
@@ -15133,22 +15062,15 @@ namespace Terraria_Server
                                                     {
                                                         text = "Screams echo around you...";
                                                     }
-                                                    if (Main.netMode == 0)
+
+                                                    if (Main.netMode == 2)
                                                     {
-                                                        ////Main.NewText(text, 50, 255, 130);
-                                                    }
-                                                    else
-                                                    {
-                                                        if (Main.netMode == 2)
-                                                        {
-                                                            NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f, 0);
-                                                        }
+                                                        NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f, 0);
                                                     }
                                                 }
                                             }
                                         }
                                     }
-                                    ////Main.PlaySound13, i * 16, j * 16, 1);
                                     WorldGen.destroyObject = false;
                                 }
                             }

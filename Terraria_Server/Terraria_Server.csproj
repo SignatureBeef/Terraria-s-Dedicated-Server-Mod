@@ -104,6 +104,7 @@
   <ItemGroup>
     <Compile Include="Commands\ConsoleSender.cs" />
     <Compile Include="Commands\Sender.cs" />
+    <Compile Include="Events\BasePlayerEvent.cs" />
     <Compile Include="Events\ChestOpenEvent.cs" />
     <Compile Include="Events\LoginEvent.cs" />
     <Compile Include="Events\LogoutEvent.cs" />

@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
+using Terraria_Server.Commands;
+using System;
 using System.IO;
 using System.Diagnostics;
-
-using Terraria_Server.Commands;
-using System.Collections;
 
 namespace Terraria_Server
 {
@@ -314,7 +312,7 @@ namespace Terraria_Server
 
 
                 World world = new World(worldXtiles, worldYtiles);
-                world.setSavePath(worldFile);
+                world.SavePath = worldFile;
 
                 server = new Server(world, properties.getMaxPlayers(),
                     Statics.getDataPath + Statics.systemSeperator + "whitelist.txt",
@@ -376,7 +374,6 @@ namespace Terraria_Server
                 }
                 catch
                 {
-                    //Program.tConsole.WriteLine("Lol You crashed your crash log, Good work.");
                 }
             }
             if (Program.tConsole != null)

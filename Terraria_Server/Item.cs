@@ -5912,7 +5912,6 @@ namespace Terraria_Server
                                         Main.dust[num3].alpha = 100;
                                         Main.dust[num3].noGravity = true;
                                     }
-                                    //////Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                                 else
                                 {
@@ -5927,7 +5926,6 @@ namespace Terraria_Server
                                         Main.dust[num4].alpha = 100;
                                         Main.dust[num4].noGravity = true;
                                     }
-                                    //////Main.PlaySound19, (int)this.position.X, (int)this.position.Y, 1);
                                 }
                             }
                             this.wet = true;
@@ -6016,27 +6014,7 @@ namespace Terraria_Server
                 {
                     this.beingGrabbed = false;
                 }
-                if (this.type == 8 || this.type == 41 || this.type == 75 || this.type == 105 || this.type == 116)
-                {
-                    if (!this.wet)
-                    {
-                        //////Lighting.addLight((int)((this.position.X - 7f) / 16f), (int)((this.position.Y - 7f) / 16f), 1f);
-                    }
-                }
-                else
-                {
-                    if (this.type == 282 || this.type == 286)
-                    {
-                        //////Lighting.addLight((int)((this.position.X - 7f) / 16f), (int)((this.position.Y - 7f) / 16f), 0.8f);
-                    }
-                    else
-                    {
-                        if (this.type == 183)
-                        {
-                            //////Lighting.addLight((int)((this.position.X - 7f) / 16f), (int)((this.position.Y - 7f) / 16f), 0.5f);
-                        }
-                    }
-                }
+
                 if (this.type == 75)
                 {
                     if (Main.rand.Next(25) == 0)

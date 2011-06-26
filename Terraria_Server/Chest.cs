@@ -1,4 +1,5 @@
 using System;
+
 namespace Terraria_Server
 {
     public class Chest
@@ -7,24 +8,29 @@ namespace Terraria_Server
         public Item[] item = new Item[Chest.maxItems];
         public int x;
         public int y;
+
         public object Clone()
         {
             return base.MemberwiseClone();
         }
+
         public static int UsingChest(int i)
         {
             if (Main.chest[i] != null)
             {
-                for (int j = 0; j < 255; j++)
+                int index = 0;
+                foreach(Player player in Main.player)
                 {
-                    if (Main.player[j].active && Main.player[j].chest == i)
+                    if (player.active && player.chest == i)
                     {
-                        return j;
+                        return index;
                     }
+                    index++;
                 }
             }
             return -1;
         }
+
         public static int FindChest(int X, int Y)
         {
             for (int i = 0; i < 1000; i++)
@@ -36,6 +42,7 @@ namespace Terraria_Server
             }
             return -1;
         }
+
         public static int CreateChest(int X, int Y)
         {
             for (int i = 0; i < 1000; i++)
@@ -61,6 +68,7 @@ namespace Terraria_Server
             }
             return -1;
         }
+
         public static bool DestroyChest(int X, int Y)
         {
             for (int i = 0; i < 1000; i++)
@@ -80,6 +88,7 @@ namespace Terraria_Server
             }
             return true;
         }
+
         public void SetupShop(int type)
         {
             for (int i = 0; i < Chest.maxItems; i++)

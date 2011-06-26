@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Terraria_Server.Events;
-using Terraria_Server.Commands;
-using Terraria_Server.Plugin;
-
+﻿using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Commands
 {
@@ -21,10 +14,10 @@ namespace Terraria_Server.Commands
         public void parseConsoleCommand(string Line, Server server)
         {
             ConsoleSender cSender = new ConsoleSender(server);
-            cSender.getConsoleCommand().setMessage(Line);
-            cSender.getConsoleCommand().setSender(new Sender());
-            server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, cSender.getConsoleCommand());
-            if (cSender.getConsoleCommand().getCancelled())
+            cSender.ConsoleCommand.Message = Line;
+            cSender.ConsoleCommand.Sender = new Sender();
+            server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, cSender.ConsoleCommand);
+            if (cSender.ConsoleCommand.Cancelled)
             {
                 return;
             }
@@ -35,23 +28,11 @@ namespace Terraria_Server.Commands
                 Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
                 return;
             }
-            switchCommands(commands, cSender.getConsoleCommand().getSender());
+            switchCommands(commands, cSender.ConsoleCommand.Sender);
         }
 
         public void parsePlayerCommand(Player player, string Line)
         {
-            /*
-             * Already have this in messageBuffer D:< (Hurp DeathCradle, HURP)
-                PlayerCommandEvent cCommand = new PlayerCommandEvent();
-                cCommand.setMessage(Line);
-                cCommand.setSender(player);
-                cCommand.setPlayer(player);
-                server.getPluginManager().processHook(Hooks.PLAYER_COMMAND, cCommand);
-                if (cCommand.getCancelled())
-                {
-                    return;
-                }
-             */
             if (Line.StartsWith("/"))
             {
                 Line = Line.Remove(0, 1);
@@ -79,7 +60,7 @@ namespace Terraria_Server.Commands
                         if (sender is Player)
                         {
                             Player player = (Player)sender;
-                            if (!player.isOp())
+                            if (!player.Op)
                             {
                                 NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                                 return;
@@ -96,7 +77,7 @@ namespace Terraria_Server.Commands
                         if (sender is Player)
                         {
                             Player player = (Player)sender;
-                            if (!player.isOp())
+                            if (!player.Op)
                             {
                                 NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                                 return;
@@ -147,7 +128,7 @@ namespace Terraria_Server.Commands
                         if (sender is Player)
                         {
                             Player player = (Player)sender;
-                            if (!player.isOp())
+                            if (!player.Op)
                             {
                                 NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                                 return;
@@ -156,23 +137,6 @@ namespace Terraria_Server.Commands
                         Commands.SaveAll();
                         break;
                     }
-                /*case (int)Commands.Command.COMMAND_ALLOW_GOD_MODE:
-                    {
-                        if (sender is Player)
-                        {
-                            Player player = (Player)sender;
-                            if (!player.isOp())
-                            {
-                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                                return;
-                            }
-                        }
-                        Program.server.setGodMode(!Program.server.getGodMode());
-                        Program.server.notifyAll("God Mode is now " + Program.server.getGodMode().ToString());
-                        Program.server.notifyOps("Gode Mod Toggled by " + sender.getName());
-                        Program.tConsole.WriteLine(sender.getName() + " toggled God Mode to: " + Program.server.getGodMode().ToString());
-                        break;
-                    }*/
                 case (int)Commands.Command.COMMAND_HELP:
                     {
                         Commands.ShowHelp(sender);
@@ -254,20 +218,6 @@ namespace Terraria_Server.Commands
                         break;
                     }
             }
-
-            //if (sender is Player)
-            //{
-            //    Player player = (Player)sender;
-            //    foreach (Player ply in Main.player)
-            //    {
-            //        if (ply.whoAmi == player.whoAmi)
-            //        {
-            //            Main.player[player.whoAmi] = player;
-            //            break;
-            //        }
-            //    }
-            //}
-
         }
 
     }

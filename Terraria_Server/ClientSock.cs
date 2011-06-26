@@ -1,5 +1,6 @@
 using System;
 using System.Net.Sockets;
+
 namespace Terraria_Server
 {
 	public class ClientSock

@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
+using System;
 namespace Terraria_Server
 {
     public class ServerProperties : PropertiesFile
     {
-
-        //PropertiesFile propFile;
-
         public ServerProperties(String pFile)
         {
             base.setFile(pFile);
@@ -71,24 +65,6 @@ namespace Terraria_Server
         {
             base.setValue("port", Port.ToString());
         }
-
-        /*public string getServerName()
-        {
-            string Name = base.getValue("servername");
-            if (Name == null || Name.Trim().Length < 0)
-            {
-                return "TDSM Server!";
-            }
-            else
-            {
-                return Name;
-            }
-        }
-
-        public void setServerName(string Name)
-        {
-            base.setValue("servername", Name);
-        }*/
 
         public string getGreeting()
         {
@@ -237,14 +213,7 @@ namespace Terraria_Server
         public int[] getMapSizes()
         {
             string CustomTiles = base.getValue("opt-mapsize");
-            /*if (CustomTiles == null || CustomTiles.Trim().Length < 0)
-            {
-                return false;
-            }
-            else
-            {
-                return Boolean.Parse(CustomTiles);
-            }*/
+
             if (CustomTiles == null)
             {
                 return null;
