@@ -17,7 +17,7 @@ TDSM IS NOT tMod. TDSM was actually under development before tMod was released.
 Status
 -------------
 TDSM is currently runnable as a server, You may also find that Developers can also now make plugins for it if they feel so.
-Current Protocol Version: 9 (1.04)
+
 
 How To Use
 -------------
