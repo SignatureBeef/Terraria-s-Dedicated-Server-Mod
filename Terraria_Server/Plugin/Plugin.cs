@@ -39,6 +39,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerOpenChest(ChestOpenEvent Event) { }
         public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { }
         public virtual void onPlayerDeath(PlayerDeathEvent Event) { }
+        public virtual void onDoorStateChange(DoorStateChangeEvent Event) { }
 
     	private ArrayList pluginHooks = new ArrayList();
 

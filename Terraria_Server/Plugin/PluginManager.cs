@@ -235,6 +235,11 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerDeath((PlayerDeathEvent)Event);
                                     break;
                                 }
+                            case Hooks.DOOR_STATECHANGE:
+                                {
+                                    plugin.onDoorStateChange((DoorStateChangeEvent)Event);
+                                    break;
+                                }
                         }
                     }
                 }
