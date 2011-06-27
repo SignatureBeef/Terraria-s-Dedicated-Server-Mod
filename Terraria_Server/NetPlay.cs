@@ -22,6 +22,7 @@ namespace Terraria_Server
         public static string password = "";
         public static bool spamCheck = false;
         public static bool ServerUp = false;
+        public static bool anyClients = false;
         		
         public static void ClientLoop(object threadContext)
 		{
@@ -273,8 +274,15 @@ namespace Terraria_Server
                                         if (Netplay.serverSock[k].networkStream.DataAvailable)
                                         {
                                             Netplay.serverSock[k].locked = true;
-                                            Netplay.serverSock[k].networkStream.BeginRead(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length, new AsyncCallback(Netplay.serverSock[k].ServerReadCallBack), Netplay.serverSock[k].networkStream);
-                                        }
+                                            if (Statics.debugMode)
+                                            {
+                                                Netplay.serverSock[k].networkStream.Read(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length);
+                                            }
+                                            else
+                                            {
+                                                Netplay.serverSock[k].networkStream.BeginRead(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length, new AsyncCallback(Netplay.serverSock[k].ServerReadCallBack), Netplay.serverSock[k].networkStream);
+                                            }
+                                         }
                                     }
                                     catch
                                     {
@@ -427,6 +435,14 @@ namespace Terraria_Server
 						Main.statusText = num2 + " clients connected";
 					}
 				}
+                if (num2 == 0)
+                {
+                    Netplay.anyClients = false;
+                }
+                else
+                {
+                    Netplay.anyClients = true;
+                }
 				Netplay.ServerUp = true;
 			}
 			Netplay.tcpListener.Stop();
@@ -442,8 +458,9 @@ namespace Terraria_Server
                 while (WorldGen.saveLock)
                 {
                 }
+
                 Statics.serverStarted = false;
-                Statics.IsActive = false;
+                Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
 			}
 			Main.myPlayer = 0;
 		}
@@ -475,7 +492,8 @@ namespace Terraria_Server
 					{
 						if (!Netplay.disconnect)
 						{
-							Main.menuMode = 15;
+                            Main.menuMode = 15;
+                            Program.tConsole.WriteLine("Netplay Exception:");
                             Program.tConsole.WriteLine(arg_81_0.ToString());
 							Netplay.disconnect = true;
 						}
@@ -499,7 +517,7 @@ namespace Terraria_Server
 
         public static void StopServer()
         {
-            Statics.IsActive = false;
+            Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
             Program.tConsole.WriteLine("Disabling Plugins");
             Program.server.getPluginManager().DisablePlugins();
             Program.tConsole.WriteLine("Closing Connections...");

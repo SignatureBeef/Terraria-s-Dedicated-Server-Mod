@@ -209,7 +209,6 @@ namespace Terraria_Server
                     Program.tConsole.WriteLine("Error updating!");
                     Program.tConsole.WriteLine(e.Message);
                 }
-                
 
                 Statics.debugMode = properties.debugMode();
                 if (Statics.debugMode)
@@ -367,7 +366,7 @@ namespace Terraria_Server
                         streamWriter.WriteLine(e);
                         streamWriter.WriteLine("");
                     }
-                    Debug.WriteLine("Server crash: " + DateTime.Now);
+                    Program.tConsole.WriteLine("Server crash: " + DateTime.Now);
                     Program.tConsole.WriteLine(e.Message);
                     Program.tConsole.WriteLine(e.StackTrace);
                     Program.tConsole.WriteLine(e.InnerException.Message);
@@ -385,6 +384,48 @@ namespace Terraria_Server
             }
         }
 
+        //public static void Updater()
+        //{
+        //    if (server == null)
+        //    {
+        //        Program.tConsole.WriteLine("Issue in updater thread!");
+        //        return;
+        //    }
+
+        //    Stopwatch stopwatch = new Stopwatch();
+        //    double num6 = 16.666666666666668;
+        //    stopwatch.Start();
+        //    double num7 = 0.0;
+
+        //    if (Server.rand == null)
+        //    {
+        //        Server.rand = new Random((int)DateTime.Now.Ticks);
+        //    }
+
+        //    while (Statics.IsActive)
+        //    {
+        //        double num8 = (double)stopwatch.ElapsedMilliseconds + num7;
+        //        if (num8 >= num6)
+        //        {
+        //            num7 = num8 - num6;
+        //            stopwatch.Reset();
+        //            stopwatch.Start();
+
+        //            server.Update();
+
+        //            float num9 = (float)stopwatch.ElapsedMilliseconds;
+        //            if ((double)num9 < num6)
+        //            {
+        //                int num10 = (int)(num6 - (double)num9) - 1;
+        //                if (num10 > 1)
+        //                {
+        //                    Thread.Sleep(num10);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+
         public static void Updater()
         {
             if (server == null)
@@ -393,38 +434,50 @@ namespace Terraria_Server
                 return;
             }
 
-	        Stopwatch stopwatch = new Stopwatch();
-            double num6 = 16.666666666666668;
-	        stopwatch.Start();
-	        double num7 = 0.0;
-
             if (Server.rand == null)
             {
-                Server.rand = new Random((int)DateTime.Now.Ticks);
+               Server.rand = new Random((int)DateTime.Now.Ticks);
             }
 
-	        while (Statics.IsActive)
-	        {
-		        double num8 = (double)stopwatch.ElapsedMilliseconds + num7;
-		        if (num8 >= num6)
-		        {
-			        num7 = num8 - num6;
-			        stopwatch.Reset();
-			        stopwatch.Start();
+            Stopwatch stopwatch = new Stopwatch();
 
-			        server.Update();
+            stopwatch.Start();
+            double num6 = 16.666666666666668;
+            double num7 = 0.0;
+            while (!Netplay.disconnect)
+            {
+                double num8 = (double)stopwatch.ElapsedMilliseconds;
+                if (num8 + num7 >= num6)
+                {
+                    num7 += num8 - num6;
+                    stopwatch.Reset();
+                    stopwatch.Start();
 
-			        float num9 = (float)stopwatch.ElapsedMilliseconds;
-			        if ((double)num9 < num6)
-			        {
-				        int num10 = (int)(num6 - (double)num9) - 1;
-				        if (num10 > 1)
-				        {
-					        Thread.Sleep(num10);
-				        }
-			        }
-		        }
-	        }
+                    if (num7 > 1000.0)
+                    {
+                        num7 = 1000.0;
+                    }
+                    if (Netplay.anyClients)
+                    {
+                        server.Update();
+                    }
+                    double num9 = (double)stopwatch.ElapsedMilliseconds + num7;
+                    if (num9 < num6)
+                    {
+                        int num10 = (int)(num6 - num9) - 1;
+                        if (num10 > 1)
+                        {
+                            Thread.Sleep(num10);
+                            if (!Netplay.anyClients)
+                            {
+                                num7 = 0.0;
+                                Thread.Sleep(10);
+                            }
+                        }
+                    }
+                }
+                Thread.Sleep(0);
+            }
         }
     
     }

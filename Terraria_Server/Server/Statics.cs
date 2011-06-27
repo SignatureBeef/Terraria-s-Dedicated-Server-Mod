@@ -13,6 +13,7 @@ namespace Terraria_Server
 
         public static bool cmdMessages = true;
         public static bool debugMode = false;
+        public static bool keepRunning = false;
 
         public static int platform = 0;
         public static bool isLinux
