@@ -274,14 +274,14 @@ namespace Terraria_Server
                                         if (Netplay.serverSock[k].networkStream.DataAvailable)
                                         {
                                             Netplay.serverSock[k].locked = true;
-                                            if (!Statics.debugMode)
-                                            {
-                                                Netplay.serverSock[k].networkStream.Read(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length);
-                                            }
-                                            else
-                                            {
+                                            //if (!Statics.debugMode)
+                                            //{
+                                             //   Netplay.serverSock[k].networkStream.Read(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length);
+                                            //}
+                                            //else
+                                            //{
                                                 Netplay.serverSock[k].networkStream.BeginRead(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length, new AsyncCallback(Netplay.serverSock[k].ServerReadCallBack), Netplay.serverSock[k].networkStream);
-                                            }
+                                            //}
                                          }
                                     }
                                     catch

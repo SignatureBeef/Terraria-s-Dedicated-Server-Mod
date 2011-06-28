@@ -23,6 +23,7 @@ namespace Terraria_Server
             setGreeting(getGreeting());
             setInitialWorldPath(getInitialWorldPath());
             setServerPassword(getServerPassword());
+            setUsingWhiteList(isUsingWhiteList());
             setAutomaticUpdates(automaticUpdates());
             setNPCDoorOpenCancel(isNPCDoorOpenCancelled());
             setSeed(getSeed());
