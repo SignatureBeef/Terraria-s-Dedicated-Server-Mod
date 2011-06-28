@@ -933,17 +933,6 @@ namespace Terraria_Server
                                                                                         state = true;
                                                                                     }
 
-                                                                                    //DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
-                                                                                    //doorEvent.setSender(new Sender());
-                                                                                    //doorEvent.setVector(new Vector2());
-                                                                                    //doorEvent.setDirection(direction);
-                                                                                    //doorEvent.setState(state);
-                                                                                    //Program.server.getPluginManager().processHook(Hooks.DOOR_STATECHANGE, doorEvent);
-                                                                                    //if (doorEvent.getCancelled())
-                                                                                    //{
-                                                                                    //    return;
-                                                                                    //}
-
                                                                                     if (b8 == 0)
                                                                                     {
                                                                                         WorldGen.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.player[this.whoAmI]);
