@@ -127,7 +127,9 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.PLAYER_ME:
                     {
-                        string Message = Program.mergeStrArray(commands); 
+                        string Message = Program.mergeStrArray(commands);
+                        if (Message.Length <= 3) { return; }
+
                         if (sender is Player)
                         {
                             Commands.Me_Say(Message.Remove(0, 3).Trim(), ((Player)sender).whoAmi);
