@@ -106,8 +106,8 @@
     <Compile Include="Commands\Sender.cs" />
     <Compile Include="Events\ChestOpenEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
-    <Compile Include="Events\LoginEvent.cs" />
-    <Compile Include="Events\LogoutEvent.cs" />
+    <Compile Include="Events\PlayerLoginEvent.cs" />
+    <Compile Include="Events\PlayerLogoutEvent.cs" />
     <Compile Include="Events\PartyChangeEvent.cs" />
     <Compile Include="Events\PlayerChatEvent.cs" />
     <Compile Include="Events\PlayerCommandEvent.cs" />

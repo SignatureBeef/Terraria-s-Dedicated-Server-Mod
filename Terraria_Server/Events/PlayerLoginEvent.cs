@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class LoginEvent : Event
+    public class PlayerLoginEvent : Event
     {
 
         private ServerSock socket = null;

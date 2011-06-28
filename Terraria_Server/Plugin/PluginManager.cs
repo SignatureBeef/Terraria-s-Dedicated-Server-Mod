@@ -192,17 +192,17 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.PLAYER_PRELOGIN:
                                 {
-                                    plugin.onPlayerPreLogin((LoginEvent)Event);
+                                    plugin.onPlayerPreLogin((PlayerLoginEvent)Event);
                                     break;
                                 }
                             case Hooks.PLAYER_LOGIN:
                                 {
-                                    plugin.onPlayerJoin((LoginEvent)Event);
+                                    plugin.onPlayerJoin((PlayerLoginEvent)Event);
                                     break;
                                 }
                             case Hooks.PLAYER_LOGOUT:
                                 {
-                                    plugin.onPlayerLogout((LogoutEvent)Event);
+                                    plugin.onPlayerLogout((PlayerLogoutEvent)Event);
                                     break;
                                 }
                             case Hooks.PLAYER_PARTYCHANGE:

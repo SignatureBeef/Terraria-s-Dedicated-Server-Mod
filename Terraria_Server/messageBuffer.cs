@@ -70,7 +70,7 @@ namespace Terraria_Server
             }
 			if (b == 1 && Main.netMode == 2)
 			{
-                LoginEvent Event = new LoginEvent();
+                PlayerLoginEvent Event = new PlayerLoginEvent();
                 Event.setSocket(Netplay.serverSock[this.whoAmI]);
                 Event.setSender(Main.player[this.whoAmI]);
                 Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, Event);

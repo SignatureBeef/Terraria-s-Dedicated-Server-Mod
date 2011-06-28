@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class LogoutEvent : LoginEvent
+    public class PlayerLogoutEvent : PlayerLoginEvent
     {
     }
 }
