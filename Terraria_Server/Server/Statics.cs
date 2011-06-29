@@ -5,7 +5,7 @@ namespace Terraria_Server
 {
     public static class Statics
     {
-        public const int BUILD = 11;
+        public const int BUILD = 13;
         public const int CURRENT_RELEASE = 12;
 
         private const String WORLDS = "Worlds";
@@ -15,6 +15,7 @@ namespace Terraria_Server
 
         public static bool cmdMessages = true;
         public static bool debugMode = false;
+        public static bool keepRunning = false;
 
         public static bool IsActive = false;
         public static bool serverStarted = false;

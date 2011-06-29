@@ -1670,7 +1670,7 @@ namespace Terraria_Server
 						{
 							Program.tConsole.WriteLine(Main.player[i].name + " has joined.");
 
-                            LoginEvent Event = new LoginEvent();
+                            PlayerLoginEvent Event = new PlayerLoginEvent();
                             Event.Socket = Netplay.serverSock[i];
                             Event.Sender = Main.player[i];
                             Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_LOGIN, Event);
@@ -1688,7 +1688,7 @@ namespace Terraria_Server
 						{
 							Program.tConsole.WriteLine(Netplay.serverSock[i].oldName + " has left.");
 
-                            LogoutEvent Event = new LogoutEvent();
+                            PlayerLogoutEvent Event = new PlayerLogoutEvent();
                             Event.Socket = Netplay.serverSock[i];
                             Event.Sender = Main.player[i];
                             Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);

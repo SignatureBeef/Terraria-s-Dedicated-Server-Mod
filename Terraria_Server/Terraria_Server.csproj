@@ -113,8 +113,9 @@
     <Compile Include="Shops\DryadShop.cs" />
     <Compile Include="Events\BasePlayerEvent.cs" />
     <Compile Include="Events\ChestOpenEvent.cs" />
-    <Compile Include="Events\LoginEvent.cs" />
-    <Compile Include="Events\LogoutEvent.cs" />
+    <Compile Include="Events\DoorStateChangeEvent.cs" />
+    <Compile Include="Events\PlayerLoginEvent.cs" />
+    <Compile Include="Events\PlayerLogoutEvent.cs" />
     <Compile Include="Events\PartyChangeEvent.cs" />
     <Compile Include="Events\PlayerChatEvent.cs" />
     <Compile Include="Events\PlayerCommandEvent.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Netplay.cs" />
     <Compile Include="NPC.cs" />
     <Compile Include="Player.cs" />
+    <Compile Include="Plugin\DoorOpener.cs" />
     <Compile Include="Plugin\Hooks.cs" />
     <Compile Include="Plugin\Party.cs" />
     <Compile Include="Plugin\Plugin.cs" />

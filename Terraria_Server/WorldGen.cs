@@ -3,8 +3,12 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Diagnostics;
+using Terraria_Server.Events;
+using Terraria_Server.Commands;
+using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
+
 namespace Terraria_Server
 {
     internal class WorldGen
@@ -4938,9 +4942,27 @@ namespace Terraria_Server
             }
             return result;
         }
-        
-        public static bool CloseDoor(int i, int j, bool forced = false)
+
+        public static bool CloseDoor(int i, int j, bool forced = false, DoorOpener opener = DoorOpener.SERVER, Sender sender = null)
         {
+            if (sender == null)
+            {
+                ConsoleSender cSender = new ConsoleSender(Program.server);
+                cSender.ConsoleCommand.Sender = new Sender();
+                sender = cSender;
+            }
+
+            DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
+            doorEvent.Sender = sender;
+            doorEvent.setVector(new Vector2(i, j));
+            doorEvent.setDirection(1);
+            doorEvent.setOpener(opener);
+            doorEvent.setOpened(forced);
+            Program.server.getPluginManager().processHook(Hooks.DOOR_STATECHANGE, doorEvent);
+            if (doorEvent.Cancelled)
+            {
+                return true;
+            }
             int num = 0;
             int num2 = i;
             int num3 = j;
@@ -7808,9 +7830,28 @@ namespace Terraria_Server
             }
             return false;
         }
-        
-        public static bool OpenDoor(int i, int j, int direction)
+
+        public static bool OpenDoor(int i, int j, int direction, bool state = false, DoorOpener opender = DoorOpener.SERVER, Sender sender = null)
         {
+            if (sender == null)
+            {
+                ConsoleSender cSender = new ConsoleSender(Program.server);
+                cSender.ConsoleCommand.Sender = new Sender();
+                sender = cSender;
+            }
+
+            DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
+            doorEvent.Sender = sender;
+            doorEvent.setVector(new Vector2(i, j));
+            doorEvent.setDirection(direction);
+            doorEvent.setOpener(opender);
+            doorEvent.setOpened(state);
+            Program.server.getPluginManager().processHook(Hooks.DOOR_STATECHANGE, doorEvent);
+            if (doorEvent.Cancelled)
+            {
+                return true;
+            }
+
             int num = 0;
             if (Main.tile[i, j - 1] == null)
             {

@@ -188,17 +188,17 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.PLAYER_PRELOGIN:
                                 {
-                                    plugin.onPlayerPreLogin((LoginEvent)hookEvent);
+                                    plugin.onPlayerPreLogin((PlayerLoginEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_LOGIN:
                                 {
-                                    plugin.onPlayerJoin((LoginEvent)hookEvent);
+                                    plugin.onPlayerJoin((PlayerLoginEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_LOGOUT:
                                 {
-                                    plugin.onPlayerLogout((LogoutEvent)hookEvent);
+                                    plugin.onPlayerLogout((PlayerLogoutEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_PARTYCHANGE:
@@ -229,6 +229,11 @@ namespace Terraria_Server.Plugin
                             case Hooks.PLAYER_DEATH:
                                 {
                                     plugin.onPlayerDeath((PlayerDeathEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.DOOR_STATECHANGE:
+                                {
+                                    plugin.onDoorStateChange((DoorStateChangeEvent)hookEvent);
                                     break;
                                 }
                         }

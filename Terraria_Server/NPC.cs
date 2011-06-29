@@ -1,5 +1,6 @@
 using System;
 using Terraria_Server.Misc;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server
 {
@@ -88,9 +89,9 @@ namespace Terraria_Server
         public int doorY;
         public int friendlyRegen;
 
-        private void SetGore(int goreType)
+        private int SetGore(int goreType)
         {
-            Gore.NewGore(this.position, this.velocity, goreType);
+            return Gore.NewGore(this.position, this.velocity, goreType);
         }
 
         public void SetDefaults(string Name)
@@ -2192,7 +2193,7 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            bool flag4 = WorldGen.OpenDoor(num4, num5, this.direction);
+                                            bool flag4 = WorldGen.OpenDoor(num4, num5, this.direction, this.closeDoor, DoorOpener.NPC);
                                             if (!flag4)
                                             {
                                                 this.ai[3] = (float)num3;
@@ -3636,7 +3637,7 @@ namespace Terraria_Server
                                                     }
                                                     if (this.closeDoor && ((this.position.X + (float)(this.width / 2)) / 16f > (float)(this.doorX + 2) || (this.position.X + (float)(this.width / 2)) / 16f < (float)(this.doorX - 2)))
                                                     {
-                                                        bool flag9 = WorldGen.CloseDoor(this.doorX, this.doorY, false);
+                                                        bool flag9 = WorldGen.CloseDoor(this.doorX, this.doorY, false, DoorOpener.NPC);
                                                         if (flag9)
                                                         {
                                                             this.closeDoor = false;
@@ -3717,7 +3718,7 @@ namespace Terraria_Server
                                                         {
                                                             if (Main.netMode != 1)
                                                             {
-                                                                bool flag10 = WorldGen.OpenDoor(num68, num69 - 2, this.direction);
+                                                                bool flag10 = WorldGen.OpenDoor(num68, num69 - 2, this.direction, this.closeDoor, DoorOpener.NPC);
                                                                 if (flag10)
                                                                 {
                                                                     this.closeDoor = true;
@@ -3728,7 +3729,7 @@ namespace Terraria_Server
                                                                     this.ai[1] += 80f;
                                                                     return;
                                                                 }
-                                                                if (WorldGen.OpenDoor(num68, num69 - 2, -this.direction))
+                                                                if (WorldGen.OpenDoor(num68, num69 - 2, -this.direction, this.closeDoor, DoorOpener.NPC))
                                                                 {
                                                                     this.closeDoor = true;
                                                                     this.doorX = num68;

@@ -108,7 +108,9 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.PLAYER_ME:
                     {
-                        string Message = Commands.MergeStringArray(commands); 
+                        string Message = Commands.MergeStringArray(commands);
+                        if (Message.Length <= 3) { return; }
+
                         if (sender is Player)
                         {
                             Commands.Me_Say(Message.Remove(0, 3).Trim(), ((Player)sender).whoAmi);
@@ -222,6 +224,11 @@ namespace Terraria_Server.Commands
                 case (int)Commands.Command.COMMAND_KICK:
                     {
                         Commands.Kick(sender, commands);
+                        break;
+                    }
+                case (int)Commands.Command.COMMAND_RESTART:
+                    {
+                        Commands.Restart(sender, server);
                         break;
                     }
                 default:

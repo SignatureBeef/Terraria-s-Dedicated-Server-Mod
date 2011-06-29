@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Text;
 
+using Terraria_Server;
+using System.Threading;
+
 namespace Terraria_Server.Commands
 {
     public class Commands
@@ -50,7 +53,8 @@ namespace Terraria_Server.Commands
             PLAYER_OPLOGIN = 19,
             PLAYER_OPLOGOUT = 20,
             COMMAND_NPCSPAWN = 21,
-            COMMAND_KICK = 22
+            COMMAND_KICK = 22,
+            COMMAND_RESTART = 23
         }
  
         public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",
@@ -60,7 +64,7 @@ namespace Terraria_Server.Commands
                                                                     "give",         "spawnnpc",     "tp",
 																	"tphere",       "settle",       "op",
                                                                     "deop",         "oplogin",      "oplogout",
-                                                                    "npcspawns",    "kick"};
+                                                                    "npcspawns",    "kick",         "restart"};
 
         public static string[] CommandInformation = new string[] {  "Stop & Close The Server.",
                                                                     "Reload Plugins.",
@@ -84,7 +88,8 @@ namespace Terraria_Server.Commands
                                                                     "Log in as OP: /oplogin <password>",
                                                                     "Log out of OP status.",
                                                                     "Toggle the state of NPC Spawning.",
-                                                                    "Kicks a player from the server."};
+                                                                    "Kicks a player from the server.", 
+                                                                    "Restarts the server."};
 
         public static string MergeStringArray(string[] Array)
         {
@@ -1007,5 +1012,56 @@ namespace Terraria_Server.Commands
             }
             sender.sendMessage("Command Error!");
         }
+    
+        public static void Heal(Sender sender, string[] commands)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.Op)
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            if (commands != null && commands.Length > 1)
+            {
+                if (commands[0] != null && commands[0].Length > 0)
+                {
+                    Player banee = Program.server.GetPlayerByName(commands[1]);
+
+                    
+
+                    return;
+                }
+            }
+            sender.sendMessage("Command Error!");
+        }
+
+        public static void Restart(Sender sender, Server server)
+        {
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.Op)
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            Statics.keepRunning = true;
+            server.StopServer();
+            while (Statics.serverStarted);
+            Program.tConsole.WriteLine("Starting the Server");
+            server.Initialize();
+            WorldGen.loadWorld();
+            server.StartServer();
+            Program.updateThread = new Thread(Program.Updater);
+            Statics.keepRunning = false;
+
+        }
+
     }
 }

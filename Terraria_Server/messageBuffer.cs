@@ -1,10 +1,12 @@
 
 using Terraria_Server.Events;
 using System.Text;
-using System;
 using Terraria_Server.Plugin;
-using Terraria_Server.Misc;
+using Terraria_Server.Commands;
+using System;
 using Terraria_Server.Shops;
+using Terraria_Server.Misc;
+
 namespace Terraria_Server
 {
 	public class MessageBuffer
@@ -71,7 +73,7 @@ namespace Terraria_Server
             }
 			if (b == 1 && Main.netMode == 2)
 			{
-                LoginEvent Event = new LoginEvent();
+                PlayerLoginEvent Event = new PlayerLoginEvent();
                 Event.Socket = Netplay.serverSock[this.whoAmI];
                 Event.Sender = Main.player[this.whoAmI];
                 Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, Event);
@@ -875,9 +877,9 @@ namespace Terraria_Server
                                                                                 {
                                                                                     byte b8 = this.readBuffer[num];
                                                                                     num++;
-                                                                                    int num30 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                    int x = BitConverter.ToInt32(this.readBuffer, num);
                                                                                     num += 4;
-                                                                                    int num31 = BitConverter.ToInt32(this.readBuffer, num);
+                                                                                    int y = BitConverter.ToInt32(this.readBuffer, num);
                                                                                     num += 4;
                                                                                     int num32 = (int)this.readBuffer[num];
                                                                                     int direction = 0;
@@ -885,20 +887,28 @@ namespace Terraria_Server
                                                                                     {
                                                                                         direction = -1;
                                                                                     }
+
+                                                                                    bool state = false;
+
+                                                                                    if (b8 == 0) //if open
+                                                                                    {
+                                                                                        state = true;
+                                                                                    }
+
                                                                                     if (b8 == 0)
                                                                                     {
-                                                                                        WorldGen.OpenDoor(num30, num31, direction);
+                                                                                        WorldGen.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.player[this.whoAmI]);
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         if (b8 == 1)
                                                                                         {
-                                                                                            WorldGen.CloseDoor(num30, num31, true);
+                                                                                            WorldGen.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.player[this.whoAmI]);
                                                                                         }
                                                                                     }
                                                                                     if (Main.netMode == 2)
                                                                                     {
-                                                                                        NetMessage.SendData(19, -1, this.whoAmI, "", (int)b8, (float)num30, (float)num31, (float)num32, 0);
+                                                                                        NetMessage.SendData(19, -1, this.whoAmI, "", (int)b8, (float)x, (float)y, (float)num32, 0);
                                                                                         return;
                                                                                     }
                                                                                 }

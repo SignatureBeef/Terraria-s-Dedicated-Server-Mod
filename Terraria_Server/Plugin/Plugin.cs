@@ -24,14 +24,15 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerCommand(PlayerCommandEvent Event) { }
         public virtual void onPlayerCommandProcess(ConsoleCommandEvent Event) { }
         public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
-        public virtual void onPlayerJoin(LoginEvent Event) { }
-        public virtual void onPlayerPreLogin(LoginEvent Event) { }
-        public virtual void onPlayerLogout(LogoutEvent Event) { }
+        public virtual void onPlayerJoin(PlayerLoginEvent Event) { }
+        public virtual void onPlayerPreLogin(PlayerLoginEvent Event) { }
+        public virtual void onPlayerLogout(PlayerLogoutEvent Event) { }
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
         public virtual void onTileBreak(TileBreakEvent Event) { }
         public virtual void onPlayerOpenChest(ChestOpenEvent Event) { }
         public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { }
         public virtual void onPlayerDeath(PlayerDeathEvent Event) { }
+        public virtual void onDoorStateChange(DoorStateChangeEvent Event) { }
 
     	private ArrayList pluginHooks = new ArrayList();
 
