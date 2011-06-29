@@ -1517,14 +1517,11 @@ namespace Terraria_Server
 					{
 						NetMessage.buffer[i].totalData = 0;
 					}
-					else
-					{
-						if (num > 0)
-						{
-							Buffer.BlockCopy(NetMessage.buffer[i].readBuffer, num, NetMessage.buffer[i].readBuffer, 0, NetMessage.buffer[i].totalData - num);
-							NetMessage.buffer[i].totalData -= num;
-						}
-					}
+                    else if (num > 0)
+                    {
+                        Buffer.BlockCopy(NetMessage.buffer[i].readBuffer, num, NetMessage.buffer[i].readBuffer, 0, NetMessage.buffer[i].totalData - num);
+                        NetMessage.buffer[i].totalData -= num;
+                    }
 					NetMessage.buffer[i].checkBytes = false;
 				}
 			}
