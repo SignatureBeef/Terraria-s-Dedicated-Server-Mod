@@ -87,7 +87,12 @@ namespace Terraria_Server
         public int doorX;
         public int doorY;
         public int friendlyRegen;
-        
+
+        private void SetGore(int goreType)
+        {
+            Gore.NewGore(this.position, this.velocity, goreType);
+        }
+
         public void SetDefaults(string Name)
         {
             this.SetDefaults(0);
@@ -103,217 +108,178 @@ namespace Terraria_Server
                 this.color = new Color(0, 220, 40, 100);
                 this.value = 3f;
             }
-            else
+            else if (Name == "Pinky")
             {
-                if (Name == "Pinky")
+                this.SetDefaults(1);
+                this.name = Name;
+                this.scale = 0.6f;
+                this.damage = 5;
+                this.defense = 5;
+                this.life = 150;
+                this.knockBackResist = 1.4f;
+                this.color = new Color(250, 30, 90, 90);
+                this.value = 10000f;
+            }
+            else if (Name == "Baby Slime")
+            {
+                this.SetDefaults(1);
+                this.name = Name;
+                this.scale = 0.9f;
+                this.damage = 13;
+                this.defense = 4;
+                this.life = 30;
+                this.knockBackResist = 0.95f;
+                this.alpha = 120;
+                this.color = new Color(0, 0, 0, 50);
+                this.value = 10f;
+            }
+            else if (Name == "Black Slime")
+            {
+                this.SetDefaults(1);
+                this.name = Name;
+                this.damage = 15;
+                this.defense = 4;
+                this.life = 45;
+                this.color = new Color(0, 0, 0, 50);
+                this.value = 20f;
+            }
+            else if (Name == "Purple Slime")
+            {
+                this.SetDefaults(1);
+                this.name = Name;
+                this.scale = 1.2f;
+                this.damage = 12;
+                this.defense = 6;
+                this.life = 40;
+                this.knockBackResist = 0.9f;
+                this.color = new Color(200, 0, 255, 150);
+                this.value = 10f;
+            }
+            else if (Name == "Red Slime")
+            {
+                this.SetDefaults(1);
+                this.name = Name;
+                this.damage = 12;
+                this.defense = 4;
+                this.life = 35;
+                this.color = new Color(255, 30, 0, 100);
+                this.value = 8f;
+            }
+            else if (Name == "Yellow Slime")
+            {
+                this.SetDefaults(1);
+                this.name = Name;
+                this.scale = 1.2f;
+                this.damage = 15;
+                this.defense = 7;
+                this.life = 45;
+                this.color = new Color(255, 255, 0, 100);
+                this.value = 10f;
+            }
+            else if (Name == "Jungle Slime")
+            {
+                this.SetDefaults(1);
+                this.name = Name;
+                this.damage = 18;
+                this.defense = 6;
+                this.life = 60;
+                this.scale = 1.1f;
+                this.color = new Color(143, 215, 93, 100);
+                this.value = 500f;
+            }
+            else if (Name == "Little Eater")
+            {
+                this.SetDefaults(6);
+                this.name = Name;
+                this.scale = 0.85f;
+                this.defense = (int)((float)this.defense * this.scale);
+                this.damage = (int)((float)this.damage * this.scale);
+                this.life = (int)((float)this.life * this.scale);
+                this.value = (float)((int)(this.value * this.scale));
+                NPC.npcSlots *= this.scale;
+                this.knockBackResist *= 2f - this.scale;
+            }
+            else if (Name == "Big Eater")
+            {
+                this.SetDefaults(6);
+                this.name = Name;
+                this.scale = 1.15f;
+                this.defense = (int)((float)this.defense * this.scale);
+                this.damage = (int)((float)this.damage * this.scale);
+                this.life = (int)((float)this.life * this.scale);
+                this.value = (float)((int)(this.value * this.scale));
+                NPC.npcSlots *= this.scale;
+                this.knockBackResist *= 2f - this.scale;
+            }
+            else if (Name == "Short Bones")
+            {
+                this.SetDefaults(31);
+                this.name = Name;
+                this.scale = 0.9f;
+                this.defense = (int)((float)this.defense * this.scale);
+                this.damage = (int)((float)this.damage * this.scale);
+                this.life = (int)((float)this.life * this.scale);
+                this.value = (float)((int)(this.value * this.scale));
+            }
+            else if (Name == "Big Boned")
+            {
+                this.SetDefaults(31);
+                this.name = Name;
+                this.scale = 1.15f;
+                this.defense = (int)((float)this.defense * this.scale);
+                this.damage = (int)((double)((float)this.damage * this.scale) * 1.1);
+                this.life = (int)((double)((float)this.life * this.scale) * 1.1);
+                this.value = (float)((int)(this.value * this.scale));
+                NPC.npcSlots = 2f;
+                this.knockBackResist *= 2f - this.scale;
+            }
+            else if (Name == "Little Stinger")
+            {
+                this.SetDefaults(42);
+                this.name = Name;
+                this.scale = 0.85f;
+                this.defense = (int)((float)this.defense * this.scale);
+                this.damage = (int)((float)this.damage * this.scale);
+                this.life = (int)((float)this.life * this.scale);
+                this.value = (float)((int)(this.value * this.scale));
+                NPC.npcSlots *= this.scale;
+                this.knockBackResist *= 2f - this.scale;
+            }
+            else if (Name == "Big Stinger")
+            {
+                this.SetDefaults(42);
+                this.name = Name;
+                this.scale = 1.15f;
+                this.defense = (int)((float)this.defense * this.scale);
+                this.damage = (int)((float)this.damage * this.scale);
+                this.life = (int)((float)this.life * this.scale);
+                this.value = (float)((int)(this.value * this.scale));
+                NPC.npcSlots *= this.scale;
+                this.knockBackResist *= 2f - this.scale;
+            }
+            else if (Name != "")
+            {
+                for (int i = 1; i < 70; i++)
                 {
-                    this.SetDefaults(1);
-                    this.name = Name;
-                    this.scale = 0.6f;
-                    this.damage = 5;
-                    this.defense = 5;
-                    this.life = 150;
-                    this.knockBackResist = 1.4f;
-                    this.color = new Color(250, 30, 90, 90);
-                    this.value = 10000f;
-                }
-                else
-                {
-                    if (Name == "Baby Slime")
+                    this.SetDefaults(i);
+
+                    if (this.name == Name)
                     {
-                        this.SetDefaults(1);
-                        this.name = Name;
-                        this.scale = 0.9f;
-                        this.damage = 13;
-                        this.defense = 4;
-                        this.life = 30;
-                        this.knockBackResist = 0.95f;
-                        this.alpha = 120;
-                        this.color = new Color(0, 0, 0, 50);
-                        this.value = 10f;
+                        break;
                     }
-                    else
+
+                    if (i == 69)
                     {
-                        if (Name == "Black Slime")
-                        {
-                            this.SetDefaults(1);
-                            this.name = Name;
-                            this.damage = 15;
-                            this.defense = 4;
-                            this.life = 45;
-                            this.color = new Color(0, 0, 0, 50);
-                            this.value = 20f;
-                        }
-                        else
-                        {
-                            if (Name == "Purple Slime")
-                            {
-                                this.SetDefaults(1);
-                                this.name = Name;
-                                this.scale = 1.2f;
-                                this.damage = 12;
-                                this.defense = 6;
-                                this.life = 40;
-                                this.knockBackResist = 0.9f;
-                                this.color = new Color(200, 0, 255, 150);
-                                this.value = 10f;
-                            }
-                            else
-                            {
-                                if (Name == "Red Slime")
-                                {
-                                    this.SetDefaults(1);
-                                    this.name = Name;
-                                    this.damage = 12;
-                                    this.defense = 4;
-                                    this.life = 35;
-                                    this.color = new Color(255, 30, 0, 100);
-                                    this.value = 8f;
-                                }
-                                else
-                                {
-                                    if (Name == "Yellow Slime")
-                                    {
-                                        this.SetDefaults(1);
-                                        this.name = Name;
-                                        this.scale = 1.2f;
-                                        this.damage = 15;
-                                        this.defense = 7;
-                                        this.life = 45;
-                                        this.color = new Color(255, 255, 0, 100);
-                                        this.value = 10f;
-                                    }
-                                    else
-                                    {
-                                        if (Name == "Jungle Slime")
-                                        {
-                                            this.SetDefaults(1);
-                                            this.name = Name;
-                                            this.damage = 18;
-                                            this.defense = 6;
-                                            this.life = 60;
-                                            this.scale = 1.1f;
-                                            this.color = new Color(143, 215, 93, 100);
-                                            this.value = 500f;
-                                        }
-                                        else
-                                        {
-                                            if (Name == "Little Eater")
-                                            {
-                                                this.SetDefaults(6);
-                                                this.name = Name;
-                                                this.scale = 0.85f;
-                                                this.defense = (int)((float)this.defense * this.scale);
-                                                this.damage = (int)((float)this.damage * this.scale);
-                                                this.life = (int)((float)this.life * this.scale);
-                                                this.value = (float)((int)(this.value * this.scale));
-                                                NPC.npcSlots *= this.scale;
-                                                this.knockBackResist *= 2f - this.scale;
-                                            }
-                                            else
-                                            {
-                                                if (Name == "Big Eater")
-                                                {
-                                                    this.SetDefaults(6);
-                                                    this.name = Name;
-                                                    this.scale = 1.15f;
-                                                    this.defense = (int)((float)this.defense * this.scale);
-                                                    this.damage = (int)((float)this.damage * this.scale);
-                                                    this.life = (int)((float)this.life * this.scale);
-                                                    this.value = (float)((int)(this.value * this.scale));
-                                                    NPC.npcSlots *= this.scale;
-                                                    this.knockBackResist *= 2f - this.scale;
-                                                }
-                                                else
-                                                {
-                                                    if (Name == "Short Bones")
-                                                    {
-                                                        this.SetDefaults(31);
-                                                        this.name = Name;
-                                                        this.scale = 0.9f;
-                                                        this.defense = (int)((float)this.defense * this.scale);
-                                                        this.damage = (int)((float)this.damage * this.scale);
-                                                        this.life = (int)((float)this.life * this.scale);
-                                                        this.value = (float)((int)(this.value * this.scale));
-                                                    }
-                                                    else
-                                                    {
-                                                        if (Name == "Big Boned")
-                                                        {
-                                                            this.SetDefaults(31);
-                                                            this.name = Name;
-                                                            this.scale = 1.15f;
-                                                            this.defense = (int)((float)this.defense * this.scale);
-                                                            this.damage = (int)((double)((float)this.damage * this.scale) * 1.1);
-                                                            this.life = (int)((double)((float)this.life * this.scale) * 1.1);
-                                                            this.value = (float)((int)(this.value * this.scale));
-                                                            NPC.npcSlots = 2f;
-                                                            this.knockBackResist *= 2f - this.scale;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (Name == "Little Stinger")
-                                                            {
-                                                                this.SetDefaults(42);
-                                                                this.name = Name;
-                                                                this.scale = 0.85f;
-                                                                this.defense = (int)((float)this.defense * this.scale);
-                                                                this.damage = (int)((float)this.damage * this.scale);
-                                                                this.life = (int)((float)this.life * this.scale);
-                                                                this.value = (float)((int)(this.value * this.scale));
-                                                                NPC.npcSlots *= this.scale;
-                                                                this.knockBackResist *= 2f - this.scale;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (Name == "Big Stinger")
-                                                                {
-                                                                    this.SetDefaults(42);
-                                                                    this.name = Name;
-                                                                    this.scale = 1.15f;
-                                                                    this.defense = (int)((float)this.defense * this.scale);
-                                                                    this.damage = (int)((float)this.damage * this.scale);
-                                                                    this.life = (int)((float)this.life * this.scale);
-                                                                    this.value = (float)((int)(this.value * this.scale));
-                                                                    NPC.npcSlots *= this.scale;
-                                                                    this.knockBackResist *= 2f - this.scale;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (Name != "")
-                                                                    {
-                                                                        for (int i = 1; i < 70; i++)
-                                                                        {
-                                                                            this.SetDefaults(i);
-                                                                            if (this.name == Name)
-                                                                            {
-                                                                                break;
-                                                                            }
-                                                                            if (i == 69)
-                                                                            {
-                                                                                this.SetDefaults(0);
-                                                                                this.active = false;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        this.active = false;
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        this.SetDefaults(0);
+                        this.active = false;
                     }
                 }
             }
+            else
+            {
+                this.active = false;
+            }
+
             this.lifeMax = this.life;
         }
        
@@ -355,10 +321,12 @@ namespace Terraria_Server
             this.timeLeft = NPC.activeTime;
             this.type = Type;
             this.value = 0f;
+
             for (int i = 0; i < NPC.maxAI; i++)
             {
                 this.ai[i] = 0f;
             }
+
             if (this.type == 1)
             {
                 this.name = "Blue Slime";
@@ -1767,27 +1735,21 @@ namespace Terraria_Server
                             this.ai[1] += 1f;
                             return;
                         }
-                        else
+                        else if (this.ai[0] >= -30f)
                         {
-                            if (this.ai[0] >= -30f)
-                            {
-                                this.aiAction = 1;
-                                return;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (this.target < 255 && ((this.direction == 1 && this.velocity.X < 3f) || (this.direction == -1 && this.velocity.X > -3f)))
-                        {
-                            if ((this.direction == -1 && (double)this.velocity.X < 0.1) || (this.direction == 1 && (double)this.velocity.X > -0.1))
-                            {
-                                this.velocity.X = this.velocity.X + 0.2f * (float)this.direction;
-                                return;
-                            }
-                            this.velocity.X = this.velocity.X * 0.93f;
+                            this.aiAction = 1;
                             return;
                         }
+                    }
+                    else if (this.target < 255 && ((this.direction == 1 && this.velocity.X < 3f) || (this.direction == -1 && this.velocity.X > -3f)))
+                    {
+                        if ((this.direction == -1 && (double)this.velocity.X < 0.1) || (this.direction == 1 && (double)this.velocity.X > -0.1))
+                        {
+                            this.velocity.X = this.velocity.X + 0.2f * (float)this.direction;
+                            return;
+                        }
+                        this.velocity.X = this.velocity.X * 0.93f;
+                        return;
                     }
                 }
                 else
@@ -8438,10 +8400,10 @@ namespace Terraria_Server
                             }
                             if (this.type == 51)
                             {
-                                Gore.NewGore(this.position, this.velocity, 83);
+                                SetGore(83);
                                 return;
                             }
-                            Gore.NewGore(this.position, this.velocity, 82);
+                            SetGore(82);
                             return;
                         }
                         else
@@ -8480,15 +8442,15 @@ namespace Terraria_Server
                                 }
                                 if (this.type == 46)
                                 {
-                                    Gore.NewGore(this.position, this.velocity, 76);
+                                    SetGore(76);
                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y), this.velocity, 77);
                                     return;
                                 }
                                 if (this.type == 67)
                                 {
-                                    Gore.NewGore(this.position, this.velocity, 95);
-                                    Gore.NewGore(this.position, this.velocity, 95);
-                                    Gore.NewGore(this.position, this.velocity, 96);
+                                    SetGore(95);
+                                    SetGore(95);
+                                    SetGore(96);
                                     return;
                                 }
                             }
@@ -8536,7 +8498,7 @@ namespace Terraria_Server
                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y), this.velocity, 85);
                                         return;
                                     }
-                                    Gore.NewGore(this.position, this.velocity, 78);
+                                    SetGore(78);
                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y), this.velocity, 79);
                                     return;
                                 }
@@ -8574,7 +8536,7 @@ namespace Terraria_Server
                                             Color newColor = default(Color);
                                             Dust.NewDust(arg_A8A_0, arg_A8A_1, arg_A8A_2, arg_A8A_3, arg_A8A_4, arg_A8A_5, arg_A8A_6, newColor, 1f);
                                         }
-                                        Gore.NewGore(this.position, this.velocity, 1);
+                                        SetGore(1);
                                         Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity, 2);
                                         return;
                                     }
@@ -8612,8 +8574,8 @@ namespace Terraria_Server
                                                 Color newColor = default(Color);
                                                 Dust.NewDust(arg_B79_0, arg_B79_1, arg_B79_2, arg_B79_3, arg_B79_4, arg_B79_5, arg_B79_6, newColor, 1f);
                                             }
-                                            Gore.NewGore(this.position, this.velocity, 97);
-                                            Gore.NewGore(this.position, this.velocity, 98);
+                                            SetGore(97);
+                                            SetGore(98);
                                             return;
                                         }
                                         else
@@ -8650,7 +8612,7 @@ namespace Terraria_Server
                                                     Color newColor = default(Color);
                                                     Dust.NewDust(arg_C4F_0, arg_C4F_1, arg_C4F_2, arg_C4F_3, arg_C4F_4, arg_C4F_5, arg_C4F_6, newColor, 1f);
                                                 }
-                                                Gore.NewGore(this.position, this.velocity, 86);
+                                                SetGore(86);
                                                 Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity, 87);
                                                 Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity, 88);
                                                 return;
@@ -8729,7 +8691,7 @@ namespace Terraria_Server
                                                             Color newColor = default(Color);
                                                             Dust.NewDust(arg_EFD_0, arg_EFD_1, arg_EFD_2, arg_EFD_3, arg_EFD_4, arg_EFD_5, arg_EFD_6, newColor, 1f);
                                                         }
-                                                        Gore.NewGore(this.position, this.velocity, 3);
+                                                        SetGore(3);
                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 4);
                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 4);
                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 5);
@@ -8813,8 +8775,8 @@ namespace Terraria_Server
                                                                     Color newColor = default(Color);
                                                                     Dust.NewDust(arg_124D_0, arg_124D_1, arg_124D_2, arg_124D_3, arg_124D_4, arg_124D_5, arg_124D_6, newColor, 1f);
                                                                 }
-                                                                Gore.NewGore(this.position, this.velocity, 6);
-                                                                Gore.NewGore(this.position, this.velocity, 7);
+                                                                SetGore(6);
+                                                                SetGore(7);
                                                                 return;
                                                             }
                                                             else
@@ -8835,9 +8797,9 @@ namespace Terraria_Server
                                                                     {
                                                                         Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
                                                                     }
-                                                                    int num32 = Gore.NewGore(this.position, this.velocity, 14);
+                                                                    int num32 = SetGore(14);
                                                                     Main.gore[num32].alpha = this.alpha;
-                                                                    num32 = Gore.NewGore(this.position, this.velocity, 15);
+                                                                    num32 = SetGore(15);
                                                                     Main.gore[num32].alpha = this.alpha;
                                                                     return;
                                                                 }
@@ -8859,7 +8821,7 @@ namespace Terraria_Server
                                                                         {
                                                                             Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
                                                                         }
-                                                                        int num35 = Gore.NewGore(this.position, this.velocity, this.type - 7 + 18);
+                                                                        int num35 = SetGore(this.type - 7 + 18);
                                                                         Main.gore[num35].alpha = this.alpha;
                                                                         return;
                                                                     }
@@ -8897,7 +8859,7 @@ namespace Terraria_Server
                                                                                 Color newColor = default(Color);
                                                                                 Dust.NewDust(arg_152F_0, arg_152F_1, arg_152F_2, arg_152F_3, arg_152F_4, arg_152F_5, arg_152F_6, newColor, 1f);
                                                                             }
-                                                                            Gore.NewGore(this.position, this.velocity, this.type - 7 + 18);
+                                                                            SetGore(this.type - 7 + 18);
                                                                             return;
                                                                         }
                                                                         else
@@ -8920,18 +8882,18 @@ namespace Terraria_Server
                                                                                 }
                                                                                 if (this.type == 13)
                                                                                 {
-                                                                                    Gore.NewGore(this.position, this.velocity, 24);
-                                                                                    Gore.NewGore(this.position, this.velocity, 25);
+                                                                                    SetGore(24);
+                                                                                    SetGore(25);
                                                                                     return;
                                                                                 }
                                                                                 if (this.type == 14)
                                                                                 {
-                                                                                    Gore.NewGore(this.position, this.velocity, 26);
-                                                                                    Gore.NewGore(this.position, this.velocity, 27);
+                                                                                    SetGore(26);
+                                                                                    SetGore(27);
                                                                                     return;
                                                                                 }
-                                                                                Gore.NewGore(this.position, this.velocity, 28);
-                                                                                Gore.NewGore(this.position, this.velocity, 29);
+                                                                                SetGore(28);
+                                                                                SetGore(29);
                                                                                 return;
                                                                             }
                                                                             else
@@ -8968,7 +8930,7 @@ namespace Terraria_Server
                                                                                         Color newColor = default(Color);
                                                                                         Dust.NewDust(arg_1752_0, arg_1752_1, arg_1752_2, arg_1752_3, arg_1752_4, arg_1752_5, arg_1752_6, newColor, 1f);
                                                                                     }
-                                                                                    Gore.NewGore(this.position, this.velocity, 30);
+                                                                                    SetGore(30);
                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 31);
                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 31);
                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 32);
@@ -9009,7 +8971,7 @@ namespace Terraria_Server
                                                                                             Color newColor = default(Color);
                                                                                             Dust.NewDust(arg_18D4_0, arg_18D4_1, arg_18D4_2, arg_18D4_3, arg_18D4_4, arg_18D4_5, arg_18D4_6, newColor, 1f);
                                                                                         }
-                                                                                        Gore.NewGore(this.position, this.velocity, 73);
+                                                                                        SetGore(73);
                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 74);
                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 74);
                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 75);
@@ -9050,7 +9012,7 @@ namespace Terraria_Server
                                                                                                 Color newColor = default(Color);
                                                                                                 Dust.NewDust(arg_1A60_0, arg_1A60_1, arg_1A60_2, arg_1A60_3, arg_1A60_4, arg_1A60_5, arg_1A60_6, newColor, 1f);
                                                                                             }
-                                                                                            Gore.NewGore(this.position, this.velocity, 58);
+                                                                                            SetGore(58);
                                                                                             Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 59);
                                                                                             Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 59);
                                                                                             Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 60);
@@ -9091,7 +9053,7 @@ namespace Terraria_Server
                                                                                                     Color newColor = default(Color);
                                                                                                     Dust.NewDust(arg_1BE2_0, arg_1BE2_1, arg_1BE2_2, arg_1BE2_3, arg_1BE2_4, arg_1BE2_5, arg_1BE2_6, newColor, 1f);
                                                                                                 }
-                                                                                                Gore.NewGore(this.position, this.velocity, 33);
+                                                                                                SetGore(33);
                                                                                                 Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 34);
                                                                                                 Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 34);
                                                                                                 Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 35);
@@ -9132,7 +9094,7 @@ namespace Terraria_Server
                                                                                                         Color newColor = default(Color);
                                                                                                         Dust.NewDust(arg_1D64_0, arg_1D64_1, arg_1D64_2, arg_1D64_3, arg_1D64_4, arg_1D64_5, arg_1D64_6, newColor, 1f);
                                                                                                     }
-                                                                                                    Gore.NewGore(this.position, this.velocity, 36);
+                                                                                                    SetGore(36);
                                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 37);
                                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 37);
                                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 38);
@@ -9173,7 +9135,7 @@ namespace Terraria_Server
                                                                                                             Color newColor = default(Color);
                                                                                                             Dust.NewDust(arg_1EE6_0, arg_1EE6_1, arg_1EE6_2, arg_1EE6_3, arg_1EE6_4, arg_1EE6_5, arg_1EE6_6, newColor, 1f);
                                                                                                         }
-                                                                                                        Gore.NewGore(this.position, this.velocity, 64);
+                                                                                                        SetGore(64);
                                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 65);
                                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 65);
                                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 66);
@@ -9214,7 +9176,7 @@ namespace Terraria_Server
                                                                                                                 Color newColor = default(Color);
                                                                                                                 Dust.NewDust(arg_2068_0, arg_2068_1, arg_2068_2, arg_2068_3, arg_2068_4, arg_2068_5, arg_2068_6, newColor, 1f);
                                                                                                             }
-                                                                                                            Gore.NewGore(this.position, this.velocity, 39);
+                                                                                                            SetGore(39);
                                                                                                             Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 40);
                                                                                                             Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 40);
                                                                                                             Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 41);
@@ -9255,7 +9217,7 @@ namespace Terraria_Server
                                                                                                                     Color newColor = default(Color);
                                                                                                                     Dust.NewDust(arg_2214_0, arg_2214_1, arg_2214_2, arg_2214_3, arg_2214_4, arg_2214_5, arg_2214_6, newColor, 1f);
                                                                                                                 }
-                                                                                                                Gore.NewGore(this.position, this.velocity, 42);
+                                                                                                                SetGore(42);
                                                                                                                 Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 43);
                                                                                                                 Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 43);
                                                                                                                 Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 44);
@@ -9296,7 +9258,7 @@ namespace Terraria_Server
                                                                                                                         Color newColor = default(Color);
                                                                                                                         Dust.NewDust(arg_23AC_0, arg_23AC_1, arg_23AC_2, arg_23AC_3, arg_23AC_4, arg_23AC_5, arg_23AC_6, newColor, 1f);
                                                                                                                     }
-                                                                                                                    Gore.NewGore(this.position, this.velocity, this.type - 39 + 67);
+                                                                                                                    SetGore(this.type - 39 + 67);
                                                                                                                     return;
                                                                                                                 }
                                                                                                                 else
@@ -9403,14 +9365,14 @@ namespace Terraria_Server
                                                                                                                             }
                                                                                                                             if (this.type == 35)
                                                                                                                             {
-                                                                                                                                Gore.NewGore(this.position, this.velocity, 54);
-                                                                                                                                Gore.NewGore(this.position, this.velocity, 55);
+                                                                                                                                SetGore(54);
+                                                                                                                                SetGore(55);
                                                                                                                                 return;
                                                                                                                             }
-                                                                                                                            Gore.NewGore(this.position, this.velocity, 56);
-                                                                                                                            Gore.NewGore(this.position, this.velocity, 57);
-                                                                                                                            Gore.NewGore(this.position, this.velocity, 57);
-                                                                                                                            Gore.NewGore(this.position, this.velocity, 57);
+                                                                                                                            SetGore(56);
+                                                                                                                            SetGore(57);
+                                                                                                                            SetGore(57);
+                                                                                                                            SetGore(57);
                                                                                                                             return;
                                                                                                                         }
                                                                                                                         else
@@ -9522,7 +9484,7 @@ namespace Terraria_Server
                                                                                                                                         Dust expr_2AE3 = Main.dust[num74];
                                                                                                                                         expr_2AE3.velocity *= 2f;
                                                                                                                                     }
-                                                                                                                                    Gore.NewGore(this.position, this.velocity, 45);
+                                                                                                                                    SetGore(45);
                                                                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 46);
                                                                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 46);
                                                                                                                                     Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 47);
@@ -9623,7 +9585,7 @@ namespace Terraria_Server
                                                                                                                                             Color newColor = default(Color);
                                                                                                                                             Dust.NewDust(arg_2F41_0, arg_2F41_1, arg_2F41_2, arg_2F41_3, arg_2F41_4, arg_2F41_5, arg_2F41_6, newColor, 1f);
                                                                                                                                         }
-                                                                                                                                        Gore.NewGore(this.position, this.velocity, 48);
+                                                                                                                                        SetGore(48);
                                                                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 49);
                                                                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 49);
                                                                                                                                         Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 50);
@@ -9678,8 +9640,8 @@ namespace Terraria_Server
                                                                                                                                             {
                                                                                                                                                 Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
                                                                                                                                             }
-                                                                                                                                            Gore.NewGore(this.position, this.velocity, 70);
-                                                                                                                                            Gore.NewGore(this.position, this.velocity, 71);
+                                                                                                                                            SetGore(70);
+                                                                                                                                            SetGore(71);
                                                                                                                                             return;
                                                                                                                                         }
                                                                                                                                         else
@@ -9700,8 +9662,8 @@ namespace Terraria_Server
                                                                                                                                                 {
                                                                                                                                                     Dust.NewDust(this.position, this.width, this.height, 40, (float)hitDirection, -2f, this.alpha, this.color, 1.2f);
                                                                                                                                                 }
-                                                                                                                                                Gore.NewGore(this.position, this.velocity, 72);
-                                                                                                                                                Gore.NewGore(this.position, this.velocity, 72);
+                                                                                                                                                SetGore(72);
+                                                                                                                                                SetGore(72);
                                                                                                                                                 return;
                                                                                                                                             }
                                                                                                                                             else
@@ -9738,8 +9700,8 @@ namespace Terraria_Server
                                                                                                                                                         Color newColor = default(Color);
                                                                                                                                                         Dust.NewDust(arg_33D2_0, arg_33D2_1, arg_33D2_2, arg_33D2_3, arg_33D2_4, arg_33D2_5, arg_33D2_6, newColor, 1f);
                                                                                                                                                     }
-                                                                                                                                                    Gore.NewGore(this.position, this.velocity, 80);
-                                                                                                                                                    Gore.NewGore(this.position, this.velocity, 81);
+                                                                                                                                                    SetGore(80);
+                                                                                                                                                    SetGore(81);
                                                                                                                                                     return;
                                                                                                                                                 }
                                                                                                                                                 else
@@ -9776,9 +9738,9 @@ namespace Terraria_Server
                                                                                                                                                             Color newColor = default(Color);
                                                                                                                                                             Dust.NewDust(arg_34B2_0, arg_34B2_1, arg_34B2_2, arg_34B2_3, arg_34B2_4, arg_34B2_5, arg_34B2_6, newColor, 1f);
                                                                                                                                                         }
-                                                                                                                                                        Gore.NewGore(this.position, this.velocity, 93);
-                                                                                                                                                        Gore.NewGore(this.position, this.velocity, 94);
-                                                                                                                                                        Gore.NewGore(this.position, this.velocity, 94);
+                                                                                                                                                        SetGore(93);
+                                                                                                                                                        SetGore(94);
+                                                                                                                                                        SetGore(94);
                                                                                                                                                     }
                                                                                                                                                 }
                                                                                                                                             }

@@ -377,237 +377,85 @@ namespace Terraria_Server
             Main.tileShine[45] = 1900;
             Main.tileShine[46] = 2000;
             Main.tileShine[47] = 2100;
-            Main.tileCut[3] = true;
-            Main.tileCut[24] = true;
-            Main.tileCut[28] = true;
-            Main.tileCut[32] = true;
-            Main.tileCut[51] = true;
-            Main.tileCut[52] = true;
-            Main.tileCut[61] = true;
-            Main.tileCut[62] = true;
-            Main.tileCut[69] = true;
-            Main.tileCut[71] = true;
-            Main.tileCut[73] = true;
-            Main.tileCut[74] = true;
-            Main.tileCut[82] = true;
-            Main.tileCut[83] = true;
-            Main.tileCut[84] = true;
-            Main.tileAlch[82] = true;
-            Main.tileAlch[83] = true;
-            Main.tileAlch[84] = true;
-            Main.tileFrameImportant[82] = true;
-            Main.tileFrameImportant[83] = true;
-            Main.tileFrameImportant[84] = true;
-            Main.tileFrameImportant[85] = true;
-            Main.tileSolid[0] = true;
-            Main.tileBlockLight[0] = true;
-            Main.tileSolid[1] = true;
-            Main.tileBlockLight[1] = true;
-            Main.tileSolid[2] = true;
-            Main.tileBlockLight[2] = true;
-            Main.tileSolid[3] = false;
-            Main.tileNoAttach[3] = true;
-            Main.tileNoFail[3] = true;
-            Main.tileSolid[4] = false;
-            Main.tileNoAttach[4] = true;
-            Main.tileNoFail[4] = true;
-            Main.tileNoFail[24] = true;
-            Main.tileSolid[5] = false;
-            Main.tileSolid[6] = true;
-            Main.tileBlockLight[6] = true;
-            Main.tileSolid[7] = true;
-            Main.tileBlockLight[7] = true;
-            Main.tileSolid[8] = true;
-            Main.tileBlockLight[8] = true;
-            Main.tileSolid[9] = true;
-            Main.tileBlockLight[9] = true;
-            Main.tileBlockLight[10] = true;
-            Main.tileSolid[10] = true;
-            Main.tileNoAttach[10] = true;
-            Main.tileBlockLight[10] = true;
-            Main.tileSolid[11] = false;
-            Main.tileSolidTop[19] = true;
-            Main.tileSolid[19] = true;
-            Main.tileSolid[22] = true;
-            Main.tileSolid[23] = true;
-            Main.tileSolid[25] = true;
-            Main.tileSolid[30] = true;
-            Main.tileNoFail[32] = true;
-            Main.tileBlockLight[32] = true;
-            Main.tileSolid[37] = true;
-            Main.tileBlockLight[37] = true;
-            Main.tileSolid[38] = true;
-            Main.tileBlockLight[38] = true;
-            Main.tileSolid[39] = true;
-            Main.tileBlockLight[39] = true;
-            Main.tileSolid[40] = true;
-            Main.tileBlockLight[40] = true;
-            Main.tileSolid[41] = true;
-            Main.tileBlockLight[41] = true;
-            Main.tileSolid[43] = true;
-            Main.tileBlockLight[43] = true;
-            Main.tileSolid[44] = true;
-            Main.tileBlockLight[44] = true;
-            Main.tileSolid[45] = true;
-            Main.tileBlockLight[45] = true;
-            Main.tileSolid[46] = true;
-            Main.tileBlockLight[46] = true;
-            Main.tileSolid[47] = true;
-            Main.tileBlockLight[47] = true;
-            Main.tileSolid[48] = true;
-            Main.tileBlockLight[48] = true;
-            Main.tileSolid[53] = true;
-            Main.tileBlockLight[53] = true;
-            Main.tileSolid[54] = true;
-            Main.tileBlockLight[52] = true;
-            Main.tileSolid[56] = true;
-            Main.tileBlockLight[56] = true;
-            Main.tileSolid[57] = true;
-            Main.tileBlockLight[57] = true;
-            Main.tileSolid[58] = true;
-            Main.tileBlockLight[58] = true;
-            Main.tileSolid[59] = true;
-            Main.tileBlockLight[59] = true;
-            Main.tileSolid[60] = true;
-            Main.tileBlockLight[60] = true;
-            Main.tileSolid[63] = true;
-            Main.tileBlockLight[63] = true;
-            Main.tileStone[63] = true;
-            Main.tileSolid[64] = true;
-            Main.tileBlockLight[64] = true;
-            Main.tileStone[64] = true;
-            Main.tileSolid[65] = true;
-            Main.tileBlockLight[65] = true;
-            Main.tileStone[65] = true;
-            Main.tileSolid[66] = true;
-            Main.tileBlockLight[66] = true;
-            Main.tileStone[66] = true;
-            Main.tileSolid[67] = true;
-            Main.tileBlockLight[67] = true;
-            Main.tileStone[67] = true;
-            Main.tileSolid[68] = true;
-            Main.tileBlockLight[68] = true;
-            Main.tileStone[68] = true;
-            Main.tileSolid[75] = true;
-            Main.tileBlockLight[75] = true;
-            Main.tileSolid[76] = true;
-            Main.tileBlockLight[76] = true;
-            Main.tileSolid[70] = true;
-            Main.tileBlockLight[70] = true;
-            Main.tileBlockLight[51] = true;
-            Main.tileNoFail[50] = true;
-            Main.tileNoAttach[50] = true;
-            Main.tileDungeon[41] = true;
-            Main.tileDungeon[43] = true;
-            Main.tileDungeon[44] = true;
-            Main.tileBlockLight[30] = true;
-            Main.tileBlockLight[25] = true;
-            Main.tileBlockLight[23] = true;
-            Main.tileBlockLight[22] = true;
-            Main.tileBlockLight[62] = true;
-            Main.tileSolidTop[18] = true;
-            Main.tileSolidTop[14] = true;
-            Main.tileSolidTop[16] = true;
-            Main.tileNoAttach[20] = true;
-            Main.tileNoAttach[19] = true;
-            Main.tileNoAttach[13] = true;
-            Main.tileNoAttach[14] = true;
-            Main.tileNoAttach[15] = true;
-            Main.tileNoAttach[16] = true;
-            Main.tileNoAttach[17] = true;
-            Main.tileNoAttach[18] = true;
-            Main.tileNoAttach[19] = true;
-            Main.tileNoAttach[21] = true;
-            Main.tileNoAttach[27] = true;
-            Main.tileFrameImportant[3] = true;
-            Main.tileFrameImportant[5] = true;
-            Main.tileFrameImportant[10] = true;
-            Main.tileFrameImportant[11] = true;
-            Main.tileFrameImportant[12] = true;
-            Main.tileFrameImportant[13] = true;
-            Main.tileFrameImportant[14] = true;
-            Main.tileFrameImportant[15] = true;
-            Main.tileFrameImportant[16] = true;
-            Main.tileFrameImportant[17] = true;
-            Main.tileFrameImportant[18] = true;
-            Main.tileFrameImportant[20] = true;
-            Main.tileFrameImportant[21] = true;
-            Main.tileFrameImportant[24] = true;
-            Main.tileFrameImportant[26] = true;
-            Main.tileFrameImportant[27] = true;
-            Main.tileFrameImportant[28] = true;
-            Main.tileFrameImportant[29] = true;
-            Main.tileFrameImportant[31] = true;
-            Main.tileFrameImportant[33] = true;
-            Main.tileFrameImportant[34] = true;
-            Main.tileFrameImportant[35] = true;
-            Main.tileFrameImportant[36] = true;
-            Main.tileFrameImportant[42] = true;
-            Main.tileFrameImportant[50] = true;
-            Main.tileFrameImportant[55] = true;
-            Main.tileFrameImportant[61] = true;
-            Main.tileFrameImportant[71] = true;
-            Main.tileFrameImportant[72] = true;
-            Main.tileFrameImportant[73] = true;
-            Main.tileFrameImportant[74] = true;
-            Main.tileFrameImportant[77] = true;
-            Main.tileFrameImportant[78] = true;
-            Main.tileFrameImportant[79] = true;
-            Main.tileFrameImportant[81] = true;
-            Main.tileTable[14] = true;
-            Main.tileTable[18] = true;
-            Main.tileTable[19] = true;
-            Main.tileWaterDeath[4] = true;
-            Main.tileWaterDeath[51] = true;
-            Main.tileLavaDeath[3] = true;
-            Main.tileLavaDeath[5] = true;
-            Main.tileLavaDeath[10] = true;
-            Main.tileLavaDeath[11] = true;
-            Main.tileLavaDeath[12] = true;
-            Main.tileLavaDeath[13] = true;
-            Main.tileLavaDeath[14] = true;
-            Main.tileLavaDeath[15] = true;
-            Main.tileLavaDeath[16] = true;
-            Main.tileLavaDeath[17] = true;
-            Main.tileLavaDeath[18] = true;
-            Main.tileLavaDeath[19] = true;
-            Main.tileLavaDeath[20] = true;
-            Main.tileLavaDeath[27] = true;
-            Main.tileLavaDeath[28] = true;
-            Main.tileLavaDeath[29] = true;
-            Main.tileLavaDeath[32] = true;
-            Main.tileLavaDeath[33] = true;
-            Main.tileLavaDeath[34] = true;
-            Main.tileLavaDeath[35] = true;
-            Main.tileLavaDeath[36] = true;
-            Main.tileLavaDeath[42] = true;
-            Main.tileLavaDeath[49] = true;
-            Main.tileLavaDeath[50] = true;
-            Main.tileLavaDeath[52] = true;
-            Main.tileLavaDeath[55] = true;
-            Main.tileLavaDeath[61] = true;
-            Main.tileLavaDeath[62] = true;
-            Main.tileLavaDeath[69] = true;
-            Main.tileLavaDeath[71] = true;
-            Main.tileLavaDeath[72] = true;
-            Main.tileLavaDeath[73] = true;
-            Main.tileLavaDeath[74] = true;
-            Main.tileLavaDeath[79] = true;
-            Main.tileLavaDeath[80] = true;
-            Main.tileLavaDeath[81] = true;
-            Main.wallHouse[1] = true;
-            Main.wallHouse[4] = true;
-            Main.wallHouse[5] = true;
-            Main.wallHouse[6] = true;
-            Main.wallHouse[10] = true;
-            Main.wallHouse[11] = true;
-            Main.wallHouse[12] = true;
-            Main.tileNoFail[61] = true;
-            Main.tileNoFail[73] = true;
-            Main.tileNoFail[74] = true;
-            Main.tileNoFail[82] = true;
-            Main.tileNoFail[83] = true;
-            Main.tileNoFail[84] = true;
+
+            foreach (int i in new int[] { 3, 24, 28, 32, 51, 52, 61, 62, 69, 71, 73, 74, 82, 83, 84 })
+            {
+                Main.tileCut[i] = true;
+            }
+
+            foreach (int i in new int[] { 82, 83, 84 })
+            {
+                Main.tileAlch[i] = true;
+            }
+
+            foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 24, 26, 27, 28, 29, 
+                31, 33, 34, 35, 36, 42, 50, 55, 61, 71, 72, 73, 74, 77, 78, 79, 81, 82, 83, 84, 85 })
+            {
+                Main.tileFrameImportant[i] = true;
+            }
+
+            foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 27, 28, 29, 32, 33,
+                34, 35, 36, 42, 49, 50, 52, 55, 61, 62, 69, 71, 72, 73, 74, 79, 80, 81})
+            {
+                Main.tileLavaDeath[i] = true;
+            }
+
+            foreach (int i in new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 22, 23, 25, 30, 32, 37, 38, 39, 40, 41, 43, 44, 
+                45, 46, 47, 48, 51, 52, 53, 56, 57, 58, 59, 60, 62, 63, 64, 65, 66, 67, 68, 70, 75, 76 })
+            {
+                Main.tileBlockLight[i] = true;
+            }
+
+            foreach (int i in new int[] { 14, 16, 18, 19 })
+            {
+                Main.tileSolidTop[i] = true;
+            }
+
+            foreach (int i in new int[] { 3, 4, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 27, 50 })
+            {
+                Main.tileNoAttach[i] = true;
+            }
+
+            foreach (int i in new int[] { 14, 18, 19 })
+            {
+                Main.tileTable[i] = true;
+            }
+
+            foreach (int i in new int[] { 4, 51 })
+            {
+                Main.tileWaterDeath[i] = true;
+            }
+
+            foreach (int i in new int[] { 1, 4, 5, 6, 10, 11, 12 })
+            {
+                Main.wallHouse[i] = true;
+            }
+
+            foreach (int i in new int[] { 3, 4, 24, 32, 50, 61, 73, 74, 82, 83, 84 })
+            {
+                Main.tileNoFail[i] = true;
+            }
+
+            foreach (int i in new int[] {0, 1, 2, 6, 7, 8, 9, 10, 19, 22, 23, 25, 30, 37, 38, 39, 40, 41, 43, 44, 45, 46,
+                47, 48, 53, 54, 56, 57, 58, 59, 60, 63, 64, 65, 66, 67, 68, 70, 75, 76})
+            {
+                Main.tileSolid[i] = true;
+            }
+
+            foreach (int i in new int[] { 3, 4, 5, 11 })
+            {
+                Main.tileSolid[i] = false;
+            }
+
+            foreach (int i in new int[] { 63, 64, 65, 66, 67, 68 })
+            {
+                Main.tileStone[i] = false;
+            }
+
+            foreach (int i in new int[] { 41, 43, 44 })
+            {
+                Main.tileDungeon[i] = true;
+            }
 
             for (int j = 0; j < Main.maxMenuItems; j++)
             {
@@ -658,17 +506,20 @@ namespace Terraria_Server
             {
                 Main.liquidBuffer[num11] = new LiquidBuffer();
             }
+
             this.shops[0] = new Chest();
             this.shops[1] = new MerchantShop();
             this.shops[2] = new ArmsDealerShop();
             this.shops[3] = new DryadShop();
             this.shops[4] = new DemolitionistShop();
             this.shops[5] = new ClothierShop();
+
             Main.teamColor[0] = new Color(255, 255, 255);
             Main.teamColor[1] = new Color(230, 40, 20);
             Main.teamColor[2] = new Color(20, 200, 30);
             Main.teamColor[3] = new Color(75, 90, 255);
             Main.teamColor[4] = new Color(200, 180, 0);
+
 			Netplay.Init();
 		}
 
@@ -1055,33 +906,29 @@ namespace Terraria_Server
                                 {
                                     num8++;
                                 }
-                                if (Main.npc[i].type == 17)
+                                switch (Main.npc[i].type)
                                 {
-                                    num3++;
-                                }
-                                if (Main.npc[i].type == 18)
-                                {
-                                    num4++;
-                                }
-                                if (Main.npc[i].type == 19)
-                                {
-                                    num6++;
-                                }
-                                if (Main.npc[i].type == 20)
-                                {
-                                    num5++;
-                                }
-                                if (Main.npc[i].type == 22)
-                                {
-                                    num7++;
-                                }
-                                if (Main.npc[i].type == 38)
-                                {
-                                    num9++;
-                                }
-                                if (Main.npc[i].type == 54)
-                                {
-                                    num10++;
+                                    case 17:
+                                        num3++;
+                                        break;
+                                    case 18:
+                                        num4++;
+                                        break;
+                                    case 19:
+                                        num6++;
+                                        break;
+                                    case 20:
+                                        num5++;
+                                        break;
+                                    case 22:
+                                        num7++;
+                                        break;
+                                    case 38:
+                                        num9++;
+                                        break;
+                                    case 54:
+                                        num10++;
+                                        break;
                                 }
                                 num11++;
                             }
@@ -1135,43 +982,43 @@ namespace Terraria_Server
                                     num13 += num14;
                                 }
                             }
-                            if (WorldGen.spawnNPC == 0 && num7 < 1)
+                            if (num7 < 1)
                             {
                                 WorldGen.spawnNPC = 22;
                             }
-                            if (WorldGen.spawnNPC == 0 && (double)num12 > 5000.0 && num3 < 1)
+                            if ((double)num12 > 5000.0 && num3 < 1)
                             {
                                 WorldGen.spawnNPC = 17;
                             }
-                            if (WorldGen.spawnNPC == 0 && flag2 && num4 < 1)
+                            if (flag2 && num4 < 1)
                             {
                                 WorldGen.spawnNPC = 18;
                             }
-                            if (WorldGen.spawnNPC == 0 && flag3 && num6 < 1)
+                            if (flag3 && num6 < 1)
                             {
                                 WorldGen.spawnNPC = 19;
                             }
-                            if (WorldGen.spawnNPC == 0 && (NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3) && num5 < 1)
+                            if ((NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3) && num5 < 1)
                             {
                                 WorldGen.spawnNPC = 20;
                             }
-                            if (WorldGen.spawnNPC == 0 && flag4 && num3 > 0 && num9 < 1)
+                            if (flag4 && num3 > 0 && num9 < 1)
                             {
                                 WorldGen.spawnNPC = 38;
                             }
-                            if (WorldGen.spawnNPC == 0 && NPC.downedBoss3 && num10 < 1)
+                            if (NPC.downedBoss3 && num10 < 1)
                             {
                                 WorldGen.spawnNPC = 54;
                             }
-                            if (WorldGen.spawnNPC == 0 && num12 > 100000 && num3 < 2 && num2 > 2)
+                            if (num12 > 100000 && num3 < 2 && num2 > 2)
                             {
                                 WorldGen.spawnNPC = 17;
                             }
-                            if (WorldGen.spawnNPC == 0 && num13 >= 20 && num4 < 2 && num2 > 2)
+                            if (num13 >= 20 && num4 < 2 && num2 > 2)
                             {
                                 WorldGen.spawnNPC = 18;
                             }
-                            if (WorldGen.spawnNPC == 0 && num12 > 5000000 && num3 < 3 && num2 > 4)
+                            if (num12 > 5000000 && num3 < 3 && num2 > 4)
                             {
                                 WorldGen.spawnNPC = 17;
                             }

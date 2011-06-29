@@ -18,32 +18,37 @@ namespace Terraria_Server
         public Color color;
         public int alpha;
         public Rectangle frame;
-        public static int NewDust(Vector2 Position, int Width, int Height, int Type, float SpeedX = 0f, float SpeedY = 0f, int Alpha = 0, Color newColor = default(Color), float Scale = 1f)
+
+        public static int NewDust(Vector2 Position, int width, int height, int Type, float SpeedX = 0f, float SpeedY = 0f, int Alpha = 0, Color newColor = default(Color), float Scale = 1f)
         {
             if (WorldGen.gen)
             {
                 return 0;
             }
+
             if (Main.netMode == 2)
             {
                 return 0;
             }
+
             int result = 0;
             int i = 0;
             while (i < 1000)
             {
                 if (!Main.dust[i].active)
                 {
-                    int num = Width;
-                    int num2 = Height;
-                    if (num < 5)
+                    int dustWidth = width;
+                    if (dustWidth < 5)
                     {
-                        num = 5;
+                        dustWidth = 5;
                     }
-                    if (num2 < 5)
+
+                    int dustHeight = height;
+                    if (dustHeight < 5)
                     {
-                        num2 = 5;
+                        dustHeight = 5;
                     }
+
                     result = i;
                     Main.dust[i].fadeIn = 0f;
                     Main.dust[i].active = true;
@@ -51,8 +56,8 @@ namespace Terraria_Server
                     Main.dust[i].noGravity = false;
                     Main.dust[i].color = newColor;
                     Main.dust[i].alpha = Alpha;
-                    Main.dust[i].position.X = Position.X + (float)Main.rand.Next(num - 4) + 4f;
-                    Main.dust[i].position.Y = Position.Y + (float)Main.rand.Next(num2 - 4) + 4f;
+                    Main.dust[i].position.X = Position.X + (float)Main.rand.Next(dustWidth - 4) + 4f;
+                    Main.dust[i].position.Y = Position.Y + (float)Main.rand.Next(dustHeight - 4) + 4f;
                     Main.dust[i].velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + SpeedX;
                     Main.dust[i].velocity.Y = (float)Main.rand.Next(-20, 21) * 0.1f + SpeedY;
                     Main.dust[i].frame.X = 10 * Type;
@@ -63,6 +68,7 @@ namespace Terraria_Server
                     Main.dust[i].scale = 1f + (float)Main.rand.Next(-20, 21) * 0.01f;
                     Main.dust[i].scale *= Scale;
                     Main.dust[i].noLight = false;
+
                     if (Main.dust[i].type == 6 || Main.dust[i].type == 29)
                     {
                         Main.dust[i].velocity.Y = (float)Main.rand.Next(-10, 6) * 0.1f;
@@ -70,6 +76,7 @@ namespace Terraria_Server
                         expr_241_cp_0.velocity.X = expr_241_cp_0.velocity.X * 0.3f;
                         Main.dust[i].scale *= 0.7f;
                     }
+
                     if (Main.dust[i].type == 33)
                     {
                         Main.dust[i].alpha = 170;
@@ -78,18 +85,22 @@ namespace Terraria_Server
                         Dust expr_2B3_cp_0 = Main.dust[i];
                         expr_2B3_cp_0.velocity.Y = expr_2B3_cp_0.velocity.Y + 1f;
                     }
+
                     if (Main.dust[i].type == 41)
                     {
                         Dust expr_2DB = Main.dust[i];
                         expr_2DB.velocity *= 0f;
                     }
+
                     if (Main.dust[i].type != 34 && Main.dust[i].type != 35)
                     {
                         break;
                     }
+
                     Dust expr_31A = Main.dust[i];
                     expr_31A.velocity *= 0.1f;
                     Main.dust[i].velocity.Y = -0.5f;
+
                     if (Main.dust[i].type == 34 && !Collision.WetCollision(new Vector2(Main.dust[i].position.X, Main.dust[i].position.Y - 8f), 4, 4))
                     {
                         Main.dust[i].active = false;
@@ -104,6 +115,7 @@ namespace Terraria_Server
             }
             return result;
         }
+
         public static void UpdateDust()
         {
             Dust.lavaBubbles = 0;
@@ -117,8 +129,10 @@ namespace Terraria_Server
                         {
                             Dust.lavaBubbles++;
                         }
+                        
                         Dust expr_4C = Main.dust[i];
                         expr_4C.position += Main.dust[i].velocity;
+                        
                         if (Main.dust[i].type == 6 || Main.dust[i].type == 29)
                         {
                             if (!Main.dust[i].noGravity)
@@ -139,93 +153,77 @@ namespace Terraria_Server
                                 }
                             }
                         }
-                        else
+                        else if (Main.dust[i].type == 14 || Main.dust[i].type == 16 || Main.dust[i].type == 31)
                         {
-                            if (Main.dust[i].type == 14 || Main.dust[i].type == 16 || Main.dust[i].type == 31)
+                            Dust expr_176_cp_0 = Main.dust[i];
+                            expr_176_cp_0.velocity.Y = expr_176_cp_0.velocity.Y * 0.98f;
+                            Dust expr_193_cp_0 = Main.dust[i];
+                            expr_193_cp_0.velocity.X = expr_193_cp_0.velocity.X * 0.98f;
+                        }
+                        else if (Main.dust[i].type == 32)
+                        {
+                            Main.dust[i].scale -= 0.01f;
+                            Dust expr_1DD_cp_0 = Main.dust[i];
+                            expr_1DD_cp_0.velocity.X = expr_1DD_cp_0.velocity.X * 0.96f;
+                            Dust expr_1FA_cp_0 = Main.dust[i];
+                            expr_1FA_cp_0.velocity.Y = expr_1FA_cp_0.velocity.Y + 0.1f;
+                        }
+                        else if (Main.dust[i].type == 15)
+                        {
+                            Dust expr_3EA_cp_0 = Main.dust[i];
+                            expr_3EA_cp_0.velocity.Y = expr_3EA_cp_0.velocity.Y * 0.98f;
+                            Dust expr_407_cp_0 = Main.dust[i];
+                            expr_407_cp_0.velocity.X = expr_407_cp_0.velocity.X * 0.98f;
+                            float num3 = Main.dust[i].scale;
+                            if (num3 > 1f)
                             {
-                                Dust expr_176_cp_0 = Main.dust[i];
-                                expr_176_cp_0.velocity.Y = expr_176_cp_0.velocity.Y * 0.98f;
-                                Dust expr_193_cp_0 = Main.dust[i];
-                                expr_193_cp_0.velocity.X = expr_193_cp_0.velocity.X * 0.98f;
+                                num3 = 1f;
                             }
-                            else
+                            if (Main.dust[i].noLight)
                             {
-                                if (Main.dust[i].type == 32)
-                                {
-                                    Main.dust[i].scale -= 0.01f;
-                                    Dust expr_1DD_cp_0 = Main.dust[i];
-                                    expr_1DD_cp_0.velocity.X = expr_1DD_cp_0.velocity.X * 0.96f;
-                                    Dust expr_1FA_cp_0 = Main.dust[i];
-                                    expr_1FA_cp_0.velocity.Y = expr_1FA_cp_0.velocity.Y + 0.1f;
-                                }
-                                else
-                                {
-                                    if (Main.dust[i].type == 15)
-                                    {
-                                        Dust expr_3EA_cp_0 = Main.dust[i];
-                                        expr_3EA_cp_0.velocity.Y = expr_3EA_cp_0.velocity.Y * 0.98f;
-                                        Dust expr_407_cp_0 = Main.dust[i];
-                                        expr_407_cp_0.velocity.X = expr_407_cp_0.velocity.X * 0.98f;
-                                        float num3 = Main.dust[i].scale;
-                                        if (num3 > 1f)
-                                        {
-                                            num3 = 1f;
-                                        }
-                                        if (Main.dust[i].noLight)
-                                        {
-                                            num3 *= 0.5f;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (Main.dust[i].type == 20 || Main.dust[i].type == 21)
-                                        {
-                                            Main.dust[i].scale += 0.005f;
-                                            Dust expr_4CB_cp_0 = Main.dust[i];
-                                            expr_4CB_cp_0.velocity.Y = expr_4CB_cp_0.velocity.Y * 0.94f;
-                                            Dust expr_4E8_cp_0 = Main.dust[i];
-                                            expr_4E8_cp_0.velocity.X = expr_4E8_cp_0.velocity.X * 0.94f;
-                                            float num4 = Main.dust[i].scale * 0.8f;
-                                            if (Main.dust[i].type == 21)
-                                            {
-                                                num4 = Main.dust[i].scale * 0.4f;
-                                            }
-                                            if (num4 > 1f)
-                                            {
-                                                num4 = 1f;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (Main.dust[i].type == 27)
-                                            {
-                                                Dust expr_597 = Main.dust[i];
-                                                expr_597.velocity *= 0.94f;
-                                                Main.dust[i].scale += 0.002f;
-                                                float num5 = Main.dust[i].scale;
-                                                if (num5 > 1f)
-                                                {
-                                                    num5 = 1f;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (!Main.dust[i].noGravity && Main.dust[i].type != 41)
-                                                {
-                                                    Dust expr_645_cp_0 = Main.dust[i];
-                                                    expr_645_cp_0.velocity.Y = expr_645_cp_0.velocity.Y + 0.1f;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                num3 *= 0.5f;
                             }
                         }
+                        else if (Main.dust[i].type == 20 || Main.dust[i].type == 21)
+                        {
+                            Main.dust[i].scale += 0.005f;
+                            Dust expr_4CB_cp_0 = Main.dust[i];
+                            expr_4CB_cp_0.velocity.Y = expr_4CB_cp_0.velocity.Y * 0.94f;
+                            Dust expr_4E8_cp_0 = Main.dust[i];
+                            expr_4E8_cp_0.velocity.X = expr_4E8_cp_0.velocity.X * 0.94f;
+                            float num4 = Main.dust[i].scale * 0.8f;
+                            if (Main.dust[i].type == 21)
+                            {
+                                num4 = Main.dust[i].scale * 0.4f;
+                            }
+                            if (num4 > 1f)
+                            {
+                                num4 = 1f;
+                            }
+                        }
+                        else if (Main.dust[i].type == 27)
+                        {
+                            Dust expr_597 = Main.dust[i];
+                            expr_597.velocity *= 0.94f;
+                            Main.dust[i].scale += 0.002f;
+                            float num5 = Main.dust[i].scale;
+                            if (num5 > 1f)
+                            {
+                                num5 = 1f;
+                            }
+                        }
+                        else if (!Main.dust[i].noGravity && Main.dust[i].type != 41)
+                        {
+                            Dust expr_645_cp_0 = Main.dust[i];
+                            expr_645_cp_0.velocity.Y = expr_645_cp_0.velocity.Y + 0.1f;
+                        }
                     }
+
                     if (Main.dust[i].type == 5 && Main.dust[i].noGravity)
                     {
                         Main.dust[i].scale -= 0.04f;
                     }
+
                     if (Main.dust[i].type == 33)
                     {
                         bool flag = Collision.WetCollision(new Vector2(Main.dust[i].position.X, Main.dust[i].position.Y), 4, 4);
