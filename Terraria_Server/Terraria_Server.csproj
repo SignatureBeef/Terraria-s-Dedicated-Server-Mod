@@ -103,9 +103,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\MessageEvent.cs" />
-    <Compile Include="Items\Item.cs" />
-    <Compile Include="Items\ItemRepository.cs" />
-    <Compile Include="Items\Items.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\ConnectionResponseMessage.cs" />
@@ -232,11 +229,6 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Items.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

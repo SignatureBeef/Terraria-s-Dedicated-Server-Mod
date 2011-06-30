@@ -3,7 +3,6 @@ using Terraria_Server.Commands;
 using System;
 using System.IO;
 using System.Diagnostics;
-using Terraria_Server.Items;
 
 namespace Terraria_Server
 {
