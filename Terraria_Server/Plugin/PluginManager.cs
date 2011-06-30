@@ -212,7 +212,7 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.TILE_CHANGE:
                                 {
-                                    plugin.onTileBreak((PlayerTileChangeEvent)Event);
+                                    plugin.onTileChange((PlayerTileChangeEvent)Event);
                                     break;
                                 }
                             case Hooks.PLAYER_HURT:
