@@ -17,6 +17,7 @@ namespace TDSMPlugin
         {
             setSpawningCancelled(isSpawningCancelled());
             setTileBreakage(getTileBreakage());
+            setExplosivesAllowed(isExplosivesAllowed());
         }
 
         public bool isSpawningCancelled()
@@ -53,6 +54,24 @@ namespace TDSMPlugin
         public void setTileBreakage(bool TileBreakage)
         {
             base.setValue("tilebreakage", TileBreakage.ToString());
+        }
+
+        public bool isExplosivesAllowed()
+        {
+            string Explosives = base.getValue("allowexplosives");
+            if (Explosives == null || Explosives.Trim().Length < 0)
+            {
+                return true;
+            }
+            else
+            {
+                return Boolean.Parse(Explosives);
+            }
+        }
+
+        public void setExplosivesAllowed(bool Explosives)
+        {
+            base.setValue("allowexplosives", Explosives.ToString());
         }
     }
 }

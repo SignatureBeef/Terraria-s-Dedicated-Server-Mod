@@ -32,7 +32,5 @@ namespace Terraria_Server.Events
             messageSender = Sender;
         }
 
-
-
     }
 }

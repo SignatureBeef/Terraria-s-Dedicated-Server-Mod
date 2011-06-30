@@ -27,6 +27,7 @@ namespace TDSMExamplePlugin
         public Properties properties;
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
+        public bool explosivesAllowed = false;
         public bool isEnabled = false;
 
         public override void Load()
@@ -54,6 +55,7 @@ namespace TDSMExamplePlugin
             //read properties data
             spawningAllowed = properties.isSpawningCancelled();
             tileBreakageAllowed = properties.getTileBreakage();
+            explosivesAllowed = properties.isExplosivesAllowed();
 
             isEnabled = true;
         }
@@ -62,8 +64,9 @@ namespace TDSMExamplePlugin
         {
             Program.tConsole.WriteLine(base.Name + " enabled.");
             //Register Hooks
-            this.registerHook(Hooks.TILE_BREAK);
+            this.registerHook(Hooks.TILE_CHANGE);
             this.registerHook(Hooks.PLAYER_COMMAND);
+            this.registerHook(Hooks.PLAYER_PROJECTILE);
 
             Main.stopSpawns = isEnabled;
             if (isEnabled)
@@ -99,11 +102,25 @@ namespace TDSMExamplePlugin
             }
         }
 
-        public override void onTileBreak(PlayerTileBreakEvent Event)
+        public override void onTileBreak(PlayerTileChangeEvent Event)
         {
             if (isEnabled == false || tileBreakageAllowed == false) { return; }
             Event.setCancelled(true);
             Program.tConsole.WriteLine("[TSDM Plugin] Cancelled Tile change of Player: " + ((Player)Event.getSender()).name);
+        }
+
+        public override void onPlayerProjectileUse(ProjectileEvent Event)
+        {
+            if (isEnabled == false) { return; }
+            if(!explosivesAllowed) {
+
+                int type = Event.getProjectile().type;
+                if (type == 28 || type ==  29 || type == 37)
+                {
+                    Event.setCancelled(true);
+                    Program.tConsole.WriteLine("[TSDM Plugin] Cancelled Explosive usage of Player: " + ((Player)Event.getSender()).name);
+                }
+            }
         }
         
     }

@@ -210,7 +210,7 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerPartyChange((PartyChangeEvent)Event);
                                     break;
                                 }
-                            case Hooks.TILE_BREAK:
+                            case Hooks.TILE_CHANGE:
                                 {
                                     plugin.onTileBreak((PlayerTileChangeEvent)Event);
                                     break;
@@ -243,6 +243,11 @@ namespace Terraria_Server.Plugin
                             case Hooks.PLAYER_EDITSIGN:
                                 {
                                     plugin.onPlayerEditSign((PlayerEditSignEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_PROJECTILE:
+                                {
+                                    plugin.onPlayerProjectileUse((ProjectileEvent)Event);
                                     break;
                                 }
                         }

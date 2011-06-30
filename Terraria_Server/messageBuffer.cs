@@ -807,7 +807,7 @@ namespace Terraria_Server
                                                                             Event.setTile(tile);
                                                                             Event.setTileType(b6);
                                                                             Event.setTilePos(new Vector2(num27, num28));
-                                                                            Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, Event);
+                                                                            Program.server.getPluginManager().processHook(Hooks.TILE_CHANGE, Event);
                                                                             if (Event.getCancelled())
                                                                             {
                                                                                 NetMessage.SendTileSquare(this.whoAmI, num27, num28, 1);
@@ -1360,6 +1360,31 @@ namespace Terraria_Server
 																														}
 																													}
 																												}
+
+                                                                                                                Projectile projectile = new Projectile();
+
+
+                                                                                                                projectile.identity = (int)num51;
+                                                                                                                projectile.position.X = x6;
+                                                                                                                projectile.position.Y = y5;
+                                                                                                                projectile.velocity.X = x7;
+                                                                                                                projectile.velocity.Y = y6;
+                                                                                                                projectile.damage = (int)damage;
+                                                                                                                projectile.type = (int)b18;
+                                                                                                                projectile.owner = (int)b17;
+                                                                                                                projectile.knockBack = knockBack;
+
+                                                                                                                ProjectileEvent playerEvent = new ProjectileEvent();
+                                                                                                                playerEvent.setSender(Main.player[Main.myPlayer]);
+                                                                                                                playerEvent.setProjectile(Main.projectile[num53]);
+                                                                                                                Program.server.getPluginManager().processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
+                                                                                                                if (playerEvent.getCancelled())
+                                                                                                                {
+                                                                                                                    return;
+                                                                                                                }
+
+                                                                                                                Main.projectile[num53] = projectile;
+
 																												if (!Main.projectile[num53].active || Main.projectile[num53].type != (int)b18)
 																												{
 																													Main.projectile[num53].SetDefaults((int)b18);
@@ -1368,15 +1393,7 @@ namespace Terraria_Server
                                                                                                                         Netplay.serverSock[this.whoAmI].spamProjectile += 1f;
                                                                                                                     }
 																												}
-																												Main.projectile[num53].identity = (int)num51;
-																												Main.projectile[num53].position.X = x6;
-																												Main.projectile[num53].position.Y = y5;
-																												Main.projectile[num53].velocity.X = x7;
-																												Main.projectile[num53].velocity.Y = y6;
-																												Main.projectile[num53].damage = (int)damage;
-																												Main.projectile[num53].type = (int)b18;
-																												Main.projectile[num53].owner = (int)b17;
-																												Main.projectile[num53].knockBack = knockBack;
+
 																												for (int num56 = 0; num56 < Projectile.maxAI; num56++)
 																												{
 																													Main.projectile[num53].ai[num56] = array2[num56];
