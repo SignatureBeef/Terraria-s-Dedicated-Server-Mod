@@ -109,7 +109,7 @@ namespace TDSMExamplePlugin
             Program.tConsole.WriteLine("[TSDM Plugin] Cancelled Tile change of Player: " + ((Player)Event.getSender()).name);
         }
 
-        public override void onPlayerProjectileUse(ProjectileEvent Event)
+        public override void onPlayerProjectileUse(PlayerProjectileEvent Event)
         {
             if (isEnabled == false) { return; }
             if(!explosivesAllowed) {
