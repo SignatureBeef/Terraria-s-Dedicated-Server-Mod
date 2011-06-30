@@ -154,7 +154,6 @@
     <Compile Include="Shops\DemolitionistShop.cs" />
     <Compile Include="Shops\DryadShop.cs" />
     <Compile Include="Events\BasePlayerEvent.cs" />
-    <Compile Include="Events\ChestOpenEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
     <Compile Include="Events\PlayerDestroySignEvent.cs" />
     <Compile Include="Events\PlayerEditSignEvent.cs" />

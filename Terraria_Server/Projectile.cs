@@ -2937,12 +2937,12 @@ namespace Terraria_Server
                                                                             {
                                                                                 //Need to check if this works :3
                                                                                 PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
-                                                                                playerEvent.setSender(Main.player[Main.myPlayer]);
+                                                                                playerEvent.Sender = Main.player[Main.myPlayer];
                                                                                 playerEvent.setSign(Main.sign[num80]);
                                                                                 playerEvent.setText(this.miscText);
                                                                                 playerEvent.setIsPlayer(false);
                                                                                 Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
-                                                                                if (playerEvent.getCancelled())
+                                                                                if (playerEvent.Cancelled)
                                                                                 {
                                                                                     return;
                                                                                 }

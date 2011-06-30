@@ -46,12 +46,12 @@ namespace Terraria_Server.Messages
             tile.tileX = x;
             tile.tileY = y;
 
-            TileBreakEvent breakEvent = new TileBreakEvent();
+            PlayerTileChangeEvent breakEvent = new PlayerTileChangeEvent();
             breakEvent.Sender = Main.player[whoAmI];
             breakEvent.Tile = tile;
             breakEvent.Type = tileType;
             breakEvent.Position = new Vector2(x, y);
-            Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, breakEvent);
+            Program.server.getPluginManager().processHook(Hooks.TILE_CHANGE, breakEvent);
             if (breakEvent.Cancelled)
             {
                 NetMessage.SendTileSquare(whoAmI, x, y, 1);

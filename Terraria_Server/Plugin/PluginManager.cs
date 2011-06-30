@@ -208,7 +208,7 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.TILE_CHANGE:
                                 {
-                                    plugin.onTileBreak((TileBreakEvent)hookEvent);
+                                    plugin.onTileChange((PlayerTileChangeEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_HURT:
@@ -218,7 +218,7 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.PLAYER_CHEST:
                                 {
-                                    plugin.onPlayerOpenChest((ChestOpenEvent)hookEvent);
+                                    plugin.onPlayerOpenChest((PlayerChestOpenEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_STATEUPDATE:
@@ -238,12 +238,12 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.PLAYER_EDITSIGN:
                                 {
-                                    plugin.onPlayerEditSign((PlayerEditSignEvent)Event);
+                                    plugin.onPlayerEditSign((PlayerEditSignEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_PROJECTILE:
                                 {
-                                    plugin.onPlayerProjectileUse((PlayerProjectileEvent)Event);
+                                    plugin.onPlayerProjectileUse((PlayerProjectileEvent)hookEvent);
                                     break;
                                 }
                         }

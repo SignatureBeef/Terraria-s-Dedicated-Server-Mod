@@ -27,7 +27,7 @@ namespace Terraria_Server.Messages
             int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             int chestIndex = Chest.FindChest(x, y);
-            var chestEvent = new ChestOpenEvent();
+            var chestEvent = new PlayerChestOpenEvent();
             chestEvent.Sender = Main.player[whoAmI];
             chestEvent.ID = chestIndex;
             Program.server.getPluginManager().processHook(Hooks.PLAYER_CHEST, chestEvent);

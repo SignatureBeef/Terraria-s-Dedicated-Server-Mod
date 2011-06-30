@@ -27,7 +27,7 @@ namespace Terraria_Server.Plugin
         public abstract void Enable();
         public abstract void Disable();
 
-        public virtual void onPlayerChat(PlayerChatEvent Event) { }
+        public virtual void onPlayerChat(MessageEvent Event) { }
         public virtual void onPlayerCommand(PlayerCommandEvent Event) { }
         public virtual void onPlayerCommandProcess(ConsoleCommandEvent Event) { }
         public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
