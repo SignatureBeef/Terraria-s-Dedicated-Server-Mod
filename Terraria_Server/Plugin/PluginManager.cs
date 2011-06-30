@@ -183,7 +183,7 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.PLAYER_CHAT:
                                 {
-                                    plugin.onPlayerChat((PlayerChatEvent)hookEvent);
+                                    plugin.onPlayerChat((MessageEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_PRELOGIN:

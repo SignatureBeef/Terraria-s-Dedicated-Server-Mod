@@ -7,7 +7,7 @@ using System;
 using Terraria_Server.Shops;
 using Terraria_Server.Misc;
 
-namespace Terraria_Server
+namespace Terraria_Server.Messages
 {
     public class MessageBuffer
     {
@@ -78,13 +78,13 @@ namespace Terraria_Server
                 switch (bufferData)
                 {
                     case 2:
-                        disconnect(start, length);
+                        Disconnect(start, length);
                         break;
                     case 3:
-                        syncInventory(start);
+                        SyncInventory(start);
                         break;
                     case 7:
-                        syncWorldTime(start, length, num);
+                        SyncWorldTime(start, length, num);
                         break;
                     case 9:
                         method9(start, length);
@@ -117,7 +117,7 @@ namespace Terraria_Server
                 switch (bufferData)
                 {
                     case 1:
-                        login(start, length);
+                        Login(start, length);
                         break;
                     case 6:
                         method6();
@@ -255,7 +255,7 @@ namespace Terraria_Server
         }
 
 
-        private void login(int start, int length)
+        private void Login(int start, int length)
         {
             ServerSock serverSock = Netplay.serverSock[whoAmI];
             PlayerLoginEvent loginEvent = new PlayerLoginEvent();
@@ -304,14 +304,14 @@ namespace Terraria_Server
         }
 
 
-        private void disconnect(int start, int length)
+        private void Disconnect(int start, int length)
         {
             Netplay.disconnect = true;
             Main.statusText = Encoding.ASCII.GetString(readBuffer, start + 1, length - 1);
         }
 
 
-        private void syncInventory(int start)
+        private void SyncInventory(int start)
         {
             if (Netplay.clientSock.state == 1)
             {
@@ -483,7 +483,7 @@ namespace Terraria_Server
         }
 
 
-        private void syncWorldTime(int start, int length, int num)
+        private void SyncWorldTime(int start, int length, int num)
         {
             Main.time = (double)BitConverter.ToInt32(readBuffer, num);
             num += 4;
@@ -1268,7 +1268,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (!ProcessMessage(new PlayerChatEvent(), chat, Hooks.PLAYER_CHAT))
+                        if (!ProcessMessage(new MessageEvent(), chat, Hooks.PLAYER_CHAT))
                         {
                             return;
                         }
@@ -1285,7 +1285,7 @@ namespace Terraria_Server
         }
 
 
-        private bool ProcessMessage(BaseMessageEvent messageEvent, String text, Hooks hook)
+        private bool ProcessMessage(MessageEvent messageEvent, String text, Hooks hook)
         {
             messageEvent.Message = text;
             messageEvent.Sender = Main.player[whoAmI];
@@ -1723,6 +1723,7 @@ namespace Terraria_Server
             }
         }
 
+
         private void useMana(int num)
         {
             int playerIndex = (int)readBuffer[num++];
@@ -1884,6 +1885,7 @@ namespace Terraria_Server
             }
         }
 
+
         private void FlowLiquid(int num)
         {
             int x = BitConverter.ToInt32(readBuffer, num);
@@ -1937,6 +1939,7 @@ namespace Terraria_Server
             }
         }
 
+
         private void Buffs(int num)
         {
             int playerIndex = (int)readBuffer[num++];
@@ -1968,6 +1971,7 @@ namespace Terraria_Server
                 NetMessage.SendData(50, -1, whoAmI, "", playerIndex);
             }
         }
+
 
         private void SummonSkeletron(int num)
         {

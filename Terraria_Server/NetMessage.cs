@@ -2,6 +2,7 @@
 using System;
 using System.Text;
 using Terraria_Server.Events;
+using Terraria_Server.Messages;
 namespace Terraria_Server
 {
 	public class NetMessage

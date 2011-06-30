@@ -102,7 +102,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Events\BaseMessageEvent.cs" />
+    <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Items\Item.cs" />
     <Compile Include="Items\ItemRepository.cs" />
     <Compile Include="Items\Items.cs" />
@@ -118,7 +118,6 @@
     <Compile Include="Events\PlayerLoginEvent.cs" />
     <Compile Include="Events\PlayerLogoutEvent.cs" />
     <Compile Include="Events\PartyChangeEvent.cs" />
-    <Compile Include="Events\PlayerChatEvent.cs" />
     <Compile Include="Events\PlayerCommandEvent.cs" />
     <Compile Include="Shops\Chest.cs" />
     <Compile Include="ClientSock.cs" />
@@ -139,7 +138,7 @@
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />
     <Compile Include="Main.cs" />
-    <Compile Include="MessageBuffer.cs" />
+    <Compile Include="Messages\MessageBuffer.cs" />
     <Compile Include="NetMessage.cs" />
     <Compile Include="Netplay.cs" />
     <Compile Include="NPC.cs" />

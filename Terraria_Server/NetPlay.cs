@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using System.Net;
 using System;
 using System.Threading;
+using Terraria_Server.Messages;
 namespace Terraria_Server
 {
     public class Netplay
