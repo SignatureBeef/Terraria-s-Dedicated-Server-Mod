@@ -99,7 +99,7 @@ namespace TDSMExamplePlugin
             }
         }
 
-        public override void onTileBreak(TileBreakEvent Event)
+        public override void onTileBreak(PlayerTileBreakEvent Event)
         {
             if (isEnabled == false || tileBreakageAllowed == false) { return; }
             Event.setCancelled(true);

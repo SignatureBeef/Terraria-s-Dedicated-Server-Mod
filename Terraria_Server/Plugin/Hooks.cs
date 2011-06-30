@@ -19,6 +19,8 @@ namespace Terraria_Server.Plugin
         PLAYER_CHEST,
         PLAYER_STATEUPDATE,
         PLAYER_DEATH,
-        DOOR_STATECHANGE
+        DOOR_STATECHANGE,
+        PLAYER_EDITSIGN,
+        //PLAYER_DESTROYSIGN
     }
 }

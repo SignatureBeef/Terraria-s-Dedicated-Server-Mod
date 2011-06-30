@@ -104,8 +104,10 @@
   <ItemGroup>
     <Compile Include="Commands\ConsoleSender.cs" />
     <Compile Include="Commands\Sender.cs" />
-    <Compile Include="Events\ChestOpenEvent.cs" />
+    <Compile Include="Events\PlayerChestOpenEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
+    <Compile Include="Events\PlayerDestroySignEvent.cs" />
+    <Compile Include="Events\PlayerEditSignEvent.cs" />
     <Compile Include="Events\PlayerLoginEvent.cs" />
     <Compile Include="Events\PlayerLogoutEvent.cs" />
     <Compile Include="Events\PartyChangeEvent.cs" />
@@ -123,7 +125,7 @@
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\PlayerHurtEvent.cs" />
     <Compile Include="Events\PlayerStateUpdateEvent.cs" />
-    <Compile Include="Events\TileBreakEvent.cs" />
+    <Compile Include="Events\PlayerTileChangeEvent.cs" />
     <Compile Include="Gore.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />

@@ -87,7 +87,6 @@ namespace Terraria_Server.Commands
                         }
 
                         Program.server.notifyOps("Stopping Server...");
-                        Program.tConsole.WriteLine("Stopping Server...");
                         Commands.Exit(sender.getServer());
                         break;
                     }
@@ -104,7 +103,6 @@ namespace Terraria_Server.Commands
                         }
 
                         Program.server.notifyOps("Reloading Plugins.");
-                        Program.tConsole.WriteLine("Reloading Plugins.");
                         Commands.Reload(sender.getServer());
                         break;
                     }

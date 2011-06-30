@@ -802,7 +802,7 @@ namespace Terraria_Server
                                                                             tile.tileX = num27;
                                                                             tile.tileY = num28;
 
-                                                                            TileBreakEvent Event = new TileBreakEvent();
+                                                                            PlayerTileChangeEvent Event = new PlayerTileChangeEvent();
                                                                             Event.setSender(Main.player[this.whoAmI]);
                                                                             Event.setTile(tile);
                                                                             Event.setTileType(b6);
@@ -837,7 +837,7 @@ namespace Terraria_Server
                                                                             }
                                                                             if (b5 == 0)
                                                                             {
-                                                                                WorldGen.KillTile(num27, num28, flag4, false, false);
+                                                                                WorldGen.KillTile(num27, num28, flag4, false, false, Main.player[this.whoAmI]);
                                                                             }
                                                                             else
                                                                             {
@@ -1482,7 +1482,7 @@ namespace Terraria_Server
 																																	int y7 = BitConverter.ToInt32(this.readBuffer, num);
 																																	num += 4;
 																																	int num63 = Chest.FindChest(x8, y7);
-                                                                                                                                    var Event = new ChestOpenEvent();
+                                                                                                                                    var Event = new PlayerChestOpenEvent();
                                                                                                                                     Event.setSender(Main.player[whoAmI]);
                                                                                                                                     Event.setChestID(num63);
                                                                                                                                     Program.server.getPluginManager().processHook(Hooks.PLAYER_CHEST, Event);
@@ -1924,6 +1924,17 @@ namespace Terraria_Server
                                                                                                                                                                                         Main.sign[num88] = new Sign();
                                                                                                                                                                                         Main.sign[num88].x = x9;
                                                                                                                                                                                         Main.sign[num88].y = y8;
+
+                                                                                                                                                                                        PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
+                                                                                                                                                                                        playerEvent.setSender(Main.player[Main.myPlayer]);
+                                                                                                                                                                                        playerEvent.setSign(Main.sign[num88]);
+                                                                                                                                                                                        playerEvent.setText(string11);
+                                                                                                                                                                                        Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
+                                                                                                                                                                                        if (playerEvent.getCancelled())
+                                                                                                                                                                                        {
+                                                                                                                                                                                            return;
+                                                                                                                                                                                        }
+
                                                                                                                                                                                         Sign.TextSign(num88, string11);
                                                                                                                                                                                         if (Main.netMode == 1 && Main.sign[num88] != null && num88 != Main.player[Main.myPlayer].sign)
                                                                                                                                                                                         {
