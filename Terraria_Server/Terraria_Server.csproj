@@ -117,7 +117,7 @@
     <Compile Include="ClientSock.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Events\PlayerDeathEvent.cs" />
-    <Compile Include="Events\ProjectileEvent.cs" />
+    <Compile Include="Events\PlayerProjectileEvent.cs" />
     <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandParser.cs" />
