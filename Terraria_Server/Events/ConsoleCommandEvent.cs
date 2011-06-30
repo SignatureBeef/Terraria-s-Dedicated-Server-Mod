@@ -1,8 +1,6 @@
 ﻿namespace Terraria_Server.Events
 {
-    public class ConsoleCommandEvent : Event
+    public class ConsoleCommandEvent : BaseMessageEvent
     {
-        public string Message { get; set; }
-
     }
 }

@@ -1,7 +1,6 @@
 ﻿namespace Terraria_Server.Events
 {
-    public class PlayerChatEvent : Event
+    public class PlayerChatEvent : BaseMessageEvent
     {
-        public string Message { get; set; }
     }
 }

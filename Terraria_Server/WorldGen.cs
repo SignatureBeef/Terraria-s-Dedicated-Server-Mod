@@ -1164,7 +1164,7 @@ namespace Terraria_Server
                                         binaryWriter.Write(true);
                                         binaryWriter.Write(chest.x);
                                         binaryWriter.Write(chest.y);
-                                        for (int l = 0; l < Chest.maxItems; l++)
+                                        for (int l = 0; l < Chest.MAX_ITEMS; l++)
                                         {
                                             binaryWriter.Write((byte)chest.contents[l].Stack);
                                             if (chest.contents[l].Stack > 0)
@@ -1340,7 +1340,7 @@ namespace Terraria_Server
                                     Main.chest[l] = new Chest();
                                     Main.chest[l].x = binaryReader.ReadInt32();
                                     Main.chest[l].y = binaryReader.ReadInt32();
-                                    for (int m = 0; m < Chest.maxItems; m++)
+                                    for (int m = 0; m < Chest.MAX_ITEMS; m++)
                                     {
                                         Main.chest[l].contents[m] = new Item();
                                         byte b = binaryReader.ReadByte();

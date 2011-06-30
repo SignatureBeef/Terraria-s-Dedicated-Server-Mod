@@ -11,35 +11,35 @@ namespace Terraria_Server
 {
     public class MessageBuffer
     {
-        public const int readBufferMax = 65535;
-        public const int writeBufferMax = 65535;
+        public const int BUFFER_MAX = 65535;
+
+        private const int MAX_HAIR_ID = 17;
+
         public bool broadcast;
-        public byte[] readBuffer = new byte[65535];
-        public byte[] writeBuffer = new byte[65535];
-        public bool writeLocked;
+        public bool checkBytes;
+
+        public byte[] readBuffer;
+        public byte[] writeBuffer;
+
         public int messageLength;
+        public int spamCount;
         public int totalData;
         public int whoAmI;
-        public int spamCount;
-        public int maxSpam;
-        public bool checkBytes;
 
         public void Reset()
         {
-            this.writeBuffer = new byte[65535];
-            this.writeLocked = false;
-            this.messageLength = 0;
-            this.totalData = 0;
-            this.spamCount = 0;
-            this.broadcast = false;
-            this.checkBytes = false;
+            readBuffer = new byte[BUFFER_MAX];
+            writeBuffer = new byte[BUFFER_MAX];
+            messageLength = 0;
+            totalData = 0;
+            spamCount = 0;
         }
 
         public void GetData(int start, int length)
         {
-            if (this.whoAmI < 256)
+            if (whoAmI < 256)
             {
-                Netplay.serverSock[this.whoAmI].timeOut = 0;
+                Netplay.serverSock[whoAmI].timeOut = 0;
             }
             else
             {
@@ -47,38 +47,32 @@ namespace Terraria_Server
             }
 
             int num = start + 1;
-            byte bufferData = this.readBuffer[start];
+            byte bufferData = readBuffer[start];
 
             if (Main.netMode == 1 && Netplay.clientSock.statusMax > 0)
             {
                 Netplay.clientSock.statusCount++;
             }
 
-            if (Main.verboseNetplay)
-            {
-                for (int j = start; j < start + length; j++)
-                {
-                    byte arg_85_0 = this.readBuffer[j];
-                }
-            }
-
             if (Main.netMode == 2)
             {
                 if (bufferData != 38)
                 {
-                    if (Netplay.serverSock[this.whoAmI].state == -1)
+                    if (Netplay.serverSock[whoAmI].state == -1)
                     {
-                        NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f);
+                        NetMessage.SendData(2, whoAmI, -1, "Incorrect password.");
                         return;
                     }
 
-                    if (Netplay.serverSock[this.whoAmI].state < 10 && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
+                    if (Netplay.serverSock[whoAmI].state < 10 && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
                     {
-                        NetMessage.BootPlayer(this.whoAmI, "Invalid operation at this state.");
+                        NetMessage.BootPlayer(whoAmI, "Invalid operation at this state.");
                     }
                 }
             }
 
+            //Certain events are only processed under specific net modes. Check for these modes first.
+            bool dataSkipped = false;
             if (Main.netMode == 1)
             {
                 switch (bufferData)
@@ -87,31 +81,34 @@ namespace Terraria_Server
                         disconnect(start, length);
                         break;
                     case 3:
-                        method3(start);
+                        syncInventory(start);
                         break;
                     case 7:
-                        method7(start, length, num);
+                        syncWorldTime(start, length, num);
                         break;
                     case 9:
                         method9(start, length);
                         break;
                     case 10:
-                        method10(start, num, bufferData);
+                        processTiles(start, num, bufferData);
                         break;
                     case 11:
                         method11(num);
                         break;
                     case 14:
-                        method14(num);
+                        activatePlayer(num);
                         break;
                     case 23:
-                        method23(start, length, num);
+                        processNPCs(start, length, num);
                         break;
                     case 37:
-                        method37();
+                        isAutoPass();
                         break;
                     case 39:
-                        method39(num);
+                        disownItem(num);
+                        break;
+                    default:
+                        dataSkipped = true;
                         break;
                 }
             }
@@ -126,410 +123,391 @@ namespace Terraria_Server
                         method6();
                         break;
                     case 8:
-                        method8(num);
+                        updateTileData(num);
                         break;
                     case 15:
-                        method15();
+                        syncPlayers();
                         break;
                     case 31:
-                        method31(num);
+                        useChest(num);
                         break;
                     case 34:
-                        method34(num);
+                        killTile(num);
                         break;
                     case 38:
-                        method38(start, length, num);
+                        verifyPassword(start, length, num);
                         break;
                     case 46:
-                        method46(num);
+                        ReadSign(num);
+                        break;
+                    default:
+                        dataSkipped = true;
                         break;
                 }
             }
 
-            switch (bufferData)
+            /*
+             * If the message was not already caught it isn't specific to a certain net mode
+             * and should be processed as such.
+            */
+            if (dataSkipped)
             {
-                case 4:
-                    method4(start, length, num);
-                    break;
-                case 5:
-                    method5(start, length);
-                    break;
-                case 12:
-                    method12(num);
-                    break;
-                case 13:
-                    method13(num);
-                    break;
-                case 16:
-                    method16(num);
-                    break;
-                case 17:
-                    method17(num);
-                    break;
-                case 19:
-                    method19(num);
-                    break;
-                case 20:
-                    method20(start, num, bufferData);
-                    break;
-                case 21:
-                    method21(start, length, num);
-                    break;
-                case 22:
-                    method22(num);
-                    break;
-                case 24:
-                    method24(num);
-                    break;
-                case 25:
-                    method25(start, length);
-                    break;
-                case (int)Packet.STRIKE_PLAYER:
-                    methodStrike(start, length, num);
-                    break;
-                case (int)Packet.PROJECTILE:
-                    methodProjectile(num);
-                    break;
-                case 28:
-                    method28(num);
-                    break;
-                case 29:
-                    method29(num);
-                    break;
-                case 30:
-                    method30(num);
-                    break;
-                case 32:
-                    method32(start, length, num);
-                    break;
-                case 33:
-                    method33(num);
-                    break;
-                case 35:
-                    method35(num);
-                    break;
-                case 36:
-                    method36(num);
-                    break;
-                case 40:
-                    method40(num);
-                    break;
-                case 41:
-                    method41(num);
-                    break;
-                case 42:
-                    method42(num);
-                    break;
-                case 43:
-                    method43(num);
-                    break;
-                case 44:
-                    method44(start, length, num);
-                    break;
-                case 45:
-                    method45(num);
-                    break;
-                case 47:
-                    method47(start, length, num);
-                    break;
-                case 48:
-                    method48(num);
-                    break;
-                case 49:
-                    method49();
-                    break;
-                case 50:
-                    method50(num);
-                    break;
-                case 51:
-                    method51(num);
-                    break;
+                switch (bufferData)
+                {
+                    case 4:
+                        syncPlayer(start, length, num);
+                        break;
+                    case 5:
+                        syncStacks(start, length);
+                        break;
+                    case 12:
+                        spawnPlayer(num);
+                        break;
+                    case 13:
+                        syncPlayerInput(num);
+                        break;
+                    case 16:
+                        checkPlayerDeath(num);
+                        break;
+                    case 17:
+                        modTile(num);
+                        break;
+                    case 19:
+                        syncDoor(num);
+                        break;
+                    case 20:
+                        processTiles2(start, num, bufferData);
+                        break;
+                    case 21:
+                        moveItem(start, length, num);
+                        break;
+                    case 22:
+                        itemOwner(num);
+                        break;
+                    case 24:
+                        playerAttackNPC(num);
+                        break;
+                    case 25:
+                        processMessageEvent(start, length);
+                        break;
+                    case (int)Packet.STRIKE_PLAYER:
+                        processStrike(start, length, num);
+                        break;
+                    case (int)Packet.PROJECTILE:
+                        processProjectile(num);
+                        break;
+                    case 28:
+                        processNPCDamage(num);
+                        break;
+                    case 29:
+                        killProjectile(num);
+                        break;
+                    case 30:
+                        switchPvP(num);
+                        break;
+                    case 32:
+                        addToChest(start, length, num);
+                        break;
+                    case 33:
+                        manageInventory(num);
+                        break;
+                    case 35:
+                        heal(num);
+                        break;
+                    case 36:
+                        enterZone(num);
+                        break;
+                    case 40:
+                        talkToNPC(num);
+                        break;
+                    case 41:
+                        rotateItem(num);
+                        break;
+                    case 42:
+                        setMana(num);
+                        break;
+                    case 43:
+                        useMana(num);
+                        break;
+                    case 44:
+                        pvpKill(start, length, num);
+                        break;
+                    case 45:
+                        joinParty(num);
+                        break;
+                    case 47:
+                        WriteSign(start, length, num);
+                        break;
+                    case 48:
+                        FlowLiquid(num);
+                        break;
+                    case 49:
+                        SpawnPlayerAlt();
+                        break;
+                    case 50:
+                        Buffs(num);
+                        break;
+                    case 51:
+                        SummonSkeletron(num);
+                        break;
+                }
             }
         }
 
+
         private void login(int start, int length)
         {
-            PlayerLoginEvent Event = new PlayerLoginEvent();
-            Event.Socket = Netplay.serverSock[this.whoAmI];
-            Event.Sender = Main.player[this.whoAmI];
-            Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, Event);
-            if (Event.Cancelled)
+            ServerSock serverSock = Netplay.serverSock[whoAmI];
+            PlayerLoginEvent loginEvent = new PlayerLoginEvent();
+            loginEvent.Socket = serverSock;
+            loginEvent.Sender = Main.player[whoAmI];
+            Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, loginEvent);
+            if (loginEvent.Cancelled)
             {
-                NetMessage.SendData(2, this.whoAmI, -1, "Disconnected By Server.", 0, 0f, 0f, 0f);
+                NetMessage.SendData(2, whoAmI, -1, "Disconnected By Server.");
                 return;
             }
 
-            if (Program.server.BanList.containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]))
+            String clientName = serverSock.tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0];
+
+            if (Program.server.BanList.containsException(clientName))
             {
-                NetMessage.SendData(2, this.whoAmI, -1, "You are banned from this Server.", 0, 0f, 0f, 0f);
+                NetMessage.SendData(2, whoAmI, -1, "You are banned from this Server.");
                 return;
             }
 
-            if (Program.properties.UseWhiteList && !Program.server.WhiteList.containsException(Netplay.serverSock[this.whoAmI].tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]))
+            if (Program.properties.UseWhiteList && !Program.server.WhiteList.containsException(clientName))
             {
-                NetMessage.SendData(2, this.whoAmI, -1, "You are not on the WhiteList.", 0, 0f, 0f, 0f);
+                NetMessage.SendData(2, whoAmI, -1, "You are not on the WhiteList.");
                 return;
             }
 
-            if (Netplay.serverSock[this.whoAmI].state == 0)
+            if (serverSock.state == 0)
             {
-                string version = Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
+                string version = Encoding.ASCII.GetString(readBuffer, start + 1, length - 1);
                 if (!(version == "Terraria" + Statics.CURRENT_RELEASE))
                 {
-                    NetMessage.SendData(2, this.whoAmI, -1, "You are not using the same version as this Server.", 0, 0f, 0f, 0f);
+                    NetMessage.SendData(2, whoAmI, -1, "You are not using the same version as this Server.");
                     return;
                 }
 
                 if (Netplay.password == null || Netplay.password == "")
                 {
-                    Netplay.serverSock[this.whoAmI].state = 1;
-                    NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                    serverSock.state = 1;
+                    NetMessage.SendData(3, whoAmI);
                     return;
                 }
 
-                Netplay.serverSock[this.whoAmI].state = -1;
-                NetMessage.SendData(37, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
+                serverSock.state = -1;
+                NetMessage.SendData(37, whoAmI);
             }
         }
+
 
         private void disconnect(int start, int length)
         {
             Netplay.disconnect = true;
-            Main.statusText = Encoding.ASCII.GetString(this.readBuffer, start + 1, length - 1);
+            Main.statusText = Encoding.ASCII.GetString(readBuffer, start + 1, length - 1);
         }
 
-        private void method3(int start)
+
+        private void syncInventory(int start)
         {
             if (Netplay.clientSock.state == 1)
             {
                 Netplay.clientSock.state = 2;
             }
 
-            int num2 = (int)this.readBuffer[start + 1];
-            if (num2 != Main.myPlayer)
+            int myPlayerNum = (int)readBuffer[start + 1];
+            if (myPlayerNum != Main.myPlayer)
             {
-                Main.player[num2] = (Player)Main.player[Main.myPlayer].Clone();
+                Main.player[myPlayerNum] = (Player)Main.player[Main.myPlayer].Clone();
                 Main.player[Main.myPlayer] = new Player();
-                Main.player[num2].whoAmi = num2;
-                Main.myPlayer = num2;
+                Main.player[myPlayerNum].whoAmi = myPlayerNum;
+                Main.myPlayer = myPlayerNum;
             }
-            NetMessage.SendData(4, -1, -1, Main.player[Main.myPlayer].name, Main.myPlayer, 0f, 0f, 0f, 0);
-            NetMessage.SendData(16, -1, -1, "", Main.myPlayer, 0f, 0f, 0f, 0);
-            NetMessage.SendData(42, -1, -1, "", Main.myPlayer, 0f, 0f, 0f, 0);
-            NetMessage.SendData(50, -1, -1, "", Main.myPlayer, 0f, 0f, 0f, 0);
-            for (int k = 0; k < 44; k++)
+
+            NetMessage.SendData(4, -1, -1, Main.player[Main.myPlayer].name, Main.myPlayer);
+            NetMessage.SendData(16, -1, -1, String.Empty, Main.myPlayer);
+            NetMessage.SendData(42, -1, -1, String.Empty, Main.myPlayer);
+            NetMessage.SendData(50, -1, -1, String.Empty, Main.myPlayer);
+
+            int count = 0;
+            foreach(Item item in Main.player[Main.myPlayer].inventory)
             {
-                NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].inventory[k].Name, Main.myPlayer, (float)k, 0f, 0f, 0);
+                NetMessage.SendData(5, -1, -1, item.Name, Main.myPlayer, (float)count++);
             }
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[0].Name, Main.myPlayer, 44f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[1].Name, Main.myPlayer, 45f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[2].Name, Main.myPlayer, 46f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[3].Name, Main.myPlayer, 47f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[4].Name, Main.myPlayer, 48f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[5].Name, Main.myPlayer, 49f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[6].Name, Main.myPlayer, 50f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[7].Name, Main.myPlayer, 51f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[8].Name, Main.myPlayer, 52f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[9].Name, Main.myPlayer, 53f, 0f, 0f, 0);
-            NetMessage.SendData(5, -1, -1, Main.player[Main.myPlayer].armor[10].Name, Main.myPlayer, 54f, 0f, 0f, 0);
-            NetMessage.SendData(6, -1, -1, "", 0, 0f, 0f, 0f, 0);
+
+            //Count should equal 44 at this point.
+            foreach (Item armor in Main.player[Main.myPlayer].armor)
+            {
+                NetMessage.SendData(5, -1, -1, armor.Name, Main.myPlayer, (float)count++);
+            }
+
+            NetMessage.SendData(6);
             if (Netplay.clientSock.state == 2)
             {
                 Netplay.clientSock.state = 3;
-                return;
             }
         }
 
-        private void method4(int start, int length, int num)
+
+        private void syncPlayer(int start, int length, int num)
         {
-            bool flag = false;
-            int num3 = (int)this.readBuffer[start + 1];
+            int playerIndex;
             if (Main.netMode == 2)
             {
-                num3 = this.whoAmI;
-            }
-            if (num3 == Main.myPlayer)
-            {
-                return;
-            }
-            int num4 = (int)this.readBuffer[start + 2];
-            if (num4 >= 17)
-            {
-                num4 = 0;
-            }
-            Main.player[num3].hair = num4;
-            Main.player[num3].whoAmi = num3;
-            num += 2;
-            Main.player[num3].hairColor.R = this.readBuffer[num];
-            num++;
-            Main.player[num3].hairColor.G = this.readBuffer[num];
-            num++;
-            Main.player[num3].hairColor.B = this.readBuffer[num];
-            num++;
-            Main.player[num3].skinColor.R = this.readBuffer[num];
-            num++;
-            Main.player[num3].skinColor.G = this.readBuffer[num];
-            num++;
-            Main.player[num3].skinColor.B = this.readBuffer[num];
-            num++;
-            Main.player[num3].eyeColor.R = this.readBuffer[num];
-            num++;
-            Main.player[num3].eyeColor.G = this.readBuffer[num];
-            num++;
-            Main.player[num3].eyeColor.B = this.readBuffer[num];
-            num++;
-            Main.player[num3].shirtColor.R = this.readBuffer[num];
-            num++;
-            Main.player[num3].shirtColor.G = this.readBuffer[num];
-            num++;
-            Main.player[num3].shirtColor.B = this.readBuffer[num];
-            num++;
-            Main.player[num3].underShirtColor.R = this.readBuffer[num];
-            num++;
-            Main.player[num3].underShirtColor.G = this.readBuffer[num];
-            num++;
-            Main.player[num3].underShirtColor.B = this.readBuffer[num];
-            num++;
-            Main.player[num3].pantsColor.R = this.readBuffer[num];
-            num++;
-            Main.player[num3].pantsColor.G = this.readBuffer[num];
-            num++;
-            Main.player[num3].pantsColor.B = this.readBuffer[num];
-            num++;
-            Main.player[num3].shoeColor.R = this.readBuffer[num];
-            num++;
-            Main.player[num3].shoeColor.G = this.readBuffer[num];
-            num++;
-            Main.player[num3].shoeColor.B = this.readBuffer[num];
-            num++;
-            if (this.readBuffer[num] == 0)
-            {
-                Main.player[num3].hardCore = false;
+                playerIndex = whoAmI;
             }
             else
             {
-                Main.player[num3].hardCore = true;
+                playerIndex = (int)readBuffer[start + 1];
             }
-            num++;
-            string text = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-            text = text.Trim();
-            Main.player[num3].name = text.Trim();
+
+            if (playerIndex == Main.myPlayer)
+            {
+                return;
+            }
+
+            int hairId = (int)readBuffer[start + 2];
+            if (hairId >= MAX_HAIR_ID)
+            {
+                hairId = 0;
+            }
+
+            Player player = Main.player[playerIndex];
+            player.hair = hairId;
+            player.whoAmi = playerIndex;
+            num += 2;
+
+            num = setColor(player.hairColor, num);
+            num = setColor(player.skinColor, num);
+            num = setColor(player.eyeColor, num);
+            num = setColor(player.shirtColor, num);
+            num = setColor(player.underShirtColor, num);
+            num = setColor(player.pantsColor, num);
+            num = setColor(player.shoeColor, num);
+
+            player.hardCore = (readBuffer[num++] != 0);
+
+            player.name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
+
             if (Main.netMode == 2)
             {
-                if (Netplay.serverSock[this.whoAmI].state < 10)
+                if (Netplay.serverSock[whoAmI].state < 10)
                 {
-                    for (int l = 0; l < 255; l++)
+                    int count = 0;
+                    foreach(Player otherPlayer in Main.player)
                     {
-                        if (l != num3 && text == Main.player[l].name && Netplay.serverSock[l].active)
+                        if (count++ != playerIndex && player.name.Equals(otherPlayer.name) && Netplay.serverSock[count].active)
                         {
-                            flag = true;
+                            NetMessage.SendData(2, whoAmI, -1, player.name + " is already on this server.");
+                            return;
                         }
                     }
                 }
-                if (flag)
+
+                if (player.name.Length > 20)
                 {
-                    NetMessage.SendData(2, this.whoAmI, -1, text + " is already on this server.", 0, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(2, whoAmI, -1, "Name is too long.");
                     return;
                 }
-                if (text.Length > 20)
+
+                if (player.name == "")
                 {
-                    NetMessage.SendData(2, this.whoAmI, -1, "Name is too long.", 0, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(2, whoAmI, -1, "Empty name.");
                     return;
                 }
-                if (text == "")
-                {
-                    NetMessage.SendData(2, this.whoAmI, -1, "Empty name.", 0, 0f, 0f, 0f, 0);
-                    return;
-                }
-                Netplay.serverSock[this.whoAmI].oldName = text;
-                Netplay.serverSock[this.whoAmI].name = text;
-                NetMessage.SendData(4, -1, this.whoAmI, text, num3, 0f, 0f, 0f, 0);
-                return;
+
+                Netplay.serverSock[whoAmI].oldName = player.name;
+                Netplay.serverSock[whoAmI].name = player.name;
+                NetMessage.SendData(4, -1, whoAmI, player.name, playerIndex);
             }
         }
 
-        private void method5(int start, int length)
+
+        private int setColor(Color color, int bufferPos)
         {
-            int num2 = (int)this.readBuffer[start + 1];
+            color.R = readBuffer[bufferPos++];
+            color.G = readBuffer[bufferPos++];
+            color.B = readBuffer[bufferPos++];
+            return bufferPos;
+        }
+
+
+        private void syncStacks(int start, int length)
+        {
+            int playerIndex = (int)readBuffer[start + 1];
             if (Main.netMode == 2)
             {
-                num2 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            if (num2 != Main.myPlayer)
+
+            if (playerIndex != Main.myPlayer)
             {
-                lock (Main.player[num2])
+                Player player = Main.player[playerIndex];
+                lock (player)
                 {
-                    int num3 = (int)this.readBuffer[start + 2];
-                    int stack = (int)this.readBuffer[start + 3];
-                    string string3 = Encoding.ASCII.GetString(this.readBuffer, start + 4, length - 4);
-                    if (num3 < 44)
+                    int inventorySlot = (int)readBuffer[start + 2];
+                    int stack = (int)readBuffer[start + 3];
+                    string itemName = Encoding.ASCII.GetString(readBuffer, start + 4, length - 4);
+                    if (inventorySlot < 44)
                     {
-                        Main.player[num2].inventory[num3] = new Item();
-                        Main.player[num2].inventory[num3].SetDefaults(string3);
-                        Main.player[num2].inventory[num3].Stack = stack;
+                        player.inventory[inventorySlot] = new Item();
+                        player.inventory[inventorySlot].SetDefaults(itemName);
+                        player.inventory[inventorySlot].Stack = stack;
                     }
                     else
                     {
-                        Main.player[num2].armor[num3 - 44] = new Item();
-                        Main.player[num2].armor[num3 - 44].SetDefaults(string3);
-                        Main.player[num2].armor[num3 - 44].Stack = stack;
+                        player.armor[inventorySlot - 44] = new Item();
+                        player.armor[inventorySlot - 44].SetDefaults(itemName);
+                        player.armor[inventorySlot - 44].Stack = stack;
                     }
-                    if (Main.netMode == 2 && num2 == this.whoAmI)
+
+                    if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(5, -1, this.whoAmI, string3, num2, (float)num3, 0f, 0f, 0);
+                        NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);
                     }
                 }
             }
         }
 
+
         private void method6()
         {
-
-            if (Netplay.serverSock[this.whoAmI].state == 1)
+            if (Netplay.serverSock[whoAmI].state == 1)
             {
-                Netplay.serverSock[this.whoAmI].state = 2;
+                Netplay.serverSock[whoAmI].state = 2;
             }
-            NetMessage.SendData(7, this.whoAmI, -1, "", 0, 0f, 0f, 0f);
-            return;
+            NetMessage.SendData(7, whoAmI);
         }
 
-        private void method7(int start, int length, int num)
+
+        private void syncWorldTime(int start, int length, int num)
         {
-            Main.time = (double)BitConverter.ToInt32(this.readBuffer, num);
+            Main.time = (double)BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.dayTime = false;
-            if (this.readBuffer[num] == 1)
-            {
-                Main.dayTime = true;
-            }
-            num++;
-            Main.moonPhase = (int)this.readBuffer[num];
-            num++;
-            int num6 = (int)this.readBuffer[num];
-            num++;
-            if (num6 == 1)
-            {
-                Main.bloodMoon = true;
-            }
-            else
-            {
-                Main.bloodMoon = false;
-            }
-            Main.maxTilesX = BitConverter.ToInt32(this.readBuffer, num);
+
+            Main.dayTime = (readBuffer[num++] == 1);
+            Main.moonPhase = (int)readBuffer[num++];
+            Main.bloodMoon = ((int)readBuffer[num++] == 1);
+
+            Main.maxTilesX = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.maxTilesY = BitConverter.ToInt32(this.readBuffer, num);
+            Main.maxTilesY = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.spawnTileX = BitConverter.ToInt32(this.readBuffer, num);
+            Main.spawnTileX = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.spawnTileY = BitConverter.ToInt32(this.readBuffer, num);
+            Main.spawnTileY = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.worldSurface = (double)BitConverter.ToInt32(this.readBuffer, num);
+            Main.worldSurface = (double)BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.rockLayer = (double)BitConverter.ToInt32(this.readBuffer, num);
+            Main.rockLayer = (double)BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.worldID = BitConverter.ToInt32(this.readBuffer, num);
+            Main.worldID = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            byte b2 = this.readBuffer[num];
+
+            byte b2 = readBuffer[num++];
             if ((b2 & 1) == 1)
             {
                 WorldGen.shadowOrbSmashed = true;
@@ -542,65 +520,60 @@ namespace Terraria_Server
             {
                 NPC.downedBoss2 = true;
             }
+
             if ((b2 & 8) == 8)
             {
                 NPC.downedBoss3 = true;
             }
-            num++;
-            Main.worldName = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+
+            Main.worldName = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             if (Netplay.clientSock.state == 3)
             {
                 Netplay.clientSock.state = 4;
-                return;
             }
         }
 
-        private void method8(int num)
+
+        private void updateTileData(int num)
         {
-            int num8 = BitConverter.ToInt32(this.readBuffer, num);
+            int num8 = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int num9 = BitConverter.ToInt32(this.readBuffer, num);
+            int num9 = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            bool flag3 = true;
-            if (num8 == -1 || num9 == -1)
-            {
-                flag3 = false;
-            }
-            else
-            {
-                if (num8 < 10 || num8 > Main.maxTilesX - 10)
-                {
-                    flag3 = false;
-                }
-                else
-                {
-                    if (num9 < 10 || num9 > Main.maxTilesY - 10)
-                    {
-                        flag3 = false;
-                    }
-                }
-            }
+
+            bool flag3 = !(num8 == -1 
+                || num8 < 10 
+                || num8 > Main.maxTilesX - 10 
+                || num9 == -1
+                || num9 < 10
+                || num9 > Main.maxTilesY - 10);
+            
             int num10 = 1350;
             if (flag3)
             {
                 num10 *= 2;
             }
-            if (Netplay.serverSock[this.whoAmI].state == 2)
+
+            ServerSock serverSock = Netplay.serverSock[whoAmI];
+            if (serverSock.state == 2)
             {
-                Netplay.serverSock[this.whoAmI].state = 3;
+                serverSock.state = 3;
             }
-            NetMessage.SendData(9, this.whoAmI, -1, "Receiving tile data", num10, 0f, 0f, 0f, 0);
-            Netplay.serverSock[this.whoAmI].statusText2 = "is receiving tile data";
-            Netplay.serverSock[this.whoAmI].statusMax += num10;
+
+            NetMessage.SendData(9, whoAmI, -1, "Receiving tile data", num10);
+            serverSock.statusText2 = "is receiving tile data";
+            serverSock.statusMax += num10;
             int sectionX = Netplay.GetSectionX(Main.spawnTileX);
             int sectionY = Netplay.GetSectionY(Main.spawnTileY);
-            for (int m = sectionX - 2; m < sectionX + 3; m++)
+
+            for (int x = sectionX - 2; x < sectionX + 3; x++)
             {
-                for (int n = sectionY - 1; n < sectionY + 2; n++)
+                for (int y = sectionY - 1; y < sectionY + 2; y++)
                 {
-                    NetMessage.SendSection(this.whoAmI, m, n);
+                    NetMessage.SendSection(whoAmI, x, y);
                 }
             }
+
             if (flag3)
             {
                 num8 = Netplay.GetSectionX(num8);
@@ -609,1137 +582,1059 @@ namespace Terraria_Server
                 {
                     for (int num12 = num9 - 1; num12 < num9 + 2; num12++)
                     {
-                        NetMessage.SendSection(this.whoAmI, num11, num12);
+                        NetMessage.SendSection(whoAmI, num11, num12);
                     }
                 }
-                NetMessage.SendData(11, this.whoAmI, -1, "", num8 - 2, (float)(num9 - 1), (float)(num8 + 2), (float)(num9 + 1), 0);
+                NetMessage.SendData(11, whoAmI, -1, "", num8 - 2, (float)(num9 - 1), (float)(num8 + 2), (float)(num9 + 1));
             }
-            NetMessage.SendData(11, this.whoAmI, -1, "", sectionX - 2, (float)(sectionY - 1), (float)(sectionX + 2), (float)(sectionY + 1), 0);
+
+            NetMessage.SendData(11, whoAmI, -1, "", sectionX - 2, (float)(sectionY - 1), (float)(sectionX + 2), (float)(sectionY + 1));
+
+            //Can't switch to a for each because there are 201 items.
             for (int num13 = 0; num13 < 200; num13++)
             {
                 if (Main.item[num13].Active)
                 {
-                    NetMessage.SendData(21, this.whoAmI, -1, "", num13, 0f, 0f, 0f, 0);
-                    NetMessage.SendData(22, this.whoAmI, -1, "", num13, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(21, whoAmI, -1, "", num13);
+                    NetMessage.SendData(22, whoAmI, -1, "", num13);
                 }
             }
+            
+            //Can't switch to a for each because there are 1001 NPCs.
             for (int num14 = 0; num14 < 1000; num14++)
             {
                 if (Main.npc[num14].active)
                 {
-                    NetMessage.SendData(23, this.whoAmI, -1, "", num14, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(23, whoAmI, -1, "", num14);
                 }
             }
-            NetMessage.SendData(49, this.whoAmI, -1, "", 0, 0f, 0f, 0f, 0);
-            return;
+            NetMessage.SendData(49, whoAmI);
         }
+
 
         private void method9(int start, int length)
         {
-            int num14 = BitConverter.ToInt32(this.readBuffer, start + 1);
-            string string4 = Encoding.ASCII.GetString(this.readBuffer, start + 5, length - 5);
+            int num14 = BitConverter.ToInt32(readBuffer, start + 1);
+            string string4 = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5);
             Netplay.clientSock.statusMax += num14;
             Netplay.clientSock.statusText = string4;
         }
 
-        private void method10(int start, int num, byte bufferData)
+
+        private void processTiles(int start, int num, byte bufferData)
         {
-            short num16 = BitConverter.ToInt16(this.readBuffer, start + 1);
-            int num17 = BitConverter.ToInt32(this.readBuffer, start + 3);
-            int num18 = BitConverter.ToInt32(this.readBuffer, start + 7);
+            short width = BitConverter.ToInt16(readBuffer, start + 1);
+            int left = BitConverter.ToInt32(readBuffer, start + 3);
+            int y = BitConverter.ToInt32(readBuffer, start + 7);
             num = start + 11;
-            for (int num19 = num17; num19 < num17 + (int)num16; num19++)
+
+            for (int x = left; x < left + (int)width; x++)
             {
-                if (Main.tile[num19, num18] == null)
+                if (Main.tile[x, y] == null)
                 {
-                    Main.tile[num19, num18] = new Tile();
+                    Main.tile[x, y] = new Tile();
                 }
-                byte b3 = this.readBuffer[num];
-                num++;
-                bool active = Main.tile[num19, num18].active;
-                if ((b3 & 1) == 1)
-                {
-                    Main.tile[num19, num18].active = true;
-                }
-                else
-                {
-                    Main.tile[num19, num18].active = false;
-                }
+
+                Tile tile = Main.tile[x, y];
+
+                byte b3 = readBuffer[num++];
+                bool active = tile.active;
+                tile.active = ((b3 & 1) == 1);
+
                 if ((b3 & 2) == 2)
                 {
-                    Main.tile[num19, num18].lighted = true;
+                    tile.lighted = true;
                 }
+
                 if ((b3 & 4) == 4)
                 {
-                    Main.tile[num19, num18].wall = 1;
+                    tile.wall = 1;
                 }
                 else
                 {
-                    Main.tile[num19, num18].wall = 0;
+                    tile.wall = 0;
                 }
+
                 if ((b3 & 8) == 8)
                 {
-                    Main.tile[num19, num18].liquid = 1;
+                    tile.liquid = 1;
                 }
                 else
                 {
-                    Main.tile[num19, num18].liquid = 0;
+                    tile.liquid = 0;
                 }
-                if (Main.tile[num19, num18].active)
+
+                if (tile.active)
                 {
-                    int type = (int)Main.tile[num19, num18].type;
-                    Main.tile[num19, num18].type = this.readBuffer[num];
-                    num++;
-                    if (Main.tileFrameImportant[(int)Main.tile[num19, num18].type])
+                    int type = (int)tile.type;
+                    tile.type = readBuffer[num++];
+
+                    if (Main.tileFrameImportant[(int)tile.type])
                     {
-                        Main.tile[num19, num18].frameX = BitConverter.ToInt16(this.readBuffer, num);
+                        tile.frameX = BitConverter.ToInt16(readBuffer, num);
                         num += 2;
-                        Main.tile[num19, num18].frameY = BitConverter.ToInt16(this.readBuffer, num);
+                        tile.frameY = BitConverter.ToInt16(readBuffer, num);
                         num += 2;
                     }
-                    else
+                    else if (!active || (int)tile.type != type)
                     {
-                        if (!active || (int)Main.tile[num19, num18].type != type)
-                        {
-                            Main.tile[num19, num18].frameX = -1;
-                            Main.tile[num19, num18].frameY = -1;
-                        }
+                        tile.frameX = -1;
+                        tile.frameY = -1;
                     }
                 }
-                if (Main.tile[num19, num18].wall > 0)
+
+                if (tile.wall > 0)
                 {
-                    Main.tile[num19, num18].wall = this.readBuffer[num];
-                    num++;
+                    tile.wall = readBuffer[num++];
                 }
-                if (Main.tile[num19, num18].liquid > 0)
+
+                if (tile.liquid > 0)
                 {
-                    Main.tile[num19, num18].liquid = this.readBuffer[num];
-                    num++;
-                    byte b4 = this.readBuffer[num];
-                    num++;
-                    if (b4 == 1)
-                    {
-                        Main.tile[num19, num18].lava = true;
-                    }
-                    else
-                    {
-                        Main.tile[num19, num18].lava = false;
-                    }
+                    tile.liquid = readBuffer[num++];
+                    byte lavaFlag = readBuffer[num++];
+                    tile.lava = (lavaFlag == 1);
                 }
             }
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData((int)bufferData, -1, this.whoAmI, "", (int)num16, (float)num17, (float)num18, 0f, 0);
-                return;
+                NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)width, (float)left, (float)y);
             }
         }
+
 
         private void method11(int num)
         {
-            int startX = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int startX = (int)BitConverter.ToInt16(readBuffer, num);
             num += 4;
-            int startY = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int startY = (int)BitConverter.ToInt16(readBuffer, num);
             num += 4;
-            int endX = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int endX = (int)BitConverter.ToInt16(readBuffer, num);
             num += 4;
-            int endY = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int endY = (int)BitConverter.ToInt16(readBuffer, num);
             num += 4;
             WorldGen.SectionTileFrame(startX, startY, endX, endY);
-            return;
         }
 
-        private void method12(int num)
+
+        private void spawnPlayer(int num)
         {
-            int num20 = (int)this.readBuffer[num];
+            int playerIndex = (int)readBuffer[num++];
             if (Main.netMode == 2)
             {
-                num20 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            Main.player[num20].SpawnX = BitConverter.ToInt32(this.readBuffer, num);
+
+            Player player = Main.player[playerIndex];
+            player.SpawnX = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.player[num20].SpawnY = BitConverter.ToInt32(this.readBuffer, num);
+            player.SpawnY = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            Main.player[num20].Spawn();
-            if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state >= 3)
+            player.Spawn();
+
+            if (Main.netMode == 2 && Netplay.serverSock[whoAmI].state >= 3)
             {
-                if (Netplay.serverSock[this.whoAmI].state == 3)
+                if (Netplay.serverSock[whoAmI].state == 3)
                 {
-                    Netplay.serverSock[this.whoAmI].state = 10;
-                    NetMessage.greetPlayer(this.whoAmI);
+                    Netplay.serverSock[whoAmI].state = 10;
+                    NetMessage.greetPlayer(whoAmI);
                     NetMessage.syncPlayers();
-                    NetMessage.buffer[this.whoAmI].broadcast = true;
-                    NetMessage.SendData(12, -1, this.whoAmI, "", this.whoAmI, 0f, 0f, 0f, 0);
+                    NetMessage.buffer[whoAmI].broadcast = true;
+                    NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
                     return;
                 }
-                NetMessage.SendData(12, -1, this.whoAmI, "", this.whoAmI, 0f, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
             }
         }
 
-        private void method13(int num)
+
+        private void syncPlayerInput(int num)
         {
-            int num21 = (int)this.readBuffer[num];
-            if (num21 == Main.myPlayer)
+            int playerIndex = (int)readBuffer[num++];
+            if (playerIndex == Main.myPlayer)
             {
                 return;
             }
-            if (Main.netMode == 1 && !Main.player[num21].active)
+
+            Player player = Main.player[playerIndex];
+            if (Main.netMode == 1 && !player.active)
             {
-                NetMessage.SendData(15, -1, -1, "", 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(15);
             }
+
             if (Main.netMode == 2)
             {
-                num21 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            int num22 = (int)this.readBuffer[num];
-            num++;
-            int selectedItem = (int)this.readBuffer[num];
-            num++;
-            float x = BitConverter.ToSingle(this.readBuffer, num);
+
+            player.oldVelocity = player.velocity;
+
+            int controlMap = (int)readBuffer[num++];
+            player.selectedItem = (int)readBuffer[num++];
+
+            player.position.X = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float num23 = BitConverter.ToSingle(this.readBuffer, num);
+            player.position.Y = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float x2 = BitConverter.ToSingle(this.readBuffer, num);
+            player.velocity.X = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float y = BitConverter.ToSingle(this.readBuffer, num);
+            player.velocity.Y = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            Main.player[num21].selectedItem = selectedItem;
-            Main.player[num21].position.X = x;
-            Main.player[num21].position.Y = num23;
-            Main.player[num21].velocity.X = x2;
-            Main.player[num21].velocity.Y = y;
-            Main.player[num21].oldVelocity = Main.player[num21].velocity;
-            Main.player[num21].fallStart = (int)(num23 / 16f);
-            Main.player[num21].controlUp = false;
-            Main.player[num21].controlDown = false;
-            Main.player[num21].controlLeft = false;
-            Main.player[num21].controlRight = false;
-            Main.player[num21].controlJump = false;
-            Main.player[num21].controlUseItem = false;
-            Main.player[num21].direction = -1;
-            if ((num22 & 1) == 1)
+
+            player.fallStart = (int)(player.position.Y / 16f);
+
+            player.controlUp = (controlMap & 1) == 1;
+            player.controlDown = (controlMap & 2) == 2;
+            player.controlLeft = (controlMap & 4) == 4;
+            player.controlRight = (controlMap & 8) == 8;
+            player.controlJump = (controlMap & 16) == 16;
+            player.controlUseItem = (controlMap & 32) == 32;
+            player.direction = (controlMap & 64) == 64 ? 1 : -1;
+
+            if (Main.netMode == 2 && Netplay.serverSock[whoAmI].state == 10)
             {
-                Main.player[num21].controlUp = true;
-            }
-            if ((num22 & 2) == 2)
-            {
-                Main.player[num21].controlDown = true;
-            }
-            if ((num22 & 4) == 4)
-            {
-                Main.player[num21].controlLeft = true;
-            }
-            if ((num22 & 8) == 8)
-            {
-                Main.player[num21].controlRight = true;
-            }
-            if ((num22 & 16) == 16)
-            {
-                Main.player[num21].controlJump = true;
-            }
-            if ((num22 & 32) == 32)
-            {
-                Main.player[num21].controlUseItem = true;
-            }
-            if ((num22 & 64) == 64)
-            {
-                Main.player[num21].direction = 1;
-            }
-            if (Main.netMode == 2 && Netplay.serverSock[this.whoAmI].state == 10)
-            {
-                NetMessage.SendData(13, -1, this.whoAmI, "", num21, 0f, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(13, -1, whoAmI, "", playerIndex);
             }
         }
 
-        private void method14(int num)
+
+        private void activatePlayer(int num)
         {
-
-            int num24 = (int)this.readBuffer[num];
-            num++;
-            int num25 = (int)this.readBuffer[num];
-            if (num25 == 1)
+            int playerIndex = (int)readBuffer[num++];
+            int isActive = (int)readBuffer[num];
+            if (isActive == 1)
             {
-                if (!Main.player[num24].active)
+                if (!Main.player[playerIndex].active)
                 {
-                    Main.player[num24] = new Player();
+                    Main.player[playerIndex] = new Player();
                 }
-                Main.player[num24].active = true;
+                Main.player[playerIndex].active = true;
                 return;
             }
-            Main.player[num24].active = false;
-            return;
+            Main.player[playerIndex].active = false;
         }
 
-        private void method15()
+
+        private void syncPlayers()
         {
             NetMessage.syncPlayers();
         }
 
-        private void method16(int num)
+
+        private void checkPlayerDeath(int num)
         {
-            int num26 = (int)this.readBuffer[num];
-            num++;
-            if (num26 == Main.myPlayer)
+            int playerIndex = (int)readBuffer[num++];
+            if (playerIndex == Main.myPlayer)
             {
                 return;
             }
-            int statLife = (int)BitConverter.ToInt16(this.readBuffer, num);
+
+            int statLife = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            int statLifeMax = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int statLifeMax = (int)BitConverter.ToInt16(readBuffer, num);
+
             if (Main.netMode == 2)
             {
-                num26 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            Main.player[num26].statLife = statLife;
-            Main.player[num26].statLifeMax = statLifeMax;
-            if (Main.player[num26].statLife <= 0)
+
+            Player player = Main.player[playerIndex];
+            player.statLife = statLife;
+            player.statLifeMax = statLifeMax;
+
+            if (player.statLife <= 0)
             {
-                Main.player[num26].dead = true;
+                player.dead = true;
             }
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(16, -1, this.whoAmI, "", num26, 0f, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(16, -1, whoAmI, "", playerIndex);
             }
         }
 
-        private void method17(int num)
+
+        private void modTile(int num)
         {
-            byte b5 = this.readBuffer[num];
-            num++;
-            int num27 = BitConverter.ToInt32(this.readBuffer, num);
+            byte tileAction = readBuffer[num++];
+            int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int num28 = BitConverter.ToInt32(this.readBuffer, num);
+            int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            byte b6 = this.readBuffer[num];
-            num++;
-            int style = (int)this.readBuffer[num];
-            bool flag4 = false;
-            if (b6 == 1)
-            {
-                flag4 = true;
-            }
+
+            byte tileType = readBuffer[num++];
+            int style = (int)readBuffer[num];
+            bool failFlag = (tileType == 1);
 
             Tile tile = new Tile();
 
-            if (Main.tile[num27, num28] != null)
+            if (Main.tile[x, y] != null)
             {
-                tile = WorldGen.cloneTile(Main.tile[num27, num28]);
+                tile = WorldGen.cloneTile(Main.tile[x, y]);
             }
-            if (Main.tile[num27, num28] == null)
+            if (Main.tile[x, y] == null)
             {
-                Main.tile[num27, num28] = new Tile();
+                Main.tile[x, y] = new Tile();
             }
 
-            tile.tileX = num27;
-            tile.tileY = num28;
+            tile.tileX = x;
+            tile.tileY = y;
 
-            TileBreakEvent Event = new TileBreakEvent();
-            Event.Sender = Main.player[this.whoAmI];
-            Event.Tile = tile;
-            Event.Type = b6;
-            Event.Position = new Vector2(num27, num28);
-            Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, Event);
-            if (Event.Cancelled)
+            TileBreakEvent breakEvent = new TileBreakEvent();
+            breakEvent.Sender = Main.player[whoAmI];
+            breakEvent.Tile = tile;
+            breakEvent.Type = tileType;
+            breakEvent.Position = new Vector2(x, y);
+            Program.server.getPluginManager().processHook(Hooks.TILE_BREAK, breakEvent);
+            if (breakEvent.Cancelled)
             {
-                NetMessage.SendTileSquare(this.whoAmI, num27, num28, 1);
+                NetMessage.SendTileSquare(whoAmI, x, y, 1);
                 return;
             }
 
             if (Main.netMode == 2)
             {
-                if (!flag4)
+                if (!failFlag)
                 {
-                    if (b5 == 0 || b5 == 2 || b5 == 4)
+                    if (tileAction == 0 || tileAction == 2 || tileAction == 4)
                     {
-                        Netplay.serverSock[this.whoAmI].spamDelBlock += 1f;
+                        Netplay.serverSock[whoAmI].spamDelBlock += 1f;
                     }
-                    else
+                    else if (tileAction == 1 || tileAction == 3)
                     {
-                        if (b5 == 1 || b5 == 3)
-                        {
-                            Netplay.serverSock[this.whoAmI].spamAddBlock += 1f;
-                        }
+                        Netplay.serverSock[whoAmI].spamAddBlock += 1f;
                     }
                 }
-                if (!Netplay.serverSock[this.whoAmI].tileSection[Netplay.GetSectionX(num27), Netplay.GetSectionY(num28)])
+
+                if (!Netplay.serverSock[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
                 {
-                    flag4 = true;
+                    failFlag = true;
                 }
             }
-            if (b5 == 0)
+
+            switch (tileAction)
             {
-                WorldGen.KillTile(num27, num28, flag4, false, false);
+                case 0:
+                    WorldGen.KillTile(x, y, failFlag, false, false);
+                    break;
+                case 1:
+                    WorldGen.PlaceTile(x, y, (int)tileType, false, true, -1, style);
+                    break;
+                case 2:
+                    WorldGen.KillWall(x, y, failFlag);
+                    break;
+                case 3:
+                    WorldGen.PlaceWall(x, y, (int)tileType, false);
+                    break;
+                case 4:
+                    WorldGen.KillTile(x, y, failFlag, false, true);
+                    break;
             }
-            else
-            {
-                if (b5 == 1)
-                {
-                    WorldGen.PlaceTile(num27, num28, (int)b6, false, true, -1, style);
-                }
-                else
-                {
-                    if (b5 == 2)
-                    {
-                        WorldGen.KillWall(num27, num28, flag4);
-                    }
-                    else
-                    {
-                        if (b5 == 3)
-                        {
-                            WorldGen.PlaceWall(num27, num28, (int)b6, false);
-                        }
-                        else
-                        {
-                            if (b5 == 4)
-                            {
-                                WorldGen.KillTile(num27, num28, flag4, false, true);
-                            }
-                        }
-                    }
-                }
-            }
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(17, -1, this.whoAmI, "", (int)b5, (float)num27, (float)num28, (float)b6, 0);
-                if (b5 == 1 && b6 == 53)
+                NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType);
+                if (tileAction == 1 && tileType == 53)
                 {
-                    NetMessage.SendTileSquare(-1, num27, num28, 1);
-                    return;
+                    NetMessage.SendTileSquare(-1, x, y, 1);
                 }
             }
         }
 
-        private void method19(int num)
+
+        private void syncDoor(int num)
         {
-            byte b8 = this.readBuffer[num];
-            num++;
-            int x = BitConverter.ToInt32(this.readBuffer, num);
+            byte doorAction = readBuffer[num++];
+            int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int y = BitConverter.ToInt32(this.readBuffer, num);
+            int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int num32 = (int)this.readBuffer[num];
+
+            int doorDirection = (int)readBuffer[num];
             int direction = 0;
-            if (num32 == 0)
+            if (doorDirection == 0)
             {
                 direction = -1;
             }
 
-            bool state = false;
+            bool state = (doorAction == 0); //if open
 
-            if (b8 == 0) //if open
+            if (state)
             {
-                state = true;
+                WorldGen.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.player[whoAmI]);
+            }
+            else if (doorAction == 1)
+            {
+                WorldGen.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.player[whoAmI]);
             }
 
-            if (b8 == 0)
-            {
-                WorldGen.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.player[this.whoAmI]);
-            }
-            else
-            {
-                if (b8 == 1)
-                {
-                    WorldGen.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.player[this.whoAmI]);
-                }
-            }
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(19, -1, this.whoAmI, "", (int)b8, (float)x, (float)y, (float)num32, 0);
-                return;
+                NetMessage.SendData(19, -1, whoAmI, "", (int)doorAction, (float)x, (float)y, (float)doorDirection);
             }
         }
 
-        private void method20(int start, int num, byte bufferData)
+
+        private void processTiles2(int start, int num, byte bufferData)
         {
-            short num33 = BitConverter.ToInt16(this.readBuffer, start + 1);
-            int num34 = BitConverter.ToInt32(this.readBuffer, start + 3);
-            int num35 = BitConverter.ToInt32(this.readBuffer, start + 7);
+            short size = BitConverter.ToInt16(readBuffer, start + 1);
+            int left = BitConverter.ToInt32(readBuffer, start + 3);
+            int top = BitConverter.ToInt32(readBuffer, start + 7);
             num = start + 11;
-            for (int num36 = num34; num36 < num34 + (int)num33; num36++)
+            for (int x = left; x < left + (int)size; x++)
             {
-                for (int num37 = num35; num37 < num35 + (int)num33; num37++)
+                for (int y = top; y < top + (int)size; y++)
                 {
-                    if (Main.tile[num36, num37] == null)
+                    if (Main.tile[x, y] == null)
                     {
-                        Main.tile[num36, num37] = new Tile();
+                        Main.tile[x, y] = new Tile();
                     }
-                    byte b9 = this.readBuffer[num];
-                    num++;
-                    bool active2 = Main.tile[num36, num37].active;
-                    if ((b9 & 1) == 1)
-                    {
-                        Main.tile[num36, num37].active = true;
-                    }
-                    else
-                    {
-                        Main.tile[num36, num37].active = false;
-                    }
+                    Tile tile = Main.tile[x, y];
+
+                    byte b9 = readBuffer[num++];
+
+                    bool wasActive = tile.active;
+
+                    tile.active = ((b9 & 1) == 1);
+
                     if ((b9 & 2) == 2)
                     {
-                        Main.tile[num36, num37].lighted = true;
+                        tile.lighted = true;
                     }
+
                     if ((b9 & 4) == 4)
                     {
-                        Main.tile[num36, num37].wall = 1;
+                        tile.wall = 1;
                     }
                     else
                     {
-                        Main.tile[num36, num37].wall = 0;
+                        tile.wall = 0;
                     }
+
                     if ((b9 & 8) == 8)
                     {
-                        Main.tile[num36, num37].liquid = 1;
+                        tile.liquid = 1;
                     }
                     else
                     {
-                        Main.tile[num36, num37].liquid = 0;
+                        tile.liquid = 0;
                     }
-                    if (Main.tile[num36, num37].active)
+
+                    if (tile.active)
                     {
-                        int type2 = (int)Main.tile[num36, num37].type;
-                        Main.tile[num36, num37].type = this.readBuffer[num];
-                        num++;
-                        if (Main.tileFrameImportant[(int)Main.tile[num36, num37].type])
+                        int wasType = (int)tile.type;
+                        tile.type = readBuffer[num++];
+                        if (Main.tileFrameImportant[(int)tile.type])
                         {
-                            Main.tile[num36, num37].frameX = BitConverter.ToInt16(this.readBuffer, num);
+                            tile.frameX = BitConverter.ToInt16(readBuffer, num);
                             num += 2;
-                            Main.tile[num36, num37].frameY = BitConverter.ToInt16(this.readBuffer, num);
+                            tile.frameY = BitConverter.ToInt16(readBuffer, num);
                             num += 2;
                         }
-                        else
+                        else if (!wasActive || (int)tile.type != wasType)
                         {
-                            if (!active2 || (int)Main.tile[num36, num37].type != type2)
-                            {
-                                Main.tile[num36, num37].frameX = -1;
-                                Main.tile[num36, num37].frameY = -1;
-                            }
+                            tile.frameX = -1;
+                            tile.frameY = -1;
                         }
                     }
-                    if (Main.tile[num36, num37].wall > 0)
+
+                    if (tile.wall > 0)
                     {
-                        Main.tile[num36, num37].wall = this.readBuffer[num];
-                        num++;
+                        tile.wall = readBuffer[num++];
                     }
-                    if (Main.tile[num36, num37].liquid > 0)
+
+                    if (tile.liquid > 0)
                     {
-                        Main.tile[num36, num37].liquid = this.readBuffer[num];
-                        num++;
-                        byte b10 = this.readBuffer[num];
-                        num++;
-                        if (b10 == 1)
-                        {
-                            Main.tile[num36, num37].lava = true;
-                        }
-                        else
-                        {
-                            Main.tile[num36, num37].lava = false;
-                        }
+                        tile.liquid = readBuffer[num++];
+                        byte b10 = readBuffer[num++];
+                        tile.lava = (b10 == 1);
                     }
                 }
             }
-            WorldGen.RangeFrame(num34, num35, num34 + (int)num33, num35 + (int)num33);
+
+            WorldGen.RangeFrame(left, top, left + (int)size, top + (int)size);
             if (Main.netMode == 2)
             {
-                NetMessage.SendData((int)bufferData, -1, this.whoAmI, "", (int)num33, (float)num34, (float)num35, 0f, 0);
-                return;
+                NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)size, (float)left, (float)top);
             }
         }
 
-        private void method21(int start, int length, int num)
+
+        private void moveItem(int start, int length, int num)
         {
-            short num38 = BitConverter.ToInt16(this.readBuffer, num);
+            short itemIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            float num39 = BitConverter.ToSingle(this.readBuffer, num);
+            float num39 = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float num40 = BitConverter.ToSingle(this.readBuffer, num);
+            float num40 = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float x3 = BitConverter.ToSingle(this.readBuffer, num);
+            float x3 = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float y2 = BitConverter.ToSingle(this.readBuffer, num);
+            float y2 = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            byte stack2 = this.readBuffer[num];
-            num++;
-            string string4 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
+            byte stackSize = readBuffer[num++];
+
+            string string4 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+
+            Item item = Main.item[(int)itemIndex];
             if (Main.netMode == 1)
             {
                 if (string4 == "0")
                 {
-                    Main.item[(int)num38].Active = false;
+                    item.Active = false;
                     return;
                 }
-                Main.item[(int)num38].SetDefaults(string4);
-                Main.item[(int)num38].Stack = (int)stack2;
-                Main.item[(int)num38].Position.X = num39;
-                Main.item[(int)num38].Position.Y = num40;
-                Main.item[(int)num38].Velocity.X = x3;
-                Main.item[(int)num38].Velocity.Y = y2;
-                Main.item[(int)num38].Active = true;
-                Main.item[(int)num38].Wet = Collision.WetCollision(Main.item[(int)num38].Position, Main.item[(int)num38].Width, Main.item[(int)num38].Height);
-                return;
+                item.SetDefaults(string4);
+                item.Stack = (int)stackSize;
+                item.Position.X = num39;
+                item.Position.Y = num40;
+                item.Velocity.X = x3;
+                item.Velocity.Y = y2;
+                item.Active = true;
+                item.Wet = Collision.WetCollision(item.Position, item.Width, item.Height);
             }
             else
             {
                 if (string4 == "0")
                 {
-                    if (num38 < 200)
+                    if (itemIndex < 200)
                     {
-                        Main.item[(int)num38].Active = false;
-                        NetMessage.SendData(21, -1, -1, "", (int)num38, 0f, 0f, 0f, 0);
-                        return;
+                        item.Active = false;
+                        NetMessage.SendData(21, -1, -1, "", (int)itemIndex, 0f, 0f, 0f, 0);
                     }
                 }
                 else
                 {
-                    bool flag5 = false;
-                    if (num38 == 200)
+                    bool isNewItem = false;
+                    if (itemIndex == 200)
                     {
-                        flag5 = true;
+                        isNewItem = true;
+                        Item newItem = new Item();
+                        newItem.SetDefaults(string4);
+                        itemIndex = (short)Item.NewItem((int)num39, (int)num40, newItem.Width, newItem.Height, newItem.Type, (int)stackSize, true);
+                        item = Main.item[(int)itemIndex];
                     }
-                    if (flag5)
+
+                    item.SetDefaults(string4);
+                    item.Stack = (int)stackSize;
+                    item.Position.X = num39;
+                    item.Position.Y = num40;
+                    item.Velocity.X = x3;
+                    item.Velocity.Y = y2;
+                    item.Active = true;
+                    item.Owner = Main.myPlayer;
+
+                    if (isNewItem)
                     {
-                        Item item = new Item();
-                        item.SetDefaults(string4);
-                        num38 = (short)Item.NewItem((int)num39, (int)num40, item.Width, item.Height, item.Type, (int)stack2, true);
-                    }
-                    Main.item[(int)num38].SetDefaults(string4);
-                    Main.item[(int)num38].Stack = (int)stack2;
-                    Main.item[(int)num38].Position.X = num39;
-                    Main.item[(int)num38].Position.Y = num40;
-                    Main.item[(int)num38].Velocity.X = x3;
-                    Main.item[(int)num38].Velocity.Y = y2;
-                    Main.item[(int)num38].Active = true;
-                    Main.item[(int)num38].Owner = Main.myPlayer;
-                    if (flag5)
-                    {
-                        NetMessage.SendData(21, -1, -1, "", (int)num38, 0f, 0f, 0f, 0);
-                        Main.item[(int)num38].OwnIgnore = this.whoAmI;
-                        Main.item[(int)num38].OwnTime = 100;
-                        Main.item[(int)num38].FindOwner((int)num38);
+                        NetMessage.SendData(21, -1, -1, "", (int)itemIndex);
+                        item.OwnIgnore = whoAmI;
+                        item.OwnTime = 100;
+                        item.FindOwner((int)itemIndex);
                         return;
                     }
-                    NetMessage.SendData(21, -1, this.whoAmI, "", (int)num38, 0f, 0f, 0f, 0);
-                    return;
+                    NetMessage.SendData(21, -1, whoAmI, "", (int)itemIndex);
                 }
             }
         }
 
-        private void method22(int num)
+
+        private void itemOwner(int num)
         {
-            short num41 = BitConverter.ToInt16(this.readBuffer, num);
+            short itemIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            byte b11 = this.readBuffer[num];
-            if (Main.netMode == 2 && Main.item[(int)num41].Owner != this.whoAmI)
+            byte owner = readBuffer[num];
+            Item item = Main.item[(int)itemIndex];
+
+            if (Main.netMode == 2)
             {
-                return;
-            }
-            Main.item[(int)num41].Owner = (int)b11;
-            if ((int)b11 == Main.myPlayer)
-            {
-                Main.item[(int)num41].KeepTime = 15;
+                if (item.Owner != whoAmI)
+                {
+                    return;
+                }
+
+                item.Owner = 255;
+                item.KeepTime = 15;
+                NetMessage.SendData(22, -1, -1, "", (int)itemIndex);
             }
             else
             {
-                Main.item[(int)num41].KeepTime = 0;
-            }
-            if (Main.netMode == 2)
-            {
-                Main.item[(int)num41].Owner = 255;
-                Main.item[(int)num41].KeepTime = 15;
-                NetMessage.SendData(22, -1, -1, "", (int)num41, 0f, 0f, 0f, 0);
-                return;
+                item.Owner = (int)owner;
+                item.KeepTime = ((int)owner == Main.myPlayer) ? 15 : 0;
             }
         }
 
-        private void method23(int start, int length, int num)
+
+        private void processNPCs(int start, int length, int num)
         {
-            short num42 = BitConverter.ToInt16(this.readBuffer, num);
+            short npcIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            float x4 = BitConverter.ToSingle(this.readBuffer, num);
+            float x = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float y3 = BitConverter.ToSingle(this.readBuffer, num);
+            float y = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float x5 = BitConverter.ToSingle(this.readBuffer, num);
+            float vX = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float y4 = BitConverter.ToSingle(this.readBuffer, num);
+            float vY = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            int target = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int target = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            int direction2 = (int)(this.readBuffer[num] - 1);
-            num++;
-            byte arg_2465_0 = this.readBuffer[num];
-            num++;
-            int num43 = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int direction = (int)(readBuffer[num++] - 1);
+            byte arg_2465_0 = readBuffer[num++];
+            int life = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            float[] array = new float[NPC.maxAI];
-            for (int num44 = 0; num44 < NPC.maxAI; num44++)
+
+            float[] aiInfo = new float[NPC.MAX_AI];
+            for (int i = 0; i < NPC.MAX_AI; i++)
             {
-                array[num44] = BitConverter.ToSingle(this.readBuffer, num);
+                aiInfo[i] = BitConverter.ToSingle(readBuffer, num);
                 num += 4;
             }
-            string string5 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-            if (!Main.npc[(int)num42].active || Main.npc[(int)num42].name != string5)
+
+            string npcName = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+
+            NPC npc = Main.npc[(int)npcIndex];
+            if (!npc.active || npc.name != npcName)
             {
-                Main.npc[(int)num42].active = true;
-                Main.npc[(int)num42].SetDefaults(string5);
+                npc.active = true;
+                npc.SetDefaults(npcName);
             }
-            Main.npc[(int)num42].position.X = x4;
-            Main.npc[(int)num42].position.Y = y3;
-            Main.npc[(int)num42].velocity.X = x5;
-            Main.npc[(int)num42].velocity.Y = y4;
-            Main.npc[(int)num42].target = target;
-            Main.npc[(int)num42].direction = direction2;
-            Main.npc[(int)num42].life = num43;
-            if (num43 <= 0)
+
+            npc.position.X = x;
+            npc.position.Y = y;
+            npc.velocity.X = vX;
+            npc.velocity.Y = vY;
+            npc.target = target;
+            npc.direction = direction;
+            npc.life = life;
+
+            if (life <= 0)
             {
-                Main.npc[(int)num42].active = false;
+                npc.active = false;
             }
-            for (int num45 = 0; num45 < NPC.maxAI; num45++)
+
+            for (int i = 0; i < NPC.MAX_AI; i++)
             {
-                Main.npc[(int)num42].ai[num45] = array[num45];
+                npc.ai[i] = aiInfo[i];
             }
-            return;
         }
 
-        private void method24(int num)
+        private void playerAttackNPC(int num)
         {
-            short num46 = BitConverter.ToInt16(this.readBuffer, num);
+            short npcIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            byte b12 = this.readBuffer[num];
+            byte playerIndex = readBuffer[num];
+
             if (Main.netMode == 2)
             {
-                b12 = (byte)this.whoAmI;
+                playerIndex = (byte)whoAmI;
             }
-            Main.npc[(int)num46].StrikeNPC(Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].Damage, Main.player[(int)b12].inventory[Main.player[(int)b12].selectedItem].KnockBack, Main.player[(int)b12].direction);
+
+            Player player = Main.player[(int)playerIndex];
+            Main.npc[(int)npcIndex].StrikeNPC(player.inventory[player.selectedItem].Damage, player.inventory[player.selectedItem].KnockBack, player.direction);
+            
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(24, -1, this.whoAmI, "", (int)num46, (float)b12, 0f, 0f, 0);
-                NetMessage.SendData(23, -1, -1, "", (int)num46, 0f, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(24, -1, whoAmI, "", (int)npcIndex, (float)playerIndex);
+                NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
             }
         }
 
-        private void method25(int start, int length)
+
+        private void processMessageEvent(int start, int length)
         {
-            int num46 = (int)this.readBuffer[start + 1];
+            int num46 = (int)readBuffer[start + 1];
+
             if (Main.netMode == 2)
             {
-                num46 = this.whoAmI;
+                num46 = whoAmI;
             }
-            byte b12 = this.readBuffer[start + 2];
-            byte b13 = this.readBuffer[start + 3];
-            byte b14 = this.readBuffer[start + 4];
-
-            b12 = 255;
-            b13 = 255;
-            b14 = 255;
-
-            string string7 = Encoding.ASCII.GetString(this.readBuffer, start + 5, length - 5);
 
             if (Main.netMode == 2)
             {
-                string Chat = string7.ToLower().Trim();
+                string chat = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5).ToLower().Trim();
 
-                if (Chat.Length > 0)
+                if (chat.Length > 0)
                 {
-                    if (Chat.Substring(0, 1).Equals("/"))
+                    if (chat.Substring(0, 1).Equals("/"))
                     {
-                        PlayerCommandEvent Event = new PlayerCommandEvent();
-                        Event.Message = Chat;
-                        Event.Sender = Main.player[this.whoAmI];
-                        Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_COMMAND, Event);
-                        if (Event.Cancelled)
+                        if (!ProcessMessage(new PlayerCommandEvent(), chat, Hooks.PLAYER_COMMAND))
                         {
                             return;
                         }
 
-                        Program.tConsole.WriteLine(Main.player[this.whoAmI].name + " Sent Command: " + string7);
-
-                        Program.commandParser.parsePlayerCommand(Main.player[this.whoAmI], Chat);
+                        Program.tConsole.WriteLine(Main.player[whoAmI].name + " Sent Command: " + chat);
+                        Program.commandParser.parsePlayerCommand(Main.player[whoAmI], chat);
                         return;
                     }
                     else
                     {
-
-                        PlayerChatEvent Event = new PlayerChatEvent();
-                        Event.Message = Chat;
-                        Event.Sender = Main.player[this.whoAmI];
-                        Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_CHAT, Event);
-
-                        if (Event.Cancelled)
+                        if (!ProcessMessage(new PlayerChatEvent(), chat, Hooks.PLAYER_CHAT))
                         {
                             return;
                         }
                     }
 
-                    NetMessage.SendData(25, -1, -1, string7, num46, (float)b12, (float)b13, (float)b14);
+                    NetMessage.SendData(25, -1, -1, chat, num46, (float)255, (float)255, (float)255);
                     if (Main.dedServ)
                     {
-                        Program.tConsole.WriteLine("<" + Main.player[this.whoAmI].name + "> " + string7);
-                        return;
+                        Program.tConsole.WriteLine("<" + Main.player[whoAmI].name + "> " + chat);
                     }
                 }
 
             }
         }
 
-        private void methodStrike(int start, int length, int num)
+
+        private bool ProcessMessage(BaseMessageEvent messageEvent, String text, Hooks hook)
         {
-            byte b16 = this.readBuffer[num];
-            if (Main.netMode == 2 && this.whoAmI != (int)b16 && (!Main.player[(int)b16].hostile || !Main.player[this.whoAmI].hostile))
+            messageEvent.Message = text;
+            messageEvent.Sender = Main.player[whoAmI];
+            Program.server.getPluginManager().processHook(hook, messageEvent);
+
+            return !messageEvent.Cancelled;
+        }
+
+
+        private void processStrike(int start, int length, int num)
+        {
+            int playerIndex = (int)readBuffer[num++];
+            Player player = Main.player[playerIndex];
+            if (Main.netMode == 2 && whoAmI != playerIndex && (!player.hostile || !Main.player[whoAmI].hostile))
             {
                 return;
             }
-            num++;
-            int num50 = (int)(this.readBuffer[num] - 1);
-            num++;
-            short num51 = BitConverter.ToInt16(this.readBuffer, num);
+
+            int hitDirection = (int)(readBuffer[num++] - 1);
+            short damage = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            byte b17 = this.readBuffer[num];
-            num++;
-            bool pvp = false;
-            string string7 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-            if (b17 != 0)
+            byte pvpFlag = readBuffer[num++];
+            bool pvp = (pvpFlag != 0);
+            string deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+
+            if (player.Hurt((int)damage, hitDirection, pvp, true, deathText) > 0.0)
             {
-                pvp = true;
-            }
-            if (Main.player[(int)b16].Hurt((int)num51, num50, pvp, true, string7) > 0.0)
-            {
-                NetMessage.SendData(26, -1, this.whoAmI, string7, (int)b16, (float)num50, (float)num51, (float)b17, 0);
-                return;
+                NetMessage.SendData(26, -1, whoAmI, deathText, playerIndex, (float)hitDirection, (float)damage, (float)pvpFlag, 0);
             }
         }
 
-        private void methodProjectile(int num)
+        private void processProjectile(int num)
         {
-            short num51 = BitConverter.ToInt16(this.readBuffer, num);
+            short projectileIdentity = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            float x6 = BitConverter.ToSingle(this.readBuffer, num);
+            float x = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float y5 = BitConverter.ToSingle(this.readBuffer, num);
+            float y = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float x7 = BitConverter.ToSingle(this.readBuffer, num);
+            float vX = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float y6 = BitConverter.ToSingle(this.readBuffer, num);
+            float vY = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            float knockBack = BitConverter.ToSingle(this.readBuffer, num);
+            float knockBack = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            short damage = BitConverter.ToInt16(this.readBuffer, num);
+            short damage = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            byte b17 = this.readBuffer[num];
-            num++;
-            byte b18 = this.readBuffer[num];
-            num++;
-            float[] array2 = new float[Projectile.maxAI];
-            for (int num52 = 0; num52 < Projectile.maxAI; num52++)
+
+            byte projectileOwner = readBuffer[num++];
+            byte type = readBuffer[num++];
+
+            float[] aiInfo = new float[Projectile.MAX_AI];
+            for (int i = 0; i < Projectile.MAX_AI; i++)
             {
-                array2[num52] = BitConverter.ToSingle(this.readBuffer, num);
+                aiInfo[i] = BitConverter.ToSingle(readBuffer, num);
                 num += 4;
             }
-            int num53 = 1000;
-            for (int num54 = 0; num54 < 1000; num54++)
+            
+            int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);
+            Projectile projectile = Main.projectile[projectileIndex];
+            if (!projectile.active || projectile.type != (int)type)
             {
-                if (Main.projectile[num54].owner == (int)b17 && Main.projectile[num54].identity == (int)num51 && Main.projectile[num54].active)
-                {
-                    num53 = num54;
-                    break;
-                }
-            }
-            if (num53 == 1000)
-            {
-                for (int num55 = 0; num55 < 1000; num55++)
-                {
-                    if (!Main.projectile[num55].active)
-                    {
-                        num53 = num55;
-                        break;
-                    }
-                }
-            }
-            if (!Main.projectile[num53].active || Main.projectile[num53].type != (int)b18)
-            {
-                Main.projectile[num53].SetDefaults((int)b18);
+                projectile.SetDefaults((int)type);
                 if (Main.netMode == 2)
                 {
-                    Netplay.serverSock[this.whoAmI].spamProjectile += 1f;
+                    Netplay.serverSock[whoAmI].spamProjectile += 1f;
                 }
             }
-            Main.projectile[num53].identity = (int)num51;
-            Main.projectile[num53].position.X = x6;
-            Main.projectile[num53].position.Y = y5;
-            Main.projectile[num53].velocity.X = x7;
-            Main.projectile[num53].velocity.Y = y6;
-            Main.projectile[num53].damage = (int)damage;
-            Main.projectile[num53].type = (int)b18;
-            Main.projectile[num53].owner = (int)b17;
-            Main.projectile[num53].knockBack = knockBack;
-            for (int num56 = 0; num56 < Projectile.maxAI; num56++)
+
+            projectile.identity = (int)projectileIdentity;
+            projectile.position.X = x;
+            projectile.position.Y = y;
+            projectile.velocity.X = vX;
+            projectile.velocity.Y = vY;
+            projectile.damage = (int)damage;
+            projectile.type = (int)type;
+            projectile.owner = (int)projectileOwner;
+            projectile.knockBack = knockBack;
+
+            for (int i = 0; i < Projectile.MAX_AI; i++)
             {
-                Main.projectile[num53].ai[num56] = array2[num56];
+                projectile.ai[i] = aiInfo[i];
             }
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(27, -1, this.whoAmI, "", num53, 0f, 0f, 0f);
-                return;
+                NetMessage.SendData(27, -1, whoAmI, "", projectileIndex, 0f, 0f, 0f);
             }
         }
 
-        private void method28(int num)
+
+        private int getProjectileIndex(int owner, int identity)
         {
-            short num57 = BitConverter.ToInt16(this.readBuffer, num);
-            num += 2;
-            short num58 = BitConverter.ToInt16(this.readBuffer, num);
-            num += 2;
-            float num59 = BitConverter.ToSingle(this.readBuffer, num);
-            num += 4;
-            int num60 = (int)(this.readBuffer[num] - 1);
-            if (num58 >= 0)
+            int index = 1000;
+            int firstInactive = index;
+            Projectile projectile;
+            for (int i = 0; i < index; i++)
             {
-                Main.npc[(int)num57].StrikeNPC((int)num58, num59, num60);
+                projectile = Main.projectile[i];
+                if (projectile.owner == owner
+                    && projectile.identity == identity
+                    && projectile.active)
+                {
+                    return i;
+                }
+
+                if (firstInactive == index && !projectile.active)
+                {
+                    firstInactive = i;
+                }
+            }
+
+            return firstInactive;
+        }
+
+
+        private void processNPCDamage(int num)
+        {
+            short npcIndex = BitConverter.ToInt16(readBuffer, num);
+            num += 2;
+            short damage = BitConverter.ToInt16(readBuffer, num);
+            num += 2;
+            float knockback = BitConverter.ToSingle(readBuffer, num);
+            num += 4;
+            int direction = (int)(readBuffer[num] - 1);
+
+            NPC npc = Main.npc[(int)npcIndex];
+            if (damage >= 0)
+            {
+                npc.StrikeNPC((int)damage, knockback, direction);
             }
             else
             {
-                Main.npc[(int)num57].life = 0;
-                Main.npc[(int)num57].HitEffect(0, 10.0);
-                Main.npc[(int)num57].active = false;
+                npc.life = 0;
+                npc.HitEffect(0, 10.0);
+                npc.active = false;
             }
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(28, -1, this.whoAmI, "", (int)num57, (float)num58, num59, (float)num60);
-                NetMessage.SendData(23, -1, -1, "", (int)num57, 0f, 0f, 0f);
-                return;
+                NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction);
+                NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
             }
         }
 
-        private void method29(int num)
+
+        private void killProjectile(int num)
         {
-            short num62 = BitConverter.ToInt16(this.readBuffer, num);
+            short identity = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            byte b20 = this.readBuffer[num];
+            byte owner = readBuffer[num];
             if (Main.netMode == 2)
             {
-                b20 = (byte)this.whoAmI;
+                owner = (byte)whoAmI;
             }
-            for (int num63 = 0; num63 < 1000; num63++)
+
+            Projectile projectile;
+            for (int i = 0; i < 1000; i++)
             {
-                if (Main.projectile[num63].owner == (int)b20 && Main.projectile[num63].identity == (int)num62 && Main.projectile[num63].active)
+                projectile = Main.projectile[i];
+                if (projectile.owner == (int)owner && projectile.identity == (int)identity && projectile.active)
                 {
-                    Main.projectile[num63].Kill();
+                    projectile.Kill();
                     break;
                 }
             }
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(29, -1, this.whoAmI, "", (int)num62, (float)b20, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(29, -1, whoAmI, "", (int)identity, (float)owner);
             }
         }
 
-        private void method30(int num)
+        
+        private void switchPvP(int num)
         {
-            byte b21 = this.readBuffer[num];
+            int playerIndex = readBuffer[num++];
             if (Main.netMode == 2)
             {
-                b21 = (byte)this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            byte b22 = this.readBuffer[num];
-            if (b22 == 1)
-            {
-                Main.player[(int)b21].hostile = true;
-            }
-            else
-            {
-                Main.player[(int)b21].hostile = false;
-            }
+
+            Player player = Main.player[playerIndex];
+            player.hostile = (readBuffer[num] == 1);
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(30, -1, this.whoAmI, "", (int)b21, 0f, 0f, 0f, 0);
-                string str = " has enabled PvP!";
-                if (b22 == 0)
+                NetMessage.SendData(30, -1, whoAmI, "", playerIndex);
+
+                String message;
+                if(player.hostile)
                 {
-                    str = " has disabled PvP!";
+                    message = " has enabled PvP!";
                 }
-                NetMessage.SendData(25, -1, -1, Main.player[(int)b21].name + str, 255, (float)Main.teamColor[Main.player[(int)b21].team].R, (float)Main.teamColor[Main.player[(int)b21].team].G, (float)Main.teamColor[Main.player[(int)b21].team].B, 0);
-                return;
-            }
-        }
-
-        private void method31(int num)
-        {
-            int x8 = BitConverter.ToInt32(this.readBuffer, num);
-            num += 4;
-            int y7 = BitConverter.ToInt32(this.readBuffer, num);
-            num += 4;
-            int num63 = Chest.FindChest(x8, y7);
-            var Event = new ChestOpenEvent();
-            Event.Sender = Main.player[whoAmI];
-            Event.ID = num63;
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_CHEST, Event);
-            if (Event.Cancelled) return;
-            if (num63 > -1 && Chest.UsingChest(num63) == -1)
-            {
-                for (int num64 = 0; num64 < Chest.maxItems; num64++)
+                else
                 {
-                    NetMessage.SendData(32, this.whoAmI, -1, "", num63, (float)num64, 0f, 0f);
+                    message = " has disabled PvP!";
                 }
-                NetMessage.SendData(33, this.whoAmI, -1, "", num63, 0f, 0f, 0f);
-                Main.player[this.whoAmI].chest = num63;
+                NetMessage.SendData(25, -1, -1, player.name + message, 255, (float)Main.teamColor[player.team].R, (float)Main.teamColor[player.team].G, (float)Main.teamColor[player.team].B);
+            }
+        }
+
+
+        private void useChest(int num)
+        {
+            int x = BitConverter.ToInt32(readBuffer, num);
+            num += 4;
+            int y = BitConverter.ToInt32(readBuffer, num);
+            num += 4;
+            int chestIndex = Chest.FindChest(x, y);
+            var chestEvent = new ChestOpenEvent();
+            chestEvent.Sender = Main.player[whoAmI];
+            chestEvent.ID = chestIndex;
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_CHEST, chestEvent);
+            
+            if (chestEvent.Cancelled)
+            {
+                return;
+            }
+
+            if (chestIndex > -1 && Chest.UsingChest(chestIndex) == -1)
+            {
+                for (int i = 0; i < Chest.MAX_ITEMS; i++)
+                {
+                    NetMessage.SendData(32, whoAmI, -1, "", chestIndex, (float)i);
+                }
+                NetMessage.SendData(33, whoAmI, -1, "", chestIndex);
+                Main.player[whoAmI].chest = chestIndex;
                 return;
             }
         }
 
-        private void method32(int start, int length, int num)
+
+        private void addToChest(int start, int length, int num)
         {
-            int num65 = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int chestIndex = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            int num66 = (int)this.readBuffer[num];
-            num++;
-            int stack3 = (int)this.readBuffer[num];
-            num++;
-            string string8 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-            if (Main.chest[num65] == null)
+            int contentsIndex = (int)readBuffer[num++];
+            int stackSize = (int)readBuffer[num++];
+
+            string string8 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            
+            if (Main.chest[chestIndex] == null)
             {
-                Main.chest[num65] = new Chest();
+                Main.chest[chestIndex] = new Chest();
             }
-            if (Main.chest[num65].contents[num66] == null)
+            
+            if (Main.chest[chestIndex].contents[contentsIndex] == null)
             {
-                Main.chest[num65].contents[num66] = new Item();
+                Main.chest[chestIndex].contents[contentsIndex] = new Item();
             }
-            Main.chest[num65].contents[num66].SetDefaults(string8);
-            Main.chest[num65].contents[num66].Stack = stack3;
-            return;
+
+            Main.chest[chestIndex].contents[contentsIndex].SetDefaults(string8);
+            Main.chest[chestIndex].contents[contentsIndex].Stack = stackSize;
         }
 
-        private void method33(int num)
+
+        private void manageInventory(int num)
         {
-            int num67 = BitConverter.ToInt32(this.readBuffer, num);
+            int inventoryIndex = BitConverter.ToInt32(readBuffer, num);
             num += 2;
-            int chestX = BitConverter.ToInt32(this.readBuffer, num);
+            int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int chestY = BitConverter.ToInt32(this.readBuffer, num);
+            int y = BitConverter.ToInt32(readBuffer, num);
+
             if (Main.netMode == 1)
             {
-                if (Main.player[Main.myPlayer].chest == -1)
+                Player player = Main.player[Main.myPlayer];
+                if (player.chest == -1
+                    || (player.chest != inventoryIndex && inventoryIndex != -1))
                 {
                     Main.playerInventory = true;
                 }
-                else
-                {
-                    if (Main.player[Main.myPlayer].chest != num67 && num67 != -1)
-                    {
-                        Main.playerInventory = true;
-                    }
-                }
-                Main.player[Main.myPlayer].chest = num67;
-                Main.player[Main.myPlayer].chestX = chestX;
-                Main.player[Main.myPlayer].chestY = chestY;
-                return;
+
+                player.chest = inventoryIndex;
+                player.chestX = x;
+                player.chestY = y;
             }
-            Main.player[this.whoAmI].chest = num67;
-            return;
+            else
+            {
+                Main.player[whoAmI].chest = inventoryIndex;
+            }
         }
 
-        private void method34(int num)
+
+        private void killTile(int num)
         {
-            int num69 = BitConverter.ToInt32(this.readBuffer, num);
+            int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int num70 = BitConverter.ToInt32(this.readBuffer, num);
-            if (Main.tile[num69, num70].type == 21)
+            int y = BitConverter.ToInt32(readBuffer, num);
+            if (Main.tile[x, y].type == 21)
             {
-                WorldGen.KillTile(num69, num70, false, false, false);
-                if (!Main.tile[num69, num70].active)
+                WorldGen.KillTile(x, y);
+                if (!Main.tile[x, y].active)
                 {
-                    NetMessage.SendData(17, -1, -1, "", 0, (float)num69, (float)num70, 0f, 0);
-                    return;
+                    NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
                 }
             }
         }
 
-        private void method35(int num)
+
+        private void heal(int num)
         {
-            int num71 = (int)this.readBuffer[num];
+            int playerIndex = (int)readBuffer[num++];
+
             if (Main.netMode == 2)
             {
-                num71 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            int num72 = (int)BitConverter.ToInt16(this.readBuffer, num);
+
+            int heal = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            if (num71 != Main.myPlayer)
+
+            if (playerIndex != Main.myPlayer)
             {
-                Main.player[num71].HealEffect(num72);
+                Main.player[playerIndex].HealEffect(heal);
             }
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(35, -1, this.whoAmI, "", num71, (float)num72, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(35, -1, whoAmI, "", playerIndex, (float)heal);
             }
         }
 
-        private void method36(int num)
+
+        private void enterZone(int num)
         {
-            int num73 = (int)this.readBuffer[num];
+            int playerIndex = (int)readBuffer[num++];
             if (Main.netMode == 2)
             {
-                num73 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            int num74 = (int)this.readBuffer[num];
-            num++;
-            int num75 = (int)this.readBuffer[num];
-            num++;
-            int num76 = (int)this.readBuffer[num];
-            num++;
-            int num77 = (int)this.readBuffer[num];
-            num++;
-            if (num74 == 0)
-            {
-                Main.player[num73].zoneEvil = false;
-            }
-            else
-            {
-                Main.player[num73].zoneEvil = true;
-            }
-            if (num75 == 0)
-            {
-                Main.player[num73].zoneMeteor = false;
-            }
-            else
-            {
-                Main.player[num73].zoneMeteor = true;
-            }
-            if (num76 == 0)
-            {
-                Main.player[num73].zoneDungeon = false;
-            }
-            else
-            {
-                Main.player[num73].zoneDungeon = true;
-            }
-            if (num77 == 0)
-            {
-                Main.player[num73].zoneJungle = false;
-            }
-            else
-            {
-                Main.player[num73].zoneJungle = true;
-            }
+
+            Player player = Main.player[playerIndex];
+            player.zoneEvil = (readBuffer[num++] != 0);
+            player.zoneMeteor = (readBuffer[num++] != 0);
+            player.zoneDungeon = (readBuffer[num++] != 0);
+            player.zoneJungle = (readBuffer[num++] != 0);
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(36, -1, this.whoAmI, "", num73, 0f, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(36, -1, whoAmI, "", playerIndex);
             }
         }
 
-        private void method37()
+
+        private void isAutoPass()
         {
             if (Main.autoPass)
             {
-                NetMessage.SendData(38, -1, -1, Netplay.password, 0, 0f, 0f, 0f, 0);
+                NetMessage.SendData(38, -1, -1, Netplay.password);
                 Main.autoPass = false;
                 return;
             }
@@ -1747,352 +1642,340 @@ namespace Terraria_Server
             Main.menuMode = 31;
         }
 
-        private void method38(int start, int length, int num)
+
+        private void verifyPassword(int start, int length, int num)
         {
-            string string9 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-            if (string9 == Netplay.password)
+            string password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            if (password == Netplay.password)
             {
-                Netplay.serverSock[this.whoAmI].state = 1;
-                NetMessage.SendData(3, this.whoAmI, -1, "", 0, 0f, 0f, 0f, 0);
+                Netplay.serverSock[whoAmI].state = 1;
+                NetMessage.SendData(3, whoAmI);
                 return;
             }
-            NetMessage.SendData(2, this.whoAmI, -1, "Incorrect password.", 0, 0f, 0f, 0f, 0);
+            NetMessage.SendData(2, whoAmI, -1, "Incorrect password.");
         }
 
-        private void method39(int num)
+
+        private void disownItem(int num)
         {
-            short num78 = BitConverter.ToInt16(this.readBuffer, num);
-            Main.item[(int)num78].Owner = 255;
-            NetMessage.SendData(22, -1, -1, "", (int)num78, 0f, 0f, 0f, 0);
+            short itemIndex = BitConverter.ToInt16(readBuffer, num);
+            Main.item[(int)itemIndex].Owner = 255;
+            NetMessage.SendData(22, -1, -1, "", (int)itemIndex);
         }
 
-        private void method40(int num)
+
+        private void talkToNPC(int num)
         {
-            byte b23 = this.readBuffer[num];
+            int playerIndex = readBuffer[num++];
+
             if (Main.netMode == 2)
             {
-                b23 = (byte)this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            int talkNPC = (int)BitConverter.ToInt16(this.readBuffer, num);
+
+            int talkNPC = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            Main.player[(int)b23].talkNPC = talkNPC;
+            Main.player[playerIndex].talkNPC = talkNPC;
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(40, -1, this.whoAmI, "", (int)b23, 0f, 0f, 0f, 0);
+                NetMessage.SendData(40, -1, whoAmI, "", playerIndex);
             }
         }
 
-        private void method41(int num)
+        private void rotateItem(int num)
         {
-            byte b24 = this.readBuffer[num];
+            int playerIndex = readBuffer[num++];
+
             if (Main.netMode == 2)
             {
-                b24 = (byte)this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            float itemRotation = BitConverter.ToSingle(this.readBuffer, num);
+
+            float itemRotation = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            int itemAnimation = (int)BitConverter.ToInt16(this.readBuffer, num);
-            Main.player[(int)b24].itemRotation = itemRotation;
-            Main.player[(int)b24].itemAnimation = itemAnimation;
+            int itemAnimation = (int)BitConverter.ToInt16(readBuffer, num);
+            Main.player[playerIndex].itemRotation = itemRotation;
+            Main.player[playerIndex].itemAnimation = itemAnimation;
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(41, -1, this.whoAmI, "", (int)b24, 0f, 0f, 0f, 0);
+                NetMessage.SendData(41, -1, whoAmI, "", playerIndex);
             }
         }
 
-        private void method42(int num)
+
+        private void setMana(int num)
         {
-            int num79 = (int)this.readBuffer[num];
+            int playerIndex = (int)readBuffer[num++];
             if (Main.netMode == 2)
             {
-                num79 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            int statMana = (int)BitConverter.ToInt16(this.readBuffer, num);
+
+            int statMana = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            int statManaMax = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int statManaMax = (int)BitConverter.ToInt16(readBuffer, num);
+
+            Main.player[playerIndex].statMana = statMana;
+            Main.player[playerIndex].statManaMax = statManaMax;
             if (Main.netMode == 2)
             {
-                num79 = this.whoAmI;
+                NetMessage.SendData(42, -1, whoAmI, "", playerIndex);
             }
-            Main.player[num79].statMana = statMana;
-            Main.player[num79].statManaMax = statManaMax;
+        }
+
+        private void useMana(int num)
+        {
+            int playerIndex = (int)readBuffer[num++];
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(42, -1, this.whoAmI, "", num79, 0f, 0f, 0f, 0);
+                playerIndex = whoAmI;
+            }
+
+            int manaAmount = (int)BitConverter.ToInt16(readBuffer, num);
+            num += 2;
+
+            if (playerIndex != Main.myPlayer)
+            {
+                Main.player[playerIndex].ManaEffect(manaAmount);
+            }
+
+            if (Main.netMode == 2)
+            {
+                NetMessage.SendData(43, -1, whoAmI, "", playerIndex, (float)manaAmount);
+            }
+        }
+
+
+        private void pvpKill(int start, int length, int num)
+        {
+            int playerIndex = readBuffer[num++];
+            if (playerIndex == Main.myPlayer)
+            {
                 return;
             }
-        }
 
-        private void method43(int num)
-        {
-            int num80 = (int)this.readBuffer[num];
             if (Main.netMode == 2)
             {
-                num80 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            int num81 = (int)BitConverter.ToInt16(this.readBuffer, num);
+
+            int direction = (int)(readBuffer[num++] - 1);
+
+            short damage = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            if (num80 != Main.myPlayer)
-            {
-                Main.player[num80].ManaEffect(num81);
-            }
+            byte pvpFlag = readBuffer[num++];
+
+            string deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            bool pvp = (pvpFlag != 0);
+
+            Main.player[playerIndex].KillMe((double)damage, direction, pvp, deathText);
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(43, -1, this.whoAmI, "", num80, (float)num81, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(44, -1, whoAmI, deathText, playerIndex, (float)direction, (float)damage, (float)pvpFlag, 0);
             }
         }
 
-        private void method44(int start, int length, int num)
-        {
-            byte b25 = this.readBuffer[num];
-            if ((int)b25 == Main.myPlayer)
-            {
-                return;
-            }
-            if (Main.netMode == 2)
-            {
-                b25 = (byte)this.whoAmI;
-            }
-            num++;
-            int num82 = (int)(this.readBuffer[num] - 1);
-            num++;
-            short num83 = BitConverter.ToInt16(this.readBuffer, num);
-            num += 2;
-            byte b26 = this.readBuffer[num];
-            num++;
-            string string10 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-            bool pvp2 = false;
-            if (b26 != 0)
-            {
-                pvp2 = true;
-            }
-            Main.player[(int)b25].KillMe((double)num83, num82, pvp2, string10);
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(44, -1, this.whoAmI, string10, (int)b25, (float)num82, (float)num83, (float)b26, 0);
-            }
-        }
 
-        private void method45(int num)
+        private void joinParty(int num)
         {
-            int num83 = (int)this.readBuffer[num];
+            int playerIndex = (int)readBuffer[num++];
             if (Main.netMode == 2)
             {
-                num83 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            num++;
-            int num84 = (int)this.readBuffer[num];
-            num++;
-            int team = Main.player[num83].team;
+
+            int teamIndex = (int)readBuffer[num++];
+            Player player = Main.player[playerIndex];
+            int currentTeam = player.team;
+
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(45, -1, this.whoAmI, "", num83, 0f, 0f, 0f);
+                NetMessage.SendData(45, -1, whoAmI, "", playerIndex);
                 Party party = Party.NONE;
-                string str2 = "";
-                if (num84 == 0)
+                string joinMessage = "";
+                switch (teamIndex)
                 {
-                    str2 = " is no longer on a party.";
-                }
-                else
-                {
-                    if (num84 == 1)
-                    {
-                        str2 = " has joined the red party.";
+                    case 0:
+                        joinMessage = " is no longer on a party.";
+                        break;
+                    case 1:
+                        joinMessage = " has joined the red party.";
                         party = Party.RED;
-                    }
-                    else
-                    {
-                        if (num84 == 2)
-                        {
-                            str2 = " has joined the green party.";
-                            party = Party.GREEN;
-                        }
-                        else
-                        {
-                            if (num84 == 3)
-                            {
-                                str2 = " has joined the blue party.";
-                                party = Party.BLUE;
-                            }
-                            else
-                            {
-                                if (num84 == 4)
-                                {
-                                    str2 = " has joined the yellow party.";
-                                    party = Party.YELLOW;
-                                }
-                            }
-                        }
-                    }
+                        break;
+                    case 2:
+                        joinMessage = " has joined the green party.";
+                        party = Party.GREEN;
+                        break;
+                    case 3:
+                        joinMessage = " has joined the blue party.";
+                        party = Party.BLUE;
+                        break;
+                    case 4:
+                        joinMessage = " has joined the yellow party.";
+                        party = Party.YELLOW;
+                        break;
                 }
-                PartyChangeEvent Event = new PartyChangeEvent();
-                Event.PartyType = party;
-                Event.Sender = Main.player[this.whoAmI];
-                Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PARTYCHANGE, Event);
-                if (Event.Cancelled)
+
+                PartyChangeEvent changeEvent = new PartyChangeEvent();
+                changeEvent.PartyType = party;
+                changeEvent.Sender = Main.player[whoAmI];
+                Program.server.getPluginManager().processHook(Hooks.PLAYER_PARTYCHANGE, changeEvent);
+                if (changeEvent.Cancelled)
                 {
                     return;
                 }
 
-                Main.player[num83].team = num84;
-                for (int num85 = 0; num85 < 255; num85++)
+                player.team = teamIndex;
+                for (int i = 0; i < 255; i++)
                 {
-                    if (num85 == this.whoAmI || (team > 0 && Main.player[num85].team == team) || (num84 > 0 && Main.player[num85].team == num84))
+                    if (i == whoAmI
+                        || (currentTeam > 0 && player.team == currentTeam)
+                        || (teamIndex > 0 && player.team == teamIndex))
                     {
-                        NetMessage.SendData(25, num85, -1, Main.player[num83].name + str2, 255, (float)Main.teamColor[num84].R, (float)Main.teamColor[num84].G, (float)Main.teamColor[num84].B);
+                        NetMessage.SendData(25, i, -1, player.name + joinMessage, 255, (float)Main.teamColor[teamIndex].R, (float)Main.teamColor[teamIndex].G, (float)Main.teamColor[teamIndex].B);
                     }
                 }
-                return;
             }
         }
 
-        private void method46(int num)
+
+        private void ReadSign(int num)
         {
-            int i2 = BitConverter.ToInt32(this.readBuffer, num);
+            int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int j2 = BitConverter.ToInt32(this.readBuffer, num);
+            int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int num87 = Sign.ReadSign(i2, j2);
-            if (num87 >= 0)
+
+            int signIndex = Sign.ReadSign(x, y);
+            if (signIndex >= 0)
             {
-                NetMessage.SendData(47, this.whoAmI, -1, "", num87, 0f, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(47, whoAmI, -1, "", signIndex);
             }
         }
 
-        private void method47(int start, int length, int num)
+
+        private void WriteSign(int start, int length, int num)
         {
-            int num88 = (int)BitConverter.ToInt16(this.readBuffer, num);
+            int signIndex = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            int x9 = BitConverter.ToInt32(this.readBuffer, num);
+            int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int y8 = BitConverter.ToInt32(this.readBuffer, num);
+            int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            string string11 = Encoding.ASCII.GetString(this.readBuffer, num, length - num + start);
-            Main.sign[num88] = new Sign();
-            Main.sign[num88].x = x9;
-            Main.sign[num88].y = y8;
-            Sign.TextSign(num88, string11);
-            if (Main.netMode == 1 && Main.sign[num88] != null && num88 != Main.player[Main.myPlayer].sign)
+
+            string string11 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            Main.sign[signIndex] = new Sign();
+            Sign sign = Main.sign[signIndex];
+            sign.x = x;
+            sign.y = y;
+            Sign.TextSign(signIndex, string11);
+            Player player = Main.player[Main.myPlayer];
+
+            if (Main.netMode == 1 
+                && sign != null
+                && signIndex != player.sign)
             {
                 Main.playerInventory = false;
-                Main.player[Main.myPlayer].talkNPC = -1;
+                player.talkNPC = -1;
                 Main.editSign = false;
-                Main.player[Main.myPlayer].sign = num88;
-                Main.npcChatText = Main.sign[num88].text;
-                return;
+                player.sign = signIndex;
+                Main.npcChatText = sign.text;
             }
         }
 
-        private void method48(int num)
+        private void FlowLiquid(int num)
         {
-            int num89 = BitConverter.ToInt32(this.readBuffer, num);
+            int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            int num90 = BitConverter.ToInt32(this.readBuffer, num);
+            int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
-            byte liquid = this.readBuffer[num];
-            num++;
-            byte b27 = this.readBuffer[num];
-            num++;
+            byte liquid = readBuffer[num++];
+            byte lavaFlag = readBuffer[num]++;
+
             if (Main.netMode == 2 && Netplay.spamCheck)
             {
-                int num91 = this.whoAmI;
-                int num92 = (int)(Main.player[num91].position.X + (float)(Main.player[num91].width / 2));
-                int num93 = (int)(Main.player[num91].position.Y + (float)(Main.player[num91].height / 2));
-                int num94 = 10;
-                int num95 = num92 - num94;
-                int num96 = num92 + num94;
-                int num97 = num93 - num94;
-                int num98 = num93 + num94;
-                if (num92 < num95 || num92 > num96 || num93 < num97 || num93 > num98)
+                int playerIndex = whoAmI;
+                Player player = Main.player[playerIndex];
+                int centerX = (int)(player.position.X + (float)(player.width / 2));
+                int centerY = (int)(player.position.Y + (float)(player.height / 2));
+                int disperseDistance = 10;
+                int left = centerX - disperseDistance;
+                int right = centerX + disperseDistance;
+                int top = centerY - disperseDistance;
+                int bottom = centerY + disperseDistance;
+                if (centerX < left || centerX > right || centerY < top || centerY > bottom)
                 {
-                    NetMessage.BootPlayer(this.whoAmI, "Cheating attempt detected: Liquid spam");
+                    NetMessage.BootPlayer(whoAmI, "Cheating attempt detected: Liquid spam");
                     return;
                 }
             }
-            if (Main.tile[num89, num90] == null)
+            if (Main.tile[x, y] == null)
             {
-                Main.tile[num89, num90] = new Tile();
+                Main.tile[x, y] = new Tile();
             }
-            lock (Main.tile[num89, num90])
+            Tile tile = Main.tile[x, y];
+            lock (tile)
             {
-                Main.tile[num89, num90].liquid = liquid;
-                if (b27 == 1)
-                {
-                    Main.tile[num89, num90].lava = true;
-                }
-                else
-                {
-                    Main.tile[num89, num90].lava = false;
-                }
+                tile.liquid = liquid;
+                tile.lava = (lavaFlag == 1);
+
                 if (Main.netMode == 2)
                 {
-                    WorldGen.SquareTileFrame(num89, num90, true);
+                    WorldGen.SquareTileFrame(x, y, true);
                 }
-                return;
             }
         }
 
-        private void method49()
+
+        private void SpawnPlayerAlt()
         {
             if (Netplay.clientSock.state == 6)
             {
                 Netplay.clientSock.state = 10;
                 Main.player[Main.myPlayer].Spawn();
-                return;
             }
         }
 
-        private void method50(int num)
+        private void Buffs(int num)
         {
-            int num99 = (int)this.readBuffer[num];
-            num++;
+            int playerIndex = (int)readBuffer[num++];
             if (Main.netMode == 2)
             {
-                num99 = this.whoAmI;
+                playerIndex = whoAmI;
             }
-            else
+            else if (playerIndex == Main.myPlayer)
             {
-                if (num99 == Main.myPlayer)
-                {
-                    return;
-                }
+                return;
             }
 
-            for (int num100 = 0; num100 < 10; num100++)
+            Player player = Main.player[playerIndex];
+            for (int i = 0; i < 10; i++)
             {
-                Main.player[num99].buffType[num100] = (int)this.readBuffer[num];
-                if (Main.player[num99].buffType[num100] > 0)
+                player.buffType[i] = (int)readBuffer[num++];
+                if (player.buffType[i] > 0)
                 {
-                    Main.player[num99].buffTime[num100] = 60;
+                    player.buffTime[i] = 60;
                 }
                 else
                 {
-                    Main.player[num99].buffTime[num100] = 0;
+                    player.buffTime[i] = 0;
                 }
-                num++;
             }
 
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(50, -1, this.whoAmI, "", num99, 0f, 0f, 0f, 0);
-                return;
+                NetMessage.SendData(50, -1, whoAmI, "", playerIndex);
             }
         }
 
-        private void method51(int num)
+        private void SummonSkeletron(int num)
         {
-            byte b28 = this.readBuffer[num];
-            if (b28 == 1)
+            byte buffer = readBuffer[num];
+            if (buffer == 1)
             {
                 NPC.SpawnSkeletron();
             }
         }
-
     }
 }

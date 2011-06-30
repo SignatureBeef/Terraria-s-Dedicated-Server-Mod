@@ -4,8 +4,8 @@ namespace Terraria_Server.Shops
 {
     public class Chest
     {
-        public static int maxItems = 20;
-        public Item[] contents = new Item[maxItems];
+        public const int MAX_ITEMS = 20;
+        public Item[] contents = new Item[MAX_ITEMS];
         public int x;
         public int y;
 
@@ -78,7 +78,7 @@ namespace Terraria_Server.Shops
                     Main.chest[i] = new Chest();
                     Main.chest[i].x = X;
                     Main.chest[i].y = Y;
-                    for (int j = 0; j < Chest.maxItems; j++)
+                    for (int j = 0; j < Chest.MAX_ITEMS; j++)
                     {
                         Main.chest[i].contents[j] = new Item();
                     }

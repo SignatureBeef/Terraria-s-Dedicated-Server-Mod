@@ -6,8 +6,9 @@ namespace Terraria_Server
 {
     public class NPC
     {
+        public const int MAX_AI = 4;
+
         public static int immuneTime = 20;
-        public static int maxAI = 4;
         private static int spawnSpaceX = 3;
         private static int spawnSpaceY = 3;
         public static int sWidth = 1680;
@@ -45,7 +46,7 @@ namespace Terraria_Server
         public int direction = 1;
         public int directionY = 1;
         public int type;
-        public float[] ai = new float[NPC.maxAI];
+        public float[] ai = new float[NPC.MAX_AI];
         public int aiAction;
         public int aiStyle;
         public int timeLeft;
@@ -323,7 +324,7 @@ namespace Terraria_Server
             this.type = Type;
             this.value = 0f;
 
-            for (int i = 0; i < NPC.maxAI; i++)
+            for (int i = 0; i < NPC.MAX_AI; i++)
             {
                 this.ai[i] = 0f;
             }

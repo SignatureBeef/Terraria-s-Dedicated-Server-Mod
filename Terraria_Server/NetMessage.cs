@@ -726,7 +726,7 @@ namespace Terraria_Server
                                                                                                                 bytes106 = BitConverter.GetBytes(0);
                                                                                                             }
                                                                                                             byte[] bytes107 = Encoding.ASCII.GetBytes(Main.npc[number].name);
-                                                                                                            num2 += bytes100.Length + bytes101.Length + bytes102.Length + bytes103.Length + bytes104.Length + bytes105.Length + bytes106.Length + NPC.maxAI * 4 + bytes107.Length + 1 + 1;
+                                                                                                            num2 += bytes100.Length + bytes101.Length + bytes102.Length + bytes103.Length + bytes104.Length + bytes105.Length + bytes106.Length + NPC.MAX_AI * 4 + bytes107.Length + 1 + 1;
                                                                                                             byte[] bytes108 = BitConverter.GetBytes(num2 - 4);
                                                                                                             Buffer.BlockCopy(bytes108, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
                                                                                                             Buffer.BlockCopy(bytes99, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
@@ -748,7 +748,7 @@ namespace Terraria_Server
                                                                                                             num3++;
                                                                                                             Buffer.BlockCopy(bytes106, 0, NetMessage.buffer[num].writeBuffer, num3, bytes106.Length);
                                                                                                             num3 += 2;
-                                                                                                            for (int l = 0; l < NPC.maxAI; l++)
+                                                                                                            for (int l = 0; l < NPC.MAX_AI; l++)
                                                                                                             {
                                                                                                                 byte[] bytes109 = BitConverter.GetBytes(Main.npc[number].ai[l]);
                                                                                                                 Buffer.BlockCopy(bytes109, 0, NetMessage.buffer[num].writeBuffer, num3, bytes109.Length);
@@ -850,7 +850,7 @@ namespace Terraria_Server
                                                                                                                             num3++;
                                                                                                                             NetMessage.buffer[num].writeBuffer[num3] = (byte)Main.projectile[number].type;
                                                                                                                             num3++;
-                                                                                                                            for (int m = 0; m < Projectile.maxAI; m++)
+                                                                                                                            for (int m = 0; m < Projectile.MAX_AI; m++)
                                                                                                                             {
                                                                                                                                 byte[] bytes128 = BitConverter.GetBytes(Main.projectile[number].ai[m]);
                                                                                                                                 Buffer.BlockCopy(bytes128, 0, NetMessage.buffer[num].writeBuffer, num3, bytes128.Length);
@@ -1437,7 +1437,6 @@ namespace Terraria_Server
 				}
 				goto IL_33DC;
 				IL_3425:
-				NetMessage.buffer[num].writeLocked = false;
 				if (packetId == 19 && Main.netMode == 1)
 				{
 					int size = 5;

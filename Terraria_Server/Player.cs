@@ -59,7 +59,7 @@ namespace Terraria_Server
 		public int breath = 200;
 		public string setBonus = "";
 		public Item[] inventory = new Item[44];
-		public Item[] bank = new Item[Chest.maxItems];
+		public Item[] bank = new Item[Chest.MAX_ITEMS];
 		public float headRotation;
 		public float bodyRotation;
 		public float legRotation;
@@ -4552,7 +4552,7 @@ namespace Terraria_Server
 						binaryWriter.Write(newPlayer.inventory[j].Name);
 						binaryWriter.Write(newPlayer.inventory[j].Stack);
 					}
-					for (int k = 0; k < Chest.maxItems; k++)
+					for (int k = 0; k < Chest.MAX_ITEMS; k++)
 					{
 						if (newPlayer.bank[k].Name == null)
 						{
@@ -4643,7 +4643,7 @@ namespace Terraria_Server
 								player.inventory[j].SetDefaults(Item.VersionName(binaryReader.ReadString(), release));
 								player.inventory[j].Stack = binaryReader.ReadInt32();
 							}
-							for (int k = 0; k < Chest.maxItems; k++)
+							for (int k = 0; k < Chest.MAX_ITEMS; k++)
 							{
 								player.bank[k].SetDefaults(Item.VersionName(binaryReader.ReadString(), release));
 								player.bank[k].Stack = binaryReader.ReadInt32();
@@ -4698,7 +4698,7 @@ namespace Terraria_Server
 				this.inventory[i] = new Item();
 				this.inventory[i].Name = "";
 			}
-			for (int j = 0; j < Chest.maxItems; j++)
+			for (int j = 0; j < Chest.MAX_ITEMS; j++)
 			{
 				this.bank[j] = new Item();
 				this.bank[j].Name = "";

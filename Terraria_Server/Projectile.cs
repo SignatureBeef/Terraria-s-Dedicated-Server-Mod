@@ -9,7 +9,7 @@ namespace Terraria_Server
         public byte wetCount;
         public bool lavaWet;
         public int whoAmI;
-        public static int maxAI = 2;
+        public const int MAX_AI = 2;
         public Vector2 position;
         public Vector2 velocity;
         public int width;
@@ -21,7 +21,7 @@ namespace Terraria_Server
         public int owner = 255;
         public bool active;
         public string name = "";
-        public float[] ai = new float[Projectile.maxAI];
+        public float[] ai = new float[Projectile.MAX_AI];
         public int aiStyle;
         public int timeLeft;
         public int soundDelay;
@@ -46,7 +46,7 @@ namespace Terraria_Server
 
         public void SetDefaults(int Type)
         {
-            for (int i = 0; i < Projectile.maxAI; i++)
+            for (int i = 0; i < Projectile.MAX_AI; i++)
             {
                 this.ai[i] = 0f;
             }
