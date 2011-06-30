@@ -407,59 +407,59 @@ namespace Terraria_Server
 															{
                                                                 if (packetId == ((int)Packet.PLAYER_STATE_UPDATE))
 																{
-																	byte[] bytes54 = BitConverter.GetBytes(packetId);
-																	byte b12 = (byte)number;
-																	byte b13 = 0;
-																	if (Main.player[(int)b12].controlUp)
-																	{
-																		b13 += 1;
-																	}
-																	if (Main.player[(int)b12].controlDown)
-																	{
-																		b13 += 2;
-																	}
-																	if (Main.player[(int)b12].controlLeft)
-																	{
-																		b13 += 4;
-																	}
-																	if (Main.player[(int)b12].controlRight)
-																	{
-																		b13 += 8;
-																	}
-																	if (Main.player[(int)b12].controlJump)
-																	{
-																		b13 += 16;
-																	}
-																	if (Main.player[(int)b12].controlUseItem)
-																	{
-																		b13 += 32;
-																	}
-																	if (Main.player[(int)b12].direction == 1)
-																	{
-																		b13 += 64;
-																	}
-																	byte b14 = (byte)Main.player[(int)b12].selectedItem;
-																	byte[] bytes55 = BitConverter.GetBytes(Main.player[number].position.X);
-																	byte[] bytes56 = BitConverter.GetBytes(Main.player[number].position.Y);
-																	byte[] bytes57 = BitConverter.GetBytes(Main.player[number].velocity.X);
-																	byte[] bytes58 = BitConverter.GetBytes(Main.player[number].velocity.Y);
-																	num2 += 3 + bytes55.Length + bytes56.Length + bytes57.Length + bytes58.Length;
-																	byte[] bytes59 = BitConverter.GetBytes(num2 - 4);
-																	Buffer.BlockCopy(bytes59, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
-																	Buffer.BlockCopy(bytes54, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
-																	NetMessage.buffer[num].writeBuffer[5] = b12;
-																	num3++;
-																	NetMessage.buffer[num].writeBuffer[6] = b13;
-																	num3++;
-																	NetMessage.buffer[num].writeBuffer[7] = b14;
-																	num3++;
-																	Buffer.BlockCopy(bytes55, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																	num3 += 4;
-																	Buffer.BlockCopy(bytes56, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																	num3 += 4;
-																	Buffer.BlockCopy(bytes57, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
-																	num3 += 4;
-																	Buffer.BlockCopy(bytes58, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                    byte[] bytes54 = BitConverter.GetBytes(packetId);
+                                                                    byte b13 = (byte)number;
+                                                                    byte b14 = 0;
+                                                                    if (Main.player[(int)b13].controlUp)
+                                                                    {
+                                                                        b14 += 1;
+                                                                    }
+                                                                    if (Main.player[(int)b13].controlDown)
+                                                                    {
+                                                                        b14 += 2;
+                                                                    }
+                                                                    if (Main.player[(int)b13].controlLeft)
+                                                                    {
+                                                                        b14 += 4;
+                                                                    }
+                                                                    if (Main.player[(int)b13].controlRight)
+                                                                    {
+                                                                        b14 += 8;
+                                                                    }
+                                                                    if (Main.player[(int)b13].controlJump)
+                                                                    {
+                                                                        b14 += 16;
+                                                                    }
+                                                                    if (Main.player[(int)b13].controlUseItem)
+                                                                    {
+                                                                        b14 += 32;
+                                                                    }
+                                                                    if (Main.player[(int)b13].direction == 1)
+                                                                    {
+                                                                        b14 += 64;
+                                                                    }
+                                                                    byte b15 = (byte)Main.player[(int)b13].selectedItem;
+                                                                    byte[] bytes55 = BitConverter.GetBytes(Main.player[number].position.X);
+                                                                    byte[] bytes56 = BitConverter.GetBytes(Main.player[number].position.Y);
+                                                                    byte[] bytes57 = BitConverter.GetBytes(Main.player[number].velocity.X);
+                                                                    byte[] bytes58 = BitConverter.GetBytes(Main.player[number].velocity.Y);
+                                                                    num2 += 3 + bytes55.Length + bytes56.Length + bytes57.Length + bytes58.Length;
+                                                                    byte[] bytes59 = BitConverter.GetBytes(num2 - 4);
+                                                                    Buffer.BlockCopy(bytes59, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
+                                                                    Buffer.BlockCopy(bytes54, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
+                                                                    NetMessage.buffer[num].writeBuffer[5] = b13;
+                                                                    num3++;
+                                                                    NetMessage.buffer[num].writeBuffer[6] = b14;
+                                                                    num3++;
+                                                                    NetMessage.buffer[num].writeBuffer[7] = b15;
+                                                                    num3++;
+                                                                    Buffer.BlockCopy(bytes55, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                    num3 += 4;
+                                                                    Buffer.BlockCopy(bytes56, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                    num3 += 4;
+                                                                    Buffer.BlockCopy(bytes57, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
+                                                                    num3 += 4;
+                                                                    Buffer.BlockCopy(bytes58, 0, NetMessage.buffer[num].writeBuffer, num3, 4);
 																}
 																else
 																{
@@ -1364,6 +1364,7 @@ namespace Terraria_Server
                         if (Statics.debugMode)
                         {
                             Netplay.clientSock.networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
+                            Netplay.clientSock.ClientWriteCallBack(null);
                         }
                         else
                         {
@@ -1403,6 +1404,8 @@ namespace Terraria_Server
                                 if (Statics.debugMode)
                                 {
                                     Netplay.serverSock[num11].networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
+
+                                    Netplay.serverSock[num11].ServerWriteCallBack(null);
                                 }
                                 else
                                 {
@@ -1425,6 +1428,7 @@ namespace Terraria_Server
                         if (Statics.debugMode)
                         {
                             Netplay.serverSock[remoteClient].networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
+                            Netplay.serverSock[remoteClient].ServerWriteCallBack(null);
                         }
                         else
                         {

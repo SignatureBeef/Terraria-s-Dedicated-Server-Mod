@@ -1279,14 +1279,7 @@ namespace Terraria_Server
                 }
                 catch
                 {
-                    if (Main.netMode == 2)
-                    {
-                        Debug.WriteLine("Error: UpdateServer()");
-                    }
-                    else
-                    {
-                        Debug.WriteLine("Error: UpdateClient();");
-                    }
+                    Debug.WriteLine("Error: UpdateServer()");
                 }
             }
             else

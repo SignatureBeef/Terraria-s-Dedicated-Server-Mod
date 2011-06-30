@@ -1,6 +1,6 @@
 ﻿namespace Terraria_Server.Events
 {
-    public class ChestOpenEvent : Event
+    public class PlayerChestOpenEvent : Event
     {
         public int ID { get; set; }
     }

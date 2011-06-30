@@ -10,11 +10,14 @@ namespace Terraria_Server.Plugin
         PLAYER_LOGOUT,
         PLAYER_PARTYCHANGE,
         PLAYER_CHAT,
-        TILE_BREAK,
+        TILE_CHANGE,
         PLAYER_HURT,
         PLAYER_CHEST,
         PLAYER_STATEUPDATE,
         PLAYER_DEATH,
-        DOOR_STATECHANGE
+        DOOR_STATECHANGE,
+        PLAYER_EDITSIGN,
+        PLAYER_PROJECTILE //,
+        //PLAYER_DESTROYSIGN
     }
 }

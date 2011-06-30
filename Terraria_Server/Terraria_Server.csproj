@@ -150,11 +150,14 @@
     <Compile Include="Shops\ClothierShop.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
     <Compile Include="Commands\Sender.cs" />
+    <Compile Include="Events\PlayerChestOpenEvent.cs" />
     <Compile Include="Shops\DemolitionistShop.cs" />
     <Compile Include="Shops\DryadShop.cs" />
     <Compile Include="Events\BasePlayerEvent.cs" />
     <Compile Include="Events\ChestOpenEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
+    <Compile Include="Events\PlayerDestroySignEvent.cs" />
+    <Compile Include="Events\PlayerEditSignEvent.cs" />
     <Compile Include="Events\PlayerLoginEvent.cs" />
     <Compile Include="Events\PlayerLogoutEvent.cs" />
     <Compile Include="Events\PartyChangeEvent.cs" />
@@ -163,6 +166,7 @@
     <Compile Include="ClientSock.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Events\PlayerDeathEvent.cs" />
+    <Compile Include="Events\PlayerProjectileEvent.cs" />
     <Compile Include="Shops\MerchantShop.cs" />
     <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Commands.cs" />
@@ -172,7 +176,7 @@
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\PlayerHurtEvent.cs" />
     <Compile Include="Events\PlayerStateUpdateEvent.cs" />
-    <Compile Include="Events\TileBreakEvent.cs" />
+    <Compile Include="Events\PlayerTileChangeEvent.cs" />
     <Compile Include="Gore.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />

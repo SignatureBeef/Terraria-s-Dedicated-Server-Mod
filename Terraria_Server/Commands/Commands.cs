@@ -816,8 +816,8 @@ namespace Terraria_Server.Commands
 
                     toplayer.teleportTo(player);
 
-                    Program.server.notifyOps("Teleported " + player.name + " to " +
-                        toplayer.name + " {" + sender.getName() + "}", true);
+                    Program.server.notifyOps("Teleported " + toplayer.name + " to " +
+                        player.name + " {" + sender.getName() + "}", true);
 
                     return;
                 }
@@ -1060,7 +1060,6 @@ namespace Terraria_Server.Commands
             server.StartServer();
             Program.updateThread = new Thread(Program.Updater);
             Statics.keepRunning = false;
-
         }
 
     }

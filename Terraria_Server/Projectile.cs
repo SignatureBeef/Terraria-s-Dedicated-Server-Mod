@@ -1,4 +1,7 @@
+
 using System;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 
 namespace Terraria_Server
@@ -2932,6 +2935,18 @@ namespace Terraria_Server
                                                                             int num80 = Sign.ReadSign(num78, num79);
                                                                             if (num80 >= 0)
                                                                             {
+                                                                                //Need to check if this works :3
+                                                                                PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
+                                                                                playerEvent.setSender(Main.player[Main.myPlayer]);
+                                                                                playerEvent.setSign(Main.sign[num80]);
+                                                                                playerEvent.setText(this.miscText);
+                                                                                playerEvent.setIsPlayer(false);
+                                                                                Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
+                                                                                if (playerEvent.getCancelled())
+                                                                                {
+                                                                                    return;
+                                                                                }
+
                                                                                 Sign.TextSign(num80, this.miscText);
                                                                             }
                                                                             this.Kill();

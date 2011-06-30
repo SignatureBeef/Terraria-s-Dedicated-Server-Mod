@@ -11142,7 +11142,7 @@ namespace Terraria_Server
             }
         }
         
-        public static void KillTile(int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false)
+        public static void KillTile(int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false, Player player = null)
         {
             if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
             {
@@ -14926,7 +14926,7 @@ namespace Terraria_Server
                 Main.tile[i, j].wallFrameY = (byte)rectangle.Y;
             }
         }
-        
+
         public static void TileFrame(int i, int j, bool resetFrame = false, bool noBreak = false)
         {
             if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY && Main.tile[i, j] != null)

@@ -1,7 +1,12 @@
-﻿using Terraria_Server.Misc;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
+using Terraria_Server.Misc;
 namespace Terraria_Server.Events
 {
-    public class TileBreakEvent : BasePlayerEvent
+    public class PlayerTileChangeEvent : Event
     {
         public Tile Tile { get; set; }
 

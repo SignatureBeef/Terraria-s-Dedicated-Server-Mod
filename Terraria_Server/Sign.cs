@@ -1,4 +1,6 @@
 using System;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server
 {
@@ -14,13 +16,36 @@ namespace Terraria_Server
         }
         public static void KillSign(int x, int y)
         {
+            /*bool isPlayer = false;
+            if (player != null)
+            {
+                isPlayer = true;
+            }*/
+
+            //int sign = -1;
             for (int i = 0; i < 1000; i++)
             {
                 if (Main.sign[i] != null && Main.sign[i].x == x && Main.sign[i].y == y)
                 {
+                    //sign = i;
                     Main.sign[i] = null;
                 }
             }
+
+            //if (sign != -1)
+            //{
+            //    PlayerDestroySignEvent playerEvent = new PlayerDestroySignEvent();
+            //    playerEvent.setSender(player);
+            //    playerEvent.setSign(Main.sign[sign]);
+            //    playerEvent.setIsPlayer(isPlayer);
+            //    Program.server.getPluginManager().processHook(Hooks.PLAYER_DESTROYSIGN, playerEvent);
+            //    if (playerEvent.getCancelled())
+            //    {
+            //        return;
+            //    }
+
+            //    Main.sign[sign] = null;
+            //}
         }
         public static int ReadSign(int i, int j)
         {

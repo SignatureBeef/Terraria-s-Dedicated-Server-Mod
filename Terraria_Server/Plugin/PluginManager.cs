@@ -43,7 +43,7 @@ namespace Terraria_Server.Plugin
                             Plugin plugin = (Plugin)Activator.CreateInstance(type);
                             if (plugin == null)
                             {
-                                throw new Exception("Could not Intanciate");
+                                throw new Exception("Could not Instanciate");
                             }
                             else
                             {
@@ -206,7 +206,7 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerPartyChange((PartyChangeEvent)hookEvent);
                                     break;
                                 }
-                            case Hooks.TILE_BREAK:
+                            case Hooks.TILE_CHANGE:
                                 {
                                     plugin.onTileBreak((TileBreakEvent)hookEvent);
                                     break;
@@ -234,6 +234,16 @@ namespace Terraria_Server.Plugin
                             case Hooks.DOOR_STATECHANGE:
                                 {
                                     plugin.onDoorStateChange((DoorStateChangeEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.PLAYER_EDITSIGN:
+                                {
+                                    plugin.onPlayerEditSign((PlayerEditSignEvent)Event);
+                                    break;
+                                }
+                            case Hooks.PLAYER_PROJECTILE:
+                                {
+                                    plugin.onPlayerProjectileUse((PlayerProjectileEvent)Event);
                                     break;
                                 }
                         }

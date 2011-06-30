@@ -1,5 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+
 using Terraria_Server.Events;
+using Terraria_Server.Commands;
+using System.Collections;
 
 namespace Terraria_Server.Plugin
 {
@@ -17,22 +23,25 @@ namespace Terraria_Server.Plugin
         public Server Server { get; set; }
 
         public abstract void Load();
+        //public void abstract UnLoad(); //I have high hopes :3
         public abstract void Enable();
         public abstract void Disable();
 
-        public virtual void onPlayerChat(MessageEvent myEvent) { }
-        public virtual void onPlayerCommand(PlayerCommandEvent myEvent) { }
-        public virtual void onPlayerCommandProcess(ConsoleCommandEvent myEvent) { }
-        public virtual void onPlayerHurt(PlayerHurtEvent myEvent) { }
-        public virtual void onPlayerJoin(PlayerLoginEvent myEvent) { }
-        public virtual void onPlayerPreLogin(PlayerLoginEvent myEvent) { }
-        public virtual void onPlayerLogout(PlayerLogoutEvent myEvent) { }
-        public virtual void onPlayerPartyChange(PartyChangeEvent myEvent) { }
-        public virtual void onTileBreak(TileBreakEvent myEvent) { }
-        public virtual void onPlayerOpenChest(ChestOpenEvent myEvent) { }
-        public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent myEvent) { }
-        public virtual void onPlayerDeath(PlayerDeathEvent myEvent) { }
-        public virtual void onDoorStateChange(DoorStateChangeEvent myEvent) { }
+        public virtual void onPlayerChat(PlayerChatEvent Event) { }
+        public virtual void onPlayerCommand(PlayerCommandEvent Event) { }
+        public virtual void onPlayerCommandProcess(ConsoleCommandEvent Event) { }
+        public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
+        public virtual void onPlayerJoin(PlayerLoginEvent Event) { }
+        public virtual void onPlayerPreLogin(PlayerLoginEvent Event) { }
+        public virtual void onPlayerLogout(PlayerLogoutEvent Event) { }
+        public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
+        public virtual void onTileChange(PlayerTileChangeEvent Event) { }
+        public virtual void onPlayerOpenChest(PlayerChestOpenEvent Event) { }
+        public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { }
+        public virtual void onPlayerDeath(PlayerDeathEvent Event) { }
+        public virtual void onDoorStateChange(DoorStateChangeEvent Event) { }
+        public virtual void onPlayerEditSign(PlayerEditSignEvent Event) { }
+        public virtual void onPlayerProjectileUse(PlayerProjectileEvent Event) { }
 
     	private ArrayList pluginHooks = new ArrayList();
 
