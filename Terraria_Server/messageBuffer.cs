@@ -1374,7 +1374,7 @@ namespace Terraria_Server
                                                                                                                 projectile.owner = (int)b17;
                                                                                                                 projectile.knockBack = knockBack;
 
-                                                                                                                ProjectileEvent playerEvent = new ProjectileEvent();
+                                                                                                                PlayerProjectileEvent playerEvent = new PlayerProjectileEvent();
                                                                                                                 playerEvent.setSender(Main.player[Main.myPlayer]);
                                                                                                                 playerEvent.setProjectile(Main.projectile[num53]);
                                                                                                                 Program.server.getPluginManager().processHook(Hooks.PLAYER_PROJECTILE, playerEvent);

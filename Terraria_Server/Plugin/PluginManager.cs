@@ -247,7 +247,7 @@ namespace Terraria_Server.Plugin
                                 }
                             case Hooks.PLAYER_PROJECTILE:
                                 {
-                                    plugin.onPlayerProjectileUse((ProjectileEvent)Event);
+                                    plugin.onPlayerProjectileUse((PlayerProjectileEvent)Event);
                                     break;
                                 }
                         }
