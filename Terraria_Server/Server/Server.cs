@@ -40,11 +40,12 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets a specified Online Player
+        //       Input name must already be cleaned of spaces
         public Player GetPlayerByName(string name)
         {
             for (int i = 0; i < Main.player.Length; i++)
             {
-                if (Main.player[i].name.ToLower() == name.ToLower())
+                if (Main.player[i].name.ToLower().Replace(" ", "") == name.ToLower())
                 {
                     return Main.player[i];
                 }
@@ -254,7 +255,8 @@ namespace Terraria_Server
         }
 
         // Summary:
-        //       Gets the max spawn rat eof NPCs
+        //       Gets the max spawn rate of NPCs
+
         public int getSpawnRate()
         {
             return NPC.spawnRate;
@@ -267,7 +269,6 @@ namespace Terraria_Server
             NPC.defaultSpawnRate = Max;
             NPC.spawnRate = Max;
         }
-
-
+        
     }
 }

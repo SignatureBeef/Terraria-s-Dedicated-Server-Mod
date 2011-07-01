@@ -52,7 +52,7 @@ namespace Terraria_Server
         public const int maxHair = 17;
 
 		public static bool grabSun = false;
-		public static bool debugMode = false;
+		//public static bool debugMode = false;
 		public static bool godMode = false;
         public static bool stopSpawns = false;
 		public static bool dumbAI = false;
