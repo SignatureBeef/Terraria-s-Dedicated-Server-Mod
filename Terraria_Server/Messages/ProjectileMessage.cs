@@ -68,7 +68,7 @@ namespace Terraria_Server.Messages
             }
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(27, -1, whoAmI, "", projectileIndex, 0f, 0f, 0f);
+                NetMessage.SendData(27, -1, whoAmI, "", projectileIndex);
             }
         }
 

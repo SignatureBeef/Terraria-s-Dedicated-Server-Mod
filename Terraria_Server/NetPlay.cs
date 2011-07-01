@@ -34,8 +34,8 @@ namespace Terraria_Server
 			{
 				WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
 			}
-			Main.player[Main.myPlayer].hostile = false;
-			Main.clientPlayer = (Player)Main.player[Main.myPlayer].clientClone();
+			Main.players[Main.myPlayer].hostile = false;
+			Main.clientPlayer = (Player)Main.players[Main.myPlayer].clientClone();
 			Main.menuMode = 10;
 			Main.menuMode = 14;
 			if (!Main.autoPass)
@@ -81,7 +81,7 @@ namespace Terraria_Server
 					{
 						Main.statusText = "Found server";
 						Netplay.clientSock.state = 1;
-						NetMessage.SendData(1, -1, -1, "", 0, 0f, 0f, 0f);
+						NetMessage.SendData(1);
 					}
 					if (Netplay.clientSock.state == 2 && num != Netplay.clientSock.state)
 					{
@@ -100,8 +100,8 @@ namespace Terraria_Server
 					if (Netplay.clientSock.state == 5 && WorldGen.worldCleared)
 					{
 						Netplay.clientSock.state = 6;
-						Main.player[Main.myPlayer].FindSpawn();
-						NetMessage.SendData(8, -1, -1, "", Main.player[Main.myPlayer].SpawnX, (float)Main.player[Main.myPlayer].SpawnY, 0f, 0f);
+						Main.players[Main.myPlayer].FindSpawn();
+						NetMessage.SendData(8, -1, -1, "", Main.players[Main.myPlayer].SpawnX, (float)Main.players[Main.myPlayer].SpawnY);
 					}
 					if (Netplay.clientSock.state == 6 && num != Netplay.clientSock.state)
 					{
@@ -155,7 +155,7 @@ namespace Terraria_Server
 			if (!Main.gameMenu)
 			{
 				Main.netMode = 0;
-				Player.SavePlayer(Main.player[Main.myPlayer]);
+				Player.SavePlayer(Main.players[Main.myPlayer]);
 				Main.gameMenu = true;
 				Main.menuMode = 14;
 			}
@@ -391,7 +391,7 @@ namespace Terraria_Server
                                     Netplay.serverSock[k].statusText2 = "";
                                     if (k < 255)
                                     {
-                                        Main.player[k].active = false;
+                                        Main.players[k].active = false;
                                     }
                                 }
                             }
@@ -479,7 +479,7 @@ namespace Terraria_Server
 						Netplay.serverSock[num].tcpClient = Netplay.tcpListener.AcceptTcpClient();
 						Netplay.serverSock[num].tcpClient.NoDelay = true;
 						Program.tConsole.WriteLine(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint + " is connecting...");
-                        Main.player[num].setIPAddress(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint.ToString());
+                        Main.players[num].setIPAddress(Netplay.serverSock[num].tcpClient.Client.RemoteEndPoint.ToString());
 						continue;
 					}
 					catch (Exception arg_81_0)

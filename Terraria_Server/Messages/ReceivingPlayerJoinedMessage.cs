@@ -25,7 +25,7 @@ namespace Terraria_Server.Messages
                 playerIndex = whoAmI;
             }
 
-            Player player = Main.player[playerIndex];
+            Player player = Main.players[playerIndex];
             player.SpawnX = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             player.SpawnY = BitConverter.ToInt32(readBuffer, num);

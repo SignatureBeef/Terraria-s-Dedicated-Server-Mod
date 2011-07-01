@@ -35,7 +35,7 @@ namespace Terraria_Server
         public Player GetPlayerByName(string name)
         {
             String lowercaseName = name.ToLower();
-            foreach (Player player in Main.player)
+            foreach (Player player in Main.players)
             {
                 if (player.name.ToLower().Equals(lowercaseName))
                 {
@@ -100,7 +100,7 @@ namespace Terraria_Server
         {
             if (Statics.cmdMessages)
             {
-                foreach (Player player in Main.player)
+                foreach (Player player in Main.players)
                 {
                     if (player.active && player.Op)
                     {
@@ -136,7 +136,7 @@ namespace Terraria_Server
         //       Gets the Servers Player List
         public Player[] getPlayerList()
         {
-            return Main.player;
+            return Main.players;
         }
 
         // Summary:

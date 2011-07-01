@@ -26,7 +26,7 @@ namespace Terraria_Server.Messages
             if (Main.netMode == 2 && Netplay.spamCheck)
             {
                 int playerIndex = whoAmI;
-                Player player = Main.player[playerIndex];
+                Player player = Main.players[playerIndex];
                 int centerX = (int)(player.position.X + (float)(player.width / 2));
                 int centerY = (int)(player.position.Y + (float)(player.height / 2));
                 int disperseDistance = 10;

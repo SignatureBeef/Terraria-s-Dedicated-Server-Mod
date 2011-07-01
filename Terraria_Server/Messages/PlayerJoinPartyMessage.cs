@@ -25,7 +25,7 @@ namespace Terraria_Server.Messages
             }
 
             int teamIndex = (int)readBuffer[num++];
-            Player player = Main.player[playerIndex];
+            Player player = Main.players[playerIndex];
             int currentTeam = player.team;
 
             if (Main.netMode == 2)
@@ -58,7 +58,7 @@ namespace Terraria_Server.Messages
 
                 PartyChangeEvent changeEvent = new PartyChangeEvent();
                 changeEvent.PartyType = party;
-                changeEvent.Sender = Main.player[whoAmI];
+                changeEvent.Sender = Main.players[whoAmI];
                 Program.server.getPluginManager().processHook(Hooks.PLAYER_PARTYCHANGE, changeEvent);
                 if (changeEvent.Cancelled)
                 {

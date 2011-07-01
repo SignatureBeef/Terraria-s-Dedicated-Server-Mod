@@ -30,7 +30,7 @@ namespace Terraria_Server.Messages
 
             if (playerIndex != Main.myPlayer)
             {
-                Main.player[playerIndex].ManaEffect(manaAmount);
+                Main.players[playerIndex].ManaEffect(manaAmount);
             }
 
             if (Main.netMode == 2)

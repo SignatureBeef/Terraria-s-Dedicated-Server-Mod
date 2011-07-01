@@ -18,8 +18,8 @@ namespace Terraria_Server.Messages
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int playerIndex = (int)readBuffer[num++];
-            Player player = Main.player[playerIndex];
-            if (Main.netMode == 2 && whoAmI != playerIndex && (!player.hostile || !Main.player[whoAmI].hostile))
+            Player player = Main.players[playerIndex];
+            if (Main.netMode == 2 && whoAmI != playerIndex && (!player.hostile || !Main.players[whoAmI].hostile))
             {
                 return;
             }

@@ -9,8 +9,14 @@ namespace Terraria_Server.Messages
     {
         private static IMessage[] messageArray = GetMessageArray();
 
+        /// <summary>
+    	/// Load all IMessage types into an indexed array at application start.
+    	/// This should allow us to process events extremely quickly while cutting down
+    	/// on how much code we have to hold in our head to understand each event.
+    	/// </summary>
         private static IMessage[] GetMessageArray()
         {
+        	//Find the highest Packet value and make an array of that size to process events.
             int highestPacket = 0;
             foreach (Packet packet in Enum.GetValues(typeof(Packet)))
             {
@@ -21,7 +27,8 @@ namespace Terraria_Server.Messages
                 }
             }
             IMessage[] tempArray = new IMessage[highestPacket];
-
+            
+            //Load all the events found in the current assembly into the the message array.
             Type type = typeof(IMessage);
             foreach(Type messageType in AppDomain.CurrentDomain.GetAssemblies()
                 .SelectMany(clazz => clazz.GetTypes()).Where(x => type.IsAssignableFrom(x) && x != type))

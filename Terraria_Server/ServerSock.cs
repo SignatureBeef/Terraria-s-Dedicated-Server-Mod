@@ -96,7 +96,7 @@ namespace Terraria_Server
 			}
 			if (this.whoAmI < 255)
 			{
-				Main.player[this.whoAmI] = new Player();
+				Main.players[this.whoAmI] = new Player();
 			}
 			this.timeOut = 0;
 			this.statusCount = 0;

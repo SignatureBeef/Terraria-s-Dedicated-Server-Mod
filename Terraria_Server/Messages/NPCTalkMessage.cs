@@ -26,7 +26,7 @@ namespace Terraria_Server.Messages
 
             int talkNPC = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            Main.player[playerIndex].talkNPC = talkNPC;
+            Main.players[playerIndex].talkNPC = talkNPC;
             if (Main.netMode == 2)
             {
                 NetMessage.SendData(40, -1, whoAmI, "", playerIndex);

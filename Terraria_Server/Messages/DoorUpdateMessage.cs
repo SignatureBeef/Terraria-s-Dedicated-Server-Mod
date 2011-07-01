@@ -34,11 +34,11 @@ namespace Terraria_Server.Messages
 
             if (state)
             {
-                WorldGen.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.player[whoAmI]);
+                WorldGen.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.players[whoAmI]);
             }
             else if (doorAction == 1)
             {
-                WorldGen.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.player[whoAmI]);
+                WorldGen.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.players[whoAmI]);
             }
 
             if (Main.netMode == 2)

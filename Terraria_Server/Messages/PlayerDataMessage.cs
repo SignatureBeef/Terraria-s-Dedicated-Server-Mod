@@ -44,7 +44,7 @@ namespace Terraria_Server.Messages
                 hairId = 0;
             }
 
-            Player player = Main.player[playerIndex];
+            Player player = Main.players[playerIndex];
             player.hair = hairId;
             player.whoAmi = playerIndex;
             num += 2;
@@ -66,7 +66,7 @@ namespace Terraria_Server.Messages
                 if (Netplay.serverSock[whoAmI].state < 10)
                 {
                     int count = 0;
-                    foreach(Player otherPlayer in Main.player)
+                    foreach(Player otherPlayer in Main.players)
                     {
                         if (count++ != playerIndex && player.name.Equals(otherPlayer.name) && Netplay.serverSock[count].active)
                         {

@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
 
             if (playerIndex != Main.myPlayer)
             {
-                Main.player[playerIndex].HealEffect(heal);
+                Main.players[playerIndex].HealEffect(heal);
             }
 
             if (Main.netMode == 2)

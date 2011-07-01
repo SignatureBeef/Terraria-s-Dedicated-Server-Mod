@@ -57,7 +57,7 @@ namespace Terraria_Server.Messages
                     if (itemIndex < 200)
                     {
                         item.Active = false;
-                        NetMessage.SendData(21, -1, -1, "", (int)itemIndex, 0f, 0f, 0f, 0);
+                        NetMessage.SendData(21, -1, -1, "", (int)itemIndex);
                     }
                 }
                 else

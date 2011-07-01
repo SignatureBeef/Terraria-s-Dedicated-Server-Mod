@@ -85,9 +85,9 @@ namespace Terraria_Server
             {
                 return false;
             }
-            for (int k = 0; k < 255; k++)
+            foreach(Player player in Main.players)
             {
-                if (Main.player[k].active && rectangle.Intersects(new Rectangle((int)Main.player[k].position.X, (int)Main.player[k].position.Y, Main.player[k].width, Main.player[k].height)))
+                if (player.active && rectangle.Intersects(new Rectangle((int)player.position.X, (int)player.position.Y, player.width, player.height)))
                 {
                     return false;
                 }

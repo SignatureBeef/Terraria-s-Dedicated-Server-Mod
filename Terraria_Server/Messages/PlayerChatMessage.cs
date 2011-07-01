@@ -39,8 +39,8 @@ namespace Terraria_Server.Messages
                             return;
                         }
 
-                        Program.tConsole.WriteLine(Main.player[whoAmI].name + " Sent Command: " + chat);
-                        Program.commandParser.parsePlayerCommand(Main.player[whoAmI], chat);
+                        Program.tConsole.WriteLine(Main.players[whoAmI].name + " Sent Command: " + chat);
+                        Program.commandParser.parsePlayerCommand(Main.players[whoAmI], chat);
                         return;
                     }
                     else
@@ -54,7 +54,7 @@ namespace Terraria_Server.Messages
                     NetMessage.SendData(25, -1, -1, chat, num46, (float)255, (float)255, (float)255);
                     if (Main.dedServ)
                     {
-                        Program.tConsole.WriteLine("<" + Main.player[whoAmI].name + "> " + chat);
+                        Program.tConsole.WriteLine("<" + Main.players[whoAmI].name + "> " + chat);
                     }
                 }
             }
@@ -63,7 +63,7 @@ namespace Terraria_Server.Messages
         private bool ProcessMessage(MessageEvent messageEvent, String text, Hooks hook, int whoAmI)
         {
             messageEvent.Message = text;
-            messageEvent.Sender = Main.player[whoAmI];
+            messageEvent.Sender = Main.players[whoAmI];
             Program.server.getPluginManager().processHook(hook, messageEvent);
 
             return !messageEvent.Cancelled;

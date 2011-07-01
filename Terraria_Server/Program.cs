@@ -61,24 +61,23 @@ namespace Terraria_Server
                         return;
                     }
                 }
-                
 
+
+#if (DEBUG == false)
                 try
                 {
-#if (DEBUG == false)
                     if (UpdateManager.performProcess())
                     {
                         Program.tConsole.WriteLine("Restarting into new update!");
                         return;
                     }
-#endif
                 }
                 catch (Exception e)
                 {
                     Program.tConsole.WriteLine("Error updating!");
                     Program.tConsole.WriteLine(e.Message);
                 }
-
+#endif
 
                 Statics.debugMode = properties.DebugMode;
                 if (Statics.debugMode)

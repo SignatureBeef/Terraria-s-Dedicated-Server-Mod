@@ -23,7 +23,7 @@ namespace Terraria_Server
         public const int maxDust = 1000;
         public const int maxCombatText = 100;
         public const int maxItemText = 100;
-        public const int maxPlayers = 255;
+        public const int MAX_PLAYERS = 255;
         public const int maxChests = 1000;
         public const int maxItemTypes = 327;
         public const int maxItems = 200;
@@ -196,7 +196,7 @@ namespace Terraria_Server
 		public static int numAvailableRecipes;
 		public static int focusRecipe;
 		public static int myPlayer = 0;
-		public static Player[] player = new Player[256];
+		public static Player[] players = new Player[MAX_PLAYERS];
 		public static int spawnTileX;
 		public static int spawnTileY;
 		public static bool npcChatRelease = false;
@@ -474,9 +474,9 @@ namespace Terraria_Server
                 Main.npc[m] = new NPC();
                 Main.npc[m].whoAmI = m;
             }
-            for (int n = 0; n < 256; n++)
+            for (int i = 0; i < 256; i++)
             {
-                Main.player[n] = new Player();
+                Main.players[i] = new Player();
             }
             for (int num2 = 0; num2 < 1001; num2++)
             {
@@ -620,16 +620,18 @@ namespace Terraria_Server
 			{
 				return;
 			}
+
 			if (Main.invasionType == 0 && Main.invasionDelay == 0)
 			{
 				int num = 0;
-				for (int i = 0; i < 255; i++)
+				foreach(Player player in Main.players)
 				{
-					if (Main.player[i].active && Main.player[i].statLife >= 200)
+                    if (player.active && player.statLife >= 200)
 					{
 						num++;
 					}
 				}
+
 				if (num > 0)
 				{
 					Main.invasionType = 1;
@@ -650,13 +652,13 @@ namespace Terraria_Server
             Main.NetplayCounter++;
             if (Main.NetplayCounter > 3600)
             {
-                NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
+                NetMessage.SendData(7);
                 NetMessage.syncPlayers();
                 Main.NetplayCounter = 0;
             }
             for (int i = 0; i < Main.maxNetplayers; i++)
             {
-                if (Main.player[i].active && Netplay.serverSock[i].active)
+                if (Main.players[i].active && Netplay.serverSock[i].active)
                 {
                     Netplay.serverSock[i].SpamUpdate();
                 }
@@ -677,7 +679,7 @@ namespace Terraria_Server
                     num2++;
                     if (!Main.item[num].Active || Main.item[num].Owner == 255)
                     {
-                        NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f);
+                        NetMessage.SendData(21, -1, -1, "", num);
                     }
                     if (num2 >= Main.maxItemUpdates || num == Main.lastItemUpdate)
                     {
@@ -686,13 +688,15 @@ namespace Terraria_Server
                 }
                 Main.lastItemUpdate = num;
             }
+
             for (int i = 0; i < 200; i++)
             {
-                if (Main.item[i].Active && (Main.item[i].Owner == 255 || !Main.player[Main.item[i].Owner].active))
+                if (Main.item[i].Active && (Main.item[i].Owner == 255 || !Main.players[Main.item[i].Owner].active))
                 {
                     Main.item[i].FindOwner(i);
                 }
             }
+
             for (int i = 0; i < 255; i++)
             {
                 if (Netplay.serverSock[i].active)
@@ -703,10 +707,12 @@ namespace Terraria_Server
                         Netplay.serverSock[i].kill = true;
                     }
                 }
-                if (Main.player[i].active)
+
+                Player player = Main.players[i];
+                if (player.active)
                 {
-                    int sectionX = Netplay.GetSectionX((int)(Main.player[i].position.X / 16f));
-                    int sectionY = Netplay.GetSectionY((int)(Main.player[i].position.Y / 16f));
+                    int sectionX = Netplay.GetSectionX((int)(player.position.X / 16f));
+                    int sectionY = Netplay.GetSectionY((int)(player.position.Y / 16f));
                     int num3 = 0;
                     for (int j = sectionX - 1; j < sectionX + 2; j++)
                     {
@@ -721,10 +727,11 @@ namespace Terraria_Server
                             }
                         }
                     }
+
                     if (num3 > 0)
                     {
                         int num4 = num3 * 150;
-                        NetMessage.SendData(9, i, -1, "Recieving tile data", num4, 0f, 0f, 0f);
+                        NetMessage.SendData(9, i, -1, "Recieving tile data", num4);
                         Netplay.serverSock[i].statusText2 = "is recieving tile data";
                         Netplay.serverSock[i].statusMax += num4;
                         for (int j = sectionX - 1; j < sectionX + 2; j++)
@@ -755,17 +762,20 @@ namespace Terraria_Server
                 {
                     if (Main.time > 4860.0)
                     {
-                        for (int i = 0; i < 255; i++)
+                        int count = 0;
+                        foreach(Player player in Main.players)
                         {
-                            if (Main.player[i].active && !Main.player[i].dead && (double)Main.player[i].position.Y < Main.worldSurface * 16.0)
+                            if (player.active && !player.dead && (double)player.position.Y < Main.worldSurface * 16.0)
                             {
-                                NPC.SpawnOnPlayer(i, 4);
+                                NPC.SpawnOnPlayer(player, count, 4);
                                 WorldGen.spawnEye = false;
                                 break;
                             }
+                            count++;
                         }
                     }
                 }
+
                 if (Main.time > 32400.0)
                 {
                     if (Main.invasionDelay > 0)
@@ -784,7 +794,7 @@ namespace Terraria_Server
                     }
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
+                        NetMessage.SendData(7);
                         WorldGen.saveAndPlay();
                     }
                     if (Main.netMode != 1)
@@ -814,9 +824,9 @@ namespace Terraria_Server
                     if (!NPC.downedBoss1 && Main.netMode != 1)
                     {
                         bool flag = false;
-                        for (int i = 0; i < 255; i++)
+                        foreach(Player player in Main.players)
                         {
-                            if (Main.player[i].active && Main.player[i].statLifeMax >= 200)
+                            if (player.active && player.statLifeMax >= 200)
                             {
                                 flag = true;
                                 break;
@@ -849,7 +859,7 @@ namespace Terraria_Server
                     {
                         for (int i = 0; i < 255; i++)
                         {
-                            if (Main.player[i].active && Main.player[i].statLifeMax > 100)
+                            if (Main.players[i].active && Main.players[i].statLifeMax > 100)
                             {
                                 Main.bloodMoon = true;
                                 break;
@@ -867,7 +877,7 @@ namespace Terraria_Server
                     Main.dayTime = false;
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(7, -1, -1, "", 0, 0f, 0f, 0f);
+                        NetMessage.SendData(7);
                     }
                 }
                 if (Main.netMode != 1)
@@ -878,7 +888,7 @@ namespace Terraria_Server
                         int num2 = 0;
                         for (int i = 0; i < 255; i++)
                         {
-                            if (Main.player[i].active)
+                            if (Main.players[i].active)
                             {
                                 num2++;
                             }
@@ -942,39 +952,39 @@ namespace Terraria_Server
                             bool flag4 = false;
                             for (int i = 0; i < 255; i++)
                             {
-                                if (Main.player[i].active)
+                                if (Main.players[i].active)
                                 {
                                     for (int j = 0; j < 44; j++)
                                     {
-                                        if (Main.player[i].inventory[j] != null & Main.player[i].inventory[j].Stack > 0)
+                                        if (Main.players[i].inventory[j] != null & Main.players[i].inventory[j].Stack > 0)
                                         {
-                                            if (Main.player[i].inventory[j].Type == 71)
+                                            if (Main.players[i].inventory[j].Type == 71)
                                             {
-                                                num12 += Main.player[i].inventory[j].Stack;
+                                                num12 += Main.players[i].inventory[j].Stack;
                                             }
-                                            if (Main.player[i].inventory[j].Type == 72)
+                                            if (Main.players[i].inventory[j].Type == 72)
                                             {
-                                                num12 += Main.player[i].inventory[j].Stack * 100;
+                                                num12 += Main.players[i].inventory[j].Stack * 100;
                                             }
-                                            if (Main.player[i].inventory[j].Type == 73)
+                                            if (Main.players[i].inventory[j].Type == 73)
                                             {
-                                                num12 += Main.player[i].inventory[j].Stack * 10000;
+                                                num12 += Main.players[i].inventory[j].Stack * 10000;
                                             }
-                                            if (Main.player[i].inventory[j].Type == 74)
+                                            if (Main.players[i].inventory[j].Type == 74)
                                             {
-                                                num12 += Main.player[i].inventory[j].Stack * 1000000;
+                                                num12 += Main.players[i].inventory[j].Stack * 1000000;
                                             }
-                                            if (Main.player[i].inventory[j].Type == 95 || Main.player[i].inventory[j].Type == 96 || Main.player[i].inventory[j].Type == 97 || Main.player[i].inventory[j].Type == 98 || Main.player[i].inventory[j].UseAmmo == 14)
+                                            if (Main.players[i].inventory[j].Type == 95 || Main.players[i].inventory[j].Type == 96 || Main.players[i].inventory[j].Type == 97 || Main.players[i].inventory[j].Type == 98 || Main.players[i].inventory[j].UseAmmo == 14)
                                             {
                                                 flag3 = true;
                                             }
-                                            if (Main.player[i].inventory[j].Type == 166 || Main.player[i].inventory[j].Type == 167 || Main.player[i].inventory[j].Type == 168 || Main.player[i].inventory[j].Type == 235)
+                                            if (Main.players[i].inventory[j].Type == 166 || Main.players[i].inventory[j].Type == 167 || Main.players[i].inventory[j].Type == 168 || Main.players[i].inventory[j].Type == 235)
                                             {
                                                 flag4 = true;
                                             }
                                         }
                                     }
-                                    int num14 = Main.player[i].statLifeMax / 20;
+                                    int num14 = Main.players[i].statLifeMax / 20;
                                     if (num14 > 5)
                                     {
                                         flag2 = true;
@@ -1080,39 +1090,43 @@ namespace Terraria_Server
 
         public void Update()
         {
-            for (int i = 0; i < 255; i++)
+            int count = 0;
+            foreach(Player player in Main.players)
             {
                 if (Main.ignoreErrors)
                 {
                     try
                     {
-                        Main.player[i].UpdatePlayer(i);
+                        player.UpdatePlayer(count);
                     }
                     catch
                     {
                         Debug.WriteLine(string.Concat(new object[]
 						{
 							"Error: player[", 
-							i, 
+							count, 
 							"].UpdatePlayer(", 
-							i, 
+							count, 
 							")"
 						}));
                     }
                 }
                 else
                 {
-                    Main.player[i].UpdatePlayer(i);
+                    player.UpdatePlayer(count);
                 }
+                count++;
             }
+
             if (Main.netMode != 1)
             {
                 NPC.SpawnNPC();
             }
-            for (int i = 0; i < 255; i++)
+
+            foreach (Player player in Main.players)
             {
-                Main.player[i].activeNPCs = 0;
-                Main.player[i].townNPCs = 0;
+                player.activeNPCs = 0;
+                player.townNPCs = 0;
             }
             for (int i = 0; i < 1000; i++)
             {

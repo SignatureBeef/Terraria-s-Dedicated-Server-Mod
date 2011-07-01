@@ -24,7 +24,7 @@ namespace Terraria_Server.Messages
 
             if (Main.netMode == 1)
             {
-                Player player = Main.player[Main.myPlayer];
+                Player player = Main.players[Main.myPlayer];
                 if (player.chest == -1
                     || (player.chest != inventoryIndex && inventoryIndex != -1))
                 {
@@ -37,7 +37,7 @@ namespace Terraria_Server.Messages
             }
             else
             {
-                Main.player[whoAmI].chest = inventoryIndex;
+                Main.players[whoAmI].chest = inventoryIndex;
             }
         }
     }

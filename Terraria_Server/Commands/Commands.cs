@@ -132,11 +132,11 @@ namespace Terraria_Server.Commands
         public static string List(int playerIndex = 0, bool sendPlayer = true)
         {
             string playerList = "";
-            for (int i = 0; i < 255; i++)
+            foreach(Player player in Main.players)
             {
-                if (Main.player[i].active)
+                if (player.active)
                 {
-                    playerList += ", " + Main.player[i].name;
+                    playerList += ", " + player.name;
                 }
             }
             if (playerList.StartsWith(","))
@@ -156,7 +156,7 @@ namespace Terraria_Server.Commands
             {
                 if (playerIndex >= 0) //-1 Means Console :3
                 {
-                    NetMessage.SendData(25, -1, -1, "*" + Main.player[playerIndex].name + " " + Message, 255, 200f, 100f, 0f);
+                    NetMessage.SendData(25, -1, -1, "*" + Main.players[playerIndex].name + " " + Message, 255, 200f, 100f);
                 }
                 else
                 {
@@ -508,7 +508,7 @@ namespace Terraria_Server.Commands
                                 goto ERROR;
                             }
                     }
-                    NetMessage.SendData((int)Packet.WORLD_DATA, -1, -1, "", 0, 0f, 0f, 0f); //Update Data
+                    NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
                     Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.getName());
                     return;
                 }

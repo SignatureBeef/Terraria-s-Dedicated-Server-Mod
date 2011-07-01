@@ -47,7 +47,7 @@ namespace Terraria_Server.Messages
             tile.tileY = y;
 
             PlayerTileChangeEvent breakEvent = new PlayerTileChangeEvent();
-            breakEvent.Sender = Main.player[whoAmI];
+            breakEvent.Sender = Main.players[whoAmI];
             breakEvent.Tile = tile;
             breakEvent.Type = tileType;
             breakEvent.Position = new Vector2(x, y);

@@ -37,11 +37,11 @@ namespace Terraria_Server.Messages
             string deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             bool pvp = (pvpFlag != 0);
 
-            Main.player[playerIndex].KillMe((double)damage, direction, pvp, deathText);
+            Main.players[playerIndex].KillMe((double)damage, direction, pvp, deathText);
 
             if (Main.netMode == 2)
             {
-                NetMessage.SendData(44, -1, whoAmI, deathText, playerIndex, (float)direction, (float)damage, (float)pvpFlag, 0);
+                NetMessage.SendData(44, -1, whoAmI, deathText, playerIndex, (float)direction, (float)damage, (float)pvpFlag);
             }
         }
     }

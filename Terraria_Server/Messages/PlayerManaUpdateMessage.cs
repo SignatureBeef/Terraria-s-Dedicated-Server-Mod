@@ -27,8 +27,8 @@ namespace Terraria_Server.Messages
             num += 2;
             int statManaMax = (int)BitConverter.ToInt16(readBuffer, num);
 
-            Main.player[playerIndex].statMana = statMana;
-            Main.player[playerIndex].statManaMax = statManaMax;
+            Main.players[playerIndex].statMana = statMana;
+            Main.players[playerIndex].statManaMax = statManaMax;
             if (Main.netMode == 2)
             {
                 NetMessage.SendData(42, -1, whoAmI, "", playerIndex);

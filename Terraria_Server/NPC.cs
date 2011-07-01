@@ -2257,7 +2257,7 @@ namespace Terraria_Server
                                         }
                                     }
                                 }
-                                if ((this.type == 31 || this.type == 47) && this.velocity.Y == 0f && Math.Abs(this.position.X + (float)(this.width / 2) - (Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2))) < 100f && Math.Abs(this.position.Y + (float)(this.height / 2) - (Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2))) < 50f && ((this.direction > 0 && this.velocity.X >= 1f) || (this.direction < 0 && this.velocity.X <= -1f)))
+                                if ((this.type == 31 || this.type == 47) && this.velocity.Y == 0f && Math.Abs(this.position.X + (float)(this.width / 2) - (Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))) < 100f && Math.Abs(this.position.Y + (float)(this.height / 2) - (Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2))) < 50f && ((this.direction > 0 && this.velocity.X >= 1f) || (this.direction < 0 && this.velocity.X <= -1f)))
                                 {
                                     this.velocity.X = this.velocity.X * 2f;
                                     if (this.velocity.X > 3f)
@@ -2278,13 +2278,13 @@ namespace Terraria_Server
                         {
                             if (this.aiStyle == 4)
                             {
-                                if (this.target < 0 || this.target == 255 || Main.player[this.target].dead || !Main.player[this.target].active)
+                                if (this.target < 0 || this.target == 255 || Main.players[this.target].dead || !Main.players[this.target].active)
                                 {
                                     this.TargetClosest(true);
                                 }
-                                bool dead = Main.player[this.target].dead;
-                                float num6 = this.position.X + (float)(this.width / 2) - Main.player[this.target].position.X - (float)(Main.player[this.target].width / 2);
-                                float num7 = this.position.Y + (float)this.height - 59f - Main.player[this.target].position.Y - (float)(Main.player[this.target].height / 2);
+                                bool dead = Main.players[this.target].dead;
+                                float num6 = this.position.X + (float)(this.width / 2) - Main.players[this.target].position.X - (float)(Main.players[this.target].width / 2);
+                                float num7 = this.position.Y + (float)this.height - 59f - Main.players[this.target].position.Y - (float)(Main.players[this.target].height / 2);
                                 float num8 = (float)Math.Atan2((double)num7, (double)num6) + 1.57f;
                                 if (num8 < 0f)
                                 {
@@ -2392,8 +2392,8 @@ namespace Terraria_Server
                                             float num11 = 5f;
                                             float num12 = 0.04f;
                                             Vector2 vector = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                            float num13 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector.X;
-                                            float num14 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - 200f - vector.Y;
+                                            float num13 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector.X;
+                                            float num14 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - 200f - vector.Y;
                                             float num15 = (float)Math.Sqrt((double)(num13 * num13 + num14 * num14));
                                             float num16 = num15;
                                             num15 = num11 / num15;
@@ -2448,9 +2448,9 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if (this.position.Y + (float)this.height < Main.player[this.target].position.Y && num16 < 500f)
+                                                if (this.position.Y + (float)this.height < Main.players[this.target].position.Y && num16 < 500f)
                                                 {
-                                                    if (!Main.player[this.target].dead)
+                                                    if (!Main.players[this.target].dead)
                                                     {
                                                         this.ai[3] += 1f;
                                                     }
@@ -2459,8 +2459,8 @@ namespace Terraria_Server
                                                         this.ai[3] = 0f;
                                                         this.rotation = num8;
                                                         float num17 = 5f;
-                                                        float num18 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector.X;
-                                                        float num19 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector.Y;
+                                                        float num18 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector.X;
+                                                        float num19 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector.Y;
                                                         float num20 = (float)Math.Sqrt((double)(num18 * num18 + num19 * num19));
                                                         num20 = num17 / num20;
                                                         Vector2 vector2 = vector;
@@ -2476,7 +2476,7 @@ namespace Terraria_Server
                                                             Main.npc[num21].velocity.Y = vector3.Y;
                                                             if (Main.netMode == 2 && num21 < 1000)
                                                             {
-                                                                NetMessage.SendData(23, -1, -1, "", num21, 0f, 0f, 0f, 0);
+                                                                NetMessage.SendData(23, -1, -1, "", num21);
                                                             }
                                                         }
                                                         for (int i = 0; i < 10; i++)
@@ -2502,8 +2502,8 @@ namespace Terraria_Server
                                                 this.rotation = num8;
                                                 float num22 = 7f;
                                                 Vector2 vector4 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                float num23 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector4.X;
-                                                float num24 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector4.Y;
+                                                float num23 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector4.X;
+                                                float num24 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector4.Y;
                                                 float num25 = (float)Math.Sqrt((double)(num23 * num23 + num24 * num24));
                                                 num25 = num22 / num25;
                                                 this.velocity.X = num23 * num25;
@@ -2644,8 +2644,8 @@ namespace Terraria_Server
                                                 float num26 = 6f;
                                                 float num27 = 0.07f;
                                                 Vector2 vector5 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                float num28 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector5.X;
-                                                float num29 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - 120f - vector5.Y;
+                                                float num28 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector5.X;
+                                                float num29 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - 120f - vector5.Y;
                                                 float num30 = (float)Math.Sqrt((double)(num28 * num28 + num29 * num29));
                                                 num30 = num26 / num30;
                                                 num28 *= num30;
@@ -2706,8 +2706,8 @@ namespace Terraria_Server
                                                     this.rotation = num8;
                                                     float num31 = 8f;
                                                     Vector2 vector6 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                    float num32 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector6.X;
-                                                    float num33 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector6.Y;
+                                                    float num32 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector6.X;
+                                                    float num33 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector6.Y;
                                                     float num34 = (float)Math.Sqrt((double)(num32 * num32 + num33 * num33));
                                                     num34 = num31 / num34;
                                                     this.velocity.X = num32 * num34;
@@ -2760,7 +2760,7 @@ namespace Terraria_Server
                             {
                                 if (this.aiStyle == 5)
                                 {
-                                    if (this.target < 0 || this.target == 255 || Main.player[this.target].dead)
+                                    if (this.target < 0 || this.target == 255 || Main.players[this.target].dead)
                                     {
                                         this.TargetClosest(true);
                                     }
@@ -2780,8 +2780,8 @@ namespace Terraria_Server
                                         }
                                     }
                                     Vector2 vector7 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                    float num37 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector7.X;
-                                    float num38 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector7.Y;
+                                    float num37 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector7.X;
+                                    float num38 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector7.Y;
                                     float num39 = (float)Math.Sqrt((double)(num37 * num37 + num38 * num38));
                                     float num40 = num39;
                                     num39 = num35 / num39;
@@ -2819,7 +2819,7 @@ namespace Terraria_Server
                                             this.velocity.Y = this.velocity.Y + num38 * 0.007f;
                                         }
                                     }
-                                    if (Main.player[this.target].dead)
+                                    if (Main.players[this.target].dead)
                                     {
                                         num37 = (float)this.direction * num35 / 2f;
                                         num38 = -num35 / 2f;
@@ -2986,7 +2986,7 @@ namespace Terraria_Server
                                             expr_3840_cp_0.velocity.Y = expr_3840_cp_0.velocity.Y * 0.1f;
                                         }
                                     }
-                                    if ((Main.dayTime && this.type != 6 && this.type != 23 && this.type != 42) || Main.player[this.target].dead)
+                                    if ((Main.dayTime && this.type != 6 && this.type != 23 && this.type != 42) || Main.players[this.target].dead)
                                     {
                                         this.velocity.Y = this.velocity.Y - num36 * 2f;
                                         if (this.timeLeft > 10)
@@ -3000,11 +3000,11 @@ namespace Terraria_Server
                                 {
                                     if (this.aiStyle == 6)
                                     {
-                                        if (this.target < 0 || this.target == 255 || Main.player[this.target].dead)
+                                        if (this.target < 0 || this.target == 255 || Main.players[this.target].dead)
                                         {
                                             this.TargetClosest(true);
                                         }
-                                        if (Main.player[this.target].dead && this.timeLeft > 10)
+                                        if (Main.players[this.target].dead && this.timeLeft > 10)
                                         {
                                             this.timeLeft = 10;
                                         }
@@ -3129,7 +3129,7 @@ namespace Terraria_Server
                                             }
                                             if (!this.active && Main.netMode == 2)
                                             {
-                                                NetMessage.SendData(28, -1, -1, "", this.whoAmI, -1f, 0f, 0f, 0);
+                                                NetMessage.SendData(28, -1, -1, "", this.whoAmI, -1f);
                                             }
                                         }
                                         int num51 = (int)(this.position.X / 16f) - 1;
@@ -3190,8 +3190,8 @@ namespace Terraria_Server
                                             num56 = 0.08f;
                                         }
                                         Vector2 vector9 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                        float num57 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector9.X;
-                                        float num58 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector9.Y;
+                                        float num57 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector9.X;
+                                        float num58 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector9.Y;
                                         float num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
                                         if (this.ai[1] > 0f)
                                         {
@@ -3279,7 +3279,7 @@ namespace Terraria_Server
                                             num59 = num55 / num59;
                                             num57 *= num59;
                                             num58 *= num59;
-                                            if ((this.type == 13 || this.type == 7) && !Main.player[this.target].zoneEvil)
+                                            if ((this.type == 13 || this.type == 7) && !Main.players[this.target].zoneEvil)
                                             {
                                                 if ((double)(this.position.Y / 16f) > Main.rockLayer && this.timeLeft > 2)
                                                 {
@@ -3393,7 +3393,7 @@ namespace Terraria_Server
                                             }
                                             for (int num65 = 0; num65 < 255; num65++)
                                             {
-                                                if (Main.player[num65].active && Main.player[num65].talkNPC == this.whoAmI)
+                                                if (Main.players[num65].active && Main.players[num65].talkNPC == this.whoAmI)
                                                 {
                                                     flag7 = true;
                                                     if (this.ai[0] != 0f)
@@ -3403,7 +3403,7 @@ namespace Terraria_Server
                                                     this.ai[0] = 0f;
                                                     this.ai[1] = 300f;
                                                     this.ai[2] = 100f;
-                                                    if (Main.player[num65].position.X + (float)(Main.player[num65].width / 2) < this.position.X + (float)(this.width / 2))
+                                                    if (Main.players[num65].position.X + (float)(Main.players[num65].width / 2) < this.position.X + (float)(this.width / 2))
                                                     {
                                                         this.direction = -1;
                                                     }
@@ -3442,9 +3442,9 @@ namespace Terraria_Server
                                                     }
                                                     for (int num67 = 0; num67 < 255; num67++)
                                                     {
-                                                        if (Main.player[num67].active)
+                                                        if (Main.players[num67].active)
                                                         {
-                                                            Rectangle rectangle2 = new Rectangle((int)Main.player[num67].position.X, (int)Main.player[num67].position.Y, Main.player[num67].width, Main.player[num67].height);
+                                                            Rectangle rectangle2 = new Rectangle((int)Main.players[num67].position.X, (int)Main.players[num67].position.Y, Main.players[num67].width, Main.players[num67].height);
                                                             if (rectangle2.Intersects(rectangle))
                                                             {
                                                                 flag8 = false;
@@ -3642,7 +3642,7 @@ namespace Terraria_Server
                                                         if (flag9)
                                                         {
                                                             this.closeDoor = false;
-                                                            NetMessage.SendData(19, -1, -1, "", 1, (float)this.doorX, (float)this.doorY, (float)this.direction, 0);
+                                                            NetMessage.SendData(19, -1, -1, "", 1, (float)this.doorX, (float)this.doorY, (float)this.direction);
                                                         }
                                                         if ((this.position.X + (float)(this.width / 2)) / 16f > (float)(this.doorX + 4) || (this.position.X + (float)(this.width / 2)) / 16f < (float)(this.doorX - 4) || (this.position.Y + (float)(this.height / 2)) / 16f > (float)(this.doorY + 4) || (this.position.Y + (float)(this.height / 2)) / 16f < (float)(this.doorY - 4))
                                                         {
@@ -3725,7 +3725,7 @@ namespace Terraria_Server
                                                                     this.closeDoor = true;
                                                                     this.doorX = num68;
                                                                     this.doorY = num69 - 2;
-                                                                    NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)this.direction, 0);
+                                                                    NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)this.direction);
                                                                     this.netUpdate = true;
                                                                     this.ai[1] += 80f;
                                                                     return;
@@ -3735,7 +3735,7 @@ namespace Terraria_Server
                                                                     this.closeDoor = true;
                                                                     this.doorX = num68;
                                                                     this.doorY = num69 - 2;
-                                                                    NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)(-(float)this.direction), 0);
+                                                                    NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)(-(float)this.direction));
                                                                     this.netUpdate = true;
                                                                     this.ai[1] += 80f;
                                                                     return;
@@ -4018,14 +4018,14 @@ namespace Terraria_Server
                                                     if (this.ai[0] >= 650f && Main.netMode != 1)
                                                     {
                                                         this.ai[0] = 1f;
-                                                        int num78 = (int)Main.player[this.target].position.X / 16;
-                                                        int num79 = (int)Main.player[this.target].position.Y / 16;
+                                                        int num78 = (int)Main.players[this.target].position.X / 16;
+                                                        int num79 = (int)Main.players[this.target].position.Y / 16;
                                                         int num80 = (int)this.position.X / 16;
                                                         int num81 = (int)this.position.Y / 16;
                                                         int num82 = 20;
                                                         int num83 = 0;
                                                         bool flag11 = false;
-                                                        if (Math.Abs(this.position.X - Main.player[this.target].position.X) + Math.Abs(this.position.Y - Main.player[this.target].position.Y) > 2000f)
+                                                        if (Math.Abs(this.position.X - Main.players[this.target].position.X) + Math.Abs(this.position.Y - Main.players[this.target].position.Y) > 2000f)
                                                         {
                                                             num83 = 100;
                                                             flag11 = true;
@@ -4169,8 +4169,8 @@ namespace Terraria_Server
                                                             NPC.maxSpawns = 8;
                                                         }
                                                         Vector2 vector10 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                        float num91 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector10.X;
-                                                        float num92 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector10.Y;
+                                                        float num91 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector10.X;
+                                                        float num92 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector10.Y;
                                                         float num93 = (float)Math.Sqrt((double)(num91 * num91 + num92 * num92));
                                                         num93 = num90 / num93;
                                                         this.velocity.X = num91 * num93;
@@ -4248,8 +4248,8 @@ namespace Terraria_Server
                                                     float num99 = 0.011f;
                                                     this.TargetClosest(true);
                                                     Vector2 vector11 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                    float num100 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector11.X;
-                                                    float num101 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector11.Y;
+                                                    float num100 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector11.X;
+                                                    float num101 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector11.Y;
                                                     float num102 = (float)Math.Sqrt((double)(num100 * num100 + num101 * num101));
                                                     float num103 = num102;
                                                     this.ai[1] += 1f;
@@ -4310,7 +4310,7 @@ namespace Terraria_Server
                                                     num102 = num98 / num102;
                                                     num100 *= num102;
                                                     num101 *= num102;
-                                                    if (Main.player[this.target].dead)
+                                                    if (Main.players[this.target].dead)
                                                     {
                                                         num100 = (float)this.direction * num98 / 2f;
                                                         num101 = -num98 / 2f;
@@ -4376,10 +4376,10 @@ namespace Terraria_Server
                                                         {
                                                             this.ai[1] = 2f;
                                                         }
-                                                        if (Main.player[this.target].dead || Math.Abs(this.position.X - Main.player[this.target].position.X) > 2000f || Math.Abs(this.position.Y - Main.player[this.target].position.Y) > 2000f)
+                                                        if (Main.players[this.target].dead || Math.Abs(this.position.X - Main.players[this.target].position.X) > 2000f || Math.Abs(this.position.Y - Main.players[this.target].position.Y) > 2000f)
                                                         {
                                                             this.TargetClosest(true);
-                                                            if (Main.player[this.target].dead || Math.Abs(this.position.X - Main.player[this.target].position.X) > 2000f || Math.Abs(this.position.Y - Main.player[this.target].position.Y) > 2000f)
+                                                            if (Main.players[this.target].dead || Math.Abs(this.position.X - Main.players[this.target].position.X) > 2000f || Math.Abs(this.position.Y - Main.players[this.target].position.Y) > 2000f)
                                                             {
                                                                 this.ai[1] = 3f;
                                                             }
@@ -4399,7 +4399,7 @@ namespace Terraria_Server
                                                                 this.netUpdate = true;
                                                             }
                                                             this.rotation = this.velocity.X / 15f;
-                                                            if (this.position.Y > Main.player[this.target].position.Y - 250f)
+                                                            if (this.position.Y > Main.players[this.target].position.Y - 250f)
                                                             {
                                                                 if (this.velocity.Y > 0f)
                                                                 {
@@ -4413,7 +4413,7 @@ namespace Terraria_Server
                                                             }
                                                             else
                                                             {
-                                                                if (this.position.Y < Main.player[this.target].position.Y - 250f)
+                                                                if (this.position.Y < Main.players[this.target].position.Y - 250f)
                                                                 {
                                                                     if (this.velocity.Y < 0f)
                                                                     {
@@ -4426,7 +4426,7 @@ namespace Terraria_Server
                                                                     }
                                                                 }
                                                             }
-                                                            if (this.position.X + (float)(this.width / 2) > Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2))
+                                                            if (this.position.X + (float)(this.width / 2) > Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))
                                                             {
                                                                 if (this.velocity.X > 0f)
                                                                 {
@@ -4438,7 +4438,7 @@ namespace Terraria_Server
                                                                     this.velocity.X = 8f;
                                                                 }
                                                             }
-                                                            if (this.position.X + (float)(this.width / 2) < Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2))
+                                                            if (this.position.X + (float)(this.width / 2) < Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))
                                                             {
                                                                 if (this.velocity.X < 0f)
                                                                 {
@@ -4463,8 +4463,8 @@ namespace Terraria_Server
                                                                 }
                                                                 this.rotation += (float)this.direction * 0.3f;
                                                                 Vector2 vector12 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                float num105 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector12.X;
-                                                                float num106 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector12.Y;
+                                                                float num105 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector12.X;
+                                                                float num106 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector12.Y;
                                                                 float num107 = (float)Math.Sqrt((double)(num105 * num105 + num106 * num106));
                                                                 num107 = 2f / num107;
                                                                 this.velocity.X = num105 * num107;
@@ -4478,8 +4478,8 @@ namespace Terraria_Server
                                                                     this.defense = 9999;
                                                                     this.rotation += (float)this.direction * 0.3f;
                                                                     Vector2 vector13 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                    float num108 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector13.X;
-                                                                    float num109 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector13.Y;
+                                                                    float num108 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector13.X;
+                                                                    float num109 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector13.Y;
                                                                     float num110 = (float)Math.Sqrt((double)(num108 * num108 + num109 * num109));
                                                                     num110 = 8f / num110;
                                                                     this.velocity.X = num108 * num110;
@@ -4702,8 +4702,8 @@ namespace Terraria_Server
                                                                     this.TargetClosest(true);
                                                                     this.ai[2] = 2f;
                                                                     vector15 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                    num115 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector15.X;
-                                                                    num116 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector15.Y;
+                                                                    num115 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector15.X;
+                                                                    num116 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector15.Y;
                                                                     num117 = (float)Math.Sqrt((double)(num115 * num115 + num116 * num116));
                                                                     num117 = 20f / num117;
                                                                     this.velocity.X = num115 * num117;
@@ -4716,7 +4716,7 @@ namespace Terraria_Server
                                                             {
                                                                 if (this.ai[2] == 2f)
                                                                 {
-                                                                    if (this.position.Y > Main.player[this.target].position.Y || this.velocity.Y < 0f)
+                                                                    if (this.position.Y > Main.players[this.target].position.Y || this.velocity.Y < 0f)
                                                                     {
                                                                         this.ai[2] = 3f;
                                                                         return;
@@ -4746,8 +4746,8 @@ namespace Terraria_Server
                                                                             this.TargetClosest(true);
                                                                             this.ai[2] = 5f;
                                                                             vector16 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                            num118 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector16.X;
-                                                                            num119 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector16.Y;
+                                                                            num118 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector16.X;
+                                                                            num119 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector16.Y;
                                                                             num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
                                                                             num120 = 20f / num120;
                                                                             this.velocity.X = num118 * num120;
@@ -4758,7 +4758,7 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.ai[2] == 5f && ((this.velocity.X > 0f && this.position.X + (float)(this.width / 2) > Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2)) || (this.velocity.X < 0f && this.position.X + (float)(this.width / 2) < Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2))))
+                                                                        if (this.ai[2] == 5f && ((this.velocity.X > 0f && this.position.X + (float)(this.width / 2) > Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2)) || (this.velocity.X < 0f && this.position.X + (float)(this.width / 2) < Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))))
                                                                         {
                                                                             this.ai[2] = 0f;
                                                                             return;
@@ -4790,8 +4790,8 @@ namespace Terraria_Server
                                                                     num122 = 200f;
                                                                 }
                                                                 Vector2 vector17 = new Vector2(this.ai[0] * 16f + 8f, this.ai[1] * 16f + 8f);
-                                                                float num123 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - (float)(this.width / 2) - vector17.X;
-                                                                float num124 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - (float)(this.height / 2) - vector17.Y;
+                                                                float num123 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - (float)(this.width / 2) - vector17.X;
+                                                                float num124 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - (float)(this.height / 2) - vector17.Y;
                                                                 float num125 = (float)Math.Sqrt((double)(num123 * num123 + num124 * num124));
                                                                 if (num125 > num122)
                                                                 {
@@ -5145,8 +5145,8 @@ namespace Terraria_Server
                                                                             {
                                                                                 float num127 = 6f;
                                                                                 Vector2 vector18 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                float num128 = Main.player[this.target].position.X + (float)Main.player[this.target].width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
-                                                                                float num129 = Main.player[this.target].position.Y + (float)Main.player[this.target].height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
+                                                                                float num128 = Main.players[this.target].position.X + (float)Main.players[this.target].width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
+                                                                                float num129 = Main.players[this.target].position.Y + (float)Main.players[this.target].height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
                                                                                 float num130 = (float)Math.Sqrt((double)(num128 * num128 + num129 * num129));
                                                                                 num130 = num127 / num130;
                                                                                 num128 *= num130;
@@ -5171,8 +5171,8 @@ namespace Terraria_Server
                                                                             {
                                                                                 float num134 = 0.2f;
                                                                                 Vector2 vector19 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                float num135 = Main.player[this.target].position.X + (float)Main.player[this.target].width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
-                                                                                float num136 = Main.player[this.target].position.Y + (float)Main.player[this.target].height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
+                                                                                float num135 = Main.players[this.target].position.X + (float)Main.players[this.target].width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
+                                                                                float num136 = Main.players[this.target].position.Y + (float)Main.players[this.target].height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
                                                                                 float num137 = (float)Math.Sqrt((double)(num135 * num135 + num136 * num136));
                                                                                 num137 = num134 / num137;
                                                                                 num135 *= num137;
@@ -5321,7 +5321,7 @@ namespace Terraria_Server
                                                                                         Main.npc[num146].ai[1] = (float)Main.rand.Next(3);
                                                                                         if (Main.netMode == 2 && num146 < 1000)
                                                                                         {
-                                                                                            NetMessage.SendData(23, -1, -1, "", num146, 0f, 0f, 0f, 0);
+                                                                                            NetMessage.SendData(23, -1, -1, "", num146);
                                                                                         }
                                                                                     }
                                                                                     return;
@@ -5366,7 +5366,7 @@ namespace Terraria_Server
                                                                                 if (!this.friendly)
                                                                                 {
                                                                                     this.TargetClosest(false);
-                                                                                    if (Main.player[this.target].wet && !Main.player[this.target].dead)
+                                                                                    if (Main.players[this.target].wet && !Main.players[this.target].dead)
                                                                                     {
                                                                                         flag13 = true;
                                                                                     }
@@ -5531,7 +5531,7 @@ namespace Terraria_Server
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            Rectangle rectangle3 = new Rectangle((int)Main.player[this.target].position.X, (int)Main.player[this.target].position.Y, Main.player[this.target].width, Main.player[this.target].height);
+                                                                                            Rectangle rectangle3 = new Rectangle((int)Main.players[this.target].position.X, (int)Main.players[this.target].position.Y, Main.players[this.target].width, Main.players[this.target].height);
                                                                                             Rectangle rectangle4 = new Rectangle((int)this.position.X - 100, (int)this.position.Y - 100, this.width + 200, this.height + 200);
                                                                                             if (rectangle4.Intersects(rectangle3) || this.life < this.lifeMax)
                                                                                             {
@@ -5544,7 +5544,7 @@ namespace Terraria_Server
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    if (!Main.player[this.target].dead)
+                                                                                    if (!Main.players[this.target].dead)
                                                                                     {
                                                                                         if (this.collideX)
                                                                                         {
@@ -5612,8 +5612,8 @@ namespace Terraria_Server
                                                                                                 }
                                                                                             }
                                                                                         }
-                                                                                        float num149 = Math.Abs(this.position.X + (float)(this.width / 2) - (Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2)));
-                                                                                        float num150 = Main.player[this.target].position.Y - (float)(this.height / 2);
+                                                                                        float num149 = Math.Abs(this.position.X + (float)(this.width / 2) - (Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2)));
+                                                                                        float num150 = Main.players[this.target].position.Y - (float)(this.height / 2);
                                                                                         if (num149 > 50f)
                                                                                         {
                                                                                             num150 -= 100f;
@@ -5713,7 +5713,7 @@ namespace Terraria_Server
                                                                                     if (!this.friendly)
                                                                                     {
                                                                                         this.TargetClosest(false);
-                                                                                        if (Main.player[this.target].wet && !Main.player[this.target].dead)
+                                                                                        if (Main.players[this.target].wet && !Main.players[this.target].dead)
                                                                                         {
                                                                                             flag14 = true;
                                                                                         }
@@ -5728,8 +5728,8 @@ namespace Terraria_Server
                                                                                             this.TargetClosest(true);
                                                                                             float num152 = 7f;
                                                                                             Vector2 vector20 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                            float num153 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector20.X;
-                                                                                            float num154 = Main.player[this.target].position.Y + (float)(Main.player[this.target].height / 2) - vector20.Y;
+                                                                                            float num153 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector20.X;
+                                                                                            float num154 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector20.Y;
                                                                                             float num155 = (float)Math.Sqrt((double)(num153 * num153 + num154 * num154));
                                                                                             num155 = num152 / num155;
                                                                                             num153 *= num155;
@@ -5809,8 +5809,8 @@ namespace Terraria_Server
                                                                                         this.TargetClosest(true);
                                                                                         float num158 = 12f;
                                                                                         Vector2 vector21 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                        float num159 = Main.player[this.target].position.X + (float)(Main.player[this.target].width / 2) - vector21.X;
-                                                                                        float num160 = Main.player[this.target].position.Y - vector21.Y;
+                                                                                        float num159 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector21.X;
+                                                                                        float num160 = Main.players[this.target].position.Y - vector21.Y;
                                                                                         float num161 = (float)Math.Sqrt((double)(num159 * num159 + num160 * num160));
                                                                                         num161 = num158 / num161;
                                                                                         num159 *= num161;
@@ -5845,7 +5845,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             this.ai[0] -= 1f;
                                                                                         }
-                                                                                        if (Main.netMode != 1 && flag15 && this.ai[0] == 0f && Collision.CanHit(this.position, this.width, this.height, Main.player[this.target].position, Main.player[this.target].width, Main.player[this.target].height))
+                                                                                        if (Main.netMode != 1 && flag15 && this.ai[0] == 0f && Collision.CanHit(this.position, this.width, this.height, Main.players[this.target].position, Main.players[this.target].width, Main.players[this.target].height))
                                                                                         {
                                                                                             this.ai[0] = 200f;
                                                                                             int num162 = 10;
@@ -5854,7 +5854,7 @@ namespace Terraria_Server
                                                                                             Main.projectile[num164].ai[0] = 2f;
                                                                                             Main.projectile[num164].timeLeft = 300;
                                                                                             Main.projectile[num164].friendly = false;
-                                                                                            NetMessage.SendData(27, -1, -1, "", num164, 0f, 0f, 0f, 0);
+                                                                                            NetMessage.SendData(27, -1, -1, "", num164);
                                                                                             this.netUpdate = true;
                                                                                         }
                                                                                         try
@@ -6704,9 +6704,9 @@ namespace Terraria_Server
             float num = -1f;
             for (int i = 0; i < 255; i++)
             {
-                if (Main.player[i].active && !Main.player[i].dead && (num == -1f || Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - this.position.X + (float)(this.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - this.position.Y + (float)(this.height / 2)) < num))
+                if (Main.players[i].active && !Main.players[i].dead && (num == -1f || Math.Abs(Main.players[i].position.X + (float)(Main.players[i].width / 2) - this.position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].position.Y + (float)(Main.players[i].height / 2) - this.position.Y + (float)(this.height / 2)) < num))
                 {
-                    num = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - this.position.X + (float)(this.width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - this.position.Y + (float)(this.height / 2));
+                    num = Math.Abs(Main.players[i].position.X + (float)(Main.players[i].width / 2) - this.position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].position.Y + (float)(Main.players[i].height / 2) - this.position.Y + (float)(this.height / 2));
                     this.target = i;
                 }
             }
@@ -6714,7 +6714,7 @@ namespace Terraria_Server
             {
                 this.target = 0;
             }
-            this.targetRect = new Rectangle((int)Main.player[this.target].position.X, (int)Main.player[this.target].position.Y, Main.player[this.target].width, Main.player[this.target].height);
+            this.targetRect = new Rectangle((int)Main.players[this.target].position.X, (int)Main.players[this.target].position.Y, Main.players[this.target].width, Main.players[this.target].height);
             if (faceTarget)
             {
                 this.direction = 1;
@@ -6749,9 +6749,9 @@ namespace Terraria_Server
                         Rectangle rectangle = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)NPC.townRangeX), (int)(this.position.Y + (float)(this.height / 2) - (float)NPC.townRangeY), NPC.townRangeX * 2, NPC.townRangeY * 2);
                         for (int i = 0; i < 255; i++)
                         {
-                            if (Main.player[i].active && rectangle.Intersects(new Rectangle((int)Main.player[i].position.X, (int)Main.player[i].position.Y, Main.player[i].width, Main.player[i].height)))
+                            if (Main.players[i].active && rectangle.Intersects(new Rectangle((int)Main.players[i].position.X, (int)Main.players[i].position.Y, Main.players[i].width, Main.players[i].height)))
                             {
-                                Main.player[i].townNPCs += (int)NPC.npcSlots;
+                                Main.players[i].townNPCs += (int)NPC.npcSlots;
                             }
                         }
                     }
@@ -6762,17 +6762,17 @@ namespace Terraria_Server
                 Rectangle rectangle3 = new Rectangle((int)((double)(this.position.X + (float)(this.width / 2)) - (double)NPC.sWidth * 0.5 - (double)this.width), (int)((double)(this.position.Y + (float)(this.height / 2)) - (double)NPC.sHeight * 0.5 - (double)this.height), NPC.sWidth + this.width * 2, NPC.sHeight + this.height * 2);
                 for (int j = 0; j < 255; j++)
                 {
-                    if (Main.player[j].active)
+                    if (Main.players[j].active)
                     {
-                        if (rectangle2.Intersects(new Rectangle((int)Main.player[j].position.X, (int)Main.player[j].position.Y, Main.player[j].width, Main.player[j].height)))
+                        if (rectangle2.Intersects(new Rectangle((int)Main.players[j].position.X, (int)Main.players[j].position.Y, Main.players[j].width, Main.players[j].height)))
                         {
                             flag = true;
                             if (this.type != 25 && this.type != 30 && this.type != 33)
                             {
-                                Main.player[j].activeNPCs += (int)NPC.npcSlots;
+                                Main.players[j].activeNPCs += (int)NPC.npcSlots;
                             }
                         }
-                        if (rectangle3.Intersects(new Rectangle((int)Main.player[j].position.X, (int)Main.player[j].position.Y, Main.player[j].width, Main.player[j].height)))
+                        if (rectangle3.Intersects(new Rectangle((int)Main.players[j].position.X, (int)Main.players[j].position.Y, Main.players[j].width, Main.players[j].height)))
                         {
                             this.timeLeft = NPC.activeTime;
                         }
@@ -6798,7 +6798,7 @@ namespace Terraria_Server
                     if (Main.netMode == 2)
                     {
                         this.life = 0;
-                        NetMessage.SendData(23, -1, -1, "", this.whoAmI, 0f, 0f, 0f, 0);
+                        NetMessage.SendData(23, -1, -1, "", this.whoAmI);
                     }
                 }
             }
@@ -6818,21 +6818,21 @@ namespace Terraria_Server
             int num3 = 0;
             for (int i = 0; i < 255; i++)
             {
-                if (Main.player[i].active)
+                if (Main.players[i].active)
                 {
                     num3++;
                 }
             }
             for (int j = 0; j < 255; j++)
             {
-                if (Main.player[j].active && !Main.player[j].dead)
+                if (Main.players[j].active && !Main.players[j].dead)
                 {
                     bool flag3 = false;
                     bool flag4 = false;
-                    if (Main.player[j].active && Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0 && (double)Main.player[j].position.Y < Main.worldSurface * 16.0 + (double)NPC.sHeight)
+                    if (Main.players[j].active && Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0 && (double)Main.players[j].position.Y < Main.worldSurface * 16.0 + (double)NPC.sHeight)
                     {
                         int num4 = 3000;
-                        if ((double)Main.player[j].position.X > Main.invasionX * 16.0 - (double)num4 && (double)Main.player[j].position.X < Main.invasionX * 16.0 + (double)num4)
+                        if ((double)Main.players[j].position.X > Main.invasionX * 16.0 - (double)num4 && (double)Main.players[j].position.X < Main.invasionX * 16.0 + (double)num4)
                         {
                             flag3 = true;
                         }
@@ -6840,21 +6840,21 @@ namespace Terraria_Server
                     flag = false;
                     NPC.spawnRate = NPC.defaultSpawnRate;
                     NPC.maxSpawns = NPC.defaultMaxSpawns;
-                    if (Main.player[j].position.Y > (float)((Main.maxTilesY - 200) * 16))
+                    if (Main.players[j].position.Y > (float)((Main.maxTilesY - 200) * 16))
                     {
                         NPC.spawnRate = (int)((float)NPC.spawnRate * 0.4f);
                         NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2.1f);
                     }
                     else
                     {
-                        if ((double)Main.player[j].position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
+                        if ((double)Main.players[j].position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
                         {
                             NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
                             NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.9f);
                         }
                         else
                         {
-                            if ((double)Main.player[j].position.Y > Main.worldSurface * 16.0 + (double)NPC.sHeight)
+                            if ((double)Main.players[j].position.Y > Main.worldSurface * 16.0 + (double)NPC.sHeight)
                             {
                                 NPC.spawnRate = (int)((double)NPC.spawnRate * 0.5);
                                 NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.7f);
@@ -6874,28 +6874,28 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (Main.player[j].zoneDungeon)
+                    if (Main.players[j].zoneDungeon)
                     {
                         NPC.spawnRate = (int)((double)NPC.defaultSpawnRate * 0.22);
                         NPC.maxSpawns = NPC.defaultMaxSpawns * 2;
                     }
                     else
                     {
-                        if (Main.player[j].zoneJungle)
+                        if (Main.players[j].zoneJungle)
                         {
                             NPC.spawnRate = (int)((double)NPC.spawnRate * 0.3);
                             NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
                         }
                         else
                         {
-                            if (Main.player[j].zoneEvil)
+                            if (Main.players[j].zoneEvil)
                             {
                                 NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
                                 NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
                             }
                             else
                             {
-                                if (Main.player[j].zoneMeteor)
+                                if (Main.players[j].zoneMeteor)
                                 {
                                     NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
                                     NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.1f);
@@ -6903,51 +6903,51 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if ((double)Main.player[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
+                    if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
                     {
                         NPC.spawnRate = (int)((float)NPC.spawnRate * 0.6f);
                     }
                     else
                     {
-                        if ((double)Main.player[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
+                        if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
                         {
                             NPC.spawnRate = (int)((float)NPC.spawnRate * 0.7f);
                         }
                         else
                         {
-                            if ((double)Main.player[j].activeNPCs < (double)NPC.maxSpawns * 0.6)
+                            if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.6)
                             {
                                 NPC.spawnRate = (int)((float)NPC.spawnRate * 0.8f);
                             }
                             else
                             {
-                                if ((double)Main.player[j].activeNPCs < (double)NPC.maxSpawns * 0.8)
+                                if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.8)
                                 {
                                     NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
                                 }
                             }
                         }
                     }
-                    if ((double)(Main.player[j].position.Y * 16f) > (Main.worldSurface + Main.rockLayer) / 2.0 || Main.player[j].zoneEvil)
+                    if ((double)(Main.players[j].position.Y * 16f) > (Main.worldSurface + Main.rockLayer) / 2.0 || Main.players[j].zoneEvil)
                     {
-                        if ((double)Main.player[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
+                        if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
                         {
                             NPC.spawnRate = (int)((float)NPC.spawnRate * 0.7f);
                         }
                         else
                         {
-                            if ((double)Main.player[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
+                            if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
                             {
                                 NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
                             }
                         }
                     }
-                    if (Main.player[j].inventory[Main.player[j].selectedItem].Type == 148)
+                    if (Main.players[j].inventory[Main.players[j].selectedItemIndex].Type == 148)
                     {
                         NPC.spawnRate = (int)((double)NPC.spawnRate * 0.75);
                         NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.5f);
                     }
-                    if (Main.player[j].enemySpawns)
+                    if (Main.players[j].enemySpawns)
                     {
                         NPC.spawnRate = (int)((double)NPC.spawnRate * 0.5);
                         NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2f);
@@ -6965,14 +6965,14 @@ namespace Terraria_Server
                         NPC.maxSpawns = (int)((double)NPC.defaultMaxSpawns * (1.0 + 0.4 * (double)num3));
                         NPC.spawnRate = 30;
                     }
-                    if (Main.player[j].zoneDungeon && !NPC.downedBoss3)
+                    if (Main.players[j].zoneDungeon && !NPC.downedBoss3)
                     {
                         NPC.spawnRate = 10;
                     }
                     bool flag5 = false;
-                    if (!flag3 && (!Main.bloodMoon || Main.dayTime) && !Main.player[j].zoneDungeon && !Main.player[j].zoneEvil && !Main.player[j].zoneMeteor)
+                    if (!flag3 && (!Main.bloodMoon || Main.dayTime) && !Main.players[j].zoneDungeon && !Main.players[j].zoneEvil && !Main.players[j].zoneMeteor)
                     {
-                        if (Main.player[j].townNPCs == 1f)
+                        if (Main.players[j].townNPCs == 1f)
                         {
                             if (Main.rand.Next(3) <= 1)
                             {
@@ -6986,7 +6986,7 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            if (Main.player[j].townNPCs == 2f)
+                            if (Main.players[j].townNPCs == 2f)
                             {
                                 if (Main.rand.Next(3) == 0)
                                 {
@@ -7000,7 +7000,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if (Main.player[j].townNPCs >= 3f)
+                                if (Main.players[j].townNPCs >= 3f)
                                 {
                                     flag5 = true;
                                     NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
@@ -7008,16 +7008,16 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (Main.player[j].active && !Main.player[j].dead && Main.player[j].activeNPCs < (float)NPC.maxSpawns && Main.rand.Next(NPC.spawnRate) == 0)
+                    if (Main.players[j].active && !Main.players[j].dead && Main.players[j].activeNPCs < (float)NPC.maxSpawns && Main.rand.Next(NPC.spawnRate) == 0)
                     {
-                        int num5 = (int)(Main.player[j].position.X / 16f) - NPC.spawnRangeX;
-                        int num6 = (int)(Main.player[j].position.X / 16f) + NPC.spawnRangeX;
-                        int num7 = (int)(Main.player[j].position.Y / 16f) - NPC.spawnRangeY;
-                        int num8 = (int)(Main.player[j].position.Y / 16f) + NPC.spawnRangeY;
-                        int num9 = (int)(Main.player[j].position.X / 16f) - NPC.safeRangeX;
-                        int num10 = (int)(Main.player[j].position.X / 16f) + NPC.safeRangeX;
-                        int num11 = (int)(Main.player[j].position.Y / 16f) - NPC.safeRangeY;
-                        int num12 = (int)(Main.player[j].position.Y / 16f) + NPC.safeRangeY;
+                        int num5 = (int)(Main.players[j].position.X / 16f) - NPC.spawnRangeX;
+                        int num6 = (int)(Main.players[j].position.X / 16f) + NPC.spawnRangeX;
+                        int num7 = (int)(Main.players[j].position.Y / 16f) - NPC.spawnRangeY;
+                        int num8 = (int)(Main.players[j].position.Y / 16f) + NPC.spawnRangeY;
+                        int num9 = (int)(Main.players[j].position.X / 16f) - NPC.safeRangeX;
+                        int num10 = (int)(Main.players[j].position.X / 16f) + NPC.safeRangeX;
+                        int num11 = (int)(Main.players[j].position.Y / 16f) - NPC.safeRangeY;
+                        int num12 = (int)(Main.players[j].position.Y / 16f) + NPC.safeRangeY;
                         if (num5 < 0)
                         {
                             num5 = 0;
@@ -7138,9 +7138,9 @@ namespace Terraria_Server
                         Rectangle rectangle = new Rectangle(num * 16, num2 * 16, 16, 16);
                         for (int num19 = 0; num19 < 255; num19++)
                         {
-                            if (Main.player[num19].active)
+                            if (Main.players[num19].active)
                             {
-                                Rectangle rectangle2 = new Rectangle((int)(Main.player[num19].position.X + (float)(Main.player[num19].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.player[num19].position.Y + (float)(Main.player[num19].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                Rectangle rectangle2 = new Rectangle((int)(Main.players[num19].position.X + (float)(Main.players[num19].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[num19].position.Y + (float)(Main.players[num19].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                                 if (rectangle.Intersects(rectangle2))
                                 {
                                     flag = false;
@@ -7150,7 +7150,7 @@ namespace Terraria_Server
                     }
                     if (flag)
                     {
-                        if (Main.player[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile[num, num2].type] || Main.tile[num, num2 - 1].wall == 0))
+                        if (Main.players[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile[num, num2].type] || Main.tile[num, num2 - 1].wall == 0))
                         {
                             flag = false;
                         }
@@ -7228,7 +7228,7 @@ namespace Terraria_Server
                                         {
                                             if (flag4 && Main.rand.Next(4) == 0)
                                             {
-                                                if (Main.player[j].zoneEvil)
+                                                if (Main.players[j].zoneEvil)
                                                 {
                                                     NPC.NewNPC(num * 16 + 8, num2 * 16, 57, 0);
                                                 }
@@ -7256,7 +7256,7 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    if (Main.player[j].zoneDungeon)
+                                                    if (Main.players[j].zoneDungeon)
                                                     {
                                                         if (!NPC.downedBoss3)
                                                         {
@@ -7294,13 +7294,13 @@ namespace Terraria_Server
                                                     }
                                                     else
                                                     {
-                                                        if (Main.player[j].zoneMeteor)
+                                                        if (Main.players[j].zoneMeteor)
                                                         {
                                                             num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 23, 0);
                                                         }
                                                         else
                                                         {
-                                                            if (Main.player[j].zoneEvil && Main.rand.Next(50) == 0)
+                                                            if (Main.players[j].zoneEvil && Main.rand.Next(50) == 0)
                                                             {
                                                                 num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 7, 1);
                                                             }
@@ -7354,7 +7354,7 @@ namespace Terraria_Server
                                                                             }
                                                                             else
                                                                             {
-                                                                                if ((num20 == 22 && Main.player[j].zoneEvil) || num20 == 23 || num20 == 25)
+                                                                                if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25)
                                                                                 {
                                                                                     num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
                                                                                     if (Main.rand.Next(3) == 0)
@@ -7529,7 +7529,7 @@ namespace Terraria_Server
                                                                                                         if (Main.rand.Next(4) == 0)
                                                                                                         {
                                                                                                             num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
-                                                                                                            if (Main.player[j].zoneJungle)
+                                                                                                            if (Main.players[j].zoneJungle)
                                                                                                             {
                                                                                                                 Main.npc[num21].SetDefaults("Jungle Slime");
                                                                                                             }
@@ -7560,7 +7560,7 @@ namespace Terraria_Server
                                                                                                             }
                                                                                                             else
                                                                                                             {
-                                                                                                                if (Main.player[j].zoneJungle)
+                                                                                                                if (Main.players[j].zoneJungle)
                                                                                                                 {
                                                                                                                     num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
                                                                                                                 }
@@ -7596,7 +7596,7 @@ namespace Terraria_Server
                         }
                         if (Main.netMode == 2 && num21 < 1000)
                         {
-                            NetMessage.SendData(23, -1, -1, "", num21, 0f, 0f, 0f, 0);
+                            NetMessage.SendData(23, -1, -1, "", num21);
                             return;
                         }
                         break;
@@ -7605,7 +7605,7 @@ namespace Terraria_Server
             }
         }
         
-        public static void SpawnOnPlayer(int plr, int Type)
+        public static void SpawnOnPlayer(Player player, int playerIndex, int Type)
         {
             if (Main.netMode == 1)
             {
@@ -7614,14 +7614,14 @@ namespace Terraria_Server
             bool flag = false;
             int num = 0;
             int num2 = 0;
-            int num3 = (int)(Main.player[plr].position.X / 16f) - NPC.spawnRangeX * 3;
-            int num4 = (int)(Main.player[plr].position.X / 16f) + NPC.spawnRangeX * 3;
-            int num5 = (int)(Main.player[plr].position.Y / 16f) - NPC.spawnRangeY * 3;
-            int num6 = (int)(Main.player[plr].position.Y / 16f) + NPC.spawnRangeY * 3;
-            int num7 = (int)(Main.player[plr].position.X / 16f) - NPC.safeRangeX;
-            int num8 = (int)(Main.player[plr].position.X / 16f) + NPC.safeRangeX;
-            int num9 = (int)(Main.player[plr].position.Y / 16f) - NPC.safeRangeY;
-            int num10 = (int)(Main.player[plr].position.Y / 16f) + NPC.safeRangeY;
+            int num3 = (int)(player.position.X / 16f) - NPC.spawnRangeX * 3;
+            int num4 = (int)(player.position.X / 16f) + NPC.spawnRangeX * 3;
+            int num5 = (int)(player.position.Y / 16f) - NPC.spawnRangeY * 3;
+            int num6 = (int)(player.position.Y / 16f) + NPC.spawnRangeY * 3;
+            int num7 = (int)(player.position.X / 16f) - NPC.safeRangeX;
+            int num8 = (int)(player.position.X / 16f) + NPC.safeRangeX;
+            int num9 = (int)(player.position.Y / 16f) - NPC.safeRangeY;
+            int num10 = (int)(player.position.Y / 16f) + NPC.safeRangeY;
             if (num3 < 0)
             {
                 num3 = 0;
@@ -7727,9 +7727,9 @@ namespace Terraria_Server
                     Rectangle rectangle = new Rectangle(num * 16, num2 * 16, 16, 16);
                     for (int n = 0; n < 255; n++)
                     {
-                        if (Main.player[n].active)
+                        if (Main.players[n].active)
                         {
-                            Rectangle rectangle2 = new Rectangle((int)(Main.player[n].position.X + (float)(Main.player[n].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.player[n].position.Y + (float)(Main.player[n].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                            Rectangle rectangle2 = new Rectangle((int)(Main.players[n].position.X + (float)(Main.players[n].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[n].position.Y + (float)(Main.players[n].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                             if (rectangle.Intersects(rectangle2))
                             {
                                 flag = false;
@@ -7745,7 +7745,7 @@ namespace Terraria_Server
             if (flag)
             {
                 int num17 = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
-                Main.npc[num17].target = plr;
+                Main.npc[num17].target = playerIndex;
                 string str = Main.npc[num17].name;
                 if (Main.npc[num17].type == 13)
                 {
@@ -7757,7 +7757,7 @@ namespace Terraria_Server
                 }
                 if (Main.netMode == 2 && num17 < 1000)
                 {
-                    NetMessage.SendData(23, -1, -1, "", num17, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(23, -1, -1, "", num17);
                 }
                 if (Main.netMode == 0)
                 {
@@ -7765,7 +7765,7 @@ namespace Terraria_Server
                 }
                 if (Main.netMode == 2)
                 {
-                    NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f, 0);
+                    NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
                 }
             }
         }
@@ -7794,7 +7794,7 @@ namespace Terraria_Server
                 {
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(25, -1, -1, Main.npc[num].name + " has awoken!", 255, 175f, 75f, 255f, 0);
+                        NetMessage.SendData(25, -1, -1, Main.npc[num].name + " has awoken!", 255, 175f, 75f, 255f);
                     }
                 }
                 return num;
@@ -7815,7 +7815,7 @@ namespace Terraria_Server
                 if (Main.netMode == 2)
                 {
                     this.netUpdate = true;
-                    NetMessage.SendData(23, -1, -1, "", this.whoAmI, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(23, -1, -1, "", this.whoAmI);
                 }
             }
         }
@@ -7865,7 +7865,7 @@ namespace Terraria_Server
                     {
                         if (Main.netMode == 2)
                         {
-                            NetMessage.SendData(25, -1, -1, this.name + " was slain...", 255, 255f, 25f, 25f, 0);
+                            NetMessage.SendData(25, -1, -1, this.name + " was slain...", 255, 255f, 25f, 25f);
                         }
                     }
                     if (this.townNPC && Main.netMode != 1 && this.homeless && WorldGen.spawnNPC == this.type)
@@ -8134,18 +8134,18 @@ namespace Terraria_Server
 
                 if (Main.netMode == 2)
                 {
-                    NetMessage.SendData(25, -1, -1, this.name + " has been defeated!", 255, 175f, 75f, 255f, 0);
+                    NetMessage.SendData(25, -1, -1, this.name + " has been defeated!", 255, 175f, 75f, 255f);
                 }
             }
             if (Main.rand.Next(7) == 0 && this.lifeMax > 1)
             {
-                if (Main.rand.Next(2) == 0 && Main.player[(int)Player.FindClosest(this.position, this.width, this.height)].statMana < Main.player[(int)Player.FindClosest(this.position, this.width, this.height)].statManaMax)
+                if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statMana < Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statManaMax)
                 {
                     Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 184, 1, false);
                 }
                 else
                 {
-                    if (Main.rand.Next(2) == 0 && Main.player[(int)Player.FindClosest(this.position, this.width, this.height)].statLife < Main.player[(int)Player.FindClosest(this.position, this.width, this.height)].statLifeMax)
+                    if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statLife < Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statLifeMax)
                     {
                         Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 58, 1, false);
                     }
@@ -8275,7 +8275,7 @@ namespace Terraria_Server
                             Main.npc[num3].ai[1] = (float)j;
                             if (Main.netMode == 2 && num3 < 1000)
                             {
-                                NetMessage.SendData(23, -1, -1, "", num3, 0f, 0f, 0f, 0);
+                                NetMessage.SendData(23, -1, -1, "", num3);
                             }
                         }
                     }
@@ -8360,7 +8360,7 @@ namespace Terraria_Server
                                 Main.npc[num9].ai[1] = (float)Main.rand.Next(3);
                                 if (Main.netMode == 2 && num9 < 1000)
                                 {
-                                    NetMessage.SendData(23, -1, -1, "", num9, 0f, 0f, 0f, 0);
+                                    NetMessage.SendData(23, -1, -1, "", num9);
                                 }
                             }
                             return;
@@ -9838,7 +9838,7 @@ namespace Terraria_Server
                     num2 = Main.npc[j].height;
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(23, -1, -1, "", j, 0f, 0f, 0f, 0);
+                        NetMessage.SendData(23, -1, -1, "", j);
                     }
                 }
             }
@@ -9853,7 +9853,7 @@ namespace Terraria_Server
                 }
                 if (Main.netMode == 2)
                 {
-                    NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f, 0);
+                    NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
                 }
             }
         }
@@ -9948,7 +9948,7 @@ namespace Terraria_Server
                                     Main.npc[i].StrikeNPC(num3, (float)num4, num5);
                                     if (Main.netMode != 0)
                                     {
-                                        NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5, 0);
+                                        NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5);
                                     }
                                     this.netUpdate = true;
                                     this.immune[255] = 30;
@@ -9969,7 +9969,7 @@ namespace Terraria_Server
                             this.StrikeNPC(50, 0f, 0);
                             if (Main.netMode == 2 && Main.netMode != 0)
                             {
-                                NetMessage.SendData(28, -1, -1, "", this.whoAmI, 50f, 0f, 0f, 0);
+                                NetMessage.SendData(28, -1, -1, "", this.whoAmI, 50f);
                             }
                         }
                     }
@@ -10123,7 +10123,7 @@ namespace Terraria_Server
                 }
                 if (Main.netMode == 2 && this.netUpdate)
                 {
-                    NetMessage.SendData(23, -1, -1, "", i, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(23, -1, -1, "", i);
                 }
                 this.FindFrame();
                 this.CheckActive();
@@ -10271,7 +10271,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                result = "Ah, they will tell tales of " + Main.player[Main.myPlayer].name + " some day... good ones I'm sure.";
+                                result = "Ah, they will tell tales of " + Main.players[Main.myPlayer].name + " some day... good ones I'm sure.";
                             }
                         }
                         else
@@ -10315,7 +10315,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                result = Main.player[Main.myPlayer].name + " is it? I've heard good things, friend!";
+                                result = Main.players[Main.myPlayer].name + " is it? I've heard good things, friend!";
                             }
                         }
                         else
@@ -10361,7 +10361,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if ((double)Main.player[Main.myPlayer].statLife < (double)Main.player[Main.myPlayer].statLifeMax * 0.33)
+                        if ((double)Main.players[Main.myPlayer].statLife < (double)Main.players[Main.myPlayer].statLifeMax * 0.33)
                         {
                             int num3 = Main.rand.Next(5);
                             if (num3 == 0)
@@ -10396,7 +10396,7 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            if ((double)Main.player[Main.myPlayer].statLife < (double)Main.player[Main.myPlayer].statLifeMax * 0.66)
+                            if ((double)Main.players[Main.myPlayer].statLife < (double)Main.players[Main.myPlayer].statLifeMax * 0.66)
                             {
                                 int num4 = Main.rand.Next(4);
                                 if (num4 == 0)
@@ -10578,7 +10578,7 @@ namespace Terraria_Server
                                         int num8 = Main.rand.Next(3);
                                         if (num8 == 0)
                                         {
-                                            result = "Greetings, " + Main.player[Main.myPlayer].name + ". Is there something I can help you with?";
+                                            result = "Greetings, " + Main.players[Main.myPlayer].name + ". Is there something I can help you with?";
                                         }
                                         else
                                         {
@@ -10618,7 +10618,7 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (Main.player[Main.myPlayer].statLifeMax < 300 || Main.player[Main.myPlayer].statDefense < 10)
+                                        if (Main.players[Main.myPlayer].statLifeMax < 300 || Main.players[Main.myPlayer].statDefense < 10)
                                         {
                                             int num10 = Main.rand.Next(2);
                                             if (num10 == 0)
@@ -10719,7 +10719,7 @@ namespace Terraria_Server
                                         {
                                             if (Main.bloodMoon)
                                             {
-                                                result = Main.player[Main.myPlayer].name + "... we have a problem! Its a blood moon out there!";
+                                                result = Main.players[Main.myPlayer].name + "... we have a problem! Its a blood moon out there!";
                                             }
                                             else
                                             {
@@ -10729,7 +10729,7 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    if (Main.player[Main.myPlayer].head == 24)
+                                                    if (Main.players[Main.myPlayer].head == 24)
                                                     {
                                                         result = "That Red Hat of yours looks familiar...";
                                                     }

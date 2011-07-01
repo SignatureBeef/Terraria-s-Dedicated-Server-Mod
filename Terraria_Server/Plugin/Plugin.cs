@@ -5,7 +5,6 @@ using System.Text;
 
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
-using System.Collections;
 
 namespace Terraria_Server.Plugin
 {
@@ -43,18 +42,18 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerEditSign(PlayerEditSignEvent Event) { }
         public virtual void onPlayerProjectileUse(PlayerProjectileEvent Event) { }
 
-    	private ArrayList pluginHooks = new ArrayList();
+    	private HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
 
-        public bool containsHook(Hooks Hook)
+        public bool containsHook(Hooks hook)
         {
-            return pluginHooks.Contains(Hook);
+            return pluginHooks.Contains(hook);
         }
 
-        public bool registerHook(Hooks Hook)
+        public bool registerHook(Hooks hook)
         {
-            if (!containsHook(Hook))
+            if (!containsHook(hook))
             {
-                pluginHooks.Add(Hook);
+                pluginHooks.Add(hook);
                 return true;
             }
             return false;

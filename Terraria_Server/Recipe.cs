@@ -29,17 +29,17 @@ namespace Terraria_Server
 				int num2 = this.requiredItem[num].Stack;
 				for (int i = 0; i < 44; i++)
 				{
-					if (Main.player[Main.myPlayer].inventory[i].IsTheSameAs(this.requiredItem[num]))
+					if (Main.players[Main.myPlayer].inventory[i].IsTheSameAs(this.requiredItem[num]))
 					{
-						if (Main.player[Main.myPlayer].inventory[i].Stack > num2)
+						if (Main.players[Main.myPlayer].inventory[i].Stack > num2)
 						{
-							Main.player[Main.myPlayer].inventory[i].Stack -= num2;
+							Main.players[Main.myPlayer].inventory[i].Stack -= num2;
 							num2 = 0;
 						}
 						else
 						{
-							num2 -= Main.player[Main.myPlayer].inventory[i].Stack;
-							Main.player[Main.myPlayer].inventory[i] = new Item();
+							num2 -= Main.players[Main.myPlayer].inventory[i].Stack;
+							Main.players[Main.myPlayer].inventory[i] = new Item();
 						}
 					}
 					if (num2 <= 0)
@@ -71,9 +71,9 @@ namespace Terraria_Server
 					int num5 = Main.recipe[num3].requiredItem[num4].Stack;
 					for (int j = 0; j < 44; j++)
 					{
-						if (Main.player[Main.myPlayer].inventory[j].IsTheSameAs(Main.recipe[num3].requiredItem[num4]))
+						if (Main.players[Main.myPlayer].inventory[j].IsTheSameAs(Main.recipe[num3].requiredItem[num4]))
 						{
-							num5 -= Main.player[Main.myPlayer].inventory[j].Stack;
+							num5 -= Main.players[Main.myPlayer].inventory[j].Stack;
 						}
 						if (num5 <= 0)
 						{
@@ -93,7 +93,7 @@ namespace Terraria_Server
 					int num6 = 0;
 					while (num6 < Recipe.maxRequirements && Main.recipe[num3].requiredTile[num6] != -1)
 					{
-						if (!Main.player[Main.myPlayer].adjTile[Main.recipe[num3].requiredTile[num6]])
+						if (!Main.players[Main.myPlayer].adjTile[Main.recipe[num3].requiredTile[num6]])
 						{
 							flag2 = false;
 							break;

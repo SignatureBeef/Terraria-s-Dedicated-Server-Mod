@@ -25,7 +25,7 @@ namespace Terraria_Server.Messages
 
             if (playerIndex != Main.myPlayer)
             {
-                Player player = Main.player[playerIndex];
+                Player player = Main.players[playerIndex];
                 lock (player)
                 {
                     int inventorySlot = (int)readBuffer[start + 2];

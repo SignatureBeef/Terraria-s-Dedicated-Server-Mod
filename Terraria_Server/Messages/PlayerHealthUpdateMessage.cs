@@ -34,7 +34,7 @@ namespace Terraria_Server.Messages
                 playerIndex = whoAmI;
             }
 
-            Player player = Main.player[playerIndex];
+            Player player = Main.players[playerIndex];
             player.statLife = statLife;
             player.statLifeMax = statLifeMax;
 

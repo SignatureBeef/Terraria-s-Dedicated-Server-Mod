@@ -13,7 +13,7 @@ namespace Terraria_Server.Shops
             contents[i++].SetDefaults("Copper Axe");
             contents[i++].SetDefaults("Torch");
             contents[i++].SetDefaults("Lesser Healing Potion");
-            if (Main.player[Main.myPlayer].statManaMax == 200)
+            if (Main.players[Main.myPlayer].statManaMax == 200)
             {
                 contents[i++].SetDefaults("Lesser Mana Potion");
             }

@@ -915,7 +915,7 @@ namespace Terraria_Server
                 WorldGen.KillTile(x, y, false, false, false);
                 if (Main.netMode == 2)
                 {
-                    NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y, 0f, 0);
+                    NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
                 }
             }
         }

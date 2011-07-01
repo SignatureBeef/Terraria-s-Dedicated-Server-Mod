@@ -30,7 +30,7 @@ namespace Terraria_Server.Messages
             sign.x = x;
             sign.y = y;
             Sign.TextSign(signIndex, string11);
-            Player player = Main.player[Main.myPlayer];
+            Player player = Main.players[Main.myPlayer];
 
             if (Main.netMode == 1 
                 && sign != null

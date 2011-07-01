@@ -39,7 +39,7 @@ namespace Terraria_Server.Shops
             if (Main.chest[i] != null)
             {
                 int index = 0;
-                foreach(Player player in Main.player)
+                foreach(Player player in Main.players)
                 {
                     if (player.active && player.chest == i)
                     {

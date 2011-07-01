@@ -1,7 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
-using System.Collections;
+using System.Collections.Generic;
 using Terraria_Server.Events;
 
 namespace Terraria_Server.Plugin
@@ -15,52 +16,48 @@ namespace Terraria_Server.Plugin
     public class PluginManager
     {
         private string pluginPath = String.Empty;
-        private ArrayList pluginList = null;
-        private Server server = null;
+        private Dictionary<String, Plugin> plugins;
+        private Server server;
 
         public PluginManager(string pluginPath, Server server)
         {
             this.pluginPath = pluginPath;
             this.server = server;
 
-            pluginList = new ArrayList();
+            plugins = new Dictionary<String, Plugin>();
         }
 
-        public Plugin loadPlugin(string PluginPath)
+        /// <summary>
+        /// Load the plugin located at the specified path.
+        /// This only loads one plugin.
+        /// </summary>
+        /// <param name="PluginPath"></param>
+        /// <returns></returns>
+        public Plugin loadPlugin(string pluginPath)
         {
             try
             {
-                string name = new FileInfo(PluginPath).Name;
-                Type[] types = Assembly.LoadFrom(PluginPath).GetTypes();
-                for (int i = 0; i < types.Length; i++)
-                {
-                    Type type = types[i];
-                    if (!type.IsAbstract)
+            	Type type = typeof(Plugin);
+	            foreach(Type messageType in Assembly.LoadFrom(pluginPath).GetTypes()
+	                .Where(x => type.IsAssignableFrom(x) && x != type))
+	            {
+	                Plugin plugin = (Plugin)Activator.CreateInstance(type);
+                    if (plugin == null)
                     {
-                        Type baseType = type.BaseType;
-                        if (baseType == typeof(Plugin))
-                        {
-                            Plugin plugin = (Plugin)Activator.CreateInstance(type);
-                            if (plugin == null)
-                            {
-                                throw new Exception("Could not Instanciate");
-                            }
-                            else
-                            {
-                                plugin.Server = server;
-                                plugin.Load();
-                                return plugin;
-                            }
-                        }
+                        throw new Exception("Could not Instantiate");
                     }
-                }
-                
-                
+                    else
+                    {
+                        plugin.Server = server;
+                        plugin.Load();
+                        return plugin;
+                    }
+	            }
             }
             catch (Exception exception)
             {
-                Program.tConsole.WriteLine("Error Loading Plugin '" + PluginPath + "'. Is it up to Date?");
-                Program.tConsole.WriteLine("Plugin Load Exception '" + PluginPath + "' : "
+                Program.tConsole.WriteLine("Error Loading Plugin '" + pluginPath + "'. Is it up to Date?");
+                Program.tConsole.WriteLine("Plugin Load Exception '" + pluginPath + "' : "
                     + exception.ToString());
             }
 
@@ -78,17 +75,16 @@ namespace Terraria_Server.Plugin
                     Plugin plugin = loadPlugin(file);
                     if (plugin != null)
                     {
-                        pluginList.Add(plugin);
+                    	plugins.Add(plugin.Name.ToLower().Trim(), plugin);
                     }
                 }
             }
-
             EnablePlugins();
         }
 
         public void EnablePlugins()
         {
-            foreach (Plugin plugin in pluginList)
+            foreach (Plugin plugin in plugins.Values)
             {
                 plugin.Enabled = true;
                 plugin.Enable();
@@ -97,73 +93,56 @@ namespace Terraria_Server.Plugin
 
         public void DisablePlugins()
         {
-            if (pluginList != null)
+            foreach (Plugin plugin in plugins.Values)
             {
-                foreach (Plugin plugin in pluginList)
-                {
-                    plugin.Enabled = false;
-                    plugin.Disable();
-                }
-
-                pluginList.Clear();
+                plugin.Enabled = false;
+                plugin.Disable();
             }
+
+            plugins.Clear();
         }
         
         //Returns true on plugin successfully Enabling
         public bool EnablePlugin(string name)
         {
-            foreach (Plugin plugin in pluginList)
-            {
-                if (plugin.Name == name)
-                {
-                    plugin.Enabled = true;
-                    plugin.Enable();
-                    return true;
-                }
-            }
+        	String cleanedName = name.ToLower().Trim();
+        	if(plugins.ContainsKey(cleanedName))
+        	{
+	        	Plugin plugin = plugins[cleanedName];
+	            plugin.Enabled = true;
+	            plugin.Enable();
+	            return true;
+        	}
             return false;
         }
 
         //Returns true on plugin successfully Disabling
         public bool DisablePlugin(string name)
         {
-            if (pluginList != null)
-            {
-                Plugin dPlugin = null;
-                foreach (Plugin plugin in pluginList)
-                {
-                    if (plugin.Name == name)
-                    {
-                        dPlugin = plugin;
-                        break;
-                    }
-                }
-
-                if (dPlugin != null) 
-                {
-                    dPlugin.Enabled = false;
-                    dPlugin.Disable();
-
-                    return true;
-                }
-            }
+        	String cleanedName = name.ToLower().Trim();
+        	if(plugins.ContainsKey(cleanedName))
+        	{
+	        	Plugin plugin = plugins[cleanedName];
+	            plugin.Enabled = false;
+	            plugin.Disable();
+	            return true;
+        	}
             return false;
         }
 
         public Plugin getPlugin(string name)
         {
-            foreach (Plugin plugin in pluginList)
-            {
-                if(plugin.Name.Trim().ToLower().Equals(name.Trim().ToLower())) {
-                    return plugin;
-                }
-            }
-            return null;
+        	String cleanedName = name.ToLower().Trim();
+        	if(plugins.ContainsKey(cleanedName))
+        	{
+        		return plugins[cleanedName];
+        	}
+        	return null;
         }
         
         public void processHook(Hooks hook, Event hookEvent)
 		{
-            foreach (Plugin plugin in pluginList)
+            foreach (Plugin plugin in plugins.Values)
 			{
 				try
 				{

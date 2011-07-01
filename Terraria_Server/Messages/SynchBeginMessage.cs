@@ -20,14 +20,14 @@ namespace Terraria_Server.Messages
             int isActive = (int)readBuffer[num];
             if (isActive == 1)
             {
-                if (!Main.player[playerIndex].active)
+                if (!Main.players[playerIndex].active)
                 {
-                    Main.player[playerIndex] = new Player();
+                    Main.players[playerIndex] = new Player();
                 }
-                Main.player[playerIndex].active = true;
+                Main.players[playerIndex].active = true;
                 return;
             }
-            Main.player[playerIndex].active = false;
+            Main.players[playerIndex].active = false;
         }
     }
 }

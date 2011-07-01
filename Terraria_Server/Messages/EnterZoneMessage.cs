@@ -22,7 +22,7 @@ namespace Terraria_Server.Messages
                 playerIndex = whoAmI;
             }
 
-            Player player = Main.player[playerIndex];
+            Player player = Main.players[playerIndex];
             player.zoneEvil = (readBuffer[num++] != 0);
             player.zoneMeteor = (readBuffer[num++] != 0);
             player.zoneDungeon = (readBuffer[num++] != 0);

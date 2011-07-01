@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
             num += 4;
             int chestIndex = Chest.FindChest(x, y);
             var chestEvent = new PlayerChestOpenEvent();
-            chestEvent.Sender = Main.player[whoAmI];
+            chestEvent.Sender = Main.players[whoAmI];
             chestEvent.ID = chestIndex;
             Program.server.getPluginManager().processHook(Hooks.PLAYER_CHEST, chestEvent);
             
@@ -44,7 +44,7 @@ namespace Terraria_Server.Messages
                     NetMessage.SendData(32, whoAmI, -1, "", chestIndex, (float)i);
                 }
                 NetMessage.SendData(33, whoAmI, -1, "", chestIndex);
-                Main.player[whoAmI].chest = chestIndex;
+                Main.players[whoAmI].chest = chestIndex;
                 return;
             }
         }

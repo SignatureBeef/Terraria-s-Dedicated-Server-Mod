@@ -19,7 +19,7 @@ namespace Terraria_Server.Messages
             if (Netplay.clientSock.state == 6)
             {
                 Netplay.clientSock.state = 10;
-                Main.player[Main.myPlayer].Spawn();
+                Main.players[Main.myPlayer].Spawn();
             }
         }
     }

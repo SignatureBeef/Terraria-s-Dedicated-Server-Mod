@@ -26,7 +26,7 @@ namespace Terraria_Server.Messages
                 return;
             }
 
-            Player player = Main.player[playerIndex];
+            Player player = Main.players[playerIndex];
             for (int i = 0; i < 10; i++)
             {
                 player.buffType[i] = (int)readBuffer[num++];

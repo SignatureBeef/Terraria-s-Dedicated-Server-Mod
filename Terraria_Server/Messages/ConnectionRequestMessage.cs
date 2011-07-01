@@ -22,7 +22,7 @@ namespace Terraria_Server.Messages
             ServerSock serverSock = Netplay.serverSock[whoAmI];
             PlayerLoginEvent loginEvent = new PlayerLoginEvent();
             loginEvent.Socket = serverSock;
-            loginEvent.Sender = Main.player[whoAmI];
+            loginEvent.Sender = Main.players[whoAmI];
             Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, loginEvent);
             if (loginEvent.Cancelled)
             {

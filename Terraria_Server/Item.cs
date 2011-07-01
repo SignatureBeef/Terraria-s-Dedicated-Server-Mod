@@ -4611,7 +4611,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             this.Width = 20;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             this.Height = 20;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             this.Value = 10000;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            this.Color = Main.player[Main.myPlayer].shirtColor;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            this.Color = Main.players[Main.myPlayer].shirtColor;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         {
@@ -4622,7 +4622,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 this.Width = 20;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 this.Height = 20;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 this.Value = 10000;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                this.Color = Main.player[Main.myPlayer].pantsColor;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                this.Color = Main.players[Main.myPlayer].pantsColor;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             {
@@ -4633,7 +4633,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     this.Width = 20;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     this.Height = 20;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     this.Value = 10000;
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    this.Color = Main.player[Main.myPlayer].hairColor;
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    this.Color = Main.players[Main.myPlayer].hairColor;
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 }
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 else
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 {
@@ -5980,7 +5980,7 @@ namespace Terraria_Server
                                 {
                                     if (Main.netMode == 2)
                                     {
-                                        NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npc[l].direction), 0);
+                                        NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npc[l].direction));
                                     }
                                     Main.npc[l].StrikeNPC(9999, 10f, -Main.npc[l].direction);
                                 }
@@ -5992,7 +5992,7 @@ namespace Terraria_Server
                         this.Stack = 0;
                         if (Main.netMode != 0)
                         {
-                            NetMessage.SendData(21, -1, -1, "", i, 0f, 0f, 0f, 0);
+                            NetMessage.SendData(21, -1, -1, "", i);
                         }
                     }
                     if (this.Type == 75 && Main.dayTime)
@@ -6010,7 +6010,7 @@ namespace Terraria_Server
                         this.Stack = 0;
                         if (Main.netMode == 2)
                         {
-                            NetMessage.SendData(21, -1, -1, "", i, 0f, 0f, 0f, 0);
+                            NetMessage.SendData(21, -1, -1, "", i);
                         }
                     }
                 }
@@ -6040,7 +6040,7 @@ namespace Terraria_Server
                     if (this.Release >= 300)
                     {
                         this.Release = 0;
-                        NetMessage.SendData(39, this.Owner, -1, "", i, 0f, 0f, 0f, 0);
+                        NetMessage.SendData(39, this.Owner, -1, "", i);
                     }
                 }
                 if (this.Wet)
@@ -6100,7 +6100,7 @@ namespace Terraria_Server
             Main.item[num].Stack = Stack;
             if (Main.netMode == 2 && !noBroadcast)
             {
-                NetMessage.SendData(21, -1, -1, "", num, 0f, 0f, 0f, 0);
+                NetMessage.SendData(21, -1, -1, "", num);
                 Main.item[num].FindOwner(num);
             }
             else
@@ -6121,24 +6121,28 @@ namespace Terraria_Server
             int num = this.Owner;
             this.Owner = 255;
             float num2 = -1f;
-            for (int i = 0; i < 255; i++)
+            int count = 0;
+            foreach(Player player in Main.players)
             {
-                if (this.OwnIgnore != i && Main.player[i].active && Main.player[i].ItemSpace(Main.item[whoAmI]))
+                if (this.OwnIgnore != count && player.active && player.ItemSpace(Main.item[whoAmI]))
                 {
-                    float num3 = Math.Abs(Main.player[i].position.X + (float)(Main.player[i].width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(Main.player[i].position.Y + (float)(Main.player[i].height / 2) - this.Position.Y - (float)this.Height);
+                    float num3 = Math.Abs(player.position.X + (float)(player.width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(player.position.Y + (float)(player.height / 2) - this.Position.Y - (float)this.Height);
                     if (num3 < (float)(Main.screenWidth / 2 + Main.screenHeight / 2) && (num2 == -1f || num3 < num2))
                     {
                         num2 = num3;
-                        this.Owner = i;
+                        this.Owner = count;
                     }
                 }
+                count++;
             }
-            if (this.Owner != num && ((num == Main.myPlayer && Main.netMode == 1) || (num == 255 && Main.netMode == 2) || !Main.player[num].active))
+            if (this.Owner != num && ((num == Main.myPlayer && Main.netMode == 1) 
+                || (num == 255 && Main.netMode == 2) 
+                || !Main.players[num].active))
             {
-                NetMessage.SendData(21, -1, -1, "", whoAmI, 0f, 0f, 0f, 0);
+                NetMessage.SendData(21, -1, -1, "", whoAmI);
                 if (this.Active)
                 {
-                    NetMessage.SendData(22, -1, -1, "", whoAmI, 0f, 0f, 0f, 0);
+                    NetMessage.SendData(22, -1, -1, "", whoAmI);
                 }
             }
         }
