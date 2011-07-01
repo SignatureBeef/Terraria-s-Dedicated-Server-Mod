@@ -76,20 +76,17 @@ namespace Terraria_Server.Messages
                 Netplay.clientSock.statusCount++;
             }
 
-            if (Main.netMode == 2)
+            if (Main.netMode == 2 && bufferData != 38)
             {
-                if (bufferData != 38)
+                if (Netplay.serverSock[whoAmI].state == -1)
                 {
-                    if (Netplay.serverSock[whoAmI].state == -1)
-                    {
-                        NetMessage.SendData(2, whoAmI, -1, "Incorrect password.");
-                        return;
-                    }
+                    NetMessage.SendData(2, whoAmI, -1, "Incorrect password.");
+                    return;
+                }
 
-                    if (Netplay.serverSock[whoAmI].state < 10 && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
-                    {
-                        NetMessage.BootPlayer(whoAmI, "Invalid operation at this state.");
-                    }
+                if (Netplay.serverSock[whoAmI].state < 10 && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
+                {
+                    NetMessage.BootPlayer(whoAmI, "Invalid operation at this state.");
                 }
             }
 
