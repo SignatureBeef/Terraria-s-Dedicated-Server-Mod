@@ -272,7 +272,7 @@ namespace Terraria_Server
                                         if (Netplay.serverSock[k].networkStream.DataAvailable)
                                         {
                                             Netplay.serverSock[k].locked = true;
-                                            if (!Statics.debugMode)
+                                            if (Statics.debugMode)
                                             {
                                                 Netplay.serverSock[k].networkStream.Read(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length);
                                                 NetMessage.RecieveBytes(Netplay.serverSock[k].readBuffer, Netplay.serverSock[k].readBuffer.Length, Netplay.serverSock[k].whoAmI);
