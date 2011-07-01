@@ -1253,6 +1253,11 @@ namespace Terraria_Server
                             NetMessage.buffer[num].writeBuffer[num3] = b59;
 						    break;
                         }
+                    default:
+                        {
+                            //Unknown packet :3
+                            return;
+                        }
                 }
 
 				if (Main.netMode != 1)

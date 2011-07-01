@@ -1828,6 +1828,16 @@ namespace Terraria_Server
                                                                                                                                                                             {
                                                                                                                                                                                 pvp2 = true;
                                                                                                                                                                             }
+
+                                                                                                                                                                            PlayerDeathEvent pDeath = new PlayerDeathEvent();
+                                                                                                                                                                            pDeath.setDeathMessage(string10);
+                                                                                                                                                                            pDeath.setSender(Main.player[(int)b25]);
+                                                                                                                                                                            Program.server.getPluginManager().processHook(Hooks.PLAYER_DEATH, pDeath);
+                                                                                                                                                                            if (pDeath.getCancelled())
+                                                                                                                                                                            {
+                                                                                                                                                                                return;
+                                                                                                                                                                            }
+
                                                                                                                                                                             Main.player[(int)b25].KillMe((double)num83, num82, pvp2, string10);
                                                                                                                                                                             if (Main.netMode == 2)
                                                                                                                                                                             {
