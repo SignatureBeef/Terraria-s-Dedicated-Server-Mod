@@ -65,12 +65,11 @@ namespace Terraria_Server
 
                 try
                 {
-                    /*
                     if (UpdateManager.performProcess())
                     {
                         Program.tConsole.WriteLine("Restarting into new update!");
                         return;
-                    }*/
+                    }
                 }
                 catch (Exception e)
                 {
