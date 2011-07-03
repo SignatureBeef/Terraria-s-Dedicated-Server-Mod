@@ -34,8 +34,8 @@ namespace Terraria_Server.Messages
                 Tile tile = Main.tile[x, y];
 
                 byte b3 = readBuffer[num++];
-                bool active = tile.active;
-                tile.active = ((b3 & 1) == 1);
+                bool active = tile.Active;
+                tile.Active = ((b3 & 1) == 1);
 
                 if ((b3 & 2) == 2)
                 {
@@ -60,7 +60,7 @@ namespace Terraria_Server.Messages
                     tile.liquid = 0;
                 }
 
-                if (tile.active)
+                if (tile.Active)
                 {
                     int type = (int)tile.type;
                     tile.type = readBuffer[num++];

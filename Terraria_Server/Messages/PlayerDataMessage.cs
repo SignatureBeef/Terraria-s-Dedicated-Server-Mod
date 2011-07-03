@@ -59,7 +59,7 @@ namespace Terraria_Server.Messages
 
             player.hardCore = (readBuffer[num++] != 0);
 
-            player.name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
+            player.Name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
 
             if (Main.netMode == 2)
             {
@@ -68,29 +68,29 @@ namespace Terraria_Server.Messages
                     int count = 0;
                     foreach(Player otherPlayer in Main.players)
                     {
-                        if (count++ != playerIndex && player.name.Equals(otherPlayer.name) && Netplay.serverSock[count].active)
+                        if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.serverSock[count].active)
                         {
-                            NetMessage.SendData(2, whoAmI, -1, player.name + " is already on this server.");
+                            NetMessage.SendData(2, whoAmI, -1, player.Name + " is already on this server.");
                             return;
                         }
                     }
                 }
 
-                if (player.name.Length > 20)
+                if (player.Name.Length > 20)
                 {
                     NetMessage.SendData(2, whoAmI, -1, "Name is too long.");
                     return;
                 }
 
-                if (player.name == "")
+                if (player.Name == "")
                 {
                     NetMessage.SendData(2, whoAmI, -1, "Empty name.");
                     return;
                 }
 
-                Netplay.serverSock[whoAmI].oldName = player.name;
-                Netplay.serverSock[whoAmI].name = player.name;
-                NetMessage.SendData(4, -1, whoAmI, player.name, playerIndex);
+                Netplay.serverSock[whoAmI].oldName = player.Name;
+                Netplay.serverSock[whoAmI].name = player.Name;
+                NetMessage.SendData(4, -1, whoAmI, player.Name, playerIndex);
             }
         }
 

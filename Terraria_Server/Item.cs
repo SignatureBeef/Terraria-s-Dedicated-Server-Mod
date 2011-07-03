@@ -5976,7 +5976,7 @@ namespace Terraria_Server
                         {
                             for (int l = 0; l < 1000; l++)
                             {
-                                if (Main.npc[l].active && Main.npc[l].type == 22)
+                                if (Main.npc[l].Active && Main.npc[l].type == 22)
                                 {
                                     if (Main.netMode == 2)
                                     {
@@ -6124,9 +6124,9 @@ namespace Terraria_Server
             int count = 0;
             foreach(Player player in Main.players)
             {
-                if (this.OwnIgnore != count && player.active && player.ItemSpace(Main.item[whoAmI]))
+                if (this.OwnIgnore != count && player.Active && player.ItemSpace(Main.item[whoAmI]))
                 {
-                    float num3 = Math.Abs(player.position.X + (float)(player.width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(player.position.Y + (float)(player.height / 2) - this.Position.Y - (float)this.Height);
+                    float num3 = Math.Abs(player.Position.X + (float)(player.width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(player.Position.Y + (float)(player.height / 2) - this.Position.Y - (float)this.Height);
                     if (num3 < (float)(Main.screenWidth / 2 + Main.screenHeight / 2) && (num2 == -1f || num3 < num2))
                     {
                         num2 = num3;
@@ -6137,7 +6137,7 @@ namespace Terraria_Server
             }
             if (this.Owner != num && ((num == Main.myPlayer && Main.netMode == 1) 
                 || (num == 255 && Main.netMode == 2) 
-                || !Main.players[num].active))
+                || !Main.players[num].Active))
             {
                 NetMessage.SendData(21, -1, -1, "", whoAmI);
                 if (this.Active)

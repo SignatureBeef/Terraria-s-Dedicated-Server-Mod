@@ -32,12 +32,13 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets a specified Online Player
+        //       Input name must already be cleaned of spaces
         public Player GetPlayerByName(string name)
         {
             String lowercaseName = name.ToLower();
             foreach (Player player in Main.players)
             {
-                if (player.name.ToLower().Equals(lowercaseName))
+                if (player.Name.ToLower().Replace(" ", "").Equals(lowercaseName))
                 {
                     return player;
                 }
@@ -102,7 +103,7 @@ namespace Terraria_Server
             {
                 foreach (Player player in Main.players)
                 {
-                    if (player.active && player.Op)
+                    if (player.Active && player.Op)
                     {
                         NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255, 176f, 196, 222f);
                     }
@@ -150,5 +151,84 @@ namespace Terraria_Server
         // Summary:
         //       Gets the OP list
         public DataRegister OpList { get; set; }
+
+        // Summary:
+        //       Get the array of Active NPCs
+        public NPC[] getActiveNPCs()
+        {
+            NPC[] npcs = null;
+
+            int npcCount = 0;
+            for (int i = 0; i < Main.npc.Length-1; i++)
+            {
+                if (Main.npc[i].Active)
+                {
+                    npcCount++;
+                }
+            }
+
+            if (npcCount > 0)
+            {
+                npcs = new NPC[npcCount];
+                npcCount = 0;
+                for (int i = 0; i < Main.npc.Length-1; i++)
+                {
+                    if (Main.npc[i].Active)
+                    {
+                        npcs[npcCount] = Main.npc[i];
+                        npcCount++;
+                    }
+                }
+            }
+            
+            return npcs;
+        }
+
+        // Summary:
+        //       Gets the total of all active NPCs
+        public int getActiveNPCCount()
+        {
+            int npcCount = 0;
+            for (int i = 0; i < Main.npc.Length - 1; i++)
+            {
+                if (Main.npc[i].Active)
+                {
+                    npcCount++;
+                }
+            }
+            return npcCount;
+        }
+
+        // Summary:
+        //       Gets the maximum allowed NPCs
+        public int getMaxNPCs()
+        {
+            return NPC.maxSpawns;
+        }
+
+        // Summary:
+        //       Sets the maximum allowed NPCs
+        public void setMaxNPCs(int Max)
+        {
+            NPC.defaultMaxSpawns = Max;
+            NPC.maxSpawns = Max;
+        }
+
+        // Summary:
+        //       Gets the max spawn rate of NPCs
+
+        public int getSpawnRate()
+        {
+            return NPC.spawnRate;
+        }
+
+        // Summary:
+        //       Sets the max spawn rate of NPCs
+        public void setSpawnRate(int Max)
+        {
+            NPC.defaultSpawnRate = Max;
+            NPC.spawnRate = Max;
+        }
+        
     }
 }

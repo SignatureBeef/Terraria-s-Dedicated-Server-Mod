@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Messages
 {
@@ -36,6 +38,15 @@ namespace Terraria_Server.Messages
 
             string deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             bool pvp = (pvpFlag != 0);
+
+            PlayerDeathEvent pDeath = new PlayerDeathEvent();
+            pDeath.DeathMessage = deathText;
+            pDeath.Sender = Main.players[playerIndex];
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_DEATH, pDeath);
+            if (pDeath.Cancelled)
+            {
+                return;
+            }
 
             Main.players[playerIndex].KillMe((double)damage, direction, pvp, deathText);
 

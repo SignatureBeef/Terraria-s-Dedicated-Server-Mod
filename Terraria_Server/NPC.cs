@@ -35,13 +35,13 @@ namespace Terraria_Server
         public static int spawnRate = NPC.defaultSpawnRate;
         public static int maxSpawns = NPC.defaultMaxSpawns;
         public int soundDelay;
-        public Vector2 position;
-        public Vector2 velocity;
+        public Vector2 Position;
+        public Vector2 Velocity;
         public Vector2 oldPosition;
         public Vector2 oldVelocity;
         public int width;
         public int height;
-        public bool active;
+        public bool Active;
         public int[] immune = new int[256];
         public int direction = 1;
         public int directionY = 1;
@@ -60,7 +60,7 @@ namespace Terraria_Server
         public Rectangle targetRect;
         public double frameCounter;
         public Rectangle frame;
-        public string name;
+        public string Name;
         public Color color;
         public int alpha;
         public float scale = 1f;
@@ -92,7 +92,7 @@ namespace Terraria_Server
 
         private int SetGore(int goreType)
         {
-            return Gore.NewGore(this.position, this.velocity, goreType);
+            return Gore.NewGore(this.Position, this.Velocity, goreType);
         }
 
         public void SetDefaults(string Name)
@@ -101,7 +101,7 @@ namespace Terraria_Server
             if (Name == "Green Slime")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 0.9f;
                 this.damage = 6;
                 this.defense = 0;
@@ -113,7 +113,7 @@ namespace Terraria_Server
             else if (Name == "Pinky")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 0.6f;
                 this.damage = 5;
                 this.defense = 5;
@@ -125,7 +125,7 @@ namespace Terraria_Server
             else if (Name == "Baby Slime")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 0.9f;
                 this.damage = 13;
                 this.defense = 4;
@@ -138,7 +138,7 @@ namespace Terraria_Server
             else if (Name == "Black Slime")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.damage = 15;
                 this.defense = 4;
                 this.life = 45;
@@ -148,7 +148,7 @@ namespace Terraria_Server
             else if (Name == "Purple Slime")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 1.2f;
                 this.damage = 12;
                 this.defense = 6;
@@ -160,7 +160,7 @@ namespace Terraria_Server
             else if (Name == "Red Slime")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.damage = 12;
                 this.defense = 4;
                 this.life = 35;
@@ -170,7 +170,7 @@ namespace Terraria_Server
             else if (Name == "Yellow Slime")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 1.2f;
                 this.damage = 15;
                 this.defense = 7;
@@ -181,7 +181,7 @@ namespace Terraria_Server
             else if (Name == "Jungle Slime")
             {
                 this.SetDefaults(1);
-                this.name = Name;
+                this.Name = Name;
                 this.damage = 18;
                 this.defense = 6;
                 this.life = 60;
@@ -192,7 +192,7 @@ namespace Terraria_Server
             else if (Name == "Little Eater")
             {
                 this.SetDefaults(6);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 0.85f;
                 this.defense = (int)((float)this.defense * this.scale);
                 this.damage = (int)((float)this.damage * this.scale);
@@ -204,7 +204,7 @@ namespace Terraria_Server
             else if (Name == "Big Eater")
             {
                 this.SetDefaults(6);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 1.15f;
                 this.defense = (int)((float)this.defense * this.scale);
                 this.damage = (int)((float)this.damage * this.scale);
@@ -216,7 +216,7 @@ namespace Terraria_Server
             else if (Name == "Short Bones")
             {
                 this.SetDefaults(31);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 0.9f;
                 this.defense = (int)((float)this.defense * this.scale);
                 this.damage = (int)((float)this.damage * this.scale);
@@ -226,7 +226,7 @@ namespace Terraria_Server
             else if (Name == "Big Boned")
             {
                 this.SetDefaults(31);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 1.15f;
                 this.defense = (int)((float)this.defense * this.scale);
                 this.damage = (int)((double)((float)this.damage * this.scale) * 1.1);
@@ -238,7 +238,7 @@ namespace Terraria_Server
             else if (Name == "Little Stinger")
             {
                 this.SetDefaults(42);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 0.85f;
                 this.defense = (int)((float)this.defense * this.scale);
                 this.damage = (int)((float)this.damage * this.scale);
@@ -250,7 +250,7 @@ namespace Terraria_Server
             else if (Name == "Big Stinger")
             {
                 this.SetDefaults(42);
-                this.name = Name;
+                this.Name = Name;
                 this.scale = 1.15f;
                 this.defense = (int)((float)this.defense * this.scale);
                 this.damage = (int)((float)this.damage * this.scale);
@@ -265,7 +265,7 @@ namespace Terraria_Server
                 {
                     this.SetDefaults(i);
 
-                    if (this.name == Name)
+                    if (this.Name == Name)
                     {
                         break;
                     }
@@ -273,13 +273,13 @@ namespace Terraria_Server
                     if (i == 69)
                     {
                         this.SetDefaults(0);
-                        this.active = false;
+                        this.Active = false;
                     }
                 }
             }
             else
             {
-                this.active = false;
+                this.Active = false;
             }
 
             this.lifeMax = this.life;
@@ -301,7 +301,7 @@ namespace Terraria_Server
             this.boss = false;
             this.noTileCollide = false;
             this.rotation = 0f;
-            this.active = true;
+            this.Active = true;
             this.alpha = 0;
             this.color = default(Color);
             this.collideX = false;
@@ -311,7 +311,7 @@ namespace Terraria_Server
             this.frameCounter = 0.0;
             this.netUpdate = false;
             this.knockBackResist = 1f;
-            this.name = "";
+            this.Name = "";
             this.noGravity = false;
             this.scale = 1f;
             this.soundHit = 0;
@@ -331,7 +331,7 @@ namespace Terraria_Server
 
             if (this.type == 1)
             {
-                this.name = "Blue Slime";
+                this.Name = "Blue Slime";
                 this.width = 24;
                 this.height = 18;
                 this.aiStyle = 1;
@@ -348,7 +348,7 @@ namespace Terraria_Server
             {
                 if (this.type == 2)
                 {
-                    this.name = "Demon Eye";
+                    this.Name = "Demon Eye";
                     this.width = 30;
                     this.height = 32;
                     this.aiStyle = 2;
@@ -364,7 +364,7 @@ namespace Terraria_Server
                 {
                     if (this.type == 3)
                     {
-                        this.name = "Zombie";
+                        this.Name = "Zombie";
                         this.width = 18;
                         this.height = 40;
                         this.aiStyle = 3;
@@ -380,7 +380,7 @@ namespace Terraria_Server
                     {
                         if (this.type == 4)
                         {
-                            this.name = "Eye of Cthulhu";
+                            this.Name = "Eye of Cthulhu";
                             this.width = 100;
                             this.height = 110;
                             this.aiStyle = 4;
@@ -400,7 +400,7 @@ namespace Terraria_Server
                         {
                             if (this.type == 5)
                             {
-                                this.name = "Servant of Cthulhu";
+                                this.Name = "Servant of Cthulhu";
                                 this.width = 20;
                                 this.height = 20;
                                 this.aiStyle = 5;
@@ -417,7 +417,7 @@ namespace Terraria_Server
                                 if (this.type == 6)
                                 {
                                     NPC.npcSlots = 0.75f;
-                                    this.name = "Eater of Souls";
+                                    this.Name = "Eater of Souls";
                                     this.width = 30;
                                     this.height = 30;
                                     this.aiStyle = 5;
@@ -435,7 +435,7 @@ namespace Terraria_Server
                                     if (this.type == 7)
                                     {
                                         NPC.npcSlots = 3.5f;
-                                        this.name = "Devourer Head";
+                                        this.Name = "Devourer Head";
                                         this.width = 22;
                                         this.height = 22;
                                         this.aiStyle = 6;
@@ -454,7 +454,7 @@ namespace Terraria_Server
                                     {
                                         if (this.type == 8)
                                         {
-                                            this.name = "Devourer Body";
+                                            this.Name = "Devourer Body";
                                             this.width = 22;
                                             this.height = 22;
                                             this.aiStyle = 6;
@@ -473,7 +473,7 @@ namespace Terraria_Server
                                         {
                                             if (this.type == 9)
                                             {
-                                                this.name = "Devourer Tail";
+                                                this.Name = "Devourer Tail";
                                                 this.width = 22;
                                                 this.height = 22;
                                                 this.aiStyle = 6;
@@ -492,7 +492,7 @@ namespace Terraria_Server
                                             {
                                                 if (this.type == 10)
                                                 {
-                                                    this.name = "Giant Worm Head";
+                                                    this.Name = "Giant Worm Head";
                                                     this.width = 14;
                                                     this.height = 14;
                                                     this.aiStyle = 6;
@@ -511,7 +511,7 @@ namespace Terraria_Server
                                                 {
                                                     if (this.type == 11)
                                                     {
-                                                        this.name = "Giant Worm Body";
+                                                        this.Name = "Giant Worm Body";
                                                         this.width = 14;
                                                         this.height = 14;
                                                         this.aiStyle = 6;
@@ -530,7 +530,7 @@ namespace Terraria_Server
                                                     {
                                                         if (this.type == 12)
                                                         {
-                                                            this.name = "Giant Worm Tail";
+                                                            this.Name = "Giant Worm Tail";
                                                             this.width = 14;
                                                             this.height = 14;
                                                             this.aiStyle = 6;
@@ -550,7 +550,7 @@ namespace Terraria_Server
                                                             if (this.type == 13)
                                                             {
                                                                 NPC.npcSlots = 8f;
-                                                                this.name = "Eater of Worlds Head";
+                                                                this.Name = "Eater of Worlds Head";
                                                                 this.width = 38;
                                                                 this.height = 38;
                                                                 this.aiStyle = 6;
@@ -570,7 +570,7 @@ namespace Terraria_Server
                                                             {
                                                                 if (this.type == 14)
                                                                 {
-                                                                    this.name = "Eater of Worlds Body";
+                                                                    this.Name = "Eater of Worlds Body";
                                                                     this.width = 38;
                                                                     this.height = 38;
                                                                     this.aiStyle = 6;
@@ -590,7 +590,7 @@ namespace Terraria_Server
                                                                 {
                                                                     if (this.type == 15)
                                                                     {
-                                                                        this.name = "Eater of Worlds Tail";
+                                                                        this.Name = "Eater of Worlds Tail";
                                                                         this.width = 38;
                                                                         this.height = 38;
                                                                         this.aiStyle = 6;
@@ -611,7 +611,7 @@ namespace Terraria_Server
                                                                         if (this.type == 16)
                                                                         {
                                                                             NPC.npcSlots = 2f;
-                                                                            this.name = "Mother Slime";
+                                                                            this.Name = "Mother Slime";
                                                                             this.width = 36;
                                                                             this.height = 24;
                                                                             this.aiStyle = 1;
@@ -632,7 +632,7 @@ namespace Terraria_Server
                                                                             {
                                                                                 this.townNPC = true;
                                                                                 this.friendly = true;
-                                                                                this.name = "Merchant";
+                                                                                this.Name = "Merchant";
                                                                                 this.width = 18;
                                                                                 this.height = 40;
                                                                                 this.aiStyle = 7;
@@ -649,7 +649,7 @@ namespace Terraria_Server
                                                                                 {
                                                                                     this.townNPC = true;
                                                                                     this.friendly = true;
-                                                                                    this.name = "Nurse";
+                                                                                    this.Name = "Nurse";
                                                                                     this.width = 18;
                                                                                     this.height = 40;
                                                                                     this.aiStyle = 7;
@@ -666,7 +666,7 @@ namespace Terraria_Server
                                                                                     {
                                                                                         this.townNPC = true;
                                                                                         this.friendly = true;
-                                                                                        this.name = "Arms Dealer";
+                                                                                        this.Name = "Arms Dealer";
                                                                                         this.width = 18;
                                                                                         this.height = 40;
                                                                                         this.aiStyle = 7;
@@ -683,7 +683,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             this.townNPC = true;
                                                                                             this.friendly = true;
-                                                                                            this.name = "Dryad";
+                                                                                            this.Name = "Dryad";
                                                                                             this.width = 18;
                                                                                             this.height = 40;
                                                                                             this.aiStyle = 7;
@@ -698,7 +698,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             if (this.type == 21)
                                                                                             {
-                                                                                                this.name = "Skeleton";
+                                                                                                this.Name = "Skeleton";
                                                                                                 this.width = 18;
                                                                                                 this.height = 40;
                                                                                                 this.aiStyle = 3;
@@ -716,7 +716,7 @@ namespace Terraria_Server
                                                                                                 {
                                                                                                     this.townNPC = true;
                                                                                                     this.friendly = true;
-                                                                                                    this.name = "Guide";
+                                                                                                    this.Name = "Guide";
                                                                                                     this.width = 18;
                                                                                                     this.height = 40;
                                                                                                     this.aiStyle = 7;
@@ -731,7 +731,7 @@ namespace Terraria_Server
                                                                                                 {
                                                                                                     if (this.type == 23)
                                                                                                     {
-                                                                                                        this.name = "Meteor Head";
+                                                                                                        this.Name = "Meteor Head";
                                                                                                         this.width = 22;
                                                                                                         this.height = 22;
                                                                                                         this.aiStyle = 5;
@@ -750,7 +750,7 @@ namespace Terraria_Server
                                                                                                         if (this.type == 24)
                                                                                                         {
                                                                                                             NPC.npcSlots = 3f;
-                                                                                                            this.name = "Fire Imp";
+                                                                                                            this.Name = "Fire Imp";
                                                                                                             this.width = 18;
                                                                                                             this.height = 40;
                                                                                                             this.aiStyle = 8;
@@ -767,7 +767,7 @@ namespace Terraria_Server
                                                                                                         {
                                                                                                             if (this.type == 25)
                                                                                                             {
-                                                                                                                this.name = "Burning Sphere";
+                                                                                                                this.Name = "Burning Sphere";
                                                                                                                 this.width = 16;
                                                                                                                 this.height = 16;
                                                                                                                 this.aiStyle = 9;
@@ -785,7 +785,7 @@ namespace Terraria_Server
                                                                                                             {
                                                                                                                 if (this.type == 26)
                                                                                                                 {
-                                                                                                                    this.name = "Goblin Peon";
+                                                                                                                    this.Name = "Goblin Peon";
                                                                                                                     this.width = 18;
                                                                                                                     this.height = 40;
                                                                                                                     this.aiStyle = 3;
@@ -801,7 +801,7 @@ namespace Terraria_Server
                                                                                                                 {
                                                                                                                     if (this.type == 27)
                                                                                                                     {
-                                                                                                                        this.name = "Goblin Thief";
+                                                                                                                        this.Name = "Goblin Thief";
                                                                                                                         this.width = 18;
                                                                                                                         this.height = 40;
                                                                                                                         this.aiStyle = 3;
@@ -817,7 +817,7 @@ namespace Terraria_Server
                                                                                                                     {
                                                                                                                         if (this.type == 28)
                                                                                                                         {
-                                                                                                                            this.name = "Goblin Warrior";
+                                                                                                                            this.Name = "Goblin Warrior";
                                                                                                                             this.width = 18;
                                                                                                                             this.height = 40;
                                                                                                                             this.aiStyle = 3;
@@ -833,7 +833,7 @@ namespace Terraria_Server
                                                                                                                         {
                                                                                                                             if (this.type == 29)
                                                                                                                             {
-                                                                                                                                this.name = "Goblin Sorcerer";
+                                                                                                                                this.Name = "Goblin Sorcerer";
                                                                                                                                 this.width = 18;
                                                                                                                                 this.height = 40;
                                                                                                                                 this.aiStyle = 8;
@@ -849,7 +849,7 @@ namespace Terraria_Server
                                                                                                                             {
                                                                                                                                 if (this.type == 30)
                                                                                                                                 {
-                                                                                                                                    this.name = "Chaos Ball";
+                                                                                                                                    this.Name = "Chaos Ball";
                                                                                                                                     this.width = 16;
                                                                                                                                     this.height = 16;
                                                                                                                                     this.aiStyle = 9;
@@ -867,7 +867,7 @@ namespace Terraria_Server
                                                                                                                                 {
                                                                                                                                     if (this.type == 31)
                                                                                                                                     {
-                                                                                                                                        this.name = "Angry Bones";
+                                                                                                                                        this.Name = "Angry Bones";
                                                                                                                                         this.width = 18;
                                                                                                                                         this.height = 40;
                                                                                                                                         this.aiStyle = 3;
@@ -883,7 +883,7 @@ namespace Terraria_Server
                                                                                                                                     {
                                                                                                                                         if (this.type == 32)
                                                                                                                                         {
-                                                                                                                                            this.name = "Dark Caster";
+                                                                                                                                            this.Name = "Dark Caster";
                                                                                                                                             this.width = 18;
                                                                                                                                             this.height = 40;
                                                                                                                                             this.aiStyle = 8;
@@ -900,7 +900,7 @@ namespace Terraria_Server
                                                                                                                                         {
                                                                                                                                             if (this.type == 33)
                                                                                                                                             {
-                                                                                                                                                this.name = "Water Sphere";
+                                                                                                                                                this.Name = "Water Sphere";
                                                                                                                                                 this.width = 16;
                                                                                                                                                 this.height = 16;
                                                                                                                                                 this.aiStyle = 9;
@@ -918,7 +918,7 @@ namespace Terraria_Server
                                                                                                                                             {
                                                                                                                                                 if (this.type == 34)
                                                                                                                                                 {
-                                                                                                                                                    this.name = "Cursed Skull";
+                                                                                                                                                    this.Name = "Cursed Skull";
                                                                                                                                                     this.width = 26;
                                                                                                                                                     this.height = 28;
                                                                                                                                                     this.aiStyle = 10;
@@ -937,7 +937,7 @@ namespace Terraria_Server
                                                                                                                                                 {
                                                                                                                                                     if (this.type == 35)
                                                                                                                                                     {
-                                                                                                                                                        this.name = "Skeletron Head";
+                                                                                                                                                        this.Name = "Skeletron Head";
                                                                                                                                                         this.width = 80;
                                                                                                                                                         this.height = 102;
                                                                                                                                                         this.aiStyle = 11;
@@ -957,7 +957,7 @@ namespace Terraria_Server
                                                                                                                                                     {
                                                                                                                                                         if (this.type == 36)
                                                                                                                                                         {
-                                                                                                                                                            this.name = "Skeletron Hand";
+                                                                                                                                                            this.Name = "Skeletron Hand";
                                                                                                                                                             this.width = 52;
                                                                                                                                                             this.height = 52;
                                                                                                                                                             this.aiStyle = 12;
@@ -976,7 +976,7 @@ namespace Terraria_Server
                                                                                                                                                             {
                                                                                                                                                                 this.townNPC = true;
                                                                                                                                                                 this.friendly = true;
-                                                                                                                                                                this.name = "Old Man";
+                                                                                                                                                                this.Name = "Old Man";
                                                                                                                                                                 this.width = 18;
                                                                                                                                                                 this.height = 40;
                                                                                                                                                                 this.aiStyle = 7;
@@ -993,7 +993,7 @@ namespace Terraria_Server
                                                                                                                                                                 {
                                                                                                                                                                     this.townNPC = true;
                                                                                                                                                                     this.friendly = true;
-                                                                                                                                                                    this.name = "Demolitionist";
+                                                                                                                                                                    this.Name = "Demolitionist";
                                                                                                                                                                     this.width = 18;
                                                                                                                                                                     this.height = 40;
                                                                                                                                                                     this.aiStyle = 7;
@@ -1009,7 +1009,7 @@ namespace Terraria_Server
                                                                                                                                                                     if (this.type == 39)
                                                                                                                                                                     {
                                                                                                                                                                         NPC.npcSlots = 6f;
-                                                                                                                                                                        this.name = "Bone Serpent Head";
+                                                                                                                                                                        this.Name = "Bone Serpent Head";
                                                                                                                                                                         this.width = 22;
                                                                                                                                                                         this.height = 22;
                                                                                                                                                                         this.aiStyle = 6;
@@ -1028,7 +1028,7 @@ namespace Terraria_Server
                                                                                                                                                                     {
                                                                                                                                                                         if (this.type == 40)
                                                                                                                                                                         {
-                                                                                                                                                                            this.name = "Bone Serpent Body";
+                                                                                                                                                                            this.Name = "Bone Serpent Body";
                                                                                                                                                                             this.width = 22;
                                                                                                                                                                             this.height = 22;
                                                                                                                                                                             this.aiStyle = 6;
@@ -1047,7 +1047,7 @@ namespace Terraria_Server
                                                                                                                                                                         {
                                                                                                                                                                             if (this.type == 41)
                                                                                                                                                                             {
-                                                                                                                                                                                this.name = "Bone Serpent Tail";
+                                                                                                                                                                                this.Name = "Bone Serpent Tail";
                                                                                                                                                                                 this.width = 22;
                                                                                                                                                                                 this.height = 22;
                                                                                                                                                                                 this.aiStyle = 6;
@@ -1066,7 +1066,7 @@ namespace Terraria_Server
                                                                                                                                                                             {
                                                                                                                                                                                 if (this.type == 42)
                                                                                                                                                                                 {
-                                                                                                                                                                                    this.name = "Hornet";
+                                                                                                                                                                                    this.Name = "Hornet";
                                                                                                                                                                                     this.width = 34;
                                                                                                                                                                                     this.height = 32;
                                                                                                                                                                                     this.aiStyle = 5;
@@ -1086,7 +1086,7 @@ namespace Terraria_Server
                                                                                                                                                                                         this.noGravity = true;
                                                                                                                                                                                         this.noTileCollide = true;
                                                                                                                                                                                         this.behindTiles = true;
-                                                                                                                                                                                        this.name = "Man Eater";
+                                                                                                                                                                                        this.Name = "Man Eater";
                                                                                                                                                                                         this.width = 30;
                                                                                                                                                                                         this.height = 30;
                                                                                                                                                                                         this.aiStyle = 13;
@@ -1102,7 +1102,7 @@ namespace Terraria_Server
                                                                                                                                                                                     {
                                                                                                                                                                                         if (this.type == 44)
                                                                                                                                                                                         {
-                                                                                                                                                                                            this.name = "Undead Miner";
+                                                                                                                                                                                            this.Name = "Undead Miner";
                                                                                                                                                                                             this.width = 18;
                                                                                                                                                                                             this.height = 40;
                                                                                                                                                                                             this.aiStyle = 3;
@@ -1118,7 +1118,7 @@ namespace Terraria_Server
                                                                                                                                                                                         {
                                                                                                                                                                                             if (this.type == 45)
                                                                                                                                                                                             {
-                                                                                                                                                                                                this.name = "Tim";
+                                                                                                                                                                                                this.Name = "Tim";
                                                                                                                                                                                                 this.width = 18;
                                                                                                                                                                                                 this.height = 40;
                                                                                                                                                                                                 this.aiStyle = 8;
@@ -1134,7 +1134,7 @@ namespace Terraria_Server
                                                                                                                                                                                             {
                                                                                                                                                                                                 if (this.type == 46)
                                                                                                                                                                                                 {
-                                                                                                                                                                                                    this.name = "Bunny";
+                                                                                                                                                                                                    this.Name = "Bunny";
                                                                                                                                                                                                     this.friendly = true;
                                                                                                                                                                                                     this.width = 18;
                                                                                                                                                                                                     this.height = 20;
@@ -1149,7 +1149,7 @@ namespace Terraria_Server
                                                                                                                                                                                                 {
                                                                                                                                                                                                     if (this.type == 47)
                                                                                                                                                                                                     {
-                                                                                                                                                                                                        this.name = "Corrupt Bunny";
+                                                                                                                                                                                                        this.Name = "Corrupt Bunny";
                                                                                                                                                                                                         this.width = 18;
                                                                                                                                                                                                         this.height = 20;
                                                                                                                                                                                                         this.aiStyle = 3;
@@ -1164,7 +1164,7 @@ namespace Terraria_Server
                                                                                                                                                                                                     {
                                                                                                                                                                                                         if (this.type == 48)
                                                                                                                                                                                                         {
-                                                                                                                                                                                                            this.name = "Harpy";
+                                                                                                                                                                                                            this.Name = "Harpy";
                                                                                                                                                                                                             this.width = 24;
                                                                                                                                                                                                             this.height = 34;
                                                                                                                                                                                                             this.aiStyle = 14;
@@ -1181,7 +1181,7 @@ namespace Terraria_Server
                                                                                                                                                                                                             if (this.type == 49)
                                                                                                                                                                                                             {
                                                                                                                                                                                                                 NPC.npcSlots = 0.5f;
-                                                                                                                                                                                                                this.name = "Cave Bat";
+                                                                                                                                                                                                                this.Name = "Cave Bat";
                                                                                                                                                                                                                 this.width = 12;
                                                                                                                                                                                                                 this.height = 12;
                                                                                                                                                                                                                 this.aiStyle = 14;
@@ -1198,7 +1198,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                 if (this.type == 50)
                                                                                                                                                                                                                 {
                                                                                                                                                                                                                     this.boss = true;
-                                                                                                                                                                                                                    this.name = "King Slime";
+                                                                                                                                                                                                                    this.Name = "King Slime";
                                                                                                                                                                                                                     this.width = 98;
                                                                                                                                                                                                                     this.height = 92;
                                                                                                                                                                                                                     this.aiStyle = 15;
@@ -1217,7 +1217,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                     if (this.type == 51)
                                                                                                                                                                                                                     {
                                                                                                                                                                                                                         NPC.npcSlots = 0.5f;
-                                                                                                                                                                                                                        this.name = "Jungle Bat";
+                                                                                                                                                                                                                        this.Name = "Jungle Bat";
                                                                                                                                                                                                                         this.width = 12;
                                                                                                                                                                                                                         this.height = 12;
                                                                                                                                                                                                                         this.aiStyle = 14;
@@ -1233,7 +1233,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                     {
                                                                                                                                                                                                                         if (this.type == 52)
                                                                                                                                                                                                                         {
-                                                                                                                                                                                                                            this.name = "Doctor Bones";
+                                                                                                                                                                                                                            this.Name = "Doctor Bones";
                                                                                                                                                                                                                             this.width = 18;
                                                                                                                                                                                                                             this.height = 40;
                                                                                                                                                                                                                             this.aiStyle = 3;
@@ -1249,7 +1249,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                         {
                                                                                                                                                                                                                             if (this.type == 53)
                                                                                                                                                                                                                             {
-                                                                                                                                                                                                                                this.name = "The Groom";
+                                                                                                                                                                                                                                this.Name = "The Groom";
                                                                                                                                                                                                                                 this.width = 18;
                                                                                                                                                                                                                                 this.height = 40;
                                                                                                                                                                                                                                 this.aiStyle = 3;
@@ -1267,7 +1267,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                 {
                                                                                                                                                                                                                                     this.townNPC = true;
                                                                                                                                                                                                                                     this.friendly = true;
-                                                                                                                                                                                                                                    this.name = "Clothier";
+                                                                                                                                                                                                                                    this.Name = "Clothier";
                                                                                                                                                                                                                                     this.width = 18;
                                                                                                                                                                                                                                     this.height = 40;
                                                                                                                                                                                                                                     this.aiStyle = 7;
@@ -1284,7 +1284,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                     {
                                                                                                                                                                                                                                         this.friendly = true;
                                                                                                                                                                                                                                         this.noGravity = true;
-                                                                                                                                                                                                                                        this.name = "Goldfish";
+                                                                                                                                                                                                                                        this.Name = "Goldfish";
                                                                                                                                                                                                                                         this.width = 20;
                                                                                                                                                                                                                                         this.height = 18;
                                                                                                                                                                                                                                         this.aiStyle = 16;
@@ -1302,7 +1302,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                             this.noTileCollide = true;
                                                                                                                                                                                                                                             this.behindTiles = true;
                                                                                                                                                                                                                                             this.noGravity = true;
-                                                                                                                                                                                                                                            this.name = "Snatcher";
+                                                                                                                                                                                                                                            this.Name = "Snatcher";
                                                                                                                                                                                                                                             this.width = 30;
                                                                                                                                                                                                                                             this.height = 30;
                                                                                                                                                                                                                                             this.aiStyle = 13;
@@ -1319,7 +1319,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                             if (this.type == 57)
                                                                                                                                                                                                                                             {
                                                                                                                                                                                                                                                 this.noGravity = true;
-                                                                                                                                                                                                                                                this.name = "Corrupt Goldfish";
+                                                                                                                                                                                                                                                this.Name = "Corrupt Goldfish";
                                                                                                                                                                                                                                                 this.width = 18;
                                                                                                                                                                                                                                                 this.height = 20;
                                                                                                                                                                                                                                                 this.aiStyle = 16;
@@ -1336,7 +1336,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                 {
                                                                                                                                                                                                                                                     NPC.npcSlots = 0.5f;
                                                                                                                                                                                                                                                     this.noGravity = true;
-                                                                                                                                                                                                                                                    this.name = "Piranha";
+                                                                                                                                                                                                                                                    this.Name = "Piranha";
                                                                                                                                                                                                                                                     this.width = 18;
                                                                                                                                                                                                                                                     this.height = 20;
                                                                                                                                                                                                                                                     this.aiStyle = 16;
@@ -1351,7 +1351,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                 {
                                                                                                                                                                                                                                                     if (this.type == 59)
                                                                                                                                                                                                                                                     {
-                                                                                                                                                                                                                                                        this.name = "Lava Slime";
+                                                                                                                                                                                                                                                        this.Name = "Lava Slime";
                                                                                                                                                                                                                                                         this.width = 24;
                                                                                                                                                                                                                                                         this.height = 18;
                                                                                                                                                                                                                                                         this.aiStyle = 1;
@@ -1369,7 +1369,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                         if (this.type == 60)
                                                                                                                                                                                                                                                         {
                                                                                                                                                                                                                                                             NPC.npcSlots = 0.5f;
-                                                                                                                                                                                                                                                            this.name = "Hellbat";
+                                                                                                                                                                                                                                                            this.Name = "Hellbat";
                                                                                                                                                                                                                                                             this.width = 12;
                                                                                                                                                                                                                                                             this.height = 12;
                                                                                                                                                                                                                                                             this.aiStyle = 14;
@@ -1387,7 +1387,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                         {
                                                                                                                                                                                                                                                             if (this.type == 61)
                                                                                                                                                                                                                                                             {
-                                                                                                                                                                                                                                                                this.name = "Vulture";
+                                                                                                                                                                                                                                                                this.Name = "Vulture";
                                                                                                                                                                                                                                                                 this.width = 36;
                                                                                                                                                                                                                                                                 this.height = 36;
                                                                                                                                                                                                                                                                 this.aiStyle = 17;
@@ -1404,7 +1404,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                 if (this.type == 62)
                                                                                                                                                                                                                                                                 {
                                                                                                                                                                                                                                                                     NPC.npcSlots = 2f;
-                                                                                                                                                                                                                                                                    this.name = "Demon";
+                                                                                                                                                                                                                                                                    this.Name = "Demon";
                                                                                                                                                                                                                                                                     this.width = 28;
                                                                                                                                                                                                                                                                     this.height = 48;
                                                                                                                                                                                                                                                                     this.aiStyle = 14;
@@ -1422,7 +1422,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                     if (this.type == 63)
                                                                                                                                                                                                                                                                     {
                                                                                                                                                                                                                                                                         this.noGravity = true;
-                                                                                                                                                                                                                                                                        this.name = "Blue Jellyfish";
+                                                                                                                                                                                                                                                                        this.Name = "Blue Jellyfish";
                                                                                                                                                                                                                                                                         this.width = 26;
                                                                                                                                                                                                                                                                         this.height = 26;
                                                                                                                                                                                                                                                                         this.aiStyle = 18;
@@ -1439,7 +1439,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                         if (this.type == 64)
                                                                                                                                                                                                                                                                         {
                                                                                                                                                                                                                                                                             this.noGravity = true;
-                                                                                                                                                                                                                                                                            this.name = "Pink Jellyfish";
+                                                                                                                                                                                                                                                                            this.Name = "Pink Jellyfish";
                                                                                                                                                                                                                                                                             this.width = 26;
                                                                                                                                                                                                                                                                             this.height = 26;
                                                                                                                                                                                                                                                                             this.aiStyle = 18;
@@ -1456,7 +1456,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                             if (this.type == 65)
                                                                                                                                                                                                                                                                             {
                                                                                                                                                                                                                                                                                 this.noGravity = true;
-                                                                                                                                                                                                                                                                                this.name = "Shark";
+                                                                                                                                                                                                                                                                                this.Name = "Shark";
                                                                                                                                                                                                                                                                                 this.width = 100;
                                                                                                                                                                                                                                                                                 this.height = 24;
                                                                                                                                                                                                                                                                                 this.aiStyle = 16;
@@ -1473,7 +1473,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                                 if (this.type == 66)
                                                                                                                                                                                                                                                                                 {
                                                                                                                                                                                                                                                                                     NPC.npcSlots = 2f;
-                                                                                                                                                                                                                                                                                    this.name = "Voodoo Demon";
+                                                                                                                                                                                                                                                                                    this.Name = "Voodoo Demon";
                                                                                                                                                                                                                                                                                     this.width = 28;
                                                                                                                                                                                                                                                                                     this.height = 48;
                                                                                                                                                                                                                                                                                     this.aiStyle = 14;
@@ -1490,7 +1490,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                                 {
                                                                                                                                                                                                                                                                                     if (this.type == 67)
                                                                                                                                                                                                                                                                                     {
-                                                                                                                                                                                                                                                                                        this.name = "Crab";
+                                                                                                                                                                                                                                                                                        this.Name = "Crab";
                                                                                                                                                                                                                                                                                         this.width = 28;
                                                                                                                                                                                                                                                                                         this.height = 20;
                                                                                                                                                                                                                                                                                         this.aiStyle = 3;
@@ -1505,7 +1505,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                                     {
                                                                                                                                                                                                                                                                                         if (this.type == 68)
                                                                                                                                                                                                                                                                                         {
-                                                                                                                                                                                                                                                                                            this.name = "Dungeon Guardian";
+                                                                                                                                                                                                                                                                                            this.Name = "Dungeon Guardian";
                                                                                                                                                                                                                                                                                             this.width = 80;
                                                                                                                                                                                                                                                                                             this.height = 102;
                                                                                                                                                                                                                                                                                             this.aiStyle = 11;
@@ -1522,7 +1522,7 @@ namespace Terraria_Server
                                                                                                                                                                                                                                                                                         {
                                                                                                                                                                                                                                                                                             if (this.type == 69)
                                                                                                                                                                                                                                                                                             {
-                                                                                                                                                                                                                                                                                                this.name = "Antlion";
+                                                                                                                                                                                                                                                                                                this.Name = "Antlion";
                                                                                                                                                                                                                                                                                                 this.width = 24;
                                                                                                                                                                                                                                                                                                 this.height = 24;
                                                                                                                                                                                                                                                                                                 this.aiStyle = 19;
@@ -1616,10 +1616,10 @@ namespace Terraria_Server
         {
             if (this.aiStyle == 0)
             {
-                this.velocity.X = this.velocity.X * 0.93f;
-                if ((double)this.velocity.X > -0.1 && (double)this.velocity.X < 0.1)
+                this.Velocity.X = this.Velocity.X * 0.93f;
+                if ((double)this.Velocity.X > -0.1 && (double)this.Velocity.X < 0.1)
                 {
-                    this.velocity.X = 0f;
+                    this.Velocity.X = 0f;
                     return;
                 }
             }
@@ -1629,12 +1629,12 @@ namespace Terraria_Server
                 {
                     if (this.type == 59)
                     {
-                        Vector2 arg_D5_0 = new Vector2(this.position.X, this.position.Y);
+                        Vector2 arg_D5_0 = new Vector2(this.Position.X, this.Position.Y);
                         int arg_D5_1 = this.width;
                         int arg_D5_2 = this.height;
                         int arg_D5_3 = 6;
-                        float arg_D5_4 = this.velocity.X * 0.2f;
-                        float arg_D5_5 = this.velocity.Y * 0.2f;
+                        float arg_D5_4 = this.Velocity.X * 0.2f;
+                        float arg_D5_5 = this.Velocity.Y * 0.2f;
                         int arg_D5_6 = 100;
                         Color newColor = default(Color);
                         int num = Dust.NewDust(arg_D5_0, arg_D5_1, arg_D5_2, arg_D5_3, arg_D5_4, arg_D5_5, arg_D5_6, newColor, 1.7f);
@@ -1644,33 +1644,33 @@ namespace Terraria_Server
                     {
                         if (this.type == 59)
                         {
-                            if (this.velocity.Y > 2f)
+                            if (this.Velocity.Y > 2f)
                             {
-                                this.velocity.Y = this.velocity.Y * 0.9f;
+                                this.Velocity.Y = this.Velocity.Y * 0.9f;
                             }
                             else
                             {
                                 if (this.directionY < 0)
                                 {
-                                    this.velocity.Y = this.velocity.Y - 0.8f;
+                                    this.Velocity.Y = this.Velocity.Y - 0.8f;
                                 }
                             }
-                            this.velocity.Y = this.velocity.Y - 0.5f;
-                            if (this.velocity.Y < -10f)
+                            this.Velocity.Y = this.Velocity.Y - 0.5f;
+                            if (this.Velocity.Y < -10f)
                             {
-                                this.velocity.Y = -10f;
+                                this.Velocity.Y = -10f;
                             }
                         }
                         else
                         {
-                            if (this.velocity.Y > 2f)
+                            if (this.Velocity.Y > 2f)
                             {
-                                this.velocity.Y = this.velocity.Y * 0.9f;
+                                this.Velocity.Y = this.Velocity.Y * 0.9f;
                             }
-                            this.velocity.Y = this.velocity.Y - 0.5f;
-                            if (this.velocity.Y < -4f)
+                            this.Velocity.Y = this.Velocity.Y - 0.5f;
+                            if (this.Velocity.Y < -4f)
                             {
-                                this.velocity.Y = -4f;
+                                this.Velocity.Y = -4f;
                             }
                         }
                         this.TargetClosest(true);
@@ -1682,19 +1682,19 @@ namespace Terraria_Server
                         this.ai[2] = 1f;
                         this.TargetClosest(true);
                     }
-                    if (this.velocity.Y == 0f)
+                    if (this.Velocity.Y == 0f)
                     {
-                        if (this.ai[3] == this.position.X)
+                        if (this.ai[3] == this.Position.X)
                         {
                             this.direction *= -1;
                         }
                         this.ai[3] = 0f;
-                        this.velocity.X = this.velocity.X * 0.8f;
-                        if ((double)this.velocity.X > -0.1 && (double)this.velocity.X < 0.1)
+                        this.Velocity.X = this.Velocity.X * 0.8f;
+                        if ((double)this.Velocity.X > -0.1 && (double)this.Velocity.X < 0.1)
                         {
-                            this.velocity.X = 0f;
+                            this.Velocity.X = 0f;
                         }
-                        if (!Main.dayTime || this.life != this.lifeMax || (double)this.position.Y > Main.worldSurface * 16.0)
+                        if (!Main.dayTime || this.life != this.lifeMax || (double)this.Position.Y > Main.worldSurface * 16.0)
                         {
                             this.ai[0] += 1f;
                         }
@@ -1706,32 +1706,32 @@ namespace Terraria_Server
                         if (this.ai[0] >= 0f)
                         {
                             this.netUpdate = true;
-                            if (!Main.dayTime || this.life != this.lifeMax || (double)this.position.Y > Main.worldSurface * 16.0)
+                            if (!Main.dayTime || this.life != this.lifeMax || (double)this.Position.Y > Main.worldSurface * 16.0)
                             {
                                 this.TargetClosest(true);
                             }
                             if (this.ai[1] == 2f)
                             {
-                                this.velocity.Y = -8f;
+                                this.Velocity.Y = -8f;
                                 if (this.type == 59)
                                 {
-                                    this.velocity.Y = this.velocity.Y - 2f;
+                                    this.Velocity.Y = this.Velocity.Y - 2f;
                                 }
-                                this.velocity.X = this.velocity.X + (float)(3 * this.direction);
+                                this.Velocity.X = this.Velocity.X + (float)(3 * this.direction);
                                 if (this.type == 59)
                                 {
-                                    this.velocity.X = this.velocity.X + 0.5f * (float)this.direction;
+                                    this.Velocity.X = this.Velocity.X + 0.5f * (float)this.direction;
                                 }
                                 this.ai[0] = -200f;
                                 this.ai[1] = 0f;
-                                this.ai[3] = this.position.X;
+                                this.ai[3] = this.Position.X;
                                 return;
                             }
-                            this.velocity.Y = -6f;
-                            this.velocity.X = this.velocity.X + (float)(2 * this.direction);
+                            this.Velocity.Y = -6f;
+                            this.Velocity.X = this.Velocity.X + (float)(2 * this.direction);
                             if (this.type == 59)
                             {
-                                this.velocity.X = this.velocity.X + (float)(2 * this.direction);
+                                this.Velocity.X = this.Velocity.X + (float)(2 * this.direction);
                             }
                             this.ai[0] = -120f;
                             this.ai[1] += 1f;
@@ -1743,14 +1743,14 @@ namespace Terraria_Server
                             return;
                         }
                     }
-                    else if (this.target < 255 && ((this.direction == 1 && this.velocity.X < 3f) || (this.direction == -1 && this.velocity.X > -3f)))
+                    else if (this.target < 255 && ((this.direction == 1 && this.Velocity.X < 3f) || (this.direction == -1 && this.Velocity.X > -3f)))
                     {
-                        if ((this.direction == -1 && (double)this.velocity.X < 0.1) || (this.direction == 1 && (double)this.velocity.X > -0.1))
+                        if ((this.direction == -1 && (double)this.Velocity.X < 0.1) || (this.direction == 1 && (double)this.Velocity.X > -0.1))
                         {
-                            this.velocity.X = this.velocity.X + 0.2f * (float)this.direction;
+                            this.Velocity.X = this.Velocity.X + 0.2f * (float)this.direction;
                             return;
                         }
-                        this.velocity.X = this.velocity.X * 0.93f;
+                        this.Velocity.X = this.Velocity.X * 0.93f;
                         return;
                     }
                 }
@@ -1761,41 +1761,41 @@ namespace Terraria_Server
                         this.noGravity = true;
                         if (this.collideX)
                         {
-                            this.velocity.X = this.oldVelocity.X * -0.5f;
-                            if (this.direction == -1 && this.velocity.X > 0f && this.velocity.X < 2f)
+                            this.Velocity.X = this.oldVelocity.X * -0.5f;
+                            if (this.direction == -1 && this.Velocity.X > 0f && this.Velocity.X < 2f)
                             {
-                                this.velocity.X = 2f;
+                                this.Velocity.X = 2f;
                             }
-                            if (this.direction == 1 && this.velocity.X < 0f && this.velocity.X > -2f)
+                            if (this.direction == 1 && this.Velocity.X < 0f && this.Velocity.X > -2f)
                             {
-                                this.velocity.X = -2f;
+                                this.Velocity.X = -2f;
                             }
                         }
                         if (this.collideY)
                         {
-                            this.velocity.Y = this.oldVelocity.Y * -0.5f;
-                            if (this.velocity.Y > 0f && this.velocity.Y < 1f)
+                            this.Velocity.Y = this.oldVelocity.Y * -0.5f;
+                            if (this.Velocity.Y > 0f && this.Velocity.Y < 1f)
                             {
-                                this.velocity.Y = 1f;
+                                this.Velocity.Y = 1f;
                             }
-                            if (this.velocity.Y < 0f && this.velocity.Y > -1f)
+                            if (this.Velocity.Y < 0f && this.Velocity.Y > -1f)
                             {
-                                this.velocity.Y = -1f;
+                                this.Velocity.Y = -1f;
                             }
                         }
-                        if (Main.dayTime && (double)this.position.Y <= Main.worldSurface * 16.0 && this.type == 2)
+                        if (Main.dayTime && (double)this.Position.Y <= Main.worldSurface * 16.0 && this.type == 2)
                         {
                             if (this.timeLeft > 10)
                             {
                                 this.timeLeft = 10;
                             }
                             this.directionY = -1;
-                            if (this.velocity.Y > 0f)
+                            if (this.Velocity.Y > 0f)
                             {
                                 this.direction = 1;
                             }
                             this.direction = -1;
-                            if (this.velocity.X > 0f)
+                            if (this.Velocity.X > 0f)
                             {
                                 this.direction = 1;
                             }
@@ -1804,95 +1804,95 @@ namespace Terraria_Server
                         {
                             this.TargetClosest(true);
                         }
-                        if (this.direction == -1 && this.velocity.X > -4f)
+                        if (this.direction == -1 && this.Velocity.X > -4f)
                         {
-                            this.velocity.X = this.velocity.X - 0.1f;
-                            if (this.velocity.X > 4f)
+                            this.Velocity.X = this.Velocity.X - 0.1f;
+                            if (this.Velocity.X > 4f)
                             {
-                                this.velocity.X = this.velocity.X - 0.1f;
+                                this.Velocity.X = this.Velocity.X - 0.1f;
                             }
                             else
                             {
-                                if (this.velocity.X > 0f)
+                                if (this.Velocity.X > 0f)
                                 {
-                                    this.velocity.X = this.velocity.X + 0.05f;
+                                    this.Velocity.X = this.Velocity.X + 0.05f;
                                 }
                             }
-                            if (this.velocity.X < -4f)
+                            if (this.Velocity.X < -4f)
                             {
-                                this.velocity.X = -4f;
+                                this.Velocity.X = -4f;
                             }
                         }
                         else
                         {
-                            if (this.direction == 1 && this.velocity.X < 4f)
+                            if (this.direction == 1 && this.Velocity.X < 4f)
                             {
-                                this.velocity.X = this.velocity.X + 0.1f;
-                                if (this.velocity.X < -4f)
+                                this.Velocity.X = this.Velocity.X + 0.1f;
+                                if (this.Velocity.X < -4f)
                                 {
-                                    this.velocity.X = this.velocity.X + 0.1f;
+                                    this.Velocity.X = this.Velocity.X + 0.1f;
                                 }
                                 else
                                 {
-                                    if (this.velocity.X < 0f)
+                                    if (this.Velocity.X < 0f)
                                     {
-                                        this.velocity.X = this.velocity.X - 0.05f;
+                                        this.Velocity.X = this.Velocity.X - 0.05f;
                                     }
                                 }
-                                if (this.velocity.X > 4f)
+                                if (this.Velocity.X > 4f)
                                 {
-                                    this.velocity.X = 4f;
+                                    this.Velocity.X = 4f;
                                 }
                             }
                         }
-                        if (this.directionY == -1 && (double)this.velocity.Y > -1.5)
+                        if (this.directionY == -1 && (double)this.Velocity.Y > -1.5)
                         {
-                            this.velocity.Y = this.velocity.Y - 0.04f;
-                            if ((double)this.velocity.Y > 1.5)
+                            this.Velocity.Y = this.Velocity.Y - 0.04f;
+                            if ((double)this.Velocity.Y > 1.5)
                             {
-                                this.velocity.Y = this.velocity.Y - 0.05f;
+                                this.Velocity.Y = this.Velocity.Y - 0.05f;
                             }
                             else
                             {
-                                if (this.velocity.Y > 0f)
+                                if (this.Velocity.Y > 0f)
                                 {
-                                    this.velocity.Y = this.velocity.Y + 0.03f;
+                                    this.Velocity.Y = this.Velocity.Y + 0.03f;
                                 }
                             }
-                            if ((double)this.velocity.Y < -1.5)
+                            if ((double)this.Velocity.Y < -1.5)
                             {
-                                this.velocity.Y = -1.5f;
+                                this.Velocity.Y = -1.5f;
                             }
                         }
                         else
                         {
-                            if (this.directionY == 1 && (double)this.velocity.Y < 1.5)
+                            if (this.directionY == 1 && (double)this.Velocity.Y < 1.5)
                             {
-                                this.velocity.Y = this.velocity.Y + 0.04f;
-                                if ((double)this.velocity.Y < -1.5)
+                                this.Velocity.Y = this.Velocity.Y + 0.04f;
+                                if ((double)this.Velocity.Y < -1.5)
                                 {
-                                    this.velocity.Y = this.velocity.Y + 0.05f;
+                                    this.Velocity.Y = this.Velocity.Y + 0.05f;
                                 }
                                 else
                                 {
-                                    if (this.velocity.Y < 0f)
+                                    if (this.Velocity.Y < 0f)
                                     {
-                                        this.velocity.Y = this.velocity.Y - 0.03f;
+                                        this.Velocity.Y = this.Velocity.Y - 0.03f;
                                     }
                                 }
-                                if ((double)this.velocity.Y > 1.5)
+                                if ((double)this.Velocity.Y > 1.5)
                                 {
-                                    this.velocity.Y = 1.5f;
+                                    this.Velocity.Y = 1.5f;
                                 }
                             }
                         }
                         if (this.type == 2 && Main.rand.Next(40) == 0)
                         {
-                            Vector2 arg_ADF_0 = new Vector2(this.position.X, this.position.Y + (float)this.height * 0.25f);
+                            Vector2 arg_ADF_0 = new Vector2(this.Position.X, this.Position.Y + (float)this.height * 0.25f);
                             int arg_ADF_1 = this.width;
                             int arg_ADF_2 = (int)((float)this.height * 0.5f);
                             int arg_ADF_3 = 5;
-                            float arg_ADF_4 = this.velocity.X;
+                            float arg_ADF_4 = this.Velocity.X;
                             float arg_ADF_5 = 2f;
                             int arg_ADF_6 = 0;
                             Color newColor = default(Color);
@@ -1904,14 +1904,14 @@ namespace Terraria_Server
                         }
                         if (this.wet)
                         {
-                            if (this.velocity.Y > 0f)
+                            if (this.Velocity.Y > 0f)
                             {
-                                this.velocity.Y = this.velocity.Y * 0.95f;
+                                this.Velocity.Y = this.Velocity.Y * 0.95f;
                             }
-                            this.velocity.Y = this.velocity.Y - 0.5f;
-                            if (this.velocity.Y < -4f)
+                            this.Velocity.Y = this.Velocity.Y - 0.5f;
+                            if (this.Velocity.Y < -4f)
                             {
-                                this.velocity.Y = -4f;
+                                this.Velocity.Y = -4f;
                             }
                             this.TargetClosest(true);
                             return;
@@ -1923,17 +1923,17 @@ namespace Terraria_Server
                         {
                             int num3 = 60;
                             bool flag = false;
-                            if (this.velocity.Y == 0f && ((this.velocity.X > 0f && this.direction < 0) || (this.velocity.X < 0f && this.direction > 0)))
+                            if (this.Velocity.Y == 0f && ((this.Velocity.X > 0f && this.direction < 0) || (this.Velocity.X < 0f && this.direction > 0)))
                             {
                                 flag = true;
                             }
-                            if (this.position.X == this.oldPosition.X || this.ai[3] >= (float)num3 || flag)
+                            if (this.Position.X == this.oldPosition.X || this.ai[3] >= (float)num3 || flag)
                             {
                                 this.ai[3] += 1f;
                             }
                             else
                             {
-                                if ((double)Math.Abs(this.velocity.X) > 0.9 && this.ai[3] > 0f)
+                                if ((double)Math.Abs(this.Velocity.X) > 0.9 && this.ai[3] > 0f)
                                 {
                                     this.ai[3] -= 1f;
                                 }
@@ -1946,19 +1946,19 @@ namespace Terraria_Server
                             {
                                 this.netUpdate = true;
                             }
-                            if ((!Main.dayTime || (double)this.position.Y > Main.worldSurface * 16.0 || this.type == 26 || this.type == 27 || this.type == 28 || this.type == 31 || this.type == 47 || this.type == 67) && this.ai[3] < (float)num3)
+                            if ((!Main.dayTime || (double)this.Position.Y > Main.worldSurface * 16.0 || this.type == 26 || this.type == 27 || this.type == 28 || this.type == 31 || this.type == 47 || this.type == 67) && this.ai[3] < (float)num3)
                             {
                                 this.TargetClosest(true);
                             }
                             else
                             {
-                                if (Main.dayTime && (double)(this.position.Y / 16f) < Main.worldSurface && this.timeLeft > 10)
+                                if (Main.dayTime && (double)(this.Position.Y / 16f) < Main.worldSurface && this.timeLeft > 10)
                                 {
                                     this.timeLeft = 10;
                                 }
-                                if (this.velocity.X == 0f)
+                                if (this.Velocity.X == 0f)
                                 {
-                                    if (this.velocity.Y == 0f)
+                                    if (this.Velocity.Y == 0f)
                                     {
                                         this.ai[0] += 1f;
                                         if (this.ai[0] >= 2f)
@@ -1980,31 +1980,31 @@ namespace Terraria_Server
                             }
                             if (this.type == 27)
                             {
-                                if (this.velocity.X < -2f || this.velocity.X > 2f)
+                                if (this.Velocity.X < -2f || this.Velocity.X > 2f)
                                 {
-                                    if (this.velocity.Y == 0f)
+                                    if (this.Velocity.Y == 0f)
                                     {
-                                        this.velocity *= 0.8f;
+                                        this.Velocity *= 0.8f;
                                     }
                                 }
                                 else
                                 {
-                                    if (this.velocity.X < 2f && this.direction == 1)
+                                    if (this.Velocity.X < 2f && this.direction == 1)
                                     {
-                                        this.velocity.X = this.velocity.X + 0.07f;
-                                        if (this.velocity.X > 2f)
+                                        this.Velocity.X = this.Velocity.X + 0.07f;
+                                        if (this.Velocity.X > 2f)
                                         {
-                                            this.velocity.X = 2f;
+                                            this.Velocity.X = 2f;
                                         }
                                     }
                                     else
                                     {
-                                        if (this.velocity.X > -2f && this.direction == -1)
+                                        if (this.Velocity.X > -2f && this.direction == -1)
                                         {
-                                            this.velocity.X = this.velocity.X - 0.07f;
-                                            if (this.velocity.X < -2f)
+                                            this.Velocity.X = this.Velocity.X - 0.07f;
+                                            if (this.Velocity.X < -2f)
                                             {
-                                                this.velocity.X = -2f;
+                                                this.Velocity.X = -2f;
                                             }
                                         }
                                     }
@@ -2014,31 +2014,31 @@ namespace Terraria_Server
                             {
                                 if (this.type == 21 || this.type == 26 || this.type == 31 || this.type == 47)
                                 {
-                                    if (this.velocity.X < -1.5f || this.velocity.X > 1.5f)
+                                    if (this.Velocity.X < -1.5f || this.Velocity.X > 1.5f)
                                     {
-                                        if (this.velocity.Y == 0f)
+                                        if (this.Velocity.Y == 0f)
                                         {
-                                            this.velocity *= 0.8f;
+                                            this.Velocity *= 0.8f;
                                         }
                                     }
                                     else
                                     {
-                                        if (this.velocity.X < 1.5f && this.direction == 1)
+                                        if (this.Velocity.X < 1.5f && this.direction == 1)
                                         {
-                                            this.velocity.X = this.velocity.X + 0.07f;
-                                            if (this.velocity.X > 1.5f)
+                                            this.Velocity.X = this.Velocity.X + 0.07f;
+                                            if (this.Velocity.X > 1.5f)
                                             {
-                                                this.velocity.X = 1.5f;
+                                                this.Velocity.X = 1.5f;
                                             }
                                         }
                                         else
                                         {
-                                            if (this.velocity.X > -1.5f && this.direction == -1)
+                                            if (this.Velocity.X > -1.5f && this.direction == -1)
                                             {
-                                                this.velocity.X = this.velocity.X - 0.07f;
-                                                if (this.velocity.X < -1.5f)
+                                                this.Velocity.X = this.Velocity.X - 0.07f;
+                                                if (this.Velocity.X < -1.5f)
                                                 {
-                                                    this.velocity.X = -1.5f;
+                                                    this.Velocity.X = -1.5f;
                                                 }
                                             }
                                         }
@@ -2048,31 +2048,31 @@ namespace Terraria_Server
                                 {
                                     if (this.type == 67)
                                     {
-                                        if (this.velocity.X < -0.5f || this.velocity.X > 0.5f)
+                                        if (this.Velocity.X < -0.5f || this.Velocity.X > 0.5f)
                                         {
-                                            if (this.velocity.Y == 0f)
+                                            if (this.Velocity.Y == 0f)
                                             {
-                                                this.velocity *= 0.7f;
+                                                this.Velocity *= 0.7f;
                                             }
                                         }
                                         else
                                         {
-                                            if (this.velocity.X < 0.5f && this.direction == 1)
+                                            if (this.Velocity.X < 0.5f && this.direction == 1)
                                             {
-                                                this.velocity.X = this.velocity.X + 0.03f;
-                                                if (this.velocity.X > 0.5f)
+                                                this.Velocity.X = this.Velocity.X + 0.03f;
+                                                if (this.Velocity.X > 0.5f)
                                                 {
-                                                    this.velocity.X = 0.5f;
+                                                    this.Velocity.X = 0.5f;
                                                 }
                                             }
                                             else
                                             {
-                                                if (this.velocity.X > -0.5f && this.direction == -1)
+                                                if (this.Velocity.X > -0.5f && this.direction == -1)
                                                 {
-                                                    this.velocity.X = this.velocity.X - 0.03f;
-                                                    if (this.velocity.X < -0.5f)
+                                                    this.Velocity.X = this.Velocity.X - 0.03f;
+                                                    if (this.Velocity.X < -0.5f)
                                                     {
-                                                        this.velocity.X = -0.5f;
+                                                        this.Velocity.X = -0.5f;
                                                     }
                                                 }
                                             }
@@ -2080,31 +2080,31 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (this.velocity.X < -1f || this.velocity.X > 1f)
+                                        if (this.Velocity.X < -1f || this.Velocity.X > 1f)
                                         {
-                                            if (this.velocity.Y == 0f)
+                                            if (this.Velocity.Y == 0f)
                                             {
-                                                this.velocity *= 0.8f;
+                                                this.Velocity *= 0.8f;
                                             }
                                         }
                                         else
                                         {
-                                            if (this.velocity.X < 1f && this.direction == 1)
+                                            if (this.Velocity.X < 1f && this.direction == 1)
                                             {
-                                                this.velocity.X = this.velocity.X + 0.07f;
-                                                if (this.velocity.X > 1f)
+                                                this.Velocity.X = this.Velocity.X + 0.07f;
+                                                if (this.Velocity.X > 1f)
                                                 {
-                                                    this.velocity.X = 1f;
+                                                    this.Velocity.X = 1f;
                                                 }
                                             }
                                             else
                                             {
-                                                if (this.velocity.X > -1f && this.direction == -1)
+                                                if (this.Velocity.X > -1f && this.direction == -1)
                                                 {
-                                                    this.velocity.X = this.velocity.X - 0.07f;
-                                                    if (this.velocity.X < -1f)
+                                                    this.Velocity.X = this.Velocity.X - 0.07f;
+                                                    if (this.Velocity.X < -1f)
                                                     {
-                                                        this.velocity.X = -1f;
+                                                        this.Velocity.X = -1f;
                                                     }
                                                 }
                                             }
@@ -2112,14 +2112,14 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            if (this.velocity.Y != 0f)
+                            if (this.Velocity.Y != 0f)
                             {
                                 this.ai[1] = 0f;
                                 this.ai[2] = 0f;
                                 return;
                             }
-                            int num4 = (int)((this.position.X + (float)(this.width / 2) + (float)(15 * this.direction)) / 16f);
-                            int num5 = (int)((this.position.Y + (float)this.height - 15f) / 16f);
+                            int num4 = (int)((this.Position.X + (float)(this.width / 2) + (float)(15 * this.direction)) / 16f);
+                            int num5 = (int)((this.Position.Y + (float)this.height - 15f) / 16f);
                             if (Main.tile[num4, num5] == null)
                             {
                                 Main.tile[num4, num5] = new Tile();
@@ -2153,7 +2153,7 @@ namespace Terraria_Server
                             {
                                 flag2 = false;
                             }
-                            if (Main.tile[num4, num5 - 1].active && Main.tile[num4, num5 - 1].type == 10 && flag2)
+                            if (Main.tile[num4, num5 - 1].Active && Main.tile[num4, num5 - 1].type == 10 && flag2)
                             {
                                 this.ai[2] += 1f;
                                 this.ai[3] = 0f;
@@ -2163,7 +2163,7 @@ namespace Terraria_Server
                                     {
                                         this.ai[1] = 0f;
                                     }
-                                    this.velocity.X = 0.5f * (float)(-(float)this.direction);
+                                    this.Velocity.X = 0.5f * (float)(-(float)this.direction);
                                     this.ai[1] += 1f;
                                     if (this.type == 27)
                                     {
@@ -2211,41 +2211,41 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if ((this.velocity.X < 0f && this.spriteDirection == -1) || (this.velocity.X > 0f && this.spriteDirection == 1))
+                                if ((this.Velocity.X < 0f && this.spriteDirection == -1) || (this.Velocity.X > 0f && this.spriteDirection == 1))
                                 {
-                                    if (Main.tile[num4, num5 - 2].active && Main.tileSolid[(int)Main.tile[num4, num5 - 2].type])
+                                    if (Main.tile[num4, num5 - 2].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 2].type])
                                     {
-                                        if (Main.tile[num4, num5 - 3].active && Main.tileSolid[(int)Main.tile[num4, num5 - 3].type])
+                                        if (Main.tile[num4, num5 - 3].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 3].type])
                                         {
-                                            this.velocity.Y = -8f;
+                                            this.Velocity.Y = -8f;
                                             this.netUpdate = true;
                                         }
                                         else
                                         {
-                                            this.velocity.Y = -7f;
+                                            this.Velocity.Y = -7f;
                                             this.netUpdate = true;
                                         }
                                     }
                                     else
                                     {
-                                        if (Main.tile[num4, num5 - 1].active && Main.tileSolid[(int)Main.tile[num4, num5 - 1].type])
+                                        if (Main.tile[num4, num5 - 1].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 1].type])
                                         {
-                                            this.velocity.Y = -6f;
+                                            this.Velocity.Y = -6f;
                                             this.netUpdate = true;
                                         }
                                         else
                                         {
-                                            if (Main.tile[num4, num5].active && Main.tileSolid[(int)Main.tile[num4, num5].type])
+                                            if (Main.tile[num4, num5].Active && Main.tileSolid[(int)Main.tile[num4, num5].type])
                                             {
-                                                this.velocity.Y = -5f;
+                                                this.Velocity.Y = -5f;
                                                 this.netUpdate = true;
                                             }
                                             else
                                             {
-                                                if (this.directionY < 0 && this.type != 67 && (!Main.tile[num4, num5 + 1].active || !Main.tileSolid[(int)Main.tile[num4, num5 + 1].type]) && (!Main.tile[num4 + this.direction, num5 + 1].active || !Main.tileSolid[(int)Main.tile[num4 + this.direction, num5 + 1].type]))
+                                                if (this.directionY < 0 && this.type != 67 && (!Main.tile[num4, num5 + 1].Active || !Main.tileSolid[(int)Main.tile[num4, num5 + 1].type]) && (!Main.tile[num4 + this.direction, num5 + 1].Active || !Main.tileSolid[(int)Main.tile[num4 + this.direction, num5 + 1].type]))
                                                 {
-                                                    this.velocity.Y = -8f;
-                                                    this.velocity.X = this.velocity.X * 1.5f;
+                                                    this.Velocity.Y = -8f;
+                                                    this.Velocity.X = this.Velocity.X * 1.5f;
                                                     this.netUpdate = true;
                                                 }
                                                 else
@@ -2257,18 +2257,18 @@ namespace Terraria_Server
                                         }
                                     }
                                 }
-                                if ((this.type == 31 || this.type == 47) && this.velocity.Y == 0f && Math.Abs(this.position.X + (float)(this.width / 2) - (Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))) < 100f && Math.Abs(this.position.Y + (float)(this.height / 2) - (Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2))) < 50f && ((this.direction > 0 && this.velocity.X >= 1f) || (this.direction < 0 && this.velocity.X <= -1f)))
+                                if ((this.type == 31 || this.type == 47) && this.Velocity.Y == 0f && Math.Abs(this.Position.X + (float)(this.width / 2) - (Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2))) < 100f && Math.Abs(this.Position.Y + (float)(this.height / 2) - (Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2))) < 50f && ((this.direction > 0 && this.Velocity.X >= 1f) || (this.direction < 0 && this.Velocity.X <= -1f)))
                                 {
-                                    this.velocity.X = this.velocity.X * 2f;
-                                    if (this.velocity.X > 3f)
+                                    this.Velocity.X = this.Velocity.X * 2f;
+                                    if (this.Velocity.X > 3f)
                                     {
-                                        this.velocity.X = 3f;
+                                        this.Velocity.X = 3f;
                                     }
-                                    if (this.velocity.X < -3f)
+                                    if (this.Velocity.X < -3f)
                                     {
-                                        this.velocity.X = -3f;
+                                        this.Velocity.X = -3f;
                                     }
-                                    this.velocity.Y = -4f;
+                                    this.Velocity.Y = -4f;
                                     this.netUpdate = true;
                                     return;
                                 }
@@ -2278,13 +2278,13 @@ namespace Terraria_Server
                         {
                             if (this.aiStyle == 4)
                             {
-                                if (this.target < 0 || this.target == 255 || Main.players[this.target].dead || !Main.players[this.target].active)
+                                if (this.target < 0 || this.target == 255 || Main.players[this.target].dead || !Main.players[this.target].Active)
                                 {
                                     this.TargetClosest(true);
                                 }
                                 bool dead = Main.players[this.target].dead;
-                                float num6 = this.position.X + (float)(this.width / 2) - Main.players[this.target].position.X - (float)(Main.players[this.target].width / 2);
-                                float num7 = this.position.Y + (float)this.height - 59f - Main.players[this.target].position.Y - (float)(Main.players[this.target].height / 2);
+                                float num6 = this.Position.X + (float)(this.width / 2) - Main.players[this.target].Position.X - (float)(Main.players[this.target].width / 2);
+                                float num7 = this.Position.Y + (float)this.height - 59f - Main.players[this.target].Position.Y - (float)(Main.players[this.target].height / 2);
                                 float num8 = (float)Math.Atan2((double)num7, (double)num6) + 1.57f;
                                 if (num8 < 0f)
                                 {
@@ -2360,11 +2360,11 @@ namespace Terraria_Server
                                 }
                                 if (Main.rand.Next(5) == 0)
                                 {
-                                    Vector2 arg_1DAB_0 = new Vector2(this.position.X, this.position.Y + (float)this.height * 0.25f);
+                                    Vector2 arg_1DAB_0 = new Vector2(this.Position.X, this.Position.Y + (float)this.height * 0.25f);
                                     int arg_1DAB_1 = this.width;
                                     int arg_1DAB_2 = (int)((float)this.height * 0.5f);
                                     int arg_1DAB_3 = 5;
-                                    float arg_1DAB_4 = this.velocity.X;
+                                    float arg_1DAB_4 = this.Velocity.X;
                                     float arg_1DAB_5 = 2f;
                                     int arg_1DAB_6 = 0;
                                     Color newColor = default(Color);
@@ -2376,7 +2376,7 @@ namespace Terraria_Server
                                 }
                                 if (Main.dayTime || dead)
                                 {
-                                    this.velocity.Y = this.velocity.Y - 0.04f;
+                                    this.Velocity.Y = this.Velocity.Y - 0.04f;
                                     if (this.timeLeft > 10)
                                     {
                                         this.timeLeft = 10;
@@ -2391,49 +2391,49 @@ namespace Terraria_Server
                                         {
                                             float num11 = 5f;
                                             float num12 = 0.04f;
-                                            Vector2 vector = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                            float num13 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector.X;
-                                            float num14 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - 200f - vector.Y;
+                                            Vector2 vector = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                            float num13 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector.X;
+                                            float num14 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - 200f - vector.Y;
                                             float num15 = (float)Math.Sqrt((double)(num13 * num13 + num14 * num14));
                                             float num16 = num15;
                                             num15 = num11 / num15;
                                             num13 *= num15;
                                             num14 *= num15;
-                                            if (this.velocity.X < num13)
+                                            if (this.Velocity.X < num13)
                                             {
-                                                this.velocity.X = this.velocity.X + num12;
-                                                if (this.velocity.X < 0f && num13 > 0f)
+                                                this.Velocity.X = this.Velocity.X + num12;
+                                                if (this.Velocity.X < 0f && num13 > 0f)
                                                 {
-                                                    this.velocity.X = this.velocity.X + num12;
+                                                    this.Velocity.X = this.Velocity.X + num12;
                                                 }
                                             }
                                             else
                                             {
-                                                if (this.velocity.X > num13)
+                                                if (this.Velocity.X > num13)
                                                 {
-                                                    this.velocity.X = this.velocity.X - num12;
-                                                    if (this.velocity.X > 0f && num13 < 0f)
+                                                    this.Velocity.X = this.Velocity.X - num12;
+                                                    if (this.Velocity.X > 0f && num13 < 0f)
                                                     {
-                                                        this.velocity.X = this.velocity.X - num12;
+                                                        this.Velocity.X = this.Velocity.X - num12;
                                                     }
                                                 }
                                             }
-                                            if (this.velocity.Y < num14)
+                                            if (this.Velocity.Y < num14)
                                             {
-                                                this.velocity.Y = this.velocity.Y + num12;
-                                                if (this.velocity.Y < 0f && num14 > 0f)
+                                                this.Velocity.Y = this.Velocity.Y + num12;
+                                                if (this.Velocity.Y < 0f && num14 > 0f)
                                                 {
-                                                    this.velocity.Y = this.velocity.Y + num12;
+                                                    this.Velocity.Y = this.Velocity.Y + num12;
                                                 }
                                             }
                                             else
                                             {
-                                                if (this.velocity.Y > num14)
+                                                if (this.Velocity.Y > num14)
                                                 {
-                                                    this.velocity.Y = this.velocity.Y - num12;
-                                                    if (this.velocity.Y > 0f && num14 < 0f)
+                                                    this.Velocity.Y = this.Velocity.Y - num12;
+                                                    if (this.Velocity.Y > 0f && num14 < 0f)
                                                     {
-                                                        this.velocity.Y = this.velocity.Y - num12;
+                                                        this.Velocity.Y = this.Velocity.Y - num12;
                                                     }
                                                 }
                                             }
@@ -2448,7 +2448,7 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if (this.position.Y + (float)this.height < Main.players[this.target].position.Y && num16 < 500f)
+                                                if (this.Position.Y + (float)this.height < Main.players[this.target].Position.Y && num16 < 500f)
                                                 {
                                                     if (!Main.players[this.target].dead)
                                                     {
@@ -2459,8 +2459,8 @@ namespace Terraria_Server
                                                         this.ai[3] = 0f;
                                                         this.rotation = num8;
                                                         float num17 = 5f;
-                                                        float num18 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector.X;
-                                                        float num19 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector.Y;
+                                                        float num18 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector.X;
+                                                        float num19 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector.Y;
                                                         float num20 = (float)Math.Sqrt((double)(num18 * num18 + num19 * num19));
                                                         num20 = num17 / num20;
                                                         Vector2 vector2 = vector;
@@ -2472,8 +2472,8 @@ namespace Terraria_Server
                                                         if (Main.netMode != 1)
                                                         {
                                                             int num21 = NPC.NewNPC((int)vector2.X, (int)vector2.Y, 5, 0);
-                                                            Main.npc[num21].velocity.X = vector3.X;
-                                                            Main.npc[num21].velocity.Y = vector3.Y;
+                                                            Main.npc[num21].Velocity.X = vector3.X;
+                                                            Main.npc[num21].Velocity.Y = vector3.Y;
                                                             if (Main.netMode == 2 && num21 < 1000)
                                                             {
                                                                 NetMessage.SendData(23, -1, -1, "", num21);
@@ -2501,13 +2501,13 @@ namespace Terraria_Server
                                             {
                                                 this.rotation = num8;
                                                 float num22 = 7f;
-                                                Vector2 vector4 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                float num23 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector4.X;
-                                                float num24 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector4.Y;
+                                                Vector2 vector4 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                float num23 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector4.X;
+                                                float num24 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector4.Y;
                                                 float num25 = (float)Math.Sqrt((double)(num23 * num23 + num24 * num24));
                                                 num25 = num22 / num25;
-                                                this.velocity.X = num23 * num25;
-                                                this.velocity.Y = num24 * num25;
+                                                this.Velocity.X = num23 * num25;
+                                                this.Velocity.Y = num24 * num25;
                                                 this.ai[1] = 2f;
                                             }
                                             else
@@ -2517,20 +2517,20 @@ namespace Terraria_Server
                                                     this.ai[2] += 1f;
                                                     if (this.ai[2] >= 40f)
                                                     {
-                                                        this.velocity.X = this.velocity.X * 0.98f;
-                                                        this.velocity.Y = this.velocity.Y * 0.98f;
-                                                        if ((double)this.velocity.X > -0.1 && (double)this.velocity.X < 0.1)
+                                                        this.Velocity.X = this.Velocity.X * 0.98f;
+                                                        this.Velocity.Y = this.Velocity.Y * 0.98f;
+                                                        if ((double)this.Velocity.X > -0.1 && (double)this.Velocity.X < 0.1)
                                                         {
-                                                            this.velocity.X = 0f;
+                                                            this.Velocity.X = 0f;
                                                         }
-                                                        if ((double)this.velocity.Y > -0.1 && (double)this.velocity.Y < 0.1)
+                                                        if ((double)this.Velocity.Y > -0.1 && (double)this.Velocity.Y < 0.1)
                                                         {
-                                                            this.velocity.Y = 0f;
+                                                            this.Velocity.Y = 0f;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        this.rotation = (float)Math.Atan2((double)this.velocity.Y, (double)this.velocity.X) - 1.57f;
+                                                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) - 1.57f;
                                                     }
                                                     if (this.ai[2] >= 120f)
                                                     {
@@ -2596,13 +2596,13 @@ namespace Terraria_Server
                                                 {
                                                     for (int j = 0; j < 2; j++)
                                                     {
-                                                        Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 8);
-                                                        Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
-                                                        Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 6);
+                                                        Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 8);
+                                                        Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
+                                                        Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 6);
                                                     }
                                                     for (int k = 0; k < 20; k++)
                                                     {
-                                                        Vector2 arg_28B3_0 = this.position;
+                                                        Vector2 arg_28B3_0 = this.Position;
                                                         int arg_28B3_1 = this.width;
                                                         int arg_28B3_2 = this.height;
                                                         int arg_28B3_3 = 5;
@@ -2614,7 +2614,7 @@ namespace Terraria_Server
                                                     }
                                                 }
                                             }
-                                            Vector2 arg_2932_0 = this.position;
+                                            Vector2 arg_2932_0 = this.Position;
                                             int arg_2932_1 = this.width;
                                             int arg_2932_2 = this.height;
                                             int arg_2932_3 = 5;
@@ -2623,15 +2623,15 @@ namespace Terraria_Server
                                             int arg_2932_6 = 0;
                                             newColor = default(Color);
                                             Dust.NewDust(arg_2932_0, arg_2932_1, arg_2932_2, arg_2932_3, arg_2932_4, arg_2932_5, arg_2932_6, newColor, 1f);
-                                            this.velocity.X = this.velocity.X * 0.98f;
-                                            this.velocity.Y = this.velocity.Y * 0.98f;
-                                            if ((double)this.velocity.X > -0.1 && (double)this.velocity.X < 0.1)
+                                            this.Velocity.X = this.Velocity.X * 0.98f;
+                                            this.Velocity.Y = this.Velocity.Y * 0.98f;
+                                            if ((double)this.Velocity.X > -0.1 && (double)this.Velocity.X < 0.1)
                                             {
-                                                this.velocity.X = 0f;
+                                                this.Velocity.X = 0f;
                                             }
-                                            if ((double)this.velocity.Y > -0.1 && (double)this.velocity.Y < 0.1)
+                                            if ((double)this.Velocity.Y > -0.1 && (double)this.Velocity.Y < 0.1)
                                             {
-                                                this.velocity.Y = 0f;
+                                                this.Velocity.Y = 0f;
                                                 return;
                                             }
                                         }
@@ -2643,48 +2643,48 @@ namespace Terraria_Server
                                             {
                                                 float num26 = 6f;
                                                 float num27 = 0.07f;
-                                                Vector2 vector5 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                float num28 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector5.X;
-                                                float num29 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - 120f - vector5.Y;
+                                                Vector2 vector5 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                float num28 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector5.X;
+                                                float num29 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - 120f - vector5.Y;
                                                 float num30 = (float)Math.Sqrt((double)(num28 * num28 + num29 * num29));
                                                 num30 = num26 / num30;
                                                 num28 *= num30;
                                                 num29 *= num30;
-                                                if (this.velocity.X < num28)
+                                                if (this.Velocity.X < num28)
                                                 {
-                                                    this.velocity.X = this.velocity.X + num27;
-                                                    if (this.velocity.X < 0f && num28 > 0f)
+                                                    this.Velocity.X = this.Velocity.X + num27;
+                                                    if (this.Velocity.X < 0f && num28 > 0f)
                                                     {
-                                                        this.velocity.X = this.velocity.X + num27;
+                                                        this.Velocity.X = this.Velocity.X + num27;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    if (this.velocity.X > num28)
+                                                    if (this.Velocity.X > num28)
                                                     {
-                                                        this.velocity.X = this.velocity.X - num27;
-                                                        if (this.velocity.X > 0f && num28 < 0f)
+                                                        this.Velocity.X = this.Velocity.X - num27;
+                                                        if (this.Velocity.X > 0f && num28 < 0f)
                                                         {
-                                                            this.velocity.X = this.velocity.X - num27;
+                                                            this.Velocity.X = this.Velocity.X - num27;
                                                         }
                                                     }
                                                 }
-                                                if (this.velocity.Y < num29)
+                                                if (this.Velocity.Y < num29)
                                                 {
-                                                    this.velocity.Y = this.velocity.Y + num27;
-                                                    if (this.velocity.Y < 0f && num29 > 0f)
+                                                    this.Velocity.Y = this.Velocity.Y + num27;
+                                                    if (this.Velocity.Y < 0f && num29 > 0f)
                                                     {
-                                                        this.velocity.Y = this.velocity.Y + num27;
+                                                        this.Velocity.Y = this.Velocity.Y + num27;
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    if (this.velocity.Y > num29)
+                                                    if (this.Velocity.Y > num29)
                                                     {
-                                                        this.velocity.Y = this.velocity.Y - num27;
-                                                        if (this.velocity.Y > 0f && num29 < 0f)
+                                                        this.Velocity.Y = this.Velocity.Y - num27;
+                                                        if (this.Velocity.Y > 0f && num29 < 0f)
                                                         {
-                                                            this.velocity.Y = this.velocity.Y - num27;
+                                                            this.Velocity.Y = this.Velocity.Y - num27;
                                                         }
                                                     }
                                                 }
@@ -2705,13 +2705,13 @@ namespace Terraria_Server
                                                 {
                                                     this.rotation = num8;
                                                     float num31 = 8f;
-                                                    Vector2 vector6 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                    float num32 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector6.X;
-                                                    float num33 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector6.Y;
+                                                    Vector2 vector6 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                    float num32 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector6.X;
+                                                    float num33 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector6.Y;
                                                     float num34 = (float)Math.Sqrt((double)(num32 * num32 + num33 * num33));
                                                     num34 = num31 / num34;
-                                                    this.velocity.X = num32 * num34;
-                                                    this.velocity.Y = num33 * num34;
+                                                    this.Velocity.X = num32 * num34;
+                                                    this.Velocity.Y = num33 * num34;
                                                     this.ai[1] = 2f;
                                                     return;
                                                 }
@@ -2720,20 +2720,20 @@ namespace Terraria_Server
                                                     this.ai[2] += 1f;
                                                     if (this.ai[2] >= 40f)
                                                     {
-                                                        this.velocity.X = this.velocity.X * 0.97f;
-                                                        this.velocity.Y = this.velocity.Y * 0.97f;
-                                                        if ((double)this.velocity.X > -0.1 && (double)this.velocity.X < 0.1)
+                                                        this.Velocity.X = this.Velocity.X * 0.97f;
+                                                        this.Velocity.Y = this.Velocity.Y * 0.97f;
+                                                        if ((double)this.Velocity.X > -0.1 && (double)this.Velocity.X < 0.1)
                                                         {
-                                                            this.velocity.X = 0f;
+                                                            this.Velocity.X = 0f;
                                                         }
-                                                        if ((double)this.velocity.Y > -0.1 && (double)this.velocity.Y < 0.1)
+                                                        if ((double)this.Velocity.Y > -0.1 && (double)this.Velocity.Y < 0.1)
                                                         {
-                                                            this.velocity.Y = 0f;
+                                                            this.Velocity.Y = 0f;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        this.rotation = (float)Math.Atan2((double)this.velocity.Y, (double)this.velocity.X) - 1.57f;
+                                                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) - 1.57f;
                                                     }
                                                     if (this.ai[2] >= 100f)
                                                     {
@@ -2779,9 +2779,9 @@ namespace Terraria_Server
                                             num36 = 0.03f;
                                         }
                                     }
-                                    Vector2 vector7 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                    float num37 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector7.X;
-                                    float num38 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector7.Y;
+                                    Vector2 vector7 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                    float num37 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector7.X;
+                                    float num38 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector7.Y;
                                     float num39 = (float)Math.Sqrt((double)(num37 * num37 + num38 * num38));
                                     float num40 = num39;
                                     num39 = num35 / num39;
@@ -2794,19 +2794,19 @@ namespace Terraria_Server
                                             this.ai[0] += 1f;
                                             if (this.ai[0] > 0f)
                                             {
-                                                this.velocity.Y = this.velocity.Y + 0.023f;
+                                                this.Velocity.Y = this.Velocity.Y + 0.023f;
                                             }
                                             else
                                             {
-                                                this.velocity.Y = this.velocity.Y - 0.023f;
+                                                this.Velocity.Y = this.Velocity.Y - 0.023f;
                                             }
                                             if (this.ai[0] < -100f || this.ai[0] > 100f)
                                             {
-                                                this.velocity.X = this.velocity.X + 0.023f;
+                                                this.Velocity.X = this.Velocity.X + 0.023f;
                                             }
                                             else
                                             {
-                                                this.velocity.X = this.velocity.X - 0.023f;
+                                                this.Velocity.X = this.Velocity.X - 0.023f;
                                             }
                                             if (this.ai[0] > 200f)
                                             {
@@ -2815,8 +2815,8 @@ namespace Terraria_Server
                                         }
                                         if (num40 < 150f)
                                         {
-                                            this.velocity.X = this.velocity.X + num37 * 0.007f;
-                                            this.velocity.Y = this.velocity.Y + num38 * 0.007f;
+                                            this.Velocity.X = this.Velocity.X + num37 * 0.007f;
+                                            this.Velocity.Y = this.Velocity.Y + num38 * 0.007f;
                                         }
                                     }
                                     if (Main.players[this.target].dead)
@@ -2824,41 +2824,41 @@ namespace Terraria_Server
                                         num37 = (float)this.direction * num35 / 2f;
                                         num38 = -num35 / 2f;
                                     }
-                                    if (this.velocity.X < num37)
+                                    if (this.Velocity.X < num37)
                                     {
-                                        this.velocity.X = this.velocity.X + num36;
-                                        if (this.type != 6 && this.velocity.X < 0f && num37 > 0f)
+                                        this.Velocity.X = this.Velocity.X + num36;
+                                        if (this.type != 6 && this.Velocity.X < 0f && num37 > 0f)
                                         {
-                                            this.velocity.X = this.velocity.X + num36;
+                                            this.Velocity.X = this.Velocity.X + num36;
                                         }
                                     }
                                     else
                                     {
-                                        if (this.velocity.X > num37)
+                                        if (this.Velocity.X > num37)
                                         {
-                                            this.velocity.X = this.velocity.X - num36;
-                                            if (this.type != 6 && this.velocity.X > 0f && num37 < 0f)
+                                            this.Velocity.X = this.Velocity.X - num36;
+                                            if (this.type != 6 && this.Velocity.X > 0f && num37 < 0f)
                                             {
-                                                this.velocity.X = this.velocity.X - num36;
+                                                this.Velocity.X = this.Velocity.X - num36;
                                             }
                                         }
                                     }
-                                    if (this.velocity.Y < num38)
+                                    if (this.Velocity.Y < num38)
                                     {
-                                        this.velocity.Y = this.velocity.Y + num36;
-                                        if (this.type != 6 && this.velocity.Y < 0f && num38 > 0f)
+                                        this.Velocity.Y = this.Velocity.Y + num36;
+                                        if (this.type != 6 && this.Velocity.Y < 0f && num38 > 0f)
                                         {
-                                            this.velocity.Y = this.velocity.Y + num36;
+                                            this.Velocity.Y = this.Velocity.Y + num36;
                                         }
                                     }
                                     else
                                     {
-                                        if (this.velocity.Y > num38)
+                                        if (this.Velocity.Y > num38)
                                         {
-                                            this.velocity.Y = this.velocity.Y - num36;
-                                            if (this.type != 6 && this.velocity.Y > 0f && num38 < 0f)
+                                            this.Velocity.Y = this.Velocity.Y - num36;
+                                            if (this.type != 6 && this.Velocity.Y > 0f && num38 < 0f)
                                             {
-                                                this.velocity.Y = this.velocity.Y - num36;
+                                                this.Velocity.Y = this.Velocity.Y - num36;
                                             }
                                         }
                                     }
@@ -2888,19 +2888,19 @@ namespace Terraria_Server
                                         {
                                             if (this.type == 42)
                                             {
-                                                if (this.velocity.X > 0f)
+                                                if (this.Velocity.X > 0f)
                                                 {
                                                     this.spriteDirection = 1;
                                                 }
-                                                if (this.velocity.X < 0f)
+                                                if (this.Velocity.X < 0f)
                                                 {
                                                     this.spriteDirection = -1;
                                                 }
-                                                this.rotation = this.velocity.X * 0.1f;
+                                                this.rotation = this.Velocity.X * 0.1f;
                                             }
                                             else
                                             {
-                                                this.rotation = (float)Math.Atan2((double)this.velocity.Y, (double)this.velocity.X) - 1.57f;
+                                                this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) - 1.57f;
                                             }
                                         }
                                     }
@@ -2914,38 +2914,38 @@ namespace Terraria_Server
                                         if (this.collideX)
                                         {
                                             this.netUpdate = true;
-                                            this.velocity.X = this.oldVelocity.X * -num41;
-                                            if (this.direction == -1 && this.velocity.X > 0f && this.velocity.X < 2f)
+                                            this.Velocity.X = this.oldVelocity.X * -num41;
+                                            if (this.direction == -1 && this.Velocity.X > 0f && this.Velocity.X < 2f)
                                             {
-                                                this.velocity.X = 2f;
+                                                this.Velocity.X = 2f;
                                             }
-                                            if (this.direction == 1 && this.velocity.X < 0f && this.velocity.X > -2f)
+                                            if (this.direction == 1 && this.Velocity.X < 0f && this.Velocity.X > -2f)
                                             {
-                                                this.velocity.X = -2f;
+                                                this.Velocity.X = -2f;
                                             }
                                             this.netUpdate = true;
                                         }
                                         if (this.collideY)
                                         {
                                             this.netUpdate = true;
-                                            this.velocity.Y = this.oldVelocity.Y * -num41;
-                                            if (this.velocity.Y > 0f && (double)this.velocity.Y < 1.5)
+                                            this.Velocity.Y = this.oldVelocity.Y * -num41;
+                                            if (this.Velocity.Y > 0f && (double)this.Velocity.Y < 1.5)
                                             {
-                                                this.velocity.Y = 2f;
+                                                this.Velocity.Y = 2f;
                                             }
-                                            if (this.velocity.Y < 0f && (double)this.velocity.Y > -1.5)
+                                            if (this.Velocity.Y < 0f && (double)this.Velocity.Y > -1.5)
                                             {
-                                                this.velocity.Y = -2f;
+                                                this.Velocity.Y = -2f;
                                             }
                                         }
                                         if (this.type == 23)
                                         {
-                                            Vector2 arg_368F_0 = new Vector2(this.position.X - this.velocity.X, this.position.Y - this.velocity.Y);
+                                            Vector2 arg_368F_0 = new Vector2(this.Position.X - this.Velocity.X, this.Position.Y - this.Velocity.Y);
                                             int arg_368F_1 = this.width;
                                             int arg_368F_2 = this.height;
                                             int arg_368F_3 = 6;
-                                            float arg_368F_4 = this.velocity.X * 0.2f;
-                                            float arg_368F_5 = this.velocity.Y * 0.2f;
+                                            float arg_368F_4 = this.Velocity.X * 0.2f;
+                                            float arg_368F_5 = this.Velocity.Y * 0.2f;
                                             int arg_368F_6 = 100;
                                             Color newColor = default(Color);
                                             int num42 = Dust.NewDust(arg_368F_0, arg_368F_1, arg_368F_2, arg_368F_3, arg_368F_4, arg_368F_5, arg_368F_6, newColor, 2f);
@@ -2959,7 +2959,7 @@ namespace Terraria_Server
                                         {
                                             if (Main.rand.Next(20) == 0)
                                             {
-                                                int num43 = Dust.NewDust(new Vector2(this.position.X, this.position.Y + (float)this.height * 0.25f), this.width, (int)((float)this.height * 0.5f), 18, this.velocity.X, 2f, this.alpha, this.color, this.scale);
+                                                int num43 = Dust.NewDust(new Vector2(this.Position.X, this.Position.Y + (float)this.height * 0.25f), this.width, (int)((float)this.height * 0.5f), 18, this.Velocity.X, 2f, this.alpha, this.color, this.scale);
                                                 Dust expr_376B_cp_0 = Main.dust[num43];
                                                 expr_376B_cp_0.velocity.X = expr_376B_cp_0.velocity.X * 0.5f;
                                                 Dust expr_3789_cp_0 = Main.dust[num43];
@@ -2971,11 +2971,11 @@ namespace Terraria_Server
                                     {
                                         if (Main.rand.Next(40) == 0)
                                         {
-                                            Vector2 arg_380E_0 = new Vector2(this.position.X, this.position.Y + (float)this.height * 0.25f);
+                                            Vector2 arg_380E_0 = new Vector2(this.Position.X, this.Position.Y + (float)this.height * 0.25f);
                                             int arg_380E_1 = this.width;
                                             int arg_380E_2 = (int)((float)this.height * 0.5f);
                                             int arg_380E_3 = 5;
-                                            float arg_380E_4 = this.velocity.X;
+                                            float arg_380E_4 = this.Velocity.X;
                                             float arg_380E_5 = 2f;
                                             int arg_380E_6 = 0;
                                             Color newColor = default(Color);
@@ -2988,7 +2988,7 @@ namespace Terraria_Server
                                     }
                                     if ((Main.dayTime && this.type != 6 && this.type != 23 && this.type != 42) || Main.players[this.target].dead)
                                     {
-                                        this.velocity.Y = this.velocity.Y - num36 * 2f;
+                                        this.Velocity.Y = this.Velocity.Y - num36 * 2f;
                                         if (this.timeLeft > 10)
                                         {
                                             this.timeLeft = 10;
@@ -3027,56 +3027,56 @@ namespace Terraria_Server
                                                     {
                                                         this.ai[2] = 15f;
                                                     }
-                                                    this.ai[0] = (float)NPC.NewNPC((int)(this.position.X + (float)(this.width / 2)), (int)(this.position.Y + (float)this.height), this.type + 1, this.whoAmI);
+                                                    this.ai[0] = (float)NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), this.type + 1, this.whoAmI);
                                                 }
                                                 else
                                                 {
                                                     if ((this.type == 8 || this.type == 11 || this.type == 14 || this.type == 40) && this.ai[2] > 0f)
                                                     {
-                                                        this.ai[0] = (float)NPC.NewNPC((int)(this.position.X + (float)(this.width / 2)), (int)(this.position.Y + (float)this.height), this.type, this.whoAmI);
+                                                        this.ai[0] = (float)NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), this.type, this.whoAmI);
                                                     }
                                                     else
                                                     {
-                                                        this.ai[0] = (float)NPC.NewNPC((int)(this.position.X + (float)(this.width / 2)), (int)(this.position.Y + (float)this.height), this.type + 1, this.whoAmI);
+                                                        this.ai[0] = (float)NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), this.type + 1, this.whoAmI);
                                                     }
                                                 }
                                                 Main.npc[(int)this.ai[0]].ai[1] = (float)this.whoAmI;
                                                 Main.npc[(int)this.ai[0]].ai[2] = this.ai[2] - 1f;
                                                 this.netUpdate = true;
                                             }
-                                            if ((this.type == 8 || this.type == 9 || this.type == 11 || this.type == 12 || this.type == 40 || this.type == 41) && (!Main.npc[(int)this.ai[1]].active || Main.npc[(int)this.ai[1]].aiStyle != this.aiStyle))
+                                            if ((this.type == 8 || this.type == 9 || this.type == 11 || this.type == 12 || this.type == 40 || this.type == 41) && (!Main.npc[(int)this.ai[1]].Active || Main.npc[(int)this.ai[1]].aiStyle != this.aiStyle))
                                             {
                                                 this.life = 0;
                                                 this.HitEffect(0, 10.0);
-                                                this.active = false;
+                                                this.Active = false;
                                             }
-                                            if ((this.type == 7 || this.type == 8 || this.type == 10 || this.type == 11 || this.type == 39 || this.type == 40) && !Main.npc[(int)this.ai[0]].active)
+                                            if ((this.type == 7 || this.type == 8 || this.type == 10 || this.type == 11 || this.type == 39 || this.type == 40) && !Main.npc[(int)this.ai[0]].Active)
                                             {
                                                 this.life = 0;
                                                 this.HitEffect(0, 10.0);
-                                                this.active = false;
+                                                this.Active = false;
                                             }
                                             if (this.type == 13 || this.type == 14 || this.type == 15)
                                             {
-                                                if (!Main.npc[(int)this.ai[1]].active && !Main.npc[(int)this.ai[0]].active)
+                                                if (!Main.npc[(int)this.ai[1]].Active && !Main.npc[(int)this.ai[0]].Active)
                                                 {
                                                     this.life = 0;
                                                     this.HitEffect(0, 10.0);
-                                                    this.active = false;
+                                                    this.Active = false;
                                                 }
-                                                if (this.type == 13 && !Main.npc[(int)this.ai[0]].active)
+                                                if (this.type == 13 && !Main.npc[(int)this.ai[0]].Active)
                                                 {
                                                     this.life = 0;
                                                     this.HitEffect(0, 10.0);
-                                                    this.active = false;
+                                                    this.Active = false;
                                                 }
-                                                if (this.type == 15 && !Main.npc[(int)this.ai[1]].active)
+                                                if (this.type == 15 && !Main.npc[(int)this.ai[1]].Active)
                                                 {
                                                     this.life = 0;
                                                     this.HitEffect(0, 10.0);
-                                                    this.active = false;
+                                                    this.Active = false;
                                                 }
-                                                if (this.type == 14 && !Main.npc[(int)this.ai[1]].active)
+                                                if (this.type == 14 && !Main.npc[(int)this.ai[1]].Active)
                                                 {
                                                     this.type = 13;
                                                     int num45 = this.whoAmI;
@@ -3093,7 +3093,7 @@ namespace Terraria_Server
                                                     this.netUpdate = true;
                                                     this.whoAmI = num45;
                                                 }
-                                                if (this.type == 14 && !Main.npc[(int)this.ai[0]].active)
+                                                if (this.type == 14 && !Main.npc[(int)this.ai[0]].Active)
                                                 {
                                                     int num48 = this.life;
                                                     int num49 = this.whoAmI;
@@ -3114,7 +3114,7 @@ namespace Terraria_Server
                                                     bool flag5 = true;
                                                     for (int l = 0; l < 1000; l++)
                                                     {
-                                                        if (Main.npc[l].active && (Main.npc[l].type == 13 || Main.npc[l].type == 14 || Main.npc[l].type == 15))
+                                                        if (Main.npc[l].Active && (Main.npc[l].type == 13 || Main.npc[l].type == 14 || Main.npc[l].type == 15))
                                                         {
                                                             flag5 = false;
                                                             break;
@@ -3127,15 +3127,15 @@ namespace Terraria_Server
                                                     }
                                                 }
                                             }
-                                            if (!this.active && Main.netMode == 2)
+                                            if (!this.Active && Main.netMode == 2)
                                             {
                                                 NetMessage.SendData(28, -1, -1, "", this.whoAmI, -1f);
                                             }
                                         }
-                                        int num51 = (int)(this.position.X / 16f) - 1;
-                                        int num52 = (int)((this.position.X + (float)this.width) / 16f) + 2;
-                                        int num53 = (int)(this.position.Y / 16f) - 1;
-                                        int num54 = (int)((this.position.Y + (float)this.height) / 16f) + 2;
+                                        int num51 = (int)(this.Position.X / 16f) - 1;
+                                        int num52 = (int)((this.Position.X + (float)this.width) / 16f) + 2;
+                                        int num53 = (int)(this.Position.Y / 16f) - 1;
+                                        int num54 = (int)((this.Position.Y + (float)this.height) / 16f) + 2;
                                         if (num51 < 0)
                                         {
                                             num51 = 0;
@@ -3157,15 +3157,15 @@ namespace Terraria_Server
                                         {
                                             for (int n = num53; n < num54; n++)
                                             {
-                                                if (Main.tile[m, n] != null && ((Main.tile[m, n].active && (Main.tileSolid[(int)Main.tile[m, n].type] || (Main.tileSolidTop[(int)Main.tile[m, n].type] && Main.tile[m, n].frameY == 0))) || Main.tile[m, n].liquid > 64))
+                                                if (Main.tile[m, n] != null && ((Main.tile[m, n].Active && (Main.tileSolid[(int)Main.tile[m, n].type] || (Main.tileSolidTop[(int)Main.tile[m, n].type] && Main.tile[m, n].frameY == 0))) || Main.tile[m, n].liquid > 64))
                                                 {
                                                     Vector2 vector8;
                                                     vector8.X = (float)(m * 16);
                                                     vector8.Y = (float)(n * 16);
-                                                    if (this.position.X + (float)this.width > vector8.X && this.position.X < vector8.X + 16f && this.position.Y + (float)this.height > vector8.Y && this.position.Y < vector8.Y + 16f)
+                                                    if (this.Position.X + (float)this.width > vector8.X && this.Position.X < vector8.X + 16f && this.Position.Y + (float)this.height > vector8.Y && this.Position.Y < vector8.Y + 16f)
                                                     {
                                                         flag6 = true;
-                                                        if (Main.rand.Next(40) == 0 && Main.tile[m, n].active)
+                                                        if (Main.rand.Next(40) == 0 && Main.tile[m, n].Active)
                                                         {
                                                             WorldGen.KillTile(m, n, true, true, false);
                                                         }
@@ -3189,70 +3189,70 @@ namespace Terraria_Server
                                             num55 = 11f;
                                             num56 = 0.08f;
                                         }
-                                        Vector2 vector9 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                        float num57 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector9.X;
-                                        float num58 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector9.Y;
+                                        Vector2 vector9 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                        float num57 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector9.X;
+                                        float num58 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector9.Y;
                                         float num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
                                         if (this.ai[1] > 0f)
                                         {
-                                            num57 = Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - vector9.X;
-                                            num58 = Main.npc[(int)this.ai[1]].position.Y + (float)(Main.npc[(int)this.ai[1]].height / 2) - vector9.Y;
+                                            num57 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - vector9.X;
+                                            num58 = Main.npc[(int)this.ai[1]].Position.Y + (float)(Main.npc[(int)this.ai[1]].height / 2) - vector9.Y;
                                             this.rotation = (float)Math.Atan2((double)num58, (double)num57) + 1.57f;
                                             num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
                                             num59 = (num59 - (float)this.width) / num59;
                                             num57 *= num59;
                                             num58 *= num59;
-                                            this.velocity = default(Vector2);
-                                            this.position.X = this.position.X + num57;
-                                            this.position.Y = this.position.Y + num58;
+                                            this.Velocity = default(Vector2);
+                                            this.Position.X = this.Position.X + num57;
+                                            this.Position.Y = this.Position.Y + num58;
                                             return;
                                         }
                                         if (!flag6)
                                         {
                                             this.TargetClosest(true);
-                                            this.velocity.Y = this.velocity.Y + 0.11f;
-                                            if (this.velocity.Y > num55)
+                                            this.Velocity.Y = this.Velocity.Y + 0.11f;
+                                            if (this.Velocity.Y > num55)
                                             {
-                                                this.velocity.Y = num55;
+                                                this.Velocity.Y = num55;
                                             }
-                                            if ((double)(Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y)) < (double)num55 * 0.4)
+                                            if ((double)(Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) < (double)num55 * 0.4)
                                             {
-                                                if (this.velocity.X < 0f)
+                                                if (this.Velocity.X < 0f)
                                                 {
-                                                    this.velocity.X = this.velocity.X - num56 * 1.1f;
+                                                    this.Velocity.X = this.Velocity.X - num56 * 1.1f;
                                                 }
                                                 else
                                                 {
-                                                    this.velocity.X = this.velocity.X + num56 * 1.1f;
+                                                    this.Velocity.X = this.Velocity.X + num56 * 1.1f;
                                                 }
                                             }
                                             else
                                             {
-                                                if (this.velocity.Y == num55)
+                                                if (this.Velocity.Y == num55)
                                                 {
-                                                    if (this.velocity.X < num57)
+                                                    if (this.Velocity.X < num57)
                                                     {
-                                                        this.velocity.X = this.velocity.X + num56;
+                                                        this.Velocity.X = this.Velocity.X + num56;
                                                     }
                                                     else
                                                     {
-                                                        if (this.velocity.X > num57)
+                                                        if (this.Velocity.X > num57)
                                                         {
-                                                            this.velocity.X = this.velocity.X - num56;
+                                                            this.Velocity.X = this.Velocity.X - num56;
                                                         }
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    if (this.velocity.Y > 4f)
+                                                    if (this.Velocity.Y > 4f)
                                                     {
-                                                        if (this.velocity.X < 0f)
+                                                        if (this.Velocity.X < 0f)
                                                         {
-                                                            this.velocity.X = this.velocity.X + num56 * 0.9f;
+                                                            this.Velocity.X = this.Velocity.X + num56 * 0.9f;
                                                         }
                                                         else
                                                         {
-                                                            this.velocity.X = this.velocity.X - num56 * 0.9f;
+                                                            this.Velocity.X = this.Velocity.X - num56 * 0.9f;
                                                         }
                                                     }
                                                 }
@@ -3281,35 +3281,35 @@ namespace Terraria_Server
                                             num58 *= num59;
                                             if ((this.type == 13 || this.type == 7) && !Main.players[this.target].zoneEvil)
                                             {
-                                                if ((double)(this.position.Y / 16f) > Main.rockLayer && this.timeLeft > 2)
+                                                if ((double)(this.Position.Y / 16f) > Main.rockLayer && this.timeLeft > 2)
                                                 {
                                                     this.timeLeft = 2;
                                                 }
                                                 num57 = 0f;
                                                 num58 = num55;
                                             }
-                                            if ((this.velocity.X > 0f && num57 > 0f) || (this.velocity.X < 0f && num57 < 0f) || (this.velocity.Y > 0f && num58 > 0f) || (this.velocity.Y < 0f && num58 < 0f))
+                                            if ((this.Velocity.X > 0f && num57 > 0f) || (this.Velocity.X < 0f && num57 < 0f) || (this.Velocity.Y > 0f && num58 > 0f) || (this.Velocity.Y < 0f && num58 < 0f))
                                             {
-                                                if (this.velocity.X < num57)
+                                                if (this.Velocity.X < num57)
                                                 {
-                                                    this.velocity.X = this.velocity.X + num56;
+                                                    this.Velocity.X = this.Velocity.X + num56;
                                                 }
                                                 else
                                                 {
-                                                    if (this.velocity.X > num57)
+                                                    if (this.Velocity.X > num57)
                                                     {
-                                                        this.velocity.X = this.velocity.X - num56;
+                                                        this.Velocity.X = this.Velocity.X - num56;
                                                     }
                                                 }
-                                                if (this.velocity.Y < num58)
+                                                if (this.Velocity.Y < num58)
                                                 {
-                                                    this.velocity.Y = this.velocity.Y + num56;
+                                                    this.Velocity.Y = this.Velocity.Y + num56;
                                                 }
                                                 else
                                                 {
-                                                    if (this.velocity.Y > num58)
+                                                    if (this.Velocity.Y > num58)
                                                     {
-                                                        this.velocity.Y = this.velocity.Y - num56;
+                                                        this.Velocity.Y = this.Velocity.Y - num56;
                                                     }
                                                 }
                                             }
@@ -3317,65 +3317,65 @@ namespace Terraria_Server
                                             {
                                                 if (num61 > num62)
                                                 {
-                                                    if (this.velocity.X < num57)
+                                                    if (this.Velocity.X < num57)
                                                     {
-                                                        this.velocity.X = this.velocity.X + num56 * 1.1f;
+                                                        this.Velocity.X = this.Velocity.X + num56 * 1.1f;
                                                     }
                                                     else
                                                     {
-                                                        if (this.velocity.X > num57)
+                                                        if (this.Velocity.X > num57)
                                                         {
-                                                            this.velocity.X = this.velocity.X - num56 * 1.1f;
+                                                            this.Velocity.X = this.Velocity.X - num56 * 1.1f;
                                                         }
                                                     }
-                                                    if ((double)(Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y)) < (double)num55 * 0.5)
+                                                    if ((double)(Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) < (double)num55 * 0.5)
                                                     {
-                                                        if (this.velocity.Y > 0f)
+                                                        if (this.Velocity.Y > 0f)
                                                         {
-                                                            this.velocity.Y = this.velocity.Y + num56;
+                                                            this.Velocity.Y = this.Velocity.Y + num56;
                                                         }
                                                         else
                                                         {
-                                                            this.velocity.Y = this.velocity.Y - num56;
+                                                            this.Velocity.Y = this.Velocity.Y - num56;
                                                         }
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    if (this.velocity.Y < num58)
+                                                    if (this.Velocity.Y < num58)
                                                     {
-                                                        this.velocity.Y = this.velocity.Y + num56 * 1.1f;
+                                                        this.Velocity.Y = this.Velocity.Y + num56 * 1.1f;
                                                     }
                                                     else
                                                     {
-                                                        if (this.velocity.Y > num58)
+                                                        if (this.Velocity.Y > num58)
                                                         {
-                                                            this.velocity.Y = this.velocity.Y - num56 * 1.1f;
+                                                            this.Velocity.Y = this.Velocity.Y - num56 * 1.1f;
                                                         }
                                                     }
-                                                    if ((double)(Math.Abs(this.velocity.X) + Math.Abs(this.velocity.Y)) < (double)num55 * 0.5)
+                                                    if ((double)(Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) < (double)num55 * 0.5)
                                                     {
-                                                        if (this.velocity.X > 0f)
+                                                        if (this.Velocity.X > 0f)
                                                         {
-                                                            this.velocity.X = this.velocity.X + num56;
+                                                            this.Velocity.X = this.Velocity.X + num56;
                                                         }
                                                         else
                                                         {
-                                                            this.velocity.X = this.velocity.X - num56;
+                                                            this.Velocity.X = this.Velocity.X - num56;
                                                         }
                                                     }
                                                 }
                                             }
                                         }
-                                        this.rotation = (float)Math.Atan2((double)this.velocity.Y, (double)this.velocity.X) + 1.57f;
+                                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
                                         return;
                                     }
                                     else
                                     {
                                         if (this.aiStyle == 7)
                                         {
-                                            int num63 = (int)(this.position.X + (float)(this.width / 2)) / 16;
-                                            int num64 = (int)(this.position.Y + (float)this.height + 1f) / 16;
+                                            int num63 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
+                                            int num64 = (int)(this.Position.Y + (float)this.height + 1f) / 16;
                                             if (Main.netMode == 1 || !this.townNPC)
                                             {
                                                 this.homeTileX = num63;
@@ -3393,7 +3393,7 @@ namespace Terraria_Server
                                             }
                                             for (int num65 = 0; num65 < 255; num65++)
                                             {
-                                                if (Main.players[num65].active && Main.players[num65].talkNPC == this.whoAmI)
+                                                if (Main.players[num65].Active && Main.players[num65].talkNPC == this.whoAmI)
                                                 {
                                                     flag7 = true;
                                                     if (this.ai[0] != 0f)
@@ -3403,7 +3403,7 @@ namespace Terraria_Server
                                                     this.ai[0] = 0f;
                                                     this.ai[1] = 300f;
                                                     this.ai[2] = 100f;
-                                                    if (Main.players[num65].position.X + (float)(Main.players[num65].width / 2) < this.position.X + (float)(this.width / 2))
+                                                    if (Main.players[num65].Position.X + (float)(Main.players[num65].width / 2) < this.Position.X + (float)(this.width / 2))
                                                     {
                                                         this.direction = -1;
                                                     }
@@ -3417,7 +3417,7 @@ namespace Terraria_Server
                                             {
                                                 this.life = -1;
                                                 this.HitEffect(0, 10.0);
-                                                this.active = false;
+                                                this.Active = false;
                                             }
                                             if (this.type == 37 && Main.netMode != 1)
                                             {
@@ -3435,16 +3435,16 @@ namespace Terraria_Server
                                                 bool flag8 = true;
                                                 for (int num66 = 0; num66 < 2; num66++)
                                                 {
-                                                    Rectangle rectangle = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(this.position.Y + (float)(this.height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                                    Rectangle rectangle = new Rectangle((int)(this.Position.X + (float)(this.width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(this.Position.Y + (float)(this.height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                                                     if (num66 == 1)
                                                     {
                                                         rectangle = new Rectangle(this.homeTileX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, this.homeTileY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                                                     }
                                                     for (int num67 = 0; num67 < 255; num67++)
                                                     {
-                                                        if (Main.players[num67].active)
+                                                        if (Main.players[num67].Active)
                                                         {
-                                                            Rectangle rectangle2 = new Rectangle((int)Main.players[num67].position.X, (int)Main.players[num67].position.Y, Main.players[num67].width, Main.players[num67].height);
+                                                            Rectangle rectangle2 = new Rectangle((int)Main.players[num67].Position.X, (int)Main.players[num67].Position.Y, Main.players[num67].width, Main.players[num67].height);
                                                             if (rectangle2.Intersects(rectangle))
                                                             {
                                                                 flag8 = false;
@@ -3461,10 +3461,10 @@ namespace Terraria_Server
                                                 {
                                                     if (this.type == 37 || !Collision.SolidTiles(this.homeTileX - 1, this.homeTileX + 1, this.homeTileY - 3, this.homeTileY - 1))
                                                     {
-                                                        this.velocity.X = 0f;
-                                                        this.velocity.Y = 0f;
-                                                        this.position.X = (float)(this.homeTileX * 16 + 8 - this.width / 2);
-                                                        this.position.Y = (float)(this.homeTileY * 16 - this.height) - 0.1f;
+                                                        this.Velocity.X = 0f;
+                                                        this.Velocity.Y = 0f;
+                                                        this.Position.X = (float)(this.homeTileX * 16 + 8 - this.width / 2);
+                                                        this.Position.Y = (float)(this.homeTileY * 16 - this.height) - 0.1f;
                                                         this.netUpdate = true;
                                                     }
                                                     else
@@ -3486,23 +3486,23 @@ namespace Terraria_Server
                                                     {
                                                         if (num63 == this.homeTileX && num64 == this.homeTileY)
                                                         {
-                                                            if (this.velocity.X != 0f)
+                                                            if (this.Velocity.X != 0f)
                                                             {
                                                                 this.netUpdate = true;
                                                             }
-                                                            if ((double)this.velocity.X > 0.1)
+                                                            if ((double)this.Velocity.X > 0.1)
                                                             {
-                                                                this.velocity.X = this.velocity.X - 0.1f;
+                                                                this.Velocity.X = this.Velocity.X - 0.1f;
                                                             }
                                                             else
                                                             {
-                                                                if ((double)this.velocity.X < -0.1)
+                                                                if ((double)this.Velocity.X < -0.1)
                                                                 {
-                                                                    this.velocity.X = this.velocity.X + 0.1f;
+                                                                    this.Velocity.X = this.Velocity.X + 0.1f;
                                                                 }
                                                                 else
                                                                 {
-                                                                    this.velocity.X = 0f;
+                                                                    this.Velocity.X = 0f;
                                                                 }
                                                             }
                                                         }
@@ -3528,19 +3528,19 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    if ((double)this.velocity.X > 0.1)
+                                                    if ((double)this.Velocity.X > 0.1)
                                                     {
-                                                        this.velocity.X = this.velocity.X - 0.1f;
+                                                        this.Velocity.X = this.Velocity.X - 0.1f;
                                                     }
                                                     else
                                                     {
-                                                        if ((double)this.velocity.X < -0.1)
+                                                        if ((double)this.Velocity.X < -0.1)
                                                         {
-                                                            this.velocity.X = this.velocity.X + 0.1f;
+                                                            this.Velocity.X = this.Velocity.X + 0.1f;
                                                         }
                                                         else
                                                         {
-                                                            this.velocity.X = 0f;
+                                                            this.Velocity.X = 0f;
                                                         }
                                                     }
                                                     if (Main.netMode != 1)
@@ -3608,18 +3608,18 @@ namespace Terraria_Server
                                                     }
                                                     if (Main.netMode != 1 && !this.homeless && (num63 < this.homeTileX - 35 || num63 > this.homeTileX + 35))
                                                     {
-                                                        if (this.position.X < (float)(this.homeTileX * 16) && this.direction == -1)
+                                                        if (this.Position.X < (float)(this.homeTileX * 16) && this.direction == -1)
                                                         {
                                                             this.direction = 1;
-                                                            this.velocity.X = 0.1f;
+                                                            this.Velocity.X = 0.1f;
                                                             this.netUpdate = true;
                                                         }
                                                         else
                                                         {
-                                                            if (this.position.X > (float)(this.homeTileX * 16) && this.direction == 1)
+                                                            if (this.Position.X > (float)(this.homeTileX * 16) && this.direction == 1)
                                                             {
                                                                 this.direction = -1;
-                                                                this.velocity.X = -0.1f;
+                                                                this.Velocity.X = -0.1f;
                                                                 this.netUpdate = true;
                                                             }
                                                         }
@@ -3636,7 +3636,7 @@ namespace Terraria_Server
                                                         this.ai[2] = 60f;
                                                         this.netUpdate = true;
                                                     }
-                                                    if (this.closeDoor && ((this.position.X + (float)(this.width / 2)) / 16f > (float)(this.doorX + 2) || (this.position.X + (float)(this.width / 2)) / 16f < (float)(this.doorX - 2)))
+                                                    if (this.closeDoor && ((this.Position.X + (float)(this.width / 2)) / 16f > (float)(this.doorX + 2) || (this.Position.X + (float)(this.width / 2)) / 16f < (float)(this.doorX - 2)))
                                                     {
                                                         bool flag9 = WorldGen.CloseDoor(this.doorX, this.doorY, false, DoorOpener.NPC);
                                                         if (flag9)
@@ -3644,49 +3644,49 @@ namespace Terraria_Server
                                                             this.closeDoor = false;
                                                             NetMessage.SendData(19, -1, -1, "", 1, (float)this.doorX, (float)this.doorY, (float)this.direction);
                                                         }
-                                                        if ((this.position.X + (float)(this.width / 2)) / 16f > (float)(this.doorX + 4) || (this.position.X + (float)(this.width / 2)) / 16f < (float)(this.doorX - 4) || (this.position.Y + (float)(this.height / 2)) / 16f > (float)(this.doorY + 4) || (this.position.Y + (float)(this.height / 2)) / 16f < (float)(this.doorY - 4))
+                                                        if ((this.Position.X + (float)(this.width / 2)) / 16f > (float)(this.doorX + 4) || (this.Position.X + (float)(this.width / 2)) / 16f < (float)(this.doorX - 4) || (this.Position.Y + (float)(this.height / 2)) / 16f > (float)(this.doorY + 4) || (this.Position.Y + (float)(this.height / 2)) / 16f < (float)(this.doorY - 4))
                                                         {
                                                             this.closeDoor = false;
                                                         }
                                                     }
-                                                    if (this.velocity.X < -1f || this.velocity.X > 1f)
+                                                    if (this.Velocity.X < -1f || this.Velocity.X > 1f)
                                                     {
-                                                        if (this.velocity.Y == 0f)
+                                                        if (this.Velocity.Y == 0f)
                                                         {
-                                                            this.velocity *= 0.8f;
+                                                            this.Velocity *= 0.8f;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        if ((double)this.velocity.X < 1.15 && this.direction == 1)
+                                                        if ((double)this.Velocity.X < 1.15 && this.direction == 1)
                                                         {
-                                                            this.velocity.X = this.velocity.X + 0.07f;
-                                                            if (this.velocity.X > 1f)
+                                                            this.Velocity.X = this.Velocity.X + 0.07f;
+                                                            if (this.Velocity.X > 1f)
                                                             {
-                                                                this.velocity.X = 1f;
+                                                                this.Velocity.X = 1f;
                                                             }
                                                         }
                                                         else
                                                         {
-                                                            if (this.velocity.X > -1f && this.direction == -1)
+                                                            if (this.Velocity.X > -1f && this.direction == -1)
                                                             {
-                                                                this.velocity.X = this.velocity.X - 0.07f;
-                                                                if (this.velocity.X > 1f)
+                                                                this.Velocity.X = this.Velocity.X - 0.07f;
+                                                                if (this.Velocity.X > 1f)
                                                                 {
-                                                                    this.velocity.X = 1f;
+                                                                    this.Velocity.X = 1f;
                                                                 }
                                                             }
                                                         }
                                                     }
-                                                    if (this.velocity.Y == 0f)
+                                                    if (this.Velocity.Y == 0f)
                                                     {
-                                                        if (this.position.X == this.ai[2])
+                                                        if (this.Position.X == this.ai[2])
                                                         {
                                                             this.direction *= -1;
                                                         }
                                                         this.ai[2] = -1f;
-                                                        int num68 = (int)((this.position.X + (float)(this.width / 2) + (float)(15 * this.direction)) / 16f);
-                                                        int num69 = (int)((this.position.Y + (float)this.height - 16f) / 16f);
+                                                        int num68 = (int)((this.Position.X + (float)(this.width / 2) + (float)(15 * this.direction)) / 16f);
+                                                        int num69 = (int)((this.Position.Y + (float)this.height - 16f) / 16f);
                                                         if (Main.tile[num68, num69] == null)
                                                         {
                                                             Main.tile[num68, num69] = new Tile();
@@ -3715,7 +3715,7 @@ namespace Terraria_Server
                                                         {
                                                             Main.tile[num68 + this.direction, num69 + 1] = new Tile();
                                                         }
-                                                        if (this.townNPC && Main.tile[num68, num69 - 2].active && Main.tile[num68, num69 - 2].type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
+                                                        if (this.townNPC && Main.tile[num68, num69 - 2].Active && Main.tile[num68, num69 - 2].type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
                                                             if (Main.netMode != 1)
                                                             {
@@ -3747,15 +3747,15 @@ namespace Terraria_Server
                                                         }
                                                         else
                                                         {
-                                                            if ((this.velocity.X < 0f && this.spriteDirection == -1) || (this.velocity.X > 0f && this.spriteDirection == 1))
+                                                            if ((this.Velocity.X < 0f && this.spriteDirection == -1) || (this.Velocity.X > 0f && this.spriteDirection == 1))
                                                             {
-                                                                if (Main.tile[num68, num69 - 2].active && Main.tileSolid[(int)Main.tile[num68, num69 - 2].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 2].type])
+                                                                if (Main.tile[num68, num69 - 2].Active && Main.tileSolid[(int)Main.tile[num68, num69 - 2].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 2].type])
                                                                 {
                                                                     if ((this.direction == 1 && !Collision.SolidTiles(num68 - 2, num68 - 1, num69 - 5, num69 - 1)) || (this.direction == -1 && !Collision.SolidTiles(num68 + 1, num68 + 2, num69 - 5, num69 - 1)))
                                                                     {
                                                                         if (!Collision.SolidTiles(num68, num68, num69 - 5, num69 - 3))
                                                                         {
-                                                                            this.velocity.Y = -6f;
+                                                                            this.Velocity.Y = -6f;
                                                                             this.netUpdate = true;
                                                                         }
                                                                         else
@@ -3772,13 +3772,13 @@ namespace Terraria_Server
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (Main.tile[num68, num69 - 1].active && Main.tileSolid[(int)Main.tile[num68, num69 - 1].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 1].type])
+                                                                    if (Main.tile[num68, num69 - 1].Active && Main.tileSolid[(int)Main.tile[num68, num69 - 1].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 1].type])
                                                                     {
                                                                         if ((this.direction == 1 && !Collision.SolidTiles(num68 - 2, num68 - 1, num69 - 4, num69 - 1)) || (this.direction == -1 && !Collision.SolidTiles(num68 + 1, num68 + 2, num69 - 4, num69 - 1)))
                                                                         {
                                                                             if (!Collision.SolidTiles(num68, num68, num69 - 4, num69 - 2))
                                                                             {
-                                                                                this.velocity.Y = -5f;
+                                                                                this.Velocity.Y = -5f;
                                                                                 this.netUpdate = true;
                                                                             }
                                                                             else
@@ -3795,11 +3795,11 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (Main.tile[num68, num69].active && Main.tileSolid[(int)Main.tile[num68, num69].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69].type])
+                                                                        if (Main.tile[num68, num69].Active && Main.tileSolid[(int)Main.tile[num68, num69].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69].type])
                                                                         {
                                                                             if ((this.direction == 1 && !Collision.SolidTiles(num68 - 2, num68, num69 - 3, num69 - 1)) || (this.direction == -1 && !Collision.SolidTiles(num68, num68 + 2, num69 - 3, num69 - 1)))
                                                                             {
-                                                                                this.velocity.Y = -3.6f;
+                                                                                this.Velocity.Y = -3.6f;
                                                                                 this.netUpdate = true;
                                                                             }
                                                                             else
@@ -3846,10 +3846,10 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (num63 >= this.homeTileX - 35 && num63 <= this.homeTileX + 35 && (!Main.tile[num68, num69 + 1].active || !Main.tileSolid[(int)Main.tile[num68, num69 + 1].type]) && (!Main.tile[num68 - this.direction, num69 + 1].active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 1].type]) && (!Main.tile[num68, num69 + 2].active || !Main.tileSolid[(int)Main.tile[num68, num69 + 2].type]) && (!Main.tile[num68 - this.direction, num69 + 2].active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 2].type]) && (!Main.tile[num68, num69 + 3].active || !Main.tileSolid[(int)Main.tile[num68, num69 + 3].type]) && (!Main.tile[num68 - this.direction, num69 + 3].active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 3].type]) && (!Main.tile[num68, num69 + 4].active || !Main.tileSolid[(int)Main.tile[num68, num69 + 4].type]) && (!Main.tile[num68 - this.direction, num69 + 4].active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 4].type]) && this.type != 46)
+                                                                        if (num63 >= this.homeTileX - 35 && num63 <= this.homeTileX + 35 && (!Main.tile[num68, num69 + 1].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 1].type]) && (!Main.tile[num68 - this.direction, num69 + 1].Active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 1].type]) && (!Main.tile[num68, num69 + 2].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 2].type]) && (!Main.tile[num68 - this.direction, num69 + 2].Active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 2].type]) && (!Main.tile[num68, num69 + 3].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 3].type]) && (!Main.tile[num68 - this.direction, num69 + 3].Active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 3].type]) && (!Main.tile[num68, num69 + 4].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 4].type]) && (!Main.tile[num68 - this.direction, num69 + 4].Active || !Main.tileSolid[(int)Main.tile[num68 - this.direction, num69 + 4].type]) && this.type != 46)
                                                                         {
                                                                             this.direction *= -1;
-                                                                            this.velocity.X = this.velocity.X * -1f;
+                                                                            this.Velocity.X = this.Velocity.X * -1f;
                                                                             this.netUpdate = true;
                                                                         }
                                                                     }
@@ -3857,18 +3857,18 @@ namespace Terraria_Server
                                                                 catch
                                                                 {
                                                                 }
-                                                                if (this.velocity.Y < 0f)
+                                                                if (this.Velocity.Y < 0f)
                                                                 {
-                                                                    this.ai[2] = this.position.X;
+                                                                    this.ai[2] = this.Position.X;
                                                                 }
                                                             }
-                                                            if (this.velocity.Y < 0f && this.wet)
+                                                            if (this.Velocity.Y < 0f && this.wet)
                                                             {
-                                                                this.velocity.Y = this.velocity.Y * 1.2f;
+                                                                this.Velocity.Y = this.Velocity.Y * 1.2f;
                                                             }
-                                                            if (this.velocity.Y < 0f && this.type == 46)
+                                                            if (this.Velocity.Y < 0f && this.type == 46)
                                                             {
-                                                                this.velocity.Y = this.velocity.Y * 1.2f;
+                                                                this.Velocity.Y = this.Velocity.Y * 1.2f;
                                                                 return;
                                                             }
                                                         }
@@ -3881,10 +3881,10 @@ namespace Terraria_Server
                                             if (this.aiStyle == 8)
                                             {
                                                 this.TargetClosest(true);
-                                                this.velocity.X = this.velocity.X * 0.93f;
-                                                if ((double)this.velocity.X > -0.1 && (double)this.velocity.X < 0.1)
+                                                this.Velocity.X = this.Velocity.X * 0.93f;
+                                                if ((double)this.Velocity.X > -0.1 && (double)this.Velocity.X < 0.1)
                                                 {
-                                                    this.velocity.X = 0f;
+                                                    this.Velocity.X = 0f;
                                                 }
                                                 if (this.ai[0] == 0f)
                                                 {
@@ -3896,7 +3896,7 @@ namespace Terraria_Server
                                                     {
                                                         if (this.type == 29 || this.type == 45)
                                                         {
-                                                            Vector2 arg_5FFC_0 = new Vector2(this.position.X, this.position.Y);
+                                                            Vector2 arg_5FFC_0 = new Vector2(this.Position.X, this.Position.Y);
                                                             int arg_5FFC_1 = this.width;
                                                             int arg_5FFC_2 = this.height;
                                                             int arg_5FFC_3 = 27;
@@ -3916,7 +3916,7 @@ namespace Terraria_Server
                                                         {
                                                             if (this.type == 32)
                                                             {
-                                                                Vector2 arg_6098_0 = new Vector2(this.position.X, this.position.Y);
+                                                                Vector2 arg_6098_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                 int arg_6098_1 = this.width;
                                                                 int arg_6098_2 = this.height;
                                                                 int arg_6098_3 = 29;
@@ -3931,7 +3931,7 @@ namespace Terraria_Server
                                                             }
                                                             else
                                                             {
-                                                                Vector2 arg_610F_0 = new Vector2(this.position.X, this.position.Y);
+                                                                Vector2 arg_610F_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                 int arg_610F_1 = this.width;
                                                                 int arg_610F_2 = this.height;
                                                                 int arg_610F_3 = 6;
@@ -3946,17 +3946,17 @@ namespace Terraria_Server
                                                             }
                                                         }
                                                     }
-                                                    this.position.X = this.ai[2] * 16f - (float)(this.width / 2) + 8f;
-                                                    this.position.Y = this.ai[3] * 16f - (float)this.height;
-                                                    this.velocity.X = 0f;
-                                                    this.velocity.Y = 0f;
+                                                    this.Position.X = this.ai[2] * 16f - (float)(this.width / 2) + 8f;
+                                                    this.Position.Y = this.ai[3] * 16f - (float)this.height;
+                                                    this.Velocity.X = 0f;
+                                                    this.Velocity.Y = 0f;
                                                     this.ai[2] = 0f;
                                                     this.ai[3] = 0f;
                                                     for (int num74 = 0; num74 < 50; num74++)
                                                     {
                                                         if (this.type == 29 || this.type == 45)
                                                         {
-                                                            Vector2 arg_625E_0 = new Vector2(this.position.X, this.position.Y);
+                                                            Vector2 arg_625E_0 = new Vector2(this.Position.X, this.Position.Y);
                                                             int arg_625E_1 = this.width;
                                                             int arg_625E_2 = this.height;
                                                             int arg_625E_3 = 27;
@@ -3976,7 +3976,7 @@ namespace Terraria_Server
                                                         {
                                                             if (this.type == 32)
                                                             {
-                                                                Vector2 arg_62FA_0 = new Vector2(this.position.X, this.position.Y);
+                                                                Vector2 arg_62FA_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                 int arg_62FA_1 = this.width;
                                                                 int arg_62FA_2 = this.height;
                                                                 int arg_62FA_3 = 29;
@@ -3991,7 +3991,7 @@ namespace Terraria_Server
                                                             }
                                                             else
                                                             {
-                                                                Vector2 arg_6371_0 = new Vector2(this.position.X, this.position.Y);
+                                                                Vector2 arg_6371_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                 int arg_6371_1 = this.width;
                                                                 int arg_6371_2 = this.height;
                                                                 int arg_6371_3 = 6;
@@ -4018,14 +4018,14 @@ namespace Terraria_Server
                                                     if (this.ai[0] >= 650f && Main.netMode != 1)
                                                     {
                                                         this.ai[0] = 1f;
-                                                        int num78 = (int)Main.players[this.target].position.X / 16;
-                                                        int num79 = (int)Main.players[this.target].position.Y / 16;
-                                                        int num80 = (int)this.position.X / 16;
-                                                        int num81 = (int)this.position.Y / 16;
+                                                        int num78 = (int)Main.players[this.target].Position.X / 16;
+                                                        int num79 = (int)Main.players[this.target].Position.Y / 16;
+                                                        int num80 = (int)this.Position.X / 16;
+                                                        int num81 = (int)this.Position.Y / 16;
                                                         int num82 = 20;
                                                         int num83 = 0;
                                                         bool flag11 = false;
-                                                        if (Math.Abs(this.position.X - Main.players[this.target].position.X) + Math.Abs(this.position.Y - Main.players[this.target].position.Y) > 2000f)
+                                                        if (Math.Abs(this.Position.X - Main.players[this.target].Position.X) + Math.Abs(this.Position.Y - Main.players[this.target].Position.Y) > 2000f)
                                                         {
                                                             num83 = 100;
                                                             flag11 = true;
@@ -4037,7 +4037,7 @@ namespace Terraria_Server
                                                             int num85 = Main.rand.Next(num79 - num82, num79 + num82);
                                                             for (int num86 = num85; num86 < num79 + num82; num86++)
                                                             {
-                                                                if ((num86 < num79 - 4 || num86 > num79 + 4 || num84 < num78 - 4 || num84 > num78 + 4) && (num86 < num81 - 1 || num86 > num81 + 1 || num84 < num80 - 1 || num84 > num80 + 1) && Main.tile[num84, num86].active)
+                                                                if ((num86 < num79 - 4 || num86 > num79 + 4 || num84 < num78 - 4 || num84 > num78 + 4) && (num86 < num81 - 1 || num86 > num81 + 1 || num84 < num80 - 1 || num84 > num80 + 1) && Main.tile[num84, num86].Active)
                                                                 {
                                                                     bool flag12 = true;
                                                                     if (this.type == 32 && Main.tile[num84, num86 - 1].wall == 0)
@@ -4074,17 +4074,17 @@ namespace Terraria_Server
                                                         {
                                                             if (this.type == 29 || this.type == 45)
                                                             {
-                                                                NPC.NewNPC((int)this.position.X + this.width / 2, (int)this.position.Y - 8, 30, 0);
+                                                                NPC.NewNPC((int)this.Position.X + this.width / 2, (int)this.Position.Y - 8, 30, 0);
                                                             }
                                                             else
                                                             {
                                                                 if (this.type == 32)
                                                                 {
-                                                                    NPC.NewNPC((int)this.position.X + this.width / 2, (int)this.position.Y - 8, 33, 0);
+                                                                    NPC.NewNPC((int)this.Position.X + this.width / 2, (int)this.Position.Y - 8, 33, 0);
                                                                 }
                                                                 else
                                                                 {
-                                                                    NPC.NewNPC((int)this.position.X + this.width / 2 + this.direction * 8, (int)this.position.Y + 20, 25, 0);
+                                                                    NPC.NewNPC((int)this.Position.X + this.width / 2 + this.direction * 8, (int)this.Position.Y + 20, 25, 0);
                                                                 }
                                                             }
                                                         }
@@ -4094,12 +4094,12 @@ namespace Terraria_Server
                                                 {
                                                     if (Main.rand.Next(5) == 0)
                                                     {
-                                                        Vector2 arg_680C_0 = new Vector2(this.position.X, this.position.Y + 2f);
+                                                        Vector2 arg_680C_0 = new Vector2(this.Position.X, this.Position.Y + 2f);
                                                         int arg_680C_1 = this.width;
                                                         int arg_680C_2 = this.height;
                                                         int arg_680C_3 = 27;
-                                                        float arg_680C_4 = this.velocity.X * 0.2f;
-                                                        float arg_680C_5 = this.velocity.Y * 0.2f;
+                                                        float arg_680C_4 = this.Velocity.X * 0.2f;
+                                                        float arg_680C_5 = this.Velocity.Y * 0.2f;
                                                         int arg_680C_6 = 100;
                                                         Color newColor = default(Color);
                                                         int num87 = Dust.NewDust(arg_680C_0, arg_680C_1, arg_680C_2, arg_680C_3, arg_680C_4, arg_680C_5, arg_680C_6, newColor, 1.5f);
@@ -4116,12 +4116,12 @@ namespace Terraria_Server
                                                     {
                                                         if (Main.rand.Next(2) == 0)
                                                         {
-                                                            Vector2 arg_68D6_0 = new Vector2(this.position.X, this.position.Y + 2f);
+                                                            Vector2 arg_68D6_0 = new Vector2(this.Position.X, this.Position.Y + 2f);
                                                             int arg_68D6_1 = this.width;
                                                             int arg_68D6_2 = this.height;
                                                             int arg_68D6_3 = 29;
-                                                            float arg_68D6_4 = this.velocity.X * 0.2f;
-                                                            float arg_68D6_5 = this.velocity.Y * 0.2f;
+                                                            float arg_68D6_4 = this.Velocity.X * 0.2f;
+                                                            float arg_68D6_5 = this.Velocity.Y * 0.2f;
                                                             int arg_68D6_6 = 100;
                                                             Color newColor = default(Color);
                                                             int num88 = Dust.NewDust(arg_68D6_0, arg_68D6_1, arg_68D6_2, arg_68D6_3, arg_68D6_4, arg_68D6_5, arg_68D6_6, newColor, 2f);
@@ -4137,12 +4137,12 @@ namespace Terraria_Server
                                                     {
                                                         if (Main.rand.Next(2) == 0)
                                                         {
-                                                            Vector2 arg_6999_0 = new Vector2(this.position.X, this.position.Y + 2f);
+                                                            Vector2 arg_6999_0 = new Vector2(this.Position.X, this.Position.Y + 2f);
                                                             int arg_6999_1 = this.width;
                                                             int arg_6999_2 = this.height;
                                                             int arg_6999_3 = 6;
-                                                            float arg_6999_4 = this.velocity.X * 0.2f;
-                                                            float arg_6999_5 = this.velocity.Y * 0.2f;
+                                                            float arg_6999_4 = this.Velocity.X * 0.2f;
+                                                            float arg_6999_5 = this.Velocity.Y * 0.2f;
                                                             int arg_6999_6 = 100;
                                                             Color newColor = default(Color);
                                                             int num89 = Dust.NewDust(arg_6999_0, arg_6999_1, arg_6999_2, arg_6999_3, arg_6999_4, arg_6999_5, arg_6999_6, newColor, 2f);
@@ -4168,13 +4168,13 @@ namespace Terraria_Server
                                                         {
                                                             NPC.maxSpawns = 8;
                                                         }
-                                                        Vector2 vector10 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                        float num91 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector10.X;
-                                                        float num92 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector10.Y;
+                                                        Vector2 vector10 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                        float num91 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector10.X;
+                                                        float num92 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector10.Y;
                                                         float num93 = (float)Math.Sqrt((double)(num91 * num91 + num92 * num92));
                                                         num93 = num90 / num93;
-                                                        this.velocity.X = num91 * num93;
-                                                        this.velocity.Y = num92 * num93;
+                                                        this.Velocity.X = num91 * num93;
+                                                        this.Velocity.Y = num92 * num93;
                                                     }
                                                     if (this.timeLeft > 100)
                                                     {
@@ -4184,12 +4184,12 @@ namespace Terraria_Server
                                                     {
                                                         if (this.type == 30)
                                                         {
-                                                            Vector2 arg_6B8D_0 = new Vector2(this.position.X, this.position.Y + 2f);
+                                                            Vector2 arg_6B8D_0 = new Vector2(this.Position.X, this.Position.Y + 2f);
                                                             int arg_6B8D_1 = this.width;
                                                             int arg_6B8D_2 = this.height;
                                                             int arg_6B8D_3 = 27;
-                                                            float arg_6B8D_4 = this.velocity.X * 0.2f;
-                                                            float arg_6B8D_5 = this.velocity.Y * 0.2f;
+                                                            float arg_6B8D_4 = this.Velocity.X * 0.2f;
+                                                            float arg_6B8D_5 = this.Velocity.Y * 0.2f;
                                                             int arg_6B8D_6 = 100;
                                                             Color newColor = default(Color);
                                                             int num95 = Dust.NewDust(arg_6B8D_0, arg_6B8D_1, arg_6B8D_2, arg_6B8D_3, arg_6B8D_4, arg_6B8D_5, arg_6B8D_6, newColor, 2f);
@@ -4197,20 +4197,20 @@ namespace Terraria_Server
                                                             Dust expr_6BAA = Main.dust[num95];
                                                             expr_6BAA.velocity *= 0.3f;
                                                             Dust expr_6BCC_cp_0 = Main.dust[num95];
-                                                            expr_6BCC_cp_0.velocity.X = expr_6BCC_cp_0.velocity.X - this.velocity.X * 0.2f;
+                                                            expr_6BCC_cp_0.velocity.X = expr_6BCC_cp_0.velocity.X - this.Velocity.X * 0.2f;
                                                             Dust expr_6BF6_cp_0 = Main.dust[num95];
-                                                            expr_6BF6_cp_0.velocity.Y = expr_6BF6_cp_0.velocity.Y - this.velocity.Y * 0.2f;
+                                                            expr_6BF6_cp_0.velocity.Y = expr_6BF6_cp_0.velocity.Y - this.Velocity.Y * 0.2f;
                                                         }
                                                         else
                                                         {
                                                             if (this.type == 33)
                                                             {
-                                                                Vector2 arg_6C87_0 = new Vector2(this.position.X, this.position.Y + 2f);
+                                                                Vector2 arg_6C87_0 = new Vector2(this.Position.X, this.Position.Y + 2f);
                                                                 int arg_6C87_1 = this.width;
                                                                 int arg_6C87_2 = this.height;
                                                                 int arg_6C87_3 = 29;
-                                                                float arg_6C87_4 = this.velocity.X * 0.2f;
-                                                                float arg_6C87_5 = this.velocity.Y * 0.2f;
+                                                                float arg_6C87_4 = this.Velocity.X * 0.2f;
+                                                                float arg_6C87_5 = this.Velocity.Y * 0.2f;
                                                                 int arg_6C87_6 = 100;
                                                                 Color newColor = default(Color);
                                                                 int num96 = Dust.NewDust(arg_6C87_0, arg_6C87_1, arg_6C87_2, arg_6C87_3, arg_6C87_4, arg_6C87_5, arg_6C87_6, newColor, 2f);
@@ -4222,12 +4222,12 @@ namespace Terraria_Server
                                                             }
                                                             else
                                                             {
-                                                                Vector2 arg_6D3E_0 = new Vector2(this.position.X, this.position.Y + 2f);
+                                                                Vector2 arg_6D3E_0 = new Vector2(this.Position.X, this.Position.Y + 2f);
                                                                 int arg_6D3E_1 = this.width;
                                                                 int arg_6D3E_2 = this.height;
                                                                 int arg_6D3E_3 = 6;
-                                                                float arg_6D3E_4 = this.velocity.X * 0.2f;
-                                                                float arg_6D3E_5 = this.velocity.Y * 0.2f;
+                                                                float arg_6D3E_4 = this.Velocity.X * 0.2f;
+                                                                float arg_6D3E_5 = this.Velocity.Y * 0.2f;
                                                                 int arg_6D3E_6 = 100;
                                                                 Color newColor = default(Color);
                                                                 int num97 = Dust.NewDust(arg_6D3E_0, arg_6D3E_1, arg_6D3E_2, arg_6D3E_3, arg_6D3E_4, arg_6D3E_5, arg_6D3E_6, newColor, 2f);
@@ -4247,9 +4247,9 @@ namespace Terraria_Server
                                                     float num98 = 1f;
                                                     float num99 = 0.011f;
                                                     this.TargetClosest(true);
-                                                    Vector2 vector11 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                    float num100 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector11.X;
-                                                    float num101 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector11.Y;
+                                                    Vector2 vector11 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                    float num100 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector11.X;
+                                                    float num101 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector11.Y;
                                                     float num102 = (float)Math.Sqrt((double)(num100 * num100 + num101 * num101));
                                                     float num103 = num102;
                                                     this.ai[1] += 1f;
@@ -4267,19 +4267,19 @@ namespace Terraria_Server
                                                         this.ai[0] += 0.9f;
                                                         if (this.ai[0] > 0f)
                                                         {
-                                                            this.velocity.Y = this.velocity.Y + 0.019f;
+                                                            this.Velocity.Y = this.Velocity.Y + 0.019f;
                                                         }
                                                         else
                                                         {
-                                                            this.velocity.Y = this.velocity.Y - 0.019f;
+                                                            this.Velocity.Y = this.Velocity.Y - 0.019f;
                                                         }
                                                         if (this.ai[0] < -100f || this.ai[0] > 100f)
                                                         {
-                                                            this.velocity.X = this.velocity.X + 0.019f;
+                                                            this.Velocity.X = this.Velocity.X + 0.019f;
                                                         }
                                                         else
                                                         {
-                                                            this.velocity.X = this.velocity.X - 0.019f;
+                                                            this.Velocity.X = this.Velocity.X - 0.019f;
                                                         }
                                                         if (this.ai[0] > 200f)
                                                         {
@@ -4315,26 +4315,26 @@ namespace Terraria_Server
                                                         num100 = (float)this.direction * num98 / 2f;
                                                         num101 = -num98 / 2f;
                                                     }
-                                                    if (this.velocity.X < num100)
+                                                    if (this.Velocity.X < num100)
                                                     {
-                                                        this.velocity.X = this.velocity.X + num99;
+                                                        this.Velocity.X = this.Velocity.X + num99;
                                                     }
                                                     else
                                                     {
-                                                        if (this.velocity.X > num100)
+                                                        if (this.Velocity.X > num100)
                                                         {
-                                                            this.velocity.X = this.velocity.X - num99;
+                                                            this.Velocity.X = this.Velocity.X - num99;
                                                         }
                                                     }
-                                                    if (this.velocity.Y < num101)
+                                                    if (this.Velocity.Y < num101)
                                                     {
-                                                        this.velocity.Y = this.velocity.Y + num99;
+                                                        this.Velocity.Y = this.Velocity.Y + num99;
                                                     }
                                                     else
                                                     {
-                                                        if (this.velocity.Y > num101)
+                                                        if (this.Velocity.Y > num101)
                                                         {
-                                                            this.velocity.Y = this.velocity.Y - num99;
+                                                            this.Velocity.Y = this.Velocity.Y - num99;
                                                         }
                                                     }
                                                     if (num100 > 0f)
@@ -4359,12 +4359,12 @@ namespace Terraria_Server
                                                             this.ai[0] = 1f;
                                                             if (this.type != 68)
                                                             {
-                                                                int num104 = NPC.NewNPC((int)(this.position.X + (float)(this.width / 2)), (int)this.position.Y + this.height / 2, 36, this.whoAmI);
+                                                                int num104 = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)this.Position.Y + this.height / 2, 36, this.whoAmI);
                                                                 Main.npc[num104].ai[0] = -1f;
                                                                 Main.npc[num104].ai[1] = (float)this.whoAmI;
                                                                 Main.npc[num104].target = this.target;
                                                                 Main.npc[num104].netUpdate = true;
-                                                                num104 = NPC.NewNPC((int)(this.position.X + (float)(this.width / 2)), (int)this.position.Y + this.height / 2, 36, this.whoAmI);
+                                                                num104 = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)this.Position.Y + this.height / 2, 36, this.whoAmI);
                                                                 Main.npc[num104].ai[0] = 1f;
                                                                 Main.npc[num104].ai[1] = (float)this.whoAmI;
                                                                 Main.npc[num104].ai[3] = 150f;
@@ -4376,10 +4376,10 @@ namespace Terraria_Server
                                                         {
                                                             this.ai[1] = 2f;
                                                         }
-                                                        if (Main.players[this.target].dead || Math.Abs(this.position.X - Main.players[this.target].position.X) > 2000f || Math.Abs(this.position.Y - Main.players[this.target].position.Y) > 2000f)
+                                                        if (Main.players[this.target].dead || Math.Abs(this.Position.X - Main.players[this.target].Position.X) > 2000f || Math.Abs(this.Position.Y - Main.players[this.target].Position.Y) > 2000f)
                                                         {
                                                             this.TargetClosest(true);
-                                                            if (Main.players[this.target].dead || Math.Abs(this.position.X - Main.players[this.target].position.X) > 2000f || Math.Abs(this.position.Y - Main.players[this.target].position.Y) > 2000f)
+                                                            if (Main.players[this.target].dead || Math.Abs(this.Position.X - Main.players[this.target].Position.X) > 2000f || Math.Abs(this.Position.Y - Main.players[this.target].Position.Y) > 2000f)
                                                             {
                                                                 this.ai[1] = 3f;
                                                             }
@@ -4398,56 +4398,56 @@ namespace Terraria_Server
                                                                 this.TargetClosest(true);
                                                                 this.netUpdate = true;
                                                             }
-                                                            this.rotation = this.velocity.X / 15f;
-                                                            if (this.position.Y > Main.players[this.target].position.Y - 250f)
+                                                            this.rotation = this.Velocity.X / 15f;
+                                                            if (this.Position.Y > Main.players[this.target].Position.Y - 250f)
                                                             {
-                                                                if (this.velocity.Y > 0f)
+                                                                if (this.Velocity.Y > 0f)
                                                                 {
-                                                                    this.velocity.Y = this.velocity.Y * 0.98f;
+                                                                    this.Velocity.Y = this.Velocity.Y * 0.98f;
                                                                 }
-                                                                this.velocity.Y = this.velocity.Y - 0.02f;
-                                                                if (this.velocity.Y > 2f)
+                                                                this.Velocity.Y = this.Velocity.Y - 0.02f;
+                                                                if (this.Velocity.Y > 2f)
                                                                 {
-                                                                    this.velocity.Y = 2f;
+                                                                    this.Velocity.Y = 2f;
                                                                 }
                                                             }
                                                             else
                                                             {
-                                                                if (this.position.Y < Main.players[this.target].position.Y - 250f)
+                                                                if (this.Position.Y < Main.players[this.target].Position.Y - 250f)
                                                                 {
-                                                                    if (this.velocity.Y < 0f)
+                                                                    if (this.Velocity.Y < 0f)
                                                                     {
-                                                                        this.velocity.Y = this.velocity.Y * 0.98f;
+                                                                        this.Velocity.Y = this.Velocity.Y * 0.98f;
                                                                     }
-                                                                    this.velocity.Y = this.velocity.Y + 0.02f;
-                                                                    if (this.velocity.Y < -2f)
+                                                                    this.Velocity.Y = this.Velocity.Y + 0.02f;
+                                                                    if (this.Velocity.Y < -2f)
                                                                     {
-                                                                        this.velocity.Y = -2f;
+                                                                        this.Velocity.Y = -2f;
                                                                     }
                                                                 }
                                                             }
-                                                            if (this.position.X + (float)(this.width / 2) > Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))
+                                                            if (this.Position.X + (float)(this.width / 2) > Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2))
                                                             {
-                                                                if (this.velocity.X > 0f)
+                                                                if (this.Velocity.X > 0f)
                                                                 {
-                                                                    this.velocity.X = this.velocity.X * 0.98f;
+                                                                    this.Velocity.X = this.Velocity.X * 0.98f;
                                                                 }
-                                                                this.velocity.X = this.velocity.X - 0.05f;
-                                                                if (this.velocity.X > 8f)
+                                                                this.Velocity.X = this.Velocity.X - 0.05f;
+                                                                if (this.Velocity.X > 8f)
                                                                 {
-                                                                    this.velocity.X = 8f;
+                                                                    this.Velocity.X = 8f;
                                                                 }
                                                             }
-                                                            if (this.position.X + (float)(this.width / 2) < Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))
+                                                            if (this.Position.X + (float)(this.width / 2) < Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2))
                                                             {
-                                                                if (this.velocity.X < 0f)
+                                                                if (this.Velocity.X < 0f)
                                                                 {
-                                                                    this.velocity.X = this.velocity.X * 0.98f;
+                                                                    this.Velocity.X = this.Velocity.X * 0.98f;
                                                                 }
-                                                                this.velocity.X = this.velocity.X + 0.05f;
-                                                                if (this.velocity.X < -8f)
+                                                                this.Velocity.X = this.Velocity.X + 0.05f;
+                                                                if (this.Velocity.X < -8f)
                                                                 {
-                                                                    this.velocity.X = -8f;
+                                                                    this.Velocity.X = -8f;
                                                                 }
                                                             }
                                                         }
@@ -4462,13 +4462,13 @@ namespace Terraria_Server
                                                                     this.ai[1] = 0f;
                                                                 }
                                                                 this.rotation += (float)this.direction * 0.3f;
-                                                                Vector2 vector12 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                float num105 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector12.X;
-                                                                float num106 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector12.Y;
+                                                                Vector2 vector12 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                float num105 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector12.X;
+                                                                float num106 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector12.Y;
                                                                 float num107 = (float)Math.Sqrt((double)(num105 * num105 + num106 * num106));
                                                                 num107 = 2f / num107;
-                                                                this.velocity.X = num105 * num107;
-                                                                this.velocity.Y = num106 * num107;
+                                                                this.Velocity.X = num105 * num107;
+                                                                this.Velocity.Y = num106 * num107;
                                                             }
                                                             else
                                                             {
@@ -4477,24 +4477,24 @@ namespace Terraria_Server
                                                                     this.damage = 9999;
                                                                     this.defense = 9999;
                                                                     this.rotation += (float)this.direction * 0.3f;
-                                                                    Vector2 vector13 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                    float num108 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector13.X;
-                                                                    float num109 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector13.Y;
+                                                                    Vector2 vector13 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                    float num108 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector13.X;
+                                                                    float num109 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector13.Y;
                                                                     float num110 = (float)Math.Sqrt((double)(num108 * num108 + num109 * num109));
                                                                     num110 = 8f / num110;
-                                                                    this.velocity.X = num108 * num110;
-                                                                    this.velocity.Y = num109 * num110;
+                                                                    this.Velocity.X = num108 * num110;
+                                                                    this.Velocity.Y = num109 * num110;
                                                                 }
                                                                 else
                                                                 {
                                                                     if (this.ai[1] == 3f)
                                                                     {
-                                                                        this.velocity.Y = this.velocity.Y - 0.1f;
-                                                                        if (this.velocity.Y > 0f)
+                                                                        this.Velocity.Y = this.Velocity.Y - 0.1f;
+                                                                        if (this.Velocity.Y > 0f)
                                                                         {
-                                                                            this.velocity.Y = this.velocity.Y * 0.95f;
+                                                                            this.Velocity.Y = this.Velocity.Y * 0.95f;
                                                                         }
-                                                                        this.velocity.X = this.velocity.X * 0.95f;
+                                                                        this.Velocity.X = this.Velocity.X * 0.95f;
                                                                         if (this.timeLeft > 50)
                                                                         {
                                                                             this.timeLeft = 50;
@@ -4505,11 +4505,11 @@ namespace Terraria_Server
                                                         }
                                                         if (this.ai[1] != 2f && this.ai[1] != 3f && this.type != 68)
                                                         {
-                                                            Vector2 arg_7AE4_0 = new Vector2(this.position.X + (float)(this.width / 2) - 15f - this.velocity.X * 5f, this.position.Y + (float)this.height - 2f);
+                                                            Vector2 arg_7AE4_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 15f - this.Velocity.X * 5f, this.Position.Y + (float)this.height - 2f);
                                                             int arg_7AE4_1 = 30;
                                                             int arg_7AE4_2 = 10;
                                                             int arg_7AE4_3 = 5;
-                                                            float arg_7AE4_4 = -this.velocity.X * 0.2f;
+                                                            float arg_7AE4_4 = -this.Velocity.X * 0.2f;
                                                             float arg_7AE4_5 = 3f;
                                                             int arg_7AE4_6 = 0;
                                                             Color newColor = default(Color);
@@ -4518,23 +4518,23 @@ namespace Terraria_Server
                                                             Dust expr_7B06_cp_0 = Main.dust[num111];
                                                             expr_7B06_cp_0.velocity.X = expr_7B06_cp_0.velocity.X * 1.3f;
                                                             Dust expr_7B24_cp_0 = Main.dust[num111];
-                                                            expr_7B24_cp_0.velocity.X = expr_7B24_cp_0.velocity.X + this.velocity.X * 0.4f;
+                                                            expr_7B24_cp_0.velocity.X = expr_7B24_cp_0.velocity.X + this.Velocity.X * 0.4f;
                                                             Dust expr_7B4E_cp_0 = Main.dust[num111];
-                                                            expr_7B4E_cp_0.velocity.Y = expr_7B4E_cp_0.velocity.Y + (2f + this.velocity.Y);
+                                                            expr_7B4E_cp_0.velocity.Y = expr_7B4E_cp_0.velocity.Y + (2f + this.Velocity.Y);
                                                             for (int num112 = 0; num112 < 2; num112++)
                                                             {
-                                                                Vector2 arg_7BC3_0 = new Vector2(this.position.X, this.position.Y + 120f);
+                                                                Vector2 arg_7BC3_0 = new Vector2(this.Position.X, this.Position.Y + 120f);
                                                                 int arg_7BC3_1 = this.width;
                                                                 int arg_7BC3_2 = 60;
                                                                 int arg_7BC3_3 = 5;
-                                                                float arg_7BC3_4 = this.velocity.X;
-                                                                float arg_7BC3_5 = this.velocity.Y;
+                                                                float arg_7BC3_4 = this.Velocity.X;
+                                                                float arg_7BC3_5 = this.Velocity.Y;
                                                                 int arg_7BC3_6 = 0;
                                                                 newColor = default(Color);
                                                                 num111 = Dust.NewDust(arg_7BC3_0, arg_7BC3_1, arg_7BC3_2, arg_7BC3_3, arg_7BC3_4, arg_7BC3_5, arg_7BC3_6, newColor, 2f);
                                                                 Main.dust[num111].noGravity = true;
                                                                 Dust expr_7BE0 = Main.dust[num111];
-                                                                expr_7BE0.velocity -= this.velocity;
+                                                                expr_7BE0.velocity -= this.Velocity;
                                                                 Dust expr_7C03_cp_0 = Main.dust[num111];
                                                                 expr_7C03_cp_0.velocity.Y = expr_7C03_cp_0.velocity.Y + 5f;
                                                             }
@@ -4546,14 +4546,14 @@ namespace Terraria_Server
                                                         if (this.aiStyle == 12)
                                                         {
                                                             this.spriteDirection = -(int)this.ai[0];
-                                                            if (!Main.npc[(int)this.ai[1]].active || Main.npc[(int)this.ai[1]].aiStyle != 11)
+                                                            if (!Main.npc[(int)this.ai[1]].Active || Main.npc[(int)this.ai[1]].aiStyle != 11)
                                                             {
                                                                 this.ai[2] += 10f;
                                                                 if (this.ai[2] > 50f || Main.netMode != 2)
                                                                 {
                                                                     this.life = -1;
                                                                     this.HitEffect(0, 10.0);
-                                                                    this.active = false;
+                                                                    this.Active = false;
                                                                 }
                                                             }
                                                             if (this.ai[2] == 0f || this.ai[2] == 3f)
@@ -4564,55 +4564,55 @@ namespace Terraria_Server
                                                                 }
                                                                 if (Main.npc[(int)this.ai[1]].ai[1] != 0f)
                                                                 {
-                                                                    if (this.position.Y > Main.npc[(int)this.ai[1]].position.Y - 100f)
+                                                                    if (this.Position.Y > Main.npc[(int)this.ai[1]].Position.Y - 100f)
                                                                     {
-                                                                        if (this.velocity.Y > 0f)
+                                                                        if (this.Velocity.Y > 0f)
                                                                         {
-                                                                            this.velocity.Y = this.velocity.Y * 0.96f;
+                                                                            this.Velocity.Y = this.Velocity.Y * 0.96f;
                                                                         }
-                                                                        this.velocity.Y = this.velocity.Y - 0.07f;
-                                                                        if (this.velocity.Y > 6f)
+                                                                        this.Velocity.Y = this.Velocity.Y - 0.07f;
+                                                                        if (this.Velocity.Y > 6f)
                                                                         {
-                                                                            this.velocity.Y = 6f;
+                                                                            this.Velocity.Y = 6f;
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.position.Y < Main.npc[(int)this.ai[1]].position.Y - 100f)
+                                                                        if (this.Position.Y < Main.npc[(int)this.ai[1]].Position.Y - 100f)
                                                                         {
-                                                                            if (this.velocity.Y < 0f)
+                                                                            if (this.Velocity.Y < 0f)
                                                                             {
-                                                                                this.velocity.Y = this.velocity.Y * 0.96f;
+                                                                                this.Velocity.Y = this.Velocity.Y * 0.96f;
                                                                             }
-                                                                            this.velocity.Y = this.velocity.Y + 0.07f;
-                                                                            if (this.velocity.Y < -6f)
+                                                                            this.Velocity.Y = this.Velocity.Y + 0.07f;
+                                                                            if (this.Velocity.Y < -6f)
                                                                             {
-                                                                                this.velocity.Y = -6f;
+                                                                                this.Velocity.Y = -6f;
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (this.position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
                                                                     {
-                                                                        if (this.velocity.X > 0f)
+                                                                        if (this.Velocity.X > 0f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X * 0.96f;
+                                                                            this.Velocity.X = this.Velocity.X * 0.96f;
                                                                         }
-                                                                        this.velocity.X = this.velocity.X - 0.1f;
-                                                                        if (this.velocity.X > 8f)
+                                                                        this.Velocity.X = this.Velocity.X - 0.1f;
+                                                                        if (this.Velocity.X > 8f)
                                                                         {
-                                                                            this.velocity.X = 8f;
+                                                                            this.Velocity.X = 8f;
                                                                         }
                                                                     }
-                                                                    if (this.position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
                                                                     {
-                                                                        if (this.velocity.X < 0f)
+                                                                        if (this.Velocity.X < 0f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X * 0.96f;
+                                                                            this.Velocity.X = this.Velocity.X * 0.96f;
                                                                         }
-                                                                        this.velocity.X = this.velocity.X + 0.1f;
-                                                                        if (this.velocity.X < -8f)
+                                                                        this.Velocity.X = this.Velocity.X + 0.1f;
+                                                                        if (this.Velocity.X < -8f)
                                                                         {
-                                                                            this.velocity.X = -8f;
+                                                                            this.Velocity.X = -8f;
                                                                         }
                                                                     }
                                                                 }
@@ -4625,89 +4625,89 @@ namespace Terraria_Server
                                                                         this.ai[3] = 0f;
                                                                         this.netUpdate = true;
                                                                     }
-                                                                    if (this.position.Y > Main.npc[(int)this.ai[1]].position.Y + 230f)
+                                                                    if (this.Position.Y > Main.npc[(int)this.ai[1]].Position.Y + 230f)
                                                                     {
-                                                                        if (this.velocity.Y > 0f)
+                                                                        if (this.Velocity.Y > 0f)
                                                                         {
-                                                                            this.velocity.Y = this.velocity.Y * 0.96f;
+                                                                            this.Velocity.Y = this.Velocity.Y * 0.96f;
                                                                         }
-                                                                        this.velocity.Y = this.velocity.Y - 0.04f;
-                                                                        if (this.velocity.Y > 3f)
+                                                                        this.Velocity.Y = this.Velocity.Y - 0.04f;
+                                                                        if (this.Velocity.Y > 3f)
                                                                         {
-                                                                            this.velocity.Y = 3f;
+                                                                            this.Velocity.Y = 3f;
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.position.Y < Main.npc[(int)this.ai[1]].position.Y + 230f)
+                                                                        if (this.Position.Y < Main.npc[(int)this.ai[1]].Position.Y + 230f)
                                                                         {
-                                                                            if (this.velocity.Y < 0f)
+                                                                            if (this.Velocity.Y < 0f)
                                                                             {
-                                                                                this.velocity.Y = this.velocity.Y * 0.96f;
+                                                                                this.Velocity.Y = this.Velocity.Y * 0.96f;
                                                                             }
-                                                                            this.velocity.Y = this.velocity.Y + 0.04f;
-                                                                            if (this.velocity.Y < -3f)
+                                                                            this.Velocity.Y = this.Velocity.Y + 0.04f;
+                                                                            if (this.Velocity.Y < -3f)
                                                                             {
-                                                                                this.velocity.Y = -3f;
+                                                                                this.Velocity.Y = -3f;
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (this.position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
                                                                     {
-                                                                        if (this.velocity.X > 0f)
+                                                                        if (this.Velocity.X > 0f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X * 0.96f;
+                                                                            this.Velocity.X = this.Velocity.X * 0.96f;
                                                                         }
-                                                                        this.velocity.X = this.velocity.X - 0.07f;
-                                                                        if (this.velocity.X > 8f)
+                                                                        this.Velocity.X = this.Velocity.X - 0.07f;
+                                                                        if (this.Velocity.X > 8f)
                                                                         {
-                                                                            this.velocity.X = 8f;
+                                                                            this.Velocity.X = 8f;
                                                                         }
                                                                     }
-                                                                    if (this.position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
                                                                     {
-                                                                        if (this.velocity.X < 0f)
+                                                                        if (this.Velocity.X < 0f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X * 0.96f;
+                                                                            this.Velocity.X = this.Velocity.X * 0.96f;
                                                                         }
-                                                                        this.velocity.X = this.velocity.X + 0.07f;
-                                                                        if (this.velocity.X < -8f)
+                                                                        this.Velocity.X = this.Velocity.X + 0.07f;
+                                                                        if (this.Velocity.X < -8f)
                                                                         {
-                                                                            this.velocity.X = -8f;
+                                                                            this.Velocity.X = -8f;
                                                                         }
                                                                     }
                                                                 }
-                                                                Vector2 vector14 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                float num113 = Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector14.X;
-                                                                float num114 = Main.npc[(int)this.ai[1]].position.Y + 230f - vector14.Y;
+                                                                Vector2 vector14 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                float num113 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector14.X;
+                                                                float num114 = Main.npc[(int)this.ai[1]].Position.Y + 230f - vector14.Y;
                                                                 Math.Sqrt((double)(num113 * num113 + num114 * num114));
                                                                 this.rotation = (float)Math.Atan2((double)num114, (double)num113) + 1.57f;
                                                                 return;
                                                             }
                                                             if (this.ai[2] == 1f)
                                                             {
-                                                                Vector2 vector15 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                float num115 = Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector15.X;
-                                                                float num116 = Main.npc[(int)this.ai[1]].position.Y + 230f - vector15.Y;
+                                                                Vector2 vector15 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                float num115 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector15.X;
+                                                                float num116 = Main.npc[(int)this.ai[1]].Position.Y + 230f - vector15.Y;
                                                                 float num117 = (float)Math.Sqrt((double)(num115 * num115 + num116 * num116));
                                                                 this.rotation = (float)Math.Atan2((double)num116, (double)num115) + 1.57f;
-                                                                this.velocity.X = this.velocity.X * 0.95f;
-                                                                this.velocity.Y = this.velocity.Y - 0.1f;
-                                                                if (this.velocity.Y < -8f)
+                                                                this.Velocity.X = this.Velocity.X * 0.95f;
+                                                                this.Velocity.Y = this.Velocity.Y - 0.1f;
+                                                                if (this.Velocity.Y < -8f)
                                                                 {
-                                                                    this.velocity.Y = -8f;
+                                                                    this.Velocity.Y = -8f;
                                                                 }
-                                                                if (this.position.Y < Main.npc[(int)this.ai[1]].position.Y - 200f)
+                                                                if (this.Position.Y < Main.npc[(int)this.ai[1]].Position.Y - 200f)
                                                                 {
                                                                     this.TargetClosest(true);
                                                                     this.ai[2] = 2f;
-                                                                    vector15 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                    num115 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector15.X;
-                                                                    num116 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector15.Y;
+                                                                    vector15 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                    num115 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector15.X;
+                                                                    num116 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector15.Y;
                                                                     num117 = (float)Math.Sqrt((double)(num115 * num115 + num116 * num116));
                                                                     num117 = 20f / num117;
-                                                                    this.velocity.X = num115 * num117;
-                                                                    this.velocity.Y = num116 * num117;
+                                                                    this.Velocity.X = num115 * num117;
+                                                                    this.Velocity.Y = num116 * num117;
                                                                     this.netUpdate = true;
                                                                     return;
                                                                 }
@@ -4716,7 +4716,7 @@ namespace Terraria_Server
                                                             {
                                                                 if (this.ai[2] == 2f)
                                                                 {
-                                                                    if (this.position.Y > Main.players[this.target].position.Y || this.velocity.Y < 0f)
+                                                                    if (this.Position.Y > Main.players[this.target].Position.Y || this.Velocity.Y < 0f)
                                                                     {
                                                                         this.ai[2] = 3f;
                                                                         return;
@@ -4726,39 +4726,39 @@ namespace Terraria_Server
                                                                 {
                                                                     if (this.ai[2] == 4f)
                                                                     {
-                                                                        Vector2 vector16 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                        float num118 = Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector16.X;
-                                                                        float num119 = Main.npc[(int)this.ai[1]].position.Y + 230f - vector16.Y;
+                                                                        Vector2 vector16 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                        float num118 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector16.X;
+                                                                        float num119 = Main.npc[(int)this.ai[1]].Position.Y + 230f - vector16.Y;
                                                                         float num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
                                                                         this.rotation = (float)Math.Atan2((double)num119, (double)num118) + 1.57f;
-                                                                        this.velocity.Y = this.velocity.Y * 0.95f;
-                                                                        this.velocity.X = this.velocity.X + 0.1f * -this.ai[0];
-                                                                        if (this.velocity.X < -8f)
+                                                                        this.Velocity.Y = this.Velocity.Y * 0.95f;
+                                                                        this.Velocity.X = this.Velocity.X + 0.1f * -this.ai[0];
+                                                                        if (this.Velocity.X < -8f)
                                                                         {
-                                                                            this.velocity.X = -8f;
+                                                                            this.Velocity.X = -8f;
                                                                         }
-                                                                        if (this.velocity.X > 8f)
+                                                                        if (this.Velocity.X > 8f)
                                                                         {
-                                                                            this.velocity.X = 8f;
+                                                                            this.Velocity.X = 8f;
                                                                         }
-                                                                        if (this.position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 500f || this.position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) + 500f)
+                                                                        if (this.Position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 500f || this.Position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) + 500f)
                                                                         {
                                                                             this.TargetClosest(true);
                                                                             this.ai[2] = 5f;
-                                                                            vector16 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                            num118 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector16.X;
-                                                                            num119 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector16.Y;
+                                                                            vector16 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                            num118 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector16.X;
+                                                                            num119 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector16.Y;
                                                                             num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
                                                                             num120 = 20f / num120;
-                                                                            this.velocity.X = num118 * num120;
-                                                                            this.velocity.Y = num119 * num120;
+                                                                            this.Velocity.X = num118 * num120;
+                                                                            this.Velocity.Y = num119 * num120;
                                                                             this.netUpdate = true;
                                                                             return;
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.ai[2] == 5f && ((this.velocity.X > 0f && this.position.X + (float)(this.width / 2) > Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2)) || (this.velocity.X < 0f && this.position.X + (float)(this.width / 2) < Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2))))
+                                                                        if (this.ai[2] == 5f && ((this.Velocity.X > 0f && this.Position.X + (float)(this.width / 2) > Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2)) || (this.Velocity.X < 0f && this.Position.X + (float)(this.width / 2) < Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2))))
                                                                         {
                                                                             this.ai[2] = 0f;
                                                                             return;
@@ -4775,11 +4775,11 @@ namespace Terraria_Server
                                                                 {
                                                                     Main.tile[(int)this.ai[0], (int)this.ai[1]] = new Tile();
                                                                 }
-                                                                if (!Main.tile[(int)this.ai[0], (int)this.ai[1]].active)
+                                                                if (!Main.tile[(int)this.ai[0], (int)this.ai[1]].Active)
                                                                 {
                                                                     this.life = -1;
                                                                     this.HitEffect(0, 10.0);
-                                                                    this.active = false;
+                                                                    this.Active = false;
                                                                     return;
                                                                 }
                                                                 this.TargetClosest(true);
@@ -4790,8 +4790,8 @@ namespace Terraria_Server
                                                                     num122 = 200f;
                                                                 }
                                                                 Vector2 vector17 = new Vector2(this.ai[0] * 16f + 8f, this.ai[1] * 16f + 8f);
-                                                                float num123 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - (float)(this.width / 2) - vector17.X;
-                                                                float num124 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - (float)(this.height / 2) - vector17.Y;
+                                                                float num123 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - (float)(this.width / 2) - vector17.X;
+                                                                float num124 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - (float)(this.height / 2) - vector17.Y;
                                                                 float num125 = (float)Math.Sqrt((double)(num123 * num123 + num124 * num124));
                                                                 if (num125 > num122)
                                                                 {
@@ -4799,80 +4799,80 @@ namespace Terraria_Server
                                                                     num123 *= num125;
                                                                     num124 *= num125;
                                                                 }
-                                                                if (this.position.X < this.ai[0] * 16f + 8f + num123)
+                                                                if (this.Position.X < this.ai[0] * 16f + 8f + num123)
                                                                 {
-                                                                    this.velocity.X = this.velocity.X + num121;
-                                                                    if (this.velocity.X < 0f && num123 > 0f)
+                                                                    this.Velocity.X = this.Velocity.X + num121;
+                                                                    if (this.Velocity.X < 0f && num123 > 0f)
                                                                     {
-                                                                        this.velocity.X = this.velocity.X + num121 * 2f;
+                                                                        this.Velocity.X = this.Velocity.X + num121 * 2f;
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (this.position.X > this.ai[0] * 16f + 8f + num123)
+                                                                    if (this.Position.X > this.ai[0] * 16f + 8f + num123)
                                                                     {
-                                                                        this.velocity.X = this.velocity.X - num121;
-                                                                        if (this.velocity.X > 0f && num123 < 0f)
+                                                                        this.Velocity.X = this.Velocity.X - num121;
+                                                                        if (this.Velocity.X > 0f && num123 < 0f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X - num121 * 2f;
+                                                                            this.Velocity.X = this.Velocity.X - num121 * 2f;
                                                                         }
                                                                     }
                                                                 }
-                                                                if (this.position.Y < this.ai[1] * 16f + 8f + num124)
+                                                                if (this.Position.Y < this.ai[1] * 16f + 8f + num124)
                                                                 {
-                                                                    this.velocity.Y = this.velocity.Y + num121;
-                                                                    if (this.velocity.Y < 0f && num124 > 0f)
+                                                                    this.Velocity.Y = this.Velocity.Y + num121;
+                                                                    if (this.Velocity.Y < 0f && num124 > 0f)
                                                                     {
-                                                                        this.velocity.Y = this.velocity.Y + num121 * 2f;
+                                                                        this.Velocity.Y = this.Velocity.Y + num121 * 2f;
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (this.position.Y > this.ai[1] * 16f + 8f + num124)
+                                                                    if (this.Position.Y > this.ai[1] * 16f + 8f + num124)
                                                                     {
-                                                                        this.velocity.Y = this.velocity.Y - num121;
-                                                                        if (this.velocity.Y > 0f && num124 < 0f)
+                                                                        this.Velocity.Y = this.Velocity.Y - num121;
+                                                                        if (this.Velocity.Y > 0f && num124 < 0f)
                                                                         {
-                                                                            this.velocity.Y = this.velocity.Y - num121 * 2f;
+                                                                            this.Velocity.Y = this.Velocity.Y - num121 * 2f;
                                                                         }
                                                                     }
                                                                 }
                                                                 if (this.type == 43)
                                                                 {
-                                                                    if (this.velocity.X > 3f)
+                                                                    if (this.Velocity.X > 3f)
                                                                     {
-                                                                        this.velocity.X = 3f;
+                                                                        this.Velocity.X = 3f;
                                                                     }
-                                                                    if (this.velocity.X < -3f)
+                                                                    if (this.Velocity.X < -3f)
                                                                     {
-                                                                        this.velocity.X = -3f;
+                                                                        this.Velocity.X = -3f;
                                                                     }
-                                                                    if (this.velocity.Y > 3f)
+                                                                    if (this.Velocity.Y > 3f)
                                                                     {
-                                                                        this.velocity.Y = 3f;
+                                                                        this.Velocity.Y = 3f;
                                                                     }
-                                                                    if (this.velocity.Y < -3f)
+                                                                    if (this.Velocity.Y < -3f)
                                                                     {
-                                                                        this.velocity.Y = -3f;
+                                                                        this.Velocity.Y = -3f;
                                                                     }
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (this.velocity.X > 2f)
+                                                                    if (this.Velocity.X > 2f)
                                                                     {
-                                                                        this.velocity.X = 2f;
+                                                                        this.Velocity.X = 2f;
                                                                     }
-                                                                    if (this.velocity.X < -2f)
+                                                                    if (this.Velocity.X < -2f)
                                                                     {
-                                                                        this.velocity.X = -2f;
+                                                                        this.Velocity.X = -2f;
                                                                     }
-                                                                    if (this.velocity.Y > 2f)
+                                                                    if (this.Velocity.Y > 2f)
                                                                     {
-                                                                        this.velocity.Y = 2f;
+                                                                        this.Velocity.Y = 2f;
                                                                     }
-                                                                    if (this.velocity.Y < -2f)
+                                                                    if (this.Velocity.Y < -2f)
                                                                     {
-                                                                        this.velocity.Y = -2f;
+                                                                        this.Velocity.Y = -2f;
                                                                     }
                                                                 }
                                                                 if (num123 > 0f)
@@ -4888,27 +4888,27 @@ namespace Terraria_Server
                                                                 if (this.collideX)
                                                                 {
                                                                     this.netUpdate = true;
-                                                                    this.velocity.X = this.oldVelocity.X * -0.7f;
-                                                                    if (this.velocity.X > 0f && this.velocity.X < 2f)
+                                                                    this.Velocity.X = this.oldVelocity.X * -0.7f;
+                                                                    if (this.Velocity.X > 0f && this.Velocity.X < 2f)
                                                                     {
-                                                                        this.velocity.X = 2f;
+                                                                        this.Velocity.X = 2f;
                                                                     }
-                                                                    if (this.velocity.X < 0f && this.velocity.X > -2f)
+                                                                    if (this.Velocity.X < 0f && this.Velocity.X > -2f)
                                                                     {
-                                                                        this.velocity.X = -2f;
+                                                                        this.Velocity.X = -2f;
                                                                     }
                                                                 }
                                                                 if (this.collideY)
                                                                 {
                                                                     this.netUpdate = true;
-                                                                    this.velocity.Y = this.oldVelocity.Y * -0.7f;
-                                                                    if (this.velocity.Y > 0f && this.velocity.Y < 2f)
+                                                                    this.Velocity.Y = this.oldVelocity.Y * -0.7f;
+                                                                    if (this.Velocity.Y > 0f && this.Velocity.Y < 2f)
                                                                     {
-                                                                        this.velocity.Y = 2f;
+                                                                        this.Velocity.Y = 2f;
                                                                     }
-                                                                    if (this.velocity.Y < 0f && this.velocity.Y > -2f)
+                                                                    if (this.Velocity.Y < 0f && this.Velocity.Y > -2f)
                                                                     {
-                                                                        this.velocity.Y = -2f;
+                                                                        this.Velocity.Y = -2f;
                                                                         return;
                                                                     }
                                                                 }
@@ -4919,12 +4919,12 @@ namespace Terraria_Server
                                                                 {
                                                                     if (this.type == 60)
                                                                     {
-                                                                        Vector2 arg_908E_0 = new Vector2(this.position.X, this.position.Y);
+                                                                        Vector2 arg_908E_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                         int arg_908E_1 = this.width;
                                                                         int arg_908E_2 = this.height;
                                                                         int arg_908E_3 = 6;
-                                                                        float arg_908E_4 = this.velocity.X * 0.2f;
-                                                                        float arg_908E_5 = this.velocity.Y * 0.2f;
+                                                                        float arg_908E_4 = this.Velocity.X * 0.2f;
+                                                                        float arg_908E_5 = this.Velocity.Y * 0.2f;
                                                                         int arg_908E_6 = 100;
                                                                         Color newColor = default(Color);
                                                                         int num126 = Dust.NewDust(arg_908E_0, arg_908E_1, arg_908E_2, arg_908E_3, arg_908E_4, arg_908E_5, arg_908E_6, newColor, 2f);
@@ -4933,108 +4933,108 @@ namespace Terraria_Server
                                                                     this.noGravity = true;
                                                                     if (this.collideX)
                                                                     {
-                                                                        this.velocity.X = this.oldVelocity.X * -0.5f;
-                                                                        if (this.direction == -1 && this.velocity.X > 0f && this.velocity.X < 2f)
+                                                                        this.Velocity.X = this.oldVelocity.X * -0.5f;
+                                                                        if (this.direction == -1 && this.Velocity.X > 0f && this.Velocity.X < 2f)
                                                                         {
-                                                                            this.velocity.X = 2f;
+                                                                            this.Velocity.X = 2f;
                                                                         }
-                                                                        if (this.direction == 1 && this.velocity.X < 0f && this.velocity.X > -2f)
+                                                                        if (this.direction == 1 && this.Velocity.X < 0f && this.Velocity.X > -2f)
                                                                         {
-                                                                            this.velocity.X = -2f;
+                                                                            this.Velocity.X = -2f;
                                                                         }
                                                                     }
                                                                     if (this.collideY)
                                                                     {
-                                                                        this.velocity.Y = this.oldVelocity.Y * -0.5f;
-                                                                        if (this.velocity.Y > 0f && this.velocity.Y < 1f)
+                                                                        this.Velocity.Y = this.oldVelocity.Y * -0.5f;
+                                                                        if (this.Velocity.Y > 0f && this.Velocity.Y < 1f)
                                                                         {
-                                                                            this.velocity.Y = 1f;
+                                                                            this.Velocity.Y = 1f;
                                                                         }
-                                                                        if (this.velocity.Y < 0f && this.velocity.Y > -1f)
+                                                                        if (this.Velocity.Y < 0f && this.Velocity.Y > -1f)
                                                                         {
-                                                                            this.velocity.Y = -1f;
+                                                                            this.Velocity.Y = -1f;
                                                                         }
                                                                     }
                                                                     this.TargetClosest(true);
-                                                                    if (this.direction == -1 && this.velocity.X > -4f)
+                                                                    if (this.direction == -1 && this.Velocity.X > -4f)
                                                                     {
-                                                                        this.velocity.X = this.velocity.X - 0.1f;
-                                                                        if (this.velocity.X > 4f)
+                                                                        this.Velocity.X = this.Velocity.X - 0.1f;
+                                                                        if (this.Velocity.X > 4f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X - 0.1f;
+                                                                            this.Velocity.X = this.Velocity.X - 0.1f;
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (this.velocity.X > 0f)
+                                                                            if (this.Velocity.X > 0f)
                                                                             {
-                                                                                this.velocity.X = this.velocity.X + 0.05f;
+                                                                                this.Velocity.X = this.Velocity.X + 0.05f;
                                                                             }
                                                                         }
-                                                                        if (this.velocity.X < -4f)
+                                                                        if (this.Velocity.X < -4f)
                                                                         {
-                                                                            this.velocity.X = -4f;
+                                                                            this.Velocity.X = -4f;
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.direction == 1 && this.velocity.X < 4f)
+                                                                        if (this.direction == 1 && this.Velocity.X < 4f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X + 0.1f;
-                                                                            if (this.velocity.X < -4f)
+                                                                            this.Velocity.X = this.Velocity.X + 0.1f;
+                                                                            if (this.Velocity.X < -4f)
                                                                             {
-                                                                                this.velocity.X = this.velocity.X + 0.1f;
+                                                                                this.Velocity.X = this.Velocity.X + 0.1f;
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (this.velocity.X < 0f)
+                                                                                if (this.Velocity.X < 0f)
                                                                                 {
-                                                                                    this.velocity.X = this.velocity.X - 0.05f;
+                                                                                    this.Velocity.X = this.Velocity.X - 0.05f;
                                                                                 }
                                                                             }
-                                                                            if (this.velocity.X > 4f)
+                                                                            if (this.Velocity.X > 4f)
                                                                             {
-                                                                                this.velocity.X = 4f;
+                                                                                this.Velocity.X = 4f;
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (this.directionY == -1 && (double)this.velocity.Y > -1.5)
+                                                                    if (this.directionY == -1 && (double)this.Velocity.Y > -1.5)
                                                                     {
-                                                                        this.velocity.Y = this.velocity.Y - 0.04f;
-                                                                        if ((double)this.velocity.Y > 1.5)
+                                                                        this.Velocity.Y = this.Velocity.Y - 0.04f;
+                                                                        if ((double)this.Velocity.Y > 1.5)
                                                                         {
-                                                                            this.velocity.Y = this.velocity.Y - 0.05f;
+                                                                            this.Velocity.Y = this.Velocity.Y - 0.05f;
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (this.velocity.Y > 0f)
+                                                                            if (this.Velocity.Y > 0f)
                                                                             {
-                                                                                this.velocity.Y = this.velocity.Y + 0.03f;
+                                                                                this.Velocity.Y = this.Velocity.Y + 0.03f;
                                                                             }
                                                                         }
-                                                                        if ((double)this.velocity.Y < -1.5)
+                                                                        if ((double)this.Velocity.Y < -1.5)
                                                                         {
-                                                                            this.velocity.Y = -1.5f;
+                                                                            this.Velocity.Y = -1.5f;
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.directionY == 1 && (double)this.velocity.Y < 1.5)
+                                                                        if (this.directionY == 1 && (double)this.Velocity.Y < 1.5)
                                                                         {
-                                                                            this.velocity.Y = this.velocity.Y + 0.04f;
-                                                                            if ((double)this.velocity.Y < -1.5)
+                                                                            this.Velocity.Y = this.Velocity.Y + 0.04f;
+                                                                            if ((double)this.Velocity.Y < -1.5)
                                                                             {
-                                                                                this.velocity.Y = this.velocity.Y + 0.05f;
+                                                                                this.Velocity.Y = this.Velocity.Y + 0.05f;
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (this.velocity.Y < 0f)
+                                                                                if (this.Velocity.Y < 0f)
                                                                                 {
-                                                                                    this.velocity.Y = this.velocity.Y - 0.03f;
+                                                                                    this.Velocity.Y = this.Velocity.Y - 0.03f;
                                                                                 }
                                                                             }
-                                                                            if ((double)this.velocity.Y > 1.5)
+                                                                            if ((double)this.Velocity.Y > 1.5)
                                                                             {
-                                                                                this.velocity.Y = 1.5f;
+                                                                                this.Velocity.Y = 1.5f;
                                                                             }
                                                                         }
                                                                     }
@@ -5042,96 +5042,96 @@ namespace Terraria_Server
                                                                     {
                                                                         if (this.wet)
                                                                         {
-                                                                            if (this.velocity.Y > 0f)
+                                                                            if (this.Velocity.Y > 0f)
                                                                             {
-                                                                                this.velocity.Y = this.velocity.Y * 0.95f;
+                                                                                this.Velocity.Y = this.Velocity.Y * 0.95f;
                                                                             }
-                                                                            this.velocity.Y = this.velocity.Y - 0.5f;
-                                                                            if (this.velocity.Y < -4f)
+                                                                            this.Velocity.Y = this.Velocity.Y - 0.5f;
+                                                                            if (this.Velocity.Y < -4f)
                                                                             {
-                                                                                this.velocity.Y = -4f;
+                                                                                this.Velocity.Y = -4f;
                                                                             }
                                                                             this.TargetClosest(true);
                                                                         }
-                                                                        if (this.direction == -1 && this.velocity.X > -4f)
+                                                                        if (this.direction == -1 && this.Velocity.X > -4f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X - 0.1f;
-                                                                            if (this.velocity.X > 4f)
+                                                                            this.Velocity.X = this.Velocity.X - 0.1f;
+                                                                            if (this.Velocity.X > 4f)
                                                                             {
-                                                                                this.velocity.X = this.velocity.X - 0.1f;
+                                                                                this.Velocity.X = this.Velocity.X - 0.1f;
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (this.velocity.X > 0f)
+                                                                                if (this.Velocity.X > 0f)
                                                                                 {
-                                                                                    this.velocity.X = this.velocity.X + 0.05f;
+                                                                                    this.Velocity.X = this.Velocity.X + 0.05f;
                                                                                 }
                                                                             }
-                                                                            if (this.velocity.X < -4f)
+                                                                            if (this.Velocity.X < -4f)
                                                                             {
-                                                                                this.velocity.X = -4f;
+                                                                                this.Velocity.X = -4f;
                                                                             }
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (this.direction == 1 && this.velocity.X < 4f)
+                                                                            if (this.direction == 1 && this.Velocity.X < 4f)
                                                                             {
-                                                                                this.velocity.X = this.velocity.X + 0.1f;
-                                                                                if (this.velocity.X < -4f)
+                                                                                this.Velocity.X = this.Velocity.X + 0.1f;
+                                                                                if (this.Velocity.X < -4f)
                                                                                 {
-                                                                                    this.velocity.X = this.velocity.X + 0.1f;
+                                                                                    this.Velocity.X = this.Velocity.X + 0.1f;
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    if (this.velocity.X < 0f)
+                                                                                    if (this.Velocity.X < 0f)
                                                                                     {
-                                                                                        this.velocity.X = this.velocity.X - 0.05f;
+                                                                                        this.Velocity.X = this.Velocity.X - 0.05f;
                                                                                     }
                                                                                 }
-                                                                                if (this.velocity.X > 4f)
+                                                                                if (this.Velocity.X > 4f)
                                                                                 {
-                                                                                    this.velocity.X = 4f;
+                                                                                    this.Velocity.X = 4f;
                                                                                 }
                                                                             }
                                                                         }
-                                                                        if (this.directionY == -1 && (double)this.velocity.Y > -1.5)
+                                                                        if (this.directionY == -1 && (double)this.Velocity.Y > -1.5)
                                                                         {
-                                                                            this.velocity.Y = this.velocity.Y - 0.04f;
-                                                                            if ((double)this.velocity.Y > 1.5)
+                                                                            this.Velocity.Y = this.Velocity.Y - 0.04f;
+                                                                            if ((double)this.Velocity.Y > 1.5)
                                                                             {
-                                                                                this.velocity.Y = this.velocity.Y - 0.05f;
+                                                                                this.Velocity.Y = this.Velocity.Y - 0.05f;
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (this.velocity.Y > 0f)
+                                                                                if (this.Velocity.Y > 0f)
                                                                                 {
-                                                                                    this.velocity.Y = this.velocity.Y + 0.03f;
+                                                                                    this.Velocity.Y = this.Velocity.Y + 0.03f;
                                                                                 }
                                                                             }
-                                                                            if ((double)this.velocity.Y < -1.5)
+                                                                            if ((double)this.Velocity.Y < -1.5)
                                                                             {
-                                                                                this.velocity.Y = -1.5f;
+                                                                                this.Velocity.Y = -1.5f;
                                                                             }
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (this.directionY == 1 && (double)this.velocity.Y < 1.5)
+                                                                            if (this.directionY == 1 && (double)this.Velocity.Y < 1.5)
                                                                             {
-                                                                                this.velocity.Y = this.velocity.Y + 0.04f;
-                                                                                if ((double)this.velocity.Y < -1.5)
+                                                                                this.Velocity.Y = this.Velocity.Y + 0.04f;
+                                                                                if ((double)this.Velocity.Y < -1.5)
                                                                                 {
-                                                                                    this.velocity.Y = this.velocity.Y + 0.05f;
+                                                                                    this.Velocity.Y = this.Velocity.Y + 0.05f;
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    if (this.velocity.Y < 0f)
+                                                                                    if (this.Velocity.Y < 0f)
                                                                                     {
-                                                                                        this.velocity.Y = this.velocity.Y - 0.03f;
+                                                                                        this.Velocity.Y = this.Velocity.Y - 0.03f;
                                                                                     }
                                                                                 }
-                                                                                if ((double)this.velocity.Y > 1.5)
+                                                                                if ((double)this.Velocity.Y > 1.5)
                                                                                 {
-                                                                                    this.velocity.Y = 1.5f;
+                                                                                    this.Velocity.Y = 1.5f;
                                                                                 }
                                                                             }
                                                                         }
@@ -5144,9 +5144,9 @@ namespace Terraria_Server
                                                                             if (this.ai[0] == 30f || this.ai[0] == 60f || this.ai[0] == 90f)
                                                                             {
                                                                                 float num127 = 6f;
-                                                                                Vector2 vector18 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                float num128 = Main.players[this.target].position.X + (float)Main.players[this.target].width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
-                                                                                float num129 = Main.players[this.target].position.Y + (float)Main.players[this.target].height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
+                                                                                Vector2 vector18 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                                float num128 = Main.players[this.target].Position.X + (float)Main.players[this.target].width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
+                                                                                float num129 = Main.players[this.target].Position.Y + (float)Main.players[this.target].height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
                                                                                 float num130 = (float)Math.Sqrt((double)(num128 * num128 + num129 * num129));
                                                                                 num130 = num127 / num130;
                                                                                 num128 *= num130;
@@ -5170,9 +5170,9 @@ namespace Terraria_Server
                                                                             if (this.ai[0] == 20f || this.ai[0] == 40f || this.ai[0] == 60f || this.ai[0] == 80f)
                                                                             {
                                                                                 float num134 = 0.2f;
-                                                                                Vector2 vector19 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                float num135 = Main.players[this.target].position.X + (float)Main.players[this.target].width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
-                                                                                float num136 = Main.players[this.target].position.Y + (float)Main.players[this.target].height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
+                                                                                Vector2 vector19 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                                float num135 = Main.players[this.target].Position.X + (float)Main.players[this.target].width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
+                                                                                float num136 = Main.players[this.target].Position.Y + (float)Main.players[this.target].height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
                                                                                 float num137 = (float)Math.Sqrt((double)(num135 * num135 + num136 * num136));
                                                                                 num137 = num134 / num137;
                                                                                 num135 *= num137;
@@ -5206,12 +5206,12 @@ namespace Terraria_Server
                                                                             this.ai[2] = 1f;
                                                                             this.TargetClosest(true);
                                                                         }
-                                                                        if (this.velocity.Y == 0f)
+                                                                        if (this.Velocity.Y == 0f)
                                                                         {
-                                                                            this.velocity.X = this.velocity.X * 0.8f;
-                                                                            if ((double)this.velocity.X > -0.1 && (double)this.velocity.X < 0.1)
+                                                                            this.Velocity.X = this.Velocity.X * 0.8f;
+                                                                            if ((double)this.Velocity.X > -0.1 && (double)this.Velocity.X < 0.1)
                                                                             {
-                                                                                this.velocity.X = 0f;
+                                                                                this.Velocity.X = 0f;
                                                                             }
                                                                             this.ai[0] += 2f;
                                                                             if ((double)this.life < (double)this.lifeMax * 0.8)
@@ -5240,8 +5240,8 @@ namespace Terraria_Server
                                                                                 this.TargetClosest(true);
                                                                                 if (this.ai[1] == 3f)
                                                                                 {
-                                                                                    this.velocity.Y = -13f;
-                                                                                    this.velocity.X = this.velocity.X + 3.5f * (float)this.direction;
+                                                                                    this.Velocity.Y = -13f;
+                                                                                    this.Velocity.X = this.Velocity.X + 3.5f * (float)this.direction;
                                                                                     this.ai[0] = -200f;
                                                                                     this.ai[1] = 0f;
                                                                                 }
@@ -5249,15 +5249,15 @@ namespace Terraria_Server
                                                                                 {
                                                                                     if (this.ai[1] == 2f)
                                                                                     {
-                                                                                        this.velocity.Y = -6f;
-                                                                                        this.velocity.X = this.velocity.X + 4.5f * (float)this.direction;
+                                                                                        this.Velocity.Y = -6f;
+                                                                                        this.Velocity.X = this.Velocity.X + 4.5f * (float)this.direction;
                                                                                         this.ai[0] = -120f;
                                                                                         this.ai[1] += 1f;
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        this.velocity.Y = -8f;
-                                                                                        this.velocity.X = this.velocity.X + 4f * (float)this.direction;
+                                                                                        this.Velocity.Y = -8f;
+                                                                                        this.Velocity.X = this.Velocity.X + 4f * (float)this.direction;
                                                                                         this.ai[0] = -120f;
                                                                                         this.ai[1] += 1f;
                                                                                     }
@@ -5273,19 +5273,19 @@ namespace Terraria_Server
                                                                         }
                                                                         else
                                                                         {
-                                                                            if (this.target < 255 && ((this.direction == 1 && this.velocity.X < 3f) || (this.direction == -1 && this.velocity.X > -3f)))
+                                                                            if (this.target < 255 && ((this.direction == 1 && this.Velocity.X < 3f) || (this.direction == -1 && this.Velocity.X > -3f)))
                                                                             {
-                                                                                if ((this.direction == -1 && (double)this.velocity.X < 0.1) || (this.direction == 1 && (double)this.velocity.X > -0.1))
+                                                                                if ((this.direction == -1 && (double)this.Velocity.X < 0.1) || (this.direction == 1 && (double)this.Velocity.X > -0.1))
                                                                                 {
-                                                                                    this.velocity.X = this.velocity.X + 0.2f * (float)this.direction;
+                                                                                    this.Velocity.X = this.Velocity.X + 0.2f * (float)this.direction;
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    this.velocity.X = this.velocity.X * 0.93f;
+                                                                                    this.Velocity.X = this.Velocity.X * 0.93f;
                                                                                 }
                                                                             }
                                                                         }
-                                                                        int num141 = Dust.NewDust(this.position, this.width, this.height, 4, this.velocity.X, this.velocity.Y, 255, new Color(0, 80, 255, 80), this.scale * 1.2f);
+                                                                        int num141 = Dust.NewDust(this.Position, this.width, this.height, 4, this.Velocity.X, this.Velocity.Y, 255, new Color(0, 80, 255, 80), this.scale * 1.2f);
                                                                         Main.dust[num141].noGravity = true;
                                                                         Dust expr_A082 = Main.dust[num141];
                                                                         expr_A082.velocity *= 0.5f;
@@ -5295,13 +5295,13 @@ namespace Terraria_Server
                                                                             num142 = num142 * 0.5f + 0.75f;
                                                                             if (num142 != this.scale)
                                                                             {
-                                                                                this.position.X = this.position.X + (float)(this.width / 2);
-                                                                                this.position.Y = this.position.Y + (float)this.height;
+                                                                                this.Position.X = this.Position.X + (float)(this.width / 2);
+                                                                                this.Position.Y = this.Position.Y + (float)this.height;
                                                                                 this.scale = num142;
                                                                                 this.width = (int)(98f * this.scale);
                                                                                 this.height = (int)(92f * this.scale);
-                                                                                this.position.X = this.position.X - (float)(this.width / 2);
-                                                                                this.position.Y = this.position.Y - (float)this.height;
+                                                                                this.Position.X = this.Position.X - (float)(this.width / 2);
+                                                                                this.Position.Y = this.Position.Y - (float)this.height;
                                                                             }
                                                                             if (Main.netMode != 1)
                                                                             {
@@ -5312,12 +5312,12 @@ namespace Terraria_Server
                                                                                     int num144 = Main.rand.Next(1, 4);
                                                                                     for (int num145 = 0; num145 < num144; num145++)
                                                                                     {
-                                                                                        int x = (int)(this.position.X + (float)Main.rand.Next(this.width - 32));
-                                                                                        int y = (int)(this.position.Y + (float)Main.rand.Next(this.height - 32));
+                                                                                        int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
+                                                                                        int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
                                                                                         int num146 = NPC.NewNPC(x, y, 1, 0);
                                                                                         Main.npc[num146].SetDefaults(1);
-                                                                                        Main.npc[num146].velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
-                                                                                        Main.npc[num146].velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
+                                                                                        Main.npc[num146].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
+                                                                                        Main.npc[num146].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
                                                                                         Main.npc[num146].ai[1] = (float)Main.rand.Next(3);
                                                                                         if (Main.netMode == 2 && num146 < 1000)
                                                                                         {
@@ -5341,22 +5341,22 @@ namespace Terraria_Server
                                                                             {
                                                                                 if (this.collideX)
                                                                                 {
-                                                                                    this.velocity.X = this.velocity.X * -1f;
+                                                                                    this.Velocity.X = this.Velocity.X * -1f;
                                                                                     this.direction *= -1;
                                                                                 }
                                                                                 if (this.collideY)
                                                                                 {
-                                                                                    if (this.velocity.Y > 0f)
+                                                                                    if (this.Velocity.Y > 0f)
                                                                                     {
-                                                                                        this.velocity.Y = Math.Abs(this.velocity.Y) * -1f;
+                                                                                        this.Velocity.Y = Math.Abs(this.Velocity.Y) * -1f;
                                                                                         this.directionY = -1;
                                                                                         this.ai[0] = -1f;
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        if (this.velocity.Y < 0f)
+                                                                                        if (this.Velocity.Y < 0f)
                                                                                         {
-                                                                                            this.velocity.Y = Math.Abs(this.velocity.Y);
+                                                                                            this.Velocity.Y = Math.Abs(this.Velocity.Y);
                                                                                             this.directionY = 1;
                                                                                             this.ai[0] = 1f;
                                                                                         }
@@ -5376,72 +5376,72 @@ namespace Terraria_Server
                                                                                     this.TargetClosest(true);
                                                                                     if (this.type == 65)
                                                                                     {
-                                                                                        this.velocity.X = this.velocity.X + (float)this.direction * 0.15f;
-                                                                                        this.velocity.Y = this.velocity.Y + (float)this.directionY * 0.15f;
-                                                                                        if (this.velocity.X > 5f)
+                                                                                        this.Velocity.X = this.Velocity.X + (float)this.direction * 0.15f;
+                                                                                        this.Velocity.Y = this.Velocity.Y + (float)this.directionY * 0.15f;
+                                                                                        if (this.Velocity.X > 5f)
                                                                                         {
-                                                                                            this.velocity.X = 5f;
+                                                                                            this.Velocity.X = 5f;
                                                                                         }
-                                                                                        if (this.velocity.X < -5f)
+                                                                                        if (this.Velocity.X < -5f)
                                                                                         {
-                                                                                            this.velocity.X = -5f;
+                                                                                            this.Velocity.X = -5f;
                                                                                         }
-                                                                                        if (this.velocity.Y > 3f)
+                                                                                        if (this.Velocity.Y > 3f)
                                                                                         {
-                                                                                            this.velocity.Y = 3f;
+                                                                                            this.Velocity.Y = 3f;
                                                                                         }
-                                                                                        if (this.velocity.Y < -3f)
+                                                                                        if (this.Velocity.Y < -3f)
                                                                                         {
-                                                                                            this.velocity.Y = -3f;
+                                                                                            this.Velocity.Y = -3f;
                                                                                         }
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        this.velocity.X = this.velocity.X + (float)this.direction * 0.1f;
-                                                                                        this.velocity.Y = this.velocity.Y + (float)this.directionY * 0.1f;
-                                                                                        if (this.velocity.X > 3f)
+                                                                                        this.Velocity.X = this.Velocity.X + (float)this.direction * 0.1f;
+                                                                                        this.Velocity.Y = this.Velocity.Y + (float)this.directionY * 0.1f;
+                                                                                        if (this.Velocity.X > 3f)
                                                                                         {
-                                                                                            this.velocity.X = 3f;
+                                                                                            this.Velocity.X = 3f;
                                                                                         }
-                                                                                        if (this.velocity.X < -3f)
+                                                                                        if (this.Velocity.X < -3f)
                                                                                         {
-                                                                                            this.velocity.X = -3f;
+                                                                                            this.Velocity.X = -3f;
                                                                                         }
-                                                                                        if (this.velocity.Y > 2f)
+                                                                                        if (this.Velocity.Y > 2f)
                                                                                         {
-                                                                                            this.velocity.Y = 2f;
+                                                                                            this.Velocity.Y = 2f;
                                                                                         }
-                                                                                        if (this.velocity.Y < -2f)
+                                                                                        if (this.Velocity.Y < -2f)
                                                                                         {
-                                                                                            this.velocity.Y = -2f;
+                                                                                            this.Velocity.Y = -2f;
                                                                                         }
                                                                                     }
                                                                                 }
                                                                                 else
                                                                                 {
-                                                                                    this.velocity.X = this.velocity.X + (float)this.direction * 0.1f;
-                                                                                    if (this.velocity.X < -1f || this.velocity.X > 1f)
+                                                                                    this.Velocity.X = this.Velocity.X + (float)this.direction * 0.1f;
+                                                                                    if (this.Velocity.X < -1f || this.Velocity.X > 1f)
                                                                                     {
-                                                                                        this.velocity.X = this.velocity.X * 0.95f;
+                                                                                        this.Velocity.X = this.Velocity.X * 0.95f;
                                                                                     }
                                                                                     if (this.ai[0] == -1f)
                                                                                     {
-                                                                                        this.velocity.Y = this.velocity.Y - 0.01f;
-                                                                                        if ((double)this.velocity.Y < -0.3)
+                                                                                        this.Velocity.Y = this.Velocity.Y - 0.01f;
+                                                                                        if ((double)this.Velocity.Y < -0.3)
                                                                                         {
                                                                                             this.ai[0] = 1f;
                                                                                         }
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        this.velocity.Y = this.velocity.Y + 0.01f;
-                                                                                        if ((double)this.velocity.Y > 0.3)
+                                                                                        this.Velocity.Y = this.Velocity.Y + 0.01f;
+                                                                                        if ((double)this.Velocity.Y > 0.3)
                                                                                         {
                                                                                             this.ai[0] = -1f;
                                                                                         }
                                                                                     }
-                                                                                    int num147 = (int)(this.position.X + (float)(this.width / 2)) / 16;
-                                                                                    int num148 = (int)(this.position.Y + (float)(this.height / 2)) / 16;
+                                                                                    int num147 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
+                                                                                    int num148 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
                                                                                     if (Main.tile[num147, num148 - 1] == null)
                                                                                     {
                                                                                         Main.tile[num147, num148 - 1] = new Tile();
@@ -5456,54 +5456,54 @@ namespace Terraria_Server
                                                                                     }
                                                                                     if (Main.tile[num147, num148 - 1].liquid > 128)
                                                                                     {
-                                                                                        if (Main.tile[num147, num148 + 1].active)
+                                                                                        if (Main.tile[num147, num148 + 1].Active)
                                                                                         {
                                                                                             this.ai[0] = -1f;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            if (Main.tile[num147, num148 + 2].active)
+                                                                                            if (Main.tile[num147, num148 + 2].Active)
                                                                                             {
                                                                                                 this.ai[0] = -1f;
                                                                                             }
                                                                                         }
                                                                                     }
-                                                                                    if ((double)this.velocity.Y > 0.4 || (double)this.velocity.Y < -0.4)
+                                                                                    if ((double)this.Velocity.Y > 0.4 || (double)this.Velocity.Y < -0.4)
                                                                                     {
-                                                                                        this.velocity.Y = this.velocity.Y * 0.95f;
+                                                                                        this.Velocity.Y = this.Velocity.Y * 0.95f;
                                                                                     }
                                                                                 }
                                                                             }
                                                                             else
                                                                             {
-                                                                                if (this.velocity.Y == 0f)
+                                                                                if (this.Velocity.Y == 0f)
                                                                                 {
                                                                                     if (this.type == 65)
                                                                                     {
-                                                                                        this.velocity.X = this.velocity.X * 0.94f;
-                                                                                        if ((double)this.velocity.X > -0.2 && (double)this.velocity.X < 0.2)
+                                                                                        this.Velocity.X = this.Velocity.X * 0.94f;
+                                                                                        if ((double)this.Velocity.X > -0.2 && (double)this.Velocity.X < 0.2)
                                                                                         {
-                                                                                            this.velocity.X = 0f;
+                                                                                            this.Velocity.X = 0f;
                                                                                         }
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         if (Main.netMode != 1)
                                                                                         {
-                                                                                            this.velocity.Y = (float)Main.rand.Next(-50, -20) * 0.1f;
-                                                                                            this.velocity.X = (float)Main.rand.Next(-20, 20) * 0.1f;
+                                                                                            this.Velocity.Y = (float)Main.rand.Next(-50, -20) * 0.1f;
+                                                                                            this.Velocity.X = (float)Main.rand.Next(-20, 20) * 0.1f;
                                                                                             this.netUpdate = true;
                                                                                         }
                                                                                     }
                                                                                 }
-                                                                                this.velocity.Y = this.velocity.Y + 0.3f;
-                                                                                if (this.velocity.Y > 10f)
+                                                                                this.Velocity.Y = this.Velocity.Y + 0.3f;
+                                                                                if (this.Velocity.Y > 10f)
                                                                                 {
-                                                                                    this.velocity.Y = 10f;
+                                                                                    this.Velocity.Y = 10f;
                                                                                 }
                                                                                 this.ai[0] = 1f;
                                                                             }
-                                                                            this.rotation = this.velocity.Y * (float)this.direction * 0.1f;
+                                                                            this.rotation = this.Velocity.Y * (float)this.direction * 0.1f;
                                                                             if ((double)this.rotation < -0.2)
                                                                             {
                                                                                 this.rotation = -0.2f;
@@ -5524,19 +5524,19 @@ namespace Terraria_Server
                                                                                     this.TargetClosest(true);
                                                                                     if (Main.netMode != 1)
                                                                                     {
-                                                                                        if (this.velocity.X != 0f || this.velocity.Y != 0f)
+                                                                                        if (this.Velocity.X != 0f || this.Velocity.Y != 0f)
                                                                                         {
                                                                                             this.ai[0] = 1f;
                                                                                             this.netUpdate = true;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            Rectangle rectangle3 = new Rectangle((int)Main.players[this.target].position.X, (int)Main.players[this.target].position.Y, Main.players[this.target].width, Main.players[this.target].height);
-                                                                                            Rectangle rectangle4 = new Rectangle((int)this.position.X - 100, (int)this.position.Y - 100, this.width + 200, this.height + 200);
+                                                                                            Rectangle rectangle3 = new Rectangle((int)Main.players[this.target].Position.X, (int)Main.players[this.target].Position.Y, Main.players[this.target].width, Main.players[this.target].height);
+                                                                                            Rectangle rectangle4 = new Rectangle((int)this.Position.X - 100, (int)this.Position.Y - 100, this.width + 200, this.height + 200);
                                                                                             if (rectangle4.Intersects(rectangle3) || this.life < this.lifeMax)
                                                                                             {
                                                                                                 this.ai[0] = 1f;
-                                                                                                this.velocity.Y = this.velocity.Y - 6f;
+                                                                                                this.Velocity.Y = this.Velocity.Y - 6f;
                                                                                                 this.netUpdate = true;
                                                                                             }
                                                                                         }
@@ -5548,112 +5548,112 @@ namespace Terraria_Server
                                                                                     {
                                                                                         if (this.collideX)
                                                                                         {
-                                                                                            this.velocity.X = this.oldVelocity.X * -0.5f;
-                                                                                            if (this.direction == -1 && this.velocity.X > 0f && this.velocity.X < 2f)
+                                                                                            this.Velocity.X = this.oldVelocity.X * -0.5f;
+                                                                                            if (this.direction == -1 && this.Velocity.X > 0f && this.Velocity.X < 2f)
                                                                                             {
-                                                                                                this.velocity.X = 2f;
+                                                                                                this.Velocity.X = 2f;
                                                                                             }
-                                                                                            if (this.direction == 1 && this.velocity.X < 0f && this.velocity.X > -2f)
+                                                                                            if (this.direction == 1 && this.Velocity.X < 0f && this.Velocity.X > -2f)
                                                                                             {
-                                                                                                this.velocity.X = -2f;
+                                                                                                this.Velocity.X = -2f;
                                                                                             }
                                                                                         }
                                                                                         if (this.collideY)
                                                                                         {
-                                                                                            this.velocity.Y = this.oldVelocity.Y * -0.5f;
-                                                                                            if (this.velocity.Y > 0f && this.velocity.Y < 1f)
+                                                                                            this.Velocity.Y = this.oldVelocity.Y * -0.5f;
+                                                                                            if (this.Velocity.Y > 0f && this.Velocity.Y < 1f)
                                                                                             {
-                                                                                                this.velocity.Y = 1f;
+                                                                                                this.Velocity.Y = 1f;
                                                                                             }
-                                                                                            if (this.velocity.Y < 0f && this.velocity.Y > -1f)
+                                                                                            if (this.Velocity.Y < 0f && this.Velocity.Y > -1f)
                                                                                             {
-                                                                                                this.velocity.Y = -1f;
+                                                                                                this.Velocity.Y = -1f;
                                                                                             }
                                                                                         }
                                                                                         this.TargetClosest(true);
-                                                                                        if (this.direction == -1 && this.velocity.X > -3f)
+                                                                                        if (this.direction == -1 && this.Velocity.X > -3f)
                                                                                         {
-                                                                                            this.velocity.X = this.velocity.X - 0.1f;
-                                                                                            if (this.velocity.X > 3f)
+                                                                                            this.Velocity.X = this.Velocity.X - 0.1f;
+                                                                                            if (this.Velocity.X > 3f)
                                                                                             {
-                                                                                                this.velocity.X = this.velocity.X - 0.1f;
+                                                                                                this.Velocity.X = this.Velocity.X - 0.1f;
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                                if (this.velocity.X > 0f)
+                                                                                                if (this.Velocity.X > 0f)
                                                                                                 {
-                                                                                                    this.velocity.X = this.velocity.X - 0.05f;
+                                                                                                    this.Velocity.X = this.Velocity.X - 0.05f;
                                                                                                 }
                                                                                             }
-                                                                                            if (this.velocity.X < -3f)
+                                                                                            if (this.Velocity.X < -3f)
                                                                                             {
-                                                                                                this.velocity.X = -3f;
+                                                                                                this.Velocity.X = -3f;
                                                                                             }
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            if (this.direction == 1 && this.velocity.X < 3f)
+                                                                                            if (this.direction == 1 && this.Velocity.X < 3f)
                                                                                             {
-                                                                                                this.velocity.X = this.velocity.X + 0.1f;
-                                                                                                if (this.velocity.X < -3f)
+                                                                                                this.Velocity.X = this.Velocity.X + 0.1f;
+                                                                                                if (this.Velocity.X < -3f)
                                                                                                 {
-                                                                                                    this.velocity.X = this.velocity.X + 0.1f;
+                                                                                                    this.Velocity.X = this.Velocity.X + 0.1f;
                                                                                                 }
                                                                                                 else
                                                                                                 {
-                                                                                                    if (this.velocity.X < 0f)
+                                                                                                    if (this.Velocity.X < 0f)
                                                                                                     {
-                                                                                                        this.velocity.X = this.velocity.X + 0.05f;
+                                                                                                        this.Velocity.X = this.Velocity.X + 0.05f;
                                                                                                     }
                                                                                                 }
-                                                                                                if (this.velocity.X > 3f)
+                                                                                                if (this.Velocity.X > 3f)
                                                                                                 {
-                                                                                                    this.velocity.X = 3f;
+                                                                                                    this.Velocity.X = 3f;
                                                                                                 }
                                                                                             }
                                                                                         }
-                                                                                        float num149 = Math.Abs(this.position.X + (float)(this.width / 2) - (Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2)));
-                                                                                        float num150 = Main.players[this.target].position.Y - (float)(this.height / 2);
+                                                                                        float num149 = Math.Abs(this.Position.X + (float)(this.width / 2) - (Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2)));
+                                                                                        float num150 = Main.players[this.target].Position.Y - (float)(this.height / 2);
                                                                                         if (num149 > 50f)
                                                                                         {
                                                                                             num150 -= 100f;
                                                                                         }
-                                                                                        if (this.position.Y < num150)
+                                                                                        if (this.Position.Y < num150)
                                                                                         {
-                                                                                            this.velocity.Y = this.velocity.Y + 0.05f;
-                                                                                            if (this.velocity.Y < 0f)
+                                                                                            this.Velocity.Y = this.Velocity.Y + 0.05f;
+                                                                                            if (this.Velocity.Y < 0f)
                                                                                             {
-                                                                                                this.velocity.Y = this.velocity.Y + 0.01f;
+                                                                                                this.Velocity.Y = this.Velocity.Y + 0.01f;
                                                                                             }
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            this.velocity.Y = this.velocity.Y - 0.05f;
-                                                                                            if (this.velocity.Y > 0f)
+                                                                                            this.Velocity.Y = this.Velocity.Y - 0.05f;
+                                                                                            if (this.Velocity.Y > 0f)
                                                                                             {
-                                                                                                this.velocity.Y = this.velocity.Y - 0.01f;
+                                                                                                this.Velocity.Y = this.Velocity.Y - 0.01f;
                                                                                             }
                                                                                         }
-                                                                                        if (this.velocity.Y < -3f)
+                                                                                        if (this.Velocity.Y < -3f)
                                                                                         {
-                                                                                            this.velocity.Y = -3f;
+                                                                                            this.Velocity.Y = -3f;
                                                                                         }
-                                                                                        if (this.velocity.Y > 3f)
+                                                                                        if (this.Velocity.Y > 3f)
                                                                                         {
-                                                                                            this.velocity.Y = 3f;
+                                                                                            this.Velocity.Y = 3f;
                                                                                         }
                                                                                     }
                                                                                 }
                                                                                 if (this.wet)
                                                                                 {
-                                                                                    if (this.velocity.Y > 0f)
+                                                                                    if (this.Velocity.Y > 0f)
                                                                                     {
-                                                                                        this.velocity.Y = this.velocity.Y * 0.95f;
+                                                                                        this.Velocity.Y = this.Velocity.Y * 0.95f;
                                                                                     }
-                                                                                    this.velocity.Y = this.velocity.Y - 0.5f;
-                                                                                    if (this.velocity.Y < -4f)
+                                                                                    this.Velocity.Y = this.Velocity.Y - 0.5f;
+                                                                                    if (this.Velocity.Y < -4f)
                                                                                     {
-                                                                                        this.velocity.Y = -4f;
+                                                                                        this.Velocity.Y = -4f;
                                                                                     }
                                                                                     this.TargetClosest(true);
                                                                                     return;
@@ -5669,41 +5669,41 @@ namespace Terraria_Server
                                                                                     }
                                                                                     if (!this.wet)
                                                                                     {
-                                                                                        this.rotation += this.velocity.X * 0.1f;
-                                                                                        if (this.velocity.Y == 0f)
+                                                                                        this.rotation += this.Velocity.X * 0.1f;
+                                                                                        if (this.Velocity.Y == 0f)
                                                                                         {
-                                                                                            this.velocity.X = this.velocity.X * 0.98f;
-                                                                                            if ((double)this.velocity.X > -0.01 && (double)this.velocity.X < 0.01)
+                                                                                            this.Velocity.X = this.Velocity.X * 0.98f;
+                                                                                            if ((double)this.Velocity.X > -0.01 && (double)this.Velocity.X < 0.01)
                                                                                             {
-                                                                                                this.velocity.X = 0f;
+                                                                                                this.Velocity.X = 0f;
                                                                                             }
                                                                                         }
-                                                                                        this.velocity.Y = this.velocity.Y + 0.2f;
-                                                                                        if (this.velocity.Y > 10f)
+                                                                                        this.Velocity.Y = this.Velocity.Y + 0.2f;
+                                                                                        if (this.Velocity.Y > 10f)
                                                                                         {
-                                                                                            this.velocity.Y = 10f;
+                                                                                            this.Velocity.Y = 10f;
                                                                                         }
                                                                                         this.ai[0] = 1f;
                                                                                         return;
                                                                                     }
                                                                                     if (this.collideX)
                                                                                     {
-                                                                                        this.velocity.X = this.velocity.X * -1f;
+                                                                                        this.Velocity.X = this.Velocity.X * -1f;
                                                                                         this.direction *= -1;
                                                                                     }
                                                                                     if (this.collideY)
                                                                                     {
-                                                                                        if (this.velocity.Y > 0f)
+                                                                                        if (this.Velocity.Y > 0f)
                                                                                         {
-                                                                                            this.velocity.Y = Math.Abs(this.velocity.Y) * -1f;
+                                                                                            this.Velocity.Y = Math.Abs(this.Velocity.Y) * -1f;
                                                                                             this.directionY = -1;
                                                                                             this.ai[0] = -1f;
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            if (this.velocity.Y < 0f)
+                                                                                            if (this.Velocity.Y < 0f)
                                                                                             {
-                                                                                                this.velocity.Y = Math.Abs(this.velocity.Y);
+                                                                                                this.Velocity.Y = Math.Abs(this.Velocity.Y);
                                                                                                 this.directionY = 1;
                                                                                                 this.ai[0] = 1f;
                                                                                             }
@@ -5720,51 +5720,51 @@ namespace Terraria_Server
                                                                                     }
                                                                                     if (flag14)
                                                                                     {
-                                                                                        this.rotation = (float)Math.Atan2((double)this.velocity.Y, (double)this.velocity.X) + 1.57f;
-                                                                                        this.velocity *= 0.98f;
+                                                                                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 1.57f;
+                                                                                        this.Velocity *= 0.98f;
                                                                                         float num151 = 0.2f;
-                                                                                        if (this.velocity.X > -num151 && this.velocity.X < num151 && this.velocity.Y > -num151 && this.velocity.Y < num151)
+                                                                                        if (this.Velocity.X > -num151 && this.Velocity.X < num151 && this.Velocity.Y > -num151 && this.Velocity.Y < num151)
                                                                                         {
                                                                                             this.TargetClosest(true);
                                                                                             float num152 = 7f;
-                                                                                            Vector2 vector20 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                            float num153 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector20.X;
-                                                                                            float num154 = Main.players[this.target].position.Y + (float)(Main.players[this.target].height / 2) - vector20.Y;
+                                                                                            Vector2 vector20 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                                            float num153 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector20.X;
+                                                                                            float num154 = Main.players[this.target].Position.Y + (float)(Main.players[this.target].height / 2) - vector20.Y;
                                                                                             float num155 = (float)Math.Sqrt((double)(num153 * num153 + num154 * num154));
                                                                                             num155 = num152 / num155;
                                                                                             num153 *= num155;
                                                                                             num154 *= num155;
-                                                                                            this.velocity.X = num153;
-                                                                                            this.velocity.Y = num154;
+                                                                                            this.Velocity.X = num153;
+                                                                                            this.Velocity.Y = num154;
                                                                                             return;
                                                                                         }
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        this.velocity.X = this.velocity.X + (float)this.direction * 0.02f;
-                                                                                        this.rotation = this.velocity.X * 0.4f;
-                                                                                        if (this.velocity.X < -1f || this.velocity.X > 1f)
+                                                                                        this.Velocity.X = this.Velocity.X + (float)this.direction * 0.02f;
+                                                                                        this.rotation = this.Velocity.X * 0.4f;
+                                                                                        if (this.Velocity.X < -1f || this.Velocity.X > 1f)
                                                                                         {
-                                                                                            this.velocity.X = this.velocity.X * 0.95f;
+                                                                                            this.Velocity.X = this.Velocity.X * 0.95f;
                                                                                         }
                                                                                         if (this.ai[0] == -1f)
                                                                                         {
-                                                                                            this.velocity.Y = this.velocity.Y - 0.01f;
-                                                                                            if (this.velocity.Y < -1f)
+                                                                                            this.Velocity.Y = this.Velocity.Y - 0.01f;
+                                                                                            if (this.Velocity.Y < -1f)
                                                                                             {
                                                                                                 this.ai[0] = 1f;
                                                                                             }
                                                                                         }
                                                                                         else
                                                                                         {
-                                                                                            this.velocity.Y = this.velocity.Y + 0.01f;
-                                                                                            if (this.velocity.Y > 1f)
+                                                                                            this.Velocity.Y = this.Velocity.Y + 0.01f;
+                                                                                            if (this.Velocity.Y > 1f)
                                                                                             {
                                                                                                 this.ai[0] = -1f;
                                                                                             }
                                                                                         }
-                                                                                        int num156 = (int)(this.position.X + (float)(this.width / 2)) / 16;
-                                                                                        int num157 = (int)(this.position.Y + (float)(this.height / 2)) / 16;
+                                                                                        int num156 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
+                                                                                        int num157 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
                                                                                         if (Main.tile[num156, num157 - 1] == null)
                                                                                         {
                                                                                             Main.tile[num156, num157 - 1] = new Tile();
@@ -5779,13 +5779,13 @@ namespace Terraria_Server
                                                                                         }
                                                                                         if (Main.tile[num156, num157 - 1].liquid > 128)
                                                                                         {
-                                                                                            if (Main.tile[num156, num157 + 1].active)
+                                                                                            if (Main.tile[num156, num157 + 1].Active)
                                                                                             {
                                                                                                 this.ai[0] = -1f;
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                                if (Main.tile[num156, num157 + 2].active)
+                                                                                                if (Main.tile[num156, num157 + 2].Active)
                                                                                                 {
                                                                                                     this.ai[0] = -1f;
                                                                                                 }
@@ -5795,9 +5795,9 @@ namespace Terraria_Server
                                                                                         {
                                                                                             this.ai[0] = 1f;
                                                                                         }
-                                                                                        if ((double)this.velocity.Y > 1.2 || (double)this.velocity.Y < -1.2)
+                                                                                        if ((double)this.Velocity.Y > 1.2 || (double)this.Velocity.Y < -1.2)
                                                                                         {
-                                                                                            this.velocity.Y = this.velocity.Y * 0.99f;
+                                                                                            this.Velocity.Y = this.Velocity.Y * 0.99f;
                                                                                             return;
                                                                                         }
                                                                                     }
@@ -5808,9 +5808,9 @@ namespace Terraria_Server
                                                                                     {
                                                                                         this.TargetClosest(true);
                                                                                         float num158 = 12f;
-                                                                                        Vector2 vector21 = new Vector2(this.position.X + (float)this.width * 0.5f, this.position.Y + (float)this.height * 0.5f);
-                                                                                        float num159 = Main.players[this.target].position.X + (float)(Main.players[this.target].width / 2) - vector21.X;
-                                                                                        float num160 = Main.players[this.target].position.Y - vector21.Y;
+                                                                                        Vector2 vector21 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
+                                                                                        float num159 = Main.players[this.target].Position.X + (float)(Main.players[this.target].width / 2) - vector21.X;
+                                                                                        float num160 = Main.players[this.target].Position.Y - vector21.Y;
                                                                                         float num161 = (float)Math.Sqrt((double)(num159 * num159 + num160 * num160));
                                                                                         num161 = num158 / num161;
                                                                                         num159 *= num161;
@@ -5831,13 +5831,13 @@ namespace Terraria_Server
                                                                                                     this.rotation = 0.8f;
                                                                                                 }
                                                                                             }
-                                                                                            if (this.velocity.X != 0f)
+                                                                                            if (this.Velocity.X != 0f)
                                                                                             {
-                                                                                                this.velocity.X = this.velocity.X * 0.9f;
-                                                                                                if ((double)this.velocity.X > -0.1 || (double)this.velocity.X < 0.1)
+                                                                                                this.Velocity.X = this.Velocity.X * 0.9f;
+                                                                                                if ((double)this.Velocity.X > -0.1 || (double)this.Velocity.X < 0.1)
                                                                                                 {
                                                                                                     this.netUpdate = true;
-                                                                                                    this.velocity.X = 0f;
+                                                                                                    this.Velocity.X = 0f;
                                                                                                 }
                                                                                             }
                                                                                         }
@@ -5845,7 +5845,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             this.ai[0] -= 1f;
                                                                                         }
-                                                                                        if (Main.netMode != 1 && flag15 && this.ai[0] == 0f && Collision.CanHit(this.position, this.width, this.height, Main.players[this.target].position, Main.players[this.target].width, Main.players[this.target].height))
+                                                                                        if (Main.netMode != 1 && flag15 && this.ai[0] == 0f && Collision.CanHit(this.Position, this.width, this.height, Main.players[this.target].Position, Main.players[this.target].width, Main.players[this.target].height))
                                                                                         {
                                                                                             this.ai[0] = 200f;
                                                                                             int num162 = 10;
@@ -5859,10 +5859,10 @@ namespace Terraria_Server
                                                                                         }
                                                                                         try
                                                                                         {
-                                                                                            int num165 = (int)this.position.X / 16;
-                                                                                            int num166 = (int)(this.position.X + (float)(this.width / 2)) / 16;
-                                                                                            int num167 = (int)(this.position.X + (float)this.width) / 16;
-                                                                                            int num168 = (int)(this.position.Y + (float)this.height) / 16;
+                                                                                            int num165 = (int)this.Position.X / 16;
+                                                                                            int num166 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
+                                                                                            int num167 = (int)(this.Position.X + (float)this.width) / 16;
+                                                                                            int num168 = (int)(this.Position.Y + (float)this.height) / 16;
                                                                                             bool flag16 = false;
                                                                                             if (Main.tile[num165, num168] == null)
                                                                                             {
@@ -5876,7 +5876,7 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 Main.tile[num165, num168] = new Tile();
                                                                                             }
-                                                                                            if ((Main.tile[num165, num168].active && Main.tileSolid[(int)Main.tile[num165, num168].type]) || (Main.tile[num166, num168].active && Main.tileSolid[(int)Main.tile[num166, num168].type]) || (Main.tile[num167, num168].active && Main.tileSolid[(int)Main.tile[num167, num168].type]))
+                                                                                            if ((Main.tile[num165, num168].Active && Main.tileSolid[(int)Main.tile[num165, num168].type]) || (Main.tile[num166, num168].Active && Main.tileSolid[(int)Main.tile[num166, num168].type]) || (Main.tile[num167, num168].Active && Main.tileSolid[(int)Main.tile[num167, num168].type]))
                                                                                             {
                                                                                                 flag16 = true;
                                                                                             }
@@ -5884,7 +5884,7 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 this.noGravity = true;
                                                                                                 this.noTileCollide = true;
-                                                                                                this.velocity.Y = -0.2f;
+                                                                                                this.Velocity.Y = -0.2f;
                                                                                             }
                                                                                             else
                                                                                             {
@@ -5892,12 +5892,12 @@ namespace Terraria_Server
                                                                                                 this.noTileCollide = false;
                                                                                                 if (Main.rand.Next(2) == 0)
                                                                                                 {
-                                                                                                    Vector2 arg_BA65_0 = new Vector2(this.position.X - 4f, this.position.Y + (float)this.height - 8f);
+                                                                                                    Vector2 arg_BA65_0 = new Vector2(this.Position.X - 4f, this.Position.Y + (float)this.height - 8f);
                                                                                                     int arg_BA65_1 = this.width + 8;
                                                                                                     int arg_BA65_2 = 24;
                                                                                                     int arg_BA65_3 = 32;
                                                                                                     float arg_BA65_4 = 0f;
-                                                                                                    float arg_BA65_5 = this.velocity.Y / 2f;
+                                                                                                    float arg_BA65_5 = this.Velocity.Y / 2f;
                                                                                                     int arg_BA65_6 = 0;
                                                                                                     Color newColor = default(Color);
                                                                                                     int num169 = Dust.NewDust(arg_BA65_0, arg_BA65_1, arg_BA65_2, arg_BA65_3, arg_BA65_4, arg_BA65_5, arg_BA65_6, newColor, 1f);
@@ -5943,19 +5943,19 @@ namespace Terraria_Server
             int num2 = 0;
             if (this.aiAction == 0)
             {
-                if (this.velocity.Y < 0f)
+                if (this.Velocity.Y < 0f)
                 {
                     num2 = 2;
                 }
                 else
                 {
-                    if (this.velocity.Y > 0f)
+                    if (this.Velocity.Y > 0f)
                     {
                         num2 = 3;
                     }
                     else
                     {
-                        if (this.velocity.X != 0f)
+                        if (this.Velocity.X != 0f)
                         {
                             num2 = 1;
                         }
@@ -5996,7 +5996,7 @@ namespace Terraria_Server
             }
             if (this.type == 50)
             {
-                if (this.velocity.Y != 0f)
+                if (this.Velocity.Y != 0f)
                 {
                     this.frame.Y = num * 4;
                 }
@@ -6025,8 +6025,8 @@ namespace Terraria_Server
             if (this.type == 61)
             {
                 this.spriteDirection = this.direction;
-                this.rotation = this.velocity.X * 0.1f;
-                if (this.velocity.X == 0f && this.velocity.Y == 0f)
+                this.rotation = this.Velocity.X * 0.1f;
+                if (this.Velocity.X == 0f && this.Velocity.Y == 0f)
                 {
                     this.frame.Y = 0;
                     this.frameCounter = 0.0;
@@ -6051,7 +6051,7 @@ namespace Terraria_Server
             if (this.type == 62 || this.type == 66)
             {
                 this.spriteDirection = this.direction;
-                this.rotation = this.velocity.X * 0.1f;
+                this.rotation = this.Velocity.X * 0.1f;
                 this.frameCounter += 1.0;
                 if (this.frameCounter < 6.0)
                 {
@@ -6100,15 +6100,15 @@ namespace Terraria_Server
             {
                 if (this.type == 2)
                 {
-                    if (this.velocity.X > 0f)
+                    if (this.Velocity.X > 0f)
                     {
                         this.spriteDirection = 1;
-                        this.rotation = (float)Math.Atan2((double)this.velocity.Y, (double)this.velocity.X);
+                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X);
                     }
-                    if (this.velocity.X < 0f)
+                    if (this.Velocity.X < 0f)
                     {
                         this.spriteDirection = -1;
-                        this.rotation = (float)Math.Atan2((double)this.velocity.Y, (double)this.velocity.X) + 3.14f;
+                        this.rotation = (float)Math.Atan2((double)this.Velocity.Y, (double)this.Velocity.X) + 3.14f;
                     }
                 }
                 this.frameCounter += 1.0;
@@ -6200,7 +6200,7 @@ namespace Terraria_Server
             }
             if (this.type == 67)
             {
-                if (this.velocity.Y == 0f)
+                if (this.Velocity.Y == 0f)
                 {
                     this.spriteDirection = this.direction;
                 }
@@ -6254,15 +6254,15 @@ namespace Terraria_Server
             }
             if (this.type == 48 || this.type == 49 || this.type == 51 || this.type == 60)
             {
-                if (this.velocity.X > 0f)
+                if (this.Velocity.X > 0f)
                 {
                     this.spriteDirection = 1;
                 }
-                if (this.velocity.X < 0f)
+                if (this.Velocity.X < 0f)
                 {
                     this.spriteDirection = -1;
                 }
-                this.rotation = this.velocity.X * 0.1f;
+                this.rotation = this.Velocity.X * 0.1f;
                 this.frameCounter += 1.0;
                 if (this.frameCounter >= 6.0)
                 {
@@ -6342,7 +6342,7 @@ namespace Terraria_Server
             }
             if (this.type == 17 || this.type == 18 || this.type == 19 || this.type == 20 || this.type == 22 || this.type == 38 || this.type == 26 || this.type == 27 || this.type == 28 || this.type == 31 || this.type == 21 || this.type == 44 || this.type == 54 || this.type == 37)
             {
-                if (this.velocity.Y == 0f)
+                if (this.Velocity.Y == 0f)
                 {
                     if (this.direction == 1)
                     {
@@ -6352,14 +6352,14 @@ namespace Terraria_Server
                     {
                         this.spriteDirection = -1;
                     }
-                    if (this.velocity.X == 0f)
+                    if (this.Velocity.X == 0f)
                     {
                         this.frame.Y = 0;
                         this.frameCounter = 0.0;
                     }
                     else
                     {
-                        this.frameCounter += (double)(Math.Abs(this.velocity.X) * 2f);
+                        this.frameCounter += (double)(Math.Abs(this.Velocity.X) * 2f);
                         this.frameCounter += 1.0;
                         if (this.frameCounter > 6.0)
                         {
@@ -6386,7 +6386,7 @@ namespace Terraria_Server
             {
                 if (this.type == 3 || this.type == 52 || this.type == 53)
                 {
-                    if (this.velocity.Y == 0f)
+                    if (this.Velocity.Y == 0f)
                     {
                         if (this.direction == 1)
                         {
@@ -6397,21 +6397,21 @@ namespace Terraria_Server
                             this.spriteDirection = -1;
                         }
                     }
-                    if (this.velocity.Y != 0f || (this.direction == -1 && this.velocity.X > 0f) || (this.direction == 1 && this.velocity.X < 0f))
+                    if (this.Velocity.Y != 0f || (this.direction == -1 && this.Velocity.X > 0f) || (this.direction == 1 && this.Velocity.X < 0f))
                     {
                         this.frameCounter = 0.0;
                         this.frame.Y = num * 2;
                     }
                     else
                     {
-                        if (this.velocity.X == 0f)
+                        if (this.Velocity.X == 0f)
                         {
                             this.frameCounter = 0.0;
                             this.frame.Y = 0;
                         }
                         else
                         {
-                            this.frameCounter += (double)Math.Abs(this.velocity.X);
+                            this.frameCounter += (double)Math.Abs(this.Velocity.X);
                             if (this.frameCounter < 8.0)
                             {
                                 this.frame.Y = 0;
@@ -6448,7 +6448,7 @@ namespace Terraria_Server
                 {
                     if (this.type == 46 || this.type == 47)
                     {
-                        if (this.velocity.Y == 0f)
+                        if (this.Velocity.Y == 0f)
                         {
                             if (this.direction == 1)
                             {
@@ -6458,14 +6458,14 @@ namespace Terraria_Server
                             {
                                 this.spriteDirection = -1;
                             }
-                            if (this.velocity.X == 0f)
+                            if (this.Velocity.X == 0f)
                             {
                                 this.frame.Y = 0;
                                 this.frameCounter = 0.0;
                             }
                             else
                             {
-                                this.frameCounter += (double)(Math.Abs(this.velocity.X) * 1f);
+                                this.frameCounter += (double)(Math.Abs(this.Velocity.X) * 1f);
                                 this.frameCounter += 1.0;
                                 if (this.frameCounter > 6.0)
                                 {
@@ -6480,14 +6480,14 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            if (this.velocity.Y < 0f)
+                            if (this.Velocity.Y < 0f)
                             {
                                 this.frameCounter = 0.0;
                                 this.frame.Y = num * 4;
                             }
                             else
                             {
-                                if (this.velocity.Y > 0f)
+                                if (this.Velocity.Y > 0f)
                                 {
                                     this.frameCounter = 0.0;
                                     this.frame.Y = num * 6;
@@ -6562,7 +6562,7 @@ namespace Terraria_Server
                                 {
                                     if (this.type == 24)
                                     {
-                                        if (this.velocity.Y == 0f)
+                                        if (this.Velocity.Y == 0f)
                                         {
                                             if (this.direction == 1)
                                             {
@@ -6653,7 +6653,7 @@ namespace Terraria_Server
                                     {
                                         if (this.type == 29 || this.type == 32 || this.type == 45)
                                         {
-                                            if (this.velocity.Y == 0f)
+                                            if (this.Velocity.Y == 0f)
                                             {
                                                 if (this.direction == 1)
                                                 {
@@ -6665,7 +6665,7 @@ namespace Terraria_Server
                                                 }
                                             }
                                             this.frame.Y = 0;
-                                            if (this.velocity.Y != 0f)
+                                            if (this.Velocity.Y != 0f)
                                             {
                                                 this.frame.Y = this.frame.Y + num;
                                             }
@@ -6704,9 +6704,9 @@ namespace Terraria_Server
             float num = -1f;
             for (int i = 0; i < 255; i++)
             {
-                if (Main.players[i].active && !Main.players[i].dead && (num == -1f || Math.Abs(Main.players[i].position.X + (float)(Main.players[i].width / 2) - this.position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].position.Y + (float)(Main.players[i].height / 2) - this.position.Y + (float)(this.height / 2)) < num))
+                if (Main.players[i].Active && !Main.players[i].dead && (num == -1f || Math.Abs(Main.players[i].Position.X + (float)(Main.players[i].width / 2) - this.Position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].Position.Y + (float)(Main.players[i].height / 2) - this.Position.Y + (float)(this.height / 2)) < num))
                 {
-                    num = Math.Abs(Main.players[i].position.X + (float)(Main.players[i].width / 2) - this.position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].position.Y + (float)(Main.players[i].height / 2) - this.position.Y + (float)(this.height / 2));
+                    num = Math.Abs(Main.players[i].Position.X + (float)(Main.players[i].width / 2) - this.Position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].Position.Y + (float)(Main.players[i].height / 2) - this.Position.Y + (float)(this.height / 2));
                     this.target = i;
                 }
             }
@@ -6714,16 +6714,16 @@ namespace Terraria_Server
             {
                 this.target = 0;
             }
-            this.targetRect = new Rectangle((int)Main.players[this.target].position.X, (int)Main.players[this.target].position.Y, Main.players[this.target].width, Main.players[this.target].height);
+            this.targetRect = new Rectangle((int)Main.players[this.target].Position.X, (int)Main.players[this.target].Position.Y, Main.players[this.target].width, Main.players[this.target].height);
             if (faceTarget)
             {
                 this.direction = 1;
-                if ((float)(this.targetRect.X + this.targetRect.Width / 2) < this.position.X + (float)(this.width / 2))
+                if ((float)(this.targetRect.X + this.targetRect.Width / 2) < this.Position.X + (float)(this.width / 2))
                 {
                     this.direction = -1;
                 }
                 this.directionY = 1;
-                if ((float)(this.targetRect.Y + this.targetRect.Height / 2) < this.position.Y + (float)(this.height / 2))
+                if ((float)(this.targetRect.Y + this.targetRect.Height / 2) < this.Position.Y + (float)(this.height / 2))
                 {
                     this.directionY = -1;
                 }
@@ -6736,7 +6736,7 @@ namespace Terraria_Server
         
         public void CheckActive()
         {
-            if (this.active)
+            if (this.Active)
             {
                 if (this.type == 8 || this.type == 9 || this.type == 11 || this.type == 12 || this.type == 14 || this.type == 15 || this.type == 40 || this.type == 41)
                 {
@@ -6744,12 +6744,12 @@ namespace Terraria_Server
                 }
                 if (this.townNPC)
                 {
-                    if ((double)this.position.Y < Main.worldSurface * 18.0)
+                    if ((double)this.Position.Y < Main.worldSurface * 18.0)
                     {
-                        Rectangle rectangle = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)NPC.townRangeX), (int)(this.position.Y + (float)(this.height / 2) - (float)NPC.townRangeY), NPC.townRangeX * 2, NPC.townRangeY * 2);
+                        Rectangle rectangle = new Rectangle((int)(this.Position.X + (float)(this.width / 2) - (float)NPC.townRangeX), (int)(this.Position.Y + (float)(this.height / 2) - (float)NPC.townRangeY), NPC.townRangeX * 2, NPC.townRangeY * 2);
                         for (int i = 0; i < 255; i++)
                         {
-                            if (Main.players[i].active && rectangle.Intersects(new Rectangle((int)Main.players[i].position.X, (int)Main.players[i].position.Y, Main.players[i].width, Main.players[i].height)))
+                            if (Main.players[i].Active && rectangle.Intersects(new Rectangle((int)Main.players[i].Position.X, (int)Main.players[i].Position.Y, Main.players[i].width, Main.players[i].height)))
                             {
                                 Main.players[i].townNPCs += (int)NPC.npcSlots;
                             }
@@ -6758,13 +6758,13 @@ namespace Terraria_Server
                     return;
                 }
                 bool flag = false;
-                Rectangle rectangle2 = new Rectangle((int)(this.position.X + (float)(this.width / 2) - (float)NPC.activeRangeX), (int)(this.position.Y + (float)(this.height / 2) - (float)NPC.activeRangeY), NPC.activeRangeX * 2, NPC.activeRangeY * 2);
-                Rectangle rectangle3 = new Rectangle((int)((double)(this.position.X + (float)(this.width / 2)) - (double)NPC.sWidth * 0.5 - (double)this.width), (int)((double)(this.position.Y + (float)(this.height / 2)) - (double)NPC.sHeight * 0.5 - (double)this.height), NPC.sWidth + this.width * 2, NPC.sHeight + this.height * 2);
+                Rectangle rectangle2 = new Rectangle((int)(this.Position.X + (float)(this.width / 2) - (float)NPC.activeRangeX), (int)(this.Position.Y + (float)(this.height / 2) - (float)NPC.activeRangeY), NPC.activeRangeX * 2, NPC.activeRangeY * 2);
+                Rectangle rectangle3 = new Rectangle((int)((double)(this.Position.X + (float)(this.width / 2)) - (double)NPC.sWidth * 0.5 - (double)this.width), (int)((double)(this.Position.Y + (float)(this.height / 2)) - (double)NPC.sHeight * 0.5 - (double)this.height), NPC.sWidth + this.width * 2, NPC.sHeight + this.height * 2);
                 for (int j = 0; j < 255; j++)
                 {
-                    if (Main.players[j].active)
+                    if (Main.players[j].Active)
                     {
-                        if (rectangle2.Intersects(new Rectangle((int)Main.players[j].position.X, (int)Main.players[j].position.Y, Main.players[j].width, Main.players[j].height)))
+                        if (rectangle2.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].width, Main.players[j].height)))
                         {
                             flag = true;
                             if (this.type != 25 && this.type != 30 && this.type != 33)
@@ -6772,7 +6772,7 @@ namespace Terraria_Server
                                 Main.players[j].activeNPCs += (int)NPC.npcSlots;
                             }
                         }
-                        if (rectangle3.Intersects(new Rectangle((int)Main.players[j].position.X, (int)Main.players[j].position.Y, Main.players[j].width, Main.players[j].height)))
+                        if (rectangle3.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].width, Main.players[j].height)))
                         {
                             this.timeLeft = NPC.activeTime;
                         }
@@ -6794,7 +6794,7 @@ namespace Terraria_Server
                 if (!flag && Main.netMode != 1)
                 {
                     NPC.noSpawnCycle = true;
-                    this.active = false;
+                    this.Active = false;
                     if (Main.netMode == 2)
                     {
                         this.life = 0;
@@ -6818,21 +6818,21 @@ namespace Terraria_Server
             int num3 = 0;
             for (int i = 0; i < 255; i++)
             {
-                if (Main.players[i].active)
+                if (Main.players[i].Active)
                 {
                     num3++;
                 }
             }
             for (int j = 0; j < 255; j++)
             {
-                if (Main.players[j].active && !Main.players[j].dead)
+                if (Main.players[j].Active && !Main.players[j].dead)
                 {
                     bool flag3 = false;
                     bool flag4 = false;
-                    if (Main.players[j].active && Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0 && (double)Main.players[j].position.Y < Main.worldSurface * 16.0 + (double)NPC.sHeight)
+                    if (Main.players[j].Active && Main.invasionType > 0 && Main.invasionDelay == 0 && Main.invasionSize > 0 && (double)Main.players[j].Position.Y < Main.worldSurface * 16.0 + (double)NPC.sHeight)
                     {
                         int num4 = 3000;
-                        if ((double)Main.players[j].position.X > Main.invasionX * 16.0 - (double)num4 && (double)Main.players[j].position.X < Main.invasionX * 16.0 + (double)num4)
+                        if ((double)Main.players[j].Position.X > Main.invasionX * 16.0 - (double)num4 && (double)Main.players[j].Position.X < Main.invasionX * 16.0 + (double)num4)
                         {
                             flag3 = true;
                         }
@@ -6840,21 +6840,21 @@ namespace Terraria_Server
                     flag = false;
                     NPC.spawnRate = NPC.defaultSpawnRate;
                     NPC.maxSpawns = NPC.defaultMaxSpawns;
-                    if (Main.players[j].position.Y > (float)((Main.maxTilesY - 200) * 16))
+                    if (Main.players[j].Position.Y > (float)((Main.maxTilesY - 200) * 16))
                     {
                         NPC.spawnRate = (int)((float)NPC.spawnRate * 0.4f);
                         NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2.1f);
                     }
                     else
                     {
-                        if ((double)Main.players[j].position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
+                        if ((double)Main.players[j].Position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
                         {
                             NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
                             NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.9f);
                         }
                         else
                         {
-                            if ((double)Main.players[j].position.Y > Main.worldSurface * 16.0 + (double)NPC.sHeight)
+                            if ((double)Main.players[j].Position.Y > Main.worldSurface * 16.0 + (double)NPC.sHeight)
                             {
                                 NPC.spawnRate = (int)((double)NPC.spawnRate * 0.5);
                                 NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.7f);
@@ -6928,7 +6928,7 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if ((double)(Main.players[j].position.Y * 16f) > (Main.worldSurface + Main.rockLayer) / 2.0 || Main.players[j].zoneEvil)
+                    if ((double)(Main.players[j].Position.Y * 16f) > (Main.worldSurface + Main.rockLayer) / 2.0 || Main.players[j].zoneEvil)
                     {
                         if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
                         {
@@ -7008,16 +7008,16 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (Main.players[j].active && !Main.players[j].dead && Main.players[j].activeNPCs < (float)NPC.maxSpawns && Main.rand.Next(NPC.spawnRate) == 0)
+                    if (Main.players[j].Active && !Main.players[j].dead && Main.players[j].activeNPCs < (float)NPC.maxSpawns && Main.rand.Next(NPC.spawnRate) == 0)
                     {
-                        int num5 = (int)(Main.players[j].position.X / 16f) - NPC.spawnRangeX;
-                        int num6 = (int)(Main.players[j].position.X / 16f) + NPC.spawnRangeX;
-                        int num7 = (int)(Main.players[j].position.Y / 16f) - NPC.spawnRangeY;
-                        int num8 = (int)(Main.players[j].position.Y / 16f) + NPC.spawnRangeY;
-                        int num9 = (int)(Main.players[j].position.X / 16f) - NPC.safeRangeX;
-                        int num10 = (int)(Main.players[j].position.X / 16f) + NPC.safeRangeX;
-                        int num11 = (int)(Main.players[j].position.Y / 16f) - NPC.safeRangeY;
-                        int num12 = (int)(Main.players[j].position.Y / 16f) + NPC.safeRangeY;
+                        int num5 = (int)(Main.players[j].Position.X / 16f) - NPC.spawnRangeX;
+                        int num6 = (int)(Main.players[j].Position.X / 16f) + NPC.spawnRangeX;
+                        int num7 = (int)(Main.players[j].Position.Y / 16f) - NPC.spawnRangeY;
+                        int num8 = (int)(Main.players[j].Position.Y / 16f) + NPC.spawnRangeY;
+                        int num9 = (int)(Main.players[j].Position.X / 16f) - NPC.safeRangeX;
+                        int num10 = (int)(Main.players[j].Position.X / 16f) + NPC.safeRangeX;
+                        int num11 = (int)(Main.players[j].Position.Y / 16f) - NPC.safeRangeY;
+                        int num12 = (int)(Main.players[j].Position.Y / 16f) + NPC.safeRangeY;
                         if (num5 < 0)
                         {
                             num5 = 0;
@@ -7039,7 +7039,7 @@ namespace Terraria_Server
                         {
                             int num13 = Main.rand.Next(num5, num6);
                             int num14 = Main.rand.Next(num7, num8);
-                            if (Main.tile[num13, num14].active && Main.tileSolid[(int)Main.tile[num13, num14].type])
+                            if (Main.tile[num13, num14].Active && Main.tileSolid[(int)Main.tile[num13, num14].type])
                             {
                                 goto IL_ACE;
                             }
@@ -7058,7 +7058,7 @@ namespace Terraria_Server
                                     int l = num14;
                                     while (l < Main.maxTilesY)
                                     {
-                                        if (Main.tile[num13, l].active && Main.tileSolid[(int)Main.tile[num13, l].type])
+                                        if (Main.tile[num13, l].Active && Main.tileSolid[(int)Main.tile[num13, l].type])
                                         {
                                             if (num13 < num9 || num13 > num10 || l < num11 || l > num12)
                                             {
@@ -7106,7 +7106,7 @@ namespace Terraria_Server
                                     {
                                         for (int n = num17; n < num18; n++)
                                         {
-                                            if (Main.tile[m, n].active && Main.tileSolid[(int)Main.tile[m, n].type])
+                                            if (Main.tile[m, n].Active && Main.tileSolid[(int)Main.tile[m, n].type])
                                             {
                                                 flag = false;
                                                 break;
@@ -7138,9 +7138,9 @@ namespace Terraria_Server
                         Rectangle rectangle = new Rectangle(num * 16, num2 * 16, 16, 16);
                         for (int num19 = 0; num19 < 255; num19++)
                         {
-                            if (Main.players[num19].active)
+                            if (Main.players[num19].Active)
                             {
-                                Rectangle rectangle2 = new Rectangle((int)(Main.players[num19].position.X + (float)(Main.players[num19].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[num19].position.Y + (float)(Main.players[num19].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                Rectangle rectangle2 = new Rectangle((int)(Main.players[num19].Position.X + (float)(Main.players[num19].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[num19].Position.Y + (float)(Main.players[num19].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                                 if (rectangle.Intersects(rectangle2))
                                 {
                                     flag = false;
@@ -7614,14 +7614,14 @@ namespace Terraria_Server
             bool flag = false;
             int num = 0;
             int num2 = 0;
-            int num3 = (int)(player.position.X / 16f) - NPC.spawnRangeX * 3;
-            int num4 = (int)(player.position.X / 16f) + NPC.spawnRangeX * 3;
-            int num5 = (int)(player.position.Y / 16f) - NPC.spawnRangeY * 3;
-            int num6 = (int)(player.position.Y / 16f) + NPC.spawnRangeY * 3;
-            int num7 = (int)(player.position.X / 16f) - NPC.safeRangeX;
-            int num8 = (int)(player.position.X / 16f) + NPC.safeRangeX;
-            int num9 = (int)(player.position.Y / 16f) - NPC.safeRangeY;
-            int num10 = (int)(player.position.Y / 16f) + NPC.safeRangeY;
+            int num3 = (int)(player.Position.X / 16f) - NPC.spawnRangeX * 3;
+            int num4 = (int)(player.Position.X / 16f) + NPC.spawnRangeX * 3;
+            int num5 = (int)(player.Position.Y / 16f) - NPC.spawnRangeY * 3;
+            int num6 = (int)(player.Position.Y / 16f) + NPC.spawnRangeY * 3;
+            int num7 = (int)(player.Position.X / 16f) - NPC.safeRangeX;
+            int num8 = (int)(player.Position.X / 16f) + NPC.safeRangeX;
+            int num9 = (int)(player.Position.Y / 16f) - NPC.safeRangeY;
+            int num10 = (int)(player.Position.Y / 16f) + NPC.safeRangeY;
             if (num3 < 0)
             {
                 num3 = 0;
@@ -7645,7 +7645,7 @@ namespace Terraria_Server
                 {
                     int num11 = Main.rand.Next(num3, num4);
                     int num12 = Main.rand.Next(num5, num6);
-                    if (Main.tile[num11, num12].active && Main.tileSolid[(int)Main.tile[num11, num12].type])
+                    if (Main.tile[num11, num12].Active && Main.tileSolid[(int)Main.tile[num11, num12].type])
                     {
                         goto IL_2E1;
                     }
@@ -7654,7 +7654,7 @@ namespace Terraria_Server
                         int k = num12;
                         while (k < Main.maxTilesY)
                         {
-                            if (Main.tile[num11, k].active && Main.tileSolid[(int)Main.tile[num11, k].type])
+                            if (Main.tile[num11, k].Active && Main.tileSolid[(int)Main.tile[num11, k].type])
                             {
                                 if (num11 < num7 || num11 > num8 || k < num9 || k > num10)
                                 {
@@ -7701,7 +7701,7 @@ namespace Terraria_Server
                             {
                                 for (int m = num15; m < num16; m++)
                                 {
-                                    if (Main.tile[l, m].active && Main.tileSolid[(int)Main.tile[l, m].type])
+                                    if (Main.tile[l, m].Active && Main.tileSolid[(int)Main.tile[l, m].type])
                                     {
                                         flag = false;
                                         break;
@@ -7727,9 +7727,9 @@ namespace Terraria_Server
                     Rectangle rectangle = new Rectangle(num * 16, num2 * 16, 16, 16);
                     for (int n = 0; n < 255; n++)
                     {
-                        if (Main.players[n].active)
+                        if (Main.players[n].Active)
                         {
-                            Rectangle rectangle2 = new Rectangle((int)(Main.players[n].position.X + (float)(Main.players[n].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[n].position.Y + (float)(Main.players[n].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                            Rectangle rectangle2 = new Rectangle((int)(Main.players[n].Position.X + (float)(Main.players[n].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[n].Position.Y + (float)(Main.players[n].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                             if (rectangle.Intersects(rectangle2))
                             {
                                 flag = false;
@@ -7746,7 +7746,7 @@ namespace Terraria_Server
             {
                 int num17 = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
                 Main.npc[num17].target = playerIndex;
-                string str = Main.npc[num17].name;
+                string str = Main.npc[num17].Name;
                 if (Main.npc[num17].type == 13)
                 {
                     str = "Eater of Worlds";
@@ -7775,7 +7775,7 @@ namespace Terraria_Server
             int num = -1;
             for (int i = Start; i < 1000; i++)
             {
-                if (!Main.npc[i].active)
+                if (!Main.npc[i].Active)
                 {
                     num = i;
                     break;
@@ -7785,16 +7785,16 @@ namespace Terraria_Server
             {
                 Main.npc[num] = new NPC();
                 Main.npc[num].SetDefaults(Type);
-                Main.npc[num].position.X = (float)(X - Main.npc[num].width / 2);
-                Main.npc[num].position.Y = (float)(Y - Main.npc[num].height);
-                Main.npc[num].active = true;
+                Main.npc[num].Position.X = (float)(X - Main.npc[num].width / 2);
+                Main.npc[num].Position.Y = (float)(Y - Main.npc[num].height);
+                Main.npc[num].Active = true;
                 Main.npc[num].timeLeft = (int)((double)NPC.activeTime * 1.25);
-                Main.npc[num].wet = Collision.WetCollision(Main.npc[num].position, Main.npc[num].width, Main.npc[num].height);
+                Main.npc[num].wet = Collision.WetCollision(Main.npc[num].Position, Main.npc[num].width, Main.npc[num].height);
                 if (Type == 50)
                 {
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(25, -1, -1, Main.npc[num].name + " has awoken!", 255, 175f, 75f, 255f);
+                        NetMessage.SendData(25, -1, -1, Main.npc[num].Name + " has awoken!", 255, 175f, 75f, 255f);
                     }
                 }
                 return num;
@@ -7806,12 +7806,12 @@ namespace Terraria_Server
         {
             if (Main.netMode != 1)
             {
-                Vector2 vector = this.velocity;
+                Vector2 vector = this.Velocity;
                 int num = this.spriteDirection;
                 this.SetDefaults(newType);
                 this.spriteDirection = num;
                 this.TargetClosest(true);
-                this.velocity = vector;
+                this.Velocity = vector;
                 if (Main.netMode == 2)
                 {
                     this.netUpdate = true;
@@ -7822,7 +7822,7 @@ namespace Terraria_Server
         
         public double StrikeNPC(int Damage, float knockBack, int hitDirection)
         {
-            if (!this.active || this.life <= 0)
+            if (!this.Active || this.life <= 0)
             {
                 return 0.0;
             }
@@ -7848,13 +7848,13 @@ namespace Terraria_Server
                 {
                     if (!this.noGravity)
                     {
-                        this.velocity.Y = -knockBack * 0.75f * this.knockBackResist;
+                        this.Velocity.Y = -knockBack * 0.75f * this.knockBackResist;
                     }
                     else
                     {
-                        this.velocity.Y = -knockBack * 0.5f * this.knockBackResist;
+                        this.Velocity.Y = -knockBack * 0.5f * this.knockBackResist;
                     }
-                    this.velocity.X = knockBack * (float)hitDirection * this.knockBackResist;
+                    this.Velocity.X = knockBack * (float)hitDirection * this.knockBackResist;
                 }
                 this.HitEffect(hitDirection, num);
 
@@ -7865,7 +7865,7 @@ namespace Terraria_Server
                     {
                         if (Main.netMode == 2)
                         {
-                            NetMessage.SendData(25, -1, -1, this.name + " was slain...", 255, 255f, 25f, 25f);
+                            NetMessage.SendData(25, -1, -1, this.Name + " was slain...", 255, 255f, 25f, 25f);
                         }
                     }
                     if (this.townNPC && Main.netMode != 1 && this.homeless && WorldGen.spawnNPC == this.type)
@@ -7874,7 +7874,7 @@ namespace Terraria_Server
                     }
 
                     this.NPCLoot();
-                    this.active = false;
+                    this.Active = false;
                     if (this.type == 26 || this.type == 27 || this.type == 28 || this.type == 29)
                     {
                         Main.invasionSize--;
@@ -7889,19 +7889,19 @@ namespace Terraria_Server
         {
             if (this.type == 1 || this.type == 16)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 23, Main.rand.Next(1, 3), false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 23, Main.rand.Next(1, 3), false);
             }
             if (this.type == 2)
             {
                 if (Main.rand.Next(3) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 38, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 38, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(100) == 0)
                     {
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 236, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 236, 1, false);
                     }
                 }
             }
@@ -7909,204 +7909,204 @@ namespace Terraria_Server
             {
                 if (Main.rand.Next(500) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 263, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 263, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(40) == 0)
                     {
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 118, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 118, 1, false);
                     }
                 }
             }
             if (this.type == 3 && Main.rand.Next(50) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 216, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 216, 1, false);
             }
             if (this.type == 66)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 267, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 267, 1, false);
             }
             if (this.type == 62 && Main.rand.Next(50) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 272, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 272, 1, false);
             }
             if (this.type == 52)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 251, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 251, 1, false);
             }
             if (this.type == 53)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 239, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 239, 1, false);
             }
             if (this.type == 54)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 260, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 260, 1, false);
             }
             if (this.type == 55)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 261, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 261, 1, false);
             }
             if (this.type == 69 && Main.rand.Next(10) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 323, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 323, 1, false);
             }
             if (this.type == 4)
             {
                 int stack = Main.rand.Next(30) + 20;
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 47, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 47, stack, false);
                 stack = Main.rand.Next(20) + 10;
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 56, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack, false);
                 stack = Main.rand.Next(20) + 10;
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 56, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack, false);
                 stack = Main.rand.Next(20) + 10;
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 56, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack, false);
                 stack = Main.rand.Next(3) + 1;
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 59, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 59, stack, false);
             }
             if (this.type == 6 && Main.rand.Next(3) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 68, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 68, 1, false);
             }
             if (this.type == 7 || this.type == 8 || this.type == 9)
             {
                 if (Main.rand.Next(3) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 68, Main.rand.Next(1, 3), false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 68, Main.rand.Next(1, 3), false);
                 }
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 69, Main.rand.Next(3, 9), false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 69, Main.rand.Next(3, 9), false);
             }
             if ((this.type == 10 || this.type == 11 || this.type == 12) && Main.rand.Next(500) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 215, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 215, 1, false);
             }
             if (this.type == 47 && Main.rand.Next(75) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 243, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 243, 1, false);
             }
             if (this.type == 39 || this.type == 40 || this.type == 41)
             {
                 if (Main.rand.Next(100) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 220, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 220, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(100) == 0)
                     {
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 218, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 218, 1, false);
                     }
                 }
             }
             if (this.type == 13 || this.type == 14 || this.type == 15)
             {
                 int stack2 = Main.rand.Next(1, 4);
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 86, stack2, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 86, stack2, false);
                 if (Main.rand.Next(2) == 0)
                 {
                     stack2 = Main.rand.Next(2, 6);
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 56, stack2, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack2, false);
                 }
                 if (this.boss)
                 {
                     stack2 = Main.rand.Next(10, 30);
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 56, stack2, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack2, false);
                     stack2 = Main.rand.Next(10, 31);
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 56, stack2, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack2, false);
                 }
             }
             if (this.type == 63 || this.type == 64)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 282, Main.rand.Next(1, 5), false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 282, Main.rand.Next(1, 5), false);
             }
             if (this.type == 21 || this.type == 44)
             {
                 if (Main.rand.Next(25) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 118, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 118, 1, false);
                 }
                 else
                 {
                     if (this.type == 44)
                     {
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 166, Main.rand.Next(1, 4), false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 166, Main.rand.Next(1, 4), false);
                     }
                 }
             }
             if (this.type == 45)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 238, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 238, 1, false);
             }
             if (this.type == 50)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, Main.rand.Next(256, 259), 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, Main.rand.Next(256, 259), 1, false);
             }
             if (this.type == 23 && Main.rand.Next(50) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 116, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 116, 1, false);
             }
             if (this.type == 24)
             {
                 if (Main.rand.Next(50) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 112, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 112, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(500) == 0)
                     {
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 244, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 244, 1, false);
                     }
                 }
             }
             if (this.type == 31 || this.type == 32)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 154, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 154, 1, false);
             }
             if (this.type == 26 || this.type == 27 || this.type == 28 || this.type == 29)
             {
                 if (Main.rand.Next(400) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 128, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 128, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(200) == 0)
                     {
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 160, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 160, 1, false);
                     }
                     else
                     {
                         if (Main.rand.Next(2) == 0)
                         {
                             int stack3 = Main.rand.Next(1, 6);
-                            Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 161, stack3, false);
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 161, stack3, false);
                         }
                     }
                 }
             }
             if (this.type == 42)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 209, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 209, 1, false);
             }
             if (this.type == 43 && Main.rand.Next(5) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 210, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 210, 1, false);
             }
             if (this.type == 65)
             {
                 if (Main.rand.Next(50) == 0)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 268, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 268, 1, false);
                 }
                 else
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 319, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 319, 1, false);
                 }
             }
             if (this.type == 48 && Main.rand.Next(5) == 0)
             {
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 320, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 320, 1, false);
             }
             if (this.boss)
             {
@@ -8117,37 +8117,37 @@ namespace Terraria_Server
                 if (this.type == 13 || this.type == 14 || this.type == 15)
                 {
                     NPC.downedBoss2 = true;
-                    this.name = "Eater of Worlds";
+                    this.Name = "Eater of Worlds";
                 }
                 if (this.type == 35)
                 {
                     NPC.downedBoss3 = true;
-                    this.name = "Skeletron";
+                    this.Name = "Skeletron";
                 }
                 int stack4 = Main.rand.Next(5, 16);
-                Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 28, stack4, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 28, stack4, false);
                 int num = Main.rand.Next(5) + 5;
                 for (int i = 0; i < num; i++)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 58, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 58, 1, false);
                 }
 
                 if (Main.netMode == 2)
                 {
-                    NetMessage.SendData(25, -1, -1, this.name + " has been defeated!", 255, 175f, 75f, 255f);
+                    NetMessage.SendData(25, -1, -1, this.Name + " has been defeated!", 255, 175f, 75f, 255f);
                 }
             }
             if (Main.rand.Next(7) == 0 && this.lifeMax > 1)
             {
-                if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statMana < Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statManaMax)
+                if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statMana < Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statManaMax)
                 {
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 184, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 184, 1, false);
                 }
                 else
                 {
-                    if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statLife < Main.players[(int)Player.FindClosest(this.position, this.width, this.height)].statLifeMax)
+                    if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statLife < Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statLifeMax)
                     {
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 58, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 58, 1, false);
                     }
                 }
             }
@@ -8183,7 +8183,7 @@ namespace Terraria_Server
                         num3 /= Main.rand.Next(3) + 1;
                     }
                     num2 -= (float)(1000000 * num3);
-                    Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 74, num3, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 74, num3, false);
                 }
                 else
                 {
@@ -8199,7 +8199,7 @@ namespace Terraria_Server
                             num4 /= Main.rand.Next(3) + 1;
                         }
                         num2 -= (float)(10000 * num4);
-                        Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 73, num4, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 73, num4, false);
                     }
                     else
                     {
@@ -8215,7 +8215,7 @@ namespace Terraria_Server
                                 num5 /= Main.rand.Next(3) + 1;
                             }
                             num2 -= (float)(100 * num5);
-                            Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 72, num5, false);
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 72, num5, false);
                         }
                         else
                         {
@@ -8233,7 +8233,7 @@ namespace Terraria_Server
                                 num6 = 1;
                             }
                             num2 -= (float)num6;
-                            Item.NewItem((int)this.position.X, (int)this.position.Y, this.width, this.height, 71, num6, false);
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 71, num6, false);
                         }
                     }
                 }
@@ -8249,7 +8249,7 @@ namespace Terraria_Server
                     int num = 0;
                     while ((double)num < dmg / (double)this.lifeMax * 100.0)
                     {
-                        Dust.NewDust(this.position, this.width, this.height, 4, (float)hitDirection, -1f, this.alpha, this.color, 1f);
+                        Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, this.alpha, this.color, 1f);
                         num++;
                     }
                 }
@@ -8257,21 +8257,21 @@ namespace Terraria_Server
                 {
                     for (int i = 0; i < 50; i++)
                     {
-                        Dust.NewDust(this.position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, this.alpha, this.color, 1f);
+                        Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, this.alpha, this.color, 1f);
                     }
                     if (Main.netMode != 1 && this.type == 16)
                     {
                         int num2 = Main.rand.Next(2) + 2;
                         for (int j = 0; j < num2; j++)
                         {
-                            int num3 = NPC.NewNPC((int)(this.position.X + (float)(this.width / 2)), (int)(this.position.Y + (float)this.height), 1, 0);
+                            int num3 = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), 1, 0);
                             Main.npc[num3].SetDefaults("Baby Slime");
-                            Main.npc[num3].velocity.X = this.velocity.X * 2f;
-                            Main.npc[num3].velocity.Y = this.velocity.Y;
+                            Main.npc[num3].Velocity.X = this.Velocity.X * 2f;
+                            Main.npc[num3].Velocity.Y = this.Velocity.Y;
                             NPC expr_173_cp_0 = Main.npc[num3];
-                            expr_173_cp_0.velocity.X = expr_173_cp_0.velocity.X + ((float)Main.rand.Next(-20, 20) * 0.1f + (float)(j * this.direction) * 0.3f);
+                            expr_173_cp_0.Velocity.X = expr_173_cp_0.Velocity.X + ((float)Main.rand.Next(-20, 20) * 0.1f + (float)(j * this.direction) * 0.3f);
                             NPC expr_1B1_cp_0 = Main.npc[num3];
-                            expr_1B1_cp_0.velocity.Y = expr_1B1_cp_0.velocity.Y - ((float)Main.rand.Next(0, 10) * 0.1f + (float)j);
+                            expr_1B1_cp_0.Velocity.Y = expr_1B1_cp_0.Velocity.Y - ((float)Main.rand.Next(0, 10) * 0.1f + (float)j);
                             Main.npc[num3].ai[1] = (float)j;
                             if (Main.netMode == 2 && num3 < 1000)
                             {
@@ -8290,7 +8290,7 @@ namespace Terraria_Server
                         int num4 = 0;
                         while ((double)num4 < dmg / (double)this.lifeMax * 80.0)
                         {
-                            Vector2 arg_350_0 = this.position;
+                            Vector2 arg_350_0 = this.Position;
                             int arg_350_1 = this.width;
                             int arg_350_2 = this.height;
                             int arg_350_3 = 6;
@@ -8305,7 +8305,7 @@ namespace Terraria_Server
                     }
                     for (int k = 0; k < 40; k++)
                     {
-                        Vector2 arg_3AB_0 = this.position;
+                        Vector2 arg_3AB_0 = this.Position;
                         int arg_3AB_1 = this.width;
                         int arg_3AB_2 = this.height;
                         int arg_3AB_3 = 6;
@@ -8317,8 +8317,8 @@ namespace Terraria_Server
                     }
                     if (this.type == 59 && Main.netMode != 1)
                     {
-                        int num5 = (int)(this.position.X + (float)(this.width / 2)) / 16;
-                        int num6 = (int)(this.position.Y + (float)(this.height / 2)) / 16;
+                        int num5 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
+                        int num6 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
                         Main.tile[num5, num6].lava = true;
                         if (Main.tile[num5, num6].liquid < 200)
                         {
@@ -8337,26 +8337,26 @@ namespace Terraria_Server
                             int num7 = 0;
                             while ((double)num7 < dmg / (double)this.lifeMax * 300.0)
                             {
-                                Dust.NewDust(this.position, this.width, this.height, 4, (float)hitDirection, -1f, 175, new Color(0, 80, 255, 100), 1f);
+                                Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, 175, new Color(0, 80, 255, 100), 1f);
                                 num7++;
                             }
                             return;
                         }
                         for (int l = 0; l < 200; l++)
                         {
-                            Dust.NewDust(this.position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 175, new Color(0, 80, 255, 100), 1f);
+                            Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 175, new Color(0, 80, 255, 100), 1f);
                         }
                         if (Main.netMode != 1)
                         {
                             int num8 = Main.rand.Next(4) + 4;
                             for (int m = 0; m < num8; m++)
                             {
-                                int x = (int)(this.position.X + (float)Main.rand.Next(this.width - 32));
-                                int y = (int)(this.position.Y + (float)Main.rand.Next(this.height - 32));
+                                int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
+                                int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
                                 int num9 = NPC.NewNPC(x, y, 1, 0);
                                 Main.npc[num9].SetDefaults(1);
-                                Main.npc[num9].velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
-                                Main.npc[num9].velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
+                                Main.npc[num9].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
+                                Main.npc[num9].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
                                 Main.npc[num9].ai[1] = (float)Main.rand.Next(3);
                                 if (Main.netMode == 2 && num9 < 1000)
                                 {
@@ -8375,7 +8375,7 @@ namespace Terraria_Server
                                 int num10 = 0;
                                 while ((double)num10 < dmg / (double)this.lifeMax * 30.0)
                                 {
-                                    Vector2 arg_69A_0 = this.position;
+                                    Vector2 arg_69A_0 = this.Position;
                                     int arg_69A_1 = this.width;
                                     int arg_69A_2 = this.height;
                                     int arg_69A_3 = 5;
@@ -8390,7 +8390,7 @@ namespace Terraria_Server
                             }
                             for (int n = 0; n < 15; n++)
                             {
-                                Vector2 arg_6F0_0 = this.position;
+                                Vector2 arg_6F0_0 = this.Position;
                                 int arg_6F0_1 = this.width;
                                 int arg_6F0_2 = this.height;
                                 int arg_6F0_3 = 5;
@@ -8417,7 +8417,7 @@ namespace Terraria_Server
                                     int num11 = 0;
                                     while ((double)num11 < dmg / (double)this.lifeMax * 20.0)
                                     {
-                                        Vector2 arg_78F_0 = this.position;
+                                        Vector2 arg_78F_0 = this.Position;
                                         int arg_78F_1 = this.width;
                                         int arg_78F_2 = this.height;
                                         int arg_78F_3 = 5;
@@ -8432,7 +8432,7 @@ namespace Terraria_Server
                                 }
                                 for (int num12 = 0; num12 < 10; num12++)
                                 {
-                                    Vector2 arg_7E5_0 = this.position;
+                                    Vector2 arg_7E5_0 = this.Position;
                                     int arg_7E5_1 = this.width;
                                     int arg_7E5_2 = this.height;
                                     int arg_7E5_3 = 5;
@@ -8445,7 +8445,7 @@ namespace Terraria_Server
                                 if (this.type == 46)
                                 {
                                     SetGore(76);
-                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y), this.velocity, 77);
+                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 77);
                                     return;
                                 }
                                 if (this.type == 67)
@@ -8465,7 +8465,7 @@ namespace Terraria_Server
                                         int num13 = 0;
                                         while ((double)num13 < dmg / (double)this.lifeMax * 20.0)
                                         {
-                                            Vector2 arg_8E2_0 = this.position;
+                                            Vector2 arg_8E2_0 = this.Position;
                                             int arg_8E2_1 = this.width;
                                             int arg_8E2_2 = this.height;
                                             int arg_8E2_3 = 5;
@@ -8480,7 +8480,7 @@ namespace Terraria_Server
                                     }
                                     for (int num14 = 0; num14 < 10; num14++)
                                     {
-                                        Vector2 arg_938_0 = this.position;
+                                        Vector2 arg_938_0 = this.Position;
                                         int arg_938_1 = this.width;
                                         int arg_938_2 = this.height;
                                         int arg_938_3 = 5;
@@ -8492,16 +8492,16 @@ namespace Terraria_Server
                                     }
                                     if (this.type == 57)
                                     {
-                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y), this.velocity, 84);
+                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 84);
                                         return;
                                     }
                                     if (this.type == 58)
                                     {
-                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y), this.velocity, 85);
+                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 85);
                                         return;
                                     }
                                     SetGore(78);
-                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y), this.velocity, 79);
+                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 79);
                                     return;
                                 }
                                 else
@@ -8513,7 +8513,7 @@ namespace Terraria_Server
                                             int num15 = 0;
                                             while ((double)num15 < dmg / (double)this.lifeMax * 100.0)
                                             {
-                                                Vector2 arg_A34_0 = this.position;
+                                                Vector2 arg_A34_0 = this.Position;
                                                 int arg_A34_1 = this.width;
                                                 int arg_A34_2 = this.height;
                                                 int arg_A34_3 = 5;
@@ -8528,7 +8528,7 @@ namespace Terraria_Server
                                         }
                                         for (int num16 = 0; num16 < 50; num16++)
                                         {
-                                            Vector2 arg_A8A_0 = this.position;
+                                            Vector2 arg_A8A_0 = this.Position;
                                             int arg_A8A_1 = this.width;
                                             int arg_A8A_2 = this.height;
                                             int arg_A8A_3 = 5;
@@ -8539,7 +8539,7 @@ namespace Terraria_Server
                                             Dust.NewDust(arg_A8A_0, arg_A8A_1, arg_A8A_2, arg_A8A_3, arg_A8A_4, arg_A8A_5, arg_A8A_6, newColor, 1f);
                                         }
                                         SetGore(1);
-                                        Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity, 2);
+                                        Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 2);
                                         return;
                                     }
                                     else
@@ -8551,7 +8551,7 @@ namespace Terraria_Server
                                                 int num17 = 0;
                                                 while ((double)num17 < dmg / (double)this.lifeMax * 100.0)
                                                 {
-                                                    Vector2 arg_B23_0 = this.position;
+                                                    Vector2 arg_B23_0 = this.Position;
                                                     int arg_B23_1 = this.width;
                                                     int arg_B23_2 = this.height;
                                                     int arg_B23_3 = 5;
@@ -8566,7 +8566,7 @@ namespace Terraria_Server
                                             }
                                             for (int num18 = 0; num18 < 50; num18++)
                                             {
-                                                Vector2 arg_B79_0 = this.position;
+                                                Vector2 arg_B79_0 = this.Position;
                                                 int arg_B79_1 = this.width;
                                                 int arg_B79_2 = this.height;
                                                 int arg_B79_3 = 5;
@@ -8589,7 +8589,7 @@ namespace Terraria_Server
                                                     int num19 = 0;
                                                     while ((double)num19 < dmg / (double)this.lifeMax * 100.0)
                                                     {
-                                                        Vector2 arg_BF9_0 = this.position;
+                                                        Vector2 arg_BF9_0 = this.Position;
                                                         int arg_BF9_1 = this.width;
                                                         int arg_BF9_2 = this.height;
                                                         int arg_BF9_3 = 5;
@@ -8604,7 +8604,7 @@ namespace Terraria_Server
                                                 }
                                                 for (int num20 = 0; num20 < 50; num20++)
                                                 {
-                                                    Vector2 arg_C4F_0 = this.position;
+                                                    Vector2 arg_C4F_0 = this.Position;
                                                     int arg_C4F_1 = this.width;
                                                     int arg_C4F_2 = this.height;
                                                     int arg_C4F_3 = 5;
@@ -8615,8 +8615,8 @@ namespace Terraria_Server
                                                     Dust.NewDust(arg_C4F_0, arg_C4F_1, arg_C4F_2, arg_C4F_3, arg_C4F_4, arg_C4F_5, arg_C4F_6, newColor, 1f);
                                                 }
                                                 SetGore(86);
-                                                Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity, 87);
-                                                Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity, 88);
+                                                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 87);
+                                                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 88);
                                                 return;
                                             }
                                             else
@@ -8628,7 +8628,7 @@ namespace Terraria_Server
                                                         int num21 = 0;
                                                         while ((double)num21 < dmg / (double)this.lifeMax * 150.0)
                                                         {
-                                                            Vector2 arg_D19_0 = this.position;
+                                                            Vector2 arg_D19_0 = this.Position;
                                                             int arg_D19_1 = this.width;
                                                             int arg_D19_2 = this.height;
                                                             int arg_D19_3 = 5;
@@ -8643,7 +8643,7 @@ namespace Terraria_Server
                                                     }
                                                     for (int num22 = 0; num22 < 75; num22++)
                                                     {
-                                                        Vector2 arg_D6F_0 = this.position;
+                                                        Vector2 arg_D6F_0 = this.Position;
                                                         int arg_D6F_1 = this.width;
                                                         int arg_D6F_2 = this.height;
                                                         int arg_D6F_3 = 5;
@@ -8653,10 +8653,10 @@ namespace Terraria_Server
                                                         Color newColor = default(Color);
                                                         Dust.NewDust(arg_D6F_0, arg_D6F_1, arg_D6F_2, arg_D6F_3, arg_D6F_4, arg_D6F_5, arg_D6F_6, newColor, 1f);
                                                     }
-                                                    Gore.NewGore(this.position, this.velocity * 0.8f, 89);
-                                                    Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity * 0.8f, 90);
-                                                    Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity * 0.8f, 91);
-                                                    Gore.NewGore(new Vector2(this.position.X + 14f, this.position.Y), this.velocity * 0.8f, 92);
+                                                    Gore.NewGore(this.Position, this.Velocity * 0.8f, 89);
+                                                    Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 90);
+                                                    Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 91);
+                                                    Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 92);
                                                     return;
                                                 }
                                                 else
@@ -8668,7 +8668,7 @@ namespace Terraria_Server
                                                             int num23 = 0;
                                                             while ((double)num23 < dmg / (double)this.lifeMax * 100.0)
                                                             {
-                                                                Vector2 arg_EA3_0 = this.position;
+                                                                Vector2 arg_EA3_0 = this.Position;
                                                                 int arg_EA3_1 = this.width;
                                                                 int arg_EA3_2 = this.height;
                                                                 int arg_EA3_3 = 5;
@@ -8683,7 +8683,7 @@ namespace Terraria_Server
                                                         }
                                                         for (int num24 = 0; num24 < 50; num24++)
                                                         {
-                                                            Vector2 arg_EFD_0 = this.position;
+                                                            Vector2 arg_EFD_0 = this.Position;
                                                             int arg_EFD_1 = this.width;
                                                             int arg_EFD_2 = this.height;
                                                             int arg_EFD_3 = 5;
@@ -8694,10 +8694,10 @@ namespace Terraria_Server
                                                             Dust.NewDust(arg_EFD_0, arg_EFD_1, arg_EFD_2, arg_EFD_3, arg_EFD_4, arg_EFD_5, arg_EFD_6, newColor, 1f);
                                                         }
                                                         SetGore(3);
-                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 4);
-                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 4);
-                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 5);
-                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 5);
+                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
+                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
+                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
+                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
                                                         return;
                                                     }
                                                     else
@@ -8709,7 +8709,7 @@ namespace Terraria_Server
                                                                 int num25 = 0;
                                                                 while ((double)num25 < dmg / (double)this.lifeMax * 100.0)
                                                                 {
-                                                                    Vector2 arg_101F_0 = this.position;
+                                                                    Vector2 arg_101F_0 = this.Position;
                                                                     int arg_101F_1 = this.width;
                                                                     int arg_101F_2 = this.height;
                                                                     int arg_101F_3 = 5;
@@ -8724,7 +8724,7 @@ namespace Terraria_Server
                                                             }
                                                             for (int num26 = 0; num26 < 150; num26++)
                                                             {
-                                                                Vector2 arg_1075_0 = this.position;
+                                                                Vector2 arg_1075_0 = this.Position;
                                                                 int arg_1075_1 = this.width;
                                                                 int arg_1075_2 = this.height;
                                                                 int arg_1075_3 = 5;
@@ -8736,10 +8736,10 @@ namespace Terraria_Server
                                                             }
                                                             for (int num27 = 0; num27 < 2; num27++)
                                                             {
-                                                                Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 2);
-                                                                Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
-                                                                Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 9);
-                                                                Gore.NewGore(this.position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 10);
+                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 2);
+                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
+                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 9);
+                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 10);
                                                             }
                                                             return;
                                                         }
@@ -8752,7 +8752,7 @@ namespace Terraria_Server
                                                                     int num28 = 0;
                                                                     while ((double)num28 < dmg / (double)this.lifeMax * 50.0)
                                                                     {
-                                                                        Vector2 arg_11F7_0 = this.position;
+                                                                        Vector2 arg_11F7_0 = this.Position;
                                                                         int arg_11F7_1 = this.width;
                                                                         int arg_11F7_2 = this.height;
                                                                         int arg_11F7_3 = 5;
@@ -8767,7 +8767,7 @@ namespace Terraria_Server
                                                                 }
                                                                 for (int num29 = 0; num29 < 20; num29++)
                                                                 {
-                                                                    Vector2 arg_124D_0 = this.position;
+                                                                    Vector2 arg_124D_0 = this.Position;
                                                                     int arg_124D_1 = this.width;
                                                                     int arg_124D_2 = this.height;
                                                                     int arg_124D_3 = 5;
@@ -8790,14 +8790,14 @@ namespace Terraria_Server
                                                                         int num30 = 0;
                                                                         while ((double)num30 < dmg / (double)this.lifeMax * 100.0)
                                                                         {
-                                                                            Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                                                                            Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
                                                                             num30++;
                                                                         }
                                                                         return;
                                                                     }
                                                                     for (int num31 = 0; num31 < 50; num31++)
                                                                     {
-                                                                        Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                                                                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
                                                                     }
                                                                     int num32 = SetGore(14);
                                                                     Main.gore[num32].alpha = this.alpha;
@@ -8814,14 +8814,14 @@ namespace Terraria_Server
                                                                             int num33 = 0;
                                                                             while ((double)num33 < dmg / (double)this.lifeMax * 100.0)
                                                                             {
-                                                                                Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                                                                                Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
                                                                                 num33++;
                                                                             }
                                                                             return;
                                                                         }
                                                                         for (int num34 = 0; num34 < 50; num34++)
                                                                         {
-                                                                            Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                                                                            Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
                                                                         }
                                                                         int num35 = SetGore(this.type - 7 + 18);
                                                                         Main.gore[num35].alpha = this.alpha;
@@ -8836,7 +8836,7 @@ namespace Terraria_Server
                                                                                 int num36 = 0;
                                                                                 while ((double)num36 < dmg / (double)this.lifeMax * 50.0)
                                                                                 {
-                                                                                    Vector2 arg_14D5_0 = this.position;
+                                                                                    Vector2 arg_14D5_0 = this.Position;
                                                                                     int arg_14D5_1 = this.width;
                                                                                     int arg_14D5_2 = this.height;
                                                                                     int arg_14D5_3 = 5;
@@ -8851,7 +8851,7 @@ namespace Terraria_Server
                                                                             }
                                                                             for (int num37 = 0; num37 < 10; num37++)
                                                                             {
-                                                                                Vector2 arg_152F_0 = this.position;
+                                                                                Vector2 arg_152F_0 = this.Position;
                                                                                 int arg_152F_1 = this.width;
                                                                                 int arg_152F_2 = this.height;
                                                                                 int arg_152F_3 = 5;
@@ -8873,14 +8873,14 @@ namespace Terraria_Server
                                                                                     int num38 = 0;
                                                                                     while ((double)num38 < dmg / (double)this.lifeMax * 100.0)
                                                                                     {
-                                                                                        Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                                                                                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
                                                                                         num38++;
                                                                                     }
                                                                                     return;
                                                                                 }
                                                                                 for (int num39 = 0; num39 < 50; num39++)
                                                                                 {
-                                                                                    Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                                                                                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
                                                                                 }
                                                                                 if (this.type == 13)
                                                                                 {
@@ -8907,7 +8907,7 @@ namespace Terraria_Server
                                                                                         int num40 = 0;
                                                                                         while ((double)num40 < dmg / (double)this.lifeMax * 100.0)
                                                                                         {
-                                                                                            Vector2 arg_16F8_0 = this.position;
+                                                                                            Vector2 arg_16F8_0 = this.Position;
                                                                                             int arg_16F8_1 = this.width;
                                                                                             int arg_16F8_2 = this.height;
                                                                                             int arg_16F8_3 = 5;
@@ -8922,7 +8922,7 @@ namespace Terraria_Server
                                                                                     }
                                                                                     for (int num41 = 0; num41 < 50; num41++)
                                                                                     {
-                                                                                        Vector2 arg_1752_0 = this.position;
+                                                                                        Vector2 arg_1752_0 = this.Position;
                                                                                         int arg_1752_1 = this.width;
                                                                                         int arg_1752_2 = this.height;
                                                                                         int arg_1752_3 = 5;
@@ -8933,10 +8933,10 @@ namespace Terraria_Server
                                                                                         Dust.NewDust(arg_1752_0, arg_1752_1, arg_1752_2, arg_1752_3, arg_1752_4, arg_1752_5, arg_1752_6, newColor, 1f);
                                                                                     }
                                                                                     SetGore(30);
-                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 31);
-                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 31);
-                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 32);
-                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 32);
+                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
+                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
+                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
+                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
                                                                                     return;
                                                                                 }
                                                                                 else
@@ -8948,7 +8948,7 @@ namespace Terraria_Server
                                                                                             int num42 = 0;
                                                                                             while ((double)num42 < dmg / (double)this.lifeMax * 100.0)
                                                                                             {
-                                                                                                Vector2 arg_187A_0 = this.position;
+                                                                                                Vector2 arg_187A_0 = this.Position;
                                                                                                 int arg_187A_1 = this.width;
                                                                                                 int arg_187A_2 = this.height;
                                                                                                 int arg_187A_3 = 5;
@@ -8963,7 +8963,7 @@ namespace Terraria_Server
                                                                                         }
                                                                                         for (int num43 = 0; num43 < 50; num43++)
                                                                                         {
-                                                                                            Vector2 arg_18D4_0 = this.position;
+                                                                                            Vector2 arg_18D4_0 = this.Position;
                                                                                             int arg_18D4_1 = this.width;
                                                                                             int arg_18D4_2 = this.height;
                                                                                             int arg_18D4_3 = 5;
@@ -8974,10 +8974,10 @@ namespace Terraria_Server
                                                                                             Dust.NewDust(arg_18D4_0, arg_18D4_1, arg_18D4_2, arg_18D4_3, arg_18D4_4, arg_18D4_5, arg_18D4_6, newColor, 1f);
                                                                                         }
                                                                                         SetGore(73);
-                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 74);
-                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 74);
-                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 75);
-                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 75);
+                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 74);
+                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 74);
+                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 75);
+                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 75);
                                                                                         return;
                                                                                     }
                                                                                     else
@@ -8989,7 +8989,7 @@ namespace Terraria_Server
                                                                                                 int num44 = 0;
                                                                                                 while ((double)num44 < dmg / (double)this.lifeMax * 100.0)
                                                                                                 {
-                                                                                                    Vector2 arg_1A06_0 = this.position;
+                                                                                                    Vector2 arg_1A06_0 = this.Position;
                                                                                                     int arg_1A06_1 = this.width;
                                                                                                     int arg_1A06_2 = this.height;
                                                                                                     int arg_1A06_3 = 5;
@@ -9004,7 +9004,7 @@ namespace Terraria_Server
                                                                                             }
                                                                                             for (int num45 = 0; num45 < 50; num45++)
                                                                                             {
-                                                                                                Vector2 arg_1A60_0 = this.position;
+                                                                                                Vector2 arg_1A60_0 = this.Position;
                                                                                                 int arg_1A60_1 = this.width;
                                                                                                 int arg_1A60_2 = this.height;
                                                                                                 int arg_1A60_3 = 5;
@@ -9015,10 +9015,10 @@ namespace Terraria_Server
                                                                                                 Dust.NewDust(arg_1A60_0, arg_1A60_1, arg_1A60_2, arg_1A60_3, arg_1A60_4, arg_1A60_5, arg_1A60_6, newColor, 1f);
                                                                                             }
                                                                                             SetGore(58);
-                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 59);
-                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 59);
-                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 60);
-                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 60);
+                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 59);
+                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 59);
+                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 60);
+                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 60);
                                                                                             return;
                                                                                         }
                                                                                         else
@@ -9030,7 +9030,7 @@ namespace Terraria_Server
                                                                                                     int num46 = 0;
                                                                                                     while ((double)num46 < dmg / (double)this.lifeMax * 100.0)
                                                                                                     {
-                                                                                                        Vector2 arg_1B88_0 = this.position;
+                                                                                                        Vector2 arg_1B88_0 = this.Position;
                                                                                                         int arg_1B88_1 = this.width;
                                                                                                         int arg_1B88_2 = this.height;
                                                                                                         int arg_1B88_3 = 5;
@@ -9045,7 +9045,7 @@ namespace Terraria_Server
                                                                                                 }
                                                                                                 for (int num47 = 0; num47 < 50; num47++)
                                                                                                 {
-                                                                                                    Vector2 arg_1BE2_0 = this.position;
+                                                                                                    Vector2 arg_1BE2_0 = this.Position;
                                                                                                     int arg_1BE2_1 = this.width;
                                                                                                     int arg_1BE2_2 = this.height;
                                                                                                     int arg_1BE2_3 = 5;
@@ -9056,10 +9056,10 @@ namespace Terraria_Server
                                                                                                     Dust.NewDust(arg_1BE2_0, arg_1BE2_1, arg_1BE2_2, arg_1BE2_3, arg_1BE2_4, arg_1BE2_5, arg_1BE2_6, newColor, 1f);
                                                                                                 }
                                                                                                 SetGore(33);
-                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 34);
-                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 34);
-                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 35);
-                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 35);
+                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 34);
+                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 34);
+                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 35);
+                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 35);
                                                                                                 return;
                                                                                             }
                                                                                             else
@@ -9071,7 +9071,7 @@ namespace Terraria_Server
                                                                                                         int num48 = 0;
                                                                                                         while ((double)num48 < dmg / (double)this.lifeMax * 100.0)
                                                                                                         {
-                                                                                                            Vector2 arg_1D0A_0 = this.position;
+                                                                                                            Vector2 arg_1D0A_0 = this.Position;
                                                                                                             int arg_1D0A_1 = this.width;
                                                                                                             int arg_1D0A_2 = this.height;
                                                                                                             int arg_1D0A_3 = 5;
@@ -9086,7 +9086,7 @@ namespace Terraria_Server
                                                                                                     }
                                                                                                     for (int num49 = 0; num49 < 50; num49++)
                                                                                                     {
-                                                                                                        Vector2 arg_1D64_0 = this.position;
+                                                                                                        Vector2 arg_1D64_0 = this.Position;
                                                                                                         int arg_1D64_1 = this.width;
                                                                                                         int arg_1D64_2 = this.height;
                                                                                                         int arg_1D64_3 = 5;
@@ -9097,10 +9097,10 @@ namespace Terraria_Server
                                                                                                         Dust.NewDust(arg_1D64_0, arg_1D64_1, arg_1D64_2, arg_1D64_3, arg_1D64_4, arg_1D64_5, arg_1D64_6, newColor, 1f);
                                                                                                     }
                                                                                                     SetGore(36);
-                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 37);
-                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 37);
-                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 38);
-                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 38);
+                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 37);
+                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 37);
+                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 38);
+                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 38);
                                                                                                     return;
                                                                                                 }
                                                                                                 else
@@ -9112,7 +9112,7 @@ namespace Terraria_Server
                                                                                                             int num50 = 0;
                                                                                                             while ((double)num50 < dmg / (double)this.lifeMax * 100.0)
                                                                                                             {
-                                                                                                                Vector2 arg_1E8C_0 = this.position;
+                                                                                                                Vector2 arg_1E8C_0 = this.Position;
                                                                                                                 int arg_1E8C_1 = this.width;
                                                                                                                 int arg_1E8C_2 = this.height;
                                                                                                                 int arg_1E8C_3 = 5;
@@ -9127,7 +9127,7 @@ namespace Terraria_Server
                                                                                                         }
                                                                                                         for (int num51 = 0; num51 < 50; num51++)
                                                                                                         {
-                                                                                                            Vector2 arg_1EE6_0 = this.position;
+                                                                                                            Vector2 arg_1EE6_0 = this.Position;
                                                                                                             int arg_1EE6_1 = this.width;
                                                                                                             int arg_1EE6_2 = this.height;
                                                                                                             int arg_1EE6_3 = 5;
@@ -9138,10 +9138,10 @@ namespace Terraria_Server
                                                                                                             Dust.NewDust(arg_1EE6_0, arg_1EE6_1, arg_1EE6_2, arg_1EE6_3, arg_1EE6_4, arg_1EE6_5, arg_1EE6_6, newColor, 1f);
                                                                                                         }
                                                                                                         SetGore(64);
-                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 65);
-                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 65);
-                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 66);
-                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 66);
+                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 65);
+                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 65);
+                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 66);
+                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 66);
                                                                                                         return;
                                                                                                     }
                                                                                                     else
@@ -9153,7 +9153,7 @@ namespace Terraria_Server
                                                                                                                 int num52 = 0;
                                                                                                                 while ((double)num52 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                 {
-                                                                                                                    Vector2 arg_200E_0 = this.position;
+                                                                                                                    Vector2 arg_200E_0 = this.Position;
                                                                                                                     int arg_200E_1 = this.width;
                                                                                                                     int arg_200E_2 = this.height;
                                                                                                                     int arg_200E_3 = 5;
@@ -9168,7 +9168,7 @@ namespace Terraria_Server
                                                                                                             }
                                                                                                             for (int num53 = 0; num53 < 50; num53++)
                                                                                                             {
-                                                                                                                Vector2 arg_2068_0 = this.position;
+                                                                                                                Vector2 arg_2068_0 = this.Position;
                                                                                                                 int arg_2068_1 = this.width;
                                                                                                                 int arg_2068_2 = this.height;
                                                                                                                 int arg_2068_3 = 5;
@@ -9179,10 +9179,10 @@ namespace Terraria_Server
                                                                                                                 Dust.NewDust(arg_2068_0, arg_2068_1, arg_2068_2, arg_2068_3, arg_2068_4, arg_2068_5, arg_2068_6, newColor, 1f);
                                                                                                             }
                                                                                                             SetGore(39);
-                                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 40);
-                                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 40);
-                                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 41);
-                                                                                                            Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 41);
+                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 40);
+                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 40);
+                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 41);
+                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 41);
                                                                                                             return;
                                                                                                         }
                                                                                                         else
@@ -9194,7 +9194,7 @@ namespace Terraria_Server
                                                                                                                     int num54 = 0;
                                                                                                                     while ((double)num54 < dmg / (double)this.lifeMax * 50.0)
                                                                                                                     {
-                                                                                                                        Vector2 arg_21B9_0 = this.position;
+                                                                                                                        Vector2 arg_21B9_0 = this.Position;
                                                                                                                         int arg_21B9_1 = this.width;
                                                                                                                         int arg_21B9_2 = this.height;
                                                                                                                         int arg_21B9_3 = 26;
@@ -9209,7 +9209,7 @@ namespace Terraria_Server
                                                                                                                 }
                                                                                                                 for (int num55 = 0; num55 < 20; num55++)
                                                                                                                 {
-                                                                                                                    Vector2 arg_2214_0 = this.position;
+                                                                                                                    Vector2 arg_2214_0 = this.Position;
                                                                                                                     int arg_2214_1 = this.width;
                                                                                                                     int arg_2214_2 = this.height;
                                                                                                                     int arg_2214_3 = 26;
@@ -9220,10 +9220,10 @@ namespace Terraria_Server
                                                                                                                     Dust.NewDust(arg_2214_0, arg_2214_1, arg_2214_2, arg_2214_3, arg_2214_4, arg_2214_5, arg_2214_6, newColor, 1f);
                                                                                                                 }
                                                                                                                 SetGore(42);
-                                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 43);
-                                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 43);
-                                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 44);
-                                                                                                                Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 44);
+                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 43);
+                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 43);
+                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 44);
+                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 44);
                                                                                                                 return;
                                                                                                             }
                                                                                                             else
@@ -9235,7 +9235,7 @@ namespace Terraria_Server
                                                                                                                         int num56 = 0;
                                                                                                                         while ((double)num56 < dmg / (double)this.lifeMax * 50.0)
                                                                                                                         {
-                                                                                                                            Vector2 arg_2351_0 = this.position;
+                                                                                                                            Vector2 arg_2351_0 = this.Position;
                                                                                                                             int arg_2351_1 = this.width;
                                                                                                                             int arg_2351_2 = this.height;
                                                                                                                             int arg_2351_3 = 26;
@@ -9250,7 +9250,7 @@ namespace Terraria_Server
                                                                                                                     }
                                                                                                                     for (int num57 = 0; num57 < 20; num57++)
                                                                                                                     {
-                                                                                                                        Vector2 arg_23AC_0 = this.position;
+                                                                                                                        Vector2 arg_23AC_0 = this.Position;
                                                                                                                         int arg_23AC_1 = this.width;
                                                                                                                         int arg_23AC_2 = this.height;
                                                                                                                         int arg_23AC_3 = 26;
@@ -9272,12 +9272,12 @@ namespace Terraria_Server
                                                                                                                             int num58 = 0;
                                                                                                                             while ((double)num58 < dmg / (double)this.lifeMax * 30.0)
                                                                                                                             {
-                                                                                                                                Vector2 arg_245C_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                Vector2 arg_245C_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                 int arg_245C_1 = this.width;
                                                                                                                                 int arg_245C_2 = this.height;
                                                                                                                                 int arg_245C_3 = 15;
-                                                                                                                                float arg_245C_4 = -this.velocity.X * 0.2f;
-                                                                                                                                float arg_245C_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                float arg_245C_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                float arg_245C_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                 int arg_245C_6 = 100;
                                                                                                                                 Color newColor = default(Color);
                                                                                                                                 int num59 = Dust.NewDust(arg_245C_0, arg_245C_1, arg_245C_2, arg_245C_3, arg_245C_4, arg_245C_5, arg_245C_6, newColor, 1.8f);
@@ -9285,12 +9285,12 @@ namespace Terraria_Server
                                                                                                                                 Main.dust[num59].noGravity = true;
                                                                                                                                 Dust expr_2487 = Main.dust[num59];
                                                                                                                                 expr_2487.velocity *= 1.3f;
-                                                                                                                                Vector2 arg_24F9_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                Vector2 arg_24F9_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                 int arg_24F9_1 = this.width;
                                                                                                                                 int arg_24F9_2 = this.height;
                                                                                                                                 int arg_24F9_3 = 26;
-                                                                                                                                float arg_24F9_4 = -this.velocity.X * 0.2f;
-                                                                                                                                float arg_24F9_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                float arg_24F9_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                float arg_24F9_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                 int arg_24F9_6 = 0;
                                                                                                                                 newColor = default(Color);
                                                                                                                                 num59 = Dust.NewDust(arg_24F9_0, arg_24F9_1, arg_24F9_2, arg_24F9_3, arg_24F9_4, arg_24F9_5, arg_24F9_6, newColor, 0.9f);
@@ -9303,12 +9303,12 @@ namespace Terraria_Server
                                                                                                                         }
                                                                                                                         for (int num60 = 0; num60 < 15; num60++)
                                                                                                                         {
-                                                                                                                            Vector2 arg_25B3_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                            Vector2 arg_25B3_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                             int arg_25B3_1 = this.width;
                                                                                                                             int arg_25B3_2 = this.height;
                                                                                                                             int arg_25B3_3 = 15;
-                                                                                                                            float arg_25B3_4 = -this.velocity.X * 0.2f;
-                                                                                                                            float arg_25B3_5 = -this.velocity.Y * 0.2f;
+                                                                                                                            float arg_25B3_4 = -this.Velocity.X * 0.2f;
+                                                                                                                            float arg_25B3_5 = -this.Velocity.Y * 0.2f;
                                                                                                                             int arg_25B3_6 = 100;
                                                                                                                             Color newColor = default(Color);
                                                                                                                             int num61 = Dust.NewDust(arg_25B3_0, arg_25B3_1, arg_25B3_2, arg_25B3_3, arg_25B3_4, arg_25B3_5, arg_25B3_6, newColor, 1.8f);
@@ -9316,12 +9316,12 @@ namespace Terraria_Server
                                                                                                                             Main.dust[num61].noGravity = true;
                                                                                                                             Dust expr_25DE = Main.dust[num61];
                                                                                                                             expr_25DE.velocity *= 1.3f;
-                                                                                                                            Vector2 arg_2650_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                            Vector2 arg_2650_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                             int arg_2650_1 = this.width;
                                                                                                                             int arg_2650_2 = this.height;
                                                                                                                             int arg_2650_3 = 26;
-                                                                                                                            float arg_2650_4 = -this.velocity.X * 0.2f;
-                                                                                                                            float arg_2650_5 = -this.velocity.Y * 0.2f;
+                                                                                                                            float arg_2650_4 = -this.Velocity.X * 0.2f;
+                                                                                                                            float arg_2650_5 = -this.Velocity.Y * 0.2f;
                                                                                                                             int arg_2650_6 = 0;
                                                                                                                             newColor = default(Color);
                                                                                                                             num61 = Dust.NewDust(arg_2650_0, arg_2650_1, arg_2650_2, arg_2650_3, arg_2650_4, arg_2650_5, arg_2650_6, newColor, 0.9f);
@@ -9340,7 +9340,7 @@ namespace Terraria_Server
                                                                                                                                 int num62 = 0;
                                                                                                                                 while ((double)num62 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                                 {
-                                                                                                                                    Vector2 arg_26E2_0 = this.position;
+                                                                                                                                    Vector2 arg_26E2_0 = this.Position;
                                                                                                                                     int arg_26E2_1 = this.width;
                                                                                                                                     int arg_26E2_2 = this.height;
                                                                                                                                     int arg_26E2_3 = 26;
@@ -9355,7 +9355,7 @@ namespace Terraria_Server
                                                                                                                             }
                                                                                                                             for (int num63 = 0; num63 < 150; num63++)
                                                                                                                             {
-                                                                                                                                Vector2 arg_273D_0 = this.position;
+                                                                                                                                Vector2 arg_273D_0 = this.Position;
                                                                                                                                 int arg_273D_1 = this.width;
                                                                                                                                 int arg_273D_2 = this.height;
                                                                                                                                 int arg_273D_3 = 26;
@@ -9391,7 +9391,7 @@ namespace Terraria_Server
                                                                                                                                         {
                                                                                                                                             num65 = 6;
                                                                                                                                         }
-                                                                                                                                        Vector2 arg_2836_0 = this.position;
+                                                                                                                                        Vector2 arg_2836_0 = this.Position;
                                                                                                                                         int arg_2836_1 = this.width;
                                                                                                                                         int arg_2836_2 = this.height;
                                                                                                                                         int arg_2836_3 = num65;
@@ -9400,12 +9400,12 @@ namespace Terraria_Server
                                                                                                                                         int arg_2836_6 = 0;
                                                                                                                                         Color newColor = default(Color);
                                                                                                                                         Dust.NewDust(arg_2836_0, arg_2836_1, arg_2836_2, arg_2836_3, arg_2836_4, arg_2836_5, arg_2836_6, newColor, 1f);
-                                                                                                                                        Vector2 arg_2897_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                        Vector2 arg_2897_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                         int arg_2897_1 = this.width;
                                                                                                                                         int arg_2897_2 = this.height;
                                                                                                                                         int arg_2897_3 = 6;
-                                                                                                                                        float arg_2897_4 = this.velocity.X * 0.2f;
-                                                                                                                                        float arg_2897_5 = this.velocity.Y * 0.2f;
+                                                                                                                                        float arg_2897_4 = this.Velocity.X * 0.2f;
+                                                                                                                                        float arg_2897_5 = this.Velocity.Y * 0.2f;
                                                                                                                                         int arg_2897_6 = 100;
                                                                                                                                         newColor = default(Color);
                                                                                                                                         int num66 = Dust.NewDust(arg_2897_0, arg_2897_1, arg_2897_2, arg_2897_3, arg_2897_4, arg_2897_5, arg_2897_6, newColor, 2f);
@@ -9421,7 +9421,7 @@ namespace Terraria_Server
                                                                                                                                     {
                                                                                                                                         num68 = 6;
                                                                                                                                     }
-                                                                                                                                    Vector2 arg_2914_0 = this.position;
+                                                                                                                                    Vector2 arg_2914_0 = this.Position;
                                                                                                                                     int arg_2914_1 = this.width;
                                                                                                                                     int arg_2914_2 = this.height;
                                                                                                                                     int arg_2914_3 = num68;
@@ -9433,12 +9433,12 @@ namespace Terraria_Server
                                                                                                                                 }
                                                                                                                                 for (int num69 = 0; num69 < 50; num69++)
                                                                                                                                 {
-                                                                                                                                    Vector2 arg_2989_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                    Vector2 arg_2989_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                     int arg_2989_1 = this.width;
                                                                                                                                     int arg_2989_2 = this.height;
                                                                                                                                     int arg_2989_3 = 6;
-                                                                                                                                    float arg_2989_4 = this.velocity.X * 0.2f;
-                                                                                                                                    float arg_2989_5 = this.velocity.Y * 0.2f;
+                                                                                                                                    float arg_2989_4 = this.Velocity.X * 0.2f;
+                                                                                                                                    float arg_2989_5 = this.Velocity.Y * 0.2f;
                                                                                                                                     int arg_2989_6 = 100;
                                                                                                                                     Color newColor = default(Color);
                                                                                                                                     int num70 = Dust.NewDust(arg_2989_0, arg_2989_1, arg_2989_2, arg_2989_3, arg_2989_4, arg_2989_5, arg_2989_6, newColor, 2.5f);
@@ -9457,12 +9457,12 @@ namespace Terraria_Server
                                                                                                                                         int num71 = 0;
                                                                                                                                         while ((double)num71 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                                         {
-                                                                                                                                            Vector2 arg_2A38_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                            Vector2 arg_2A38_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                             int arg_2A38_1 = this.width;
                                                                                                                                             int arg_2A38_2 = this.height;
                                                                                                                                             int arg_2A38_3 = 6;
-                                                                                                                                            float arg_2A38_4 = this.velocity.X;
-                                                                                                                                            float arg_2A38_5 = this.velocity.Y;
+                                                                                                                                            float arg_2A38_4 = this.Velocity.X;
+                                                                                                                                            float arg_2A38_5 = this.Velocity.Y;
                                                                                                                                             int arg_2A38_6 = 100;
                                                                                                                                             Color newColor = default(Color);
                                                                                                                                             int num72 = Dust.NewDust(arg_2A38_0, arg_2A38_1, arg_2A38_2, arg_2A38_3, arg_2A38_4, arg_2A38_5, arg_2A38_6, newColor, 2.5f);
@@ -9473,12 +9473,12 @@ namespace Terraria_Server
                                                                                                                                     }
                                                                                                                                     for (int num73 = 0; num73 < 50; num73++)
                                                                                                                                     {
-                                                                                                                                        Vector2 arg_2AC6_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                        Vector2 arg_2AC6_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                         int arg_2AC6_1 = this.width;
                                                                                                                                         int arg_2AC6_2 = this.height;
                                                                                                                                         int arg_2AC6_3 = 6;
-                                                                                                                                        float arg_2AC6_4 = this.velocity.X;
-                                                                                                                                        float arg_2AC6_5 = this.velocity.Y;
+                                                                                                                                        float arg_2AC6_4 = this.Velocity.X;
+                                                                                                                                        float arg_2AC6_5 = this.Velocity.Y;
                                                                                                                                         int arg_2AC6_6 = 100;
                                                                                                                                         Color newColor = default(Color);
                                                                                                                                         int num74 = Dust.NewDust(arg_2AC6_0, arg_2AC6_1, arg_2AC6_2, arg_2AC6_3, arg_2AC6_4, arg_2AC6_5, arg_2AC6_6, newColor, 2.5f);
@@ -9487,10 +9487,10 @@ namespace Terraria_Server
                                                                                                                                         expr_2AE3.velocity *= 2f;
                                                                                                                                     }
                                                                                                                                     SetGore(45);
-                                                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 46);
-                                                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 46);
-                                                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 47);
-                                                                                                                                    Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 47);
+                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
+                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
+                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
+                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
                                                                                                                                     return;
                                                                                                                                 }
                                                                                                                                 else
@@ -9499,24 +9499,24 @@ namespace Terraria_Server
                                                                                                                                     {
                                                                                                                                         for (int num75 = 0; num75 < 20; num75++)
                                                                                                                                         {
-                                                                                                                                            Vector2 arg_2C6A_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                            Vector2 arg_2C6A_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                             int arg_2C6A_1 = this.width;
                                                                                                                                             int arg_2C6A_2 = this.height;
                                                                                                                                             int arg_2C6A_3 = 6;
-                                                                                                                                            float arg_2C6A_4 = -this.velocity.X * 0.2f;
-                                                                                                                                            float arg_2C6A_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                            float arg_2C6A_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                            float arg_2C6A_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                             int arg_2C6A_6 = 100;
                                                                                                                                             Color newColor = default(Color);
                                                                                                                                             int num76 = Dust.NewDust(arg_2C6A_0, arg_2C6A_1, arg_2C6A_2, arg_2C6A_3, arg_2C6A_4, arg_2C6A_5, arg_2C6A_6, newColor, 2f);
                                                                                                                                             Main.dust[num76].noGravity = true;
                                                                                                                                             Dust expr_2C87 = Main.dust[num76];
                                                                                                                                             expr_2C87.velocity *= 2f;
-                                                                                                                                            Vector2 arg_2CF9_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                            Vector2 arg_2CF9_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                             int arg_2CF9_1 = this.width;
                                                                                                                                             int arg_2CF9_2 = this.height;
                                                                                                                                             int arg_2CF9_3 = 6;
-                                                                                                                                            float arg_2CF9_4 = -this.velocity.X * 0.2f;
-                                                                                                                                            float arg_2CF9_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                            float arg_2CF9_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                            float arg_2CF9_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                             int arg_2CF9_6 = 100;
                                                                                                                                             newColor = default(Color);
                                                                                                                                             num76 = Dust.NewDust(arg_2CF9_0, arg_2CF9_1, arg_2CF9_2, arg_2CF9_3, arg_2CF9_4, arg_2CF9_5, arg_2CF9_6, newColor, 1f);
@@ -9529,24 +9529,24 @@ namespace Terraria_Server
                                                                                                                                     {
                                                                                                                                         for (int num77 = 0; num77 < 20; num77++)
                                                                                                                                         {
-                                                                                                                                            Vector2 arg_2DC0_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                            Vector2 arg_2DC0_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                             int arg_2DC0_1 = this.width;
                                                                                                                                             int arg_2DC0_2 = this.height;
                                                                                                                                             int arg_2DC0_3 = 29;
-                                                                                                                                            float arg_2DC0_4 = -this.velocity.X * 0.2f;
-                                                                                                                                            float arg_2DC0_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                            float arg_2DC0_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                            float arg_2DC0_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                             int arg_2DC0_6 = 100;
                                                                                                                                             Color newColor = default(Color);
                                                                                                                                             int num78 = Dust.NewDust(arg_2DC0_0, arg_2DC0_1, arg_2DC0_2, arg_2DC0_3, arg_2DC0_4, arg_2DC0_5, arg_2DC0_6, newColor, 2f);
                                                                                                                                             Main.dust[num78].noGravity = true;
                                                                                                                                             Dust expr_2DDD = Main.dust[num78];
                                                                                                                                             expr_2DDD.velocity *= 2f;
-                                                                                                                                            Vector2 arg_2E50_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                            Vector2 arg_2E50_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                             int arg_2E50_1 = this.width;
                                                                                                                                             int arg_2E50_2 = this.height;
                                                                                                                                             int arg_2E50_3 = 29;
-                                                                                                                                            float arg_2E50_4 = -this.velocity.X * 0.2f;
-                                                                                                                                            float arg_2E50_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                            float arg_2E50_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                            float arg_2E50_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                             int arg_2E50_6 = 100;
                                                                                                                                             newColor = default(Color);
                                                                                                                                             num78 = Dust.NewDust(arg_2E50_0, arg_2E50_1, arg_2E50_2, arg_2E50_3, arg_2E50_4, arg_2E50_5, arg_2E50_6, newColor, 1f);
@@ -9562,7 +9562,7 @@ namespace Terraria_Server
                                                                                                                                             int num79 = 0;
                                                                                                                                             while ((double)num79 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                                             {
-                                                                                                                                                Vector2 arg_2EE7_0 = this.position;
+                                                                                                                                                Vector2 arg_2EE7_0 = this.Position;
                                                                                                                                                 int arg_2EE7_1 = this.width;
                                                                                                                                                 int arg_2EE7_2 = this.height;
                                                                                                                                                 int arg_2EE7_3 = 5;
@@ -9577,7 +9577,7 @@ namespace Terraria_Server
                                                                                                                                         }
                                                                                                                                         for (int num80 = 0; num80 < 50; num80++)
                                                                                                                                         {
-                                                                                                                                            Vector2 arg_2F41_0 = this.position;
+                                                                                                                                            Vector2 arg_2F41_0 = this.Position;
                                                                                                                                             int arg_2F41_1 = this.width;
                                                                                                                                             int arg_2F41_2 = this.height;
                                                                                                                                             int arg_2F41_3 = 5;
@@ -9588,10 +9588,10 @@ namespace Terraria_Server
                                                                                                                                             Dust.NewDust(arg_2F41_0, arg_2F41_1, arg_2F41_2, arg_2F41_3, arg_2F41_4, arg_2F41_5, arg_2F41_6, newColor, 1f);
                                                                                                                                         }
                                                                                                                                         SetGore(48);
-                                                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 49);
-                                                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 20f), this.velocity, 49);
-                                                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 50);
-                                                                                                                                        Gore.NewGore(new Vector2(this.position.X, this.position.Y + 34f), this.velocity, 50);
+                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
+                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
+                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
+                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
                                                                                                                                         return;
                                                                                                                                     }
                                                                                                                                     else
@@ -9600,24 +9600,24 @@ namespace Terraria_Server
                                                                                                                                         {
                                                                                                                                             for (int num81 = 0; num81 < 20; num81++)
                                                                                                                                             {
-                                                                                                                                                Vector2 arg_30B7_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                                Vector2 arg_30B7_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                                 int arg_30B7_1 = this.width;
                                                                                                                                                 int arg_30B7_2 = this.height;
                                                                                                                                                 int arg_30B7_3 = 27;
-                                                                                                                                                float arg_30B7_4 = -this.velocity.X * 0.2f;
-                                                                                                                                                float arg_30B7_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                                float arg_30B7_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                                float arg_30B7_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                                 int arg_30B7_6 = 100;
                                                                                                                                                 Color newColor = default(Color);
                                                                                                                                                 int num82 = Dust.NewDust(arg_30B7_0, arg_30B7_1, arg_30B7_2, arg_30B7_3, arg_30B7_4, arg_30B7_5, arg_30B7_6, newColor, 2f);
                                                                                                                                                 Main.dust[num82].noGravity = true;
                                                                                                                                                 Dust expr_30D4 = Main.dust[num82];
                                                                                                                                                 expr_30D4.velocity *= 2f;
-                                                                                                                                                Vector2 arg_3147_0 = new Vector2(this.position.X, this.position.Y);
+                                                                                                                                                Vector2 arg_3147_0 = new Vector2(this.Position.X, this.Position.Y);
                                                                                                                                                 int arg_3147_1 = this.width;
                                                                                                                                                 int arg_3147_2 = this.height;
                                                                                                                                                 int arg_3147_3 = 27;
-                                                                                                                                                float arg_3147_4 = -this.velocity.X * 0.2f;
-                                                                                                                                                float arg_3147_5 = -this.velocity.Y * 0.2f;
+                                                                                                                                                float arg_3147_4 = -this.Velocity.X * 0.2f;
+                                                                                                                                                float arg_3147_5 = -this.Velocity.Y * 0.2f;
                                                                                                                                                 int arg_3147_6 = 100;
                                                                                                                                                 newColor = default(Color);
                                                                                                                                                 num82 = Dust.NewDust(arg_3147_0, arg_3147_1, arg_3147_2, arg_3147_3, arg_3147_4, arg_3147_5, arg_3147_6, newColor, 1f);
@@ -9633,14 +9633,14 @@ namespace Terraria_Server
                                                                                                                                                 int num83 = 0;
                                                                                                                                                 while ((double)num83 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                                                 {
-                                                                                                                                                    Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                                                                                                                                                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
                                                                                                                                                     num83++;
                                                                                                                                                 }
                                                                                                                                                 return;
                                                                                                                                             }
                                                                                                                                             for (int num84 = 0; num84 < 50; num84++)
                                                                                                                                             {
-                                                                                                                                                Dust.NewDust(this.position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                                                                                                                                                Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
                                                                                                                                             }
                                                                                                                                             SetGore(70);
                                                                                                                                             SetGore(71);
@@ -9655,14 +9655,14 @@ namespace Terraria_Server
                                                                                                                                                     int num85 = 0;
                                                                                                                                                     while ((double)num85 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                                                     {
-                                                                                                                                                        Dust.NewDust(this.position, this.width, this.height, 40, (float)hitDirection, -1f, this.alpha, this.color, 1.2f);
+                                                                                                                                                        Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -1f, this.alpha, this.color, 1.2f);
                                                                                                                                                         num85++;
                                                                                                                                                     }
                                                                                                                                                     return;
                                                                                                                                                 }
                                                                                                                                                 for (int num86 = 0; num86 < 50; num86++)
                                                                                                                                                 {
-                                                                                                                                                    Dust.NewDust(this.position, this.width, this.height, 40, (float)hitDirection, -2f, this.alpha, this.color, 1.2f);
+                                                                                                                                                    Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -2f, this.alpha, this.color, 1.2f);
                                                                                                                                                 }
                                                                                                                                                 SetGore(72);
                                                                                                                                                 SetGore(72);
@@ -9677,7 +9677,7 @@ namespace Terraria_Server
                                                                                                                                                         int num87 = 0;
                                                                                                                                                         while ((double)num87 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                                                         {
-                                                                                                                                                            Vector2 arg_337C_0 = this.position;
+                                                                                                                                                            Vector2 arg_337C_0 = this.Position;
                                                                                                                                                             int arg_337C_1 = this.width;
                                                                                                                                                             int arg_337C_2 = this.height;
                                                                                                                                                             int arg_337C_3 = 5;
@@ -9692,7 +9692,7 @@ namespace Terraria_Server
                                                                                                                                                     }
                                                                                                                                                     for (int num88 = 0; num88 < 50; num88++)
                                                                                                                                                     {
-                                                                                                                                                        Vector2 arg_33D2_0 = this.position;
+                                                                                                                                                        Vector2 arg_33D2_0 = this.Position;
                                                                                                                                                         int arg_33D2_1 = this.width;
                                                                                                                                                         int arg_33D2_2 = this.height;
                                                                                                                                                         int arg_33D2_3 = 5;
@@ -9715,7 +9715,7 @@ namespace Terraria_Server
                                                                                                                                                             int num89 = 0;
                                                                                                                                                             while ((double)num89 < dmg / (double)this.lifeMax * 100.0)
                                                                                                                                                             {
-                                                                                                                                                                Vector2 arg_345C_0 = this.position;
+                                                                                                                                                                Vector2 arg_345C_0 = this.Position;
                                                                                                                                                                 int arg_345C_1 = this.width;
                                                                                                                                                                 int arg_345C_2 = this.height;
                                                                                                                                                                 int arg_345C_3 = 5;
@@ -9730,7 +9730,7 @@ namespace Terraria_Server
                                                                                                                                                         }
                                                                                                                                                         for (int num90 = 0; num90 < 50; num90++)
                                                                                                                                                         {
-                                                                                                                                                            Vector2 arg_34B2_0 = this.position;
+                                                                                                                                                            Vector2 arg_34B2_0 = this.Position;
                                                                                                                                                             int arg_34B2_1 = this.width;
                                                                                                                                                             int arg_34B2_2 = this.height;
                                                                                                                                                             int arg_34B2_3 = 5;
@@ -9789,14 +9789,14 @@ namespace Terraria_Server
                 int num91 = 0;
                 while ((double)num91 < dmg / (double)this.lifeMax * 50.0)
                 {
-                    Dust.NewDust(this.position, this.width, this.height, 4, (float)hitDirection, -1f, 0, newColor2, 1f);
+                    Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, 0, newColor2, 1f);
                     num91++;
                 }
                 return;
             }
             for (int num92 = 0; num92 < 25; num92++)
             {
-                Dust.NewDust(this.position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 0, newColor2, 1f);
+                Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 0, newColor2, 1f);
             }
         }
         
@@ -9804,7 +9804,7 @@ namespace Terraria_Server
         {
             for (int i = 0; i < 1000; i++)
             {
-                if (Main.npc[i].active && Main.npc[i].type == Type)
+                if (Main.npc[i].Active && Main.npc[i].type == Type)
                 {
                     return true;
                 }
@@ -9821,7 +9821,7 @@ namespace Terraria_Server
             int num2 = 0;
             for (int i = 0; i < 1000; i++)
             {
-                if (Main.npc[i].active && Main.npc[i].type == 35)
+                if (Main.npc[i].Active && Main.npc[i].type == 35)
                 {
                     flag = false;
                     break;
@@ -9829,11 +9829,11 @@ namespace Terraria_Server
             }
             for (int j = 0; j < 1000; j++)
             {
-                if (Main.npc[j].active && Main.npc[j].type == 37)
+                if (Main.npc[j].Active && Main.npc[j].type == 37)
                 {
                     flag2 = true;
                     Main.npc[j].ai[3] = 1f;
-                    vector = Main.npc[j].position;
+                    vector = Main.npc[j].Position;
                     num = Main.npc[j].width;
                     num2 = Main.npc[j].height;
                     if (Main.netMode == 2)
@@ -9861,7 +9861,7 @@ namespace Terraria_Server
         public void UpdateNPC(int i)
         {
             this.whoAmI = i;
-            if (this.active)
+            if (this.Active)
             {
                 if (Main.netMode != 1 && Main.bloodMoon)
                 {
@@ -9890,7 +9890,7 @@ namespace Terraria_Server
                 }
                 if (this.life <= 0)
                 {
-                    this.active = false;
+                    this.Active = false;
                 }
                 this.oldTarget = this.target;
                 this.oldDirection = this.direction;
@@ -9906,15 +9906,15 @@ namespace Terraria_Server
                 }
                 if (!this.noGravity)
                 {
-                    this.velocity.Y = this.velocity.Y + num2;
-                    if (this.velocity.Y > num)
+                    this.Velocity.Y = this.Velocity.Y + num2;
+                    if (this.Velocity.Y > num)
                     {
-                        this.velocity.Y = num;
+                        this.Velocity.Y = num;
                     }
                 }
-                if ((double)this.velocity.X < 0.005 && (double)this.velocity.X > -0.005)
+                if ((double)this.Velocity.X < 0.005 && (double)this.Velocity.X > -0.005)
                 {
-                    this.velocity.X = 0f;
+                    this.Velocity.X = 0f;
                 }
                 if (Main.netMode != 1 && this.friendly && this.type != 37)
                 {
@@ -9930,18 +9930,18 @@ namespace Terraria_Server
                     }
                     if (this.immune[255] == 0)
                     {
-                        Rectangle rectangle = new Rectangle((int)this.position.X, (int)this.position.Y, this.width, this.height);
+                        Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
                         for (int k = 0; k < 1000; k++)
                         {
-                            if (Main.npc[k].active && !Main.npc[k].friendly && Main.npc[k].damage > 0)
+                            if (Main.npc[k].Active && !Main.npc[k].friendly && Main.npc[k].damage > 0)
                             {
-                                Rectangle rectangle2 = new Rectangle((int)Main.npc[k].position.X, (int)Main.npc[k].position.Y, Main.npc[k].width, Main.npc[k].height);
+                                Rectangle rectangle2 = new Rectangle((int)Main.npc[k].Position.X, (int)Main.npc[k].Position.Y, Main.npc[k].width, Main.npc[k].height);
                                 if (rectangle.Intersects(rectangle2))
                                 {
                                     int num3 = Main.npc[k].damage;
                                     int num4 = 6;
                                     int num5 = 1;
-                                    if (Main.npc[k].position.X + (float)(Main.npc[k].width / 2) > this.position.X + (float)(this.width / 2))
+                                    if (Main.npc[k].Position.X + (float)(Main.npc[k].width / 2) > this.Position.X + (float)(this.width / 2))
                                     {
                                         num5 = -1;
                                     }
@@ -9959,7 +9959,7 @@ namespace Terraria_Server
                 }
                 if (!this.noTileCollide)
                 {
-                    bool flag = Collision.LavaCollision(this.position, this.width, this.height);
+                    bool flag = Collision.LavaCollision(this.Position, this.width, this.height);
                     if (flag)
                     {
                         this.lavaWet = true;
@@ -9973,7 +9973,7 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    bool flag2 = Collision.WetCollision(this.position, this.width, this.height);
+                    bool flag2 = Collision.WetCollision(this.Position, this.width, this.height);
                     if (flag2)
                     {
                         if (!this.wet && this.wetCount == 0)
@@ -9983,7 +9983,7 @@ namespace Terraria_Server
                             {
                                 for (int l = 0; l < 30; l++)
                                 {
-                                    int num6 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
+                                    int num6 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
                                     Dust expr_4DC_cp_0 = Main.dust[num6];
                                     expr_4DC_cp_0.velocity.Y = expr_4DC_cp_0.velocity.Y - 4f;
                                     Dust expr_4FA_cp_0 = Main.dust[num6];
@@ -9998,7 +9998,7 @@ namespace Terraria_Server
                             {
                                 for (int m = 0; m < 10; m++)
                                 {
-                                    int num7 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
+                                    int num7 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
                                     Dust expr_606_cp_0 = Main.dust[num7];
                                     expr_606_cp_0.velocity.Y = expr_606_cp_0.velocity.Y - 1.5f;
                                     Dust expr_624_cp_0 = Main.dust[num7];
@@ -10015,7 +10015,7 @@ namespace Terraria_Server
                     {
                         if (this.wet)
                         {
-                            this.velocity.X = this.velocity.X * 0.5f;
+                            this.Velocity.X = this.Velocity.X * 0.5f;
                             this.wet = false;
                             if (this.wetCount == 0)
                             {
@@ -10024,7 +10024,7 @@ namespace Terraria_Server
                                 {
                                     for (int n = 0; n < 30; n++)
                                     {
-                                        int num8 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
+                                        int num8 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
                                         Dust expr_775_cp_0 = Main.dust[num8];
                                         expr_775_cp_0.velocity.Y = expr_775_cp_0.velocity.Y - 4f;
                                         Dust expr_793_cp_0 = Main.dust[num8];
@@ -10038,7 +10038,7 @@ namespace Terraria_Server
                                 {
                                     for (int num9 = 0; num9 < 10; num9++)
                                     {
-                                        int num10 = Dust.NewDust(new Vector2(this.position.X - 6f, this.position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
+                                        int num10 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.height / 2) - 8f), this.width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
                                         Dust expr_89F_cp_0 = Main.dust[num10];
                                         expr_89F_cp_0.velocity.Y = expr_89F_cp_0.velocity.Y - 1.5f;
                                         Dust expr_8BD_cp_0 = Main.dust[num10];
@@ -10068,56 +10068,56 @@ namespace Terraria_Server
                     {
                         flag3 = true;
                     }
-                    this.oldVelocity = this.velocity;
+                    this.oldVelocity = this.Velocity;
                     this.collideX = false;
                     this.collideY = false;
                     if (this.wet)
                     {
-                        Vector2 vector = this.velocity;
-                        this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, flag3, flag3);
+                        Vector2 vector = this.Velocity;
+                        this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.width, this.height, flag3, flag3);
                         if (Collision.up)
                         {
-                            this.velocity.Y = 0.01f;
+                            this.Velocity.Y = 0.01f;
                         }
-                        Vector2 value = this.velocity * 0.5f;
-                        if (this.velocity.X != vector.X)
+                        Vector2 value = this.Velocity * 0.5f;
+                        if (this.Velocity.X != vector.X)
                         {
-                            value.X = this.velocity.X;
+                            value.X = this.Velocity.X;
                             this.collideX = true;
                         }
-                        if (this.velocity.Y != vector.Y)
+                        if (this.Velocity.Y != vector.Y)
                         {
-                            value.Y = this.velocity.Y;
+                            value.Y = this.Velocity.Y;
                             this.collideY = true;
                         }
-                        this.oldPosition = this.position;
-                        this.position += value;
+                        this.oldPosition = this.Position;
+                        this.Position += value;
                     }
                     else
                     {
-                        this.velocity = Collision.TileCollision(this.position, this.velocity, this.width, this.height, flag3, flag3);
+                        this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.width, this.height, flag3, flag3);
                         if (Collision.up)
                         {
-                            this.velocity.Y = 0.01f;
+                            this.Velocity.Y = 0.01f;
                         }
-                        if (this.oldVelocity.X != this.velocity.X)
+                        if (this.oldVelocity.X != this.Velocity.X)
                         {
                             this.collideX = true;
                         }
-                        if (this.oldVelocity.Y != this.velocity.Y)
+                        if (this.oldVelocity.Y != this.Velocity.Y)
                         {
                             this.collideY = true;
                         }
-                        this.oldPosition = this.position;
-                        this.position += this.velocity;
+                        this.oldPosition = this.Position;
+                        this.Position += this.Velocity;
                     }
                 }
                 else
                 {
-                    this.oldPosition = this.position;
-                    this.position += this.velocity;
+                    this.oldPosition = this.Position;
+                    this.Position += this.Velocity;
                 }
-                if (!this.active)
+                if (!this.Active)
                 {
                     this.netUpdate = true;
                 }
@@ -10271,7 +10271,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                result = "Ah, they will tell tales of " + Main.players[Main.myPlayer].name + " some day... good ones I'm sure.";
+                                result = "Ah, they will tell tales of " + Main.players[Main.myPlayer].Name + " some day... good ones I'm sure.";
                             }
                         }
                         else
@@ -10315,7 +10315,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                result = Main.players[Main.myPlayer].name + " is it? I've heard good things, friend!";
+                                result = Main.players[Main.myPlayer].Name + " is it? I've heard good things, friend!";
                             }
                         }
                         else
@@ -10578,7 +10578,7 @@ namespace Terraria_Server
                                         int num8 = Main.rand.Next(3);
                                         if (num8 == 0)
                                         {
-                                            result = "Greetings, " + Main.players[Main.myPlayer].name + ". Is there something I can help you with?";
+                                            result = "Greetings, " + Main.players[Main.myPlayer].Name + ". Is there something I can help you with?";
                                         }
                                         else
                                         {
@@ -10719,7 +10719,7 @@ namespace Terraria_Server
                                         {
                                             if (Main.bloodMoon)
                                             {
-                                                result = Main.players[Main.myPlayer].name + "... we have a problem! Its a blood moon out there!";
+                                                result = Main.players[Main.myPlayer].Name + "... we have a problem! Its a blood moon out there!";
                                             }
                                             else
                                             {

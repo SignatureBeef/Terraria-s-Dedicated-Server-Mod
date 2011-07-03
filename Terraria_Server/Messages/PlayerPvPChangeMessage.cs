@@ -38,7 +38,7 @@ namespace Terraria_Server.Messages
                 {
                     message = " has disabled PvP!";
                 }
-                NetMessage.SendData(25, -1, -1, player.name + message, 255, (float)Main.teamColor[player.team].R, (float)Main.teamColor[player.team].G, (float)Main.teamColor[player.team].B);
+                NetMessage.SendData(25, -1, -1, player.Name + message, 255, (float)Main.teamColor[player.team].R, (float)Main.teamColor[player.team].G, (float)Main.teamColor[player.team].B);
             }
         }
     }

@@ -22,7 +22,7 @@ namespace Terraria_Server.Messages
             if (Main.tile[x, y].type == 21)
             {
                 WorldGen.KillTile(x, y);
-                if (!Main.tile[x, y].active)
+                if (!Main.tile[x, y].Active)
                 {
                     NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
                 }

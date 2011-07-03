@@ -52,7 +52,7 @@ namespace Terraria_Server
         public const int maxHair = 17;
 
 		public static bool grabSun = false;
-		public static bool debugMode = false;
+		//public static bool debugMode = false;
 		public static bool godMode = false;
         public static bool stopSpawns = false;
 		public static bool dumbAI = false;
@@ -474,7 +474,7 @@ namespace Terraria_Server
                 Main.npc[m] = new NPC();
                 Main.npc[m].whoAmI = m;
             }
-            for (int i = 0; i < 256; i++)
+            for (int i = 0; i < MAX_PLAYERS; i++)
             {
                 Main.players[i] = new Player();
             }
@@ -626,7 +626,7 @@ namespace Terraria_Server
 				int num = 0;
 				foreach(Player player in Main.players)
 				{
-                    if (player.active && player.statLife >= 200)
+                    if (player.Active && player.statLife >= 200)
 					{
 						num++;
 					}
@@ -658,7 +658,7 @@ namespace Terraria_Server
             }
             for (int i = 0; i < Main.maxNetplayers; i++)
             {
-                if (Main.players[i].active && Netplay.serverSock[i].active)
+                if (Main.players[i].Active && Netplay.serverSock[i].active)
                 {
                     Netplay.serverSock[i].SpamUpdate();
                 }
@@ -691,7 +691,7 @@ namespace Terraria_Server
 
             for (int i = 0; i < 200; i++)
             {
-                if (Main.item[i].Active && (Main.item[i].Owner == 255 || !Main.players[Main.item[i].Owner].active))
+                if (Main.item[i].Active && (Main.item[i].Owner == 255 || !Main.players[Main.item[i].Owner].Active))
                 {
                     Main.item[i].FindOwner(i);
                 }
@@ -709,10 +709,10 @@ namespace Terraria_Server
                 }
 
                 Player player = Main.players[i];
-                if (player.active)
+                if (player.Active)
                 {
-                    int sectionX = Netplay.GetSectionX((int)(player.position.X / 16f));
-                    int sectionY = Netplay.GetSectionY((int)(player.position.Y / 16f));
+                    int sectionX = Netplay.GetSectionX((int)(player.Position.X / 16f));
+                    int sectionY = Netplay.GetSectionY((int)(player.Position.Y / 16f));
                     int num3 = 0;
                     for (int j = sectionX - 1; j < sectionX + 2; j++)
                     {
@@ -765,7 +765,7 @@ namespace Terraria_Server
                         int count = 0;
                         foreach(Player player in Main.players)
                         {
-                            if (player.active && !player.dead && (double)player.position.Y < Main.worldSurface * 16.0)
+                            if (player.Active && !player.dead && (double)player.Position.Y < Main.worldSurface * 16.0)
                             {
                                 NPC.SpawnOnPlayer(player, count, 4);
                                 WorldGen.spawnEye = false;
@@ -826,7 +826,7 @@ namespace Terraria_Server
                         bool flag = false;
                         foreach(Player player in Main.players)
                         {
-                            if (player.active && player.statLifeMax >= 200)
+                            if (player.Active && player.statLifeMax >= 200)
                             {
                                 flag = true;
                                 break;
@@ -837,7 +837,7 @@ namespace Terraria_Server
                             int num = 0;
                             for (int i = 0; i < 1000; i++)
                             {
-                                if (Main.npc[i].active)
+                                if (Main.npc[i].Active)
                                 {
                                     if (Main.npc[i].townNPC)
                                     {
@@ -859,7 +859,7 @@ namespace Terraria_Server
                     {
                         for (int i = 0; i < 255; i++)
                         {
-                            if (Main.players[i].active && Main.players[i].statLifeMax > 100)
+                            if (Main.players[i].Active && Main.players[i].statLifeMax > 100)
                             {
                                 Main.bloodMoon = true;
                                 break;
@@ -888,7 +888,7 @@ namespace Terraria_Server
                         int num2 = 0;
                         for (int i = 0; i < 255; i++)
                         {
-                            if (Main.players[i].active)
+                            if (Main.players[i].Active)
                             {
                                 num2++;
                             }
@@ -906,7 +906,7 @@ namespace Terraria_Server
                         int num11 = 0;
                         for (int i = 0; i < 1000; i++)
                         {
-                            if (Main.npc[i].active && Main.npc[i].townNPC)
+                            if (Main.npc[i].Active && Main.npc[i].townNPC)
                             {
                                 if (Main.npc[i].type != 37 && !Main.npc[i].homeless)
                                 {
@@ -952,7 +952,7 @@ namespace Terraria_Server
                             bool flag4 = false;
                             for (int i = 0; i < 255; i++)
                             {
-                                if (Main.players[i].active)
+                                if (Main.players[i].Active)
                                 {
                                     for (int j = 0; j < 44; j++)
                                     {

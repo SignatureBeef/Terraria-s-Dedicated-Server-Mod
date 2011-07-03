@@ -26,7 +26,7 @@ namespace Terraria_Server.Messages
             }
 
             Player player = Main.players[playerIndex];
-            if (Main.netMode == 1 && !player.active)
+            if (Main.netMode == 1 && !player.Active)
             {
                 NetMessage.SendData(15);
             }
@@ -36,21 +36,21 @@ namespace Terraria_Server.Messages
                 playerIndex = whoAmI;
             }
 
-            player.oldVelocity = player.velocity;
+            player.oldVelocity = player.Velocity;
 
             int controlMap = (int)readBuffer[num++];
             player.selectedItemIndex = (int)readBuffer[num++];
 
-            player.position.X = BitConverter.ToSingle(readBuffer, num);
+            player.Position.X = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            player.position.Y = BitConverter.ToSingle(readBuffer, num);
+            player.Position.Y = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            player.velocity.X = BitConverter.ToSingle(readBuffer, num);
+            player.Velocity.X = BitConverter.ToSingle(readBuffer, num);
             num += 4;
-            player.velocity.Y = BitConverter.ToSingle(readBuffer, num);
+            player.Velocity.Y = BitConverter.ToSingle(readBuffer, num);
             num += 4;
 
-            player.fallStart = (int)(player.position.Y / 16f);
+            player.fallStart = (int)(player.Position.Y / 16f);
 
             player.controlUp = (controlMap & 1) == 1;
             player.controlDown = (controlMap & 2) == 2;

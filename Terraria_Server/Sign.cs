@@ -71,7 +71,7 @@ namespace Terraria_Server
         }
         public static void TextSign(int i, string text)
         {
-            if (Main.tile[Main.sign[i].x, Main.sign[i].y] == null || !Main.tile[Main.sign[i].x, Main.sign[i].y].active || (Main.tile[Main.sign[i].x, Main.sign[i].y].type != 55 && Main.tile[Main.sign[i].x, Main.sign[i].y].type != 85))
+            if (Main.tile[Main.sign[i].x, Main.sign[i].y] == null || !Main.tile[Main.sign[i].x, Main.sign[i].y].Active || (Main.tile[Main.sign[i].x, Main.sign[i].y].type != 55 && Main.tile[Main.sign[i].x, Main.sign[i].y].type != 85))
             {
                 Main.sign[i] = null;
                 return;

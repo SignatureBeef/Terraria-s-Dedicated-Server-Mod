@@ -83,7 +83,7 @@ namespace Terraria_Server.Messages
             //Can't switch to a for each because there are 1001 NPCs.
             for (int num14 = 0; num14 < 1000; num14++)
             {
-                if (Main.npc[num14].active)
+                if (Main.npc[num14].Active)
                 {
                     NetMessage.SendData(23, whoAmI, -1, "", num14);
                 }

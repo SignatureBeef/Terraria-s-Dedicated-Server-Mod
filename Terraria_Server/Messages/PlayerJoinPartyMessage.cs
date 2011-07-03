@@ -72,7 +72,7 @@ namespace Terraria_Server.Messages
                         || (currentTeam > 0 && player.team == currentTeam)
                         || (teamIndex > 0 && player.team == teamIndex))
                     {
-                        NetMessage.SendData(25, i, -1, player.name + joinMessage, 255, (float)Main.teamColor[teamIndex].R, (float)Main.teamColor[teamIndex].G, (float)Main.teamColor[teamIndex].B);
+                        NetMessage.SendData(25, i, -1, player.Name + joinMessage, 255, (float)Main.teamColor[teamIndex].R, (float)Main.teamColor[teamIndex].G, (float)Main.teamColor[teamIndex].B);
                     }
                 }
             }

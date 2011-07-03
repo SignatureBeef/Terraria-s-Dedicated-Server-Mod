@@ -33,7 +33,7 @@ namespace Terraria_Server.Messages
             {
                 npc.life = 0;
                 npc.HitEffect(0, 10.0);
-                npc.active = false;
+                npc.Active = false;
             }
             if (Main.netMode == 2)
             {

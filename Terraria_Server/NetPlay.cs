@@ -272,15 +272,15 @@ namespace Terraria_Server
                                         if (Netplay.serverSock[k].networkStream.DataAvailable)
                                         {
                                             Netplay.serverSock[k].locked = true;
-                                            if (Statics.debugMode)
-                                            {
-                                                Netplay.serverSock[k].networkStream.Read(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length);
-                                                NetMessage.RecieveBytes(Netplay.serverSock[k].readBuffer, Netplay.serverSock[k].readBuffer.Length, Netplay.serverSock[k].whoAmI);
-                                            }
-                                            else
-                                            {
+                                            //if (Statics.debugMode)
+                                            //{
+                                                //Netplay.serverSock[k].networkStream.Read(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length);
+                                                //NetMessage.RecieveBytes(Netplay.serverSock[k].readBuffer, Netplay.serverSock[k].readBuffer.Length, Netplay.serverSock[k].whoAmI);
+                                            //}
+                                            //else
+                                            //{
                                                 Netplay.serverSock[k].networkStream.BeginRead(Netplay.serverSock[k].readBuffer, 0, Netplay.serverSock[k].readBuffer.Length, new AsyncCallback(Netplay.serverSock[k].ServerReadCallBack), Netplay.serverSock[k].networkStream);
-                                            }
+                                            //}
                                          }
                                     }
                                     catch
@@ -391,7 +391,7 @@ namespace Terraria_Server
                                     Netplay.serverSock[k].statusText2 = "";
                                     if (k < 255)
                                     {
-                                        Main.players[k].active = false;
+                                        Main.players[k].Active = false;
                                     }
                                 }
                             }

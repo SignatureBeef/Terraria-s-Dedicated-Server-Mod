@@ -39,7 +39,7 @@ namespace Terraria_Server.Messages
                             return;
                         }
 
-                        Program.tConsole.WriteLine(Main.players[whoAmI].name + " Sent Command: " + chat);
+                        Program.tConsole.WriteLine(Main.players[whoAmI].Name + " Sent Command: " + chat);
                         Program.commandParser.parsePlayerCommand(Main.players[whoAmI], chat);
                         return;
                     }
@@ -54,7 +54,7 @@ namespace Terraria_Server.Messages
                     NetMessage.SendData(25, -1, -1, chat, num46, (float)255, (float)255, (float)255);
                     if (Main.dedServ)
                     {
-                        Program.tConsole.WriteLine("<" + Main.players[whoAmI].name + "> " + chat);
+                        Program.tConsole.WriteLine("<" + Main.players[whoAmI].Name + "> " + chat);
                     }
                 }
             }

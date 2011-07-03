@@ -46,23 +46,23 @@ namespace Terraria_Server.Messages
             string npcName = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
             NPC npc = Main.npc[(int)npcIndex];
-            if (!npc.active || npc.name != npcName)
+            if (!npc.Active || npc.Name != npcName)
             {
-                npc.active = true;
+                npc.Active = true;
                 npc.SetDefaults(npcName);
             }
 
-            npc.position.X = x;
-            npc.position.Y = y;
-            npc.velocity.X = vX;
-            npc.velocity.Y = vY;
+            npc.Position.X = x;
+            npc.Position.Y = y;
+            npc.Velocity.X = vX;
+            npc.Velocity.Y = vY;
             npc.target = target;
             npc.direction = direction;
             npc.life = life;
 
             if (life <= 0)
             {
-                npc.active = false;
+                npc.Active = false;
             }
 
             for (int i = 0; i < NPC.MAX_AI; i++)

@@ -53,13 +53,13 @@ namespace Terraria_Server.Messages
             }
 
             projectile.identity = (int)projectileIdentity;
-            projectile.position.X = x;
-            projectile.position.Y = y;
-            projectile.velocity.X = vX;
-            projectile.velocity.Y = vY;
+            projectile.Position.X = x;
+            projectile.Position.Y = y;
+            projectile.Velocity.X = vX;
+            projectile.Velocity.Y = vY;
             projectile.damage = (int)damage;
             projectile.type = (int)type;
-            projectile.owner = (int)projectileOwner;
+            projectile.Owner = (int)projectileOwner;
             projectile.knockBack = knockBack;
 
             for (int i = 0; i < Projectile.MAX_AI; i++)
@@ -81,7 +81,7 @@ namespace Terraria_Server.Messages
             for (int i = 0; i < index; i++)
             {
                 projectile = Main.projectile[i];
-                if (projectile.owner == owner
+                if (projectile.Owner == owner
                     && projectile.identity == identity
                     && projectile.active)
                 {

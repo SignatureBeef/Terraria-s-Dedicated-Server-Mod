@@ -134,9 +134,9 @@ namespace Terraria_Server.Commands
             string playerList = "";
             foreach(Player player in Main.players)
             {
-                if (player.active)
+                if (player.Active)
                 {
-                    playerList += ", " + player.name;
+                    playerList += ", " + player.Name;
                 }
             }
             if (playerList.StartsWith(","))
@@ -156,7 +156,7 @@ namespace Terraria_Server.Commands
             {
                 if (playerIndex >= 0) //-1 Means Console :3
                 {
-                    NetMessage.SendData(25, -1, -1, "*" + Main.players[playerIndex].name + " " + Message, 255, 200f, 100f);
+                    NetMessage.SendData(25, -1, -1, "*" + Main.players[playerIndex].Name + " " + Message, 255, 200f, 100f);
                 }
                 else
                 {
@@ -617,9 +617,9 @@ namespace Terraria_Server.Commands
                             stackSize = 1;
                         }
 
-                        Item.NewItem((int)player.position.X, (int)player.position.Y, player.width, player.height, itemType, stackSize, false);
+                        Item.NewItem((int)player.Position.X, (int)player.Position.Y, player.width, player.height, itemType, stackSize, false);
 
-                        Program.server.notifyOps("Giving " + player.name + " some " + itemType.ToString() + " {" + sender.getName() + "}", true);
+                        Program.server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.getName() + "}", true);
 
                         return;
                     }
@@ -669,9 +669,9 @@ namespace Terraria_Server.Commands
                     {
                         if (npcs[i] != null)
                         {
-                            if (npcs[i].name != null && npcs[i].name.Trim().Length > 0)
+                            if (npcs[i].Name != null && npcs[i].Name.Trim().Length > 0)
                             {
-                                string npc = npcs[i].name.Trim().Replace(" ", "").ToLower();
+                                string npc = npcs[i].Name.Trim().Replace(" ", "").ToLower();
                                 if (npc == npcName)
                                 {
                                     npcType = npcs[i].type;
@@ -732,12 +732,12 @@ namespace Terraria_Server.Commands
                     {
                         for (int i = 0; i < amount; i++)
                         {
-                            NPC.NewNPC((int)player.position.X + 3, (int)player.position.Y, npcType);
+                            NPC.NewNPC((int)player.Position.X + 3, (int)player.Position.Y, npcType);
                         }
                         NPC.SpawnNPC();
 
                         Program.server.notifyOps("Spawned " + amount.ToString() + " of " +
-                            npcType.ToString() + " {" + player.name + "}", true);
+                            npcType.ToString() + " {" + player.Name + "}", true);
                         return;
                     }
 
@@ -778,8 +778,8 @@ namespace Terraria_Server.Commands
 
                 player.teleportTo(toplayer);
 
-                Program.server.notifyOps("Teleported " + player.name + " to " +
-                    toplayer.name + " {" + sender.getName() + "}", true);
+                Program.server.notifyOps("Teleported " + player.Name + " to " +
+                    toplayer.Name + " {" + sender.getName() + "}", true);
 
                 return;
             }
@@ -816,8 +816,8 @@ namespace Terraria_Server.Commands
 
                     toplayer.teleportTo(player);
 
-                    Program.server.notifyOps("Teleported " + toplayer.name + " to " +
-                        player.name + " {" + sender.getName() + "}", true);
+                    Program.server.notifyOps("Teleported " + toplayer.Name + " to " +
+                        player.Name + " {" + sender.getName() + "}", true);
 
                     return;
                 }

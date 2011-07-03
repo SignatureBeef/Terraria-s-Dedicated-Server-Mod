@@ -111,7 +111,7 @@ namespace Terraria_Server
             {
                 type = tile.type,
                 liquid = tile.liquid,
-                active = tile.active,
+                Active = tile.Active,
                 frameNumber = tile.frameNumber,
                 wallFrameX = tile.wallFrameX,
                 wallFrameY = tile.wallFrameY,
@@ -148,7 +148,7 @@ namespace Terraria_Server
                 int num = -1;
                 for (int i = 0; i < 1000; i++)
                 {
-                    if (Main.npc[i].active && Main.npc[i].homeless && Main.npc[i].type == WorldGen.spawnNPC)
+                    if (Main.npc[i].Active && Main.npc[i].homeless && Main.npc[i].type == WorldGen.spawnNPC)
                     {
                         num = i;
                         break;
@@ -165,9 +165,9 @@ namespace Terraria_Server
                         Rectangle value = new Rectangle(num2 * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, num3 * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                         for (int j = 0; j < 255; j++)
                         {
-                            if (Main.players[j].active)
+                            if (Main.players[j].Active)
                             {
-                                Rectangle rectangle = new Rectangle((int)Main.players[j].position.X, (int)Main.players[j].position.Y, Main.players[j].width, Main.players[j].height);
+                                Rectangle rectangle = new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].width, Main.players[j].height);
                                 if (rectangle.Intersects(value))
                                 {
                                     flag = false;
@@ -206,7 +206,7 @@ namespace Terraria_Server
                                     while ((double)num6 < num5)
                                     {
                                         num3 = num6;
-                                        if (Main.tile[num2, num3].active && Main.tileSolid[(int)Main.tile[num2, num3].type])
+                                        if (Main.tile[num2, num3].Active && Main.tileSolid[(int)Main.tile[num2, num3].type])
                                         {
                                             if (!Collision.SolidTiles(num2 - 1, num2 + 1, num3 - 3, num3 - 1))
                                             {
@@ -214,9 +214,9 @@ namespace Terraria_Server
                                                 Rectangle value2 = new Rectangle(num2 * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, num3 * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                                                 for (int m = 0; m < 255; m++)
                                                 {
-                                                    if (Main.players[m].active)
+                                                    if (Main.players[m].Active)
                                                     {
-                                                        Rectangle rectangle2 = new Rectangle((int)Main.players[m].position.X, (int)Main.players[m].position.Y, Main.players[m].width, Main.players[m].height);
+                                                        Rectangle rectangle2 = new Rectangle((int)Main.players[m].Position.X, (int)Main.players[m].Position.Y, Main.players[m].width, Main.players[m].height);
                                                         if (rectangle2.Intersects(value2))
                                                         {
                                                             flag = false;
@@ -262,7 +262,7 @@ namespace Terraria_Server
                     Main.npc[num7].netUpdate = true;
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(25, -1, -1, Main.npc[num7].name + " has arrived!", 255, 50f, 125f, 255f);
+                        NetMessage.SendData(25, -1, -1, Main.npc[num7].Name + " has arrived!", 255, 50f, 125f, 255f);
                     }
                 }
                 else
@@ -347,7 +347,7 @@ namespace Terraria_Server
         {
             for (int i = 0; i < 1000; i++)
             {
-                if (Main.npc[i].active && Main.npc[i].townNPC && ignoreNPC != i && !Main.npc[i].homeless)
+                if (Main.npc[i].Active && Main.npc[i].townNPC && ignoreNPC != i && !Main.npc[i].homeless)
                 {
                     for (int j = 0; j < WorldGen.numRoomTiles; j++)
                     {
@@ -398,7 +398,7 @@ namespace Terraria_Server
             {
                 for (int m = num5 + 2; m < num6 + 2; m++)
                 {
-                    if (Main.tile[l, m].active)
+                    if (Main.tile[l, m].Active)
                     {
                         if (Main.tile[l, m].type == 23 || Main.tile[l, m].type == 24 || Main.tile[l, m].type == 25 || Main.tile[l, m].type == 32)
                         {
@@ -432,16 +432,16 @@ namespace Terraria_Server
             {
                 for (int num8 = num5 + 2; num8 < num6 + 2; num8++)
                 {
-                    if (Main.tile[n, num8].active)
+                    if (Main.tile[n, num8].Active)
                     {
                         num = num7;
-                        if (Main.tileSolid[(int)Main.tile[n, num8].type] && !Main.tileSolidTop[(int)Main.tile[n, num8].type] && !Collision.SolidTiles(n - 1, n + 1, num8 - 3, num8 - 1) && Main.tile[n - 1, num8].active && Main.tileSolid[(int)Main.tile[n - 1, num8].type] && Main.tile[n + 1, num8].active && Main.tileSolid[(int)Main.tile[n + 1, num8].type])
+                        if (Main.tileSolid[(int)Main.tile[n, num8].type] && !Main.tileSolidTop[(int)Main.tile[n, num8].type] && !Collision.SolidTiles(n - 1, n + 1, num8 - 3, num8 - 1) && Main.tile[n - 1, num8].Active && Main.tileSolid[(int)Main.tile[n - 1, num8].type] && Main.tile[n + 1, num8].Active && Main.tileSolid[(int)Main.tile[n + 1, num8].type])
                         {
                             for (int num9 = n - 2; num9 < n + 3; num9++)
                             {
                                 for (int num10 = num8 - 4; num10 < num8; num10++)
                                 {
-                                    if (Main.tile[num9, num10].active)
+                                    if (Main.tile[num9, num10].Active)
                                     {
                                         if (num9 == n)
                                         {
@@ -504,7 +504,7 @@ namespace Terraria_Server
                 WorldGen.houseTile[i] = false;
             }
             WorldGen.canSpawn = true;
-            if (Main.tile[x, y].active && Main.tileSolid[(int)Main.tile[x, y].type])
+            if (Main.tile[x, y].Active && Main.tileSolid[(int)Main.tile[x, y].type])
             {
                 WorldGen.canSpawn = false;
             }
@@ -542,7 +542,7 @@ namespace Terraria_Server
                 WorldGen.canSpawn = false;
                 return;
             }
-            if (Main.tile[x, y].active)
+            if (Main.tile[x, y].Active)
             {
                 WorldGen.houseTile[(int)Main.tile[x, y].type] = true;
                 if (Main.tileSolid[(int)Main.tile[x, y].type] || Main.tile[x, y].type == 11)
@@ -574,7 +574,7 @@ namespace Terraria_Server
                 {
                     flag = true;
                 }
-                if (Main.tile[x + j, y].active && (Main.tileSolid[(int)Main.tile[x + j, y].type] || Main.tile[x + j, y].type == 11))
+                if (Main.tile[x + j, y].Active && (Main.tileSolid[(int)Main.tile[x + j, y].type] || Main.tile[x + j, y].type == 11))
                 {
                     flag = true;
                 }
@@ -582,7 +582,7 @@ namespace Terraria_Server
                 {
                     flag2 = true;
                 }
-                if (Main.tile[x, y + j].active && (Main.tileSolid[(int)Main.tile[x, y + j].type] || Main.tile[x, y + j].type == 11))
+                if (Main.tile[x, y + j].Active && (Main.tileSolid[(int)Main.tile[x, y + j].type] || Main.tile[x, y + j].type == 11))
                 {
                     flag2 = true;
                 }
@@ -614,7 +614,7 @@ namespace Terraria_Server
             }
             for (int i = 0; i < 255; i++)
             {
-                if (Main.players[i].active)
+                if (Main.players[i].Active)
                 {
                     flag = false;
                     break;
@@ -628,7 +628,7 @@ namespace Terraria_Server
                 int num5 = 5;
                 while ((double)num5 < Main.worldSurface)
                 {
-                    if (Main.tile[j, num5].active && Main.tile[j, num5].type == 37)
+                    if (Main.tile[j, num5].Active && Main.tile[j, num5].type == 37)
                     {
                         num2++;
                         if (num2 > num4)
@@ -649,7 +649,7 @@ namespace Terraria_Server
                 }
                 for (int k = Main.rand.Next(100); k < Main.maxTilesY; k++)
                 {
-                    if (Main.tile[num7, k].active && Main.tileSolid[(int)Main.tile[num7, k].type])
+                    if (Main.tile[num7, k].Active && Main.tileSolid[(int)Main.tile[num7, k].type])
                     {
                         flag = WorldGen.meteor(num7, k);
                         break;
@@ -677,9 +677,9 @@ namespace Terraria_Server
             Rectangle rectangle = new Rectangle((i - num) * 16, (j - num) * 16, num * 2 * 16, num * 2 * 16);
             for (int k = 0; k < 255; k++)
             {
-                if (Main.players[k].active)
+                if (Main.players[k].Active)
                 {
-                    Rectangle value = new Rectangle((int)(Main.players[k].position.X + (float)(Main.players[k].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[k].position.Y + (float)(Main.players[k].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                    Rectangle value = new Rectangle((int)(Main.players[k].Position.X + (float)(Main.players[k].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[k].Position.Y + (float)(Main.players[k].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                     if (rectangle.Intersects(value))
                     {
                         return false;
@@ -688,9 +688,9 @@ namespace Terraria_Server
             }
             for (int l = 0; l < 1000; l++)
             {
-                if (Main.npc[l].active)
+                if (Main.npc[l].Active)
                 {
-                    Rectangle value2 = new Rectangle((int)Main.npc[l].position.X, (int)Main.npc[l].position.Y, Main.npc[l].width, Main.npc[l].height);
+                    Rectangle value2 = new Rectangle((int)Main.npc[l].Position.X, (int)Main.npc[l].Position.Y, Main.npc[l].width, Main.npc[l].height);
                     if (rectangle.Intersects(value2))
                     {
                         return false;
@@ -701,7 +701,7 @@ namespace Terraria_Server
             {
                 for (int n = j - num; n < j + num; n++)
                 {
-                    if (Main.tile[m, n].active && Main.tile[m, n].type == 21)
+                    if (Main.tile[m, n].Active && Main.tile[m, n].type == 21)
                     {
                         return false;
                     }
@@ -717,7 +717,7 @@ namespace Terraria_Server
                     {
                         if (!Main.tileSolid[(int)Main.tile[num2, num3].type])
                         {
-                            Main.tile[num2, num3].active = false;
+                            Main.tile[num2, num3].Active = false;
                         }
                         Main.tile[num2, num3].type = 37;
                     }
@@ -730,7 +730,7 @@ namespace Terraria_Server
                 {
                     if (num5 > j + Main.rand.Next(-2, 3) - 5 && Math.Abs(i - num4) + Math.Abs(j - num5) < num + Main.rand.Next(-3, 4))
                     {
-                        Main.tile[num4, num5].active = false;
+                        Main.tile[num4, num5].Active = false;
                     }
                 }
             }
@@ -752,7 +752,7 @@ namespace Terraria_Server
             {
                 for (int num9 = j - num; num9 < j + num; num9++)
                 {
-                    if (Main.tile[num8, num9].active && Main.rand.Next(10) == 0 && (double)(Math.Abs(i - num8) + Math.Abs(j - num9)) < (double)num * 1.3)
+                    if (Main.tile[num8, num9].Active && Main.rand.Next(10) == 0 && (double)(Math.Abs(i - num8) + Math.Abs(j - num9)) < (double)num * 1.3)
                     {
                         if (Main.tile[num8, num9].type == 5 || Main.tile[num8, num9].type == 32)
                         {
@@ -815,7 +815,7 @@ namespace Terraria_Server
             {
                 if (i != Main.myPlayer)
                 {
-                    Main.players[i].active = false;
+                    Main.players[i].Active = false;
                 }
             }
             WorldGen.loadWorld();
@@ -1120,8 +1120,8 @@ namespace Terraria_Server
                                     for (int j = 0; j < Main.maxTilesY; j++)
                                     {
                                         Tile tile = (Tile)Main.tile[i, j].Clone();
-                                        binaryWriter.Write(tile.active);
-                                        if (tile.active)
+                                        binaryWriter.Write(tile.Active);
+                                        if (tile.Active)
                                         {
                                             binaryWriter.Write(tile.type);
                                             if (Main.tileFrameImportant[(int)tile.type])
@@ -1192,12 +1192,12 @@ namespace Terraria_Server
                                 for (int n = 0; n < 1000; n++)
                                 {
                                     NPC nPC = (NPC)Main.npc[n].Clone();
-                                    if (nPC.active && nPC.townNPC)
+                                    if (nPC.Active && nPC.townNPC)
                                     {
                                         binaryWriter.Write(true);
-                                        binaryWriter.Write(nPC.name);
-                                        binaryWriter.Write(nPC.position.X);
-                                        binaryWriter.Write(nPC.position.Y);
+                                        binaryWriter.Write(nPC.Name);
+                                        binaryWriter.Write(nPC.Position.X);
+                                        binaryWriter.Write(nPC.Position.Y);
                                         binaryWriter.Write(nPC.homeless);
                                         binaryWriter.Write(nPC.homeTileX);
                                         binaryWriter.Write(nPC.homeTileY);
@@ -1306,8 +1306,8 @@ namespace Terraria_Server
                                 Program.printData("Loading world data: " + (int)(num2 * 100f + 1f) + "%", true);
                                 for (int k = 0; k < Main.maxTilesY; k++)
                                 {
-                                    Main.tile[j, k].active = binaryReader.ReadBoolean();
-                                    if (Main.tile[j, k].active)
+                                    Main.tile[j, k].Active = binaryReader.ReadBoolean();
+                                    if (Main.tile[j, k].Active)
                                     {
                                         Main.tile[j, k].type = binaryReader.ReadByte();
                                         if (Main.tileFrameImportant[(int)Main.tile[j, k].type])
@@ -1360,7 +1360,7 @@ namespace Terraria_Server
                                     string text = binaryReader.ReadString();
                                     int num3 = binaryReader.ReadInt32();
                                     int num4 = binaryReader.ReadInt32();
-                                    if (Main.tile[num3, num4].active && (Main.tile[num3, num4].type == 55 || Main.tile[num3, num4].type == 85))
+                                    if (Main.tile[num3, num4].Active && (Main.tile[num3, num4].type == 55 || Main.tile[num3, num4].type == 85))
                                     {
                                         Main.sign[n] = new Sign();
                                         Main.sign[n].x = num3;
@@ -1374,8 +1374,8 @@ namespace Terraria_Server
                             while (flag)
                             {
                                 Main.npc[num5].SetDefaults(binaryReader.ReadString());
-                                Main.npc[num5].position.X = binaryReader.ReadSingle();
-                                Main.npc[num5].position.Y = binaryReader.ReadSingle();
+                                Main.npc[num5].Position.X = binaryReader.ReadSingle();
+                                Main.npc[num5].Position.Y = binaryReader.ReadSingle();
                                 Main.npc[num5].homeless = binaryReader.ReadBoolean();
                                 Main.npc[num5].homeTileX = binaryReader.ReadInt32();
                                 Main.npc[num5].homeTileY = binaryReader.ReadInt32();
@@ -1632,7 +1632,7 @@ namespace Terraria_Server
                 int num11 = 0;
                 while ((double)num11 < num3)
                 {
-                    Main.tile[i, num11].active = false;
+                    Main.tile[i, num11].Active = false;
                     Main.tile[i, num11].lighted = true;
                     Main.tile[i, num11].frameX = -1;
                     Main.tile[i, num11].frameY = -1;
@@ -1642,14 +1642,14 @@ namespace Terraria_Server
                 {
                     if ((double)j < num4)
                     {
-                        Main.tile[i, j].active = true;
+                        Main.tile[i, j].Active = true;
                         Main.tile[i, j].type = 0;
                         Main.tile[i, j].frameX = -1;
                         Main.tile[i, j].frameY = -1;
                     }
                     else
                     {
-                        Main.tile[i, j].active = true;
+                        Main.tile[i, j].Active = true;
                         Main.tile[i, j].type = 1;
                         Main.tile[i, j].frameX = -1;
                         Main.tile[i, j].frameY = -1;
@@ -1747,7 +1747,7 @@ namespace Terraria_Server
                     int num21 = 0;
                     while ((double)num21 < Main.worldSurface)
                     {
-                        if (Main.tile[l, num21].active)
+                        if (Main.tile[l, num21].Active)
                         {
                             int num22 = num20;
                             if (l - num18 < num22)
@@ -1812,7 +1812,7 @@ namespace Terraria_Server
                     int num27 = 0;
                     while ((double)num27 < Main.worldSurface)
                     {
-                        if (Main.tile[num25, num27].active)
+                        if (Main.tile[num25, num27].Active)
                         {
                             WorldGen.Mountinater(num25, num27);
                             WorldGen.mCaveX[WorldGen.numMCaves] = num25;
@@ -1846,7 +1846,7 @@ namespace Terraria_Server
                     {
                         Main.tile[num28, num30].wall = 2;
                     }
-                    if (Main.tile[num28, num30].active && Main.tile[num28 - 1, num30].active && Main.tile[num28 + 1, num30].active && Main.tile[num28, num30 + 1].active && Main.tile[num28 - 1, num30 + 1].active && Main.tile[num28 + 1, num30 + 1].active)
+                    if (Main.tile[num28, num30].Active && Main.tile[num28 - 1, num30].Active && Main.tile[num28 + 1, num30].Active && Main.tile[num28, num30 + 1].Active && Main.tile[num28 - 1, num30 + 1].Active && Main.tile[num28 + 1, num30 + 1].Active)
                     {
                         flag3 = true;
                     }
@@ -1892,7 +1892,7 @@ namespace Terraria_Server
                 int num39 = 1;
                 while ((double)num39 < Main.worldSurface - 1.0)
                 {
-                    if (Main.tile[num38, num39].active)
+                    if (Main.tile[num38, num39].Active)
                     {
                         for (int num40 = num39; num40 < num39 + 5; num40++)
                         {
@@ -1957,7 +1957,7 @@ namespace Terraria_Server
                 int num49 = 0;
                 while ((double)num49 < num6)
                 {
-                    if (Main.tile[num48, num49].active)
+                    if (Main.tile[num48, num49].Active)
                     {
                         WorldGen.TileRunner(num48, num49, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(5, 50), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 1f, false, true);
                         break;
@@ -1971,7 +1971,7 @@ namespace Terraria_Server
                 int num51 = 0;
                 while ((double)num51 < num6)
                 {
-                    if (Main.tile[num48, num51].active)
+                    if (Main.tile[num48, num51].Active)
                     {
                         WorldGen.TileRunner(num48, num51, (double)WorldGen.genRand.Next(10, 15), WorldGen.genRand.Next(50, 130), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
                         break;
@@ -1985,7 +1985,7 @@ namespace Terraria_Server
                 int num53 = 0;
                 while ((double)num53 < num6)
                 {
-                    if (Main.tile[num48, num53].active)
+                    if (Main.tile[num48, num53].Active)
                     {
                         WorldGen.TileRunner(num48, num53, (double)WorldGen.genRand.Next(12, 25), WorldGen.genRand.Next(150, 500), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 4f, false, true);
                         WorldGen.TileRunner(num48, num53, (double)WorldGen.genRand.Next(8, 17), WorldGen.genRand.Next(60, 200), -1, false, (float)WorldGen.genRand.Next(-10, 11) * 0.1f, 2f, false, true);
@@ -2001,7 +2001,7 @@ namespace Terraria_Server
                 int num55 = 0;
                 while ((double)num55 < num6)
                 {
-                    if (Main.tile[num48, num55].active)
+                    if (Main.tile[num48, num55].Active)
                     {
                         WorldGen.TileRunner(num48, num55, (double)WorldGen.genRand.Next(7, 12), WorldGen.genRand.Next(150, 250), -1, false, 0f, 1f, true, true);
                         break;
@@ -2017,9 +2017,9 @@ namespace Terraria_Server
                 {
                     num58 = Main.maxTilesY - 2;
                 }
-                if (Main.tile[num57 - 1, num58].active && Main.tile[num57 - 1, num58].type == 0 && Main.tile[num57 + 1, num58].active && Main.tile[num57 + 1, num58].type == 0 && Main.tile[num57, num58 - 1].active && Main.tile[num57, num58 - 1].type == 0 && Main.tile[num57, num58 + 1].active && Main.tile[num57, num58 + 1].type == 0)
+                if (Main.tile[num57 - 1, num58].Active && Main.tile[num57 - 1, num58].type == 0 && Main.tile[num57 + 1, num58].Active && Main.tile[num57 + 1, num58].type == 0 && Main.tile[num57, num58 - 1].Active && Main.tile[num57, num58 - 1].type == 0 && Main.tile[num57, num58 + 1].Active && Main.tile[num57, num58 + 1].type == 0)
                 {
-                    Main.tile[num57, num58].active = true;
+                    Main.tile[num57, num58].Active = true;
                     Main.tile[num57, num58].type = 2;
                 }
                 num57 = WorldGen.genRand.Next(1, Main.maxTilesX - 1);
@@ -2028,9 +2028,9 @@ namespace Terraria_Server
                 {
                     num58 = Main.maxTilesY - 2;
                 }
-                if (Main.tile[num57 - 1, num58].active && Main.tile[num57 - 1, num58].type == 0 && Main.tile[num57 + 1, num58].active && Main.tile[num57 + 1, num58].type == 0 && Main.tile[num57, num58 - 1].active && Main.tile[num57, num58 - 1].type == 0 && Main.tile[num57, num58 + 1].active && Main.tile[num57, num58 + 1].type == 0)
+                if (Main.tile[num57 - 1, num58].Active && Main.tile[num57 - 1, num58].type == 0 && Main.tile[num57 + 1, num58].Active && Main.tile[num57 + 1, num58].type == 0 && Main.tile[num57, num58 - 1].Active && Main.tile[num57, num58 - 1].type == 0 && Main.tile[num57, num58 + 1].Active && Main.tile[num57, num58 + 1].type == 0)
                 {
-                    Main.tile[num57, num58].active = true;
+                    Main.tile[num57, num58].Active = true;
                     Main.tile[num57, num58].type = 2;
                 }
             }
@@ -2152,7 +2152,7 @@ namespace Terraria_Server
                         {
                             for (int num81 = num62 - num79 - 1; num81 <= num62 + num79 + 1; num81++)
                             {
-                                Main.tile[num80, num81].active = true;
+                                Main.tile[num80, num81].Active = true;
                                 Main.tile[num80, num81].type = 45;
                                 Main.tile[num80, num81].liquid = 0;
                                 Main.tile[num80, num81].lava = false;
@@ -2162,7 +2162,7 @@ namespace Terraria_Server
                         {
                             for (int num83 = num62 - num79; num83 <= num62 + num79; num83++)
                             {
-                                Main.tile[num82, num83].active = false;
+                                Main.tile[num82, num83].Active = false;
                                 Main.tile[num82, num83].wall = 10;
                             }
                         }
@@ -2183,23 +2183,23 @@ namespace Terraria_Server
                         {
                             for (int num88 = num62 + num79 - 2; num88 <= num62 + num79; num88++)
                             {
-                                Main.tile[num87, num88].active = false;
+                                Main.tile[num87, num88].Active = false;
                             }
                         }
                         for (int num89 = num60 - num78 - 1; num89 <= num60 + num78 + 1; num89++)
                         {
                             for (int num90 = num62 + num79 - 2; num90 <= num62 + num79 - 1; num90++)
                             {
-                                Main.tile[num89, num90].active = false;
+                                Main.tile[num89, num90].Active = false;
                             }
                         }
                         for (int num91 = num60 - num78 - 1; num91 <= num60 + num78 + 1; num91++)
                         {
                             int num92 = 4;
                             int num93 = num62 + num79 + 2;
-                            while (!Main.tile[num91, num93].active && num93 < Main.maxTilesY && num92 > 0)
+                            while (!Main.tile[num91, num93].Active && num93 < Main.maxTilesY && num92 > 0)
                             {
-                                Main.tile[num91, num93].active = true;
+                                Main.tile[num91, num93].Active = true;
                                 Main.tile[num91, num93].type = 59;
                                 num93++;
                                 num92--;
@@ -2211,7 +2211,7 @@ namespace Terraria_Server
                         {
                             for (int num95 = num60 - num78 - 1; num95 <= num60 + num78 + 1; num95++)
                             {
-                                Main.tile[num95, num94].active = true;
+                                Main.tile[num95, num94].Active = true;
                                 Main.tile[num95, num94].type = 45;
                             }
                             num78 -= WorldGen.genRand.Next(1, 3);
@@ -2228,7 +2228,7 @@ namespace Terraria_Server
             {
                 for (int num97 = 0; num97 < Main.maxTilesY; num97++)
                 {
-                    if (Main.tile[num96, num97].active)
+                    if (Main.tile[num96, num97].Active)
                     {
                         WorldGen.SpreadGrass(num96, num97, 59, 60, true);
                     }
@@ -2271,7 +2271,7 @@ namespace Terraria_Server
                     int num102 = 200;
                     while ((double)num102 < Main.worldSurface)
                     {
-                        if (Main.tile[num100, num102].active)
+                        if (Main.tile[num100, num102].Active)
                         {
                             int num103 = num100;
                             int num104 = WorldGen.genRand.Next(90, num102 - 100);
@@ -2301,7 +2301,7 @@ namespace Terraria_Server
             {
                 for (int num107 = (int)Main.worldSurface; num107 < Main.maxTilesY; num107++)
                 {
-                    if (Main.tile[num106, num107].active)
+                    if (Main.tile[num106, num107].Active)
                     {
                         WorldGen.SpreadGrass(num106, num107, 59, 70, false);
                     }
@@ -2374,7 +2374,7 @@ namespace Terraria_Server
                     num122 = WorldGen.mCaveX[num121];
                     num123 = WorldGen.mCaveY[num121];
                 }
-                if (!Main.tile[num122, num123].active)
+                if (!Main.tile[num122, num123].Active)
                 {
                     if ((double)num123 <= Main.worldSurface)
                     {
@@ -2383,7 +2383,7 @@ namespace Terraria_Server
                             goto IL_2C05;
                         }
                     }
-                    while (!Main.tile[num122, num123].active && num123 > (int)num5)
+                    while (!Main.tile[num122, num123].Active && num123 > (int)num5)
                     {
                         num123--;
                     }
@@ -2393,7 +2393,7 @@ namespace Terraria_Server
                     {
                         num124 = -1;
                     }
-                    while (!Main.tile[num122, num123].active && num122 > 10 && num122 < Main.maxTilesX - 10)
+                    while (!Main.tile[num122, num123].Active && num122 > 10 && num122 < Main.maxTilesX - 10)
                     {
                         num122 += num124;
                     }
@@ -2423,7 +2423,7 @@ namespace Terraria_Server
                 {
                     if (num127 >= num125)
                     {
-                        Main.tile[num126, num127].active = false;
+                        Main.tile[num126, num127].Active = false;
                         Main.tile[num126, num127].lava = false;
                         Main.tile[num126, num127].liquid = 0;
                     }
@@ -2447,7 +2447,7 @@ namespace Terraria_Server
                 }
                 for (int num130 = num128; num130 < Main.maxTilesY - 10; num130++)
                 {
-                    if (!Main.tile[num129, num130].active)
+                    if (!Main.tile[num129, num130].Active)
                     {
                         Main.tile[num129, num130].lava = true;
                         Main.tile[num129, num130].liquid = 255;
@@ -2459,7 +2459,7 @@ namespace Terraria_Server
                 if (WorldGen.genRand.Next(50) == 0)
                 {
                     int num132 = Main.maxTilesY - 65;
-                    while (!Main.tile[num131, num132].active && num132 > Main.maxTilesY - 135)
+                    while (!Main.tile[num131, num132].Active && num132 > Main.maxTilesY - 135)
                     {
                         num132--;
                     }
@@ -2474,7 +2474,7 @@ namespace Terraria_Server
                 if (WorldGen.genRand.Next(13) == 0)
                 {
                     int num135 = Main.maxTilesY - 65;
-                    while ((Main.tile[num133, num135].liquid > 0 || Main.tile[num133, num135].active) && num135 > Main.maxTilesY - 140)
+                    while ((Main.tile[num133, num135].liquid > 0 || Main.tile[num133, num135].Active) && num135 > Main.maxTilesY - 140)
                     {
                         num135--;
                     }
@@ -2506,12 +2506,12 @@ namespace Terraria_Server
             }
             for (int num137 = 0; num137 < Main.maxTilesX; num137++)
             {
-                if (!Main.tile[num137, Main.maxTilesY - 145].active)
+                if (!Main.tile[num137, Main.maxTilesY - 145].Active)
                 {
                     Main.tile[num137, Main.maxTilesY - 145].liquid = 255;
                     Main.tile[num137, Main.maxTilesY - 145].lava = true;
                 }
-                if (!Main.tile[num137, Main.maxTilesY - 144].active)
+                if (!Main.tile[num137, Main.maxTilesY - 144].Active)
                 {
                     Main.tile[num137, Main.maxTilesY - 144].liquid = 255;
                     Main.tile[num137, Main.maxTilesY - 144].lava = true;
@@ -2534,7 +2534,7 @@ namespace Terraria_Server
                     num142 = WorldGen.genRand.Next(300, Main.maxTilesX - 300);
                 }
                 int num143 = (int)num5 - 20;
-                while (!Main.tile[num142, num143].active)
+                while (!Main.tile[num142, num143].Active)
                 {
                     num143++;
                 }
@@ -2600,7 +2600,7 @@ namespace Terraria_Server
                     {
                         for (int num153 = 0; num153 < (int)Main.worldSurface; num153 += 5)
                         {
-                            if (Main.tile[num152, num153].active && Main.tileDungeon[(int)Main.tile[num152, num153].type])
+                            if (Main.tile[num152, num153].Active && Main.tileDungeon[(int)Main.tile[num152, num153].type])
                             {
                                 flag8 = false;
                                 break;
@@ -2629,7 +2629,7 @@ namespace Terraria_Server
                         int num156 = (int)num5;
                         while ((double)num156 < Main.worldSurface - 1.0)
                         {
-                            if (Main.tile[num155, num156].active || Main.tile[num155, num156].wall > 0)
+                            if (Main.tile[num155, num156].Active || Main.tile[num155, num156].wall > 0)
                             {
                                 if (num155 == num146)
                                 {
@@ -2655,7 +2655,7 @@ namespace Terraria_Server
                     int num157 = (int)num5;
                     while ((double)num157 < Main.worldSurface - 1.0)
                     {
-                        if (Main.tile[num155, num157].active)
+                        if (Main.tile[num155, num157].Active)
                         {
                             int num158 = num157 + WorldGen.genRand.Next(10, 14);
                             for (int num159 = num157; num159 < num158; num159++)
@@ -2687,7 +2687,7 @@ namespace Terraria_Server
                     int num162 = (int)num5;
                     while ((double)num162 < num160)
                     {
-                        if (Main.tile[num48, num162].active)
+                        if (Main.tile[num48, num162].Active)
                         {
                             if (Main.tile[num48, num162].type == 53 && num48 >= num147 + WorldGen.genRand.Next(5) && num48 <= num148 - WorldGen.genRand.Next(5))
                             {
@@ -2714,7 +2714,7 @@ namespace Terraria_Server
                 {
                     for (int num164 = 0; num164 < Main.maxTilesY - 50; num164++)
                     {
-                        if (Main.tile[num163, num164].active && Main.tile[num163, num164].type == 31)
+                        if (Main.tile[num163, num164].Active && Main.tile[num163, num164].type == 31)
                         {
                             int num165 = num163 - 13;
                             int num166 = num163 + 13;
@@ -2728,16 +2728,16 @@ namespace Terraria_Server
                                     {
                                         if (Math.Abs(num169 - num163) + Math.Abs(num170 - num164) < 9 + WorldGen.genRand.Next(11) && WorldGen.genRand.Next(3) != 0 && Main.tile[num169, num170].type != 31)
                                         {
-                                            Main.tile[num169, num170].active = true;
+                                            Main.tile[num169, num170].Active = true;
                                             Main.tile[num169, num170].type = 25;
                                             if (Math.Abs(num169 - num163) <= 1 && Math.Abs(num170 - num164) <= 1)
                                             {
-                                                Main.tile[num169, num170].active = false;
+                                                Main.tile[num169, num170].Active = false;
                                             }
                                         }
                                         if (Main.tile[num169, num170].type != 31 && Math.Abs(num169 - num163) <= 2 + WorldGen.genRand.Next(3) && Math.Abs(num170 - num164) <= 2 + WorldGen.genRand.Next(3))
                                         {
-                                            Main.tile[num169, num170].active = false;
+                                            Main.tile[num169, num170].Active = false;
                                         }
                                     }
                                 }
@@ -2777,7 +2777,7 @@ namespace Terraria_Server
                     int num179 = 0;
                     float num180 = 1f;
                     int num181 = 0;
-                    while (!Main.tile[num178 - 1, num181].active)
+                    while (!Main.tile[num178 - 1, num181].Active)
                     {
                         num181++;
                     }
@@ -2909,7 +2909,7 @@ namespace Terraria_Server
                         {
                             if ((float)num184 < (float)num181 + num180 * 0.75f - 3f)
                             {
-                                Main.tile[num182, num184].active = false;
+                                Main.tile[num182, num184].Active = false;
                                 if (num184 > num181)
                                 {
                                     Main.tile[num182, num184].liquid = 255;
@@ -2927,7 +2927,7 @@ namespace Terraria_Server
                                 if (num184 > num181)
                                 {
                                     Main.tile[num182, num184].type = 53;
-                                    Main.tile[num182, num184].active = true;
+                                    Main.tile[num182, num184].Active = true;
                                 }
                             }
                             Main.tile[num182, num184].wall = 0;
@@ -2946,7 +2946,7 @@ namespace Terraria_Server
                     float num185 = 1f;
                     int num186 = 0;
                     int num187 = 0;
-                    while (!Main.tile[num177, num187].active)
+                    while (!Main.tile[num177, num187].Active)
                     {
                         num187++;
                     }
@@ -3074,7 +3074,7 @@ namespace Terraria_Server
                         {
                             if ((float)num190 < (float)num187 + num185 * 0.75f - 3f && (double)num190 < Main.worldSurface - 2.0)
                             {
-                                Main.tile[num188, num190].active = false;
+                                Main.tile[num188, num190].Active = false;
                                 if (num190 > num187)
                                 {
                                     Main.tile[num188, num190].liquid = 255;
@@ -3092,7 +3092,7 @@ namespace Terraria_Server
                                 if (num190 > num187)
                                 {
                                     Main.tile[num188, num190].type = 53;
-                                    Main.tile[num188, num190].active = true;
+                                    Main.tile[num188, num190].Active = true;
                                 }
                             }
                             Main.tile[num188, num190].wall = 0;
@@ -3101,12 +3101,12 @@ namespace Terraria_Server
                     }
                 }
             }
-            while (!Main.tile[num174, num172].active)
+            while (!Main.tile[num174, num172].Active)
             {
                 num172++;
             }
             num172++;
-            while (!Main.tile[num175, num173].active)
+            while (!Main.tile[num175, num173].Active)
             {
                 num173++;
             }
@@ -3177,12 +3177,12 @@ namespace Terraria_Server
                 Program.printData("Gravitating sand: " + (int)(num197 * 100f) + "%", true);
                 for (int num198 = Main.maxTilesY - 5; num198 > 0; num198--)
                 {
-                    if (Main.tile[num196, num198].active && Main.tile[num196, num198].type == 53)
+                    if (Main.tile[num196, num198].Active && Main.tile[num196, num198].type == 53)
                     {
                         int num199 = num198;
-                        while (!Main.tile[num196, num199 + 1].active && num199 < Main.maxTilesY - 5)
+                        while (!Main.tile[num196, num199 + 1].Active && num199 < Main.maxTilesY - 5)
                         {
-                            Main.tile[num196, num199 + 1].active = true;
+                            Main.tile[num196, num199 + 1].Active = true;
                             Main.tile[num196, num199 + 1].type = 53;
                             num199++;
                         }
@@ -3230,7 +3230,7 @@ namespace Terraria_Server
                             {
                                 Main.tile[num200 + 3, num202].wall = 0;
                             }
-                            if (Main.tile[num200, num202].active)
+                            if (Main.tile[num200, num202].Active)
                             {
                                 flag10 = false;
                             }
@@ -3238,7 +3238,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (Main.tile[num200, num202].wall == 0 && Main.tile[num200, num202 + 1].wall == 0 && Main.tile[num200, num202 + 2].wall == 0 && Main.tile[num200, num202 + 3].wall == 0 && Main.tile[num200, num202 + 4].wall == 0 && Main.tile[num200 - 1, num202].wall == 0 && Main.tile[num200 + 1, num202].wall == 0 && Main.tile[num200 - 2, num202].wall == 0 && Main.tile[num200 + 2, num202].wall == 0 && !Main.tile[num200, num202].active && !Main.tile[num200, num202 + 1].active && !Main.tile[num200, num202 + 2].active && !Main.tile[num200, num202 + 3].active)
+                        if (Main.tile[num200, num202].wall == 0 && Main.tile[num200, num202 + 1].wall == 0 && Main.tile[num200, num202 + 2].wall == 0 && Main.tile[num200, num202 + 3].wall == 0 && Main.tile[num200, num202 + 4].wall == 0 && Main.tile[num200 - 1, num202].wall == 0 && Main.tile[num200 + 1, num202].wall == 0 && Main.tile[num200 - 2, num202].wall == 0 && Main.tile[num200 + 2, num202].wall == 0 && !Main.tile[num200, num202].Active && !Main.tile[num200, num202 + 1].Active && !Main.tile[num200, num202 + 2].Active && !Main.tile[num200, num202 + 3].Active)
                         {
                             flag10 = true;
                         }
@@ -3278,7 +3278,7 @@ namespace Terraria_Server
                 int num209 = (int)num5;
                 while ((double)num209 < Main.worldSurface - 1.0)
                 {
-                    if (Main.tile[num48, num209].active)
+                    if (Main.tile[num48, num209].Active)
                     {
                         if (Main.tile[num48, num209].type == 60)
                         {
@@ -3300,7 +3300,7 @@ namespace Terraria_Server
                 int num211 = (int)num5;
                 while ((double)num211 < Main.worldSurface - 1.0)
                 {
-                    if (Main.tile[num48, num211].active)
+                    if (Main.tile[num48, num211].Active)
                     {
                         if (Main.tile[num48, num211].type == 53)
                         {
@@ -3551,7 +3551,7 @@ namespace Terraria_Server
                     {
                         if (!flag18)
                         {
-                            if (Main.tile[num245, num246].active && Main.tileSolid[(int)Main.tile[num245, num246].type] && !Main.tile[num245, num246 - 1].lava)
+                            if (Main.tile[num245, num246].Active && Main.tileSolid[(int)Main.tile[num245, num246].type] && !Main.tile[num245, num246 - 1].lava)
                             {
                                 flag18 = true;
                             }
@@ -3588,7 +3588,7 @@ namespace Terraria_Server
                     {
                         if (Main.tile[num250, num251].wall == 13)
                         {
-                            while (!Main.tile[num250, num251].active)
+                            while (!Main.tile[num250, num251].Active)
                             {
                                 num251++;
                             }
@@ -3622,7 +3622,7 @@ namespace Terraria_Server
                 int num253 = 0;
                 while ((double)num253 < Main.worldSurface - 1.0)
                 {
-                    if (Main.tile[num48, num253].active)
+                    if (Main.tile[num48, num253].Active)
                     {
                         if (flag20 && Main.tile[num48, num253].type == 0)
                         {
@@ -3653,7 +3653,7 @@ namespace Terraria_Server
                     int num255 = 0;
                     while ((double)num255 < Main.worldSurface - 1.0)
                     {
-                        if (Main.tile[num254, num255].active && Main.tile[num254, num255].type == 53 && !Main.tile[num254, num255 - 1].active && Main.tile[num254, num255 - 1].wall == 0)
+                        if (Main.tile[num254, num255].Active && Main.tile[num254, num255].type == 53 && !Main.tile[num254, num255 - 1].Active && Main.tile[num254, num255 - 1].wall == 0)
                         {
                             if (num254 < 250 || num254 > Main.maxTilesX - 250)
                             {
@@ -3681,7 +3681,7 @@ namespace Terraria_Server
                 int num257 = Main.maxTilesX / 2 + WorldGen.genRand.Next(-num256, num256 + 1);
                 for (int num258 = 0; num258 < Main.maxTilesY; num258++)
                 {
-                    if (Main.tile[num257, num258].active)
+                    if (Main.tile[num257, num258].Active)
                     {
                         Main.spawnTileX = num257;
                         Main.spawnTileY = num258;
@@ -3706,7 +3706,7 @@ namespace Terraria_Server
                 int num260 = WorldGen.genRand.Next(Main.maxTilesX / 2 - num259, Main.maxTilesX / 2 + num259);
                 for (int num261 = 0; num261 < Main.maxTilesY; num261++)
                 {
-                    if (Main.tile[num260, num261].active)
+                    if (Main.tile[num260, num261].Active)
                     {
                         Main.spawnTileX = num260;
                         Main.spawnTileY = num261;
@@ -3745,11 +3745,11 @@ namespace Terraria_Server
                     int num268 = 1;
                     while ((double)num268 < Main.worldSurface - 1.0)
                     {
-                        if (Main.tile[num267, num268].type == 2 && Main.tile[num267, num268].active && !Main.tile[num267, num268 - 1].active)
+                        if (Main.tile[num267, num268].type == 2 && Main.tile[num267, num268].Active && !Main.tile[num267, num268 - 1].Active)
                         {
                             WorldGen.PlaceTile(num267, num268 - 1, 27, true, false, -1, 0);
                         }
-                        if (Main.tile[num267, num268].active)
+                        if (Main.tile[num267, num268].Active)
                         {
                             break;
                         }
@@ -3790,17 +3790,17 @@ namespace Terraria_Server
             {
                 for (int num276 = 0; num276 < Main.maxTilesY; num276++)
                 {
-                    if (Main.tile[num275, num276].active)
+                    if (Main.tile[num275, num276].Active)
                     {
-                        if (num276 >= (int)Main.worldSurface && Main.tile[num275, num276].type == 70 && !Main.tile[num275, num276 - 1].active)
+                        if (num276 >= (int)Main.worldSurface && Main.tile[num275, num276].type == 70 && !Main.tile[num275, num276 - 1].Active)
                         {
                             WorldGen.GrowShroom(num275, num276);
-                            if (!Main.tile[num275, num276 - 1].active)
+                            if (!Main.tile[num275, num276 - 1].Active)
                             {
                                 WorldGen.PlaceTile(num275, num276 - 1, 71, true, false, -1, 0);
                             }
                         }
-                        if (Main.tile[num275, num276].type == 60 && !Main.tile[num275, num276 - 1].active)
+                        if (Main.tile[num275, num276].type == 60 && !Main.tile[num275, num276 - 1].Active)
                         {
                             WorldGen.PlaceTile(num275, num276 - 1, 61, true, false, -1, 0);
                         }
@@ -3815,9 +3815,9 @@ namespace Terraria_Server
                 int num279 = 0;
                 while ((double)num279 < Main.worldSurface)
                 {
-                    if (num278 > 0 && !Main.tile[num277, num279].active)
+                    if (num278 > 0 && !Main.tile[num277, num279].Active)
                     {
-                        Main.tile[num277, num279].active = true;
+                        Main.tile[num277, num279].Active = true;
                         Main.tile[num277, num279].type = 52;
                         num278--;
                     }
@@ -3825,7 +3825,7 @@ namespace Terraria_Server
                     {
                         num278 = 0;
                     }
-                    if (Main.tile[num277, num279].active && Main.tile[num277, num279].type == 2 && WorldGen.genRand.Next(5) < 3)
+                    if (Main.tile[num277, num279].Active && Main.tile[num277, num279].type == 2 && WorldGen.genRand.Next(5) < 3)
                     {
                         num278 = WorldGen.genRand.Next(1, 10);
                     }
@@ -3834,9 +3834,9 @@ namespace Terraria_Server
                 num278 = 0;
                 for (int num280 = 0; num280 < Main.maxTilesY; num280++)
                 {
-                    if (num278 > 0 && !Main.tile[num277, num280].active)
+                    if (num278 > 0 && !Main.tile[num277, num280].Active)
                     {
-                        Main.tile[num277, num280].active = true;
+                        Main.tile[num277, num280].Active = true;
                         Main.tile[num277, num280].type = 62;
                         num278--;
                     }
@@ -3844,7 +3844,7 @@ namespace Terraria_Server
                     {
                         num278 = 0;
                     }
-                    if (Main.tile[num277, num280].active && Main.tile[num277, num280].type == 60 && WorldGen.genRand.Next(5) < 3)
+                    if (Main.tile[num277, num280].Active && Main.tile[num277, num280].type == 60 && WorldGen.genRand.Next(5) < 3)
                     {
                         num278 = WorldGen.genRand.Next(1, 10);
                     }
@@ -3861,7 +3861,7 @@ namespace Terraria_Server
                 int num285 = 1;
                 while ((double)num285 < Main.worldSurface - 1.0)
                 {
-                    if (Main.tile[num282, num285].active)
+                    if (Main.tile[num282, num285].Active)
                     {
                         for (int num286 = num282 - num283; num286 < num282 + num283; num286++)
                         {
@@ -3890,7 +3890,7 @@ namespace Terraria_Server
                 int num292 = 1;
                 while ((double)num292 < Main.worldSurface - 1.0)
                 {
-                    if (Main.tile[num289, num292].active)
+                    if (Main.tile[num289, num292].Active)
                     {
                         for (int num293 = num289 - num290; num293 < num289 + num290; num293++)
                         {
@@ -3918,7 +3918,7 @@ namespace Terraria_Server
             {
                 num++;
             }
-            if (Main.tile[i, num].active && Main.tile[i, num].type == 2 && Main.tile[i, num - 1].wall == 0 && Main.tile[i, num - 1].liquid == 0 && Main.tile[i - 1, num].active && Main.tile[i - 1, num].type == 2 && Main.tile[i + 1, num].active && Main.tile[i + 1, num].type == 2)
+            if (Main.tile[i, num].Active && Main.tile[i, num].type == 2 && Main.tile[i, num - 1].wall == 0 && Main.tile[i, num - 1].liquid == 0 && Main.tile[i - 1, num].Active && Main.tile[i - 1, num].type == 2 && Main.tile[i + 1, num].Active && Main.tile[i + 1, num].type == 2)
             {
                 int num2 = 2;
                 if (WorldGen.EmptyTileCheck(i - num2, i + num2, num - 55, num - 1, 20))
@@ -3930,7 +3930,7 @@ namespace Terraria_Server
                     for (int j = num - num3; j < num; j++)
                     {
                         Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
-                        Main.tile[i, j].active = true;
+                        Main.tile[i, j].Active = true;
                         Main.tile[i, j].type = 5;
                         num4 = WorldGen.genRand.Next(3);
                         int num5 = WorldGen.genRand.Next(10);
@@ -4116,7 +4116,7 @@ namespace Terraria_Server
                         }
                         if (num5 == 5 || num5 == 7)
                         {
-                            Main.tile[i - 1, j].active = true;
+                            Main.tile[i - 1, j].Active = true;
                             Main.tile[i - 1, j].type = 5;
                             num4 = WorldGen.genRand.Next(3);
                             if (WorldGen.genRand.Next(3) < 2)
@@ -4158,7 +4158,7 @@ namespace Terraria_Server
                         }
                         if (num5 == 6 || num5 == 7)
                         {
-                            Main.tile[i + 1, j].active = true;
+                            Main.tile[i + 1, j].Active = true;
                             Main.tile[i + 1, j].type = 5;
                             num4 = WorldGen.genRand.Next(3);
                             if (WorldGen.genRand.Next(3) < 2)
@@ -4202,7 +4202,7 @@ namespace Terraria_Server
                     int num6 = WorldGen.genRand.Next(3);
                     if (num6 == 0 || num6 == 1)
                     {
-                        Main.tile[i + 1, num - 1].active = true;
+                        Main.tile[i + 1, num - 1].Active = true;
                         Main.tile[i + 1, num - 1].type = 5;
                         num4 = WorldGen.genRand.Next(3);
                         if (num4 == 0)
@@ -4223,7 +4223,7 @@ namespace Terraria_Server
                     }
                     if (num6 == 0 || num6 == 2)
                     {
-                        Main.tile[i - 1, num - 1].active = true;
+                        Main.tile[i - 1, num - 1].Active = true;
                         Main.tile[i - 1, num - 1].type = 5;
                         num4 = WorldGen.genRand.Next(3);
                         if (num4 == 0)
@@ -4363,7 +4363,7 @@ namespace Terraria_Server
             {
                 return;
             }
-            if (Main.tile[i, num].active && (Main.tile[i, num].type == 2 || Main.tile[i, num].type == 23 || Main.tile[i, num].type == 60) && Main.tile[i, num - 1].wall == 0 && Main.tile[i - 1, num].active && (Main.tile[i - 1, num].type == 2 || Main.tile[i - 1, num].type == 23 || Main.tile[i - 1, num].type == 60) && Main.tile[i + 1, num].active && (Main.tile[i + 1, num].type == 2 || Main.tile[i + 1, num].type == 23 || Main.tile[i + 1, num].type == 60))
+            if (Main.tile[i, num].Active && (Main.tile[i, num].type == 2 || Main.tile[i, num].type == 23 || Main.tile[i, num].type == 60) && Main.tile[i, num - 1].wall == 0 && Main.tile[i - 1, num].Active && (Main.tile[i - 1, num].type == 2 || Main.tile[i - 1, num].type == 23 || Main.tile[i - 1, num].type == 60) && Main.tile[i + 1, num].Active && (Main.tile[i + 1, num].type == 2 || Main.tile[i + 1, num].type == 23 || Main.tile[i + 1, num].type == 60))
             {
                 int num2 = 2;
                 if (WorldGen.EmptyTileCheck(i - num2, i + num2, num - 14, num - 1, 20))
@@ -4375,7 +4375,7 @@ namespace Terraria_Server
                     for (int j = num - num3; j < num; j++)
                     {
                         Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
-                        Main.tile[i, j].active = true;
+                        Main.tile[i, j].Active = true;
                         Main.tile[i, j].type = 5;
                         num4 = WorldGen.genRand.Next(3);
                         int num5 = WorldGen.genRand.Next(10);
@@ -4561,7 +4561,7 @@ namespace Terraria_Server
                         }
                         if (num5 == 5 || num5 == 7)
                         {
-                            Main.tile[i - 1, j].active = true;
+                            Main.tile[i - 1, j].Active = true;
                             Main.tile[i - 1, j].type = 5;
                             num4 = WorldGen.genRand.Next(3);
                             if (WorldGen.genRand.Next(3) < 2)
@@ -4603,7 +4603,7 @@ namespace Terraria_Server
                         }
                         if (num5 == 6 || num5 == 7)
                         {
-                            Main.tile[i + 1, j].active = true;
+                            Main.tile[i + 1, j].Active = true;
                             Main.tile[i + 1, j].type = 5;
                             num4 = WorldGen.genRand.Next(3);
                             if (WorldGen.genRand.Next(3) < 2)
@@ -4647,7 +4647,7 @@ namespace Terraria_Server
                     int num6 = WorldGen.genRand.Next(3);
                     if (num6 == 0 || num6 == 1)
                     {
-                        Main.tile[i + 1, num - 1].active = true;
+                        Main.tile[i + 1, num - 1].Active = true;
                         Main.tile[i + 1, num - 1].type = 5;
                         num4 = WorldGen.genRand.Next(3);
                         if (num4 == 0)
@@ -4668,7 +4668,7 @@ namespace Terraria_Server
                     }
                     if (num6 == 0 || num6 == 2)
                     {
-                        Main.tile[i - 1, num - 1].active = true;
+                        Main.tile[i - 1, num - 1].Active = true;
                         Main.tile[i - 1, num - 1].type = 5;
                         num4 = WorldGen.genRand.Next(3);
                         if (num4 == 0)
@@ -4801,14 +4801,14 @@ namespace Terraria_Server
             {
                 return;
             }
-            if (Main.tile[i, y].active && Main.tile[i, y].type == 70 && Main.tile[i, y - 1].wall == 0 && Main.tile[i - 1, y].active && Main.tile[i - 1, y].type == 70 && Main.tile[i + 1, y].active && Main.tile[i + 1, y].type == 70 && WorldGen.EmptyTileCheck(i - 2, i + 2, y - 13, y - 1, 71))
+            if (Main.tile[i, y].Active && Main.tile[i, y].type == 70 && Main.tile[i, y - 1].wall == 0 && Main.tile[i - 1, y].Active && Main.tile[i - 1, y].type == 70 && Main.tile[i + 1, y].Active && Main.tile[i + 1, y].type == 70 && WorldGen.EmptyTileCheck(i - 2, i + 2, y - 13, y - 1, 71))
             {
                 int num = WorldGen.genRand.Next(4, 11);
                 int num2;
                 for (int j = y - num; j < y; j++)
                 {
                     Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
-                    Main.tile[i, j].active = true;
+                    Main.tile[i, j].Active = true;
                     Main.tile[i, j].type = 72;
                     num2 = WorldGen.genRand.Next(3);
                     if (num2 == 0)
@@ -4886,7 +4886,7 @@ namespace Terraria_Server
             {
                 for (int j = startY; j < endY + 1; j++)
                 {
-                    if (Main.tile[i, j].active)
+                    if (Main.tile[i, j].Active)
                     {
                         if (ignoreStyle == -1)
                         {
@@ -4915,17 +4915,17 @@ namespace Terraria_Server
             bool result;
             try
             {
-                if (Main.tile[i, j - 2].active && Main.tileSolid[(int)Main.tile[i, j - 2].type] && Main.tile[i, j + 2].active && Main.tileSolid[(int)Main.tile[i, j + 2].type])
+                if (Main.tile[i, j - 2].Active && Main.tileSolid[(int)Main.tile[i, j - 2].type] && Main.tile[i, j + 2].Active && Main.tileSolid[(int)Main.tile[i, j + 2].type])
                 {
-                    Main.tile[i, j - 1].active = true;
+                    Main.tile[i, j - 1].Active = true;
                     Main.tile[i, j - 1].type = 10;
                     Main.tile[i, j - 1].frameY = 0;
                     Main.tile[i, j - 1].frameX = (short)(WorldGen.genRand.Next(3) * 18);
-                    Main.tile[i, j].active = true;
+                    Main.tile[i, j].Active = true;
                     Main.tile[i, j].type = 10;
                     Main.tile[i, j].frameY = 18;
                     Main.tile[i, j].frameX = (short)(WorldGen.genRand.Next(3) * 18);
-                    Main.tile[i, j + 1].active = true;
+                    Main.tile[i, j + 1].Active = true;
                     Main.tile[i, j + 1].type = 10;
                     Main.tile[i, j + 1].frameY = 36;
                     Main.tile[i, j + 1].frameX = (short)(WorldGen.genRand.Next(3) * 18);
@@ -5053,7 +5053,7 @@ namespace Terraria_Server
                         {
                             Main.tile[l, m] = new Tile();
                         }
-                        Main.tile[l, m].active = false;
+                        Main.tile[l, m].Active = false;
                     }
                 }
             }
@@ -5072,7 +5072,7 @@ namespace Terraria_Server
             int k = j;
             while (k < Main.maxTilesY)
             {
-                if (Main.tile[i, k].active && Main.tileSolid[(int)Main.tile[i, k].type])
+                if (Main.tile[i, k].Active && Main.tileSolid[(int)Main.tile[i, k].type])
                 {
                     int num = k - 1;
                     if (Main.tile[i, num - 1].lava || Main.tile[i - 1, num - 1].lava)
@@ -5083,19 +5083,19 @@ namespace Terraria_Server
                     {
                         return false;
                     }
-                    Main.tile[i - 1, num - 1].active = true;
+                    Main.tile[i - 1, num - 1].Active = true;
                     Main.tile[i - 1, num - 1].type = 12;
                     Main.tile[i - 1, num - 1].frameX = 0;
                     Main.tile[i - 1, num - 1].frameY = 0;
-                    Main.tile[i, num - 1].active = true;
+                    Main.tile[i, num - 1].Active = true;
                     Main.tile[i, num - 1].type = 12;
                     Main.tile[i, num - 1].frameX = 18;
                     Main.tile[i, num - 1].frameY = 0;
-                    Main.tile[i - 1, num].active = true;
+                    Main.tile[i - 1, num].Active = true;
                     Main.tile[i - 1, num].type = 12;
                     Main.tile[i - 1, num].frameX = 0;
                     Main.tile[i - 1, num].frameY = 18;
-                    Main.tile[i, num].active = true;
+                    Main.tile[i, num].Active = true;
                     Main.tile[i, num].type = 12;
                     Main.tile[i, num].frameX = 18;
                     Main.tile[i, num].frameY = 18;
@@ -5119,19 +5119,19 @@ namespace Terraria_Server
             {
                 return;
             }
-            Main.tile[x - 1, y - 1].active = true;
+            Main.tile[x - 1, y - 1].Active = true;
             Main.tile[x - 1, y - 1].type = 31;
             Main.tile[x - 1, y - 1].frameX = 0;
             Main.tile[x - 1, y - 1].frameY = 0;
-            Main.tile[x, y - 1].active = true;
+            Main.tile[x, y - 1].Active = true;
             Main.tile[x, y - 1].type = 31;
             Main.tile[x, y - 1].frameX = 18;
             Main.tile[x, y - 1].frameY = 0;
-            Main.tile[x - 1, y].active = true;
+            Main.tile[x - 1, y].Active = true;
             Main.tile[x - 1, y].type = 31;
             Main.tile[x - 1, y].frameX = 0;
             Main.tile[x - 1, y].frameY = 18;
-            Main.tile[x, y].active = true;
+            Main.tile[x, y].Active = true;
             Main.tile[x, y].type = 31;
             Main.tile[x, y].frameX = 18;
             Main.tile[x, y].frameY = 18;
@@ -5143,11 +5143,11 @@ namespace Terraria_Server
             for (int i = num; i < Main.maxTilesX - num; i++)
             {
                 int num2 = Main.maxTilesY - 40;
-                while (Main.tile[i, num2].active || Main.tile[i, num2].liquid > 0)
+                while (Main.tile[i, num2].Active || Main.tile[i, num2].liquid > 0)
                 {
                     num2--;
                 }
-                if (Main.tile[i, num2 + 1].active)
+                if (Main.tile[i, num2 + 1].Active)
                 {
                     WorldGen.HellHouse(i, num2);
                     i += WorldGen.genRand.Next(15, 80);
@@ -5177,15 +5177,15 @@ namespace Terraria_Server
             for (int m = i - num / 2; m <= i + num / 2; m++)
             {
                 num4 = j;
-                while (num4 < Main.maxTilesY && ((Main.tile[m, num4].active && Main.tile[m, num4].type == 76) || Main.tile[m, num4].wall == 13))
+                while (num4 < Main.maxTilesY && ((Main.tile[m, num4].Active && Main.tile[m, num4].type == 76) || Main.tile[m, num4].wall == 13))
                 {
                     num4++;
                 }
                 int num7 = 6 + WorldGen.genRand.Next(3);
-                while (num4 < Main.maxTilesY && !Main.tile[m, num4].active)
+                while (num4 < Main.maxTilesY && !Main.tile[m, num4].Active)
                 {
                     num7--;
-                    Main.tile[m, num4].active = true;
+                    Main.tile[m, num4].Active = true;
                     Main.tile[m, num4].type = 57;
                     num4++;
                     if (num7 <= 0)
@@ -5197,16 +5197,16 @@ namespace Terraria_Server
             int num8 = 0;
             int num9 = 0;
             num4 = j;
-            while (num4 < Main.maxTilesY && ((Main.tile[i, num4].active && Main.tile[i, num4].type == 76) || Main.tile[i, num4].wall == 13))
+            while (num4 < Main.maxTilesY && ((Main.tile[i, num4].Active && Main.tile[i, num4].type == 76) || Main.tile[i, num4].wall == 13))
             {
                 num4++;
             }
             num4--;
             num9 = num4;
-            while ((Main.tile[i, num4].active && Main.tile[i, num4].type == 76) || Main.tile[i, num4].wall == 13)
+            while ((Main.tile[i, num4].Active && Main.tile[i, num4].type == 76) || Main.tile[i, num4].wall == 13)
             {
                 num4--;
-                if (Main.tile[i, num4].active && Main.tile[i, num4].type == 76)
+                if (Main.tile[i, num4].Active && Main.tile[i, num4].type == 76)
                 {
                     int num10 = WorldGen.genRand.Next(i - num / 2 + 1, i + num / 2 - 1);
                     int num11 = WorldGen.genRand.Next(i - num / 2 + 1, i + num / 2 - 1);
@@ -5234,7 +5234,7 @@ namespace Terraria_Server
                             Main.tile[n, num4].wall = 13;
                         }
                         Main.tile[n, num4].type = 19;
-                        Main.tile[n, num4].active = true;
+                        Main.tile[n, num4].Active = true;
                     }
                     num4--;
                 }
@@ -5261,7 +5261,7 @@ namespace Terraria_Server
                             {
                                 if (Main.tile[num19, num20].type == 76 || Main.tile[num19, num20].type == 19)
                                 {
-                                    Main.tile[num19, num20].active = false;
+                                    Main.tile[num19, num20].Active = false;
                                 }
                                 Main.tile[num19, num20].wall = 0;
                             }
@@ -5283,7 +5283,7 @@ namespace Terraria_Server
                 {
                     try
                     {
-                        Main.tile[k, l].active = true;
+                        Main.tile[k, l].Active = true;
                         Main.tile[k, l].type = 76;
                         Main.tile[k, l].liquid = 0;
                         Main.tile[k, l].lava = false;
@@ -5299,7 +5299,7 @@ namespace Terraria_Server
                 {
                     try
                     {
-                        Main.tile[m, n].active = false;
+                        Main.tile[m, n].Active = false;
                         Main.tile[m, n].wall = 13;
                         Main.tile[m, n].liquid = 0;
                         Main.tile[m, n].lava = false;
@@ -5441,7 +5441,7 @@ namespace Terraria_Server
             {
                 for (int k = WorldGen.dRoomL[j]; k <= WorldGen.dRoomR[j]; k++)
                 {
-                    if (!Main.tile[k, WorldGen.dRoomT[j] - 1].active)
+                    if (!Main.tile[k, WorldGen.dRoomT[j] - 1].Active)
                     {
                         WorldGen.DPlatX[WorldGen.numDPlats] = k;
                         WorldGen.DPlatY[WorldGen.numDPlats] = WorldGen.dRoomT[j] - 1;
@@ -5451,7 +5451,7 @@ namespace Terraria_Server
                 }
                 for (int l = WorldGen.dRoomL[j]; l <= WorldGen.dRoomR[j]; l++)
                 {
-                    if (!Main.tile[l, WorldGen.dRoomB[j] + 1].active)
+                    if (!Main.tile[l, WorldGen.dRoomB[j] + 1].Active)
                     {
                         WorldGen.DPlatX[WorldGen.numDPlats] = l;
                         WorldGen.DPlatY[WorldGen.numDPlats] = WorldGen.dRoomB[j] + 1;
@@ -5461,7 +5461,7 @@ namespace Terraria_Server
                 }
                 for (int m = WorldGen.dRoomT[j]; m <= WorldGen.dRoomB[j]; m++)
                 {
-                    if (!Main.tile[WorldGen.dRoomL[j] - 1, m].active)
+                    if (!Main.tile[WorldGen.dRoomL[j] - 1, m].Active)
                     {
                         WorldGen.DDoorX[WorldGen.numDDoors] = WorldGen.dRoomL[j] - 1;
                         WorldGen.DDoorY[WorldGen.numDDoors] = m;
@@ -5472,7 +5472,7 @@ namespace Terraria_Server
                 }
                 for (int n = WorldGen.dRoomT[j]; n <= WorldGen.dRoomB[j]; n++)
                 {
-                    if (!Main.tile[WorldGen.dRoomR[j] + 1, n].active)
+                    if (!Main.tile[WorldGen.dRoomR[j] + 1, n].Active)
                     {
                         WorldGen.DDoorX[WorldGen.numDDoors] = WorldGen.dRoomR[j] + 1;
                         WorldGen.DDoorY[WorldGen.numDDoors] = n;
@@ -5492,41 +5492,41 @@ namespace Terraria_Server
                 int num15 = WorldGen.genRand.Next(WorldGen.dMinX, WorldGen.dMaxX);
                 int num16 = WorldGen.genRand.Next((int)Main.worldSurface + 25, WorldGen.dMaxY);
                 int num17 = num15;
-                if ((int)Main.tile[num15, num16].wall == wallType && !Main.tile[num15, num16].active)
+                if ((int)Main.tile[num15, num16].wall == wallType && !Main.tile[num15, num16].Active)
                 {
                     int num18 = 1;
                     if (WorldGen.genRand.Next(2) == 0)
                     {
                         num18 = -1;
                     }
-                    while (!Main.tile[num15, num16].active)
+                    while (!Main.tile[num15, num16].Active)
                     {
                         num16 += num18;
                     }
-                    if (Main.tile[num15 - 1, num16].active && Main.tile[num15 + 1, num16].active && !Main.tile[num15 - 1, num16 - num18].active && !Main.tile[num15 + 1, num16 - num18].active)
+                    if (Main.tile[num15 - 1, num16].Active && Main.tile[num15 + 1, num16].Active && !Main.tile[num15 - 1, num16 - num18].Active && !Main.tile[num15 + 1, num16 - num18].Active)
                     {
                         num14++;
                         int num19 = WorldGen.genRand.Next(5, 13);
-                        while (Main.tile[num15 - 1, num16].active && Main.tile[num15, num16 + num18].active && Main.tile[num15, num16].active && !Main.tile[num15, num16 - num18].active && num19 > 0)
+                        while (Main.tile[num15 - 1, num16].Active && Main.tile[num15, num16 + num18].Active && Main.tile[num15, num16].Active && !Main.tile[num15, num16 - num18].Active && num19 > 0)
                         {
                             Main.tile[num15, num16].type = 48;
-                            if (!Main.tile[num15 - 1, num16 - num18].active && !Main.tile[num15 + 1, num16 - num18].active)
+                            if (!Main.tile[num15 - 1, num16 - num18].Active && !Main.tile[num15 + 1, num16 - num18].Active)
                             {
                                 Main.tile[num15, num16 - num18].type = 48;
-                                Main.tile[num15, num16 - num18].active = true;
+                                Main.tile[num15, num16 - num18].Active = true;
                             }
                             num15--;
                             num19--;
                         }
                         num19 = WorldGen.genRand.Next(5, 13);
                         num15 = num17 + 1;
-                        while (Main.tile[num15 + 1, num16].active && Main.tile[num15, num16 + num18].active && Main.tile[num15, num16].active && !Main.tile[num15, num16 - num18].active && num19 > 0)
+                        while (Main.tile[num15 + 1, num16].Active && Main.tile[num15, num16 + num18].Active && Main.tile[num15, num16].Active && !Main.tile[num15, num16 - num18].Active && num19 > 0)
                         {
                             Main.tile[num15, num16].type = 48;
-                            if (!Main.tile[num15 - 1, num16 - num18].active && !Main.tile[num15 + 1, num16 - num18].active)
+                            if (!Main.tile[num15 - 1, num16 - num18].Active && !Main.tile[num15 + 1, num16 - num18].Active)
                             {
                                 Main.tile[num15, num16 - num18].type = 48;
-                                Main.tile[num15, num16 - num18].active = true;
+                                Main.tile[num15, num16 - num18].Active = true;
                             }
                             num15++;
                             num19--;
@@ -5549,41 +5549,41 @@ namespace Terraria_Server
                 int num20 = WorldGen.genRand.Next(WorldGen.dMinX, WorldGen.dMaxX);
                 int num21 = WorldGen.genRand.Next((int)Main.worldSurface + 25, WorldGen.dMaxY);
                 int num22 = num21;
-                if ((int)Main.tile[num20, num21].wall == wallType && !Main.tile[num20, num21].active)
+                if ((int)Main.tile[num20, num21].wall == wallType && !Main.tile[num20, num21].Active)
                 {
                     int num23 = 1;
                     if (WorldGen.genRand.Next(2) == 0)
                     {
                         num23 = -1;
                     }
-                    while (num20 > 5 && num20 < Main.maxTilesX - 5 && !Main.tile[num20, num21].active)
+                    while (num20 > 5 && num20 < Main.maxTilesX - 5 && !Main.tile[num20, num21].Active)
                     {
                         num20 += num23;
                     }
-                    if (Main.tile[num20, num21 - 1].active && Main.tile[num20, num21 + 1].active && !Main.tile[num20 - num23, num21 - 1].active && !Main.tile[num20 - num23, num21 + 1].active)
+                    if (Main.tile[num20, num21 - 1].Active && Main.tile[num20, num21 + 1].Active && !Main.tile[num20 - num23, num21 - 1].Active && !Main.tile[num20 - num23, num21 + 1].Active)
                     {
                         num14++;
                         int num24 = WorldGen.genRand.Next(5, 13);
-                        while (Main.tile[num20, num21 - 1].active && Main.tile[num20 + num23, num21].active && Main.tile[num20, num21].active && !Main.tile[num20 - num23, num21].active && num24 > 0)
+                        while (Main.tile[num20, num21 - 1].Active && Main.tile[num20 + num23, num21].Active && Main.tile[num20, num21].Active && !Main.tile[num20 - num23, num21].Active && num24 > 0)
                         {
                             Main.tile[num20, num21].type = 48;
-                            if (!Main.tile[num20 - num23, num21 - 1].active && !Main.tile[num20 - num23, num21 + 1].active)
+                            if (!Main.tile[num20 - num23, num21 - 1].Active && !Main.tile[num20 - num23, num21 + 1].Active)
                             {
                                 Main.tile[num20 - num23, num21].type = 48;
-                                Main.tile[num20 - num23, num21].active = true;
+                                Main.tile[num20 - num23, num21].Active = true;
                             }
                             num21--;
                             num24--;
                         }
                         num24 = WorldGen.genRand.Next(5, 13);
                         num21 = num22 + 1;
-                        while (Main.tile[num20, num21 + 1].active && Main.tile[num20 + num23, num21].active && Main.tile[num20, num21].active && !Main.tile[num20 - num23, num21].active && num24 > 0)
+                        while (Main.tile[num20, num21 + 1].Active && Main.tile[num20 + num23, num21].Active && Main.tile[num20, num21].Active && !Main.tile[num20 - num23, num21].Active && num24 > 0)
                         {
                             Main.tile[num20, num21].type = 48;
-                            if (!Main.tile[num20 - num23, num21 - 1].active && !Main.tile[num20 - num23, num21 + 1].active)
+                            if (!Main.tile[num20 - num23, num21 - 1].Active && !Main.tile[num20 - num23, num21 + 1].Active)
                             {
                                 Main.tile[num20 - num23, num21].type = 48;
-                                Main.tile[num20 - num23, num21].active = true;
+                                Main.tile[num20 - num23, num21].Active = true;
                             }
                             num21++;
                             num24--;
@@ -5607,7 +5607,7 @@ namespace Terraria_Server
                 {
                     bool flag = true;
                     int num31 = WorldGen.DDoorY[num25];
-                    while (!Main.tile[num30, num31].active)
+                    while (!Main.tile[num30, num31].Active)
                     {
                         num31--;
                     }
@@ -5617,7 +5617,7 @@ namespace Terraria_Server
                     }
                     int num32 = num31;
                     num31 = WorldGen.DDoorY[num25];
-                    while (!Main.tile[num30, num31].active)
+                    while (!Main.tile[num30, num31].Active)
                     {
                         num31++;
                     }
@@ -5636,7 +5636,7 @@ namespace Terraria_Server
                         {
                             for (int num39 = num36; num39 < num37; num39++)
                             {
-                                if (Main.tile[num38, num39].active && Main.tile[num38, num39].type == 10)
+                                if (Main.tile[num38, num39].Active && Main.tile[num38, num39].type == 10)
                                 {
                                     flag = false;
                                     break;
@@ -5649,7 +5649,7 @@ namespace Terraria_Server
                             {
                                 for (int num41 = num30 - 3; num41 <= num30 + 3; num41++)
                                 {
-                                    if (Main.tile[num41, num40].active)
+                                    if (Main.tile[num41, num40].Active)
                                     {
                                         flag = false;
                                         break;
@@ -5685,12 +5685,12 @@ namespace Terraria_Server
                     int num42 = num29;
                     int num43 = WorldGen.DDoorY[num25];
                     int num44 = num43;
-                    while (!Main.tile[num42, num43].active)
+                    while (!Main.tile[num42, num43].Active)
                     {
-                        Main.tile[num42, num43].active = false;
+                        Main.tile[num42, num43].Active = false;
                         num43++;
                     }
-                    while (!Main.tile[num42, num44].active)
+                    while (!Main.tile[num42, num44].Active)
                     {
                         num44--;
                     }
@@ -5698,13 +5698,13 @@ namespace Terraria_Server
                     num44++;
                     for (int num45 = num44; num45 < num43 - 2; num45++)
                     {
-                        Main.tile[num42, num45].active = true;
+                        Main.tile[num42, num45].Active = true;
                         Main.tile[num42, num45].type = (byte)tileType;
                     }
                     WorldGen.PlaceTile(num42, num43, 10, true, false, -1, 0);
                     num42--;
                     int num46 = num43 - 3;
-                    while (!Main.tile[num42, num46].active)
+                    while (!Main.tile[num42, num46].Active)
                     {
                         num46--;
                     }
@@ -5712,13 +5712,13 @@ namespace Terraria_Server
                     {
                         for (int num47 = num43 - 4 - WorldGen.genRand.Next(3); num47 > num46; num47--)
                         {
-                            Main.tile[num42, num47].active = true;
+                            Main.tile[num42, num47].Active = true;
                             Main.tile[num42, num47].type = (byte)tileType;
                         }
                     }
                     num42 += 2;
                     num46 = num43 - 3;
-                    while (!Main.tile[num42, num46].active)
+                    while (!Main.tile[num42, num46].Active)
                     {
                         num46--;
                     }
@@ -5726,15 +5726,15 @@ namespace Terraria_Server
                     {
                         for (int num48 = num43 - 4 - WorldGen.genRand.Next(3); num48 > num46; num48--)
                         {
-                            Main.tile[num42, num48].active = true;
+                            Main.tile[num42, num48].Active = true;
                             Main.tile[num42, num48].type = (byte)tileType;
                         }
                     }
                     num43++;
                     num42--;
-                    Main.tile[num42 - 1, num43].active = true;
+                    Main.tile[num42 - 1, num43].Active = true;
                     Main.tile[num42 - 1, num43].type = (byte)tileType;
-                    Main.tile[num42 + 1, num43].active = true;
+                    Main.tile[num42 + 1, num43].Active = true;
                     Main.tile[num42 + 1, num43].type = (byte)tileType;
                 }
             }
@@ -5750,13 +5750,13 @@ namespace Terraria_Server
                     int num55 = num50;
                     int num56 = num50;
                     bool flag3 = false;
-                    if (Main.tile[num55, num54].active)
+                    if (Main.tile[num55, num54].Active)
                     {
                         flag3 = true;
                     }
                     else
                     {
-                        while (!Main.tile[num55, num54].active)
+                        while (!Main.tile[num55, num54].Active)
                         {
                             num55--;
                             if (!Main.tileDungeon[(int)Main.tile[num55, num54].type])
@@ -5764,7 +5764,7 @@ namespace Terraria_Server
                                 flag3 = true;
                             }
                         }
-                        while (!Main.tile[num56, num54].active)
+                        while (!Main.tile[num56, num54].Active)
                         {
                             num56++;
                             if (!Main.tileDungeon[(int)Main.tile[num56, num54].type])
@@ -5784,7 +5784,7 @@ namespace Terraria_Server
                         {
                             for (int num62 = num59; num62 <= num60; num62++)
                             {
-                                if (Main.tile[num61, num62].active && Main.tile[num61, num62].type == 19)
+                                if (Main.tile[num61, num62].Active && Main.tile[num61, num62].type == 19)
                                 {
                                     flag4 = false;
                                     break;
@@ -5793,7 +5793,7 @@ namespace Terraria_Server
                         }
                         for (int num63 = num54 + 3; num63 >= num54 - 5; num63--)
                         {
-                            if (Main.tile[num50, num63].active)
+                            if (Main.tile[num50, num63].Active)
                             {
                                 flag4 = false;
                                 break;
@@ -5811,15 +5811,15 @@ namespace Terraria_Server
                     int num64 = num50;
                     int num65 = num52;
                     int num66 = num50 + 1;
-                    while (!Main.tile[num64, num65].active)
+                    while (!Main.tile[num64, num65].Active)
                     {
-                        Main.tile[num64, num65].active = true;
+                        Main.tile[num64, num65].Active = true;
                         Main.tile[num64, num65].type = 19;
                         num64--;
                     }
-                    while (!Main.tile[num66, num65].active)
+                    while (!Main.tile[num66, num65].Active)
                     {
-                        Main.tile[num66, num65].active = true;
+                        Main.tile[num66, num65].Active = true;
                         Main.tile[num66, num65].type = 19;
                         num66++;
                     }
@@ -5835,14 +5835,14 @@ namespace Terraria_Server
                 int num67 = WorldGen.genRand.Next(WorldGen.dMinX, WorldGen.dMaxX);
                 int num68 = WorldGen.genRand.Next(WorldGen.dMinY, WorldGen.dMaxY);
                 bool flag5 = true;
-                if ((int)Main.tile[num67, num68].wall == wallType && !Main.tile[num67, num68].active)
+                if ((int)Main.tile[num67, num68].wall == wallType && !Main.tile[num67, num68].Active)
                 {
                     int num69 = 1;
                     if (WorldGen.genRand.Next(2) == 0)
                     {
                         num69 = -1;
                     }
-                    while (flag5 && !Main.tile[num67, num68].active)
+                    while (flag5 && !Main.tile[num67, num68].Active)
                     {
                         num67 -= num69;
                         if (num67 < 5 || num67 > Main.maxTilesX - 5)
@@ -5851,31 +5851,31 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            if (Main.tile[num67, num68].active && !Main.tileDungeon[(int)Main.tile[num67, num68].type])
+                            if (Main.tile[num67, num68].Active && !Main.tileDungeon[(int)Main.tile[num67, num68].type])
                             {
                                 flag5 = false;
                             }
                         }
                     }
-                    if (flag5 && Main.tile[num67, num68].active && Main.tileDungeon[(int)Main.tile[num67, num68].type] && Main.tile[num67, num68 - 1].active && Main.tileDungeon[(int)Main.tile[num67, num68 - 1].type] && Main.tile[num67, num68 + 1].active && Main.tileDungeon[(int)Main.tile[num67, num68 + 1].type])
+                    if (flag5 && Main.tile[num67, num68].Active && Main.tileDungeon[(int)Main.tile[num67, num68].type] && Main.tile[num67, num68 - 1].Active && Main.tileDungeon[(int)Main.tile[num67, num68 - 1].type] && Main.tile[num67, num68 + 1].Active && Main.tileDungeon[(int)Main.tile[num67, num68 + 1].type])
                     {
                         num67 += num69;
                         for (int num70 = num67 - 3; num70 <= num67 + 3; num70++)
                         {
                             for (int num71 = num68 - 3; num71 <= num68 + 3; num71++)
                             {
-                                if (Main.tile[num70, num71].active && Main.tile[num70, num71].type == 19)
+                                if (Main.tile[num70, num71].Active && Main.tile[num70, num71].type == 19)
                                 {
                                     flag5 = false;
                                     break;
                                 }
                             }
                         }
-                        if (flag5 && (!Main.tile[num67, num68 - 1].active & !Main.tile[num67, num68 - 2].active & !Main.tile[num67, num68 - 3].active))
+                        if (flag5 && (!Main.tile[num67, num68 - 1].Active & !Main.tile[num67, num68 - 2].Active & !Main.tile[num67, num68 - 3].Active))
                         {
                             int num72 = num67;
                             int num73 = num67;
-                            while (num72 > WorldGen.dMinX && num72 < WorldGen.dMaxX && !Main.tile[num72, num68].active && !Main.tile[num72, num68 - 1].active && !Main.tile[num72, num68 + 1].active)
+                            while (num72 > WorldGen.dMinX && num72 < WorldGen.dMaxX && !Main.tile[num72, num68].Active && !Main.tile[num72, num68 - 1].Active && !Main.tile[num72, num68 + 1].Active)
                             {
                                 num72 += num69;
                             }
@@ -5889,7 +5889,7 @@ namespace Terraria_Server
                             {
                                 for (int num74 = WorldGen.genRand.Next(1, 4); num74 > 0; num74--)
                                 {
-                                    Main.tile[num67, num68].active = true;
+                                    Main.tile[num67, num68].Active = true;
                                     Main.tile[num67, num68].type = 19;
                                     if (flag6)
                                     {
@@ -6039,7 +6039,7 @@ namespace Terraria_Server
                     int num83 = num82;
                     while (num83 > WorldGen.dMinY)
                     {
-                        if (Main.tile[num81, num83 - 1].active && (int)Main.tile[num81, num83 - 1].type == tileType)
+                        if (Main.tile[num81, num83 - 1].Active && (int)Main.tile[num81, num83 - 1].type == tileType)
                         {
                             bool flag7 = false;
                             for (int num84 = num81 - 15; num84 < num81 + 15; num84++)
@@ -6053,7 +6053,7 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            if (Main.tile[num81 - 1, num83].active || Main.tile[num81 + 1, num83].active || Main.tile[num81 - 1, num83 + 1].active || Main.tile[num81 + 1, num83 + 1].active || Main.tile[num81, num83 + 2].active)
+                            if (Main.tile[num81 - 1, num83].Active || Main.tile[num81 + 1, num83].Active || Main.tile[num81 - 1, num83 + 1].Active || Main.tile[num81 + 1, num83 + 1].Active || Main.tile[num81, num83 + 2].Active)
                             {
                                 flag7 = true;
                             }
@@ -6157,7 +6157,7 @@ namespace Terraria_Server
                         if ((int)Main.tile[l, m].wall != wallType)
                         {
                             Main.tile[l, m].wall = 0;
-                            Main.tile[l, m].active = true;
+                            Main.tile[l, m].Active = true;
                             Main.tile[l, m].type = (byte)tileType;
                         }
                     }
@@ -6198,7 +6198,7 @@ namespace Terraria_Server
                 {
                     for (int num13 = num5; num13 < num6; num13++)
                     {
-                        Main.tile[num12, num13].active = false;
+                        Main.tile[num12, num13].Active = false;
                         WorldGen.PlaceWall(num12, num13, wallType, true);
                     }
                 }
@@ -6509,7 +6509,7 @@ namespace Terraria_Server
                         Main.tile[l, m].liquid = 0;
                         if (Main.tile[l, m].wall == 0)
                         {
-                            Main.tile[l, m].active = true;
+                            Main.tile[l, m].Active = true;
                             Main.tile[l, m].type = (byte)tileType;
                         }
                     }
@@ -6564,7 +6564,7 @@ namespace Terraria_Server
                 {
                     for (int num10 = num5; num10 < num6; num10++)
                     {
-                        Main.tile[num9, num10].active = false;
+                        Main.tile[num9, num10].Active = false;
                         Main.tile[num9, num10].wall = (byte)wallType;
                     }
                 }
@@ -6629,7 +6629,7 @@ namespace Terraria_Server
                         Main.tile[l, m].liquid = 0;
                         if (Main.tile[l, m].wall == 0)
                         {
-                            Main.tile[l, m].active = true;
+                            Main.tile[l, m].Active = true;
                             Main.tile[l, m].type = (byte)tileType;
                         }
                     }
@@ -6681,7 +6681,7 @@ namespace Terraria_Server
                 {
                     for (int num12 = num8; num12 < num9; num12++)
                     {
-                        Main.tile[num11, num12].active = false;
+                        Main.tile[num11, num12].Active = false;
                         Main.tile[num11, num12].wall = (byte)wallType;
                     }
                 }
@@ -6761,7 +6761,7 @@ namespace Terraria_Server
                         {
                             WorldGen.PlaceWall(k, l, wallType, true);
                         }
-                        Main.tile[k, l].active = true;
+                        Main.tile[k, l].Active = true;
                         Main.tile[k, l].type = (byte)tileType;
                     }
                 }
@@ -6776,7 +6776,7 @@ namespace Terraria_Server
                 {
                     if ((int)Main.tile[m, n].wall != wallType)
                     {
-                        Main.tile[m, n].active = true;
+                        Main.tile[m, n].Active = true;
                         Main.tile[m, n].type = (byte)tileType;
                     }
                 }
@@ -6791,7 +6791,7 @@ namespace Terraria_Server
                 {
                     if ((int)Main.tile[num12, num13].wall != wallType)
                     {
-                        Main.tile[num12, num13].active = true;
+                        Main.tile[num12, num13].Active = true;
                         Main.tile[num12, num13].type = (byte)tileType;
                     }
                 }
@@ -6805,7 +6805,7 @@ namespace Terraria_Server
                 {
                     if ((int)Main.tile[num17, num18].wall != wallType)
                     {
-                        Main.tile[num17, num18].active = true;
+                        Main.tile[num17, num18].Active = true;
                         Main.tile[num17, num18].type = (byte)tileType;
                     }
                 }
@@ -6901,7 +6901,7 @@ namespace Terraria_Server
             {
                 for (int num26 = num6; num26 < num7; num26++)
                 {
-                    Main.tile[num25, num26].active = false;
+                    Main.tile[num25, num26].Active = false;
                     Main.tile[num25, num26].wall = (byte)wallType;
                 }
             }
@@ -6958,7 +6958,7 @@ namespace Terraria_Server
                         if (flag)
                         {
                             Main.tile[num27, num28].wall = 0;
-                            Main.tile[num27, num28].active = true;
+                            Main.tile[num27, num28].Active = true;
                             Main.tile[num27, num28].type = (byte)tileType;
                         }
                     }
@@ -6987,7 +6987,7 @@ namespace Terraria_Server
                 {
                     if ((int)Main.tile[num31, num32].wall != wallType)
                     {
-                        Main.tile[num31, num32].active = true;
+                        Main.tile[num31, num32].Active = true;
                         Main.tile[num31, num32].type = (byte)tileType;
                     }
                 }
@@ -7002,7 +7002,7 @@ namespace Terraria_Server
                 {
                     if ((int)Main.tile[num33, num34].wall != wallType)
                     {
-                        Main.tile[num33, num34].active = true;
+                        Main.tile[num33, num34].Active = true;
                         Main.tile[num33, num34].type = (byte)tileType;
                     }
                 }
@@ -7020,7 +7020,7 @@ namespace Terraria_Server
                 {
                     if ((int)Main.tile[num35, num36].wall != wallType)
                     {
-                        Main.tile[num35, num36].active = true;
+                        Main.tile[num35, num36].Active = true;
                         Main.tile[num35, num36].type = (byte)tileType;
                     }
                 }
@@ -7082,15 +7082,15 @@ namespace Terraria_Server
             {
                 for (int num40 = num6; num40 < num7; num40++)
                 {
-                    Main.tile[num39, num40].active = false;
+                    Main.tile[num39, num40].Active = false;
                     Main.tile[num39, num40].wall = 0;
                 }
             }
             for (int num41 = num4; num41 < num5; num41++)
             {
-                if (!Main.tile[num41, num7].active)
+                if (!Main.tile[num41, num7].Active)
                 {
-                    Main.tile[num41, num7].active = true;
+                    Main.tile[num41, num7].Active = true;
                     Main.tile[num41, num7].type = 19;
                 }
             }
@@ -7108,7 +7108,7 @@ namespace Terraria_Server
                     num43++;
                     for (int num45 = num7 + num43; num45 < num7 + 25; num45++)
                     {
-                        Main.tile[num44, num45].active = true;
+                        Main.tile[num44, num45].Active = true;
                         Main.tile[num44, num45].type = (byte)tileType;
                     }
                 }
@@ -7121,7 +7121,7 @@ namespace Terraria_Server
                     num46++;
                     for (int num48 = num7 + num46; num48 < num7 + 25; num48++)
                     {
-                        Main.tile[num47, num48].active = true;
+                        Main.tile[num47, num48].Active = true;
                         Main.tile[num47, num48].type = (byte)tileType;
                     }
                 }
@@ -7175,7 +7175,7 @@ namespace Terraria_Server
             {
                 for (int num52 = num6; num52 < num7; num52++)
                 {
-                    Main.tile[num51, num52].active = false;
+                    Main.tile[num51, num52].Active = false;
                 }
             }
             if (num3 < 0)
@@ -7194,7 +7194,7 @@ namespace Terraria_Server
             int k = j;
             while (k < Main.maxTilesY)
             {
-                if (Main.tile[i, k].active && Main.tileSolid[(int)Main.tile[i, k].type])
+                if (Main.tile[i, k].Active && Main.tileSolid[(int)Main.tile[i, k].type])
                 {
                     int num = k;
                     int style = 0;
@@ -7912,7 +7912,7 @@ namespace Terraria_Server
                 {
                     Main.tile[num4, k] = new Tile();
                 }
-                if (Main.tile[num4, k].active)
+                if (Main.tile[num4, k].Active)
                 {
                     if (Main.tile[num4, k].type != 3 && Main.tile[num4, k].type != 24 && Main.tile[num4, k].type != 52 && Main.tile[num4, k].type != 61 && Main.tile[num4, k].type != 62 && Main.tile[num4, k].type != 69 && Main.tile[num4, k].type != 71 && Main.tile[num4, k].type != 73 && Main.tile[num4, k].type != 74)
                     {
@@ -7924,7 +7924,7 @@ namespace Terraria_Server
             }
             if (flag)
             {
-                Main.tile[num2, num].active = true;
+                Main.tile[num2, num].Active = true;
                 Main.tile[num2, num].type = 11;
                 Main.tile[num2, num].frameY = 0;
                 Main.tile[num2, num].frameX = num3;
@@ -7932,7 +7932,7 @@ namespace Terraria_Server
                 {
                     Main.tile[num2 + 1, num] = new Tile();
                 }
-                Main.tile[num2 + 1, num].active = true;
+                Main.tile[num2 + 1, num].Active = true;
                 Main.tile[num2 + 1, num].type = 11;
                 Main.tile[num2 + 1, num].frameY = 0;
                 Main.tile[num2 + 1, num].frameX = (short)(num3 + 18);
@@ -7940,7 +7940,7 @@ namespace Terraria_Server
                 {
                     Main.tile[num2, num + 1] = new Tile();
                 }
-                Main.tile[num2, num + 1].active = true;
+                Main.tile[num2, num + 1].Active = true;
                 Main.tile[num2, num + 1].type = 11;
                 Main.tile[num2, num + 1].frameY = 18;
                 Main.tile[num2, num + 1].frameX = num3;
@@ -7948,7 +7948,7 @@ namespace Terraria_Server
                 {
                     Main.tile[num2 + 1, num + 1] = new Tile();
                 }
-                Main.tile[num2 + 1, num + 1].active = true;
+                Main.tile[num2 + 1, num + 1].Active = true;
                 Main.tile[num2 + 1, num + 1].type = 11;
                 Main.tile[num2 + 1, num + 1].frameY = 18;
                 Main.tile[num2 + 1, num + 1].frameX = (short)(num3 + 18);
@@ -7956,7 +7956,7 @@ namespace Terraria_Server
                 {
                     Main.tile[num2, num + 2] = new Tile();
                 }
-                Main.tile[num2, num + 2].active = true;
+                Main.tile[num2, num + 2].Active = true;
                 Main.tile[num2, num + 2].type = 11;
                 Main.tile[num2, num + 2].frameY = 36;
                 Main.tile[num2, num + 2].frameX = num3;
@@ -7964,7 +7964,7 @@ namespace Terraria_Server
                 {
                     Main.tile[num2 + 1, num + 2] = new Tile();
                 }
-                Main.tile[num2 + 1, num + 2].active = true;
+                Main.tile[num2 + 1, num + 2].Active = true;
                 Main.tile[num2 + 1, num + 2].type = 11;
                 Main.tile[num2 + 1, num + 2].frameY = 36;
                 Main.tile[num2 + 1, num + 2].frameX = (short)(num3 + 18);
@@ -8011,7 +8011,7 @@ namespace Terraria_Server
             {
                 Main.tile[x, num + 2] = new Tile();
             }
-            if (!Main.tile[x, num + 2].active || !Main.tileSolid[(int)Main.tile[x, num + 2].type])
+            if (!Main.tile[x, num + 2].Active || !Main.tileSolid[(int)Main.tile[x, num + 2].type])
             {
                 flag = true;
             }
@@ -8040,11 +8040,11 @@ namespace Terraria_Server
         
         public static void CheckOnTable1x1(int x, int y, int type)
         {
-            if (Main.tile[x, y + 1] != null && (!Main.tile[x, y + 1].active || !Main.tileTable[(int)Main.tile[x, y + 1].type]))
+            if (Main.tile[x, y + 1] != null && (!Main.tile[x, y + 1].Active || !Main.tileTable[(int)Main.tile[x, y + 1].type]))
             {
                 if (type == 78)
                 {
-                    if (!Main.tile[x, y + 1].active || !Main.tileSolid[(int)Main.tile[x, y + 1].type])
+                    if (!Main.tile[x, y + 1].Active || !Main.tileSolid[(int)Main.tile[x, y + 1].type])
                     {
                         WorldGen.KillTile(x, y, false, false, false);
                         return;
@@ -8113,7 +8113,7 @@ namespace Terraria_Server
                 num5 = 0;
                 for (int m = num3; m < num4; m++)
                 {
-                    if (!Main.tile[l, m].active || (int)Main.tile[l, m].type != type)
+                    if (!Main.tile[l, m].Active || (int)Main.tile[l, m].type != type)
                     {
                         flag = true;
                         break;
@@ -8131,7 +8131,7 @@ namespace Terraria_Server
             {
                 if (type == 85)
                 {
-                    if (Main.tile[num6, num7 + 2].active && Main.tileSolid[(int)Main.tile[num6, num7 + 2].type] && Main.tile[num6 + 1, num7 + 2].active && Main.tileSolid[(int)Main.tile[num6 + 1, num7 + 2].type])
+                    if (Main.tile[num6, num7 + 2].Active && Main.tileSolid[(int)Main.tile[num6, num7 + 2].type] && Main.tile[num6 + 1, num7 + 2].Active && Main.tileSolid[(int)Main.tile[num6 + 1, num7 + 2].type])
                     {
                         num8 = 0;
                     }
@@ -8142,25 +8142,25 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (Main.tile[num6, num7 + 2].active && Main.tileSolid[(int)Main.tile[num6, num7 + 2].type] && Main.tile[num6 + 1, num7 + 2].active && Main.tileSolid[(int)Main.tile[num6 + 1, num7 + 2].type])
+                    if (Main.tile[num6, num7 + 2].Active && Main.tileSolid[(int)Main.tile[num6, num7 + 2].type] && Main.tile[num6 + 1, num7 + 2].Active && Main.tileSolid[(int)Main.tile[num6 + 1, num7 + 2].type])
                     {
                         num8 = 0;
                     }
                     else
                     {
-                        if (Main.tile[num6, num7 - 1].active && Main.tileSolid[(int)Main.tile[num6, num7 - 1].type] && !Main.tileSolidTop[(int)Main.tile[num6, num7 - 1].type] && Main.tile[num6 + 1, num7 - 1].active && Main.tileSolid[(int)Main.tile[num6 + 1, num7 - 1].type] && !Main.tileSolidTop[(int)Main.tile[num6 + 1, num7 - 1].type])
+                        if (Main.tile[num6, num7 - 1].Active && Main.tileSolid[(int)Main.tile[num6, num7 - 1].type] && !Main.tileSolidTop[(int)Main.tile[num6, num7 - 1].type] && Main.tile[num6 + 1, num7 - 1].Active && Main.tileSolid[(int)Main.tile[num6 + 1, num7 - 1].type] && !Main.tileSolidTop[(int)Main.tile[num6 + 1, num7 - 1].type])
                         {
                             num8 = 1;
                         }
                         else
                         {
-                            if (Main.tile[num6 - 1, num7].active && Main.tileSolid[(int)Main.tile[num6 - 1, num7].type] && !Main.tileSolidTop[(int)Main.tile[num6 - 1, num7].type] && Main.tile[num6 - 1, num7 + 1].active && Main.tileSolid[(int)Main.tile[num6 - 1, num7 + 1].type] && !Main.tileSolidTop[(int)Main.tile[num6 - 1, num7 + 1].type])
+                            if (Main.tile[num6 - 1, num7].Active && Main.tileSolid[(int)Main.tile[num6 - 1, num7].type] && !Main.tileSolidTop[(int)Main.tile[num6 - 1, num7].type] && Main.tile[num6 - 1, num7 + 1].Active && Main.tileSolid[(int)Main.tile[num6 - 1, num7 + 1].type] && !Main.tileSolidTop[(int)Main.tile[num6 - 1, num7 + 1].type])
                             {
                                 num8 = 2;
                             }
                             else
                             {
-                                if (Main.tile[num6 + 2, num7].active && Main.tileSolid[(int)Main.tile[num6 + 2, num7].type] && !Main.tileSolidTop[(int)Main.tile[num6 + 2, num7].type] && Main.tile[num6 + 2, num7 + 1].active && Main.tileSolid[(int)Main.tile[num6 + 2, num7 + 1].type] && !Main.tileSolidTop[(int)Main.tile[num6 + 2, num7 + 1].type])
+                                if (Main.tile[num6 + 2, num7].Active && Main.tileSolid[(int)Main.tile[num6 + 2, num7].type] && !Main.tileSolidTop[(int)Main.tile[num6 + 2, num7].type] && Main.tile[num6 + 2, num7 + 1].Active && Main.tileSolid[(int)Main.tile[num6 + 2, num7 + 1].type] && !Main.tileSolidTop[(int)Main.tile[num6 + 2, num7 + 1].type])
                                 {
                                     num8 = 3;
                                 }
@@ -8203,7 +8203,7 @@ namespace Terraria_Server
             {
                 for (int num12 = 0; num12 < 2; num12++)
                 {
-                    Main.tile[num6 + num11, num7 + num12].active = true;
+                    Main.tile[num6 + num11, num7 + num12].Active = true;
                     Main.tile[num6 + num11, num7 + num12].type = (byte)type;
                     Main.tile[num6 + num11, num7 + num12].frameX = (short)(num10 + 18 * num11);
                     Main.tile[num6 + num11, num7 + num12].frameY = (short)(18 * num12);
@@ -8248,26 +8248,26 @@ namespace Terraria_Server
             int num7 = 0;
             if (type == 55)
             {
-                if (Main.tile[x, y + 1].active && Main.tileSolid[(int)Main.tile[x, y + 1].type] && Main.tile[x + 1, y + 1].active && Main.tileSolid[(int)Main.tile[x + 1, y + 1].type])
+                if (Main.tile[x, y + 1].Active && Main.tileSolid[(int)Main.tile[x, y + 1].type] && Main.tile[x + 1, y + 1].Active && Main.tileSolid[(int)Main.tile[x + 1, y + 1].type])
                 {
                     num6--;
                     num7 = 0;
                 }
                 else
                 {
-                    if (Main.tile[x, y - 1].active && Main.tileSolid[(int)Main.tile[x, y - 1].type] && !Main.tileSolidTop[(int)Main.tile[x, y - 1].type] && Main.tile[x + 1, y - 1].active && Main.tileSolid[(int)Main.tile[x + 1, y - 1].type] && !Main.tileSolidTop[(int)Main.tile[x + 1, y - 1].type])
+                    if (Main.tile[x, y - 1].Active && Main.tileSolid[(int)Main.tile[x, y - 1].type] && !Main.tileSolidTop[(int)Main.tile[x, y - 1].type] && Main.tile[x + 1, y - 1].Active && Main.tileSolid[(int)Main.tile[x + 1, y - 1].type] && !Main.tileSolidTop[(int)Main.tile[x + 1, y - 1].type])
                     {
                         num7 = 1;
                     }
                     else
                     {
-                        if (Main.tile[x - 1, y].active && Main.tileSolid[(int)Main.tile[x - 1, y].type] && !Main.tileSolidTop[(int)Main.tile[x - 1, y].type] && Main.tile[x - 1, y + 1].active && Main.tileSolid[(int)Main.tile[x - 1, y + 1].type] && !Main.tileSolidTop[(int)Main.tile[x - 1, y + 1].type])
+                        if (Main.tile[x - 1, y].Active && Main.tileSolid[(int)Main.tile[x - 1, y].type] && !Main.tileSolidTop[(int)Main.tile[x - 1, y].type] && Main.tile[x - 1, y + 1].Active && Main.tileSolid[(int)Main.tile[x - 1, y + 1].type] && !Main.tileSolidTop[(int)Main.tile[x - 1, y + 1].type])
                         {
                             num7 = 2;
                         }
                         else
                         {
-                            if (!Main.tile[x + 1, y].active || !Main.tileSolid[(int)Main.tile[x + 1, y].type] || Main.tileSolidTop[(int)Main.tile[x + 1, y].type] || !Main.tile[x + 1, y + 1].active || !Main.tileSolid[(int)Main.tile[x + 1, y + 1].type] || Main.tileSolidTop[(int)Main.tile[x + 1, y + 1].type])
+                            if (!Main.tile[x + 1, y].Active || !Main.tileSolid[(int)Main.tile[x + 1, y].type] || Main.tileSolidTop[(int)Main.tile[x + 1, y].type] || !Main.tile[x + 1, y + 1].Active || !Main.tileSolid[(int)Main.tile[x + 1, y + 1].type] || Main.tileSolidTop[(int)Main.tile[x + 1, y + 1].type])
                             {
                                 return false;
                             }
@@ -8281,7 +8281,7 @@ namespace Terraria_Server
             {
                 if (type == 85)
                 {
-                    if (!Main.tile[x, y + 1].active || !Main.tileSolid[(int)Main.tile[x, y + 1].type] || !Main.tile[x + 1, y + 1].active || !Main.tileSolid[(int)Main.tile[x + 1, y + 1].type])
+                    if (!Main.tile[x, y + 1].Active || !Main.tileSolid[(int)Main.tile[x, y + 1].type] || !Main.tile[x + 1, y + 1].Active || !Main.tileSolid[(int)Main.tile[x + 1, y + 1].type])
                     {
                         return false;
                     }
@@ -8289,7 +8289,7 @@ namespace Terraria_Server
                     num7 = 0;
                 }
             }
-            if (Main.tile[num5, num6].active || Main.tile[num5 + 1, num6].active || Main.tile[num5, num6 + 1].active || Main.tile[num5 + 1, num6 + 1].active)
+            if (Main.tile[num5, num6].Active || Main.tile[num5 + 1, num6].Active || Main.tile[num5, num6 + 1].Active || Main.tile[num5 + 1, num6 + 1].Active)
             {
                 return false;
             }
@@ -8298,7 +8298,7 @@ namespace Terraria_Server
             {
                 for (int l = 0; l < 2; l++)
                 {
-                    Main.tile[num5 + k, num6 + l].active = true;
+                    Main.tile[num5 + k, num6 + l].Active = true;
                     Main.tile[num5 + k, num6 + l].type = (byte)type;
                     Main.tile[num5 + k, num6 + l].frameX = (short)(num8 + 18 * k);
                     Main.tile[num5 + k, num6 + l].frameY = (short)(18 * l);
@@ -8318,17 +8318,17 @@ namespace Terraria_Server
             {
                 Main.tile[x, y + 1] = new Tile();
             }
-            if (!Main.tile[x, y].active && Main.tile[x, y + 1].active && Main.tileTable[(int)Main.tile[x, y + 1].type])
+            if (!Main.tile[x, y].Active && Main.tile[x, y + 1].Active && Main.tileTable[(int)Main.tile[x, y + 1].type])
             {
                 flag = true;
             }
-            if (type == 78 && !Main.tile[x, y].active && Main.tile[x, y + 1].active && Main.tileSolid[(int)Main.tile[x, y + 1].type])
+            if (type == 78 && !Main.tile[x, y].Active && Main.tile[x, y + 1].Active && Main.tileSolid[(int)Main.tile[x, y + 1].type])
             {
                 flag = true;
             }
             if (flag)
             {
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameX = 0;
                 Main.tile[x, y].frameY = 0;
                 Main.tile[x, y].type = (byte)type;
@@ -8349,7 +8349,7 @@ namespace Terraria_Server
             {
                 Main.tile[x, y + 1] = new Tile();
             }
-            if (!Main.tile[x, y].active && Main.tile[x, y + 1].active)
+            if (!Main.tile[x, y].Active && Main.tile[x, y + 1].Active)
             {
                 bool flag = false;
                 if (style == 0)
@@ -8435,7 +8435,7 @@ namespace Terraria_Server
                 }
                 if (!flag)
                 {
-                    Main.tile[x, y].active = true;
+                    Main.tile[x, y].Active = true;
                     Main.tile[x, y].type = 82;
                     Main.tile[x, y].frameX = (short)(18 * style);
                     Main.tile[x, y].frameY = 0;
@@ -8447,7 +8447,7 @@ namespace Terraria_Server
         
         public static void GrowAlch(int x, int y)
         {
-            if (Main.tile[x, y].active)
+            if (Main.tile[x, y].Active)
             {
                 if (Main.tile[x, y].type == 82 && WorldGen.genRand.Next(50) == 0)
                 {
@@ -8496,11 +8496,11 @@ namespace Terraria_Server
                     num2 = WorldGen.genRand.Next((int)Main.worldSurface, Main.maxTilesY - 20);
                 }
             }
-            while (num2 < Main.maxTilesY - 20 && !Main.tile[num, num2].active)
+            while (num2 < Main.maxTilesY - 20 && !Main.tile[num, num2].Active)
             {
                 num2++;
             }
-            if (Main.tile[num, num2].active && !Main.tile[num, num2 - 1].active && Main.tile[num, num2 - 1].liquid == 0)
+            if (Main.tile[num, num2].Active && !Main.tile[num, num2 - 1].Active && Main.tile[num, num2 - 1].liquid == 0)
             {
                 if (Main.tile[num, num2].type == 2)
                 {
@@ -8526,7 +8526,7 @@ namespace Terraria_Server
                 {
                     WorldGen.PlaceAlch(num, num2 - 1, 5);
                 }
-                if (Main.tile[num, num2 - 1].active && Main.netMode == 2)
+                if (Main.tile[num, num2 - 1].Active && Main.netMode == 2)
                 {
                     NetMessage.SendTileSquare(-1, num, num2 - 1, 1);
                 }
@@ -8544,7 +8544,7 @@ namespace Terraria_Server
                 Main.tile[x, y + 1] = new Tile();
             }
             bool flag = false;
-            if (!Main.tile[x, y + 1].active)
+            if (!Main.tile[x, y + 1].Active)
             {
                 flag = true;
             }
@@ -8705,13 +8705,13 @@ namespace Terraria_Server
             {
                 Main.tile[x, y + 1] = new Tile();
             }
-            if (Main.tile[x, y + 1].active && Main.tileSolid[(int)Main.tile[x, y + 1].type] && !Main.tile[x, y - 1].active)
+            if (Main.tile[x, y + 1].Active && Main.tileSolid[(int)Main.tile[x, y + 1].type] && !Main.tile[x, y - 1].Active)
             {
-                Main.tile[x, y - 1].active = true;
+                Main.tile[x, y - 1].Active = true;
                 Main.tile[x, y - 1].frameY = 0;
                 Main.tile[x, y - 1].frameX = frameX;
                 Main.tile[x, y - 1].type = (byte)type;
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 18;
                 Main.tile[x, y].frameX = frameX;
                 Main.tile[x, y].type = (byte)type;
@@ -8729,13 +8729,13 @@ namespace Terraria_Server
             {
                 Main.tile[x, y + 1] = new Tile();
             }
-            if (Main.tile[x, y - 1].active && Main.tileSolid[(int)Main.tile[x, y - 1].type] && !Main.tileSolidTop[(int)Main.tile[x, y - 1].type] && !Main.tile[x, y + 1].active)
+            if (Main.tile[x, y - 1].Active && Main.tileSolid[(int)Main.tile[x, y - 1].type] && !Main.tileSolidTop[(int)Main.tile[x, y - 1].type] && !Main.tile[x, y + 1].Active)
             {
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 0;
                 Main.tile[x, y].frameX = frameX;
                 Main.tile[x, y].type = (byte)type;
-                Main.tile[x, y + 1].active = true;
+                Main.tile[x, y + 1].Active = true;
                 Main.tile[x, y + 1].frameY = 18;
                 Main.tile[x, y + 1].frameX = frameX;
                 Main.tile[x, y + 1].type = (byte)type;
@@ -8774,7 +8774,7 @@ namespace Terraria_Server
             {
                 Main.tile[x, num - 1] = new Tile();
             }
-            if (!Main.tile[x, num - 1].active || !Main.tileSolid[(int)Main.tile[x, num - 1].type] || Main.tileSolidTop[(int)Main.tile[x, num - 1].type])
+            if (!Main.tile[x, num - 1].Active || !Main.tileSolid[(int)Main.tile[x, num - 1].type] || Main.tileSolidTop[(int)Main.tile[x, num - 1].type])
             {
                 flag = true;
             }
@@ -8831,22 +8831,22 @@ namespace Terraria_Server
             }
             if (type == 29)
             {
-                if (!Main.tile[num, y + 1].active || !Main.tileTable[(int)Main.tile[num, y + 1].type])
+                if (!Main.tile[num, y + 1].Active || !Main.tileTable[(int)Main.tile[num, y + 1].type])
                 {
                     flag = true;
                 }
-                if (!Main.tile[num + 1, y + 1].active || !Main.tileTable[(int)Main.tile[num + 1, y + 1].type])
+                if (!Main.tile[num + 1, y + 1].Active || !Main.tileTable[(int)Main.tile[num + 1, y + 1].type])
                 {
                     flag = true;
                 }
             }
             else
             {
-                if (!Main.tile[num, y + 1].active || !Main.tileSolid[(int)Main.tile[num, y + 1].type])
+                if (!Main.tile[num, y + 1].Active || !Main.tileSolid[(int)Main.tile[num, y + 1].type])
                 {
                     flag = true;
                 }
-                if (!Main.tile[num + 1, y + 1].active || !Main.tileSolid[(int)Main.tile[num + 1, y + 1].type])
+                if (!Main.tile[num + 1, y + 1].Active || !Main.tileSolid[(int)Main.tile[num + 1, y + 1].type])
                 {
                     flag = true;
                 }
@@ -8897,24 +8897,24 @@ namespace Terraria_Server
                 Main.tile[x + 1, y + 1] = new Tile();
             }
             bool flag = false;
-            if (type != 29 && Main.tile[x, y + 1].active && Main.tile[x + 1, y + 1].active && Main.tileSolid[(int)Main.tile[x, y + 1].type] && Main.tileSolid[(int)Main.tile[x + 1, y + 1].type] && !Main.tile[x, y].active && !Main.tile[x + 1, y].active)
+            if (type != 29 && Main.tile[x, y + 1].Active && Main.tile[x + 1, y + 1].Active && Main.tileSolid[(int)Main.tile[x, y + 1].type] && Main.tileSolid[(int)Main.tile[x + 1, y + 1].type] && !Main.tile[x, y].Active && !Main.tile[x + 1, y].Active)
             {
                 flag = true;
             }
             else
             {
-                if (type == 29 && Main.tile[x, y + 1].active && Main.tile[x + 1, y + 1].active && Main.tileTable[(int)Main.tile[x, y + 1].type] && Main.tileTable[(int)Main.tile[x + 1, y + 1].type] && !Main.tile[x, y].active && !Main.tile[x + 1, y].active)
+                if (type == 29 && Main.tile[x, y + 1].Active && Main.tile[x + 1, y + 1].Active && Main.tileTable[(int)Main.tile[x, y + 1].type] && Main.tileTable[(int)Main.tile[x + 1, y + 1].type] && !Main.tile[x, y].Active && !Main.tile[x + 1, y].Active)
                 {
                     flag = true;
                 }
             }
             if (flag)
             {
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 0;
                 Main.tile[x, y].frameX = 0;
                 Main.tile[x, y].type = (byte)type;
-                Main.tile[x + 1, y].active = true;
+                Main.tile[x + 1, y].Active = true;
                 Main.tile[x + 1, y].frameY = 0;
                 Main.tile[x + 1, y].frameX = 18;
                 Main.tile[x + 1, y].type = (byte)type;
@@ -8948,7 +8948,7 @@ namespace Terraria_Server
                     {
                         Main.tile[k, l] = new Tile();
                     }
-                    if (!Main.tile[k, l].active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != num3 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
+                    if (!Main.tile[k, l].Active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != num3 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
                     {
                         flag = true;
                     }
@@ -8957,7 +8957,7 @@ namespace Terraria_Server
                 {
                     Main.tile[k, num2 + 2] = new Tile();
                 }
-                if (!Main.tile[k, num2 + 2].active || !Main.tileSolid[(int)Main.tile[k, num2 + 2].type])
+                if (!Main.tile[k, num2 + 2].Active || !Main.tileSolid[(int)Main.tile[k, num2 + 2].type])
                 {
                     flag = true;
                 }
@@ -8969,7 +8969,7 @@ namespace Terraria_Server
                 {
                     for (int n = num2; n < num2 + 3; n++)
                     {
-                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].active)
+                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].Active)
                         {
                             WorldGen.KillTile(m, n, false, false, false);
                         }
@@ -9007,7 +9007,7 @@ namespace Terraria_Server
                     {
                         Main.tile[k, l] = new Tile();
                     }
-                    if (!Main.tile[k, l].active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != (k - num) * 18 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
+                    if (!Main.tile[k, l].Active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != (k - num) * 18 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
                     {
                         flag = true;
                     }
@@ -9016,7 +9016,7 @@ namespace Terraria_Server
                 {
                     Main.tile[k, num2 + 2] = new Tile();
                 }
-                if (!Main.tile[k, num2 + 2].active || !Main.tileSolid[(int)Main.tile[k, num2 + 2].type])
+                if (!Main.tile[k, num2 + 2].Active || !Main.tileSolid[(int)Main.tile[k, num2 + 2].type])
                 {
                     flag = true;
                 }
@@ -9028,7 +9028,7 @@ namespace Terraria_Server
                 {
                     for (int n = num2; n < num2 + 3; n++)
                     {
-                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].active)
+                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].Active)
                         {
                             WorldGen.KillTile(m, n, false, false, false);
                         }
@@ -9066,7 +9066,7 @@ namespace Terraria_Server
                     {
                         Main.tile[k, l] = new Tile();
                     }
-                    if (!Main.tile[k, l].active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != (k - num) * 18 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
+                    if (!Main.tile[k, l].Active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != (k - num) * 18 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
                     {
                         flag = true;
                     }
@@ -9075,7 +9075,7 @@ namespace Terraria_Server
                 {
                     Main.tile[k, num2 + 2] = new Tile();
                 }
-                if (!Main.tile[k, num2 + 2].active || !Main.tileSolid[(int)Main.tile[k, num2 + 2].type])
+                if (!Main.tile[k, num2 + 2].Active || !Main.tileSolid[(int)Main.tile[k, num2 + 2].type])
                 {
                     flag = true;
                 }
@@ -9087,7 +9087,7 @@ namespace Terraria_Server
                 {
                     for (int n = num2; n < num2 + 3; n++)
                     {
-                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].active)
+                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].Active)
                         {
                             WorldGen.KillTile(m, n, false, false, false);
                         }
@@ -9137,7 +9137,7 @@ namespace Terraria_Server
                     {
                         Main.tile[i, j] = new Tile();
                     }
-                    if (Main.tile[i, j].active)
+                    if (Main.tile[i, j].Active)
                     {
                         flag = false;
                     }
@@ -9146,7 +9146,7 @@ namespace Terraria_Server
                 {
                     Main.tile[i, y + 1] = new Tile();
                 }
-                if (!Main.tile[i, y + 1].active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
+                if (!Main.tile[i, y + 1].Active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
                 {
                     flag = false;
                 }
@@ -9158,35 +9158,35 @@ namespace Terraria_Server
             }
             if (flag)
             {
-                Main.tile[x - 1, y - 1].active = true;
+                Main.tile[x - 1, y - 1].Active = true;
                 Main.tile[x - 1, y - 1].frameY = 0;
                 Main.tile[x - 1, y - 1].frameX = num;
                 Main.tile[x - 1, y - 1].type = (byte)type;
-                Main.tile[x, y - 1].active = true;
+                Main.tile[x, y - 1].Active = true;
                 Main.tile[x, y - 1].frameY = 0;
                 Main.tile[x, y - 1].frameX = (short)(18 + num);
                 Main.tile[x, y - 1].type = (byte)type;
-                Main.tile[x + 1, y - 1].active = true;
+                Main.tile[x + 1, y - 1].Active = true;
                 Main.tile[x + 1, y - 1].frameY = 0;
                 Main.tile[x + 1, y - 1].frameX = (short)(36 + num);
                 Main.tile[x + 1, y - 1].type = (byte)type;
-                Main.tile[x + 2, y - 1].active = true;
+                Main.tile[x + 2, y - 1].Active = true;
                 Main.tile[x + 2, y - 1].frameY = 0;
                 Main.tile[x + 2, y - 1].frameX = (short)(54 + num);
                 Main.tile[x + 2, y - 1].type = (byte)type;
-                Main.tile[x - 1, y].active = true;
+                Main.tile[x - 1, y].Active = true;
                 Main.tile[x - 1, y].frameY = 18;
                 Main.tile[x - 1, y].frameX = num;
                 Main.tile[x - 1, y].type = (byte)type;
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 18;
                 Main.tile[x, y].frameX = (short)(18 + num);
                 Main.tile[x, y].type = (byte)type;
-                Main.tile[x + 1, y].active = true;
+                Main.tile[x + 1, y].Active = true;
                 Main.tile[x + 1, y].frameY = 18;
                 Main.tile[x + 1, y].frameX = (short)(36 + num);
                 Main.tile[x + 1, y].type = (byte)type;
-                Main.tile[x + 2, y].active = true;
+                Main.tile[x + 2, y].Active = true;
                 Main.tile[x + 2, y].frameY = 18;
                 Main.tile[x + 2, y].frameX = (short)(54 + num);
                 Main.tile[x + 2, y].type = (byte)type;
@@ -9208,7 +9208,7 @@ namespace Terraria_Server
                     {
                         Main.tile[i, j] = new Tile();
                     }
-                    if (Main.tile[i, j].active)
+                    if (Main.tile[i, j].Active)
                     {
                         flag = false;
                     }
@@ -9217,26 +9217,26 @@ namespace Terraria_Server
                 {
                     Main.tile[i, y + 1] = new Tile();
                 }
-                if (!Main.tile[i, y + 1].active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
+                if (!Main.tile[i, y + 1].Active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
                 {
                     flag = false;
                 }
             }
             if (flag)
             {
-                Main.tile[x - 1, y - 1].active = true;
+                Main.tile[x - 1, y - 1].Active = true;
                 Main.tile[x - 1, y - 1].frameY = 0;
                 Main.tile[x - 1, y - 1].frameX = 0;
                 Main.tile[x - 1, y - 1].type = (byte)type;
-                Main.tile[x, y - 1].active = true;
+                Main.tile[x, y - 1].Active = true;
                 Main.tile[x, y - 1].frameY = 0;
                 Main.tile[x, y - 1].frameX = 18;
                 Main.tile[x, y - 1].type = (byte)type;
-                Main.tile[x - 1, y].active = true;
+                Main.tile[x - 1, y].Active = true;
                 Main.tile[x - 1, y].frameY = 18;
                 Main.tile[x - 1, y].frameX = 0;
                 Main.tile[x - 1, y].type = (byte)type;
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 18;
                 Main.tile[x, y].frameX = 18;
                 Main.tile[x, y].type = (byte)type;
@@ -9258,7 +9258,7 @@ namespace Terraria_Server
                     {
                         Main.tile[i, j] = new Tile();
                     }
-                    if (Main.tile[i, j].active)
+                    if (Main.tile[i, j].Active)
                     {
                         flag = false;
                     }
@@ -9267,34 +9267,34 @@ namespace Terraria_Server
                 {
                     Main.tile[i, y + 1] = new Tile();
                 }
-                if (!Main.tile[i, y + 1].active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
+                if (!Main.tile[i, y + 1].Active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
                 {
                     flag = false;
                 }
             }
             if (flag)
             {
-                Main.tile[x - 1, y - 1].active = true;
+                Main.tile[x - 1, y - 1].Active = true;
                 Main.tile[x - 1, y - 1].frameY = 0;
                 Main.tile[x - 1, y - 1].frameX = 0;
                 Main.tile[x - 1, y - 1].type = (byte)type;
-                Main.tile[x, y - 1].active = true;
+                Main.tile[x, y - 1].Active = true;
                 Main.tile[x, y - 1].frameY = 0;
                 Main.tile[x, y - 1].frameX = 18;
                 Main.tile[x, y - 1].type = (byte)type;
-                Main.tile[x + 1, y - 1].active = true;
+                Main.tile[x + 1, y - 1].Active = true;
                 Main.tile[x + 1, y - 1].frameY = 0;
                 Main.tile[x + 1, y - 1].frameX = 36;
                 Main.tile[x + 1, y - 1].type = (byte)type;
-                Main.tile[x - 1, y].active = true;
+                Main.tile[x - 1, y].Active = true;
                 Main.tile[x - 1, y].frameY = 18;
                 Main.tile[x - 1, y].frameX = 0;
                 Main.tile[x - 1, y].type = (byte)type;
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 18;
                 Main.tile[x, y].frameX = 18;
                 Main.tile[x, y].type = (byte)type;
-                Main.tile[x + 1, y].active = true;
+                Main.tile[x + 1, y].Active = true;
                 Main.tile[x + 1, y].frameY = 18;
                 Main.tile[x + 1, y].frameX = 36;
                 Main.tile[x + 1, y].type = (byte)type;
@@ -9318,7 +9318,7 @@ namespace Terraria_Server
                     {
                         Main.tile[k, l] = new Tile();
                     }
-                    if (!Main.tile[k, l].active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != (k - num) * 18 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
+                    if (!Main.tile[k, l].Active || (int)Main.tile[k, l].type != type || (int)Main.tile[k, l].frameX != (k - num) * 18 || (int)Main.tile[k, l].frameY != (l - num2) * 18)
                     {
                         flag = true;
                     }
@@ -9328,7 +9328,7 @@ namespace Terraria_Server
             {
                 Main.tile[num + 1, num2 - 1] = new Tile();
             }
-            if (!Main.tile[num + 1, num2 - 1].active || !Main.tileSolid[(int)Main.tile[num + 1, num2 - 1].type] || Main.tileSolidTop[(int)Main.tile[num + 1, num2 - 1].type])
+            if (!Main.tile[num + 1, num2 - 1].Active || !Main.tileSolid[(int)Main.tile[num + 1, num2 - 1].type] || Main.tileSolidTop[(int)Main.tile[num + 1, num2 - 1].type])
             {
                 flag = true;
             }
@@ -9339,7 +9339,7 @@ namespace Terraria_Server
                 {
                     for (int n = num2; n < num2 + 3; n++)
                     {
-                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].active)
+                        if ((int)Main.tile[m, n].type == type && Main.tile[m, n].Active)
                         {
                             WorldGen.KillTile(m, n, false, false, false);
                         }
@@ -9385,7 +9385,7 @@ namespace Terraria_Server
                     {
                         Main.tile[i, j] = new Tile();
                     }
-                    if (Main.tile[i, j].active)
+                    if (Main.tile[i, j].Active)
                     {
                         flag = false;
                     }
@@ -9395,45 +9395,45 @@ namespace Terraria_Server
             {
                 Main.tile[x, y - 1] = new Tile();
             }
-            if (!Main.tile[x, y - 1].active || !Main.tileSolid[(int)Main.tile[x, y - 1].type] || Main.tileSolidTop[(int)Main.tile[x, y - 1].type])
+            if (!Main.tile[x, y - 1].Active || !Main.tileSolid[(int)Main.tile[x, y - 1].type] || Main.tileSolidTop[(int)Main.tile[x, y - 1].type])
             {
                 flag = false;
             }
             if (flag)
             {
-                Main.tile[x - 1, y].active = true;
+                Main.tile[x - 1, y].Active = true;
                 Main.tile[x - 1, y].frameY = 0;
                 Main.tile[x - 1, y].frameX = 0;
                 Main.tile[x - 1, y].type = (byte)type;
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 0;
                 Main.tile[x, y].frameX = 18;
                 Main.tile[x, y].type = (byte)type;
-                Main.tile[x + 1, y].active = true;
+                Main.tile[x + 1, y].Active = true;
                 Main.tile[x + 1, y].frameY = 0;
                 Main.tile[x + 1, y].frameX = 36;
                 Main.tile[x + 1, y].type = (byte)type;
-                Main.tile[x - 1, y + 1].active = true;
+                Main.tile[x - 1, y + 1].Active = true;
                 Main.tile[x - 1, y + 1].frameY = 18;
                 Main.tile[x - 1, y + 1].frameX = 0;
                 Main.tile[x - 1, y + 1].type = (byte)type;
-                Main.tile[x, y + 1].active = true;
+                Main.tile[x, y + 1].Active = true;
                 Main.tile[x, y + 1].frameY = 18;
                 Main.tile[x, y + 1].frameX = 18;
                 Main.tile[x, y + 1].type = (byte)type;
-                Main.tile[x + 1, y + 1].active = true;
+                Main.tile[x + 1, y + 1].Active = true;
                 Main.tile[x + 1, y + 1].frameY = 18;
                 Main.tile[x + 1, y + 1].frameX = 36;
                 Main.tile[x + 1, y + 1].type = (byte)type;
-                Main.tile[x - 1, y + 2].active = true;
+                Main.tile[x - 1, y + 2].Active = true;
                 Main.tile[x - 1, y + 2].frameY = 36;
                 Main.tile[x - 1, y + 2].frameX = 0;
                 Main.tile[x - 1, y + 2].type = (byte)type;
-                Main.tile[x, y + 2].active = true;
+                Main.tile[x, y + 2].Active = true;
                 Main.tile[x, y + 2].frameY = 36;
                 Main.tile[x, y + 2].frameX = 18;
                 Main.tile[x, y + 2].type = (byte)type;
-                Main.tile[x + 1, y + 2].active = true;
+                Main.tile[x + 1, y + 2].Active = true;
                 Main.tile[x + 1, y + 2].frameY = 36;
                 Main.tile[x + 1, y + 2].frameX = 36;
                 Main.tile[x + 1, y + 2].type = (byte)type;
@@ -9455,7 +9455,7 @@ namespace Terraria_Server
                     {
                         Main.tile[i, j] = new Tile();
                     }
-                    if (Main.tile[i, j].active || Main.tile[i, j].wall > 0)
+                    if (Main.tile[i, j].Active || Main.tile[i, j].wall > 0)
                     {
                         flag = false;
                     }
@@ -9464,7 +9464,7 @@ namespace Terraria_Server
                 {
                     Main.tile[i, y + 1] = new Tile();
                 }
-                if (!Main.tile[i, y + 1].active || Main.tile[i, y + 1].type != 2)
+                if (!Main.tile[i, y + 1].Active || Main.tile[i, y + 1].type != 2)
                 {
                     flag = false;
                 }
@@ -9477,7 +9477,7 @@ namespace Terraria_Server
                     {
                         int num = k * 18 + WorldGen.genRand.Next(3) * 36;
                         int num2 = (l + 3) * 18;
-                        Main.tile[x + k, y + l].active = true;
+                        Main.tile[x + k, y + l].Active = true;
                         Main.tile[x + k, y + l].frameX = (short)num;
                         Main.tile[x + k, y + l].frameY = (short)num2;
                         Main.tile[x + k, y + l].type = (byte)type;
@@ -9514,7 +9514,7 @@ namespace Terraria_Server
                     for (n = (int)(Main.tile[l, m].frameX / 18); n > 1; n -= 2)
                     {
                     }
-                    if (!Main.tile[l, m].active || (int)Main.tile[l, m].type != type || n != l - k || (int)Main.tile[l, m].frameY != (m - num) * 18)
+                    if (!Main.tile[l, m].Active || (int)Main.tile[l, m].type != type || n != l - k || (int)Main.tile[l, m].frameY != (m - num) * 18)
                     {
                         flag = true;
                     }
@@ -9523,7 +9523,7 @@ namespace Terraria_Server
                 {
                     Main.tile[l, num + 4] = new Tile();
                 }
-                if (!Main.tile[l, num + 4].active || Main.tile[l, num + 4].type != 2)
+                if (!Main.tile[l, num + 4].Active || Main.tile[l, num + 4].type != 2)
                 {
                     flag = true;
                 }
@@ -9535,7 +9535,7 @@ namespace Terraria_Server
                 {
                     for (int num3 = num; num3 < num + 4; num3++)
                     {
-                        if ((int)Main.tile[num2, num3].type == type && Main.tile[num2, num3].active)
+                        if ((int)Main.tile[num2, num3].type == type && Main.tile[num2, num3].Active)
                         {
                             WorldGen.KillTile(num2, num3, false, false, false);
                         }
@@ -9557,7 +9557,7 @@ namespace Terraria_Server
                     {
                         Main.tile[i, j] = new Tile();
                     }
-                    if (Main.tile[i, j].active)
+                    if (Main.tile[i, j].Active)
                     {
                         flag = false;
                     }
@@ -9566,7 +9566,7 @@ namespace Terraria_Server
                 {
                     Main.tile[i, y + 1] = new Tile();
                 }
-                if (!Main.tile[i, y + 1].active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
+                if (!Main.tile[i, y + 1].Active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
                 {
                     flag = false;
                 }
@@ -9579,7 +9579,7 @@ namespace Terraria_Server
                     {
                         int num = k * 18 + WorldGen.genRand.Next(3) * 36;
                         int num2 = (l + 1) * 18;
-                        Main.tile[x + k, y + l].active = true;
+                        Main.tile[x + k, y + l].Active = true;
                         Main.tile[x + k, y + l].frameX = (short)num;
                         Main.tile[x + k, y + l].frameY = (short)num2;
                         Main.tile[x + k, y + l].type = (byte)type;
@@ -9594,29 +9594,29 @@ namespace Terraria_Server
         {
             int num = j;
             int num2 = i;
-            while (Main.tile[num2, num].active && Main.tile[num2, num].type == 80)
+            while (Main.tile[num2, num].Active && Main.tile[num2, num].type == 80)
             {
                 num++;
-                if (!Main.tile[num2, num].active || Main.tile[num2, num].type != 80)
+                if (!Main.tile[num2, num].Active || Main.tile[num2, num].type != 80)
                 {
-                    if (Main.tile[num2 - 1, num].active && Main.tile[num2 - 1, num].type == 80 && Main.tile[num2 - 1, num - 1].active && Main.tile[num2 - 1, num - 1].type == 80 && num2 >= i)
+                    if (Main.tile[num2 - 1, num].Active && Main.tile[num2 - 1, num].type == 80 && Main.tile[num2 - 1, num - 1].Active && Main.tile[num2 - 1, num - 1].type == 80 && num2 >= i)
                     {
                         num2--;
                     }
-                    if (Main.tile[num2 + 1, num].active && Main.tile[num2 + 1, num].type == 80 && Main.tile[num2 + 1, num - 1].active && Main.tile[num2 + 1, num - 1].type == 80 && num2 <= i)
+                    if (Main.tile[num2 + 1, num].Active && Main.tile[num2 + 1, num].type == 80 && Main.tile[num2 + 1, num - 1].Active && Main.tile[num2 + 1, num - 1].type == 80 && num2 <= i)
                     {
                         num2++;
                     }
                 }
             }
-            if (!Main.tile[num2, num].active || Main.tile[num2, num].type != 53)
+            if (!Main.tile[num2, num].Active || Main.tile[num2, num].type != 53)
             {
                 WorldGen.KillTile(i, j, false, false, false);
                 return true;
             }
             if (i != num2)
             {
-                if ((!Main.tile[i, j + 1].active || Main.tile[i, j + 1].type != 80) && (!Main.tile[i - 1, j].active || Main.tile[i - 1, j].type != 80) && (!Main.tile[i + 1, j].active || Main.tile[i + 1, j].type != 80))
+                if ((!Main.tile[i, j + 1].Active || Main.tile[i, j + 1].type != 80) && (!Main.tile[i - 1, j].Active || Main.tile[i - 1, j].type != 80) && (!Main.tile[i + 1, j].Active || Main.tile[i + 1, j].type != 80))
                 {
                     WorldGen.KillTile(i, j, false, false, false);
                     return true;
@@ -9624,7 +9624,7 @@ namespace Terraria_Server
             }
             else
             {
-                if (i == num2 && (!Main.tile[i, j + 1].active || (Main.tile[i, j + 1].type != 80 && Main.tile[i, j + 1].type != 53)))
+                if (i == num2 && (!Main.tile[i, j + 1].Active || (Main.tile[i, j + 1].type != 80 && Main.tile[i, j + 1].type != 53)))
                 {
                     WorldGen.KillTile(i, j, false, false, false);
                     return true;
@@ -9652,16 +9652,16 @@ namespace Terraria_Server
                 int num2 = i;
                 if (!WorldGen.CheckCactus(i, j))
                 {
-                    while (Main.tile[num2, num].active && Main.tile[num2, num].type == 80)
+                    while (Main.tile[num2, num].Active && Main.tile[num2, num].type == 80)
                     {
                         num++;
-                        if (!Main.tile[num2, num].active || Main.tile[num2, num].type != 80)
+                        if (!Main.tile[num2, num].Active || Main.tile[num2, num].type != 80)
                         {
-                            if (Main.tile[num2 - 1, num].active && Main.tile[num2 - 1, num].type == 80 && Main.tile[num2 - 1, num - 1].active && Main.tile[num2 - 1, num - 1].type == 80 && num2 >= i)
+                            if (Main.tile[num2 - 1, num].Active && Main.tile[num2 - 1, num].type == 80 && Main.tile[num2 - 1, num - 1].Active && Main.tile[num2 - 1, num - 1].type == 80 && num2 >= i)
                             {
                                 num2--;
                             }
-                            if (Main.tile[num2 + 1, num].active && Main.tile[num2 + 1, num].type == 80 && Main.tile[num2 + 1, num - 1].active && Main.tile[num2 + 1, num - 1].type == 80 && num2 <= i)
+                            if (Main.tile[num2 + 1, num].Active && Main.tile[num2 + 1, num].type == 80 && Main.tile[num2 + 1, num - 1].Active && Main.tile[num2 + 1, num - 1].type == 80 && num2 <= i)
                             {
                                 num2++;
                             }
@@ -9678,27 +9678,27 @@ namespace Terraria_Server
                     int num7 = (int)Main.tile[i, j + 1].type;
                     int num8 = (int)Main.tile[i - 1, j + 1].type;
                     int num9 = (int)Main.tile[i + 1, j + 1].type;
-                    if (!Main.tile[i - 1, j].active)
+                    if (!Main.tile[i - 1, j].Active)
                     {
                         num4 = -1;
                     }
-                    if (!Main.tile[i + 1, j].active)
+                    if (!Main.tile[i + 1, j].Active)
                     {
                         num5 = -1;
                     }
-                    if (!Main.tile[i, j - 1].active)
+                    if (!Main.tile[i, j - 1].Active)
                     {
                         num6 = -1;
                     }
-                    if (!Main.tile[i, j + 1].active)
+                    if (!Main.tile[i, j + 1].Active)
                     {
                         num7 = -1;
                     }
-                    if (!Main.tile[i - 1, j + 1].active)
+                    if (!Main.tile[i - 1, j + 1].Active)
                     {
                         num8 = -1;
                     }
-                    if (!Main.tile[i + 1, j + 1].active)
+                    if (!Main.tile[i + 1, j + 1].Active)
                     {
                         num9 = -1;
                     }
@@ -9888,7 +9888,7 @@ namespace Terraria_Server
         {
             int num = j;
             int num2 = i;
-            if (!Main.tile[i, j].active)
+            if (!Main.tile[i, j].Active)
             {
                 return;
             }
@@ -9902,7 +9902,7 @@ namespace Terraria_Server
             }
             if (Main.tile[i, j].type == 53)
             {
-                if (Main.tile[i, j - 1].active || Main.tile[i - 1, j - 1].active || Main.tile[i + 1, j - 1].active)
+                if (Main.tile[i, j - 1].Active || Main.tile[i - 1, j - 1].Active || Main.tile[i + 1, j - 1].Active)
                 {
                     return;
                 }
@@ -9914,7 +9914,7 @@ namespace Terraria_Server
                     {
                         try
                         {
-                            if (Main.tile[k, l].active)
+                            if (Main.tile[k, l].Active)
                             {
                                 if (Main.tile[k, l].type == 80)
                                 {
@@ -9937,7 +9937,7 @@ namespace Terraria_Server
                 }
                 if (num4 > 10)
                 {
-                    Main.tile[i, j - 1].active = true;
+                    Main.tile[i, j - 1].Active = true;
                     Main.tile[i, j - 1].type = 80;
                     if (Main.netMode == 2)
                     {
@@ -9954,16 +9954,16 @@ namespace Terraria_Server
                 {
                     return;
                 }
-                while (Main.tile[num2, num].active && Main.tile[num2, num].type == 80)
+                while (Main.tile[num2, num].Active && Main.tile[num2, num].type == 80)
                 {
                     num++;
-                    if (!Main.tile[num2, num].active || Main.tile[num2, num].type != 80)
+                    if (!Main.tile[num2, num].Active || Main.tile[num2, num].type != 80)
                     {
-                        if (Main.tile[num2 - 1, num].active && Main.tile[num2 - 1, num].type == 80 && Main.tile[num2 - 1, num - 1].active && Main.tile[num2 - 1, num - 1].type == 80 && num2 >= i)
+                        if (Main.tile[num2 - 1, num].Active && Main.tile[num2 - 1, num].type == 80 && Main.tile[num2 - 1, num - 1].Active && Main.tile[num2 - 1, num - 1].type == 80 && num2 >= i)
                         {
                             num2--;
                         }
-                        if (Main.tile[num2 + 1, num].active && Main.tile[num2 + 1, num].type == 80 && Main.tile[num2 + 1, num - 1].active && Main.tile[num2 + 1, num - 1].type == 80 && num2 <= i)
+                        if (Main.tile[num2 + 1, num].Active && Main.tile[num2 + 1, num].type == 80 && Main.tile[num2 + 1, num - 1].Active && Main.tile[num2 + 1, num - 1].type == 80 && num2 <= i)
                         {
                             num2++;
                         }
@@ -9980,7 +9980,7 @@ namespace Terraria_Server
                 {
                     for (int n = num - num7; n <= num + num5; n++)
                     {
-                        if (Main.tile[m, n].active && Main.tile[m, n].type == 80)
+                        if (Main.tile[m, n].Active && Main.tile[m, n].type == 80)
                         {
                             num8++;
                         }
@@ -9994,11 +9994,11 @@ namespace Terraria_Server
                     {
                         if (num5 == 0)
                         {
-                            if (Main.tile[num2, num - 1].active)
+                            if (Main.tile[num2, num - 1].Active)
                             {
                                 return;
                             }
-                            Main.tile[num2, num - 1].active = true;
+                            Main.tile[num2, num - 1].Active = true;
                             Main.tile[num2, num - 1].type = 80;
                             WorldGen.SquareTileFrame(num2, num - 1, true);
                             if (Main.netMode == 2)
@@ -10012,13 +10012,13 @@ namespace Terraria_Server
                         {
                             bool flag = false;
                             bool flag2 = false;
-                            if (Main.tile[num2, num - 1].active && Main.tile[num2, num - 1].type == 80)
+                            if (Main.tile[num2, num - 1].Active && Main.tile[num2, num - 1].type == 80)
                             {
-                                if (!Main.tile[num2 - 1, num].active && !Main.tile[num2 - 2, num + 1].active && !Main.tile[num2 - 1, num - 1].active && !Main.tile[num2 - 1, num + 1].active && !Main.tile[num2 - 2, num].active)
+                                if (!Main.tile[num2 - 1, num].Active && !Main.tile[num2 - 2, num + 1].Active && !Main.tile[num2 - 1, num - 1].Active && !Main.tile[num2 - 1, num + 1].Active && !Main.tile[num2 - 2, num].Active)
                                 {
                                     flag = true;
                                 }
-                                if (!Main.tile[num2 + 1, num].active && !Main.tile[num2 + 2, num + 1].active && !Main.tile[num2 + 1, num - 1].active && !Main.tile[num2 + 1, num + 1].active && !Main.tile[num2 + 2, num].active)
+                                if (!Main.tile[num2 + 1, num].Active && !Main.tile[num2 + 2, num + 1].Active && !Main.tile[num2 + 1, num - 1].Active && !Main.tile[num2 + 1, num + 1].Active && !Main.tile[num2 + 2, num].Active)
                                 {
                                     flag2 = true;
                                 }
@@ -10026,7 +10026,7 @@ namespace Terraria_Server
                             int num9 = WorldGen.genRand.Next(3);
                             if (num9 == 0 && flag)
                             {
-                                Main.tile[num2 - 1, num].active = true;
+                                Main.tile[num2 - 1, num].Active = true;
                                 Main.tile[num2 - 1, num].type = 80;
                                 WorldGen.SquareTileFrame(num2 - 1, num, true);
                                 if (Main.netMode == 2)
@@ -10040,7 +10040,7 @@ namespace Terraria_Server
                             {
                                 if (num9 == 1 && flag2)
                                 {
-                                    Main.tile[num2 + 1, num].active = true;
+                                    Main.tile[num2 + 1, num].Active = true;
                                     Main.tile[num2 + 1, num].type = 80;
                                     WorldGen.SquareTileFrame(num2 + 1, num, true);
                                     if (Main.netMode == 2)
@@ -10056,15 +10056,15 @@ namespace Terraria_Server
                                     {
                                         return;
                                     }
-                                    if (Main.tile[num2 - 1, num - 1].active)
+                                    if (Main.tile[num2 - 1, num - 1].Active)
                                     {
                                         byte arg_5E0_0 = Main.tile[num2 - 1, num - 1].type;
                                     }
-                                    if (Main.tile[num2 + 1, num - 1].active && Main.tile[num2 + 1, num - 1].type == 80)
+                                    if (Main.tile[num2 + 1, num - 1].Active && Main.tile[num2 + 1, num - 1].type == 80)
                                     {
                                         return;
                                     }
-                                    Main.tile[num2, num - 1].active = true;
+                                    Main.tile[num2, num - 1].Active = true;
                                     Main.tile[num2, num - 1].type = 80;
                                     WorldGen.SquareTileFrame(num2, num - 1, true);
                                     if (Main.netMode == 2)
@@ -10079,11 +10079,11 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (Main.tile[num2, num - 1].active || Main.tile[num2, num - 2].active || Main.tile[num2 + num6, num - 1].active || !Main.tile[num2 - num6, num - 1].active || Main.tile[num2 - num6, num - 1].type != 80)
+                        if (Main.tile[num2, num - 1].Active || Main.tile[num2, num - 2].Active || Main.tile[num2 + num6, num - 1].Active || !Main.tile[num2 - num6, num - 1].Active || Main.tile[num2 - num6, num - 1].type != 80)
                         {
                             return;
                         }
-                        Main.tile[num2, num - 1].active = true;
+                        Main.tile[num2, num - 1].Active = true;
                         Main.tile[num2, num - 1].type = 80;
                         WorldGen.SquareTileFrame(num2, num - 1, true);
                         if (Main.netMode == 2)
@@ -10125,7 +10125,7 @@ namespace Terraria_Server
                     for (n = (int)(Main.tile[l, m].frameX / 18); n > 1; n -= 2)
                     {
                     }
-                    if (!Main.tile[l, m].active || (int)Main.tile[l, m].type != type || n != l - k || (int)Main.tile[l, m].frameY != (m - num) * 18)
+                    if (!Main.tile[l, m].Active || (int)Main.tile[l, m].type != type || n != l - k || (int)Main.tile[l, m].frameY != (m - num) * 18)
                     {
                         flag = true;
                     }
@@ -10134,7 +10134,7 @@ namespace Terraria_Server
                 {
                     Main.tile[l, num + 2] = new Tile();
                 }
-                if (!Main.tile[l, num + 2].active || !Main.tileSolid[(int)Main.tile[l, num + 2].type])
+                if (!Main.tile[l, num + 2].Active || !Main.tileSolid[(int)Main.tile[l, num + 2].type])
                 {
                     flag = true;
                 }
@@ -10146,7 +10146,7 @@ namespace Terraria_Server
                 {
                     for (int num3 = num; num3 < num + 2; num3++)
                     {
-                        if ((int)Main.tile[num2, num3].type == type && Main.tile[num2, num3].active)
+                        if ((int)Main.tile[num2, num3].type == type && Main.tile[num2, num3].Active)
                         {
                             WorldGen.KillTile(num2, num3, false, false, false);
                         }
@@ -10503,7 +10503,7 @@ namespace Terraria_Server
                     {
                         Main.tile[i, j] = new Tile();
                     }
-                    if (Main.tile[i, j].active)
+                    if (Main.tile[i, j].Active)
                     {
                         flag = false;
                     }
@@ -10516,7 +10516,7 @@ namespace Terraria_Server
                 {
                     Main.tile[i, y + 1] = new Tile();
                 }
-                if (!Main.tile[i, y + 1].active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
+                if (!Main.tile[i, y + 1].Active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
                 {
                     flag = false;
                 }
@@ -10529,7 +10529,7 @@ namespace Terraria_Server
                     {
                         try
                         {
-                            if (Main.tile[k, l].active && Main.tile[k, l].type == 21)
+                            if (Main.tile[k, l].Active && Main.tile[k, l].type == 21)
                             {
                                 flag = false;
                                 return -1;
@@ -10551,19 +10551,19 @@ namespace Terraria_Server
             }
             if (flag)
             {
-                Main.tile[x, y - 1].active = true;
+                Main.tile[x, y - 1].Active = true;
                 Main.tile[x, y - 1].frameY = 0;
                 Main.tile[x, y - 1].frameX = (short)(36 * style);
                 Main.tile[x, y - 1].type = (byte)type;
-                Main.tile[x + 1, y - 1].active = true;
+                Main.tile[x + 1, y - 1].Active = true;
                 Main.tile[x + 1, y - 1].frameY = 0;
                 Main.tile[x + 1, y - 1].frameX = (short)(18 + 36 * style);
                 Main.tile[x + 1, y - 1].type = (byte)type;
-                Main.tile[x, y].active = true;
+                Main.tile[x, y].Active = true;
                 Main.tile[x, y].frameY = 18;
                 Main.tile[x, y].frameX = (short)(36 * style);
                 Main.tile[x, y].type = (byte)type;
-                Main.tile[x + 1, y].active = true;
+                Main.tile[x + 1, y].Active = true;
                 Main.tile[x + 1, y].frameY = 18;
                 Main.tile[x + 1, y].frameX = (short)(18 + 36 * style);
                 Main.tile[x + 1, y].type = (byte)type;
@@ -10599,7 +10599,7 @@ namespace Terraria_Server
                     for (n = (int)(Main.tile[l, m].frameX / 18); n > 1; n -= 2)
                     {
                     }
-                    if (!Main.tile[l, m].active || (int)Main.tile[l, m].type != type || n != l - k || (int)Main.tile[l, m].frameY != (m - num) * 18)
+                    if (!Main.tile[l, m].Active || (int)Main.tile[l, m].type != type || n != l - k || (int)Main.tile[l, m].frameY != (m - num) * 18)
                     {
                         flag = true;
                     }
@@ -10608,7 +10608,7 @@ namespace Terraria_Server
                 {
                     Main.tile[l, num + 2] = new Tile();
                 }
-                if (!Main.tile[l, num + 2].active || !Main.tileSolid[(int)Main.tile[l, num + 2].type])
+                if (!Main.tile[l, num + 2].Active || !Main.tileSolid[(int)Main.tile[l, num + 2].type])
                 {
                     flag = true;
                 }
@@ -10625,7 +10625,7 @@ namespace Terraria_Server
                 {
                     for (int num3 = num; num3 < num + 3; num3++)
                     {
-                        if ((int)Main.tile[num2, num3].type == type && Main.tile[num2, num3].active)
+                        if ((int)Main.tile[num2, num3].type == type && Main.tile[num2, num3].Active)
                         {
                             Chest.DestroyChest(num2, num3);
                             WorldGen.KillTile(num2, num3, false, false, false);
@@ -10650,17 +10650,17 @@ namespace Terraria_Server
                 {
                     Main.tile[i, j] = new Tile();
                 }
-                if (forced || Collision.EmptyTile(i, j, false) || !Main.tileSolid[type] || (type == 23 && Main.tile[i, j].type == 0 && Main.tile[i, j].active) || (type == 2 && Main.tile[i, j].type == 0 && Main.tile[i, j].active) || (type == 60 && Main.tile[i, j].type == 59 && Main.tile[i, j].active) || (type == 70 && Main.tile[i, j].type == 59 && Main.tile[i, j].active))
+                if (forced || Collision.EmptyTile(i, j, false) || !Main.tileSolid[type] || (type == 23 && Main.tile[i, j].type == 0 && Main.tile[i, j].Active) || (type == 2 && Main.tile[i, j].type == 0 && Main.tile[i, j].Active) || (type == 60 && Main.tile[i, j].type == 59 && Main.tile[i, j].Active) || (type == 70 && Main.tile[i, j].type == 59 && Main.tile[i, j].Active))
                 {
-                    if (type == 23 && (Main.tile[i, j].type != 0 || !Main.tile[i, j].active))
+                    if (type == 23 && (Main.tile[i, j].type != 0 || !Main.tile[i, j].Active))
                     {
                         return false;
                     }
-                    if (type == 2 && (Main.tile[i, j].type != 0 || !Main.tile[i, j].active))
+                    if (type == 2 && (Main.tile[i, j].type != 0 || !Main.tile[i, j].Active))
                     {
                         return false;
                     }
-                    if (type == 60 && (Main.tile[i, j].type != 59 || !Main.tile[i, j].active))
+                    if (type == 60 && (Main.tile[i, j].type != 59 || !Main.tile[i, j].Active))
                     {
                         return false;
                     }
@@ -10682,11 +10682,11 @@ namespace Terraria_Server
                         {
                             Main.tile[i, j + 1] = new Tile();
                         }
-                        if (Main.tile[i - 1, j].active || Main.tile[i + 1, j].active || Main.tile[i, j - 1].active)
+                        if (Main.tile[i - 1, j].Active || Main.tile[i + 1, j].Active || Main.tile[i, j - 1].Active)
                         {
                             return false;
                         }
-                        if (!Main.tile[i, j + 1].active || !Main.tileSolid[(int)Main.tile[i, j + 1].type])
+                        if (!Main.tile[i, j + 1].Active || !Main.tileSolid[(int)Main.tile[i, j + 1].type])
                         {
                             return false;
                         }
@@ -10699,11 +10699,11 @@ namespace Terraria_Server
                     Main.tile[i, j].frameX = 0;
                     if (type == 3 || type == 24)
                     {
-                        if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1].active && ((Main.tile[i, j + 1].type == 2 && type == 3) || (Main.tile[i, j + 1].type == 23 && type == 24) || (Main.tile[i, j + 1].type == 78 && type == 3)))
+                        if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1].Active && ((Main.tile[i, j + 1].type == 2 && type == 3) || (Main.tile[i, j + 1].type == 23 && type == 24) || (Main.tile[i, j + 1].type == 78 && type == 3)))
                         {
                             if (type == 24 && WorldGen.genRand.Next(13) == 0)
                             {
-                                Main.tile[i, j].active = true;
+                                Main.tile[i, j].Active = true;
                                 Main.tile[i, j].type = 32;
                                 WorldGen.SquareTileFrame(i, j, true);
                             }
@@ -10711,7 +10711,7 @@ namespace Terraria_Server
                             {
                                 if (Main.tile[i, j + 1].type == 78)
                                 {
-                                    Main.tile[i, j].active = true;
+                                    Main.tile[i, j].Active = true;
                                     Main.tile[i, j].type = (byte)type;
                                     Main.tile[i, j].frameX = (short)(WorldGen.genRand.Next(2) * 18 + 108);
                                 }
@@ -10721,7 +10721,7 @@ namespace Terraria_Server
                                     {
                                         if (WorldGen.genRand.Next(50) == 0 || (type == 24 && WorldGen.genRand.Next(40) == 0))
                                         {
-                                            Main.tile[i, j].active = true;
+                                            Main.tile[i, j].Active = true;
                                             Main.tile[i, j].type = (byte)type;
                                             Main.tile[i, j].frameX = 144;
                                         }
@@ -10729,13 +10729,13 @@ namespace Terraria_Server
                                         {
                                             if (WorldGen.genRand.Next(35) == 0)
                                             {
-                                                Main.tile[i, j].active = true;
+                                                Main.tile[i, j].Active = true;
                                                 Main.tile[i, j].type = (byte)type;
                                                 Main.tile[i, j].frameX = (short)(WorldGen.genRand.Next(2) * 18 + 108);
                                             }
                                             else
                                             {
-                                                Main.tile[i, j].active = true;
+                                                Main.tile[i, j].Active = true;
                                                 Main.tile[i, j].type = (byte)type;
                                                 Main.tile[i, j].frameX = (short)(WorldGen.genRand.Next(6) * 18);
                                             }
@@ -10749,11 +10749,11 @@ namespace Terraria_Server
                     {
                         if (type == 61)
                         {
-                            if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1].active && Main.tile[i, j + 1].type == 60)
+                            if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1].Active && Main.tile[i, j + 1].type == 60)
                             {
                                 if (WorldGen.genRand.Next(10) == 0 && (double)j > Main.worldSurface)
                                 {
-                                    Main.tile[i, j].active = true;
+                                    Main.tile[i, j].Active = true;
                                     Main.tile[i, j].type = 69;
                                     WorldGen.SquareTileFrame(i, j, true);
                                 }
@@ -10761,7 +10761,7 @@ namespace Terraria_Server
                                 {
                                     if (WorldGen.genRand.Next(15) == 0 && (double)j > Main.worldSurface)
                                     {
-                                        Main.tile[i, j].active = true;
+                                        Main.tile[i, j].Active = true;
                                         Main.tile[i, j].type = (byte)type;
                                         Main.tile[i, j].frameX = 144;
                                     }
@@ -10769,13 +10769,13 @@ namespace Terraria_Server
                                     {
                                         if (WorldGen.genRand.Next(1000) == 0 && (double)j > Main.rockLayer)
                                         {
-                                            Main.tile[i, j].active = true;
+                                            Main.tile[i, j].Active = true;
                                             Main.tile[i, j].type = (byte)type;
                                             Main.tile[i, j].frameX = 162;
                                         }
                                         else
                                         {
-                                            Main.tile[i, j].active = true;
+                                            Main.tile[i, j].Active = true;
                                             Main.tile[i, j].type = (byte)type;
                                             if ((double)j > Main.rockLayer)
                                             {
@@ -10794,9 +10794,9 @@ namespace Terraria_Server
                         {
                             if (type == 71)
                             {
-                                if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1].active && Main.tile[i, j + 1].type == 70)
+                                if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1].Active && Main.tile[i, j + 1].type == 70)
                                 {
-                                    Main.tile[i, j].active = true;
+                                    Main.tile[i, j].Active = true;
                                     Main.tile[i, j].type = (byte)type;
                                     Main.tile[i, j].frameX = (short)(WorldGen.genRand.Next(5) * 18);
                                 }
@@ -10817,9 +10817,9 @@ namespace Terraria_Server
                                     {
                                         Main.tile[i, j + 1] = new Tile();
                                     }
-                                    if ((Main.tile[i - 1, j].active && (Main.tileSolid[(int)Main.tile[i - 1, j].type] || (Main.tile[i - 1, j].type == 5 && Main.tile[i - 1, j - 1].type == 5 && Main.tile[i - 1, j + 1].type == 5))) || (Main.tile[i + 1, j].active && (Main.tileSolid[(int)Main.tile[i + 1, j].type] || (Main.tile[i + 1, j].type == 5 && Main.tile[i + 1, j - 1].type == 5 && Main.tile[i + 1, j + 1].type == 5))) || (Main.tile[i, j + 1].active && Main.tileSolid[(int)Main.tile[i, j + 1].type]))
+                                    if ((Main.tile[i - 1, j].Active && (Main.tileSolid[(int)Main.tile[i - 1, j].type] || (Main.tile[i - 1, j].type == 5 && Main.tile[i - 1, j - 1].type == 5 && Main.tile[i - 1, j + 1].type == 5))) || (Main.tile[i + 1, j].Active && (Main.tileSolid[(int)Main.tile[i + 1, j].type] || (Main.tile[i + 1, j].type == 5 && Main.tile[i + 1, j - 1].type == 5 && Main.tile[i + 1, j + 1].type == 5))) || (Main.tile[i, j + 1].Active && Main.tileSolid[(int)Main.tile[i, j + 1].type]))
                                     {
-                                        Main.tile[i, j].active = true;
+                                        Main.tile[i, j].Active = true;
                                         Main.tile[i, j].type = (byte)type;
                                         WorldGen.SquareTileFrame(i, j, true);
                                     }
@@ -10852,14 +10852,14 @@ namespace Terraria_Server
                                         {
                                             Main.tile[i, j + 3] = new Tile();
                                         }
-                                        if (!Main.tile[i, j - 1].active && !Main.tile[i, j - 2].active && Main.tile[i, j - 3].active && Main.tileSolid[(int)Main.tile[i, j - 3].type])
+                                        if (!Main.tile[i, j - 1].Active && !Main.tile[i, j - 2].Active && Main.tile[i, j - 3].Active && Main.tileSolid[(int)Main.tile[i, j - 3].type])
                                         {
                                             WorldGen.PlaceDoor(i, j - 1, type);
                                             WorldGen.SquareTileFrame(i, j, true);
                                         }
                                         else
                                         {
-                                            if (Main.tile[i, j + 1].active || Main.tile[i, j + 2].active || !Main.tile[i, j + 3].active || !Main.tileSolid[(int)Main.tile[i, j + 3].type])
+                                            if (Main.tile[i, j + 1].Active || Main.tile[i, j + 2].Active || !Main.tile[i, j + 3].Active || !Main.tileSolid[(int)Main.tile[i, j + 3].type])
                                             {
                                                 return false;
                                             }
@@ -10896,7 +10896,7 @@ namespace Terraria_Server
                                                         {
                                                             Main.tile[i, j + 1] = new Tile();
                                                         }
-                                                        if (Main.tile[i, j + 1].active && Main.tile[i, j + 1].type == 2)
+                                                        if (Main.tile[i, j + 1].Active && Main.tile[i, j + 1].type == 2)
                                                         {
                                                             WorldGen.Place1x2(i, j, type);
                                                             WorldGen.SquareTileFrame(i, j, true);
@@ -10989,12 +10989,12 @@ namespace Terraria_Server
                                                                                                     if (type == 81)
                                                                                                     {
                                                                                                         Main.tile[i, j].frameX = (short)(26 * WorldGen.genRand.Next(6));
-                                                                                                        Main.tile[i, j].active = true;
+                                                                                                        Main.tile[i, j].Active = true;
                                                                                                         Main.tile[i, j].type = (byte)type;
                                                                                                     }
                                                                                                     else
                                                                                                     {
-                                                                                                        Main.tile[i, j].active = true;
+                                                                                                        Main.tile[i, j].Active = true;
                                                                                                         Main.tile[i, j].type = (byte)type;
                                                                                                     }
                                                                                                 }
@@ -11017,7 +11017,7 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (Main.tile[i, j].active && !mute)
+                    if (Main.tile[i, j].Active && !mute)
                     {
                         WorldGen.SquareTileFrame(i, j, true);
                         result = true;
@@ -11150,13 +11150,13 @@ namespace Terraria_Server
                 {
                     Main.tile[i, j] = new Tile();
                 }
-                if (Main.tile[i, j].active)
+                if (Main.tile[i, j].Active)
                 {
                     if (j >= 1 && Main.tile[i, j - 1] == null)
                     {
                         Main.tile[i, j - 1] = new Tile();
                     }
-                    if (j >= 1 && Main.tile[i, j - 1].active && ((Main.tile[i, j - 1].type == 5 && Main.tile[i, j].type != 5) || (Main.tile[i, j - 1].type == 21 && Main.tile[i, j].type != 21) || (Main.tile[i, j - 1].type == 26 && Main.tile[i, j].type != 26) || (Main.tile[i, j - 1].type == 72 && Main.tile[i, j].type != 72) || (Main.tile[i, j - 1].type == 12 && Main.tile[i, j].type != 12)) && (Main.tile[i, j - 1].type != 5 || ((Main.tile[i, j - 1].frameX != 66 || Main.tile[i, j - 1].frameY < 0 || Main.tile[i, j - 1].frameY > 44) && (Main.tile[i, j - 1].frameX != 88 || Main.tile[i, j - 1].frameY < 66 || Main.tile[i, j - 1].frameY > 110) && Main.tile[i, j - 1].frameY < 198)))
+                    if (j >= 1 && Main.tile[i, j - 1].Active && ((Main.tile[i, j - 1].type == 5 && Main.tile[i, j].type != 5) || (Main.tile[i, j - 1].type == 21 && Main.tile[i, j].type != 21) || (Main.tile[i, j - 1].type == 26 && Main.tile[i, j].type != 26) || (Main.tile[i, j - 1].type == 72 && Main.tile[i, j].type != 72) || (Main.tile[i, j - 1].type == 12 && Main.tile[i, j].type != 12)) && (Main.tile[i, j - 1].type != 5 || ((Main.tile[i, j - 1].frameX != 66 || Main.tile[i, j - 1].frameY < 0 || Main.tile[i, j - 1].frameY > 44) && (Main.tile[i, j - 1].frameX != 88 || Main.tile[i, j - 1].frameY < 66 || Main.tile[i, j - 1].frameY > 110) && Main.tile[i, j - 1].frameY < 198)))
                     {
                         return;
                     }
@@ -11513,7 +11513,7 @@ namespace Terraria_Server
                                                     if (WorldGen.genRand.Next(2) == 0)
                                                     {
                                                         int num5 = j;
-                                                        while (Main.tile[i, num5] != null && (!Main.tile[i, num5].active || !Main.tileSolid[(int)Main.tile[i, num5].type] || Main.tileSolidTop[(int)Main.tile[i, num5].type]))
+                                                        while (Main.tile[i, num5] != null && (!Main.tile[i, num5].Active || !Main.tileSolid[(int)Main.tile[i, num5].type] || Main.tileSolidTop[(int)Main.tile[i, num5].type]))
                                                         {
                                                             num5++;
                                                         }
@@ -11912,7 +11912,7 @@ namespace Terraria_Server
                             Item.NewItem(i * 16, j * 16, 16, 16, num4, 1, false);
                         }
                     }
-                    Main.tile[i, j].active = false;
+                    Main.tile[i, j].Active = false;
                     if (Main.tileSolid[(int)Main.tile[i, j].type])
                     {
                         Main.tile[i, j].lighted = false;
@@ -11931,9 +11931,9 @@ namespace Terraria_Server
             Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
             for (int i = 0; i < 255; i++)
             {
-                if (Main.players[i].active)
+                if (Main.players[i].Active)
                 {
-                    Rectangle value = new Rectangle((int)((double)Main.players[i].position.X + (double)Main.players[i].width * 0.5 - (double)NPC.sWidth * 0.6), (int)((double)Main.players[i].position.Y + (double)Main.players[i].height * 0.5 - (double)NPC.sHeight * 0.6), (int)((double)NPC.sWidth * 1.2), (int)((double)NPC.sHeight * 1.2));
+                    Rectangle value = new Rectangle((int)((double)Main.players[i].Position.X + (double)Main.players[i].width * 0.5 - (double)NPC.sWidth * 0.6), (int)((double)Main.players[i].Position.Y + (double)Main.players[i].height * 0.5 - (double)NPC.sHeight * 0.6), (int)((double)NPC.sWidth * 1.2), (int)((double)NPC.sHeight * 1.2));
                     if (rectangle.Intersects(value))
                     {
                         return true;
@@ -11967,7 +11967,7 @@ namespace Terraria_Server
                 {
                     for (int i = 0; i < 1000; i++)
                     {
-                        if (Main.npc[i].active && Main.npc[i].homeless && Main.npc[i].townNPC)
+                        if (Main.npc[i].Active && Main.npc[i].homeless && Main.npc[i].townNPC)
                         {
                             WorldGen.spawnNPC = Main.npc[i].type;
                             break;
@@ -12014,7 +12014,7 @@ namespace Terraria_Server
                     }
                     if (Main.tile[num4, num5].liquid > 32)
                     {
-                        if (Main.tile[num4, num5].active && (Main.tile[num4, num5].type == 3 || Main.tile[num4, num5].type == 20 || Main.tile[num4, num5].type == 24 || Main.tile[num4, num5].type == 27 || Main.tile[num4, num5].type == 73))
+                        if (Main.tile[num4, num5].Active && (Main.tile[num4, num5].type == 3 || Main.tile[num4, num5].type == 20 || Main.tile[num4, num5].type == 24 || Main.tile[num4, num5].type == 27 || Main.tile[num4, num5].type == 73))
                         {
                             WorldGen.KillTile(num4, num5, false, false, false);
                             if (Main.netMode == 2)
@@ -12025,7 +12025,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (Main.tile[num4, num5].active)
+                        if (Main.tile[num4, num5].Active)
                         {
                             if (Main.tile[num4, num5].type == 80)
                             {
@@ -12038,14 +12038,14 @@ namespace Terraria_Server
                             {
                                 if (Main.tile[num4, num5].type == 53)
                                 {
-                                    if (!Main.tile[num4, num8].active)
+                                    if (!Main.tile[num4, num8].Active)
                                     {
                                         if (num4 < 250 || num4 > Main.maxTilesX - 250)
                                         {
                                             if (WorldGen.genRand.Next(500) == 0 && Main.tile[num4, num8].liquid == 255 && Main.tile[num4, num8 - 1].liquid == 255 && Main.tile[num4, num8 - 2].liquid == 255 && Main.tile[num4, num8 - 3].liquid == 255 && Main.tile[num4, num8 - 4].liquid == 255)
                                             {
                                                 WorldGen.PlaceTile(num4, num8, 81, true, false, -1, 0);
-                                                if (Main.netMode == 2 && Main.tile[num4, num8].active)
+                                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
                                                 {
                                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                                 }
@@ -12064,10 +12064,10 @@ namespace Terraria_Server
                                 {
                                     if (Main.tile[num4, num5].type == 78)
                                     {
-                                        if (!Main.tile[num4, num8].active)
+                                        if (!Main.tile[num4, num8].Active)
                                         {
                                             WorldGen.PlaceTile(num4, num8, 3, true, false, -1, 0);
-                                            if (Main.netMode == 2 && Main.tile[num4, num8].active)
+                                            if (Main.netMode == 2 && Main.tile[num4, num8].Active)
                                             {
                                                 NetMessage.SendTileSquare(-1, num4, num8, 1);
                                             }
@@ -12078,18 +12078,18 @@ namespace Terraria_Server
                                         if (Main.tile[num4, num5].type == 2 || Main.tile[num4, num5].type == 23 || Main.tile[num4, num5].type == 32)
                                         {
                                             int num10 = (int)Main.tile[num4, num5].type;
-                                            if (!Main.tile[num4, num8].active && WorldGen.genRand.Next(12) == 0 && num10 == 2)
+                                            if (!Main.tile[num4, num8].Active && WorldGen.genRand.Next(12) == 0 && num10 == 2)
                                             {
                                                 WorldGen.PlaceTile(num4, num8, 3, true, false, -1, 0);
-                                                if (Main.netMode == 2 && Main.tile[num4, num8].active)
+                                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
                                                 {
                                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                                 }
                                             }
-                                            if (!Main.tile[num4, num8].active && WorldGen.genRand.Next(10) == 0 && num10 == 23)
+                                            if (!Main.tile[num4, num8].Active && WorldGen.genRand.Next(10) == 0 && num10 == 23)
                                             {
                                                 WorldGen.PlaceTile(num4, num8, 24, true, false, -1, 0);
-                                                if (Main.netMode == 2 && Main.tile[num4, num8].active)
+                                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
                                                 {
                                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                                 }
@@ -12099,7 +12099,7 @@ namespace Terraria_Server
                                             {
                                                 for (int k = num8; k < num9; k++)
                                                 {
-                                                    if ((num4 != j || num5 != k) && Main.tile[j, k].active)
+                                                    if ((num4 != j || num5 != k) && Main.tile[j, k].Active)
                                                     {
                                                         if (num10 == 32)
                                                         {
@@ -12149,19 +12149,19 @@ namespace Terraria_Server
                                 int num11 = num4;
                                 int num12 = num5;
                                 int num13 = 0;
-                                if (Main.tile[num11 + 1, num12].active && Main.tile[num11 + 1, num12].type == 32)
+                                if (Main.tile[num11 + 1, num12].Active && Main.tile[num11 + 1, num12].type == 32)
                                 {
                                     num13++;
                                 }
-                                if (Main.tile[num11 - 1, num12].active && Main.tile[num11 - 1, num12].type == 32)
+                                if (Main.tile[num11 - 1, num12].Active && Main.tile[num11 - 1, num12].type == 32)
                                 {
                                     num13++;
                                 }
-                                if (Main.tile[num11, num12 + 1].active && Main.tile[num11, num12 + 1].type == 32)
+                                if (Main.tile[num11, num12 + 1].Active && Main.tile[num11, num12 + 1].type == 32)
                                 {
                                     num13++;
                                 }
-                                if (Main.tile[num11, num12 - 1].active && Main.tile[num11, num12 - 1].type == 32)
+                                if (Main.tile[num11, num12 - 1].Active && Main.tile[num11, num12 - 1].type == 32)
                                 {
                                     num13++;
                                 }
@@ -12193,22 +12193,22 @@ namespace Terraria_Server
                                             }
                                         }
                                     }
-                                    if (!Main.tile[num11, num12].active)
+                                    if (!Main.tile[num11, num12].Active)
                                     {
                                         num13 = 0;
-                                        if (Main.tile[num11 + 1, num12].active && Main.tile[num11 + 1, num12].type == 32)
+                                        if (Main.tile[num11 + 1, num12].Active && Main.tile[num11 + 1, num12].type == 32)
                                         {
                                             num13++;
                                         }
-                                        if (Main.tile[num11 - 1, num12].active && Main.tile[num11 - 1, num12].type == 32)
+                                        if (Main.tile[num11 - 1, num12].Active && Main.tile[num11 - 1, num12].type == 32)
                                         {
                                             num13++;
                                         }
-                                        if (Main.tile[num11, num12 + 1].active && Main.tile[num11, num12 + 1].type == 32)
+                                        if (Main.tile[num11, num12 + 1].Active && Main.tile[num11, num12 + 1].type == 32)
                                         {
                                             num13++;
                                         }
-                                        if (Main.tile[num11, num12 - 1].active && Main.tile[num11, num12 - 1].type == 32)
+                                        if (Main.tile[num11, num12 - 1].Active && Main.tile[num11, num12 - 1].type == 32)
                                         {
                                             num13++;
                                         }
@@ -12224,7 +12224,7 @@ namespace Terraria_Server
                                             {
                                                 for (int m = num18; m < num19; m++)
                                                 {
-                                                    if (Math.Abs(l - num11) * 2 + Math.Abs(m - num12) < 9 && Main.tile[l, m].active && Main.tile[l, m].type == 23 && Main.tile[l, m - 1].active && Main.tile[l, m - 1].type == 32 && Main.tile[l, m - 1].liquid == 0)
+                                                    if (Math.Abs(l - num11) * 2 + Math.Abs(m - num12) < 9 && Main.tile[l, m].Active && Main.tile[l, m].type == 23 && Main.tile[l, m - 1].Active && Main.tile[l, m - 1].type == 32 && Main.tile[l, m - 1].liquid == 0)
                                                     {
                                                         flag3 = true;
                                                         break;
@@ -12234,7 +12234,7 @@ namespace Terraria_Server
                                             if (flag3)
                                             {
                                                 Main.tile[num11, num12].type = 32;
-                                                Main.tile[num11, num12].active = true;
+                                                Main.tile[num11, num12].Active = true;
                                                 WorldGen.SquareTileFrame(num11, num12, true);
                                                 if (Main.netMode == 2)
                                                 {
@@ -12254,14 +12254,14 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (Main.tile[num4, num5].active)
+                    if (Main.tile[num4, num5].Active)
                     {
-                        if ((Main.tile[num4, num5].type == 2 || Main.tile[num4, num5].type == 52) && WorldGen.genRand.Next(40) == 0 && !Main.tile[num4, num5 + 1].active && !Main.tile[num4, num5 + 1].lava)
+                        if ((Main.tile[num4, num5].type == 2 || Main.tile[num4, num5].type == 52) && WorldGen.genRand.Next(40) == 0 && !Main.tile[num4, num5 + 1].Active && !Main.tile[num4, num5 + 1].lava)
                         {
                             bool flag4 = false;
                             for (int n = num5; n > num5 - 10; n--)
                             {
-                                if (Main.tile[num4, n].active && Main.tile[num4, n].type == 2)
+                                if (Main.tile[num4, n].Active && Main.tile[num4, n].type == 2)
                                 {
                                     flag4 = true;
                                     break;
@@ -12272,7 +12272,7 @@ namespace Terraria_Server
                                 int num20 = num4;
                                 int num21 = num5 + 1;
                                 Main.tile[num20, num21].type = 52;
-                                Main.tile[num20, num21].active = true;
+                                Main.tile[num20, num21].Active = true;
                                 WorldGen.SquareTileFrame(num20, num21, true);
                                 if (Main.netMode == 2)
                                 {
@@ -12283,17 +12283,17 @@ namespace Terraria_Server
                         if (Main.tile[num4, num5].type == 60)
                         {
                             int type = (int)Main.tile[num4, num5].type;
-                            if (!Main.tile[num4, num8].active && WorldGen.genRand.Next(7) == 0)
+                            if (!Main.tile[num4, num8].Active && WorldGen.genRand.Next(7) == 0)
                             {
                                 WorldGen.PlaceTile(num4, num8, 61, true, false, -1, 0);
-                                if (Main.netMode == 2 && Main.tile[num4, num8].active)
+                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
                                 {
                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                 }
                             }
                             else
                             {
-                                if (WorldGen.genRand.Next(500) == 0 && (!Main.tile[num4, num8].active || Main.tile[num4, num8].type == 61 || Main.tile[num4, num8].type == 74 || Main.tile[num4, num8].type == 69) && !WorldGen.PlayerLOS(num4, num5))
+                                if (WorldGen.genRand.Next(500) == 0 && (!Main.tile[num4, num8].Active || Main.tile[num4, num8].type == 61 || Main.tile[num4, num8].type == 74 || Main.tile[num4, num8].type == 69) && !WorldGen.PlayerLOS(num4, num5))
                                 {
                                     WorldGen.GrowTree(num4, num5);
                                 }
@@ -12303,7 +12303,7 @@ namespace Terraria_Server
                             {
                                 for (int num23 = num8; num23 < num9; num23++)
                                 {
-                                    if ((num4 != num22 || num5 != num23) && Main.tile[num22, num23].active && Main.tile[num22, num23].type == 59)
+                                    if ((num4 != num22 || num5 != num23) && Main.tile[num22, num23].Active && Main.tile[num22, num23].type == 59)
                                     {
                                         WorldGen.SpreadGrass(num22, num23, 59, type, false);
                                         if ((int)Main.tile[num22, num23].type == type)
@@ -12327,12 +12327,12 @@ namespace Terraria_Server
                                 NetMessage.SendTileSquare(-1, num4, num5, 3);
                             }
                         }
-                        if ((Main.tile[num4, num5].type == 60 || Main.tile[num4, num5].type == 62) && WorldGen.genRand.Next(15) == 0 && !Main.tile[num4, num5 + 1].active && !Main.tile[num4, num5 + 1].lava)
+                        if ((Main.tile[num4, num5].type == 60 || Main.tile[num4, num5].type == 62) && WorldGen.genRand.Next(15) == 0 && !Main.tile[num4, num5 + 1].Active && !Main.tile[num4, num5 + 1].lava)
                         {
                             bool flag6 = false;
                             for (int num24 = num5; num24 > num5 - 10; num24--)
                             {
-                                if (Main.tile[num4, num24].active && Main.tile[num4, num24].type == 60)
+                                if (Main.tile[num4, num24].Active && Main.tile[num4, num24].type == 60)
                                 {
                                     flag6 = true;
                                     break;
@@ -12343,7 +12343,7 @@ namespace Terraria_Server
                                 int num25 = num4;
                                 int num26 = num5 + 1;
                                 Main.tile[num25, num26].type = 62;
-                                Main.tile[num25, num26].active = true;
+                                Main.tile[num25, num26].Active = true;
                                 WorldGen.SquareTileFrame(num25, num26, true);
                                 if (Main.netMode == 2)
                                 {
@@ -12388,15 +12388,15 @@ namespace Terraria_Server
                     }
                     if (Main.tile[num28, num29].liquid <= 32)
                     {
-                        if (Main.tile[num28, num29].active)
+                        if (Main.tile[num28, num29].Active)
                         {
                             if (Main.tile[num28, num29].type == 60)
                             {
                                 int type2 = (int)Main.tile[num28, num29].type;
-                                if (!Main.tile[num28, num32].active && WorldGen.genRand.Next(10) == 0)
+                                if (!Main.tile[num28, num32].Active && WorldGen.genRand.Next(10) == 0)
                                 {
                                     WorldGen.PlaceTile(num28, num32, 61, true, false, -1, 0);
-                                    if (Main.netMode == 2 && Main.tile[num28, num32].active)
+                                    if (Main.netMode == 2 && Main.tile[num28, num32].Active)
                                     {
                                         NetMessage.SendTileSquare(-1, num28, num32, 1);
                                     }
@@ -12406,7 +12406,7 @@ namespace Terraria_Server
                                 {
                                     for (int num35 = num32; num35 < num33; num35++)
                                     {
-                                        if ((num28 != num34 || num29 != num35) && Main.tile[num34, num35].active && Main.tile[num34, num35].type == 59)
+                                        if ((num28 != num34 || num29 != num35) && Main.tile[num34, num35].Active && Main.tile[num34, num35].type == 59)
                                         {
                                             WorldGen.SpreadGrass(num34, num35, 59, type2, false);
                                             if ((int)Main.tile[num34, num35].type == type2)
@@ -12430,12 +12430,12 @@ namespace Terraria_Server
                                     NetMessage.SendTileSquare(-1, num28, num29, 3);
                                 }
                             }
-                            if ((Main.tile[num28, num29].type == 60 || Main.tile[num28, num29].type == 62) && WorldGen.genRand.Next(5) == 0 && !Main.tile[num28, num29 + 1].active && !Main.tile[num28, num29 + 1].lava)
+                            if ((Main.tile[num28, num29].type == 60 || Main.tile[num28, num29].type == 62) && WorldGen.genRand.Next(5) == 0 && !Main.tile[num28, num29 + 1].Active && !Main.tile[num28, num29 + 1].lava)
                             {
                                 bool flag8 = false;
                                 for (int num36 = num29; num36 > num29 - 10; num36--)
                                 {
-                                    if (Main.tile[num28, num36].active && Main.tile[num28, num36].type == 60)
+                                    if (Main.tile[num28, num36].Active && Main.tile[num28, num36].type == 60)
                                     {
                                         flag8 = true;
                                         break;
@@ -12446,7 +12446,7 @@ namespace Terraria_Server
                                     int num37 = num28;
                                     int num38 = num29 + 1;
                                     Main.tile[num37, num38].type = 62;
-                                    Main.tile[num37, num38].active = true;
+                                    Main.tile[num37, num38].Active = true;
                                     WorldGen.SquareTileFrame(num37, num38, true);
                                     if (Main.netMode == 2)
                                     {
@@ -12459,19 +12459,19 @@ namespace Terraria_Server
                                 int num39 = num28;
                                 int num40 = num29;
                                 int num41 = 0;
-                                if (Main.tile[num39 + 1, num40].active && Main.tile[num39 + 1, num40].type == 69)
+                                if (Main.tile[num39 + 1, num40].Active && Main.tile[num39 + 1, num40].type == 69)
                                 {
                                     num41++;
                                 }
-                                if (Main.tile[num39 - 1, num40].active && Main.tile[num39 - 1, num40].type == 69)
+                                if (Main.tile[num39 - 1, num40].Active && Main.tile[num39 - 1, num40].type == 69)
                                 {
                                     num41++;
                                 }
-                                if (Main.tile[num39, num40 + 1].active && Main.tile[num39, num40 + 1].type == 69)
+                                if (Main.tile[num39, num40 + 1].Active && Main.tile[num39, num40 + 1].type == 69)
                                 {
                                     num41++;
                                 }
-                                if (Main.tile[num39, num40 - 1].active && Main.tile[num39, num40 - 1].type == 69)
+                                if (Main.tile[num39, num40 - 1].Active && Main.tile[num39, num40 - 1].type == 69)
                                 {
                                     num41++;
                                 }
@@ -12503,22 +12503,22 @@ namespace Terraria_Server
                                             }
                                         }
                                     }
-                                    if (!Main.tile[num39, num40].active)
+                                    if (!Main.tile[num39, num40].Active)
                                     {
                                         num41 = 0;
-                                        if (Main.tile[num39 + 1, num40].active && Main.tile[num39 + 1, num40].type == 69)
+                                        if (Main.tile[num39 + 1, num40].Active && Main.tile[num39 + 1, num40].type == 69)
                                         {
                                             num41++;
                                         }
-                                        if (Main.tile[num39 - 1, num40].active && Main.tile[num39 - 1, num40].type == 69)
+                                        if (Main.tile[num39 - 1, num40].Active && Main.tile[num39 - 1, num40].type == 69)
                                         {
                                             num41++;
                                         }
-                                        if (Main.tile[num39, num40 + 1].active && Main.tile[num39, num40 + 1].type == 69)
+                                        if (Main.tile[num39, num40 + 1].Active && Main.tile[num39, num40 + 1].type == 69)
                                         {
                                             num41++;
                                         }
-                                        if (Main.tile[num39, num40 - 1].active && Main.tile[num39, num40 - 1].type == 69)
+                                        if (Main.tile[num39, num40 - 1].Active && Main.tile[num39, num40 - 1].type == 69)
                                         {
                                             num41++;
                                         }
@@ -12534,7 +12534,7 @@ namespace Terraria_Server
                                             {
                                                 for (int num49 = num46; num49 < num47; num49++)
                                                 {
-                                                    if (Math.Abs(num48 - num39) * 2 + Math.Abs(num49 - num40) < 9 && Main.tile[num48, num49].active && Main.tile[num48, num49].type == 60 && Main.tile[num48, num49 - 1].active && Main.tile[num48, num49 - 1].type == 69 && Main.tile[num48, num49 - 1].liquid == 0)
+                                                    if (Math.Abs(num48 - num39) * 2 + Math.Abs(num49 - num40) < 9 && Main.tile[num48, num49].Active && Main.tile[num48, num49].type == 60 && Main.tile[num48, num49 - 1].Active && Main.tile[num48, num49 - 1].type == 69 && Main.tile[num48, num49 - 1].liquid == 0)
                                                     {
                                                         flag9 = true;
                                                         break;
@@ -12544,7 +12544,7 @@ namespace Terraria_Server
                                             if (flag9)
                                             {
                                                 Main.tile[num39, num40].type = 69;
-                                                Main.tile[num39, num40].active = true;
+                                                Main.tile[num39, num40].Active = true;
                                                 WorldGen.SquareTileFrame(num39, num40, true);
                                                 if (Main.netMode == 2)
                                                 {
@@ -12558,10 +12558,10 @@ namespace Terraria_Server
                             if (Main.tile[num28, num29].type == 70)
                             {
                                 int type3 = (int)Main.tile[num28, num29].type;
-                                if (!Main.tile[num28, num32].active && WorldGen.genRand.Next(10) == 0)
+                                if (!Main.tile[num28, num32].Active && WorldGen.genRand.Next(10) == 0)
                                 {
                                     WorldGen.PlaceTile(num28, num32, 71, true, false, -1, 0);
-                                    if (Main.netMode == 2 && Main.tile[num28, num32].active)
+                                    if (Main.netMode == 2 && Main.tile[num28, num32].Active)
                                     {
                                         NetMessage.SendTileSquare(-1, num28, num32, 1);
                                     }
@@ -12575,7 +12575,7 @@ namespace Terraria_Server
                                 {
                                     for (int num51 = num32; num51 < num33; num51++)
                                     {
-                                        if ((num28 != num50 || num29 != num51) && Main.tile[num50, num51].active && Main.tile[num50, num51].type == 59)
+                                        if ((num28 != num50 || num29 != num51) && Main.tile[num50, num51].Active && Main.tile[num50, num51].type == 59)
                                         {
                                             WorldGen.SpreadGrass(num50, num51, 59, type3, false);
                                             if ((int)Main.tile[num50, num51].type == type3)
@@ -12662,16 +12662,16 @@ namespace Terraria_Server
             {
                 for (int j = 1; j < Main.maxTilesY; j++)
                 {
-                    if (Main.tile[i, j].type == 2 && Main.tile[i, j].active)
+                    if (Main.tile[i, j].type == 2 && Main.tile[i, j].Active)
                     {
-                        if (!Main.tile[i, j - 1].active)
+                        if (!Main.tile[i, j - 1].Active)
                         {
                             WorldGen.PlaceTile(i, j - 1, 3, true, false, -1, 0);
                         }
                     }
                     else
                     {
-                        if (Main.tile[i, j].type == 23 && Main.tile[i, j].active && !Main.tile[i, j - 1].active)
+                        if (Main.tile[i, j].type == 23 && Main.tile[i, j].Active && !Main.tile[i, j - 1].Active)
                         {
                             WorldGen.PlaceTile(i, j - 1, 24, true, false, -1, 0);
                         }
@@ -12682,7 +12682,7 @@ namespace Terraria_Server
         
         public static void SpreadGrass(int i, int j, int dirt = 0, int grass = 2, bool repeat = true)
         {
-            if ((int)Main.tile[i, j].type != dirt || !Main.tile[i, j].active || ((double)j < Main.worldSurface && grass == 70) || ((double)j >= Main.worldSurface && dirt == 0))
+            if ((int)Main.tile[i, j].type != dirt || !Main.tile[i, j].Active || ((double)j < Main.worldSurface && grass == 70) || ((double)j >= Main.worldSurface && dirt == 0))
             {
                 return;
             }
@@ -12711,7 +12711,7 @@ namespace Terraria_Server
             {
                 for (int l = num3; l < num4; l++)
                 {
-                    if (!Main.tile[k, l].active || !Main.tileSolid[(int)Main.tile[k, l].type])
+                    if (!Main.tile[k, l].Active || !Main.tileSolid[(int)Main.tile[k, l].type])
                     {
                         flag = false;
                         break;
@@ -12729,7 +12729,7 @@ namespace Terraria_Server
                 {
                     for (int n = num3; n < num4; n++)
                     {
-                        if (Main.tile[m, n].active && (int)Main.tile[m, n].type == dirt && repeat)
+                        if (Main.tile[m, n].Active && (int)Main.tile[m, n].type == dirt && repeat)
                         {
                             WorldGen.SpreadGrass(m, n, dirt, grass, true);
                         }
@@ -12802,7 +12802,7 @@ namespace Terraria_Server
                     {
                         if ((double)(Math.Abs((float)k - value.X) + Math.Abs((float)l - value.Y)) < num2 * 0.5 * (1.0 + (double)WorldGen.genRand.Next(-10, 11) * 0.015) && Main.tile[k, l].type != 31 && Main.tile[k, l].type != 22)
                         {
-                            Main.tile[k, l].active = false;
+                            Main.tile[k, l].Active = false;
                         }
                     }
                 }
@@ -12878,9 +12878,9 @@ namespace Terraria_Server
                         {
                             if (Main.tile[m, n].type != 25 && n > j + WorldGen.genRand.Next(3, 20))
                             {
-                                Main.tile[m, n].active = true;
+                                Main.tile[m, n].Active = true;
                             }
-                            Main.tile[m, n].active = true;
+                            Main.tile[m, n].Active = true;
                             if (Main.tile[m, n].type != 31 && Main.tile[m, n].type != 22)
                             {
                                 Main.tile[m, n].type = 25;
@@ -12902,7 +12902,7 @@ namespace Terraria_Server
                             {
                                 Main.tile[num7, num8].type = 25;
                             }
-                            Main.tile[num7, num8].active = true;
+                            Main.tile[num7, num8].Active = true;
                             WorldGen.PlaceWall(num7, num8, 3, true);
                         }
                     }
@@ -12912,7 +12912,7 @@ namespace Terraria_Server
             {
                 int num9 = (int)value.X;
                 int num10 = (int)value.Y;
-                while (!Main.tile[num9, num10].active)
+                while (!Main.tile[num9, num10].Active)
                 {
                     num10++;
                 }
@@ -13007,7 +13007,7 @@ namespace Terraria_Server
                         {
                             if ((double)(Math.Abs((float)k - value.X) + Math.Abs((float)l - value.Y)) < num3 * 0.5 * (1.0 + (double)WorldGen.genRand.Next(-10, 11) * 0.015) && Main.tile[k, l].type != 31 && Main.tile[k, l].type != 22)
                             {
-                                Main.tile[k, l].active = false;
+                                Main.tile[k, l].Active = false;
                             }
                         }
                     }
@@ -13112,11 +13112,11 @@ namespace Terraria_Server
                         {
                             if (Main.tile[m, n].type != 25 && n > j + WorldGen.genRand.Next(3, 20))
                             {
-                                Main.tile[m, n].active = true;
+                                Main.tile[m, n].Active = true;
                             }
                             if (steps <= num2)
                             {
-                                Main.tile[m, n].active = true;
+                                Main.tile[m, n].Active = true;
                             }
                             if (Main.tile[m, n].type != 31)
                             {
@@ -13141,7 +13141,7 @@ namespace Terraria_Server
                             }
                             if (steps <= num2)
                             {
-                                Main.tile[num11, num12].active = true;
+                                Main.tile[num11, num12].Active = true;
                             }
                             if (num12 > j + WorldGen.genRand.Next(3, 20))
                             {
@@ -13170,7 +13170,7 @@ namespace Terraria_Server
                 {
                     int num3 = (int)value.X;
                     int num4 = (int)value.Y;
-                    if (Main.tile[num3, num4].wall == 0 && !Main.tile[num3, num4].active && Main.tile[num3, num4 - 3].wall == 0 && !Main.tile[num3, num4 - 3].active && Main.tile[num3, num4 - 1].wall == 0 && !Main.tile[num3, num4 - 1].active && Main.tile[num3, num4 - 4].wall == 0 && !Main.tile[num3, num4 - 4].active && Main.tile[num3, num4 - 2].wall == 0 && !Main.tile[num3, num4 - 2].active && Main.tile[num3, num4 - 5].wall == 0 && !Main.tile[num3, num4 - 5].active)
+                    if (Main.tile[num3, num4].wall == 0 && !Main.tile[num3, num4].Active && Main.tile[num3, num4 - 3].wall == 0 && !Main.tile[num3, num4 - 3].Active && Main.tile[num3, num4 - 1].wall == 0 && !Main.tile[num3, num4 - 1].Active && Main.tile[num3, num4 - 4].wall == 0 && !Main.tile[num3, num4 - 4].Active && Main.tile[num3, num4 - 2].wall == 0 && !Main.tile[num3, num4 - 2].Active && Main.tile[num3, num4 - 5].wall == 0 && !Main.tile[num3, num4 - 5].Active)
                     {
                         flag = false;
                     }
@@ -13307,7 +13307,7 @@ namespace Terraria_Server
                         {
                             if (type < 0)
                             {
-                                if (type == -2 && Main.tile[k, l].active && (l < WorldGen.waterLine || l > WorldGen.lavaLine))
+                                if (type == -2 && Main.tile[k, l].Active && (l < WorldGen.waterLine || l > WorldGen.lavaLine))
                                 {
                                     Main.tile[k, l].liquid = 255;
                                     if (l > WorldGen.lavaLine)
@@ -13315,11 +13315,11 @@ namespace Terraria_Server
                                         Main.tile[k, l].lava = true;
                                     }
                                 }
-                                Main.tile[k, l].active = false;
+                                Main.tile[k, l].Active = false;
                             }
                             else
                             {
-                                if ((overRide || !Main.tile[k, l].active) && (type != 40 || Main.tile[k, l].type != 53) && (!Main.tileStone[type] || Main.tile[k, l].type == 1) && Main.tile[k, l].type != 45 && (Main.tile[k, l].type != 1 || type != 59 || (double)l >= Main.worldSurface + (double)WorldGen.genRand.Next(-50, 50)))
+                                if ((overRide || !Main.tile[k, l].Active) && (type != 40 || Main.tile[k, l].type != 53) && (!Main.tileStone[type] || Main.tile[k, l].type == 1) && Main.tile[k, l].type != 45 && (Main.tile[k, l].type != 1 || type != 59 || (double)l >= Main.worldSurface + (double)WorldGen.genRand.Next(-50, 50)))
                                 {
                                     if (Main.tile[k, l].type != 53 || (double)l >= Main.worldSurface)
                                     {
@@ -13335,7 +13335,7 @@ namespace Terraria_Server
                                 }
                                 if (addTile)
                                 {
-                                    Main.tile[k, l].active = true;
+                                    Main.tile[k, l].Active = true;
                                     Main.tile[k, l].liquid = 0;
                                     Main.tile[k, l].lava = false;
                                 }
@@ -13557,7 +13557,7 @@ namespace Terraria_Server
                             double num11 = Math.Sqrt((double)(num9 * num9 + num10 * num10));
                             if (num11 < num7 * 0.4)
                             {
-                                Main.tile[k, l].active = true;
+                                Main.tile[k, l].Active = true;
                                 if (Main.tile[k, l].type == 59)
                                 {
                                     Main.tile[k, l].type = 0;
@@ -13640,7 +13640,7 @@ namespace Terraria_Server
             vector.X = (float)(i + (num2 + 2) * num);
             for (int k = j - 15; k < j + 30; k++)
             {
-                if (Main.tile[(int)vector.X, k].active)
+                if (Main.tile[(int)vector.X, k].Active)
                 {
                     vector.Y = (float)(k - 1);
                     break;
@@ -13671,7 +13671,7 @@ namespace Terraria_Server
             {
                 for (int m = num6; m < num7; m++)
                 {
-                    Main.tile[l, m].active = true;
+                    Main.tile[l, m].Active = true;
                     Main.tile[l, m].type = type;
                     Main.tile[l, m].wall = 0;
                 }
@@ -13702,7 +13702,7 @@ namespace Terraria_Server
                 {
                     if (Main.tile[n, num8].wall == 0)
                     {
-                        Main.tile[n, num8].active = false;
+                        Main.tile[n, num8].Active = false;
                         Main.tile[n, num8].wall = wall;
                     }
                 }
@@ -13711,9 +13711,9 @@ namespace Terraria_Server
             int num10 = (int)vector.Y;
             for (int num11 = num9 - 2; num11 <= num9 + 2; num11++)
             {
-                Main.tile[num11, num10].active = false;
-                Main.tile[num11, num10 - 1].active = false;
-                Main.tile[num11, num10 - 2].active = false;
+                Main.tile[num11, num10].Active = false;
+                Main.tile[num11, num10 - 1].Active = false;
+                Main.tile[num11, num10 - 2].Active = false;
             }
             WorldGen.PlaceTile(num9, num10, 10, true, false, -1, 0);
             int contain = 0;
@@ -13786,9 +13786,9 @@ namespace Terraria_Server
                         float num8 = Math.Abs((float)k - value.X);
                         float num9 = Math.Abs((float)l - value.Y);
                         double num10 = Math.Sqrt((double)(num8 * num8 + num9 * num9));
-                        if (num10 < num7 * 0.4 && !Main.tile[k, l].active)
+                        if (num10 < num7 * 0.4 && !Main.tile[k, l].Active)
                         {
-                            Main.tile[k, l].active = true;
+                            Main.tile[k, l].Active = true;
                             Main.tile[k, l].type = 0;
                         }
                     }
@@ -13870,11 +13870,11 @@ namespace Terraria_Server
                         double num10 = Math.Sqrt((double)(num8 * num8 + num9 * num9));
                         if (num10 < num2 * 0.4)
                         {
-                            if (Main.tile[k, l].active)
+                            if (Main.tile[k, l].Active)
                             {
                                 Main.tile[k, l].liquid = 255;
                             }
-                            Main.tile[k, l].active = false;
+                            Main.tile[k, l].Active = false;
                         }
                     }
                 }
@@ -13955,7 +13955,7 @@ namespace Terraria_Server
                             {
                                 if (Main.tile[k, l].type != 59)
                                 {
-                                    Main.tile[k, l].active = false;
+                                    Main.tile[k, l].Active = false;
                                 }
                             }
                             else
@@ -14037,7 +14037,7 @@ namespace Terraria_Server
                         double num10 = Math.Sqrt((double)(num8 * num8 + num9 * num9));
                         if (num10 < num7 * 0.4)
                         {
-                            Main.tile[l, m].active = false;
+                            Main.tile[l, m].Active = false;
                         }
                     }
                 }
@@ -14119,7 +14119,7 @@ namespace Terraria_Server
                         double num10 = Math.Sqrt((double)(num8 * num8 + num9 * num9));
                         if (num10 < num7 * 0.4)
                         {
-                            Main.tile[l, m].active = false;
+                            Main.tile[l, m].Active = false;
                         }
                     }
                 }
@@ -14230,7 +14230,7 @@ namespace Terraria_Server
                 for (int j = Main.maxTilesY - 2; j > 0; j--)
                 {
                     Main.tile[i, j].checkingLiquid = false;
-                    if (Main.tile[i, j].liquid > 0 && Main.tile[i, j].active && Main.tileSolid[(int)Main.tile[i, j].type] && !Main.tileSolidTop[(int)Main.tile[i, j].type])
+                    if (Main.tile[i, j].liquid > 0 && Main.tile[i, j].Active && Main.tileSolid[(int)Main.tile[i, j].type] && !Main.tileSolidTop[(int)Main.tile[i, j].type])
                     {
                         Main.tile[i, j].liquid = 0;
                     }
@@ -14238,7 +14238,7 @@ namespace Terraria_Server
                     {
                         if (Main.tile[i, j].liquid > 0)
                         {
-                            if (Main.tile[i, j].active)
+                            if (Main.tile[i, j].Active)
                             {
                                 if (Main.tileWaterDeath[(int)Main.tile[i, j].type])
                                 {
@@ -14249,7 +14249,7 @@ namespace Terraria_Server
                                     WorldGen.KillTile(i, j, false, false, false);
                                 }
                             }
-                            if ((!Main.tile[i, j + 1].active || !Main.tileSolid[(int)Main.tile[i, j + 1].type] || Main.tileSolidTop[(int)Main.tile[i, j + 1].type]) && Main.tile[i, j + 1].liquid < 255)
+                            if ((!Main.tile[i, j + 1].Active || !Main.tileSolid[(int)Main.tile[i, j + 1].type] || Main.tileSolidTop[(int)Main.tile[i, j + 1].type]) && Main.tile[i, j + 1].liquid < 255)
                             {
                                 if (Main.tile[i, j + 1].liquid > 250)
                                 {
@@ -14260,13 +14260,13 @@ namespace Terraria_Server
                                     Liquid.AddWater(i, j);
                                 }
                             }
-                            if ((!Main.tile[i - 1, j].active || !Main.tileSolid[(int)Main.tile[i - 1, j].type] || Main.tileSolidTop[(int)Main.tile[i - 1, j].type]) && Main.tile[i - 1, j].liquid != Main.tile[i, j].liquid)
+                            if ((!Main.tile[i - 1, j].Active || !Main.tileSolid[(int)Main.tile[i - 1, j].type] || Main.tileSolidTop[(int)Main.tile[i - 1, j].type]) && Main.tile[i - 1, j].liquid != Main.tile[i, j].liquid)
                             {
                                 Liquid.AddWater(i, j);
                             }
                             else
                             {
-                                if ((!Main.tile[i + 1, j].active || !Main.tileSolid[(int)Main.tile[i + 1, j].type] || Main.tileSolidTop[(int)Main.tile[i + 1, j].type]) && Main.tile[i + 1, j].liquid != Main.tile[i, j].liquid)
+                                if ((!Main.tile[i + 1, j].Active || !Main.tileSolid[(int)Main.tile[i + 1, j].type] || Main.tileSolidTop[(int)Main.tile[i + 1, j].type]) && Main.tile[i + 1, j].liquid != Main.tile[i, j].liquid)
                                 {
                                     Liquid.AddWater(i, j);
                                 }
@@ -14335,35 +14335,35 @@ namespace Terraria_Server
             {
                 num = type;
             }
-            if (i - 1 >= 0 && Main.tile[i - 1, j] != null && Main.tile[i - 1, j].active)
+            if (i - 1 >= 0 && Main.tile[i - 1, j] != null && Main.tile[i - 1, j].Active)
             {
                 byte arg_74_0 = Main.tile[i - 1, j].type;
             }
-            if (i + 1 < Main.maxTilesX && Main.tile[i + 1, j] != null && Main.tile[i + 1, j].active)
+            if (i + 1 < Main.maxTilesX && Main.tile[i + 1, j] != null && Main.tile[i + 1, j].Active)
             {
                 byte arg_B7_0 = Main.tile[i + 1, j].type;
             }
-            if (j - 1 >= 0 && Main.tile[i, j - 1] != null && Main.tile[i, j - 1].active)
+            if (j - 1 >= 0 && Main.tile[i, j - 1] != null && Main.tile[i, j - 1].Active)
             {
                 byte arg_F6_0 = Main.tile[i, j - 1].type;
             }
-            if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1] != null && Main.tile[i, j + 1].active)
+            if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1] != null && Main.tile[i, j + 1].Active)
             {
                 num = (int)Main.tile[i, j + 1].type;
             }
-            if (i - 1 >= 0 && j - 1 >= 0 && Main.tile[i - 1, j - 1] != null && Main.tile[i - 1, j - 1].active)
+            if (i - 1 >= 0 && j - 1 >= 0 && Main.tile[i - 1, j - 1] != null && Main.tile[i - 1, j - 1].Active)
             {
                 byte arg_184_0 = Main.tile[i - 1, j - 1].type;
             }
-            if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile[i + 1, j - 1] != null && Main.tile[i + 1, j - 1].active)
+            if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile[i + 1, j - 1] != null && Main.tile[i + 1, j - 1].Active)
             {
                 byte arg_1D3_0 = Main.tile[i + 1, j - 1].type;
             }
-            if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile[i - 1, j + 1] != null && Main.tile[i - 1, j + 1].active)
+            if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile[i - 1, j + 1] != null && Main.tile[i - 1, j + 1].Active)
             {
                 byte arg_222_0 = Main.tile[i - 1, j + 1].type;
             }
-            if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile[i + 1, j + 1] != null && Main.tile[i + 1, j + 1].active)
+            if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile[i + 1, j + 1] != null && Main.tile[i + 1, j + 1].Active)
             {
                 byte arg_275_0 = Main.tile[i + 1, j + 1].type;
             }
@@ -14935,7 +14935,7 @@ namespace Terraria_Server
                 {
                     Liquid.AddWater(i, j);
                 }
-                if (Main.tile[i, j].active)
+                if (Main.tile[i, j].Active)
                 {
                     if (noBreak && Main.tileFrameImportant[(int)Main.tile[i, j].type])
                     {
@@ -14992,35 +14992,35 @@ namespace Terraria_Server
                         num7 = num9;
                         num8 = num9;
                     }
-                    if (i - 1 >= 0 && Main.tile[i - 1, j] != null && Main.tile[i - 1, j].active)
+                    if (i - 1 >= 0 && Main.tile[i - 1, j] != null && Main.tile[i - 1, j].Active)
                     {
                         num4 = (int)Main.tile[i - 1, j].type;
                     }
-                    if (i + 1 < Main.maxTilesX && Main.tile[i + 1, j] != null && Main.tile[i + 1, j].active)
+                    if (i + 1 < Main.maxTilesX && Main.tile[i + 1, j] != null && Main.tile[i + 1, j].Active)
                     {
                         num5 = (int)Main.tile[i + 1, j].type;
                     }
-                    if (j - 1 >= 0 && Main.tile[i, j - 1] != null && Main.tile[i, j - 1].active)
+                    if (j - 1 >= 0 && Main.tile[i, j - 1] != null && Main.tile[i, j - 1].Active)
                     {
                         num2 = (int)Main.tile[i, j - 1].type;
                     }
-                    if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1] != null && Main.tile[i, j + 1].active)
+                    if (j + 1 < Main.maxTilesY && Main.tile[i, j + 1] != null && Main.tile[i, j + 1].Active)
                     {
                         num7 = (int)Main.tile[i, j + 1].type;
                     }
-                    if (i - 1 >= 0 && j - 1 >= 0 && Main.tile[i - 1, j - 1] != null && Main.tile[i - 1, j - 1].active)
+                    if (i - 1 >= 0 && j - 1 >= 0 && Main.tile[i - 1, j - 1] != null && Main.tile[i - 1, j - 1].Active)
                     {
                         num = (int)Main.tile[i - 1, j - 1].type;
                     }
-                    if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile[i + 1, j - 1] != null && Main.tile[i + 1, j - 1].active)
+                    if (i + 1 < Main.maxTilesX && j - 1 >= 0 && Main.tile[i + 1, j - 1] != null && Main.tile[i + 1, j - 1].Active)
                     {
                         num3 = (int)Main.tile[i + 1, j - 1].type;
                     }
-                    if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile[i - 1, j + 1] != null && Main.tile[i - 1, j + 1].active)
+                    if (i - 1 >= 0 && j + 1 < Main.maxTilesY && Main.tile[i - 1, j + 1] != null && Main.tile[i - 1, j + 1].Active)
                     {
                         num6 = (int)Main.tile[i - 1, j + 1].type;
                     }
-                    if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile[i + 1, j + 1] != null && Main.tile[i + 1, j + 1].active)
+                    if (i + 1 < Main.maxTilesX && j + 1 < Main.maxTilesY && Main.tile[i + 1, j + 1] != null && Main.tile[i + 1, j + 1].Active)
                     {
                         num8 = (int)Main.tile[i + 1, j + 1].type;
                     }
@@ -15105,7 +15105,7 @@ namespace Terraria_Server
                                 {
                                     num11 = j - 1;
                                 }
-                                if (Main.tile[num10, num11] != null && Main.tile[num10 + 1, num11] != null && Main.tile[num10, num11 + 1] != null && Main.tile[num10 + 1, num11 + 1] != null && (!Main.tile[num10, num11].active || (int)Main.tile[num10, num11].type != num9 || !Main.tile[num10 + 1, num11].active || (int)Main.tile[num10 + 1, num11].type != num9 || !Main.tile[num10, num11 + 1].active || (int)Main.tile[num10, num11 + 1].type != num9 || !Main.tile[num10 + 1, num11 + 1].active || (int)Main.tile[num10 + 1, num11 + 1].type != num9))
+                                if (Main.tile[num10, num11] != null && Main.tile[num10 + 1, num11] != null && Main.tile[num10, num11 + 1] != null && Main.tile[num10 + 1, num11 + 1] != null && (!Main.tile[num10, num11].Active || (int)Main.tile[num10, num11].type != num9 || !Main.tile[num10 + 1, num11].Active || (int)Main.tile[num10 + 1, num11].type != num9 || !Main.tile[num10, num11 + 1].Active || (int)Main.tile[num10, num11 + 1].type != num9 || !Main.tile[num10 + 1, num11 + 1].Active || (int)Main.tile[num10 + 1, num11 + 1].type != num9))
                                 {
                                     WorldGen.destroyObject = true;
                                     if ((int)Main.tile[num10, num11].type == num9)
@@ -15187,7 +15187,7 @@ namespace Terraria_Server
                                                     float num15 = -1f;
                                                     for (int k = 0; k < 255; k++)
                                                     {
-                                                        float num16 = Math.Abs(Main.players[k].position.X - num13) + Math.Abs(Main.players[k].position.Y - num14);
+                                                        float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
                                                         if (num16 < num15 || num15 == -1f)
                                                         {
                                                             num15 = num16;
@@ -15422,23 +15422,23 @@ namespace Terraria_Server
                                     {
                                         Main.tile[i, num17] = new Tile();
                                     }
-                                    if (!Main.tile[i, num17 - 1].active || !Main.tileSolid[(int)Main.tile[i, num17 - 1].type])
+                                    if (!Main.tile[i, num17 - 1].Active || !Main.tileSolid[(int)Main.tile[i, num17 - 1].type])
                                     {
                                         flag = true;
                                     }
-                                    if (!Main.tile[i, num17 + 3].active || !Main.tileSolid[(int)Main.tile[i, num17 + 3].type])
+                                    if (!Main.tile[i, num17 + 3].Active || !Main.tileSolid[(int)Main.tile[i, num17 + 3].type])
                                     {
                                         flag = true;
                                     }
-                                    if (!Main.tile[i, num17].active || (int)Main.tile[i, num17].type != num9)
+                                    if (!Main.tile[i, num17].Active || (int)Main.tile[i, num17].type != num9)
                                     {
                                         flag = true;
                                     }
-                                    if (!Main.tile[i, num17 + 1].active || (int)Main.tile[i, num17 + 1].type != num9)
+                                    if (!Main.tile[i, num17 + 1].Active || (int)Main.tile[i, num17 + 1].type != num9)
                                     {
                                         flag = true;
                                     }
-                                    if (!Main.tile[i, num17 + 2].active || (int)Main.tile[i, num17 + 2].type != num9)
+                                    if (!Main.tile[i, num17 + 2].Active || (int)Main.tile[i, num17 + 2].type != num9)
                                     {
                                         flag = true;
                                     }
@@ -15519,7 +15519,7 @@ namespace Terraria_Server
                                     {
                                         Main.tile[num19, num20 - 1] = new Tile();
                                     }
-                                    if (!Main.tile[num19, num20 - 1].active || !Main.tileSolid[(int)Main.tile[num19, num20 - 1].type] || !Main.tile[num19, num20 + 3].active || !Main.tileSolid[(int)Main.tile[num19, num20 + 3].type])
+                                    if (!Main.tile[num19, num20 - 1].Active || !Main.tileSolid[(int)Main.tile[num19, num20 - 1].type] || !Main.tile[num19, num20 + 3].Active || !Main.tileSolid[(int)Main.tile[num19, num20 + 3].type])
                                     {
                                         flag2 = true;
                                         WorldGen.destroyObject = true;
@@ -15534,7 +15534,7 @@ namespace Terraria_Server
                                     {
                                         for (int m = num20; m < num20 + 3; m++)
                                         {
-                                            if (!flag2 && (Main.tile[l, m].type != 11 || !Main.tile[l, m].active))
+                                            if (!flag2 && (Main.tile[l, m].type != 11 || !Main.tile[l, m].Active))
                                             {
                                                 WorldGen.destroyObject = true;
                                                 Item.NewItem(i * 16, j * 16, 16, 16, 25, 1, false);
@@ -19321,7 +19321,7 @@ namespace Terraria_Server
                         {
                             if (Main.tile[i, j - 1] != null)
                             {
-                                if (!Main.tile[i, j - 1].active)
+                                if (!Main.tile[i, j - 1].Active)
                                 {
                                     num2 = -1;
                                 }
@@ -19343,10 +19343,10 @@ namespace Terraria_Server
                         {
                             if (Main.netMode == 0)
                             {
-                                if (Main.tile[i, j + 1] != null && !Main.tile[i, j + 1].active)
+                                if (Main.tile[i, j + 1] != null && !Main.tile[i, j + 1].Active)
                                 {
                                     bool flag3 = true;
-                                    if (Main.tile[i, j - 1].active && Main.tile[i, j - 1].type == 21)
+                                    if (Main.tile[i, j - 1].Active && Main.tile[i, j - 1].type == 21)
                                     {
                                         flag3 = false;
                                     }
@@ -19361,7 +19361,7 @@ namespace Terraria_Server
                                         {
                                             type = 40;
                                         }
-                                        Main.tile[i, j].active = false;
+                                        Main.tile[i, j].Active = false;
                                         int num25 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type, 10, 0f, Main.myPlayer);
                                         Main.projectile[num25].ai[0] = 1f;
                                         WorldGen.SquareTileFrame(i, j, true);
@@ -19370,10 +19370,10 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if (Main.netMode == 2 && Main.tile[i, j + 1] != null && !Main.tile[i, j + 1].active)
+                                if (Main.netMode == 2 && Main.tile[i, j + 1] != null && !Main.tile[i, j + 1].Active)
                                 {
                                     bool flag4 = true;
-                                    if (Main.tile[i, j - 1].active && Main.tile[i, j - 1].type == 21)
+                                    if (Main.tile[i, j - 1].Active && Main.tile[i, j - 1].type == 21)
                                     {
                                         flag4 = false;
                                     }
@@ -19388,11 +19388,11 @@ namespace Terraria_Server
                                         {
                                             type2 = 40;
                                         }
-                                        Main.tile[i, j].active = false;
+                                        Main.tile[i, j].Active = false;
                                         int num26 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type2, 10, 0f, Main.myPlayer);
-                                        Main.projectile[num26].velocity.Y = 0.5f;
+                                        Main.projectile[num26].Velocity.Y = 0.5f;
                                         Projectile expr_65A3_cp_0 = Main.projectile[num26];
-                                        expr_65A3_cp_0.position.Y = expr_65A3_cp_0.position.Y + 2f;
+                                        expr_65A3_cp_0.Position.Y = expr_65A3_cp_0.Position.Y + 2f;
                                         Main.projectile[num26].ai[0] = 1f;
                                         NetMessage.SendTileSquare(-1, i, j, 1);
                                         WorldGen.SquareTileFrame(i, j, true);

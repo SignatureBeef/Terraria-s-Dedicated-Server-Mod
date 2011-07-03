@@ -40,7 +40,7 @@ namespace Terraria_Server.Commands
             string[] commands = Line.Trim().ToLower().Split(' ');
             if (commands == null || commands.Length <= 0)
             {
-                Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.name);
+                Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.Name);
                 return;
             }
             switchCommands(commands, player);

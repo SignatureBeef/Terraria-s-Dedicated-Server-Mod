@@ -3,7 +3,7 @@ namespace Terraria_Server
 {
 	public class Tile
 	{
-		public bool active;
+		public bool Active;
 		public bool lighted;
 		public byte type;
 		public byte wall;

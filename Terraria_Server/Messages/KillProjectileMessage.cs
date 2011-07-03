@@ -31,7 +31,7 @@ namespace Terraria_Server.Messages
             for (int i = 0; i < 1000; i++)
             {
                 projectile = Main.projectile[i];
-                if (projectile.owner == (int)owner && projectile.identity == (int)identity && projectile.active)
+                if (projectile.Owner == (int)owner && projectile.identity == (int)identity && projectile.active)
                 {
                     projectile.Kill();
                     break;

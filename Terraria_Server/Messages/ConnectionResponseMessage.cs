@@ -31,7 +31,7 @@ namespace Terraria_Server.Messages
                 Main.myPlayer = myPlayerNum;
             }
 
-            NetMessage.SendData(4, -1, -1, Main.players[Main.myPlayer].name, Main.myPlayer);
+            NetMessage.SendData(4, -1, -1, Main.players[Main.myPlayer].Name, Main.myPlayer);
             NetMessage.SendData(16, -1, -1, String.Empty, Main.myPlayer);
             NetMessage.SendData(42, -1, -1, String.Empty, Main.myPlayer);
             NetMessage.SendData(50, -1, -1, String.Empty, Main.myPlayer);
