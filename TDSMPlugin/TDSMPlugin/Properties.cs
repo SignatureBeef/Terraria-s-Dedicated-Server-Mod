@@ -2,76 +2,51 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terraria_Server;
+using Terraria_Server.Misc;
 
 namespace TDSMPlugin
 {
     public class Properties : PropertiesFile
     {
-        public Properties(String pFile)
-        {
-            base.setFile(pFile);
-        }
+        private const bool DEFAULT_SPAWNING_CANCELLED = true;
+        private const bool DEFAULT_TILE_BREAKAGE = true;
+        private const bool DEFAULT_EXPLOSIVES_ALLOWED = true;
+
+        private const String SPAWNING_CANCELLED = "allowspawns";
+        private const String TILE_BREAKAGE = "tilebreakage";
+        private const String EXPLOSIVES_ALLOWED = "allowexplosives";
+
+        public Properties(String propertiesPath) : base(propertiesPath) { }
 
         public void pushData()
         {
-            setSpawningCancelled(isSpawningCancelled());
-            setTileBreakage(getTileBreakage());
-            setExplosivesAllowed(isExplosivesAllowed());
+            object temp = SpawningCancelled;
+            temp = TileBreakage;
+            temp = ExplosivesAllowed;
         }
 
-        public bool isSpawningCancelled()
+        public bool SpawningCancelled
         {
-            string AllowSpawns = base.getValue("allowspawns");
-            if (AllowSpawns == null || AllowSpawns.Trim().Length < 0)
+            get
             {
-                return true;
-            }
-            else
-            {
-                return Boolean.Parse(AllowSpawns);
+                return getValue(SPAWNING_CANCELLED, DEFAULT_SPAWNING_CANCELLED);
             }
         }
 
-        public void setSpawningCancelled(bool AllowSpawns)
+        public bool TileBreakage
         {
-            base.setValue("allowspawns", AllowSpawns.ToString());
-        }
-
-        public bool getTileBreakage()
-        {
-            string TileBreakage = base.getValue("tilebreakage");
-            if (TileBreakage == null || TileBreakage.Trim().Length < 0)
+            get
             {
-                return true;
-            }
-            else
-            {
-                return Boolean.Parse(TileBreakage);
+                return getValue(TILE_BREAKAGE, DEFAULT_TILE_BREAKAGE);
             }
         }
 
-        public void setTileBreakage(bool TileBreakage)
+        public bool ExplosivesAllowed
         {
-            base.setValue("tilebreakage", TileBreakage.ToString());
-        }
-
-        public bool isExplosivesAllowed()
-        {
-            string Explosives = base.getValue("allowexplosives");
-            if (Explosives == null || Explosives.Trim().Length < 0)
+            get
             {
-                return true;
+                return getValue(EXPLOSIVES_ALLOWED, DEFAULT_EXPLOSIVES_ALLOWED);
             }
-            else
-            {
-                return Boolean.Parse(Explosives);
-            }
-        }
-
-        public void setExplosivesAllowed(bool Explosives)
-        {
-            base.setValue("allowexplosives", Explosives.ToString());
         }
     }
 }

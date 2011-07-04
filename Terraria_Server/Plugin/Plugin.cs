@@ -8,14 +8,13 @@ using Terraria_Server.Commands;
 
 namespace Terraria_Server.Plugin
 {
-    public abstract class Plugin 
+    public abstract class Plugin
     {
 
         public string Name { get; set; }
         public string Description { get; set; }
         public string Author { get; set; }
         public string Version { get; set; }
-        public string ServerProtocol { get; set; } //Soon to be removed. ~‎Saturday, ‎June ‎25, ‎2011
         public int TDSMBuild { get; set; } //Thinking about adding a warning for out of date plugins.
 
         public bool Enabled { get; set; }
@@ -41,8 +40,9 @@ namespace Terraria_Server.Plugin
         public virtual void onDoorStateChange(DoorStateChangeEvent Event) { }
         public virtual void onPlayerEditSign(PlayerEditSignEvent Event) { }
         public virtual void onPlayerProjectileUse(PlayerProjectileEvent Event) { }
+        public virtual void onNPCDeath(NPCDeathEvent Event) { }
 
-    	private HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
+        private HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
 
         public bool containsHook(Hooks hook)
         {

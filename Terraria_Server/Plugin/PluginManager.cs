@@ -41,16 +41,20 @@ namespace Terraria_Server.Plugin
 	            foreach(Type messageType in Assembly.LoadFrom(pluginPath).GetTypes()
 	                .Where(x => type.IsAssignableFrom(x) && x != type))
 	            {
-	                Plugin plugin = (Plugin)Activator.CreateInstance(type);
-                    if (plugin == null)
+                    //type.DeclaringMethod.Attributes != MethodAttributes.Abstract
+                    if (!messageType.IsAbstract)
                     {
-                        throw new Exception("Could not Instantiate");
-                    }
-                    else
-                    {
-                        plugin.Server = server;
-                        plugin.Load();
-                        return plugin;
+                        Plugin plugin = (Plugin)Activator.CreateInstance(messageType);
+                        if (plugin == null)
+                        {
+                            throw new Exception("Could not Instantiate");
+                        }
+                        else
+                        {
+                            plugin.Server = server;
+                            plugin.Load();
+                            return plugin;
+                        }
                     }
 	            }
             }
@@ -223,6 +227,11 @@ namespace Terraria_Server.Plugin
                             case Hooks.PLAYER_PROJECTILE:
                                 {
                                     plugin.onPlayerProjectileUse((PlayerProjectileEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.NPC_DEATH:
+                                {
+                                    plugin.onNPCDeath((NPCDeathEvent)hookEvent);
                                     break;
                                 }
                         }
