@@ -46,7 +46,7 @@ namespace Terraria_Server.Messages
 
             if (serverSock.state == 0)
             {
-                string version = Encoding.ASCII.GetString(readBuffer, start + 1, length - 1);
+                String version = Encoding.ASCII.GetString(readBuffer, start + 1, length - 1);
                 if (!(version == "Terraria" + Statics.CURRENT_TERRARIA_RELEASE))
                 {
                     NetMessage.SendData(2, whoAmI, -1, "You are not using the same version as this Server.");

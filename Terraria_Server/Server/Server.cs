@@ -16,7 +16,7 @@ namespace Terraria_Server
 
         public Server() { }
 
-        public Server(World World, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
+        public Server(World World, int PlayerCap, String myWhiteList, String myBanList, String myOpList)
         {
             Main.maxNetplayers = PlayerCap;
             world = World;
@@ -33,7 +33,7 @@ namespace Terraria_Server
         // Summary:
         //       Gets a specified Online Player
         //       Input name must already be cleaned of spaces
-        public Player GetPlayerByName(string name)
+        public Player GetPlayerByName(String name)
         {
             String lowercaseName = name.ToLower();
             foreach (Player player in Main.players)
@@ -97,7 +97,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Send a message to all online OPs
-        public void notifyOps(string message, bool writeToConsole = false)
+        public void notifyOps(String message, bool writeToConsole = false)
         {
             if (Statics.cmdMessages)
             {
@@ -114,7 +114,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Sends a Message to all Connected Clients
-        public void notifyAll(string Message)
+        public void notifyAll(String Message)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
         }

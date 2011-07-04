@@ -30,7 +30,7 @@ namespace Terraria_Server.Messages
                 {
                     int inventorySlot = (int)readBuffer[start + 2];
                     int stack = (int)readBuffer[start + 3];
-                    string itemName = Encoding.ASCII.GetString(readBuffer, start + 4, length - 4);
+                    String itemName = Encoding.ASCII.GetString(readBuffer, start + 4, length - 4);
                     if (inventorySlot < 44)
                     {
                         player.inventory[inventorySlot] = new Item();

@@ -9,7 +9,7 @@ namespace Terraria_Server
         public const int maxSigns = 1000;
         public int x;
         public int y;
-        public string text;
+        public String text;
 
         public object Clone()
         {
@@ -69,7 +69,7 @@ namespace Terraria_Server
             }
             return num4;
         }
-        public static void TextSign(int i, string text)
+        public static void TextSign(int i, String text)
         {
             if (Main.tile[Main.sign[i].x, Main.sign[i].y] == null || !Main.tile[Main.sign[i].x, Main.sign[i].y].Active || (Main.tile[Main.sign[i].x, Main.sign[i].y].type != 55 && Main.tile[Main.sign[i].x, Main.sign[i].y].type != 85))
             {

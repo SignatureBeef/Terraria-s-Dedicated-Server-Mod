@@ -11,10 +11,10 @@ namespace Terraria_Server.Plugin
     public abstract class Plugin
     {
 
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Author { get; set; }
-        public string Version { get; set; }
+        public String Name { get; set; }
+        public String Description { get; set; }
+        public String Author { get; set; }
+        public String Version { get; set; }
         public int TDSMBuild { get; set; } //Thinking about adding a warning for out of date plugins.
 
         public bool Enabled { get; set; }

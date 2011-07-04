@@ -42,7 +42,7 @@ namespace Terraria_Server
         public static bool noLiquidCheck = false;
         [ThreadStatic]
         public static Random genRand = new Random();
-        public static string statusText = "";
+        public static String statusText = "";
         private static bool destroyObject = false;
         public static int spawnDelay = 0;
         public static int spawnNPC = 0;
@@ -1053,7 +1053,7 @@ namespace Terraria_Server
             Program.tConsole.WriteLine();
         }
         
-        public static void saveWorld(string savePath, bool resetTime = false)
+        public static void saveWorld(String savePath, bool resetTime = false)
         {
             if (WorldGen.saveLock)
             {
@@ -1079,7 +1079,7 @@ namespace Terraria_Server
                     {
                         Stopwatch stopwatch = new Stopwatch();
                         stopwatch.Start();
-                        string text = savePath + ".sav";
+                        String text = savePath + ".sav";
                         using (FileStream fileStream = new FileStream(text, FileMode.Create))
                         {
                             using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
@@ -1212,7 +1212,7 @@ namespace Terraria_Server
                                 if (File.Exists(savePath))
                                 {
                                     Program.printData("Backing up world file...");
-                                    string destFileName = savePath + ".bak";
+                                    String destFileName = savePath + ".bak";
                                     File.Copy(savePath, destFileName, true);
                                 }
                                 Program.tConsole.WriteLine();
@@ -1234,7 +1234,7 @@ namespace Terraria_Server
                 {
                     if (Program.server.getWorld().SavePath.Substring(i, 1) == "\\")
                     {
-                        string path = Program.server.getWorld().SavePath.Substring(0, i);
+                        String path = Program.server.getWorld().SavePath.Substring(0, i);
                         Directory.CreateDirectory(path);
                         break;
                     }
@@ -1346,7 +1346,7 @@ namespace Terraria_Server
                                         byte b = binaryReader.ReadByte();
                                         if (b > 0)
                                         {
-                                            string defaults = Item.VersionName(binaryReader.ReadString(), num);
+                                            String defaults = Item.VersionName(binaryReader.ReadString(), num);
                                             Main.chest[l].contents[m].SetDefaults(defaults);
                                             Main.chest[l].contents[m].Stack = (int)b;
                                         }
@@ -1357,7 +1357,7 @@ namespace Terraria_Server
                             {
                                 if (binaryReader.ReadBoolean())
                                 {
-                                    string text = binaryReader.ReadString();
+                                    String text = binaryReader.ReadString();
                                     int num3 = binaryReader.ReadInt32();
                                     int num4 = binaryReader.ReadInt32();
                                     if (Main.tile[num3, num4].Active && (Main.tile[num3, num4].type == 55 || Main.tile[num3, num4].type == 85))
@@ -1385,7 +1385,7 @@ namespace Terraria_Server
                             if (num >= 7)
                             {
                                 bool flag2 = binaryReader.ReadBoolean();
-                                string a = binaryReader.ReadString();
+                                String a = binaryReader.ReadString();
                                 int num6 = binaryReader.ReadInt32();
                                 if (!flag2 || !(a == Main.worldName) || num6 != Main.worldID)
                                 {
@@ -15199,7 +15199,7 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    string text = "A horrible chill goes down your spine...";
+                                                    String text = "A horrible chill goes down your spine...";
                                                     if (WorldGen.shadowOrbCount == 2)
                                                     {
                                                         text = "Screams echo around you...";

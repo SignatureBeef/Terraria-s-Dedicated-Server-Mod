@@ -7,7 +7,7 @@ namespace Terraria_Server
 	{
 		public TcpClient tcpClient = new TcpClient();
 		public NetworkStream networkStream;
-		public string statusText;
+		public String statusText;
 		public int statusCount;
 		public int statusMax;
 		public int timeOut;

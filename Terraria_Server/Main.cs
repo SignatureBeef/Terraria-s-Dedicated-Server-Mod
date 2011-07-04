@@ -10,7 +10,7 @@ namespace Terraria_Server
 {
 	public class Main
 	{
-        public static string[] itemName = new string[327];
+        public static String[] itemName = new String[327];
         public static int alwaysSpawn = 0;
         public static bool autoGen = false;
 		private const int MF_BYPOSITION = 1024;
@@ -65,7 +65,7 @@ namespace Terraria_Server
 		public static bool ignoreErrors = false;
 		public static bool webProtect = false;
 		public static bool showSplash = true;
-        public static string defaultIP = "";
+        public static String defaultIP = "";
         private Process tServer = new Process();
 		private static bool webAuth = false;
 		public static int updateTime = 0;
@@ -95,8 +95,8 @@ namespace Terraria_Server
 		public static bool dedServ = true;
 		public int curMusic;
 		public int newMusic;
-		public static string statusText = "";
-		public static string worldName = "";
+		public static String statusText = "";
+		public static String worldName = "";
 		public static int worldID;
 		public static int background = 0;
 		public static Color tileColor;
@@ -165,7 +165,7 @@ namespace Terraria_Server
 		public static bool chatMode = false;
 		public static bool chatRelease = false;
 		public static int numChatLines = 7;
-		public static string chatText = "";
+		public static String chatText = "";
 		public static bool inputTextEnter = false;
 		public static float[] hotbarScale = new float[]
 		{
@@ -201,24 +201,24 @@ namespace Terraria_Server
 		public static int spawnTileY;
 		public static bool npcChatRelease = false;
 		public static bool editSign = false;
-		public static string signText = "";
-		public static string npcChatText = "";
+		public static String signText = "";
+		public static String npcChatText = "";
 		public static bool npcChatFocus1 = false;
 		public static bool npcChatFocus2 = false;
 		public static int npcShop = 0;
 		public Chest[] shops = new Chest[6];
 		private static Item toolTip = new Item();
-		public static string motd = "";
+		public static String motd = "";
 		public bool toggleFullscreen;
 		private int[] displayWidth = new int[99];
 		private int[] displayHeight = new int[99];
 		public static bool gameMenu = true;
 		public static Player[] loadPlayer = new Player[5];
-		public static string[] loadPlayerPath = new string[5];
-		public static string playerPathName;
-		public static string[] loadWorld = new string[999];
-		public static string[] loadWorldPath = new string[999];
-		public static string worldPathName;
+		public static String[] loadPlayerPath = new String[5];
+		public static String playerPathName;
+		public static String[] loadWorld = new String[999];
+		public static String[] loadWorldPath = new String[999];
+		public static String worldPathName;
 		public static int invasionType = 0;
 		public static double invasionX = 0.0;
 		public static int invasionSize = 0;
@@ -298,8 +298,8 @@ namespace Terraria_Server
 			5
 		};
 		public static Player clientPlayer = new Player();
-		public static string getIP = Main.defaultIP;
-		public static string getPort = Convert.ToString(Netplay.serverPort);
+		public static String getIP = Main.defaultIP;
+		public static String getPort = Convert.ToString(Netplay.serverPort);
 		public static bool menuMultiplayer = false;
 		public static bool menuServer = false;
 		public static int netMode = 2;
@@ -309,13 +309,13 @@ namespace Terraria_Server
 		public static int lastItemUpdate;
 		public static int maxNPCUpdates = 15;
 		public static int maxItemUpdates = 10;
-		public static string cUp = "W";
-		public static string cLeft = "A";
-		public static string cDown = "S";
-		public static string cRight = "D";
-		public static string cJump = "Space";
-		public static string cThrowItem = "Q";
-		public static string cInv = "Escape";
+		public static String cUp = "W";
+		public static String cLeft = "A";
+		public static String cDown = "S";
+		public static String cRight = "D";
+		public static String cJump = "Space";
+		public static String cThrowItem = "Q";
+		public static String cInv = "Escape";
 		public static Color mouseColor = new Color(255, 50, 95);
         public static Color cursorColor = new Color(255, 255, 255);
 		public static int cursorColorDirection = 1;
@@ -327,12 +327,12 @@ namespace Terraria_Server
 		public static bool hideUI = false;
 		public static bool releaseUI = false;
 		public static bool fixedTiming = false;
-		public static string oldStatusText = "";
+		public static String oldStatusText = "";
 		public static bool autoShutdown = false;
 		private static int maxMenuItems = 11;
 		private float[] menuItemScale = new float[Main.maxMenuItems];
 		public static int menuMode = 0;
-		public static string newWorldName = "";
+		public static String newWorldName = "";
 		private Color selColor = new Color(255, 255, 255);
 		public static bool autoPass = false;
 		
@@ -581,7 +581,7 @@ namespace Terraria_Server
 			{
 				return;
 			}
-			string text = "";
+			String text = "";
 			if (Main.invasionSize <= 0)
 			{
 				text = "The goblin army has been defeated!";
@@ -1059,8 +1059,8 @@ namespace Terraria_Server
 		{
 			try
 			{
-				string requestUriString = "";
-				StringBuilder stringBuilder = new StringBuilder();
+				String requestUriString = "";
+				StringBuilder StringBuilder = new StringBuilder();
 				byte[] array = new byte[8192];
 				HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUriString);
 				HttpWebResponse httpWebResponse = (HttpWebResponse)httpWebRequest.GetResponse();
@@ -1071,12 +1071,12 @@ namespace Terraria_Server
 					num = responseStream.Read(array, 0, array.Length);
 					if (num != 0)
 					{
-						string @string = Encoding.ASCII.GetString(array, 0, num);
-						stringBuilder.Append(@string);
+						String @String = Encoding.ASCII.GetString(array, 0, num);
+						StringBuilder.Append(@String);
 					}
 				}
 				while (num > 0);
-				string a = stringBuilder.ToString();
+				String a = StringBuilder.ToString();
 				if (a == "")
 				{
 					Main.webAuth = true;
@@ -1101,7 +1101,7 @@ namespace Terraria_Server
                     }
                     catch
                     {
-                        Debug.WriteLine(string.Concat(new object[]
+                        Debug.WriteLine(String.Concat(new object[]
 						{
 							"Error: player[", 
 							count, 
@@ -1139,7 +1139,7 @@ namespace Terraria_Server
                     catch (Exception value)
                     {
                         Main.npc[i] = new NPC();
-                        Debug.WriteLine(string.Concat(new object[]
+                        Debug.WriteLine(String.Concat(new object[]
 						{
 							"Error: npc[", 
 							i, 
@@ -1185,7 +1185,7 @@ namespace Terraria_Server
                     catch
                     {
                         Main.projectile[i] = new Projectile();
-                        Debug.WriteLine(string.Concat(new object[]
+                        Debug.WriteLine(String.Concat(new object[]
 						{
 							"Error: projectile[", 
 							i, 
@@ -1211,7 +1211,7 @@ namespace Terraria_Server
                     catch
                     {
                         Main.item[i] = new Item();
-                        Debug.WriteLine(string.Concat(new object[]
+                        Debug.WriteLine(String.Concat(new object[]
 						{
 							"Error: item[", 
 							i, 

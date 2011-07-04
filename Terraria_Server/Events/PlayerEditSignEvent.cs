@@ -8,6 +8,6 @@ namespace Terraria_Server.Events
     public class PlayerEditSignEvent : PlayerDestroySignEvent
     {
         public bool isPlayer { get; set; }
-        public string Text { get; set; }
+        public String Text { get; set; }
     }
 }

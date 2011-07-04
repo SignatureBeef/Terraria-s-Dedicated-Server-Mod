@@ -15,11 +15,11 @@ namespace Terraria_Server.Plugin
 
     public class PluginManager
     {
-        private string pluginPath = String.Empty;
+        private String pluginPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
         private Server server;
 
-        public PluginManager(string pluginPath, Server server)
+        public PluginManager(String pluginPath, Server server)
         {
             this.pluginPath = pluginPath;
             this.server = server;
@@ -33,7 +33,7 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="PluginPath"></param>
         /// <returns></returns>
-        public Plugin loadPlugin(string pluginPath)
+        public Plugin loadPlugin(String pluginPath)
         {
             try
             {
@@ -71,7 +71,7 @@ namespace Terraria_Server.Plugin
         public void ReloadPlugins() {
             DisablePlugins();
 
-            foreach (string file in Directory.GetFiles(pluginPath))
+            foreach (String file in Directory.GetFiles(pluginPath))
             {
                 FileInfo fileInfo = new FileInfo(file);
                 if (fileInfo.Extension.Equals(".dll"))
@@ -107,7 +107,7 @@ namespace Terraria_Server.Plugin
         }
         
         //Returns true on plugin successfully Enabling
-        public bool EnablePlugin(string name)
+        public bool EnablePlugin(String name)
         {
         	String cleanedName = name.ToLower().Trim();
         	if(plugins.ContainsKey(cleanedName))
@@ -121,7 +121,7 @@ namespace Terraria_Server.Plugin
         }
 
         //Returns true on plugin successfully Disabling
-        public bool DisablePlugin(string name)
+        public bool DisablePlugin(String name)
         {
         	String cleanedName = name.ToLower().Trim();
         	if(plugins.ContainsKey(cleanedName))
@@ -134,7 +134,7 @@ namespace Terraria_Server.Plugin
             return false;
         }
 
-        public Plugin getPlugin(string name)
+        public Plugin getPlugin(String name)
         {
         	String cleanedName = name.ToLower().Trim();
         	if(plugins.ContainsKey(cleanedName))

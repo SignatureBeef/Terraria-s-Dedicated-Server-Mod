@@ -32,7 +32,7 @@ namespace Terraria_Server.Messages
             {
                 NetMessage.SendData(45, -1, whoAmI, "", playerIndex);
                 Party party = Party.NONE;
-                string joinMessage = "";
+                String joinMessage = "";
                 switch (teamIndex)
                 {
                     case 0:

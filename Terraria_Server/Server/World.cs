@@ -47,7 +47,7 @@ namespace Terraria_Server
 
         public int Id { get; set; }
 
-        public string SavePath { get; set; }
+        public String SavePath { get; set; }
 
         public int MaxSectionsY { get; set; }
 

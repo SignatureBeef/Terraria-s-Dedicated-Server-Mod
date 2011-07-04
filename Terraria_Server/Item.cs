@@ -23,7 +23,7 @@ namespace Terraria_Server
         public int OwnTime;
         public int KeepTime;
         public int Type;
-        public string Name;
+        public String Name;
         public int HoldStyle;
         public int UseStyle;
         public bool Channel;
@@ -55,7 +55,7 @@ namespace Terraria_Server
         public int HeadSlot = -1;
         public int BodySlot = -1;
         public int LegSlot = -1;
-        public string ToolTip;
+        public String ToolTip;
         public int Owner = 255;
         public int Rare;
         public int Shoot;
@@ -78,7 +78,7 @@ namespace Terraria_Server
         public int BuffTime;
         public bool Melee;
 
-        public void SetDefaults(string ItemName)
+        public void SetDefaults(String ItemName)
         {
             this.Name = "";
             if (ItemName == "Gold Pickaxe")
@@ -5764,9 +5764,9 @@ namespace Terraria_Server
                 this.checkMat();
             }
         }
-        public static string VersionName(string oldName, int release)
+        public static String VersionName(String oldName, int release)
         {
-            string result = oldName;
+            String result = oldName;
             if (release <= 4)
             {
                 if (oldName == "Cobalt Helmet")

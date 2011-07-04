@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
 
             if (Main.netMode == 2)
             {
-                string chat = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5).ToLower().Trim();
+                String chat = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5).ToLower().Trim();
 
                 if (chat.Length > 0)
                 {

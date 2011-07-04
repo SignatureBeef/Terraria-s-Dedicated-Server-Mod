@@ -8,13 +8,13 @@ namespace Terraria_Server
         private StreamWriter streamWriter = null;
         private Platform.PlatformType platformType;
 
-        public TConsole(string serverLog, Platform.PlatformType platformType)
+        public TConsole(String serverLog, Platform.PlatformType platformType)
         {
             streamWriter = new StreamWriter(serverLog);
             this.platformType = platformType;
         }
 
-        public void WriteLine(string Line)
+        public void WriteLine(String Line)
         {
             Console.WriteLine(Line);
             streamWriter.WriteLine(Line);
@@ -31,7 +31,7 @@ namespace Terraria_Server
             }
         }
 
-        public void Write(string Message)
+        public void Write(String Message)
         {
             Console.Write(Message);
             streamWriter.Write(Message);

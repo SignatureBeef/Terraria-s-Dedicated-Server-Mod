@@ -23,7 +23,7 @@ namespace Terraria_Server
         public int alpha;
         public int Owner = 255;
         public bool active;
-        public string name = "";
+        public String name = "";
         public float[] ai = new float[Projectile.MAX_AI];
         public int aiStyle;
         public int timeLeft;
@@ -45,7 +45,7 @@ namespace Terraria_Server
         public bool hide;
         public bool ownerHitCheck;
         public int[] playerImmune = new int[255];
-        public string miscText = "";
+        public String miscText = "";
 
         public void SetDefaults(int Type)
         {

@@ -18,11 +18,11 @@ namespace Terraria_Server
 
         public static Server server;
 
-        public static void Main(string[] args)
+        public static void Main(String[] args)
         {
             try
             {
-                string MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_TERRARIA_RELEASE + "}) #"
+                String MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_TERRARIA_RELEASE + "}) #"
                     + Statics.BUILD;
                 Console.Title = MODInfo;
 
@@ -32,7 +32,7 @@ namespace Terraria_Server
 
                 if (args != null && args.Length > 0)
                 {
-                    string commandMessage = args[0].ToLower().Trim();
+                    String commandMessage = args[0].ToLower().Trim();
                     // 0 for Ops
                     if (commandMessage.Equals("-ignoremessages:0"))
                     {
@@ -89,7 +89,7 @@ namespace Terraria_Server
 
                 Program.tConsole.WriteLine("Preparing Server Data...");
 
-                string worldFile = properties.InitialWorldPath;
+                String worldFile = properties.InitialWorldPath;
                 FileInfo file = new FileInfo(worldFile);
 
                 if (!file.Exists)
@@ -211,7 +211,7 @@ namespace Terraria_Server
                 {
                     try
                     {
-                        string line = Console.ReadLine().Trim().ToLower();
+                        String line = Console.ReadLine().Trim().ToLower();
                         if (line.Length > 0)
                         {
                             commandParser.parseConsoleCommand(line, server);
@@ -279,7 +279,7 @@ namespace Terraria_Server
             return true;
         }
 
-        private static void CreateDirectory(string dirPath)
+        private static void CreateDirectory(String dirPath)
         {
             if (!Directory.Exists(dirPath))
             {
@@ -287,7 +287,7 @@ namespace Terraria_Server
             }
         }
 
-        private static bool CreateFile(string filePath)
+        private static bool CreateFile(String filePath)
         {
             if (!File.Exists(filePath))
             {
@@ -314,7 +314,7 @@ namespace Terraria_Server
             properties.Save();
         }
 
-        public static void printData(string dataText, bool console = false)
+        public static void printData(String dataText, bool console = false)
         {
             if (Platform.Type != Platform.PlatformType.UNKNOWN)
             {

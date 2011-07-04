@@ -20,9 +20,9 @@ namespace Terraria_Server
         public static bool IsActive = false;
         public static bool serverStarted = false;
 
-        public static string SavePath = Environment.CurrentDirectory;
+        public static String SavePath = Environment.CurrentDirectory;
 
-        public static string WorldPath
+        public static String WorldPath
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Terraria_Server
             }
         }
 
-        public static string PlayerPath
+        public static String PlayerPath
         {
             get
             {
@@ -38,7 +38,7 @@ namespace Terraria_Server
             }
         }
 
-        public static string PluginPath
+        public static String PluginPath
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Terraria_Server
             }
         }
 
-        public static string DataPath
+        public static String DataPath
         {
             get
             {

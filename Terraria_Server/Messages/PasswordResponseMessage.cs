@@ -17,7 +17,7 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            string password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            String password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             if (password == Netplay.password)
             {
                 Netplay.serverSock[whoAmI].state = 1;

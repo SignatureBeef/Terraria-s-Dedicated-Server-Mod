@@ -78,7 +78,7 @@ namespace Terraria_Server
             }
         }
 
-        public string Greeting
+        public String Greeting
         {
             get
             {
@@ -86,7 +86,7 @@ namespace Terraria_Server
             }
         }
 
-        public string ServerIP
+        public String ServerIP
         {
             get
             {
@@ -95,7 +95,7 @@ namespace Terraria_Server
         }
 
 
-        public string InitialWorldPath
+        public String InitialWorldPath
         {
             get
             {
@@ -103,7 +103,7 @@ namespace Terraria_Server
             }
         }
 
-        public string Password
+        public String Password
         {
             get
             {
@@ -150,7 +150,7 @@ namespace Terraria_Server
 
         public int[] getMapSizes()
         {
-            string CustomTiles = base.getValue(MAP_SIZE);
+            String CustomTiles = base.getValue(MAP_SIZE);
 
             if (CustomTiles == null)
             {
@@ -177,11 +177,11 @@ namespace Terraria_Server
             }
         }
 
-        public string MapSize
+        public String MapSize
         {
             get
             {
-                string CustomTiles = getValue(MAP_SIZE, DEFAULT_MAP_SIZE);
+                String CustomTiles = getValue(MAP_SIZE, DEFAULT_MAP_SIZE);
                 if (CustomTiles == null)
                 {
                     return "small";

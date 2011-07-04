@@ -57,7 +57,7 @@ namespace Terraria_Server.Commands
             COMMAND_RESTART = 23
         }
  
-        public static string[] CommandDefinition = new string[] {   "exit",         "reload",       "list",
+        public static String[] CommandDefinition = new String[] {   "exit",         "reload",       "list",
                                                                     "players",      "me",           "say",
                                                                     "save-all",     "help",         "whitelist",
                                                                     "ban",          "unban",        "time",
@@ -66,7 +66,7 @@ namespace Terraria_Server.Commands
                                                                     "deop",         "oplogin",      "oplogout",
                                                                     "npcspawns",    "kick",         "restart"};
 
-        public static string[] CommandInformation = new string[] {  "Stop & Close The Server.",
+        public static String[] CommandInformation = new String[] {  "Stop & Close The Server.",
                                                                     "Reload Plugins.",
                                                                     "Show Online Players.",
                                                                     "Show Online Players.",
@@ -91,7 +91,7 @@ namespace Terraria_Server.Commands
                                                                     "Kicks a player from the server.", 
                                                                     "Restarts the server."};
 
-        public static string MergeStringArray(string[] Array)
+        public static String MergeStringArray(String[] Array)
         {
             StringBuilder sb = new StringBuilder();
             if (Array != null && Array.Length > 0)
@@ -100,14 +100,14 @@ namespace Terraria_Server.Commands
                 {
                     if (Array[i] != null)
                     {
-                        sb.Append(Array[i]);
+                        sb.Append(Array[i] + " ");
                     }
                 }
             }
             return sb.ToString().Trim();
         }
 
-        public static int getCommandValue(string Command)
+        public static int getCommandValue(String Command)
         {
             for (int i = 0; i < CommandDefinition.Length; i++)
             {
@@ -129,9 +129,9 @@ namespace Terraria_Server.Commands
             server.getPluginManager().ReloadPlugins();
         }
 
-        public static string List(int playerIndex = 0, bool sendPlayer = true)
+        public static String List(int playerIndex = 0, bool sendPlayer = true)
         {
-            string playerList = "";
+            String playerList = "";
             foreach(Player player in Main.players)
             {
                 if (player.Active)
@@ -150,7 +150,7 @@ namespace Terraria_Server.Commands
             return "Current players: " + playerList.Trim() + ".";
         }
 
-        public static void Me_Say(string Message, int playerIndex = -1)
+        public static void Me_Say(String Message, int playerIndex = -1)
         {
             if (Message != null && Message.Trim().Length > 0)
             {
@@ -192,7 +192,7 @@ namespace Terraria_Server.Commands
             Program.server.GodMode = GodMode;
         }
 
-        public static void ShowHelp(Sender sender, string[] commands = null)
+        public static void ShowHelp(Sender sender, String[] commands = null)
         {
             if (sender is Player)
             {
@@ -259,7 +259,7 @@ namespace Terraria_Server.Commands
             }
         }
 
-        public static void WhiteList(Sender sender, string[] commands)
+        public static void WhiteList(Sender sender, String[] commands)
         {
             // /whitelist <add:remove> <player>
             // arg  0         1           2
@@ -277,7 +277,7 @@ namespace Terraria_Server.Commands
             {
                 if (commands[1] != null && commands[2] != null && commands[1].Length > 0 && commands[2].Length > 0)
                 {
-                    string caseType = "ADD";
+                    String caseType = "ADD";
 
                     switch (commands[1].Trim().ToUpper())
                     {
@@ -312,7 +312,7 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command args Error!");
         }
 
-        public static void BanList(Sender sender, string[] commands)
+        public static void BanList(Sender sender, String[] commands)
         {
             // /ban  <player>
             // /unban <player>
@@ -400,7 +400,7 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
-        public static void Time(Sender sender, string[] commands)
+        public static void Time(Sender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -416,7 +416,7 @@ namespace Terraria_Server.Commands
             {
                 if (commands[1] != null && commands[1].Length > 0)
                 {
-                    string caseType = commands[1].Trim().ToLower();
+                    String caseType = commands[1].Trim().ToLower();
 
                     switch (caseType)
                     {
@@ -464,7 +464,7 @@ namespace Terraria_Server.Commands
                             }
                         case "now":
                             {
-                                string AP = "AM";
+                                String AP = "AM";
                                 double time = Main.time;
                                 if (!Main.dayTime)
                                 {
@@ -483,7 +483,7 @@ namespace Terraria_Server.Commands
                                 }
                                 int Hours = (int)time;
                                 double Minutes = time - (double)Hours;
-                                string MinuteString = (Minutes * 60.0).ToString();
+                                String MinuteString = (Minutes * 60.0).ToString();
                                 if (Minutes < 10.0)
                                 {
                                     MinuteString = "0" + MinuteString;
@@ -518,7 +518,7 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
-        public static void Give(Sender sender, string[] commands)
+        public static void Give(Sender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -533,8 +533,8 @@ namespace Terraria_Server.Commands
             if (commands.Length > 3 && commands[1] != null && commands[2] != null && commands[3] != null &&
                 commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0 && commands[3].Trim().Length > 0)
             {
-                string playerName = commands[1].Trim();
-                string itemName = MergeStringArray(commands);
+                String playerName = commands[1].Trim();
+                String itemName = MergeStringArray(commands);
                 itemName = itemName.Remove(0, itemName.IndexOf(" " + commands[3]));
 
                 Player player = Program.server.GetPlayerByName(playerName);
@@ -553,7 +553,7 @@ namespace Terraria_Server.Commands
                     {
                         if (items[i].Name != null)
                         {
-                            string genItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
+                            String genItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
                             if (genItemName == itemName)
                             {
                                 item = items[i];
@@ -639,7 +639,7 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
-        public static void SpawnNPC(Sender sender, string[] commands)
+        public static void SpawnNPC(Sender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -654,7 +654,7 @@ namespace Terraria_Server.Commands
                 if (commands.Length > 2 && commands[1] != null && commands[2] != null
                     && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
                 {
-                    string npcName = MergeStringArray(commands);
+                    String npcName = MergeStringArray(commands);
                     npcName = npcName.Remove(0, npcName.IndexOf(" " + commands[2])).Replace(" ", "").ToLower();
 
                     NPC[] npcs = new NPC[Main.maxItemTypes];
@@ -671,7 +671,7 @@ namespace Terraria_Server.Commands
                         {
                             if (npcs[i].Name != null && npcs[i].Name.Trim().Length > 0)
                             {
-                                string npc = npcs[i].Name.Trim().Replace(" ", "").ToLower();
+                                String npc = npcs[i].Name.Trim().Replace(" ", "").ToLower();
                                 if (npc == npcName)
                                 {
                                     npcType = npcs[i].type;
@@ -752,7 +752,7 @@ namespace Terraria_Server.Commands
             }
         }
 
-        public static void Teleport(Sender sender, string[] commands)
+        public static void Teleport(Sender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -792,7 +792,7 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
-        public static void TeleportHere(Sender sender, string[] commands)
+        public static void TeleportHere(Sender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -855,7 +855,7 @@ namespace Terraria_Server.Commands
             }
         }
 
-        public static void OP(Sender sender, string[] commands, bool deop = false)
+        public static void OP(Sender sender, String[] commands, bool deop = false)
         {
             if (sender is Player)
             {
@@ -873,7 +873,7 @@ namespace Terraria_Server.Commands
                 && commands[1].Trim().Length > 0 
                 && (deop || commands[2].Trim().Length > 0))
             {
-                string player_OP = commands[1].Trim().ToLower();
+                String player_OP = commands[1].Trim().ToLower();
 
                 if (deop)
                 {
@@ -886,7 +886,7 @@ namespace Terraria_Server.Commands
                 }
                 else
                 {
-                    string player_Password = commands[2].Trim().ToLower();
+                    String player_Password = commands[2].Trim().ToLower();
                     Program.server.notifyOps("Opping " + player_OP + " {" + sender.getName() + "}", true);
                     Program.server.OpList.addException(player_OP + ":" + player_Password);
                 }
@@ -906,7 +906,7 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
-        public static void OPLoginOut(Sender sender, string[] commands, bool logout = false)
+        public static void OPLoginOut(Sender sender, String[] commands, bool logout = false)
         {
             if (sender is Player)
             {
@@ -922,7 +922,7 @@ namespace Terraria_Server.Commands
 
                 if (commands.Length > 1 && commands[1] != null && commands[1].Trim().Length > 0)
                 {
-                    string player_Password = commands[1].Trim().ToLower();
+                    String player_Password = commands[1].Trim().ToLower();
 
                     if (Player.isInOpList(sender.getName(), Program.server))
                     {
@@ -977,7 +977,7 @@ namespace Terraria_Server.Commands
             }
         }
 
-        public static void Kick(Sender sender, string[] commands)
+        public static void Kick(Sender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -1013,7 +1013,7 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
     
-        public static void Heal(Sender sender, string[] commands)
+        public static void Heal(Sender sender, String[] commands)
         {
             if (sender is Player)
             {

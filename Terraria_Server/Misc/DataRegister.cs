@@ -1,25 +1,26 @@
 ﻿using System.IO;
 using System.Collections;
+using System;
 
 namespace Terraria_Server.Misc
 {
     public class DataRegister
     {
-        public DataRegister(string Location)
+        public DataRegister(String Location)
         {
             FilePath = Location;
         }
 
         public ArrayList WhiteList { get; set; }
 
-        public string FilePath { get; set; }
+        public String FilePath { get; set; }
 
-        public bool containsException(string exception)
+        public bool containsException(String exception)
         {
             return WhiteList.Contains(exception.Trim().ToLower());
         }
 
-        public void addException(string exception)
+        public void addException(String exception)
         {
 
             if (!WhiteList.Contains(exception.Trim().ToLower()))
@@ -28,7 +29,7 @@ namespace Terraria_Server.Misc
             }
         }
 
-        public bool removeException(string exception)
+        public bool removeException(String exception)
         {
             bool pass = false;
             if (WhiteList.Contains(exception.Trim().ToLower()))
@@ -44,10 +45,10 @@ namespace Terraria_Server.Misc
 
             if (File.Exists(FilePath))
             {
-                string[] list = File.ReadAllLines(FilePath);
+                String[] list = File.ReadAllLines(FilePath);
                 if (list != null)
                 {
-                    foreach (string listee in list)
+                    foreach (String listee in list)
                     {
                         if (listee != null && listee.Trim().ToLower().Length > 0)
                         {
@@ -70,7 +71,7 @@ namespace Terraria_Server.Misc
                 }
             }
 
-            File.WriteAllLines(FilePath, WhiteList.ToArray(typeof(string)) as string[]);
+            File.WriteAllLines(FilePath, WhiteList.ToArray(typeof(String)) as String[]);
 
             return true;
         }

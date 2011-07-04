@@ -61,7 +61,7 @@ namespace Terraria_Server
         public Rectangle targetRect;
         public double frameCounter;
         public Rectangle frame;
-        public string Name;
+        public String Name;
         public Color color;
         public int alpha;
         public float scale = 1f;
@@ -96,7 +96,7 @@ namespace Terraria_Server
             return Gore.NewGore(this.Position, this.Velocity, goreType);
         }
 
-        public void SetDefaults(string Name)
+        public void SetDefaults(String Name)
         {
             this.SetDefaults(0);
             if (Name == "Green Slime")
@@ -7747,7 +7747,7 @@ namespace Terraria_Server
             {
                 int num17 = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
                 Main.npc[num17].target = playerIndex;
-                string str = Main.npc[num17].Name;
+                String str = Main.npc[num17].Name;
                 if (Main.npc[num17].type == 13)
                 {
                     str = "Eater of Worlds";
@@ -9858,7 +9858,7 @@ namespace Terraria_Server
             {
                 int num3 = NPC.NewNPC((int)vector.X + num / 2, (int)vector.Y + num2 / 2, 35, 0);
                 Main.npc[num3].netUpdate = true;
-                string str = "Skeletron";
+                String str = "Skeletron";
                 if (Main.netMode == 0)
                 {
                     return;
@@ -10207,7 +10207,7 @@ namespace Terraria_Server
             return new Color(num, num2, num3, num4);
         }
        
-        public string GetChat()
+        public String GetChat()
         {
             bool flag = false;
             bool flag2 = false;
@@ -10257,7 +10257,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            string result = "";
+            String result = "";
             if (this.type == 17)
             {
                 if (Main.dayTime)

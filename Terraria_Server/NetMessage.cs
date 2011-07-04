@@ -11,12 +11,12 @@ namespace Terraria_Server
 	{
 		public static MessageBuffer[] buffer = new MessageBuffer[257];
 
-        public static void BootPlayer(int plr, string msg)
+        public static void BootPlayer(int plr, String msg)
         {
             NetMessage.SendData(2, plr, -1, msg, 0, 0f, 0f, 0f);
         }
 
-        public static void SendData(int packetId, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
+        public static void SendData(int packetId, int remoteClient = -1, int ignoreClient = -1, String text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
         {
 			int num = 256;
 			if (Main.netMode == 2 && remoteClient >= 0)
@@ -154,7 +154,7 @@ namespace Terraria_Server
 									b5 = 0;
 								}
 							}
-							string text2 = text;
+							String text2 = text;
 							if (text2 == null)
 							{
 								text2 = "";
@@ -649,7 +649,7 @@ namespace Terraria_Server
                             byte[] bytes92 = BitConverter.GetBytes(Main.item[number].Velocity.X);
                             byte[] bytes93 = BitConverter.GetBytes(Main.item[number].Velocity.Y);
                             byte b26 = (byte)Main.item[number].Stack;
-                            string text3 = "0";
+                            String text3 = "0";
                             if (Main.item[number].Active && Main.item[number].Stack > 0)
                             {
                                 text3 = Main.item[number].Name;
@@ -1473,7 +1473,7 @@ namespace Terraria_Server
 		
         public static void greetPlayer(int plr)
 		{
-            string[] motd = Program.properties.Greeting.Split('@');
+            String[] motd = Program.properties.Greeting.Split('@');
             for (int i = 0; i < motd.Length; i++)
             {
                 if (motd != null && motd.Length > 0)
@@ -1485,7 +1485,7 @@ namespace Terraria_Server
                 }
             }
 
-			string text = "";
+			String text = "";
 			for (int i = 0; i < 255; i++)
 			{
 				if (Main.players[i].Active)
@@ -1538,8 +1538,8 @@ namespace Terraria_Server
 				{
 					if (Main.autoShutdown && !flag)
 					{
-						string text = Netplay.serverSock[i].tcpClient.Client.RemoteEndPoint.ToString();
-						string a = text;
+						String text = Netplay.serverSock[i].tcpClient.Client.RemoteEndPoint.ToString();
+						String a = text;
 						for (int j = 0; j < text.Length; j++)
 						{
 							if (text.Substring(j, 1) == ":")

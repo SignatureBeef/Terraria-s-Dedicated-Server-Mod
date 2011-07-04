@@ -11,11 +11,11 @@ namespace Terraria_Server.Misc
 
         private Dictionary<String, String> propertiesMap;
         
-        private string propertiesPath = String.Empty;
+        private String propertiesPath = String.Empty;
 
         public PropertiesFile(String propertiesPath)
         {
-            propertiesMap = new Dictionary<string, string>();
+            propertiesMap = new Dictionary<String, String>();
             this.propertiesPath = propertiesPath;
         }
 
@@ -63,7 +63,7 @@ namespace Terraria_Server.Misc
             }
         }
 
-        public string getValue(string key)
+        public String getValue(String key)
         {
             if (propertiesMap.ContainsKey(key))
             {
@@ -72,7 +72,7 @@ namespace Terraria_Server.Misc
             return null;
         }
 
-        public string getValue(string key, string defaultValue)
+        public String getValue(String key, String defaultValue)
         {
             String value = getValue(key);
             if (value == null || value.Trim().Length < 0)
@@ -83,7 +83,7 @@ namespace Terraria_Server.Misc
             return value;
         }
 
-        public int getValue(string key, int defaultValue)
+        public int getValue(String key, int defaultValue)
         {
             int result;
             if (int.TryParse(getValue(key), out result))
@@ -95,7 +95,7 @@ namespace Terraria_Server.Misc
             return defaultValue;
         }
 
-        public bool getValue(string key, bool defaultValue)
+        public bool getValue(String key, bool defaultValue)
         {
             bool result;
             if (bool.TryParse(getValue(key), out result))
@@ -107,17 +107,17 @@ namespace Terraria_Server.Misc
             return defaultValue;
         }
 
-        private void setValue(string key, string value)
+        private void setValue(String key, String value)
         {
             propertiesMap[key] = value;
         }
 
-        protected void setValue(string key, int value)
+        protected void setValue(String key, int value)
         {
             setValue(key, value.ToString());
         }
 
-        private void setValue(string key, bool value)
+        private void setValue(String key, bool value)
         {
             setValue(key, value.ToString());
         }

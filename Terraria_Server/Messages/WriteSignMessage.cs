@@ -24,12 +24,12 @@ namespace Terraria_Server.Messages
             int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
 
-            string string11 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            String String11 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             Main.sign[signIndex] = new Sign();
             Sign sign = Main.sign[signIndex];
             sign.x = x;
             sign.y = y;
-            Sign.TextSign(signIndex, string11);
+            Sign.TextSign(signIndex, String11);
             Player player = Main.players[Main.myPlayer];
 
             if (Main.netMode == 1 

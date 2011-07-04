@@ -29,7 +29,7 @@ namespace Terraria_Server.Messages
             num += 2;
             byte pvpFlag = readBuffer[num++];
             bool pvp = (pvpFlag != 0);
-            string deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            String deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
             if (player.Hurt((int)damage, hitDirection, pvp, true, deathText) > 0.0)
             {

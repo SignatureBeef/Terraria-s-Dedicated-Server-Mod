@@ -1,4 +1,5 @@
 ﻿using Terraria_Server.Plugin;
+using System;
 
 namespace Terraria_Server.Commands
 {
@@ -11,7 +12,7 @@ namespace Terraria_Server.Commands
             server = Server;
         }
 
-        public void parseConsoleCommand(string Line, Server server)
+        public void parseConsoleCommand(String Line, Server server)
         {
             ConsoleSender cSender = new ConsoleSender(server);
             cSender.ConsoleCommand.Message = Line;
@@ -22,7 +23,7 @@ namespace Terraria_Server.Commands
                 return;
             }
 
-            string[] commands = Line.Trim().ToLower().Split(' ');
+            String[] commands = Line.Trim().ToLower().Split(' ');
             if (commands == null || commands.Length <= 0)
             {
                 Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
@@ -31,13 +32,13 @@ namespace Terraria_Server.Commands
             switchCommands(commands, cSender.ConsoleCommand.Sender);
         }
 
-        public void parsePlayerCommand(Player player, string Line)
+        public void parsePlayerCommand(Player player, String Line)
         {
             if (Line.StartsWith("/"))
             {
                 Line = Line.Remove(0, 1);
             }
-            string[] commands = Line.Trim().ToLower().Split(' ');
+            String[] commands = Line.Trim().ToLower().Split(' ');
             if (commands == null || commands.Length <= 0)
             {
                 Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.Name);
@@ -46,7 +47,7 @@ namespace Terraria_Server.Commands
             switchCommands(commands, player);
         }
 
-        public void switchCommands(string[] commands, Sender sender)
+        public void switchCommands(String[] commands, Sender sender)
         {
             switch (Commands.getCommandValue(commands[0]))
             {
@@ -106,7 +107,7 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.PLAYER_ME:
                     {
-                        string Message = Commands.MergeStringArray(commands);
+                        String Message = Commands.MergeStringArray(commands);
                         if (Message.Length <= 3) { return; }
 
                         if (sender is Player)
@@ -115,7 +116,7 @@ namespace Terraria_Server.Commands
                         }
                         else
                         {
-                            Commands.Me_Say(Message.Remove(0, 4).Trim(), -1); //turn command list into a string and remove "say "
+                            Commands.Me_Say(Message.Remove(0, 4).Trim(), -1); //turn command list into a String and remove "say "
                         }
                         break;
                     }

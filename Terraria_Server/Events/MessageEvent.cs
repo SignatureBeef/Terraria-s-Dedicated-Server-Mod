@@ -7,6 +7,6 @@ namespace Terraria_Server.Events
 {
     public class MessageEvent : Event
     {
-        public string Message { get; set; }
+        public String Message { get; set; }
     }
 }

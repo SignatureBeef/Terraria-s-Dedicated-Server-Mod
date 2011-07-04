@@ -43,7 +43,7 @@ namespace Terraria_Server.Messages
                 num += 4;
             }
 
-            string npcName = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            String npcName = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
             NPC npc = Main.npc[(int)npcIndex];
             if (!npc.Active || npc.Name != npcName)

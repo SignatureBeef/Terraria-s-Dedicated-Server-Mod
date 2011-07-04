@@ -12,7 +12,7 @@ namespace Terraria_Server
 {
 	public class Player : Sender
 	{
-        private string ipAddress = null;
+        private String ipAddress = null;
         private bool godMode = false;
 
         public bool enemySpawns;
@@ -39,7 +39,7 @@ namespace Terraria_Server
 		public int immuneAlphaDirection;
 		public int immuneAlpha;
 		public int team;
-		public string chatText = "";
+		public String chatText = "";
 		public int sign = -1;
 		public int chatShowTime;
 		public int activeNPCs;
@@ -57,7 +57,7 @@ namespace Terraria_Server
 		public int breathCD;
 		public int breathMax = 200;
 		public int breath = 200;
-		public string setBonus = "";
+		public String setBonus = "";
 		public Item[] inventory = new Item[44];
 		public Item[] bank = new Item[Chest.MAX_ITEMS];
 		public float headRotation;
@@ -71,7 +71,7 @@ namespace Terraria_Server
         public Vector2 legVelocity;
 		public bool dead;
 		public int respawnTimer;
-		public string Name = "";
+		public String Name = "";
 		public int attackCD;
 		public int potionDelay;
 		public bool wet;
@@ -136,7 +136,7 @@ namespace Terraria_Server
 		public int SpawnY = -1;
 		public int[] spX = new int[200];
 		public int[] spY = new int[200];
-		public string[] spN = new string[200];
+		public String[] spN = new String[200];
 		public int[] spI = new int[200];
 		public static int tileRangeX = 5;
 		public static int tileRangeY = 4;
@@ -182,12 +182,12 @@ namespace Terraria_Server
 		public int fallStart;
 		public int slowCount;
 
-        public override string getName()
+        public override String getName()
         {
             return Name;
         }
 
-        public override void sendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public override void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, A, R, G, B);
         }
@@ -2593,7 +2593,7 @@ namespace Terraria_Server
 			}
 		}
 
-        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, string deathText = " was slain...")
+        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, String deathText = " was slain...")
         {
             if (!this.immune)
             {
@@ -2701,7 +2701,7 @@ namespace Terraria_Server
             }
         }
 
-        public void KillMe(double dmg, int hitDirection, bool pvp = false, string deathText = " was slain...")
+        public void KillMe(double dmg, int hitDirection, bool pvp = false, String deathText = " was slain...")
         {
             if ((Main.godMode && Main.myPlayer == this.whoAmi) || this.godMode)
             {
@@ -4323,9 +4323,9 @@ namespace Terraria_Server
 			return player;
 		}
 		
-        private static void EncryptFile(string inputFile, string outputFile)
+        private static void EncryptFile(String inputFile, String outputFile)
 		{
-			string s = "h3y_gUyZ";
+			String s = "h3y_gUyZ";
 			UnicodeEncoding unicodeEncoding = new UnicodeEncoding();
 			byte[] bytes = unicodeEncoding.GetBytes(s);
 			FileStream fileStream = new FileStream(outputFile, FileMode.Create);
@@ -4342,9 +4342,9 @@ namespace Terraria_Server
 			fileStream.Close();
 		}
 		
-        private static bool DecryptFile(string inputFile, string outputFile)
+        private static bool DecryptFile(String inputFile, String outputFile)
 		{
-			string s = "h3y_gUyZ";
+			String s = "h3y_gUyZ";
 			UnicodeEncoding unicodeEncoding = new UnicodeEncoding();
 			byte[] bytes = unicodeEncoding.GetBytes(s);
 			FileStream fileStream = new FileStream(inputFile, FileMode.Open);
@@ -4475,7 +4475,7 @@ namespace Terraria_Server
 		
         public static void SavePlayer(Player newPlayer)
 		{
-            string playerPath = Statics.PlayerPath + "\\" + newPlayer.Name;
+            String playerPath = Statics.PlayerPath + "\\" + newPlayer.Name;
             try
             {
                 Directory.CreateDirectory(Statics.PlayerPath);
@@ -4487,12 +4487,12 @@ namespace Terraria_Server
             {
                 return;
             }
-			string destFileName = playerPath + ".bak";
+			String destFileName = playerPath + ".bak";
 			if (File.Exists(playerPath))
 			{
 				File.Copy(playerPath, destFileName, true);
 			}
-			string text = playerPath + ".dat";
+			String text = playerPath + ".dat";
 			using (FileStream fileStream = new FileStream(text, FileMode.Create))
 			{
 				using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
@@ -4570,7 +4570,7 @@ namespace Terraria_Server
 			File.Delete(text);
 		}
 		
-        public static Player LoadPlayer(string playerPath)
+        public static Player LoadPlayer(String playerPath)
 		{
 			bool flag = false;
 			if (Main.rand == null)
@@ -4580,7 +4580,7 @@ namespace Terraria_Server
 			Player player = new Player();
 			try
 			{
-				string text = playerPath + ".dat";
+				String text = playerPath + ".dat";
 				flag = Player.DecryptFile(playerPath, text);
 				if (!flag)
 				{
@@ -4666,7 +4666,7 @@ namespace Terraria_Server
 			{
 				return new Player();
 			}
-			string text2 = playerPath + ".bak";
+			String text2 = playerPath + ".bak";
 			if (File.Exists(text2))
 			{
 				File.Delete(playerPath);
@@ -4703,11 +4703,11 @@ namespace Terraria_Server
 			}
 		}
 
-        public static string getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
+        public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
         {
-            string result = "";
+            String result = "";
             int num = Main.rand.Next(11);
-            string text = "";
+            String text = "";
             if (num == 0)
             {
                 text = " was slain";
@@ -4786,7 +4786,7 @@ namespace Terraria_Server
             {
                 if (proj >= 0)
                 {
-                    result = string.Concat(new string[]
+                    result = String.Concat(new String[]
 			{
 				text, 
 				" by ", 
@@ -4798,7 +4798,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    result = string.Concat(new string[]
+                    result = String.Concat(new String[]
 			{
 				text, 
 				" by ", 
@@ -4944,9 +4944,9 @@ namespace Terraria_Server
             return Netplay.serverSock[this.whoAmi];
         }
 
-        public void Kick(string Reason = null)
+        public void Kick(String Reason = null)
         {
-            string message = "You have been Kicked from this Server.";
+            String message = "You have been Kicked from this Server.";
 
             if (Reason != null)
             {
@@ -4956,12 +4956,12 @@ namespace Terraria_Server
             NetMessage.SendData(2, this.whoAmi, -1, message);
         }
 
-        public string getIPAddress()
+        public String getIPAddress()
         {
             return ipAddress;
         }
 
-        public void setIPAddress(string IPaddress)
+        public void setIPAddress(String IPaddress)
         {
             ipAddress = IPaddress;
         }
@@ -5027,13 +5027,13 @@ namespace Terraria_Server
             this.teleportTo(player.Position.X, player.Position.Y);
         }
 
-        public static string getPassword(string server, Server Server)
+        public static String getPassword(String server, Server Server)
         {
-            foreach (string listee in Server.OpList.WhiteList)
+            foreach (String listee in Server.OpList.WhiteList)
             {
                 if (listee != null && listee.Trim().ToLower().Length > 0)
                 {
-                    string userPass = listee.Trim().ToLower();
+                    String userPass = listee.Trim().ToLower();
                     if (userPass.Contains(":"))
                     {
                         if (userPass.Split(':')[0] == server.Trim().ToLower())
@@ -5046,18 +5046,18 @@ namespace Terraria_Server
             return null;
         }
 
-        public string getPassword()
+        public String getPassword()
         {
             return Player.getPassword(this.Name, this.getServer());
         }
 
-        public static bool isInOpList(string Name, Server Server)
+        public static bool isInOpList(String Name, Server Server)
         {
-            foreach (string listee in Server.OpList.WhiteList)
+            foreach (String listee in Server.OpList.WhiteList)
             {
                 if (listee != null && listee.Trim().ToLower().Length > 0)
                 {
-                    string userPass = listee.Trim().ToLower();
+                    String userPass = listee.Trim().ToLower();
                     if (userPass.Contains(":"))
                     {
                         if (userPass.Split(':')[0] == Name.Trim().ToLower())
@@ -5075,7 +5075,7 @@ namespace Terraria_Server
             return Player.isInOpList(this.Name, this.getServer());
         }
 
-        public string getOpListKey()
+        public String getOpListKey()
         {
             return this.Name.Trim().ToLower() + getPassword();
         }

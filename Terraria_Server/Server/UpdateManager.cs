@@ -6,17 +6,17 @@ namespace Terraria_Server
 {
     public class UpdateManager
     {
-        public static string UpdateList = "http://update.tdsm.org/updatelist.txt";
-        public static string UpdateLink = "http://kangaroo.olympus-gaming.net/Terraria_Server.exe"; // <3 Olympus Gaming! Check em out some time ;)
-        public static string UpdateInfo = "http://kangaroo.olympus-gaming.net/buildinfo.txt";
+        public static String UpdateList = "http://update.tdsm.org/updatelist.txt";
+        public static String UpdateLink = "http://kangaroo.olympus-gaming.net/Terraria_Server.exe"; // <3 Olympus Gaming! Check em out some time ;)
+        public static String UpdateInfo = "http://kangaroo.olympus-gaming.net/buildinfo.txt";
 
         public static void printUpdateInfo()
         {
             try
             {
                 Program.tConsole.Write("Attempting to retreive Build Info...");
-                string buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim().ToLower();
-                string toString = "Comments: ";
+                String buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim().ToLower();
+                String toString = "Comments: ";
                 if (buildInfo.Contains(toString))
                 {
                     buildInfo = buildInfo.Remove(0, buildInfo.IndexOf(toString) + toString.Length).Trim().Replace("<br/>", "\n"); //This is also used for the forums, so easy use here ;D
@@ -32,19 +32,19 @@ namespace Terraria_Server
             }
         }
 
-        public static string getUpdateList()
+        public static String getUpdateList()
         {
             return new System.Net.WebClient().DownloadString(UpdateList).Trim();
         }
 
-        private static string uList = "";
+        private static String uList = "";
         public static bool isUptoDate()
         {
-            string updateList = getUpdateList();
+            String updateList = getUpdateList();
             //b-r
             if (updateList.Contains("b"))
             {
-                string myBuild = "b" + Statics.BUILD.ToString();
+                String myBuild = "b" + Statics.BUILD.ToString();
                 uList = updateList;
                 return updateList.Equals(myBuild);
             }
@@ -64,9 +64,9 @@ namespace Terraria_Server
 
                 Program.tConsole.WriteLine("Update found, Performing b" + Statics.BUILD.ToString() + " -> " + uList);
 
-                string savePath = "Terraria_Server.upd";
-                string backupPath = "Terraria_Server.bak";
-                string myFile = System.AppDomain.CurrentDomain.FriendlyName;
+                String savePath = "Terraria_Server.upd";
+                String backupPath = "Terraria_Server.bak";
+                String myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
                 if (File.Exists(savePath))
                 {

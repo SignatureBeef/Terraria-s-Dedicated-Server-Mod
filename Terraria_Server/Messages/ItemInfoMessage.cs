@@ -31,17 +31,17 @@ namespace Terraria_Server.Messages
             num += 4;
             byte stackSize = readBuffer[num++];
 
-            string string4 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            String String4 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
             Item item = Main.item[(int)itemIndex];
             if (Main.netMode == 1)
             {
-                if (string4 == "0")
+                if (String4 == "0")
                 {
                     item.Active = false;
                     return;
                 }
-                item.SetDefaults(string4);
+                item.SetDefaults(String4);
                 item.Stack = (int)stackSize;
                 item.Position.X = num39;
                 item.Position.Y = num40;
@@ -52,7 +52,7 @@ namespace Terraria_Server.Messages
             }
             else
             {
-                if (string4 == "0")
+                if (String4 == "0")
                 {
                     if (itemIndex < 200)
                     {
@@ -67,12 +67,12 @@ namespace Terraria_Server.Messages
                     {
                         isNewItem = true;
                         Item newItem = new Item();
-                        newItem.SetDefaults(string4);
+                        newItem.SetDefaults(String4);
                         itemIndex = (short)Item.NewItem((int)num39, (int)num40, newItem.Width, newItem.Height, newItem.Type, (int)stackSize, true);
                         item = Main.item[(int)itemIndex];
                     }
 
-                    item.SetDefaults(string4);
+                    item.SetDefaults(String4);
                     item.Stack = (int)stackSize;
                     item.Position.X = num39;
                     item.Position.Y = num40;

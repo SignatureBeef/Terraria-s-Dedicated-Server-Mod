@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
             int contentsIndex = (int)readBuffer[num++];
             int stackSize = (int)readBuffer[num++];
 
-            string string8 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            String String8 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             
             if (Main.chest[chestIndex] == null)
             {
@@ -35,7 +35,7 @@ namespace Terraria_Server.Messages
                 Main.chest[chestIndex].contents[contentsIndex] = new Item();
             }
 
-            Main.chest[chestIndex].contents[contentsIndex].SetDefaults(string8);
+            Main.chest[chestIndex].contents[contentsIndex].SetDefaults(String8);
             Main.chest[chestIndex].contents[contentsIndex].Stack = stackSize;
         }
     }

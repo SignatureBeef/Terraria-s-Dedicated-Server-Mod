@@ -17,9 +17,9 @@ namespace Terraria_Server
 		public static IPAddress serverListenIP;
         public static IPAddress serverIP;
         public static int serverPort = 7777;
-        public static string serverSIP = "0.0.0.0";
+        public static String serverSIP = "0.0.0.0";
 		public static bool disconnect = false;
-        public static string password = "";
+        public static String password = "";
         public static bool spamCheck = false;
         public static bool ServerUp = false;
         public static bool anyClients = false;
@@ -123,7 +123,7 @@ namespace Terraria_Server
 						}
 						else
 						{
-							Main.statusText = string.Concat(new object[]
+							Main.statusText = String.Concat(new object[]
 							{
 								Netplay.clientSock.statusText, 
 								": ", 
@@ -292,7 +292,7 @@ namespace Terraria_Server
                                 {
                                     if (Netplay.serverSock[k].statusCount >= Netplay.serverSock[k].statusMax)
                                     {
-                                        Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                        Netplay.serverSock[k].statusText = String.Concat(new object[]
 									{
 										"(", 
 										Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -308,7 +308,7 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                        Netplay.serverSock[k].statusText = String.Concat(new object[]
 									{
 										"(", 
 										Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -326,7 +326,7 @@ namespace Terraria_Server
                                 {
                                     if (Netplay.serverSock[k].state == 0)
                                     {
-                                        Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                        Netplay.serverSock[k].statusText = String.Concat(new object[]
 									{
 										"(", 
 										Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -340,7 +340,7 @@ namespace Terraria_Server
                                     {
                                         if (Netplay.serverSock[k].state == 1)
                                         {
-                                            Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                            Netplay.serverSock[k].statusText = String.Concat(new object[]
 										{
 											"(", 
 											Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -353,7 +353,7 @@ namespace Terraria_Server
                                         {
                                             if (Netplay.serverSock[k].state == 2)
                                             {
-                                                Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                                Netplay.serverSock[k].statusText = String.Concat(new object[]
 											{
 												"(", 
 												Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -366,7 +366,7 @@ namespace Terraria_Server
                                             {
                                                 if (Netplay.serverSock[k].state != 3 && Netplay.serverSock[k].state == 10)
                                                 {
-                                                    Netplay.serverSock[k].statusText = string.Concat(new object[]
+                                                    Netplay.serverSock[k].statusText = String.Concat(new object[]
 												{
 													"(", 
 													Netplay.serverSock[k].tcpClient.Client.RemoteEndPoint, 
@@ -518,7 +518,7 @@ namespace Terraria_Server
             disconnect = true;
         }
 
-        public static bool SetIP(string newIP)
+        public static bool SetIP(String newIP)
 		{
 			bool result;
 			try
@@ -533,7 +533,7 @@ namespace Terraria_Server
 			return true;
 		}
 		
-        public static bool SetIP2(string newIP)
+        public static bool SetIP2(String newIP)
 		{
 			bool result;
 			try
