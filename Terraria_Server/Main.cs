@@ -196,7 +196,7 @@ namespace Terraria_Server
 		public static int numAvailableRecipes;
 		public static int focusRecipe;
 		public static int myPlayer = 0;
-		public static Player[] players = new Player[MAX_PLAYERS];
+		public static Player[] players = new Player[MAX_PLAYERS+1];
 		public static int spawnTileX;
 		public static int spawnTileY;
 		public static bool npcChatRelease = false;
@@ -474,7 +474,7 @@ namespace Terraria_Server
                 Main.npc[m] = new NPC();
                 Main.npc[m].whoAmI = m;
             }
-            for (int i = 0; i < MAX_PLAYERS; i++)
+            for (int i = 0; i < MAX_PLAYERS+1; i++)
             {
                 Main.players[i] = new Player();
             }
