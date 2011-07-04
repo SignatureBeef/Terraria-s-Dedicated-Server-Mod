@@ -5,7 +5,7 @@ namespace Terraria_Server
 {
     public static class Statics
     {
-        public const int BUILD = 18;
+        public const int BUILD = 19;
         public const int CURRENT_TERRARIA_RELEASE = 12;
 
         private const String WORLDS = "Worlds";

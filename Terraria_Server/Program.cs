@@ -28,6 +28,8 @@ namespace Terraria_Server
 
                 Console.WriteLine("Initializing " + MODInfo);
 
+                Console.WriteLine("Until this notice is gone, Please make sure the 3.5 framework is supported on this System.");
+
                 if (args != null && args.Length > 0)
                 {
                     string commandMessage = args[0].ToLower().Trim();
