@@ -37,7 +37,7 @@ namespace TDSMExamplePlugin
             Description = "Plugin Example for TDSM.";
             Author = "DeathCradle";
             Version = "1";
-            TDSMBuild = 9;
+            TDSMBuild = 20; //Current Release - Working
 
             string pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSM";
             //Create folder if it doesn't exist
