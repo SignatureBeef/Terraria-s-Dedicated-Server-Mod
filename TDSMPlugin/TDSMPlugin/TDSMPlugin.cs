@@ -91,7 +91,7 @@ namespace TDSMExamplePlugin
                         Program.tConsole.WriteLine("[TSDM Plugin] Player used Plugin Command: " + Event.Player.Name);
 
                         Player sendingPlayer = Event.Player;
-                        sendingPlayer.sendMessage("TDSM Plugin Example, For Build: #" + ServerProtocol, 255, 255f, 255f, 255f);
+                        sendingPlayer.sendMessage("TDSM Plugin Example, For Build: #" + this.TDSMBuild, 255, 255f, 255f, 255f);
 
                         Event.Cancelled = true;
                     }
