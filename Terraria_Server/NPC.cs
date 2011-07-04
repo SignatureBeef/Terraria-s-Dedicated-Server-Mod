@@ -1,6 +1,7 @@
 using System;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
+using Terraria_Server.Events;
 
 namespace Terraria_Server
 {
@@ -7871,6 +7872,17 @@ namespace Terraria_Server
                     if (this.townNPC && Main.netMode != 1 && this.homeless && WorldGen.spawnNPC == this.type)
                     {
                         WorldGen.spawnNPC = 0;
+                    }
+
+                    NPCDeathEvent Event = new NPCDeathEvent();
+                    Event.Npc = this;
+                    Event.Damage = Damage;
+                    Event.KnockBack = knockBack;
+                    Event.HitDirection = hitDirection;
+                    Program.server.getPluginManager().processHook(Plugin.Hooks.NPC_DEATH, Event);
+                    if (Event.Cancelled)
+                    {
+                        return 0.0;
                     }
 
                     this.NPCLoot();

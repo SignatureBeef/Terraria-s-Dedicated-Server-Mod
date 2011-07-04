@@ -108,6 +108,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Events\MessageEvent.cs" />
+    <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\ConnectionResponseMessage.cs" />
