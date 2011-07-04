@@ -33,7 +33,7 @@ namespace Terraria_Server
                     case (int)Packet.CONNECTION_REQUEST:
                         {
                             byte[] bytes = BitConverter.GetBytes(packetId);
-                            byte[] bytes2 = Encoding.ASCII.GetBytes("Terraria_Server" + Statics.CURRENT_RELEASE);
+                            byte[] bytes2 = Encoding.ASCII.GetBytes("Terraria_Server" + Statics.CURRENT_TERRARIA_RELEASE);
                             num2 += bytes2.Length;
                             byte[] bytes3 = BitConverter.GetBytes(num2 - 4);
                             Buffer.BlockCopy(bytes3, 0, NetMessage.buffer[num].writeBuffer, 0, 4);

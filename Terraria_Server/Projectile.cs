@@ -2938,9 +2938,9 @@ namespace Terraria_Server
                                                                                 //Need to check if this works :3
                                                                                 PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
                                                                                 playerEvent.Sender = Main.players[Main.myPlayer];
-                                                                                playerEvent.setSign(Main.sign[num80]);
-                                                                                playerEvent.setText(this.miscText);
-                                                                                playerEvent.setIsPlayer(false);
+                                                                                playerEvent.Sign = Main.sign[num80];
+                                                                                playerEvent.Text = this.miscText;
+                                                                                playerEvent.isPlayer = false;
                                                                                 Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
                                                                                 if (playerEvent.Cancelled)
                                                                                 {

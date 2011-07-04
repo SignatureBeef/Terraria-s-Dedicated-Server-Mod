@@ -4497,7 +4497,7 @@ namespace Terraria_Server
 			{
 				using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
 				{
-					binaryWriter.Write(Statics.CURRENT_RELEASE);
+					binaryWriter.Write(Statics.CURRENT_TERRARIA_RELEASE);
 					binaryWriter.Write(newPlayer.Name);
 					binaryWriter.Write(newPlayer.hair);
 					binaryWriter.Write(newPlayer.statLife);

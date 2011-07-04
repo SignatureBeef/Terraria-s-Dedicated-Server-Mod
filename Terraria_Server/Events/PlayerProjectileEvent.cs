@@ -7,16 +7,6 @@ namespace Terraria_Server.Events
 {
     public class PlayerProjectileEvent : Event
     {
-        private Projectile projectile;
-
-        public Projectile getProjectile()
-        {
-            return projectile;
-        }
-
-        public void setProjectile(Projectile Projectile)
-        {
-            projectile = Projectile;
-        }
+        public Projectile projectile { get; set; }
     }
 }

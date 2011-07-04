@@ -1084,7 +1084,7 @@ namespace Terraria_Server
                         {
                             using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
                             {
-                                binaryWriter.Write(Statics.CURRENT_RELEASE);
+                                binaryWriter.Write(Statics.CURRENT_TERRARIA_RELEASE);
                                 binaryWriter.Write(Main.worldName);
                                 binaryWriter.Write(Main.worldID);
                                 binaryWriter.Write((int)Main.leftWorld);
@@ -1256,7 +1256,7 @@ namespace Terraria_Server
                         WorldGen.loadFailed = false;
                         WorldGen.loadSuccess = false;
                         int num = binaryReader.ReadInt32();
-                        if (num > Statics.CURRENT_RELEASE)
+                        if (num > Statics.CURRENT_TERRARIA_RELEASE)
                         {
                             WorldGen.loadFailed = true;
                             WorldGen.loadSuccess = false;
@@ -4954,10 +4954,11 @@ namespace Terraria_Server
 
             DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
             doorEvent.Sender = sender;
-            doorEvent.setVector(new Vector2(i, j));
-            doorEvent.setDirection(1);
-            doorEvent.setOpener(opener);
-            doorEvent.setOpened(forced);
+            doorEvent.X = i;
+            doorEvent.Y = j;
+            doorEvent.Direction = 1;
+            doorEvent.Opener = opener;
+            doorEvent.isOpened = forced;
             Program.server.getPluginManager().processHook(Hooks.DOOR_STATECHANGE, doorEvent);
             if (doorEvent.Cancelled)
             {
@@ -7831,7 +7832,7 @@ namespace Terraria_Server
             return false;
         }
 
-        public static bool OpenDoor(int i, int j, int direction, bool state = false, DoorOpener opender = DoorOpener.SERVER, Sender sender = null)
+        public static bool OpenDoor(int i, int j, int direction, bool state = false, DoorOpener opener = DoorOpener.SERVER, Sender sender = null)
         {
             if (sender == null)
             {
@@ -7842,10 +7843,11 @@ namespace Terraria_Server
 
             DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
             doorEvent.Sender = sender;
-            doorEvent.setVector(new Vector2(i, j));
-            doorEvent.setDirection(direction);
-            doorEvent.setOpener(opender);
-            doorEvent.setOpened(state);
+            doorEvent.X = i;
+            doorEvent.Y = j;
+            doorEvent.Direction = direction;
+            doorEvent.Opener = opener;
+            doorEvent.isOpened = state;
             Program.server.getPluginManager().processHook(Hooks.DOOR_STATECHANGE, doorEvent);
             if (doorEvent.Cancelled)
             {

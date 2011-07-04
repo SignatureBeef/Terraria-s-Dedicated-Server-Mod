@@ -5,30 +5,11 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
+    //Currently not in use
     public class PlayerDestroySignEvent : Event
     {
-        //Currently not in use
-        private Sign sign;
-        private bool player = true;
+        private bool isPlayer { get; set; }
 
-        public Sign getSign()
-        {
-            return sign;
-        }
-
-        public void setSign(Sign Sign)
-        {
-            sign = Sign;
-        }
-
-        public bool isPlayer()
-        {
-            return player;
-        }
-
-        public void setIsPlayer(bool Player)
-        {
-            player = Player;
-        }
+        public Sign Sign { get; set; }
     }
 }
