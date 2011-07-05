@@ -91,6 +91,31 @@ namespace Terraria_Server.Commands
                                                                     "Kicks a player from the server.", 
                                                                     "Restarts the server."};
 
+            public static int[] CommandPermission = new int[] { 1,
+                                                                1,
+                                                                0,
+                                                                0,
+                                                                0,
+                                                                1, 
+                                                                1, 
+                                                                0, 
+                                                                1, 
+                                                                1, 
+                                                                1, 
+                                                                1,
+                                                                1,
+                                                                1,
+                                                                1,
+                                                                1,
+                                                                1,
+                                                                1,
+                                                                1,
+                                                                0,
+                                                                0,
+                                                                1,
+                                                                1, 
+                                                                1};
+
         public static String MergeStringArray(String[] Array)
         {
             StringBuilder sb = new StringBuilder();
@@ -200,7 +225,17 @@ namespace Terraria_Server.Commands
                 {
                     for (int i = 0; i < CommandDefinition.Length; i++)
                     {
-                        ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                        bool show = false;
+
+                        if (((Player)sender).Op || CommandPermission[i] == 0)
+                        {
+                            show = true;
+                        }
+
+                        if (show)
+                        {
+                            ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                        }
                     }
                 }
                 else
@@ -231,7 +266,17 @@ namespace Terraria_Server.Commands
 
                                 for (int i = selectingPage; i < toPage; i++)
                                 {
-                                    ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                                    bool show = false;
+
+                                    if (((Player)sender).Op || CommandPermission[i] == 0)
+                                    {
+                                        show = true;
+                                    }
+
+                                    if (show)
+                                    {
+                                        ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                                    }
                                 }
                             }
                             else

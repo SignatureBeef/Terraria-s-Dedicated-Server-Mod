@@ -23,12 +23,12 @@ namespace Terraria_Server
 
         public void WriteLine()
         {
-            if (platformType == Platform.PlatformType.UNKNOWN)
-            {
+            //if (platformType == Platform.PlatformType.WINDOWS)
+            //{
                 Console.WriteLine();
-                streamWriter.WriteLine();
-                streamWriter.Flush();
-            }
+            //    streamWriter.WriteLine();
+            //    streamWriter.Flush();
+            //}
         }
 
         public void Write(String Message)

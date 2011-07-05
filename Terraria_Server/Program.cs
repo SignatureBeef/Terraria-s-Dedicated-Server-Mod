@@ -225,6 +225,7 @@ namespace Terraria_Server
                 }
                 while (Statics.serverStarted) { }
                 Program.tConsole.WriteLine("Exiting...");
+                Program.tConsole.Close();
             }
             catch (Exception e)
             {
@@ -316,7 +317,7 @@ namespace Terraria_Server
 
         public static void printData(String dataText, bool console = false)
         {
-            if (Platform.Type != Platform.PlatformType.UNKNOWN)
+            if (Platform.Type != Platform.PlatformType.WINDOWS)
             {
                 if (console == false)
                 {
