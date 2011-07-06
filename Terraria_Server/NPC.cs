@@ -2,6 +2,7 @@ using System;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
 using Terraria_Server.Events;
+using Terraria_Server.Commands;
 
 namespace Terraria_Server
 {
@@ -7784,13 +7785,30 @@ namespace Terraria_Server
             }
             if (num >= 0)
             {
-                Main.npc[num] = new NPC();
-                Main.npc[num].SetDefaults(Type);
-                Main.npc[num].Position.X = (float)(X - Main.npc[num].width / 2);
-                Main.npc[num].Position.Y = (float)(Y - Main.npc[num].height);
-                Main.npc[num].Active = true;
-                Main.npc[num].timeLeft = (int)((double)NPC.activeTime * 1.25);
-                Main.npc[num].wet = Collision.WetCollision(Main.npc[num].Position, Main.npc[num].width, Main.npc[num].height);
+                NPC npc = new NPC();
+
+                //Main.npc[num] = new NPC();
+                npc.SetDefaults(Type);
+                npc.Position.X = (float)(X - Main.npc[num].width / 2);
+                npc.Position.Y = (float)(Y - Main.npc[num].height);
+                npc.Active = true;
+                npc.timeLeft = (int)((double)NPC.activeTime * 1.25);
+                npc.wet = Collision.WetCollision(Main.npc[num].Position, Main.npc[num].width, Main.npc[num].height);
+
+                NPCSpawnEvent npcEvent = new NPCSpawnEvent();
+                npcEvent.NPC = npc;
+                Sender sender = new Sender();
+                sender.Op = true;
+                npcEvent.Sender = sender;
+                Program.server.getPluginManager().processHook(Hooks.NPC_SPAWN, npcEvent);
+                if (npcEvent.Cancelled)
+                {
+                    npc = null;
+                    return 1000;
+                }
+
+                Main.npc[num] = npc;
+
                 if (Type == 50)
                 {
                     if (Main.netMode == 2)

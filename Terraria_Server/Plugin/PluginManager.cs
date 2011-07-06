@@ -156,7 +156,7 @@ namespace Terraria_Server.Plugin
                         {
                             case Hooks.CONSOLE_COMMAND:
                                 {
-                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent)hookEvent);
+                                    plugin.onConsoleCommand((ConsoleCommandEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_COMMAND:
@@ -232,6 +232,26 @@ namespace Terraria_Server.Plugin
                             case Hooks.NPC_DEATH:
                                 {
                                     plugin.onNPCDeath((NPCDeathEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.NPC_SPAWN:
+                                {
+                                    plugin.onNPCSpawn((NPCSpawnEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.PLAYER_TELEPORT:
+                                {
+                                    plugin.onPlayerTeleport((PlayerTeleportEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.PLAYER_MOVE:
+                                {
+                                    plugin.onPlayerMove((PlayerMoveEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.PLAYER_KEYPRESS:
+                                {
+                                    plugin.onPlayerKeyPress((PlayerKeyPressEvent)hookEvent);
                                     break;
                                 }
                         }

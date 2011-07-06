@@ -16,7 +16,9 @@ namespace Terraria_Server.Commands
         {
             ConsoleSender cSender = new ConsoleSender(server);
             cSender.ConsoleCommand.Message = Line;
-            cSender.ConsoleCommand.Sender = new Sender();
+            Sender sender = new Sender();
+            sender.Op = true;
+            cSender.ConsoleCommand.Sender = sender;
             server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, cSender.ConsoleCommand);
             if (cSender.ConsoleCommand.Cancelled)
             {

@@ -18,7 +18,11 @@ namespace Terraria_Server.Plugin
         DOOR_STATECHANGE,
         PLAYER_EDITSIGN,
         PLAYER_PROJECTILE,
-        NPC_DEATH
+        NPC_DEATH,
+        NPC_SPAWN,
+        PLAYER_TELEPORT,
+        PLAYER_MOVE,
+        PLAYER_KEYPRESS
         //PLAYER_DESTROYSIGN
     }
 }

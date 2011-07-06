@@ -91,30 +91,7 @@ namespace Terraria_Server.Commands
                                                                     "Kicks a player from the server.", 
                                                                     "Restarts the server."};
 
-            public static int[] CommandPermission = new int[] { 1,
-                                                                1,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                1, 
-                                                                1, 
-                                                                0, 
-                                                                1, 
-                                                                1, 
-                                                                1, 
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                0,
-                                                                0,
-                                                                1,
-                                                                1, 
-                                                                1};
+        public static int[] CommandPermission = new int[] { 1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1};
 
         public static String MergeStringArray(String[] Array)
         {
@@ -204,7 +181,7 @@ namespace Terraria_Server.Commands
             Program.server.BanList.Save();
             Program.server.WhiteList.Save();
 
-            Program.tConsole.WriteLine("Saving Complete.");
+            Program.server.notifyOps("Saving Complete.");
         }
 
         public static bool getGodMode()
@@ -1058,32 +1035,6 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
     
-        public static void Heal(Sender sender, String[] commands)
-        {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
-            if (commands != null && commands.Length > 1)
-            {
-                if (commands[0] != null && commands[0].Length > 0)
-                {
-                    Player banee = Program.server.GetPlayerByName(commands[1]);
-
-                    
-
-                    return;
-                }
-            }
-            sender.sendMessage("Command Error!");
-        }
-
         public static void Restart(Sender sender, Server server)
         {
             if (sender is Player)
