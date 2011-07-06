@@ -45,7 +45,7 @@ namespace Terraria_Server.Plugin
         public Server Server { get; set; }
 
         /// <summary>
-        /// Load routines, typically setting up plugin instances, initial values, etc; called before Enable()
+        /// Load routines, typically setting up plugin instances, initial values, etc; called before Enable() in startup
         /// </summary>
         public abstract void Load();
         //public void abstract UnLoad(); //I have high hopes :3
@@ -113,7 +113,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
 
         /// <summary>
-        /// Hook method for player joining the server
+        /// Hook method for player joining the server, as they're announced
         /// </summary>
         /// <param name="Event">PlayerLoginEvent info</param>
         public virtual void onPlayerJoin(PlayerLoginEvent Event) { }
@@ -149,7 +149,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
 
         /// <summary>
-        /// Hook method for previous to a player joining the server
+        /// Hook method for player's initial connection to the server, before they can start playing
         /// </summary>
         /// <param name="Event">PlayerLoginEvent info</param>
         public virtual void onPlayerPreLogin(PlayerLoginEvent Event) { }
