@@ -210,38 +210,46 @@ namespace Terraria_Server
             byte[][] list = new byte[WRITE_THREAD_BATCH_SIZE][];
             while (true)
             {
-                int items = 0;
-                
-                lock (writeQueue)
-                {
-                    while (writeQueue.Count > 0)
-                    {
-                        list[items++] = writeQueue.Dequeue ();
-                        if (items == WRITE_THREAD_BATCH_SIZE) break;
-                    }
-                }
-                
-                if (items == 0)
-                {
-                    writeSignal.WaitOne ();
-                    continue;
-                }
-                
                 try
                 {
-                    for (int i = 0; i < items; i++)
+                    int items = 0;
+
+                    lock (writeQueue)
                     {
-                        networkStream.Write (list[i], 0, list[i].Length);
-                        list[i] = null;
-                        NetMessage.buffer[this.whoAmI].spamCount--;
-                        if (this.statusMax > 0)
+                        while (writeQueue.Count > 0)
                         {
-                            this.statusCount++;
+                            list[items++] = writeQueue.Dequeue();
+                            if (items == WRITE_THREAD_BATCH_SIZE) break;
                         }
                     }
+
+                    if (items == 0)
+                    {
+                        writeSignal.WaitOne();
+                        continue;
+                    }
+
+                    try
+                    {
+                        for (int i = 0; i < items; i++)
+                        {
+                            networkStream.Write(list[i], 0, list[i].Length);
+                            list[i] = null;
+                            NetMessage.buffer[this.whoAmI].spamCount--;
+                            if (this.statusMax > 0)
+                            {
+                                this.statusCount++;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
                 }
-                catch
+                catch (Exception e)
                 {
+                    Program.tConsole.WriteLine("Exception within WriteThread:Socket");
+                    Program.tConsole.WriteLine(e.Message);
                 }
             }
         }
