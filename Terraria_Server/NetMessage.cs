@@ -1318,7 +1318,9 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    Netplay.serverSock[num11].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(Netplay.serverSock[num11].ServerWriteCallBack), Netplay.serverSock[num11].networkStream);
+                                    byte[] copy = new byte [num2];
+                                    Array.Copy (NetMessage.buffer[num].writeBuffer, copy, num2);
+                                    Netplay.serverSock[num11].Send (copy);
                                 }
                             }
 							catch
@@ -1341,7 +1343,9 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            Netplay.serverSock[remoteClient].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(Netplay.serverSock[remoteClient].ServerWriteCallBack), Netplay.serverSock[remoteClient].networkStream);
+                            byte[] copy = new byte [num2];
+                            Array.Copy (NetMessage.buffer[num].writeBuffer, copy, num2);
+                            Netplay.serverSock[remoteClient].Send (copy);
                         }
                     }
 					catch
