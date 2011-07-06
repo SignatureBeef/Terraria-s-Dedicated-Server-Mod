@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +8,7 @@ namespace Terraria_Server.Events
 {
     public class PlayerTileChangeEvent : Event
     {
-        public Tile Tile { get; set; }
+        public TileData Tile { get; set; }
 
         public int Type { get; set; }
 

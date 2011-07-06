@@ -32,23 +32,9 @@ namespace Terraria_Server.Messages
             int style = (int)readBuffer[num];
             bool failFlag = (tileType == 1);
 
-            Tile tile = new Tile();
-
-            if (Main.tile[x, y] != null)
-            {
-                tile = WorldGen.cloneTile(Main.tile[x, y]);
-            }
-            if (Main.tile[x, y] == null)
-            {
-                Main.tile[x, y] = new Tile();
-            }
-
-            tile.tileX = x;
-            tile.tileY = y;
-
             PlayerTileChangeEvent breakEvent = new PlayerTileChangeEvent();
             breakEvent.Sender = Main.players[whoAmI];
-            breakEvent.Tile = tile;
+            breakEvent.Tile = Main.tile[x, y].Data;
             breakEvent.Type = tileType;
             breakEvent.Position = new Vector2(x, y);
             Program.server.getPluginManager().processHook(Hooks.TILE_CHANGE, breakEvent);

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Terraria_Server.Messages
 {
@@ -40,15 +40,10 @@ namespace Terraria_Server.Messages
                     return;
                 }
             }
-            if (Main.tile[x, y] == null)
+            TileRef tile = Main.tile[x, y];
             {
-                Main.tile[x, y] = new Tile();
-            }
-            Tile tile = Main.tile[x, y];
-            lock (tile)
-            {
-                tile.liquid = liquid;
-                tile.lava = (lavaFlag == 1);
+                tile.Liquid = liquid;
+                tile.Lava = (lavaFlag == 1);
 
                 if (Main.netMode == 2)
                 {

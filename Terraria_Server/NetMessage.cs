@@ -304,28 +304,28 @@ namespace Terraria_Server
 				                {
 					                b10 += 1;
 				                }
-				                if (Main.tile[i, num6].lighted)
+				                if (Main.tile[i, num6].Lighted)
 				                {
 					                b10 += 2;
 				                }
-				                if (Main.tile[i, num6].wall > 0)
+				                if (Main.tile[i, num6].Wall > 0)
 				                {
 					                b10 += 4;
 				                }
-				                if (Main.tile[i, num6].liquid > 0)
+				                if (Main.tile[i, num6].Liquid > 0)
 				                {
 					                b10 += 8;
 				                }
 				                NetMessage.buffer[num].writeBuffer[num3] = b10;
 				                num3++;
-				                byte[] bytes41 = BitConverter.GetBytes(Main.tile[i, num6].frameX);
-				                byte[] bytes42 = BitConverter.GetBytes(Main.tile[i, num6].frameY);
-				                byte wall = Main.tile[i, num6].wall;
+				                byte[] bytes41 = BitConverter.GetBytes(Main.tile[i, num6].FrameX);
+				                byte[] bytes42 = BitConverter.GetBytes(Main.tile[i, num6].FrameY);
+				                byte wall = Main.tile[i, num6].Wall;
 				                if (Main.tile[i, num6].Active)
 				                {
-					                NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].type;
+					                NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].Type;
 					                num3++;
-					                if (Main.tileFrameImportant[(int)Main.tile[i, num6].type])
+					                if (Main.tileFrameImportant[(int)Main.tile[i, num6].Type])
 					                {
 						                Buffer.BlockCopy(bytes41, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
 						                num3 += 2;
@@ -338,12 +338,12 @@ namespace Terraria_Server
 					                NetMessage.buffer[num].writeBuffer[num3] = wall;
 					                num3++;
 				                }
-				                if (Main.tile[i, num6].liquid > 0)
+				                if (Main.tile[i, num6].Liquid > 0)
 				                {
-					                NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].liquid;
+					                NetMessage.buffer[num].writeBuffer[num3] = Main.tile[i, num6].Liquid;
 					                num3++;
 					                byte b11 = 0;
-					                if (Main.tile[i, num6].lava)
+					                if (Main.tile[i, num6].Lava)
 					                {
 						                b11 = 1;
 					                }
@@ -587,28 +587,28 @@ namespace Terraria_Server
                                     {
                                         b24 += 1;
                                     }
-                                    if (Main.tile[j, k].lighted)
+                                    if (Main.tile[j, k].Lighted)
                                     {
                                         b24 += 2;
                                     }
-                                    if (Main.tile[j, k].wall > 0)
+                                    if (Main.tile[j, k].Wall > 0)
                                     {
                                         b24 += 4;
                                     }
-                                    if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
+                                    if (Main.tile[j, k].Liquid > 0 && Main.netMode == 2)
                                     {
                                         b24 += 8;
                                     }
                                     NetMessage.buffer[num].writeBuffer[num3] = b24;
                                     num3++;
-                                    byte[] bytes85 = BitConverter.GetBytes(Main.tile[j, k].frameX);
-                                    byte[] bytes86 = BitConverter.GetBytes(Main.tile[j, k].frameY);
-                                    byte wall2 = Main.tile[j, k].wall;
+                                    byte[] bytes85 = BitConverter.GetBytes(Main.tile[j, k].FrameX);
+                                    byte[] bytes86 = BitConverter.GetBytes(Main.tile[j, k].FrameY);
+                                    byte wall2 = Main.tile[j, k].Wall;
                                     if (Main.tile[j, k].Active)
                                     {
-                                        NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].type;
+                                        NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].Type;
                                         num3++;
-                                        if (Main.tileFrameImportant[(int)Main.tile[j, k].type])
+                                        if (Main.tileFrameImportant[(int)Main.tile[j, k].Type])
                                         {
                                             Buffer.BlockCopy(bytes85, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
                                             num3 += 2;
@@ -621,12 +621,12 @@ namespace Terraria_Server
                                         NetMessage.buffer[num].writeBuffer[num3] = wall2;
                                         num3++;
                                     }
-                                    if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
+                                    if (Main.tile[j, k].Liquid > 0 && Main.netMode == 2)
                                     {
-                                        NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].liquid;
+                                        NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].Liquid;
                                         num3++;
                                         byte b25 = 0;
-                                        if (Main.tile[j, k].lava)
+                                        if (Main.tile[j, k].Lava)
                                         {
                                             b25 = 1;
                                         }
@@ -1198,9 +1198,9 @@ namespace Terraria_Server
                             byte[] bytes200 = BitConverter.GetBytes(packetId);
                             byte[] bytes201 = BitConverter.GetBytes(number);
                             byte[] bytes202 = BitConverter.GetBytes((int)number2);
-                            byte liquid = Main.tile[number, (int)number2].liquid;
+                            byte liquid = Main.tile[number, (int)number2].Liquid;
                             byte b57 = 0;
-                            if (Main.tile[number, (int)number2].lava)
+                            if (Main.tile[number, (int)number2].Lava)
                             {
                                 b57 = 1;
                             }

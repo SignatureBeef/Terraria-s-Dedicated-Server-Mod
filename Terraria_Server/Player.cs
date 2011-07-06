@@ -351,7 +351,7 @@ namespace Terraria_Server
                             {
                                 int num7 = (int)this.Position.X / 16;
                                 int num8 = (int)this.Position.Y / 16;
-                                if (Main.tile[num7, num8].wall > 0 && !Main.wallHouse[(int)Main.tile[num7, num8].wall])
+                                if (Main.tile[num7, num8].Wall > 0 && !Main.wallHouse[(int)Main.tile[num7, num8].Wall])
                                 {
                                     this.zoneDungeon = true;
                                 }
@@ -1138,31 +1138,31 @@ namespace Terraria_Server
                         }
                         if (this.Position.X / 16f - (float)Player.tileRangeX <= (float)Player.tileTargetX && (this.Position.X + (float)this.width) / 16f + (float)Player.tileRangeX - 1f >= (float)Player.tileTargetX && this.Position.Y / 16f - (float)Player.tileRangeY <= (float)Player.tileTargetY && (this.Position.Y + (float)this.height) / 16f + (float)Player.tileRangeY - 2f >= (float)Player.tileTargetY && Main.tile[Player.tileTargetX, Player.tileTargetY].Active)
                         {
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 79)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 79)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 224;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 21)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 48;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 4)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 8;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 13)
                             {
                                 this.showItemIcon = true;
-                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 18)
+                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX == 18)
                                 {
                                     this.showItemIcon2 = 28;
                                 }
                                 else
                                 {
-                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 36)
+                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX == 36)
                                     {
                                         this.showItemIcon2 = 110;
                                     }
@@ -1172,30 +1172,30 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 29)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 87;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 33)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 105;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 49)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 148;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 90)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX == 90)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 165;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 55)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 55)
                             {
-                                int num30 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
-                                int num31 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+                                int num30 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX / 18);
+                                int num31 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameY / 18);
                                 while (num30 > 1)
                                 {
                                     num30 -= 2;
@@ -1206,7 +1206,7 @@ namespace Terraria_Server
                                 Main.signX = num32 * 16 + 16;
                                 Main.signY = num33 * 16;
                             }
-                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 10 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 11)
+                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 10 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 11)
                             {
                                 this.showItemIcon = true;
                                 this.showItemIcon2 = 25;
@@ -1215,7 +1215,7 @@ namespace Terraria_Server
                             {
                                 if (this.releaseUseTile)
                                 {
-                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49 || (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 90))
+                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 4 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 13 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 33 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 49 || (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX == 90))
                                     {
                                         WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                         if (Main.netMode == 1)
@@ -1225,12 +1225,12 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 79)
+                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 79)
                                         {
                                             int num34 = Player.tileTargetX;
                                             int num35 = Player.tileTargetY;
-                                            num34 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18 * -1);
-                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].frameX >= 72)
+                                            num34 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX / 18 * -1);
+                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX >= 72)
                                             {
                                                 num34 += 4;
                                                 num34++;
@@ -1239,7 +1239,7 @@ namespace Terraria_Server
                                             {
                                                 num34 += 2;
                                             }
-                                            num35 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18 * -1);
+                                            num35 += (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameY / 18 * -1);
                                             num35 += 2;
                                             if (Player.CheckSpawn(num34, num35))
                                             {
@@ -1248,7 +1248,7 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 55)
+                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 55)
                                             {
                                                 bool flag4 = true;
                                                 if (this.sign >= 0)
@@ -1275,15 +1275,15 @@ namespace Terraria_Server
                                                     }
                                                     else
                                                     {
-                                                        int num38 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
-                                                        int num39 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+                                                        int num38 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX / 18);
+                                                        int num39 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameY / 18);
                                                         while (num38 > 1)
                                                         {
                                                             num38 -= 2;
                                                         }
                                                         int num40 = Player.tileTargetX - num38;
                                                         int num41 = Player.tileTargetY - num39;
-                                                        if (Main.tile[num40, num41].type == 55)
+                                                        if (Main.tile[num40, num41].Type == 55)
                                                         {
                                                             NetMessage.SendData(46, -1, -1, "", num40, (float)num41);
                                                         }
@@ -1292,14 +1292,14 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 10)
+                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 10)
                                                 {
                                                     WorldGen.OpenDoor(Player.tileTargetX, Player.tileTargetY, this.direction);
                                                     NetMessage.SendData(19, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
                                                 }
                                                 else
                                                 {
-                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 11)
+                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 11)
                                                     {
                                                         if (WorldGen.CloseDoor(Player.tileTargetX, Player.tileTargetY, false))
                                                         {
@@ -1308,12 +1308,12 @@ namespace Terraria_Server
                                                     }
                                                     else
                                                     {
-                                                        if ((Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29) && this.talkNPC == -1)
+                                                        if ((Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 21 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 29) && this.talkNPC == -1)
                                                         {
                                                             bool flag5 = false;
-                                                            int num42 = Player.tileTargetX - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
-                                                            int num43 = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
-                                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29)
+                                                            int num42 = Player.tileTargetX - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameX / 18);
+                                                            int num43 = Player.tileTargetY - (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].FrameY / 18);
+                                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 29)
                                                             {
                                                                 flag5 = true;
                                                             }
@@ -1551,13 +1551,9 @@ namespace Terraria_Server
                             {
                                 int num55 = (int)((this.Position.X + (float)(this.width / 2) + (float)(6 * this.direction)) / 16f);
                                 int num56 = (int)((this.Position.Y - 44f) / 16f);
-                                if (Main.tile[num55, num56].liquid < 128)
+                                if (Main.tile[num55, num56].Liquid < 128)
                                 {
-                                    if (Main.tile[num55, num56] == null)
-                                    {
-                                        Main.tile[num55, num56] = new Tile();
-                                    }
-                                    if (!Main.tile[num55, num56].Active || !Main.tileSolid[(int)Main.tile[num55, num56].type] || Main.tileSolidTop[(int)Main.tile[num55, num56].type])
+                                    if (!Main.tile[num55, num56].Active || !Main.tileSolid[(int)Main.tile[num55, num56].Type] || Main.tileSolidTop[(int)Main.tile[num55, num56].Type])
                                     {
                                         flag6 = false;
                                     }
@@ -2249,8 +2245,8 @@ namespace Terraria_Server
 				{
 					if (Main.tile[j, k].Active)
 					{
-						this.adjTile[(int)Main.tile[j, k].type] = true;
-						if (Main.tile[j, k].type == 77)
+						this.adjTile[(int)Main.tile[j, k].Type] = true;
+						if (Main.tile[j, k].Type == 77)
 						{
 							this.adjTile[17] = true;
 						}
@@ -2560,12 +2556,12 @@ namespace Terraria_Server
 				{
 					for (int j = Main.spawnTileY - 3; j < Main.spawnTileY; j++)
 					{
-						if (Main.tileSolid[(int)Main.tile[i, j].type] && !Main.tileSolidTop[(int)Main.tile[i, j].type])
+						if (Main.tileSolid[(int)Main.tile[i, j].Type] && !Main.tileSolidTop[(int)Main.tile[i, j].Type])
 						{
-							if (Main.tile[i, j].liquid > 0)
+							if (Main.tile[i, j].Liquid > 0)
 							{
-								Main.tile[i, j].lava = false;
-								Main.tile[i, j].liquid = 0;
+								Main.tile[i, j].Lava = false;
+								Main.tile[i, j].Liquid = 0;
 								WorldGen.SquareTileFrame(i, j, true);
 							}
 							WorldGen.KillTile(i, j, false, false, false);
@@ -3269,23 +3265,23 @@ namespace Terraria_Server
                         {
                             if (selectedItem.Type == 205)
                             {
-                                bool lava = Main.tile[Player.tileTargetX, Player.tileTargetY].lava;
+                                bool lava = Main.tile[Player.tileTargetX, Player.tileTargetY].Lava;
                                 int num10 = 0;
                                 for (int x = Player.tileTargetX - 1; x <= Player.tileTargetX + 1; x++)
                                 {
                                     for (int y = Player.tileTargetY - 1; y <= Player.tileTargetY + 1; y++)
                                     {
-                                        if (Main.tile[x, y].lava == lava)
+                                        if (Main.tile[x, y].Lava == lava)
                                         {
-                                            num10 += (int)Main.tile[x, y].liquid;
+                                            num10 += (int)Main.tile[x, y].Liquid;
                                         }
                                     }
                                 }
 
-                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid > 0 && num10 > 100)
+                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid > 0 && num10 > 100)
                                 {
-                                    bool lava2 = Main.tile[Player.tileTargetX, Player.tileTargetY].lava;
-                                    if (!Main.tile[Player.tileTargetX, Player.tileTargetY].lava)
+                                    bool lava2 = Main.tile[Player.tileTargetX, Player.tileTargetY].Lava;
+                                    if (!Main.tile[Player.tileTargetX, Player.tileTargetY].Lava)
                                     {
                                         selectedItem.SetDefaults(206);
                                     }
@@ -3295,9 +3291,9 @@ namespace Terraria_Server
                                     }
 
                                     itemTime = selectedItem.UseTime;
-                                    int num11 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquid;
-                                    Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 0;
-                                    Main.tile[Player.tileTargetX, Player.tileTargetY].lava = false;
+                                    int num11 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid;
+                                    Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid = 0;
+                                    Main.tile[Player.tileTargetX, Player.tileTargetY].Lava = false;
                                     WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
 
                                     if (Main.netMode == 1)
@@ -3313,9 +3309,9 @@ namespace Terraria_Server
                                     {
                                         for (int y = Player.tileTargetY - 1; y <= Player.tileTargetY + 1; y++)
                                         {
-                                            if (num11 < 256 && Main.tile[x, y].lava == lava)
+                                            if (num11 < 256 && Main.tile[x, y].Lava == lava)
                                             {
-                                                int num12 = (int)Main.tile[x, y].liquid;
+                                                int num12 = (int)Main.tile[x, y].Liquid;
 
                                                 if (num12 + num11 > 255)
                                                 {
@@ -3323,13 +3319,13 @@ namespace Terraria_Server
                                                 }
 
                                                 num11 += num12;
-                                                Tile expr_20A0 = Main.tile[x, y];
-                                                expr_20A0.liquid -= (byte)num12;
-                                                Main.tile[x, y].lava = lava2;
+                                                TileRef expr_20A0 = Main.tile[x, y];
+                                                expr_20A0.Liquid -= (byte)num12;
+                                                Main.tile[x, y].Lava = lava2;
 
-                                                if (Main.tile[x, y].liquid == 0)
+                                                if (Main.tile[x, y].Liquid == 0)
                                                 {
-                                                    Main.tile[x, y].lava = false;
+                                                    Main.tile[x, y].Lava = false;
                                                 }
 
                                                 WorldGen.SquareTileFrame(x, y, false);
@@ -3347,16 +3343,16 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            else if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid < 200)
+                            else if (Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid < 200)
                             {
-                                if (!Main.tile[Player.tileTargetX, Player.tileTargetY].Active || !Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] || !Main.tileSolidTop[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type])
+                                if (!Main.tile[Player.tileTargetX, Player.tileTargetY].Active || !Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].Type] || !Main.tileSolidTop[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].Type])
                                 {
                                     if (selectedItem.Type == 207)
                                     {
-                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].lava)
+                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].Lava)
                                         {
-                                            Main.tile[Player.tileTargetX, Player.tileTargetY].lava = true;
-                                            Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
+                                            Main.tile[Player.tileTargetX, Player.tileTargetY].Lava = true;
+                                            Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid = 255;
                                             WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                             selectedItem.SetDefaults(205);
                                             this.itemTime = selectedItem.UseTime;
@@ -3366,10 +3362,10 @@ namespace Terraria_Server
                                             }
                                         }
                                     }
-                                    else if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid == 0 || !Main.tile[Player.tileTargetX, Player.tileTargetY].lava)
+                                    else if (Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid == 0 || !Main.tile[Player.tileTargetX, Player.tileTargetY].Lava)
                                     {
-                                        Main.tile[Player.tileTargetX, Player.tileTargetY].lava = false;
-                                        Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
+                                        Main.tile[Player.tileTargetX, Player.tileTargetY].Lava = false;
+                                        Main.tile[Player.tileTargetX, Player.tileTargetY].Liquid = 255;
                                         WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                         selectedItem.SetDefaults(205);
                                         this.itemTime = selectedItem.UseTime;
@@ -3403,15 +3399,15 @@ namespace Terraria_Server
                                     hitTileX = Player.tileTargetX;
                                     hitTileY = Player.tileTargetY;
                                 }
-                                if (Main.tileNoFail[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type])
+                                if (Main.tileNoFail[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].Type])
                                 {
                                     hitTile = 100;
                                 }
-                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].type != 27)
+                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type != 27)
                                 {
-                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 10 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 11 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 12 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 14 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 15 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 16 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 17 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 18 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 19 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 26 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 28 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 29 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 31 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 34 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 35 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 36 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 42 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 48 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 54 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 55 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 77 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 78 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 79)
+                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 4 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 10 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 11 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 12 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 13 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 14 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 15 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 16 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 17 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 18 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 19 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 21 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 26 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 28 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 29 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 31 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 33 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 34 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 35 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 36 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 42 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 48 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 49 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 50 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 54 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 55 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 77 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 78 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 79)
                                     {
-                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 48)
+                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 48)
                                         {
                                             hitTile += selectedItem.Hammer / 3;
                                         }
@@ -3421,7 +3417,7 @@ namespace Terraria_Server
                                         }
 
                                         if ((double)Player.tileTargetY > Main.rockLayer 
-                                            && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 77 
+                                            && Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 77 
                                             && selectedItem.Hammer < 60)
                                         {
                                             hitTile = 0;
@@ -3429,7 +3425,7 @@ namespace Terraria_Server
 
                                         if (selectedItem.Hammer > 0)
                                         {
-                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 26)
+                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 26)
                                             {
                                                 Hurt(this.statLife / 2, -direction, false, false);
                                                 WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
@@ -3440,7 +3436,7 @@ namespace Terraria_Server
                                             }
                                             else if (hitTile >= 100)
                                             {
-                                                if (Main.netMode == 1 && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21)
+                                                if (Main.netMode == 1 && Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 21)
                                                 {
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                                     NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
@@ -3470,11 +3466,11 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 5 
-                                            || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 30 
-                                            || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 72)
+                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 5 
+                                            || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 30 
+                                            || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 72)
                                         {
-                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 30)
+                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 30)
                                             {
                                                 hitTile += selectedItem.Axe * 5;
                                             }
@@ -3508,7 +3504,7 @@ namespace Terraria_Server
                                         {
                                             if (selectedItem.Pick > 0)
                                             {
-                                                if (Main.tileDungeon[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 37 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 25 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 58)
+                                                if (Main.tileDungeon[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].Type] || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 37 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 25 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 58)
                                                 {
                                                     hitTile += selectedItem.Pick / 2;
                                                 }
@@ -3516,31 +3512,31 @@ namespace Terraria_Server
                                                 {
                                                     hitTile += selectedItem.Pick;
                                                 }
-                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 25 && selectedItem.Pick < 65)
+                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 25 && selectedItem.Pick < 65)
                                                 {
                                                     hitTile = 0;
                                                 }
                                                 else
                                                 {
-                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 37 && selectedItem.Pick < 55)
+                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 37 && selectedItem.Pick < 55)
                                                     {
                                                         hitTile = 0;
                                                     }
                                                     else
                                                     {
-                                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 56 && selectedItem.Pick < 65)
+                                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 56 && selectedItem.Pick < 65)
                                                         {
                                                             hitTile = 0;
                                                         }
                                                         else
                                                         {
-                                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 58 && selectedItem.Pick < 65)
+                                                            if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 58 && selectedItem.Pick < 65)
                                                             {
                                                                 hitTile = 0;
                                                             }
                                                             else
                                                             {
-                                                                if (Main.tileDungeon[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].type] && selectedItem.Pick < 65)
+                                                                if (Main.tileDungeon[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].Type] && selectedItem.Pick < 65)
                                                                 {
                                                                     if ((double)Player.tileTargetX < (double)Main.maxTilesX * 0.25 || (double)Player.tileTargetX > (double)Main.maxTilesX * 0.75)
                                                                     {
@@ -3551,7 +3547,7 @@ namespace Terraria_Server
                                                         }
                                                     }
                                                 }
-                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 40 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 53 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 59)
+                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 0 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 40 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 53 || Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 59)
                                                 {
                                                     hitTile += selectedItem.Pick;
                                                 }
@@ -3579,21 +3575,21 @@ namespace Terraria_Server
                                 }
                             }
                         }
-                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].wall > 0)
+                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Wall > 0)
                         {
                             if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
                             {
                                 if (selectedItem.Hammer > 0)
                                 {
                                     bool flag3 = true;
-                                    if (!Main.wallHouse[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall])
+                                    if (!Main.wallHouse[(int)Main.tile[Player.tileTargetX, Player.tileTargetY].Wall])
                                     {
                                         flag3 = false;
                                         for (int k = Player.tileTargetX - 1; k < Player.tileTargetX + 2; k++)
                                         {
                                             for (int l = Player.tileTargetY - 1; l < Player.tileTargetY + 2; l++)
                                             {
-                                                if (Main.tile[k, l].wall != Main.tile[Player.tileTargetX, Player.tileTargetY].wall)
+                                                if (Main.tile[k, l].Wall != Main.tile[Player.tileTargetX, Player.tileTargetY].Wall)
                                                 {
                                                     flag3 = true;
                                                     break;
@@ -3672,7 +3668,7 @@ namespace Terraria_Server
                                 bool flag4 = false;
                                 if (selectedItem.CreateTile == 23 || selectedItem.CreateTile == 2)
                                 {
-                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].Active && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 0)
+                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY].Active && Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 0)
                                     {
                                         flag4 = true;
                                     }
@@ -3681,7 +3677,7 @@ namespace Terraria_Server
                                 {
                                     if (selectedItem.CreateTile == 60 || selectedItem.CreateTile == 70)
                                     {
-                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Active && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 59)
+                                        if (Main.tile[Player.tileTargetX, Player.tileTargetY].Active && Main.tile[Player.tileTargetX, Player.tileTargetY].Type == 59)
                                         {
                                             flag4 = true;
                                         }
@@ -3690,13 +3686,13 @@ namespace Terraria_Server
                                     {
                                         if (selectedItem.CreateTile == 4)
                                         {
-                                            int num13 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type;
-                                            int num14 = (int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY].type;
-                                            int num15 = (int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY].type;
-                                            int num16 = (int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY - 1].type;
-                                            int num17 = (int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY - 1].type;
-                                            int num18 = (int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY - 1].type;
-                                            int num19 = (int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY + 1].type;
+                                            int num13 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Type;
+                                            int num14 = (int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Type;
+                                            int num15 = (int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Type;
+                                            int num16 = (int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY - 1].Type;
+                                            int num17 = (int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY - 1].Type;
+                                            int num18 = (int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY - 1].Type;
+                                            int num19 = (int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY + 1].Type;
                                             if (!Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active)
                                             {
                                                 num13 = -1;
@@ -3748,7 +3744,7 @@ namespace Terraria_Server
                                         {
                                             if (selectedItem.CreateTile == 78)
                                             {
-                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active && (Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type] || Main.tileTable[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type]))
+                                                if (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active && (Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Type] || Main.tileTable[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Type]))
                                                 {
                                                     flag4 = true;
                                                 }
@@ -3757,7 +3753,7 @@ namespace Terraria_Server
                                             {
                                                 if (selectedItem.CreateTile == 13 || selectedItem.CreateTile == 29 || selectedItem.CreateTile == 33 || selectedItem.CreateTile == 49)
                                                 {
-                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active && Main.tileTable[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type])
+                                                    if (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active && Main.tileTable[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Type])
                                                     {
                                                         flag4 = true;
                                                     }
@@ -3766,14 +3762,14 @@ namespace Terraria_Server
                                                 {
                                                     if (selectedItem.CreateTile == 51)
                                                     {
-                                                        if (Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].wall > 0)
+                                                        if (Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Wall > 0 || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Wall > 0)
                                                         {
                                                             flag4 = true;
                                                         }
                                                     }
                                                     else
                                                     {
-                                                        if ((Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY].type]) || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].wall > 0 || (Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY].type]) || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].wall > 0 || (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].type]) || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].wall > 0 || (Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY - 1].type]) || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].wall > 0)
+                                                        if ((Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Type]) || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Wall > 0 || (Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Type]) || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Wall > 0 || (Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Type]) || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Wall > 0 || (Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Active && Main.tileSolid[(int)Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Type]) || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Wall > 0)
                                                         {
                                                             flag4 = true;
                                                         }
@@ -3796,10 +3792,10 @@ namespace Terraria_Server
                                         {
                                             if (this.direction == 1)
                                             {
-                                                Tile expr_40C8 = Main.tile[Player.tileTargetX, Player.tileTargetY];
-                                                expr_40C8.frameX += 18;
-                                                Tile expr_40ED = Main.tile[Player.tileTargetX, Player.tileTargetY - 1];
-                                                expr_40ED.frameX += 18;
+                                                TileRef expr_40C8 = Main.tile[Player.tileTargetX, Player.tileTargetY];
+                                                expr_40C8.FrameX += 18;
+                                                TileRef expr_40ED = Main.tile[Player.tileTargetX, Player.tileTargetY - 1];
+                                                expr_40ED.FrameX += 18;
                                             }
                                             if (Main.netMode == 1)
                                             {
@@ -3829,12 +3825,12 @@ namespace Terraria_Server
                         this.showItemIcon = true;
                         if (this.itemTime == 0 && this.itemAnimation > 0 && this.controlUseItem)
                         {
-                            if (Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].wall > 0)
+                            if (Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX + 1, Player.tileTargetY].Wall > 0 || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Active || Main.tile[Player.tileTargetX - 1, Player.tileTargetY].Wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY + 1].Wall > 0 || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Active || Main.tile[Player.tileTargetX, Player.tileTargetY - 1].Wall > 0)
                             {
-                                if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall != selectedItem.CreateWall)
+                                if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].Wall != selectedItem.CreateWall)
                                 {
                                     WorldGen.PlaceWall(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateWall, false);
-                                    if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall == selectedItem.CreateWall)
+                                    if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].Wall == selectedItem.CreateWall)
                                     {
                                         this.itemTime = selectedItem.UseTime;
                                         if (Main.netMode == 1)
@@ -4017,7 +4013,7 @@ namespace Terraria_Server
                             {
                                 for (int l = num23; l < num24; l++)
                                 {
-                                    if (Main.tile[k, l].type == 3 || Main.tile[k, l].type == 24 || Main.tile[k, l].type == 28 || Main.tile[k, l].type == 32 || Main.tile[k, l].type == 51 || Main.tile[k, l].type == 52 || Main.tile[k, l].type == 61 || Main.tile[k, l].type == 62 || Main.tile[k, l].type == 69 || Main.tile[k, l].type == 71 || Main.tile[k, l].type == 73 || Main.tile[k, l].type == 74)
+                                    if (Main.tile[k, l].Type == 3 || Main.tile[k, l].Type == 24 || Main.tile[k, l].Type == 28 || Main.tile[k, l].Type == 32 || Main.tile[k, l].Type == 51 || Main.tile[k, l].Type == 52 || Main.tile[k, l].Type == 61 || Main.tile[k, l].Type == 62 || Main.tile[k, l].Type == 69 || Main.tile[k, l].Type == 71 || Main.tile[k, l].Type == 73 || Main.tile[k, l].Type == 74)
                                     {
                                         WorldGen.KillTile(k, l, false, false, false);
                                         if (Main.netMode == 1)
@@ -4379,11 +4375,7 @@ namespace Terraria_Server
 			{
 				return false;
 			}
-			if (Main.tile[x, y - 1] == null)
-			{
-				return false;
-			}
-			if (!Main.tile[x, y - 1].Active || Main.tile[x, y - 1].type != 79)
+			if (!Main.tile[x, y - 1].Active || Main.tile[x, y - 1].Type != 79)
 			{
 				return false;
 			}
@@ -4391,11 +4383,11 @@ namespace Terraria_Server
 			{
 				for (int j = y - 3; j < y; j++)
 				{
-					if (Main.tile[i, j] == null)
+					if (! Main.tile[i, j].Exists)
 					{
 						return false;
 					}
-					if (Main.tile[i, j].Active && Main.tileSolid[(int)Main.tile[i, j].type] && !Main.tileSolidTop[(int)Main.tile[i, j].type])
+					if (Main.tile[i, j].Active && Main.tileSolid[(int)Main.tile[i, j].Type] && !Main.tileSolidTop[(int)Main.tile[i, j].Type])
 					{
 						return false;
 					}
