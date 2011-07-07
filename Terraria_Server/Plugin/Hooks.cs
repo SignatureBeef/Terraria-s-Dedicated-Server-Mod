@@ -1,6 +1,9 @@
 ﻿
 namespace Terraria_Server.Plugin
 {
+    /// <summary>
+    /// All hooks currently available for processing
+    /// </summary>
     public enum Hooks
     {
         CONSOLE_COMMAND,

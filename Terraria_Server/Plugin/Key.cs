@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Terraria_Server.Plugin
 {
+    /// <summary>
+    /// Key class for determining player's keypresses.  Currently only up, down, left, right and jump are detectable
+    /// </summary>
     public class Key
     {
         public bool Up { get; set; }
