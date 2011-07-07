@@ -54,7 +54,8 @@ namespace Terraria_Server.Commands
             PLAYER_OPLOGOUT = 20,
             COMMAND_NPCSPAWN = 21,
             COMMAND_KICK = 22,
-            COMMAND_RESTART = 23
+            COMMAND_RESTART = 23,
+            COMMAND_STOP = 24
         }
  
         public static String[] CommandDefinition = new String[] {   "exit",         "reload",       "list",
@@ -64,7 +65,8 @@ namespace Terraria_Server.Commands
                                                                     "give",         "spawnnpc",     "tp",
 																	"tphere",       "settle",       "op",
                                                                     "deop",         "oplogin",      "oplogout",
-                                                                    "npcspawns",    "kick",         "restart"};
+                                                                    "npcspawns",    "kick",         "restart",
+                                                                    "stop"};
 
         public static String[] CommandInformation = new String[] {  "Stop & Close The Server.",
                                                                     "Reload Plugins.",
@@ -89,9 +91,10 @@ namespace Terraria_Server.Commands
                                                                     "Log out of OP status.",
                                                                     "Toggle the state of NPC Spawning.",
                                                                     "Kicks a player from the server.", 
-                                                                    "Restarts the server."};
+                                                                    "Restarts the server.",
+                                                                    "Stop & Close The Server."};
 
-        public static int[] CommandPermission = new int[] { 1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1};
+        public static int[] CommandPermission = new int[] { 1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1};
 
         public static String MergeStringArray(String[] Array)
         {

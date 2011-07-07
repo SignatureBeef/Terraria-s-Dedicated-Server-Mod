@@ -7795,17 +7795,21 @@ namespace Terraria_Server
                 npc.timeLeft = (int)((double)NPC.activeTime * 1.25);
                 npc.wet = Collision.WetCollision(Main.npc[num].Position, Main.npc[num].width, Main.npc[num].height);
 
-                NPCSpawnEvent npcEvent = new NPCSpawnEvent();
-                npcEvent.NPC = npc;
-                Sender sender = new Sender();
-                sender.Op = true;
-                npcEvent.Sender = sender;
-                Program.server.getPluginManager().processHook(Hooks.NPC_SPAWN, npcEvent);
-                if (npcEvent.Cancelled)
+                if (!WorldGen.gen)
                 {
-                    npc = null;
-                    return 1000;
+                    NPCSpawnEvent npcEvent = new NPCSpawnEvent();
+                    npcEvent.NPC = npc;
+                    Sender sender = new Sender();
+                    sender.Op = true;
+                    npcEvent.Sender = sender;
+                    Program.server.getPluginManager().processHook(Hooks.NPC_SPAWN, npcEvent);
+                    if (npcEvent.Cancelled)
+                    {
+                        npc = null;
+                        return 1000;
+                    }
                 }
+                
 
                 Main.npc[num] = npc;
 
