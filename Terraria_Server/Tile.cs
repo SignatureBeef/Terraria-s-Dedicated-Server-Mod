@@ -1,3 +1,4 @@
+using System;
 using System.Runtime.InteropServices;
 
 namespace Terraria_Server
@@ -26,13 +27,13 @@ namespace Terraria_Server
 		}
 		
 		public bool Active {
-			get { return Main.tile.data [x, y].active; }
-			set { Main.tile.data [x, y].active = value; }
+			get { return Main.tile.data [x, y].Active; }
+			set { Main.tile.data [x, y].Active = value; }
 		}
 		
 		public bool Lighted {
-			get { return Main.tile.data [x, y].lighted; }
-			set { Main.tile.data [x, y].lighted = value; }
+			get { return Main.tile.data [x, y].Lighted; }
+			set { Main.tile.data [x, y].Lighted = value; }
 		}
 
 		public byte Type {
@@ -66,18 +67,18 @@ namespace Terraria_Server
 		}
 
 		public bool CheckingLiquid {
-			get { return Main.tile.data [x, y].checkingLiquid; }
-			set { Main.tile.data [x, y].checkingLiquid = value; }
+			get { return Main.tile.data [x, y].CheckingLiquid; }
+			set { Main.tile.data [x, y].CheckingLiquid = value; }
 		}
 
 		public bool SkipLiquid {
-			get { return Main.tile.data [x, y].skipLiquid; }
-			set { Main.tile.data [x, y].skipLiquid = value; }
+			get { return Main.tile.data [x, y].SkipLiquid; }
+			set { Main.tile.data [x, y].SkipLiquid = value; }
 		}
 
 		public bool Lava {
-			get { return Main.tile.data [x, y].lava; }
-			set { Main.tile.data [x, y].lava = value; }
+			get { return Main.tile.data [x, y].Lava; }
+			set { Main.tile.data [x, y].Lava = value; }
 		}
 
 		public byte FrameNumber {
@@ -96,6 +97,16 @@ namespace Terraria_Server
 		}
 	}
 	
+	[Flags]
+	internal enum TileFlags : byte
+	{
+		Active = 1,
+		Lighted = 2,
+		CheckingLiquid = 4,
+		SkipLiquid = 8,
+		Lava = 16,
+	}
+	
 	[StructLayout(LayoutKind.Sequential, Pack=1)]
 	public struct TileData
 	{
@@ -108,27 +119,31 @@ namespace Terraria_Server
 		internal byte wallFrameNumber;
 		internal byte liquid;
 		internal byte frameNumber;
-		internal bool active;
-		internal bool lighted;
-		internal bool checkingLiquid;
-		internal bool skipLiquid;
-		internal bool lava;
-
+		internal TileFlags flags;
+		
+		internal void SetFlag (TileFlags f, bool value)
+		{
+			if (value)
+				flags |= f;
+			else
+				flags &= ~f;
+		}
+		
 		public bool Active {
 			get {
-				return this.active;
+				return (flags & TileFlags.Active) != 0;
 			}
 			set {
-				active = value;
+				SetFlag (TileFlags.Active, value);
 			}
 		}
 
 		public bool CheckingLiquid {
 			get {
-				return this.checkingLiquid;
+				return (flags & TileFlags.CheckingLiquid) != 0;
 			}
 			set {
-				checkingLiquid = value;
+				SetFlag (TileFlags.CheckingLiquid, value);
 			}
 		}
 
@@ -161,19 +176,19 @@ namespace Terraria_Server
 
 		public bool Lava {
 			get {
-				return this.lava;
+				return (flags & TileFlags.Lava) != 0;
 			}
 			set {
-				lava = value;
+				SetFlag (TileFlags.Lava, value);
 			}
 		}
 
 		public bool Lighted {
 			get {
-				return this.lighted;
+				return (flags & TileFlags.Lighted) != 0;
 			}
 			set {
-				lighted = value;
+				SetFlag (TileFlags.Lighted, value);
 			}
 		}
 
@@ -188,10 +203,10 @@ namespace Terraria_Server
 
 		public bool SkipLiquid {
 			get {
-				return this.skipLiquid;
+				return (flags & TileFlags.SkipLiquid) != 0;
 			}
 			set {
-				skipLiquid = value;
+				SetFlag (TileFlags.SkipLiquid, value);
 			}
 		}
 
