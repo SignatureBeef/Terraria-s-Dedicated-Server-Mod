@@ -7,6 +7,7 @@ namespace Terraria_Server
 {
     public class NPC
     {
+        public const int MAX_NPCS = 1000;
         public const int MAX_AI = 4;
 
         public static int immuneTime = 20;
@@ -2472,12 +2473,12 @@ namespace Terraria_Server
                                                         vector2.Y += vector3.Y * 10f;
                                                         if (Main.netMode != 1)
                                                         {
-                                                            int num21 = NPC.NewNPC((int)vector2.X, (int)vector2.Y, 5, 0);
-                                                            Main.npc[num21].Velocity.X = vector3.X;
-                                                            Main.npc[num21].Velocity.Y = vector3.Y;
-                                                            if (Main.netMode == 2 && num21 < 1000)
+                                                            int npcIndex = NPC.NewNPC((int)vector2.X, (int)vector2.Y, 5, 0);
+                                                            Main.npcs[npcIndex].Velocity.X = vector3.X;
+                                                            Main.npcs[npcIndex].Velocity.Y = vector3.Y;
+                                                            if (Main.netMode == 2 && npcIndex < MAX_NPCS)
                                                             {
-                                                                NetMessage.SendData(23, -1, -1, "", num21);
+                                                                NetMessage.SendData(23, -1, -1, "", npcIndex);
                                                             }
                                                         }
                                                         for (int i = 0; i < 10; i++)
@@ -3041,17 +3042,17 @@ namespace Terraria_Server
                                                         this.ai[0] = (float)NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), this.type + 1, this.whoAmI);
                                                     }
                                                 }
-                                                Main.npc[(int)this.ai[0]].ai[1] = (float)this.whoAmI;
-                                                Main.npc[(int)this.ai[0]].ai[2] = this.ai[2] - 1f;
+                                                Main.npcs[(int)this.ai[0]].ai[1] = (float)this.whoAmI;
+                                                Main.npcs[(int)this.ai[0]].ai[2] = this.ai[2] - 1f;
                                                 this.netUpdate = true;
                                             }
-                                            if ((this.type == 8 || this.type == 9 || this.type == 11 || this.type == 12 || this.type == 40 || this.type == 41) && (!Main.npc[(int)this.ai[1]].Active || Main.npc[(int)this.ai[1]].aiStyle != this.aiStyle))
+                                            if ((this.type == 8 || this.type == 9 || this.type == 11 || this.type == 12 || this.type == 40 || this.type == 41) && (!Main.npcs[(int)this.ai[1]].Active || Main.npcs[(int)this.ai[1]].aiStyle != this.aiStyle))
                                             {
                                                 this.life = 0;
                                                 this.HitEffect(0, 10.0);
                                                 this.Active = false;
                                             }
-                                            if ((this.type == 7 || this.type == 8 || this.type == 10 || this.type == 11 || this.type == 39 || this.type == 40) && !Main.npc[(int)this.ai[0]].Active)
+                                            if ((this.type == 7 || this.type == 8 || this.type == 10 || this.type == 11 || this.type == 39 || this.type == 40) && !Main.npcs[(int)this.ai[0]].Active)
                                             {
                                                 this.life = 0;
                                                 this.HitEffect(0, 10.0);
@@ -3059,25 +3060,25 @@ namespace Terraria_Server
                                             }
                                             if (this.type == 13 || this.type == 14 || this.type == 15)
                                             {
-                                                if (!Main.npc[(int)this.ai[1]].Active && !Main.npc[(int)this.ai[0]].Active)
+                                                if (!Main.npcs[(int)this.ai[1]].Active && !Main.npcs[(int)this.ai[0]].Active)
                                                 {
                                                     this.life = 0;
                                                     this.HitEffect(0, 10.0);
                                                     this.Active = false;
                                                 }
-                                                if (this.type == 13 && !Main.npc[(int)this.ai[0]].Active)
+                                                if (this.type == 13 && !Main.npcs[(int)this.ai[0]].Active)
                                                 {
                                                     this.life = 0;
                                                     this.HitEffect(0, 10.0);
                                                     this.Active = false;
                                                 }
-                                                if (this.type == 15 && !Main.npc[(int)this.ai[1]].Active)
+                                                if (this.type == 15 && !Main.npcs[(int)this.ai[1]].Active)
                                                 {
                                                     this.life = 0;
                                                     this.HitEffect(0, 10.0);
                                                     this.Active = false;
                                                 }
-                                                if (this.type == 14 && !Main.npc[(int)this.ai[1]].Active)
+                                                if (this.type == 14 && !Main.npcs[(int)this.ai[1]].Active)
                                                 {
                                                     this.type = 13;
                                                     int num45 = this.whoAmI;
@@ -3094,7 +3095,7 @@ namespace Terraria_Server
                                                     this.netUpdate = true;
                                                     this.whoAmI = num45;
                                                 }
-                                                if (this.type == 14 && !Main.npc[(int)this.ai[0]].Active)
+                                                if (this.type == 14 && !Main.npcs[(int)this.ai[0]].Active)
                                                 {
                                                     int num48 = this.life;
                                                     int num49 = this.whoAmI;
@@ -3113,9 +3114,9 @@ namespace Terraria_Server
                                                 if (this.life == 0)
                                                 {
                                                     bool flag5 = true;
-                                                    for (int l = 0; l < 1000; l++)
+                                                    for (int l = 0; l < MAX_NPCS; l++)
                                                     {
-                                                        if (Main.npc[l].Active && (Main.npc[l].type == 13 || Main.npc[l].type == 14 || Main.npc[l].type == 15))
+                                                        if (Main.npcs[l].Active && (Main.npcs[l].type == 13 || Main.npcs[l].type == 14 || Main.npcs[l].type == 15))
                                                         {
                                                             flag5 = false;
                                                             break;
@@ -3196,8 +3197,8 @@ namespace Terraria_Server
                                         float num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
                                         if (this.ai[1] > 0f)
                                         {
-                                            num57 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - vector9.X;
-                                            num58 = Main.npc[(int)this.ai[1]].Position.Y + (float)(Main.npc[(int)this.ai[1]].height / 2) - vector9.Y;
+                                            num57 = Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - vector9.X;
+                                            num58 = Main.npcs[(int)this.ai[1]].Position.Y + (float)(Main.npcs[(int)this.ai[1]].height / 2) - vector9.Y;
                                             this.rotation = (float)Math.Atan2((double)num58, (double)num57) + 1.57f;
                                             num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
                                             num59 = (num59 - (float)this.width) / num59;
@@ -4360,17 +4361,17 @@ namespace Terraria_Server
                                                             this.ai[0] = 1f;
                                                             if (this.type != 68)
                                                             {
-                                                                int num104 = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)this.Position.Y + this.height / 2, 36, this.whoAmI);
-                                                                Main.npc[num104].ai[0] = -1f;
-                                                                Main.npc[num104].ai[1] = (float)this.whoAmI;
-                                                                Main.npc[num104].target = this.target;
-                                                                Main.npc[num104].netUpdate = true;
-                                                                num104 = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)this.Position.Y + this.height / 2, 36, this.whoAmI);
-                                                                Main.npc[num104].ai[0] = 1f;
-                                                                Main.npc[num104].ai[1] = (float)this.whoAmI;
-                                                                Main.npc[num104].ai[3] = 150f;
-                                                                Main.npc[num104].target = this.target;
-                                                                Main.npc[num104].netUpdate = true;
+                                                                int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)this.Position.Y + this.height / 2, 36, this.whoAmI);
+                                                                Main.npcs[npcIndex].ai[0] = -1f;
+                                                                Main.npcs[npcIndex].ai[1] = (float)this.whoAmI;
+                                                                Main.npcs[npcIndex].target = this.target;
+                                                                Main.npcs[npcIndex].netUpdate = true;
+                                                                npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)this.Position.Y + this.height / 2, 36, this.whoAmI);
+                                                                Main.npcs[npcIndex].ai[0] = 1f;
+                                                                Main.npcs[npcIndex].ai[1] = (float)this.whoAmI;
+                                                                Main.npcs[npcIndex].ai[3] = 150f;
+                                                                Main.npcs[npcIndex].target = this.target;
+                                                                Main.npcs[npcIndex].netUpdate = true;
                                                             }
                                                         }
                                                         if (this.type == 68 && this.ai[1] != 3f && this.ai[1] != 2f)
@@ -4547,7 +4548,7 @@ namespace Terraria_Server
                                                         if (this.aiStyle == 12)
                                                         {
                                                             this.spriteDirection = -(int)this.ai[0];
-                                                            if (!Main.npc[(int)this.ai[1]].Active || Main.npc[(int)this.ai[1]].aiStyle != 11)
+                                                            if (!Main.npcs[(int)this.ai[1]].Active || Main.npcs[(int)this.ai[1]].aiStyle != 11)
                                                             {
                                                                 this.ai[2] += 10f;
                                                                 if (this.ai[2] > 50f || Main.netMode != 2)
@@ -4559,13 +4560,13 @@ namespace Terraria_Server
                                                             }
                                                             if (this.ai[2] == 0f || this.ai[2] == 3f)
                                                             {
-                                                                if (Main.npc[(int)this.ai[1]].ai[1] == 3f && this.timeLeft > 10)
+                                                                if (Main.npcs[(int)this.ai[1]].ai[1] == 3f && this.timeLeft > 10)
                                                                 {
                                                                     this.timeLeft = 10;
                                                                 }
-                                                                if (Main.npc[(int)this.ai[1]].ai[1] != 0f)
+                                                                if (Main.npcs[(int)this.ai[1]].ai[1] != 0f)
                                                                 {
-                                                                    if (this.Position.Y > Main.npc[(int)this.ai[1]].Position.Y - 100f)
+                                                                    if (this.Position.Y > Main.npcs[(int)this.ai[1]].Position.Y - 100f)
                                                                     {
                                                                         if (this.Velocity.Y > 0f)
                                                                         {
@@ -4579,7 +4580,7 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.Position.Y < Main.npc[(int)this.ai[1]].Position.Y - 100f)
+                                                                        if (this.Position.Y < Main.npcs[(int)this.ai[1]].Position.Y - 100f)
                                                                         {
                                                                             if (this.Velocity.Y < 0f)
                                                                             {
@@ -4592,7 +4593,7 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (this.Position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) > Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
                                                                     {
                                                                         if (this.Velocity.X > 0f)
                                                                         {
@@ -4604,7 +4605,7 @@ namespace Terraria_Server
                                                                             this.Velocity.X = 8f;
                                                                         }
                                                                     }
-                                                                    if (this.Position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) < Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 120f * this.ai[0])
                                                                     {
                                                                         if (this.Velocity.X < 0f)
                                                                         {
@@ -4626,7 +4627,7 @@ namespace Terraria_Server
                                                                         this.ai[3] = 0f;
                                                                         this.netUpdate = true;
                                                                     }
-                                                                    if (this.Position.Y > Main.npc[(int)this.ai[1]].Position.Y + 230f)
+                                                                    if (this.Position.Y > Main.npcs[(int)this.ai[1]].Position.Y + 230f)
                                                                     {
                                                                         if (this.Velocity.Y > 0f)
                                                                         {
@@ -4640,7 +4641,7 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (this.Position.Y < Main.npc[(int)this.ai[1]].Position.Y + 230f)
+                                                                        if (this.Position.Y < Main.npcs[(int)this.ai[1]].Position.Y + 230f)
                                                                         {
                                                                             if (this.Velocity.Y < 0f)
                                                                             {
@@ -4653,7 +4654,7 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (this.Position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) > Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
                                                                     {
                                                                         if (this.Velocity.X > 0f)
                                                                         {
@@ -4665,7 +4666,7 @@ namespace Terraria_Server
                                                                             this.Velocity.X = 8f;
                                                                         }
                                                                     }
-                                                                    if (this.Position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
+                                                                    if (this.Position.X + (float)(this.width / 2) < Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 200f * this.ai[0])
                                                                     {
                                                                         if (this.Velocity.X < 0f)
                                                                         {
@@ -4679,8 +4680,8 @@ namespace Terraria_Server
                                                                     }
                                                                 }
                                                                 Vector2 vector14 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                                                                float num113 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector14.X;
-                                                                float num114 = Main.npc[(int)this.ai[1]].Position.Y + 230f - vector14.Y;
+                                                                float num113 = Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector14.X;
+                                                                float num114 = Main.npcs[(int)this.ai[1]].Position.Y + 230f - vector14.Y;
                                                                 Math.Sqrt((double)(num113 * num113 + num114 * num114));
                                                                 this.rotation = (float)Math.Atan2((double)num114, (double)num113) + 1.57f;
                                                                 return;
@@ -4688,8 +4689,8 @@ namespace Terraria_Server
                                                             if (this.ai[2] == 1f)
                                                             {
                                                                 Vector2 vector15 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                                                                float num115 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector15.X;
-                                                                float num116 = Main.npc[(int)this.ai[1]].Position.Y + 230f - vector15.Y;
+                                                                float num115 = Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector15.X;
+                                                                float num116 = Main.npcs[(int)this.ai[1]].Position.Y + 230f - vector15.Y;
                                                                 float num117 = (float)Math.Sqrt((double)(num115 * num115 + num116 * num116));
                                                                 this.rotation = (float)Math.Atan2((double)num116, (double)num115) + 1.57f;
                                                                 this.Velocity.X = this.Velocity.X * 0.95f;
@@ -4698,7 +4699,7 @@ namespace Terraria_Server
                                                                 {
                                                                     this.Velocity.Y = -8f;
                                                                 }
-                                                                if (this.Position.Y < Main.npc[(int)this.ai[1]].Position.Y - 200f)
+                                                                if (this.Position.Y < Main.npcs[(int)this.ai[1]].Position.Y - 200f)
                                                                 {
                                                                     this.TargetClosest(true);
                                                                     this.ai[2] = 2f;
@@ -4728,8 +4729,8 @@ namespace Terraria_Server
                                                                     if (this.ai[2] == 4f)
                                                                     {
                                                                         Vector2 vector16 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                                                                        float num118 = Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector16.X;
-                                                                        float num119 = Main.npc[(int)this.ai[1]].Position.Y + 230f - vector16.Y;
+                                                                        float num118 = Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 200f * this.ai[0] - vector16.X;
+                                                                        float num119 = Main.npcs[(int)this.ai[1]].Position.Y + 230f - vector16.Y;
                                                                         float num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
                                                                         this.rotation = (float)Math.Atan2((double)num119, (double)num118) + 1.57f;
                                                                         this.Velocity.Y = this.Velocity.Y * 0.95f;
@@ -4742,7 +4743,7 @@ namespace Terraria_Server
                                                                         {
                                                                             this.Velocity.X = 8f;
                                                                         }
-                                                                        if (this.Position.X + (float)(this.width / 2) < Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) - 500f || this.Position.X + (float)(this.width / 2) > Main.npc[(int)this.ai[1]].Position.X + (float)(Main.npc[(int)this.ai[1]].width / 2) + 500f)
+                                                                        if (this.Position.X + (float)(this.width / 2) < Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) - 500f || this.Position.X + (float)(this.width / 2) > Main.npcs[(int)this.ai[1]].Position.X + (float)(Main.npcs[(int)this.ai[1]].width / 2) + 500f)
                                                                         {
                                                                             this.TargetClosest(true);
                                                                             this.ai[2] = 5f;
@@ -5315,14 +5316,14 @@ namespace Terraria_Server
                                                                                     {
                                                                                         int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
                                                                                         int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
-                                                                                        int num146 = NPC.NewNPC(x, y, 1, 0);
-                                                                                        Main.npc[num146].SetDefaults(1);
-                                                                                        Main.npc[num146].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
-                                                                                        Main.npc[num146].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
-                                                                                        Main.npc[num146].ai[1] = (float)Main.rand.Next(3);
-                                                                                        if (Main.netMode == 2 && num146 < 1000)
+                                                                                        int npcIndex = NPC.NewNPC(x, y, 1, 0);
+                                                                                        Main.npcs[npcIndex].SetDefaults(1);
+                                                                                        Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
+                                                                                        Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
+                                                                                        Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
+                                                                                        if (Main.netMode == 2 && npcIndex < MAX_NPCS)
                                                                                         {
-                                                                                            NetMessage.SendData(23, -1, -1, "", num146);
+                                                                                            NetMessage.SendData(23, -1, -1, "", npcIndex);
                                                                                         }
                                                                                     }
                                                                                     return;
@@ -7164,7 +7165,7 @@ namespace Terraria_Server
                     {
                         flag = false;
                         int num20 = (int)Main.tile[num, num2].type;
-                        int num21 = 1000;
+                        int npcIndex = 1000;
                         if (flag2)
                         {
                             NPC.NewNPC(num * 16 + 8, num2 * 16, 48, 0);
@@ -7261,32 +7262,32 @@ namespace Terraria_Server
                                                     {
                                                         if (!NPC.downedBoss3)
                                                         {
-                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 68, 0);
+                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 68, 0);
                                                         }
                                                         else
                                                         {
                                                             if (Main.rand.Next(3) == 0)
                                                             {
-                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 34, 0);
+                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 34, 0);
                                                             }
                                                             else
                                                             {
                                                                 if (Main.rand.Next(6) == 0)
                                                                 {
-                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 32, 0);
+                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 32, 0);
                                                                 }
                                                                 else
                                                                 {
-                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
+                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
                                                                     if (Main.rand.Next(4) == 0)
                                                                     {
-                                                                        Main.npc[num21].SetDefaults("Big Boned");
+                                                                        Main.npcs[npcIndex].SetDefaults("Big Boned");
                                                                     }
                                                                     else
                                                                     {
                                                                         if (Main.rand.Next(5) == 0)
                                                                         {
-                                                                            Main.npc[num21].SetDefaults("Short Bones");
+                                                                            Main.npcs[npcIndex].SetDefaults("Short Bones");
                                                                         }
                                                                     }
                                                                 }
@@ -7297,19 +7298,19 @@ namespace Terraria_Server
                                                     {
                                                         if (Main.players[j].zoneMeteor)
                                                         {
-                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 23, 0);
+                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 23, 0);
                                                         }
                                                         else
                                                         {
                                                             if (Main.players[j].zoneEvil && Main.rand.Next(50) == 0)
                                                             {
-                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 7, 1);
+                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 7, 1);
                                                             }
                                                             else
                                                             {
                                                                 if (num20 == 60 && Main.rand.Next(500) == 0 && !Main.dayTime)
                                                                 {
-                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 52, 0);
+                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 52, 0);
                                                                 }
                                                                 else
                                                                 {
@@ -7317,23 +7318,23 @@ namespace Terraria_Server
                                                                     {
                                                                         if (Main.rand.Next(3) == 0)
                                                                         {
-                                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 43, 0);
-                                                                            Main.npc[num21].ai[0] = (float)num;
-                                                                            Main.npc[num21].ai[1] = (float)num2;
-                                                                            Main.npc[num21].netUpdate = true;
+                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 43, 0);
+                                                                            Main.npcs[npcIndex].ai[0] = (float)num;
+                                                                            Main.npcs[npcIndex].ai[1] = (float)num2;
+                                                                            Main.npcs[npcIndex].netUpdate = true;
                                                                         }
                                                                         else
                                                                         {
-                                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
+                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
                                                                             if (Main.rand.Next(4) == 0)
                                                                             {
-                                                                                Main.npc[num21].SetDefaults("Little Stinger");
+                                                                                Main.npcs[npcIndex].SetDefaults("Little Stinger");
                                                                             }
                                                                             else
                                                                             {
                                                                                 if (Main.rand.Next(4) == 0)
                                                                                 {
-                                                                                    Main.npc[num21].SetDefaults("Big Stinger");
+                                                                                    Main.npcs[npcIndex].SetDefaults("Big Stinger");
                                                                                 }
                                                                             }
                                                                         }
@@ -7342,31 +7343,31 @@ namespace Terraria_Server
                                                                     {
                                                                         if (num20 == 60 && Main.rand.Next(4) == 0)
                                                                         {
-                                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
+                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
                                                                         }
                                                                         else
                                                                         {
                                                                             if (num20 == 60 && Main.rand.Next(8) == 0)
                                                                             {
-                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 56, 0);
-                                                                                Main.npc[num21].ai[0] = (float)num;
-                                                                                Main.npc[num21].ai[1] = (float)num2;
-                                                                                Main.npc[num21].netUpdate = true;
+                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 56, 0);
+                                                                                Main.npcs[npcIndex].ai[0] = (float)num;
+                                                                                Main.npcs[npcIndex].ai[1] = (float)num2;
+                                                                                Main.npcs[npcIndex].netUpdate = true;
                                                                             }
                                                                             else
                                                                             {
                                                                                 if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25)
                                                                                 {
-                                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
+                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
                                                                                     if (Main.rand.Next(3) == 0)
                                                                                     {
-                                                                                        Main.npc[num21].SetDefaults("Little Eater");
+                                                                                        Main.npcs[npcIndex].SetDefaults("Little Eater");
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         if (Main.rand.Next(3) == 0)
                                                                                         {
-                                                                                            Main.npc[num21].SetDefaults("Big Eater");
+                                                                                            Main.npcs[npcIndex].SetDefaults("Big Eater");
                                                                                         }
                                                                                     }
                                                                                 }
@@ -7385,38 +7386,38 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.AnyNPCs(50))
                                                                                                 {
-                                                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 50, 0);
+                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 50, 0);
                                                                                                 }
                                                                                                 else
                                                                                                 {
                                                                                                     if (num20 == 53 && Main.rand.Next(5) == 0 && !flag4)
                                                                                                     {
-                                                                                                        num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 69, 0);
+                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 69, 0);
                                                                                                     }
                                                                                                     else
                                                                                                     {
                                                                                                         if (num20 == 53 && !flag4)
                                                                                                         {
-                                                                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 61, 0);
+                                                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 61, 0);
                                                                                                         }
                                                                                                         else
                                                                                                         {
-                                                                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                                                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                                                                                             if (num20 == 60)
                                                                                                             {
-                                                                                                                Main.npc[num21].SetDefaults("Jungle Slime");
+                                                                                                                Main.npcs[npcIndex].SetDefaults("Jungle Slime");
                                                                                                             }
                                                                                                             else
                                                                                                             {
                                                                                                                 if (Main.rand.Next(3) == 0 || num22 < 200)
                                                                                                                 {
-                                                                                                                    Main.npc[num21].SetDefaults("Green Slime");
+                                                                                                                    Main.npcs[npcIndex].SetDefaults("Green Slime");
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
                                                                                                                     if (Main.rand.Next(10) == 0 && num22 > 400)
                                                                                                                     {
-                                                                                                                        Main.npc[num21].SetDefaults("Purple Slime");
+                                                                                                                        Main.npcs[npcIndex].SetDefaults("Purple Slime");
                                                                                                                     }
                                                                                                                 }
                                                                                                             }
@@ -7429,7 +7430,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             if (Main.rand.Next(6) == 0 || (Main.moonPhase == 4 && Main.rand.Next(2) == 0))
                                                                                             {
-                                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 2, 0);
+                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 2, 0);
                                                                                             }
                                                                                             else
                                                                                             {
@@ -7450,24 +7451,24 @@ namespace Terraria_Server
                                                                                         {
                                                                                             if (Main.rand.Next(30) == 0)
                                                                                             {
-                                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
+                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                                                                                 if (Main.rand.Next(5) == 0)
                                                                                                 {
-                                                                                                    Main.npc[num21].SetDefaults("Yellow Slime");
+                                                                                                    Main.npcs[npcIndex].SetDefaults("Yellow Slime");
                                                                                                 }
                                                                                                 else
                                                                                                 {
                                                                                                     if (Main.rand.Next(2) == 0)
                                                                                                     {
-                                                                                                        Main.npc[num21].SetDefaults("Blue Slime");
+                                                                                                        Main.npcs[npcIndex].SetDefaults("Blue Slime");
                                                                                                     }
                                                                                                     else
                                                                                                     {
-                                                                                                        Main.npc[num21].SetDefaults("Red Slime");
+                                                                                                        Main.npcs[npcIndex].SetDefaults("Red Slime");
                                                                                                     }
                                                                                                 }
                                                                                             }
@@ -7478,13 +7479,13 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 if (Main.rand.Next(40) == 0 && !NPC.AnyNPCs(39))
                                                                                                 {
-                                                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 39, 1);
+                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 39, 1);
                                                                                                 }
                                                                                                 else
                                                                                                 {
                                                                                                     if (Main.rand.Next(20) == 0)
                                                                                                     {
-                                                                                                        num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 24, 0);
+                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 24, 0);
                                                                                                     }
                                                                                                     else
                                                                                                     {
@@ -7492,22 +7493,22 @@ namespace Terraria_Server
                                                                                                         {
                                                                                                             if (Main.rand.Next(10) == 0)
                                                                                                             {
-                                                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 66, 0);
+                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 66, 0);
                                                                                                             }
                                                                                                             else
                                                                                                             {
-                                                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 62, 0);
+                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 62, 0);
                                                                                                             }
                                                                                                         }
                                                                                                         else
                                                                                                         {
                                                                                                             if (Main.rand.Next(3) == 0)
                                                                                                             {
-                                                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 59, 0);
+                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 59, 0);
                                                                                                             }
                                                                                                             else
                                                                                                             {
-                                                                                                                num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 60, 0);
+                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 60, 0);
                                                                                                             }
                                                                                                         }
                                                                                                     }
@@ -7517,26 +7518,26 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 if (Main.rand.Next(35) == 0)
                                                                                                 {
-                                                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
+                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
                                                                                                 }
                                                                                                 else
                                                                                                 {
                                                                                                     if (Main.rand.Next(10) == 0)
                                                                                                     {
-                                                                                                        num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 16, 0);
+                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 16, 0);
                                                                                                     }
                                                                                                     else
                                                                                                     {
                                                                                                         if (Main.rand.Next(4) == 0)
                                                                                                         {
-                                                                                                            num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                                                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                                                                                             if (Main.players[j].zoneJungle)
                                                                                                             {
-                                                                                                                Main.npc[num21].SetDefaults("Jungle Slime");
+                                                                                                                Main.npcs[npcIndex].SetDefaults("Jungle Slime");
                                                                                                             }
                                                                                                             else
                                                                                                             {
-                                                                                                                Main.npc[num21].SetDefaults("Black Slime");
+                                                                                                                Main.npcs[npcIndex].SetDefaults("Black Slime");
                                                                                                             }
                                                                                                         }
                                                                                                         else
@@ -7545,17 +7546,17 @@ namespace Terraria_Server
                                                                                                             {
                                                                                                                 if ((double)num2 > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(700) == 0)
                                                                                                                 {
-                                                                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 45, 0);
+                                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 45, 0);
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
                                                                                                                     if (Main.rand.Next(15) == 0)
                                                                                                                     {
-                                                                                                                        num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 44, 0);
+                                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 44, 0);
                                                                                                                     }
                                                                                                                     else
                                                                                                                     {
-                                                                                                                        num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 21, 0);
+                                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 21, 0);
                                                                                                                     }
                                                                                                                 }
                                                                                                             }
@@ -7563,11 +7564,11 @@ namespace Terraria_Server
                                                                                                             {
                                                                                                                 if (Main.players[j].zoneJungle)
                                                                                                                 {
-                                                                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
+                                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
-                                                                                                                    num21 = NPC.NewNPC(num * 16 + 8, num2 * 16, 49, 0);
+                                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 49, 0);
                                                                                                                 }
                                                                                                             }
                                                                                                         }
@@ -7591,13 +7592,13 @@ namespace Terraria_Server
                                 }
                             }
                         }
-                        if (Main.npc[num21].type == 1 && Main.rand.Next(250) == 0)
+                        if (Main.npcs[npcIndex].type == 1 && Main.rand.Next(250) == 0)
                         {
-                            Main.npc[num21].SetDefaults("Pinky");
+                            Main.npcs[npcIndex].SetDefaults("Pinky");
                         }
-                        if (Main.netMode == 2 && num21 < 1000)
+                        if (Main.netMode == 2 && npcIndex < MAX_NPCS)
                         {
-                            NetMessage.SendData(23, -1, -1, "", num21);
+                            NetMessage.SendData(23, -1, -1, "", npcIndex);
                             return;
                         }
                         break;
@@ -7745,20 +7746,20 @@ namespace Terraria_Server
             }
             if (flag)
             {
-                int num17 = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
-                Main.npc[num17].target = playerIndex;
-                String str = Main.npc[num17].Name;
-                if (Main.npc[num17].type == 13)
+                int npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
+                Main.npcs[npcIndex].target = playerIndex;
+                String str = Main.npcs[npcIndex].Name;
+                if (Main.npcs[npcIndex].type == 13)
                 {
                     str = "Eater of Worlds";
                 }
-                if (Main.npc[num17].type == 35)
+                if (Main.npcs[npcIndex].type == 35)
                 {
                     str = "Skeletron";
                 }
-                if (Main.netMode == 2 && num17 < 1000)
+                if (Main.netMode == 2 && npcIndex < MAX_NPCS)
                 {
-                    NetMessage.SendData(23, -1, -1, "", num17);
+                    NetMessage.SendData(23, -1, -1, "", npcIndex);
                 }
                 if (Main.netMode == 0)
                 {
@@ -7773,34 +7774,34 @@ namespace Terraria_Server
         
         public static int NewNPC(int X, int Y, int Type, int Start = 0)
         {
-            int num = -1;
-            for (int i = Start; i < 1000; i++)
+            int npcIndex = -1;
+            for (int i = Start; i < MAX_NPCS; i++)
             {
-                if (!Main.npc[i].Active)
+                if (!Main.npcs[i].Active)
                 {
-                    num = i;
+                    npcIndex = i;
                     break;
                 }
             }
-            if (num >= 0)
+            if (npcIndex >= 0)
             {
-                Main.npc[num] = new NPC();
-                Main.npc[num].SetDefaults(Type);
-                Main.npc[num].Position.X = (float)(X - Main.npc[num].width / 2);
-                Main.npc[num].Position.Y = (float)(Y - Main.npc[num].height);
-                Main.npc[num].Active = true;
-                Main.npc[num].timeLeft = (int)((double)NPC.activeTime * 1.25);
-                Main.npc[num].wet = Collision.WetCollision(Main.npc[num].Position, Main.npc[num].width, Main.npc[num].height);
+                Main.npcs[npcIndex] = new NPC();
+                Main.npcs[npcIndex].SetDefaults(Type);
+                Main.npcs[npcIndex].Position.X = (float)(X - Main.npcs[npcIndex].width / 2);
+                Main.npcs[npcIndex].Position.Y = (float)(Y - Main.npcs[npcIndex].height);
+                Main.npcs[npcIndex].Active = true;
+                Main.npcs[npcIndex].timeLeft = (int)((double)NPC.activeTime * 1.25);
+                Main.npcs[npcIndex].wet = Collision.WetCollision(Main.npcs[npcIndex].Position, Main.npcs[npcIndex].width, Main.npcs[npcIndex].height);
                 if (Type == 50)
                 {
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(25, -1, -1, Main.npc[num].Name + " has awoken!", 255, 175f, 75f, 255f);
+                        NetMessage.SendData(25, -1, -1, Main.npcs[npcIndex].Name + " has awoken!", 255, 175f, 75f, 255f);
                     }
                 }
-                return num;
+                return npcIndex;
             }
-            return 1000;
+            return MAX_NPCS;
         }
         
         public void Transform(int newType)
@@ -8251,7 +8252,7 @@ namespace Terraria_Server
                 }
             }
         }
-        
+
         public void HitEffect(int hitDirection = 0, double dmg = 10.0)
         {
             if (this.type == 1 || this.type == 16)
@@ -8273,1524 +8274,1183 @@ namespace Terraria_Server
                     }
                     if (Main.netMode != 1 && this.type == 16)
                     {
-                        int num2 = Main.rand.Next(2) + 2;
-                        for (int j = 0; j < num2; j++)
+                        int spawnedSlimes = Main.rand.Next(2) + 2;
+                        for (int slimeNum = 0; slimeNum < spawnedSlimes; slimeNum++)
                         {
-                            int num3 = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), 1, 0);
-                            Main.npc[num3].SetDefaults("Baby Slime");
-                            Main.npc[num3].Velocity.X = this.Velocity.X * 2f;
-                            Main.npc[num3].Velocity.Y = this.Velocity.Y;
-                            NPC expr_173_cp_0 = Main.npc[num3];
-                            expr_173_cp_0.Velocity.X = expr_173_cp_0.Velocity.X + ((float)Main.rand.Next(-20, 20) * 0.1f + (float)(j * this.direction) * 0.3f);
-                            NPC expr_1B1_cp_0 = Main.npc[num3];
-                            expr_1B1_cp_0.Velocity.Y = expr_1B1_cp_0.Velocity.Y - ((float)Main.rand.Next(0, 10) * 0.1f + (float)j);
-                            Main.npc[num3].ai[1] = (float)j;
-                            if (Main.netMode == 2 && num3 < 1000)
+                            int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), 1, 0);
+                            Main.npcs[npcIndex].SetDefaults("Baby Slime");
+                            Main.npcs[npcIndex].Velocity.X = this.Velocity.X * 2f;
+                            Main.npcs[npcIndex].Velocity.Y = this.Velocity.Y;
+                            NPC npc = Main.npcs[npcIndex];
+                            npc.Velocity.X = npc.Velocity.X + ((float)Main.rand.Next(-20, 20) * 0.1f + (float)(slimeNum * this.direction) * 0.3f);
+                            npc.Velocity.Y = npc.Velocity.Y - ((float)Main.rand.Next(0, 10) * 0.1f + (float)slimeNum);
+                            npc.ai[1] = (float)slimeNum;
+                            if (Main.netMode == 2 && npcIndex < MAX_NPCS)
                             {
-                                NetMessage.SendData(23, -1, -1, "", num3);
+                                NetMessage.SendData(23, -1, -1, "", npcIndex);
                             }
                         }
                     }
                 }
             }
-            if (this.type != 63 && this.type != 64)
+            else if (this.type == 59 || this.type == 60)
             {
-                if (this.type == 59 || this.type == 60)
+                if (this.life > 0)
                 {
-                    if (this.life > 0)
+                    int num4 = 0;
+                    while ((double)num4 < dmg / (double)this.lifeMax * 80.0)
                     {
-                        int num4 = 0;
-                        while ((double)num4 < dmg / (double)this.lifeMax * 80.0)
-                        {
-                            Vector2 arg_350_0 = this.Position;
-                            int arg_350_1 = this.width;
-                            int arg_350_2 = this.height;
-                            int arg_350_3 = 6;
-                            float arg_350_4 = (float)(hitDirection * 2);
-                            float arg_350_5 = -1f;
-                            int arg_350_6 = this.alpha;
-                            Color newColor = default(Color);
-                            Dust.NewDust(arg_350_0, arg_350_1, arg_350_2, arg_350_3, arg_350_4, arg_350_5, arg_350_6, newColor, 1.5f);
-                            num4++;
-                        }
-                        return;
-                    }
-                    for (int k = 0; k < 40; k++)
-                    {
-                        Vector2 arg_3AB_0 = this.Position;
-                        int arg_3AB_1 = this.width;
-                        int arg_3AB_2 = this.height;
-                        int arg_3AB_3 = 6;
-                        float arg_3AB_4 = (float)(hitDirection * 2);
-                        float arg_3AB_5 = -1f;
-                        int arg_3AB_6 = this.alpha;
+                        Vector2 arg_350_0 = this.Position;
+                        int arg_350_1 = this.width;
+                        int arg_350_2 = this.height;
+                        int arg_350_3 = 6;
+                        float arg_350_4 = (float)(hitDirection * 2);
+                        float arg_350_5 = -1f;
+                        int arg_350_6 = this.alpha;
                         Color newColor = default(Color);
-                        Dust.NewDust(arg_3AB_0, arg_3AB_1, arg_3AB_2, arg_3AB_3, arg_3AB_4, arg_3AB_5, arg_3AB_6, newColor, 1.5f);
+                        Dust.NewDust(arg_350_0, arg_350_1, arg_350_2, arg_350_3, arg_350_4, arg_350_5, arg_350_6, newColor, 1.5f);
+                        num4++;
                     }
-                    if (this.type == 59 && Main.netMode != 1)
-                    {
-                        int num5 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
-                        int num6 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
-                        Main.tile[num5, num6].lava = true;
-                        if (Main.tile[num5, num6].liquid < 200)
-                        {
-                            Main.tile[num5, num6].liquid = 200;
-                        }
-                        WorldGen.TileFrame(num5, num6, false, false);
-                        return;
-                    }
+                    return;
                 }
-                else
+                for (int k = 0; k < 40; k++)
                 {
-                    if (this.type == 50)
+                    Vector2 arg_3AB_0 = this.Position;
+                    int arg_3AB_1 = this.width;
+                    int arg_3AB_2 = this.height;
+                    int arg_3AB_3 = 6;
+                    float arg_3AB_4 = (float)(hitDirection * 2);
+                    float arg_3AB_5 = -1f;
+                    int arg_3AB_6 = this.alpha;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_3AB_0, arg_3AB_1, arg_3AB_2, arg_3AB_3, arg_3AB_4, arg_3AB_5, arg_3AB_6, newColor, 1.5f);
+                }
+                if (this.type == 59 && Main.netMode != 1)
+                {
+                    int num5 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
+                    int num6 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
+                    Main.tile[num5, num6].lava = true;
+                    if (Main.tile[num5, num6].liquid < 200)
                     {
-                        if (this.life > 0)
+                        Main.tile[num5, num6].liquid = 200;
+                    }
+                    WorldGen.TileFrame(num5, num6, false, false);
+                    return;
+                }
+            }
+            else if (this.type == 50)
+            {
+                if (this.life > 0)
+                {
+                    int num7 = 0;
+                    while ((double)num7 < dmg / (double)this.lifeMax * 300.0)
+                    {
+                        Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, 175, new Color(0, 80, 255, 100), 1f);
+                        num7++;
+                    }
+                    return;
+                }
+                for (int l = 0; l < 200; l++)
+                {
+                    Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 175, new Color(0, 80, 255, 100), 1f);
+                }
+                if (Main.netMode != 1)
+                {
+                    int num8 = Main.rand.Next(4) + 4;
+                    for (int m = 0; m < num8; m++)
+                    {
+                        int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
+                        int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
+                        int npcIndex = NPC.NewNPC(x, y, 1, 0);
+                        Main.npcs[npcIndex].SetDefaults(1);
+                        Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
+                        Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
+                        Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
+                        if (Main.netMode == 2 && npcIndex < 1000)
                         {
-                            int num7 = 0;
-                            while ((double)num7 < dmg / (double)this.lifeMax * 300.0)
-                            {
-                                Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, 175, new Color(0, 80, 255, 100), 1f);
-                                num7++;
-                            }
-                            return;
-                        }
-                        for (int l = 0; l < 200; l++)
-                        {
-                            Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 175, new Color(0, 80, 255, 100), 1f);
-                        }
-                        if (Main.netMode != 1)
-                        {
-                            int num8 = Main.rand.Next(4) + 4;
-                            for (int m = 0; m < num8; m++)
-                            {
-                                int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
-                                int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
-                                int num9 = NPC.NewNPC(x, y, 1, 0);
-                                Main.npc[num9].SetDefaults(1);
-                                Main.npc[num9].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
-                                Main.npc[num9].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
-                                Main.npc[num9].ai[1] = (float)Main.rand.Next(3);
-                                if (Main.netMode == 2 && num9 < 1000)
-                                {
-                                    NetMessage.SendData(23, -1, -1, "", num9);
-                                }
-                            }
-                            return;
+                            NetMessage.SendData(23, -1, -1, "", npcIndex);
                         }
                     }
-                    else
+                    return;
+                }
+            }
+            else if (this.type == 49 || this.type == 51)
+            {
+                if (this.life > 0)
+                {
+                    int num10 = 0;
+                    while ((double)num10 < dmg / (double)this.lifeMax * 30.0)
                     {
-                        if (this.type == 49 || this.type == 51)
-                        {
-                            if (this.life > 0)
-                            {
-                                int num10 = 0;
-                                while ((double)num10 < dmg / (double)this.lifeMax * 30.0)
-                                {
-                                    Vector2 arg_69A_0 = this.Position;
-                                    int arg_69A_1 = this.width;
-                                    int arg_69A_2 = this.height;
-                                    int arg_69A_3 = 5;
-                                    float arg_69A_4 = (float)hitDirection;
-                                    float arg_69A_5 = -1f;
-                                    int arg_69A_6 = 0;
-                                    Color newColor = default(Color);
-                                    Dust.NewDust(arg_69A_0, arg_69A_1, arg_69A_2, arg_69A_3, arg_69A_4, arg_69A_5, arg_69A_6, newColor, 1f);
-                                    num10++;
-                                }
-                                return;
-                            }
-                            for (int n = 0; n < 15; n++)
-                            {
-                                Vector2 arg_6F0_0 = this.Position;
-                                int arg_6F0_1 = this.width;
-                                int arg_6F0_2 = this.height;
-                                int arg_6F0_3 = 5;
-                                float arg_6F0_4 = (float)(2 * hitDirection);
-                                float arg_6F0_5 = -2f;
-                                int arg_6F0_6 = 0;
-                                Color newColor = default(Color);
-                                Dust.NewDust(arg_6F0_0, arg_6F0_1, arg_6F0_2, arg_6F0_3, arg_6F0_4, arg_6F0_5, arg_6F0_6, newColor, 1f);
-                            }
-                            if (this.type == 51)
-                            {
-                                SetGore(83);
-                                return;
-                            }
-                            SetGore(82);
-                            return;
-                        }
-                        else
-                        {
-                            if (this.type == 46 || this.type == 55 || this.type == 67)
-                            {
-                                if (this.life > 0)
-                                {
-                                    int num11 = 0;
-                                    while ((double)num11 < dmg / (double)this.lifeMax * 20.0)
-                                    {
-                                        Vector2 arg_78F_0 = this.Position;
-                                        int arg_78F_1 = this.width;
-                                        int arg_78F_2 = this.height;
-                                        int arg_78F_3 = 5;
-                                        float arg_78F_4 = (float)hitDirection;
-                                        float arg_78F_5 = -1f;
-                                        int arg_78F_6 = 0;
-                                        Color newColor = default(Color);
-                                        Dust.NewDust(arg_78F_0, arg_78F_1, arg_78F_2, arg_78F_3, arg_78F_4, arg_78F_5, arg_78F_6, newColor, 1f);
-                                        num11++;
-                                    }
-                                    return;
-                                }
-                                for (int num12 = 0; num12 < 10; num12++)
-                                {
-                                    Vector2 arg_7E5_0 = this.Position;
-                                    int arg_7E5_1 = this.width;
-                                    int arg_7E5_2 = this.height;
-                                    int arg_7E5_3 = 5;
-                                    float arg_7E5_4 = (float)(2 * hitDirection);
-                                    float arg_7E5_5 = -2f;
-                                    int arg_7E5_6 = 0;
-                                    Color newColor = default(Color);
-                                    Dust.NewDust(arg_7E5_0, arg_7E5_1, arg_7E5_2, arg_7E5_3, arg_7E5_4, arg_7E5_5, arg_7E5_6, newColor, 1f);
-                                }
-                                if (this.type == 46)
-                                {
-                                    SetGore(76);
-                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 77);
-                                    return;
-                                }
-                                if (this.type == 67)
-                                {
-                                    SetGore(95);
-                                    SetGore(95);
-                                    SetGore(96);
-                                    return;
-                                }
-                            }
-                            else
-                            {
-                                if (this.type == 47 || this.type == 57 || this.type == 58)
-                                {
-                                    if (this.life > 0)
-                                    {
-                                        int num13 = 0;
-                                        while ((double)num13 < dmg / (double)this.lifeMax * 20.0)
-                                        {
-                                            Vector2 arg_8E2_0 = this.Position;
-                                            int arg_8E2_1 = this.width;
-                                            int arg_8E2_2 = this.height;
-                                            int arg_8E2_3 = 5;
-                                            float arg_8E2_4 = (float)hitDirection;
-                                            float arg_8E2_5 = -1f;
-                                            int arg_8E2_6 = 0;
-                                            Color newColor = default(Color);
-                                            Dust.NewDust(arg_8E2_0, arg_8E2_1, arg_8E2_2, arg_8E2_3, arg_8E2_4, arg_8E2_5, arg_8E2_6, newColor, 1f);
-                                            num13++;
-                                        }
-                                        return;
-                                    }
-                                    for (int num14 = 0; num14 < 10; num14++)
-                                    {
-                                        Vector2 arg_938_0 = this.Position;
-                                        int arg_938_1 = this.width;
-                                        int arg_938_2 = this.height;
-                                        int arg_938_3 = 5;
-                                        float arg_938_4 = (float)(2 * hitDirection);
-                                        float arg_938_5 = -2f;
-                                        int arg_938_6 = 0;
-                                        Color newColor = default(Color);
-                                        Dust.NewDust(arg_938_0, arg_938_1, arg_938_2, arg_938_3, arg_938_4, arg_938_5, arg_938_6, newColor, 1f);
-                                    }
-                                    if (this.type == 57)
-                                    {
-                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 84);
-                                        return;
-                                    }
-                                    if (this.type == 58)
-                                    {
-                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 85);
-                                        return;
-                                    }
-                                    SetGore(78);
-                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 79);
-                                    return;
-                                }
-                                else
-                                {
-                                    if (this.type == 2)
-                                    {
-                                        if (this.life > 0)
-                                        {
-                                            int num15 = 0;
-                                            while ((double)num15 < dmg / (double)this.lifeMax * 100.0)
-                                            {
-                                                Vector2 arg_A34_0 = this.Position;
-                                                int arg_A34_1 = this.width;
-                                                int arg_A34_2 = this.height;
-                                                int arg_A34_3 = 5;
-                                                float arg_A34_4 = (float)hitDirection;
-                                                float arg_A34_5 = -1f;
-                                                int arg_A34_6 = 0;
-                                                Color newColor = default(Color);
-                                                Dust.NewDust(arg_A34_0, arg_A34_1, arg_A34_2, arg_A34_3, arg_A34_4, arg_A34_5, arg_A34_6, newColor, 1f);
-                                                num15++;
-                                            }
-                                            return;
-                                        }
-                                        for (int num16 = 0; num16 < 50; num16++)
-                                        {
-                                            Vector2 arg_A8A_0 = this.Position;
-                                            int arg_A8A_1 = this.width;
-                                            int arg_A8A_2 = this.height;
-                                            int arg_A8A_3 = 5;
-                                            float arg_A8A_4 = (float)(2 * hitDirection);
-                                            float arg_A8A_5 = -2f;
-                                            int arg_A8A_6 = 0;
-                                            Color newColor = default(Color);
-                                            Dust.NewDust(arg_A8A_0, arg_A8A_1, arg_A8A_2, arg_A8A_3, arg_A8A_4, arg_A8A_5, arg_A8A_6, newColor, 1f);
-                                        }
-                                        SetGore(1);
-                                        Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 2);
-                                        return;
-                                    }
-                                    else
-                                    {
-                                        if (this.type == 69)
-                                        {
-                                            if (this.life > 0)
-                                            {
-                                                int num17 = 0;
-                                                while ((double)num17 < dmg / (double)this.lifeMax * 100.0)
-                                                {
-                                                    Vector2 arg_B23_0 = this.Position;
-                                                    int arg_B23_1 = this.width;
-                                                    int arg_B23_2 = this.height;
-                                                    int arg_B23_3 = 5;
-                                                    float arg_B23_4 = (float)hitDirection;
-                                                    float arg_B23_5 = -1f;
-                                                    int arg_B23_6 = 0;
-                                                    Color newColor = default(Color);
-                                                    Dust.NewDust(arg_B23_0, arg_B23_1, arg_B23_2, arg_B23_3, arg_B23_4, arg_B23_5, arg_B23_6, newColor, 1f);
-                                                    num17++;
-                                                }
-                                                return;
-                                            }
-                                            for (int num18 = 0; num18 < 50; num18++)
-                                            {
-                                                Vector2 arg_B79_0 = this.Position;
-                                                int arg_B79_1 = this.width;
-                                                int arg_B79_2 = this.height;
-                                                int arg_B79_3 = 5;
-                                                float arg_B79_4 = (float)(2 * hitDirection);
-                                                float arg_B79_5 = -2f;
-                                                int arg_B79_6 = 0;
-                                                Color newColor = default(Color);
-                                                Dust.NewDust(arg_B79_0, arg_B79_1, arg_B79_2, arg_B79_3, arg_B79_4, arg_B79_5, arg_B79_6, newColor, 1f);
-                                            }
-                                            SetGore(97);
-                                            SetGore(98);
-                                            return;
-                                        }
-                                        else
-                                        {
-                                            if (this.type == 61)
-                                            {
-                                                if (this.life > 0)
-                                                {
-                                                    int num19 = 0;
-                                                    while ((double)num19 < dmg / (double)this.lifeMax * 100.0)
-                                                    {
-                                                        Vector2 arg_BF9_0 = this.Position;
-                                                        int arg_BF9_1 = this.width;
-                                                        int arg_BF9_2 = this.height;
-                                                        int arg_BF9_3 = 5;
-                                                        float arg_BF9_4 = (float)hitDirection;
-                                                        float arg_BF9_5 = -1f;
-                                                        int arg_BF9_6 = 0;
-                                                        Color newColor = default(Color);
-                                                        Dust.NewDust(arg_BF9_0, arg_BF9_1, arg_BF9_2, arg_BF9_3, arg_BF9_4, arg_BF9_5, arg_BF9_6, newColor, 1f);
-                                                        num19++;
-                                                    }
-                                                    return;
-                                                }
-                                                for (int num20 = 0; num20 < 50; num20++)
-                                                {
-                                                    Vector2 arg_C4F_0 = this.Position;
-                                                    int arg_C4F_1 = this.width;
-                                                    int arg_C4F_2 = this.height;
-                                                    int arg_C4F_3 = 5;
-                                                    float arg_C4F_4 = (float)(2 * hitDirection);
-                                                    float arg_C4F_5 = -2f;
-                                                    int arg_C4F_6 = 0;
-                                                    Color newColor = default(Color);
-                                                    Dust.NewDust(arg_C4F_0, arg_C4F_1, arg_C4F_2, arg_C4F_3, arg_C4F_4, arg_C4F_5, arg_C4F_6, newColor, 1f);
-                                                }
-                                                SetGore(86);
-                                                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 87);
-                                                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 88);
-                                                return;
-                                            }
-                                            else
-                                            {
-                                                if (this.type == 65)
-                                                {
-                                                    if (this.life > 0)
-                                                    {
-                                                        int num21 = 0;
-                                                        while ((double)num21 < dmg / (double)this.lifeMax * 150.0)
-                                                        {
-                                                            Vector2 arg_D19_0 = this.Position;
-                                                            int arg_D19_1 = this.width;
-                                                            int arg_D19_2 = this.height;
-                                                            int arg_D19_3 = 5;
-                                                            float arg_D19_4 = (float)hitDirection;
-                                                            float arg_D19_5 = -1f;
-                                                            int arg_D19_6 = 0;
-                                                            Color newColor = default(Color);
-                                                            Dust.NewDust(arg_D19_0, arg_D19_1, arg_D19_2, arg_D19_3, arg_D19_4, arg_D19_5, arg_D19_6, newColor, 1f);
-                                                            num21++;
-                                                        }
-                                                        return;
-                                                    }
-                                                    for (int num22 = 0; num22 < 75; num22++)
-                                                    {
-                                                        Vector2 arg_D6F_0 = this.Position;
-                                                        int arg_D6F_1 = this.width;
-                                                        int arg_D6F_2 = this.height;
-                                                        int arg_D6F_3 = 5;
-                                                        float arg_D6F_4 = (float)(2 * hitDirection);
-                                                        float arg_D6F_5 = -2f;
-                                                        int arg_D6F_6 = 0;
-                                                        Color newColor = default(Color);
-                                                        Dust.NewDust(arg_D6F_0, arg_D6F_1, arg_D6F_2, arg_D6F_3, arg_D6F_4, arg_D6F_5, arg_D6F_6, newColor, 1f);
-                                                    }
-                                                    Gore.NewGore(this.Position, this.Velocity * 0.8f, 89);
-                                                    Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 90);
-                                                    Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 91);
-                                                    Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 92);
-                                                    return;
-                                                }
-                                                else
-                                                {
-                                                    if (this.type == 3 || this.type == 52 || this.type == 53)
-                                                    {
-                                                        if (this.life > 0)
-                                                        {
-                                                            int num23 = 0;
-                                                            while ((double)num23 < dmg / (double)this.lifeMax * 100.0)
-                                                            {
-                                                                Vector2 arg_EA3_0 = this.Position;
-                                                                int arg_EA3_1 = this.width;
-                                                                int arg_EA3_2 = this.height;
-                                                                int arg_EA3_3 = 5;
-                                                                float arg_EA3_4 = (float)hitDirection;
-                                                                float arg_EA3_5 = -1f;
-                                                                int arg_EA3_6 = 0;
-                                                                Color newColor = default(Color);
-                                                                Dust.NewDust(arg_EA3_0, arg_EA3_1, arg_EA3_2, arg_EA3_3, arg_EA3_4, arg_EA3_5, arg_EA3_6, newColor, 1f);
-                                                                num23++;
-                                                            }
-                                                            return;
-                                                        }
-                                                        for (int num24 = 0; num24 < 50; num24++)
-                                                        {
-                                                            Vector2 arg_EFD_0 = this.Position;
-                                                            int arg_EFD_1 = this.width;
-                                                            int arg_EFD_2 = this.height;
-                                                            int arg_EFD_3 = 5;
-                                                            float arg_EFD_4 = 2.5f * (float)hitDirection;
-                                                            float arg_EFD_5 = -2.5f;
-                                                            int arg_EFD_6 = 0;
-                                                            Color newColor = default(Color);
-                                                            Dust.NewDust(arg_EFD_0, arg_EFD_1, arg_EFD_2, arg_EFD_3, arg_EFD_4, arg_EFD_5, arg_EFD_6, newColor, 1f);
-                                                        }
-                                                        SetGore(3);
-                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
-                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
-                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
-                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
-                                                        return;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (this.type == 4)
-                                                        {
-                                                            if (this.life > 0)
-                                                            {
-                                                                int num25 = 0;
-                                                                while ((double)num25 < dmg / (double)this.lifeMax * 100.0)
-                                                                {
-                                                                    Vector2 arg_101F_0 = this.Position;
-                                                                    int arg_101F_1 = this.width;
-                                                                    int arg_101F_2 = this.height;
-                                                                    int arg_101F_3 = 5;
-                                                                    float arg_101F_4 = (float)hitDirection;
-                                                                    float arg_101F_5 = -1f;
-                                                                    int arg_101F_6 = 0;
-                                                                    Color newColor = default(Color);
-                                                                    Dust.NewDust(arg_101F_0, arg_101F_1, arg_101F_2, arg_101F_3, arg_101F_4, arg_101F_5, arg_101F_6, newColor, 1f);
-                                                                    num25++;
-                                                                }
-                                                                return;
-                                                            }
-                                                            for (int num26 = 0; num26 < 150; num26++)
-                                                            {
-                                                                Vector2 arg_1075_0 = this.Position;
-                                                                int arg_1075_1 = this.width;
-                                                                int arg_1075_2 = this.height;
-                                                                int arg_1075_3 = 5;
-                                                                float arg_1075_4 = (float)(2 * hitDirection);
-                                                                float arg_1075_5 = -2f;
-                                                                int arg_1075_6 = 0;
-                                                                Color newColor = default(Color);
-                                                                Dust.NewDust(arg_1075_0, arg_1075_1, arg_1075_2, arg_1075_3, arg_1075_4, arg_1075_5, arg_1075_6, newColor, 1f);
-                                                            }
-                                                            for (int num27 = 0; num27 < 2; num27++)
-                                                            {
-                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 2);
-                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
-                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 9);
-                                                                Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 10);
-                                                            }
-                                                            return;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (this.type == 5)
-                                                            {
-                                                                if (this.life > 0)
-                                                                {
-                                                                    int num28 = 0;
-                                                                    while ((double)num28 < dmg / (double)this.lifeMax * 50.0)
-                                                                    {
-                                                                        Vector2 arg_11F7_0 = this.Position;
-                                                                        int arg_11F7_1 = this.width;
-                                                                        int arg_11F7_2 = this.height;
-                                                                        int arg_11F7_3 = 5;
-                                                                        float arg_11F7_4 = (float)hitDirection;
-                                                                        float arg_11F7_5 = -1f;
-                                                                        int arg_11F7_6 = 0;
-                                                                        Color newColor = default(Color);
-                                                                        Dust.NewDust(arg_11F7_0, arg_11F7_1, arg_11F7_2, arg_11F7_3, arg_11F7_4, arg_11F7_5, arg_11F7_6, newColor, 1f);
-                                                                        num28++;
-                                                                    }
-                                                                    return;
-                                                                }
-                                                                for (int num29 = 0; num29 < 20; num29++)
-                                                                {
-                                                                    Vector2 arg_124D_0 = this.Position;
-                                                                    int arg_124D_1 = this.width;
-                                                                    int arg_124D_2 = this.height;
-                                                                    int arg_124D_3 = 5;
-                                                                    float arg_124D_4 = (float)(2 * hitDirection);
-                                                                    float arg_124D_5 = -2f;
-                                                                    int arg_124D_6 = 0;
-                                                                    Color newColor = default(Color);
-                                                                    Dust.NewDust(arg_124D_0, arg_124D_1, arg_124D_2, arg_124D_3, arg_124D_4, arg_124D_5, arg_124D_6, newColor, 1f);
-                                                                }
-                                                                SetGore(6);
-                                                                SetGore(7);
-                                                                return;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (this.type == 6)
-                                                                {
-                                                                    if (this.life > 0)
-                                                                    {
-                                                                        int num30 = 0;
-                                                                        while ((double)num30 < dmg / (double)this.lifeMax * 100.0)
-                                                                        {
-                                                                            Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                                                                            num30++;
-                                                                        }
-                                                                        return;
-                                                                    }
-                                                                    for (int num31 = 0; num31 < 50; num31++)
-                                                                    {
-                                                                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                                                                    }
-                                                                    int num32 = SetGore(14);
-                                                                    Main.gore[num32].alpha = this.alpha;
-                                                                    num32 = SetGore(15);
-                                                                    Main.gore[num32].alpha = this.alpha;
-                                                                    return;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (this.type == 7 || this.type == 8 || this.type == 9)
-                                                                    {
-                                                                        if (this.life > 0)
-                                                                        {
-                                                                            int num33 = 0;
-                                                                            while ((double)num33 < dmg / (double)this.lifeMax * 100.0)
-                                                                            {
-                                                                                Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                                                                                num33++;
-                                                                            }
-                                                                            return;
-                                                                        }
-                                                                        for (int num34 = 0; num34 < 50; num34++)
-                                                                        {
-                                                                            Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                                                                        }
-                                                                        int num35 = SetGore(this.type - 7 + 18);
-                                                                        Main.gore[num35].alpha = this.alpha;
-                                                                        return;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (this.type == 10 || this.type == 11 || this.type == 12)
-                                                                        {
-                                                                            if (this.life > 0)
-                                                                            {
-                                                                                int num36 = 0;
-                                                                                while ((double)num36 < dmg / (double)this.lifeMax * 50.0)
-                                                                                {
-                                                                                    Vector2 arg_14D5_0 = this.Position;
-                                                                                    int arg_14D5_1 = this.width;
-                                                                                    int arg_14D5_2 = this.height;
-                                                                                    int arg_14D5_3 = 5;
-                                                                                    float arg_14D5_4 = (float)hitDirection;
-                                                                                    float arg_14D5_5 = -1f;
-                                                                                    int arg_14D5_6 = 0;
-                                                                                    Color newColor = default(Color);
-                                                                                    Dust.NewDust(arg_14D5_0, arg_14D5_1, arg_14D5_2, arg_14D5_3, arg_14D5_4, arg_14D5_5, arg_14D5_6, newColor, 1f);
-                                                                                    num36++;
-                                                                                }
-                                                                                return;
-                                                                            }
-                                                                            for (int num37 = 0; num37 < 10; num37++)
-                                                                            {
-                                                                                Vector2 arg_152F_0 = this.Position;
-                                                                                int arg_152F_1 = this.width;
-                                                                                int arg_152F_2 = this.height;
-                                                                                int arg_152F_3 = 5;
-                                                                                float arg_152F_4 = 2.5f * (float)hitDirection;
-                                                                                float arg_152F_5 = -2.5f;
-                                                                                int arg_152F_6 = 0;
-                                                                                Color newColor = default(Color);
-                                                                                Dust.NewDust(arg_152F_0, arg_152F_1, arg_152F_2, arg_152F_3, arg_152F_4, arg_152F_5, arg_152F_6, newColor, 1f);
-                                                                            }
-                                                                            SetGore(this.type - 7 + 18);
-                                                                            return;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (this.type == 13 || this.type == 14 || this.type == 15)
-                                                                            {
-                                                                                if (this.life > 0)
-                                                                                {
-                                                                                    int num38 = 0;
-                                                                                    while ((double)num38 < dmg / (double)this.lifeMax * 100.0)
-                                                                                    {
-                                                                                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                                                                                        num38++;
-                                                                                    }
-                                                                                    return;
-                                                                                }
-                                                                                for (int num39 = 0; num39 < 50; num39++)
-                                                                                {
-                                                                                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                                                                                }
-                                                                                if (this.type == 13)
-                                                                                {
-                                                                                    SetGore(24);
-                                                                                    SetGore(25);
-                                                                                    return;
-                                                                                }
-                                                                                if (this.type == 14)
-                                                                                {
-                                                                                    SetGore(26);
-                                                                                    SetGore(27);
-                                                                                    return;
-                                                                                }
-                                                                                SetGore(28);
-                                                                                SetGore(29);
-                                                                                return;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (this.type == 17)
-                                                                                {
-                                                                                    if (this.life > 0)
-                                                                                    {
-                                                                                        int num40 = 0;
-                                                                                        while ((double)num40 < dmg / (double)this.lifeMax * 100.0)
-                                                                                        {
-                                                                                            Vector2 arg_16F8_0 = this.Position;
-                                                                                            int arg_16F8_1 = this.width;
-                                                                                            int arg_16F8_2 = this.height;
-                                                                                            int arg_16F8_3 = 5;
-                                                                                            float arg_16F8_4 = (float)hitDirection;
-                                                                                            float arg_16F8_5 = -1f;
-                                                                                            int arg_16F8_6 = 0;
-                                                                                            Color newColor = default(Color);
-                                                                                            Dust.NewDust(arg_16F8_0, arg_16F8_1, arg_16F8_2, arg_16F8_3, arg_16F8_4, arg_16F8_5, arg_16F8_6, newColor, 1f);
-                                                                                            num40++;
-                                                                                        }
-                                                                                        return;
-                                                                                    }
-                                                                                    for (int num41 = 0; num41 < 50; num41++)
-                                                                                    {
-                                                                                        Vector2 arg_1752_0 = this.Position;
-                                                                                        int arg_1752_1 = this.width;
-                                                                                        int arg_1752_2 = this.height;
-                                                                                        int arg_1752_3 = 5;
-                                                                                        float arg_1752_4 = 2.5f * (float)hitDirection;
-                                                                                        float arg_1752_5 = -2.5f;
-                                                                                        int arg_1752_6 = 0;
-                                                                                        Color newColor = default(Color);
-                                                                                        Dust.NewDust(arg_1752_0, arg_1752_1, arg_1752_2, arg_1752_3, arg_1752_4, arg_1752_5, arg_1752_6, newColor, 1f);
-                                                                                    }
-                                                                                    SetGore(30);
-                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
-                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
-                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
-                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
-                                                                                    return;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (this.type == 22)
-                                                                                    {
-                                                                                        if (this.life > 0)
-                                                                                        {
-                                                                                            int num42 = 0;
-                                                                                            while ((double)num42 < dmg / (double)this.lifeMax * 100.0)
-                                                                                            {
-                                                                                                Vector2 arg_187A_0 = this.Position;
-                                                                                                int arg_187A_1 = this.width;
-                                                                                                int arg_187A_2 = this.height;
-                                                                                                int arg_187A_3 = 5;
-                                                                                                float arg_187A_4 = (float)hitDirection;
-                                                                                                float arg_187A_5 = -1f;
-                                                                                                int arg_187A_6 = 0;
-                                                                                                Color newColor = default(Color);
-                                                                                                Dust.NewDust(arg_187A_0, arg_187A_1, arg_187A_2, arg_187A_3, arg_187A_4, arg_187A_5, arg_187A_6, newColor, 1f);
-                                                                                                num42++;
-                                                                                            }
-                                                                                            return;
-                                                                                        }
-                                                                                        for (int num43 = 0; num43 < 50; num43++)
-                                                                                        {
-                                                                                            Vector2 arg_18D4_0 = this.Position;
-                                                                                            int arg_18D4_1 = this.width;
-                                                                                            int arg_18D4_2 = this.height;
-                                                                                            int arg_18D4_3 = 5;
-                                                                                            float arg_18D4_4 = 2.5f * (float)hitDirection;
-                                                                                            float arg_18D4_5 = -2.5f;
-                                                                                            int arg_18D4_6 = 0;
-                                                                                            Color newColor = default(Color);
-                                                                                            Dust.NewDust(arg_18D4_0, arg_18D4_1, arg_18D4_2, arg_18D4_3, arg_18D4_4, arg_18D4_5, arg_18D4_6, newColor, 1f);
-                                                                                        }
-                                                                                        SetGore(73);
-                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 74);
-                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 74);
-                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 75);
-                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 75);
-                                                                                        return;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (this.type == 37 || this.type == 54)
-                                                                                        {
-                                                                                            if (this.life > 0)
-                                                                                            {
-                                                                                                int num44 = 0;
-                                                                                                while ((double)num44 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                {
-                                                                                                    Vector2 arg_1A06_0 = this.Position;
-                                                                                                    int arg_1A06_1 = this.width;
-                                                                                                    int arg_1A06_2 = this.height;
-                                                                                                    int arg_1A06_3 = 5;
-                                                                                                    float arg_1A06_4 = (float)hitDirection;
-                                                                                                    float arg_1A06_5 = -1f;
-                                                                                                    int arg_1A06_6 = 0;
-                                                                                                    Color newColor = default(Color);
-                                                                                                    Dust.NewDust(arg_1A06_0, arg_1A06_1, arg_1A06_2, arg_1A06_3, arg_1A06_4, arg_1A06_5, arg_1A06_6, newColor, 1f);
-                                                                                                    num44++;
-                                                                                                }
-                                                                                                return;
-                                                                                            }
-                                                                                            for (int num45 = 0; num45 < 50; num45++)
-                                                                                            {
-                                                                                                Vector2 arg_1A60_0 = this.Position;
-                                                                                                int arg_1A60_1 = this.width;
-                                                                                                int arg_1A60_2 = this.height;
-                                                                                                int arg_1A60_3 = 5;
-                                                                                                float arg_1A60_4 = 2.5f * (float)hitDirection;
-                                                                                                float arg_1A60_5 = -2.5f;
-                                                                                                int arg_1A60_6 = 0;
-                                                                                                Color newColor = default(Color);
-                                                                                                Dust.NewDust(arg_1A60_0, arg_1A60_1, arg_1A60_2, arg_1A60_3, arg_1A60_4, arg_1A60_5, arg_1A60_6, newColor, 1f);
-                                                                                            }
-                                                                                            SetGore(58);
-                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 59);
-                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 59);
-                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 60);
-                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 60);
-                                                                                            return;
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (this.type == 18)
-                                                                                            {
-                                                                                                if (this.life > 0)
-                                                                                                {
-                                                                                                    int num46 = 0;
-                                                                                                    while ((double)num46 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                    {
-                                                                                                        Vector2 arg_1B88_0 = this.Position;
-                                                                                                        int arg_1B88_1 = this.width;
-                                                                                                        int arg_1B88_2 = this.height;
-                                                                                                        int arg_1B88_3 = 5;
-                                                                                                        float arg_1B88_4 = (float)hitDirection;
-                                                                                                        float arg_1B88_5 = -1f;
-                                                                                                        int arg_1B88_6 = 0;
-                                                                                                        Color newColor = default(Color);
-                                                                                                        Dust.NewDust(arg_1B88_0, arg_1B88_1, arg_1B88_2, arg_1B88_3, arg_1B88_4, arg_1B88_5, arg_1B88_6, newColor, 1f);
-                                                                                                        num46++;
-                                                                                                    }
-                                                                                                    return;
-                                                                                                }
-                                                                                                for (int num47 = 0; num47 < 50; num47++)
-                                                                                                {
-                                                                                                    Vector2 arg_1BE2_0 = this.Position;
-                                                                                                    int arg_1BE2_1 = this.width;
-                                                                                                    int arg_1BE2_2 = this.height;
-                                                                                                    int arg_1BE2_3 = 5;
-                                                                                                    float arg_1BE2_4 = 2.5f * (float)hitDirection;
-                                                                                                    float arg_1BE2_5 = -2.5f;
-                                                                                                    int arg_1BE2_6 = 0;
-                                                                                                    Color newColor = default(Color);
-                                                                                                    Dust.NewDust(arg_1BE2_0, arg_1BE2_1, arg_1BE2_2, arg_1BE2_3, arg_1BE2_4, arg_1BE2_5, arg_1BE2_6, newColor, 1f);
-                                                                                                }
-                                                                                                SetGore(33);
-                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 34);
-                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 34);
-                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 35);
-                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 35);
-                                                                                                return;
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (this.type == 19)
-                                                                                                {
-                                                                                                    if (this.life > 0)
-                                                                                                    {
-                                                                                                        int num48 = 0;
-                                                                                                        while ((double)num48 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                        {
-                                                                                                            Vector2 arg_1D0A_0 = this.Position;
-                                                                                                            int arg_1D0A_1 = this.width;
-                                                                                                            int arg_1D0A_2 = this.height;
-                                                                                                            int arg_1D0A_3 = 5;
-                                                                                                            float arg_1D0A_4 = (float)hitDirection;
-                                                                                                            float arg_1D0A_5 = -1f;
-                                                                                                            int arg_1D0A_6 = 0;
-                                                                                                            Color newColor = default(Color);
-                                                                                                            Dust.NewDust(arg_1D0A_0, arg_1D0A_1, arg_1D0A_2, arg_1D0A_3, arg_1D0A_4, arg_1D0A_5, arg_1D0A_6, newColor, 1f);
-                                                                                                            num48++;
-                                                                                                        }
-                                                                                                        return;
-                                                                                                    }
-                                                                                                    for (int num49 = 0; num49 < 50; num49++)
-                                                                                                    {
-                                                                                                        Vector2 arg_1D64_0 = this.Position;
-                                                                                                        int arg_1D64_1 = this.width;
-                                                                                                        int arg_1D64_2 = this.height;
-                                                                                                        int arg_1D64_3 = 5;
-                                                                                                        float arg_1D64_4 = 2.5f * (float)hitDirection;
-                                                                                                        float arg_1D64_5 = -2.5f;
-                                                                                                        int arg_1D64_6 = 0;
-                                                                                                        Color newColor = default(Color);
-                                                                                                        Dust.NewDust(arg_1D64_0, arg_1D64_1, arg_1D64_2, arg_1D64_3, arg_1D64_4, arg_1D64_5, arg_1D64_6, newColor, 1f);
-                                                                                                    }
-                                                                                                    SetGore(36);
-                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 37);
-                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 37);
-                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 38);
-                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 38);
-                                                                                                    return;
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (this.type == 38)
-                                                                                                    {
-                                                                                                        if (this.life > 0)
-                                                                                                        {
-                                                                                                            int num50 = 0;
-                                                                                                            while ((double)num50 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                            {
-                                                                                                                Vector2 arg_1E8C_0 = this.Position;
-                                                                                                                int arg_1E8C_1 = this.width;
-                                                                                                                int arg_1E8C_2 = this.height;
-                                                                                                                int arg_1E8C_3 = 5;
-                                                                                                                float arg_1E8C_4 = (float)hitDirection;
-                                                                                                                float arg_1E8C_5 = -1f;
-                                                                                                                int arg_1E8C_6 = 0;
-                                                                                                                Color newColor = default(Color);
-                                                                                                                Dust.NewDust(arg_1E8C_0, arg_1E8C_1, arg_1E8C_2, arg_1E8C_3, arg_1E8C_4, arg_1E8C_5, arg_1E8C_6, newColor, 1f);
-                                                                                                                num50++;
-                                                                                                            }
-                                                                                                            return;
-                                                                                                        }
-                                                                                                        for (int num51 = 0; num51 < 50; num51++)
-                                                                                                        {
-                                                                                                            Vector2 arg_1EE6_0 = this.Position;
-                                                                                                            int arg_1EE6_1 = this.width;
-                                                                                                            int arg_1EE6_2 = this.height;
-                                                                                                            int arg_1EE6_3 = 5;
-                                                                                                            float arg_1EE6_4 = 2.5f * (float)hitDirection;
-                                                                                                            float arg_1EE6_5 = -2.5f;
-                                                                                                            int arg_1EE6_6 = 0;
-                                                                                                            Color newColor = default(Color);
-                                                                                                            Dust.NewDust(arg_1EE6_0, arg_1EE6_1, arg_1EE6_2, arg_1EE6_3, arg_1EE6_4, arg_1EE6_5, arg_1EE6_6, newColor, 1f);
-                                                                                                        }
-                                                                                                        SetGore(64);
-                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 65);
-                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 65);
-                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 66);
-                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 66);
-                                                                                                        return;
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (this.type == 20)
-                                                                                                        {
-                                                                                                            if (this.life > 0)
-                                                                                                            {
-                                                                                                                int num52 = 0;
-                                                                                                                while ((double)num52 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                {
-                                                                                                                    Vector2 arg_200E_0 = this.Position;
-                                                                                                                    int arg_200E_1 = this.width;
-                                                                                                                    int arg_200E_2 = this.height;
-                                                                                                                    int arg_200E_3 = 5;
-                                                                                                                    float arg_200E_4 = (float)hitDirection;
-                                                                                                                    float arg_200E_5 = -1f;
-                                                                                                                    int arg_200E_6 = 0;
-                                                                                                                    Color newColor = default(Color);
-                                                                                                                    Dust.NewDust(arg_200E_0, arg_200E_1, arg_200E_2, arg_200E_3, arg_200E_4, arg_200E_5, arg_200E_6, newColor, 1f);
-                                                                                                                    num52++;
-                                                                                                                }
-                                                                                                                return;
-                                                                                                            }
-                                                                                                            for (int num53 = 0; num53 < 50; num53++)
-                                                                                                            {
-                                                                                                                Vector2 arg_2068_0 = this.Position;
-                                                                                                                int arg_2068_1 = this.width;
-                                                                                                                int arg_2068_2 = this.height;
-                                                                                                                int arg_2068_3 = 5;
-                                                                                                                float arg_2068_4 = 2.5f * (float)hitDirection;
-                                                                                                                float arg_2068_5 = -2.5f;
-                                                                                                                int arg_2068_6 = 0;
-                                                                                                                Color newColor = default(Color);
-                                                                                                                Dust.NewDust(arg_2068_0, arg_2068_1, arg_2068_2, arg_2068_3, arg_2068_4, arg_2068_5, arg_2068_6, newColor, 1f);
-                                                                                                            }
-                                                                                                            SetGore(39);
-                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 40);
-                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 40);
-                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 41);
-                                                                                                            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 41);
-                                                                                                            return;
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (this.type == 21 || this.type == 31 || this.type == 32 || this.type == 44 || this.type == 45)
-                                                                                                            {
-                                                                                                                if (this.life > 0)
-                                                                                                                {
-                                                                                                                    int num54 = 0;
-                                                                                                                    while ((double)num54 < dmg / (double)this.lifeMax * 50.0)
-                                                                                                                    {
-                                                                                                                        Vector2 arg_21B9_0 = this.Position;
-                                                                                                                        int arg_21B9_1 = this.width;
-                                                                                                                        int arg_21B9_2 = this.height;
-                                                                                                                        int arg_21B9_3 = 26;
-                                                                                                                        float arg_21B9_4 = (float)hitDirection;
-                                                                                                                        float arg_21B9_5 = -1f;
-                                                                                                                        int arg_21B9_6 = 0;
-                                                                                                                        Color newColor = default(Color);
-                                                                                                                        Dust.NewDust(arg_21B9_0, arg_21B9_1, arg_21B9_2, arg_21B9_3, arg_21B9_4, arg_21B9_5, arg_21B9_6, newColor, 1f);
-                                                                                                                        num54++;
-                                                                                                                    }
-                                                                                                                    return;
-                                                                                                                }
-                                                                                                                for (int num55 = 0; num55 < 20; num55++)
-                                                                                                                {
-                                                                                                                    Vector2 arg_2214_0 = this.Position;
-                                                                                                                    int arg_2214_1 = this.width;
-                                                                                                                    int arg_2214_2 = this.height;
-                                                                                                                    int arg_2214_3 = 26;
-                                                                                                                    float arg_2214_4 = 2.5f * (float)hitDirection;
-                                                                                                                    float arg_2214_5 = -2.5f;
-                                                                                                                    int arg_2214_6 = 0;
-                                                                                                                    Color newColor = default(Color);
-                                                                                                                    Dust.NewDust(arg_2214_0, arg_2214_1, arg_2214_2, arg_2214_3, arg_2214_4, arg_2214_5, arg_2214_6, newColor, 1f);
-                                                                                                                }
-                                                                                                                SetGore(42);
-                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 43);
-                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 43);
-                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 44);
-                                                                                                                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 44);
-                                                                                                                return;
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                if (this.type == 39 || this.type == 40 || this.type == 41)
-                                                                                                                {
-                                                                                                                    if (this.life > 0)
-                                                                                                                    {
-                                                                                                                        int num56 = 0;
-                                                                                                                        while ((double)num56 < dmg / (double)this.lifeMax * 50.0)
-                                                                                                                        {
-                                                                                                                            Vector2 arg_2351_0 = this.Position;
-                                                                                                                            int arg_2351_1 = this.width;
-                                                                                                                            int arg_2351_2 = this.height;
-                                                                                                                            int arg_2351_3 = 26;
-                                                                                                                            float arg_2351_4 = (float)hitDirection;
-                                                                                                                            float arg_2351_5 = -1f;
-                                                                                                                            int arg_2351_6 = 0;
-                                                                                                                            Color newColor = default(Color);
-                                                                                                                            Dust.NewDust(arg_2351_0, arg_2351_1, arg_2351_2, arg_2351_3, arg_2351_4, arg_2351_5, arg_2351_6, newColor, 1f);
-                                                                                                                            num56++;
-                                                                                                                        }
-                                                                                                                        return;
-                                                                                                                    }
-                                                                                                                    for (int num57 = 0; num57 < 20; num57++)
-                                                                                                                    {
-                                                                                                                        Vector2 arg_23AC_0 = this.Position;
-                                                                                                                        int arg_23AC_1 = this.width;
-                                                                                                                        int arg_23AC_2 = this.height;
-                                                                                                                        int arg_23AC_3 = 26;
-                                                                                                                        float arg_23AC_4 = 2.5f * (float)hitDirection;
-                                                                                                                        float arg_23AC_5 = -2.5f;
-                                                                                                                        int arg_23AC_6 = 0;
-                                                                                                                        Color newColor = default(Color);
-                                                                                                                        Dust.NewDust(arg_23AC_0, arg_23AC_1, arg_23AC_2, arg_23AC_3, arg_23AC_4, arg_23AC_5, arg_23AC_6, newColor, 1f);
-                                                                                                                    }
-                                                                                                                    SetGore(this.type - 39 + 67);
-                                                                                                                    return;
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    if (this.type == 34)
-                                                                                                                    {
-                                                                                                                        if (this.life > 0)
-                                                                                                                        {
-                                                                                                                            int num58 = 0;
-                                                                                                                            while ((double)num58 < dmg / (double)this.lifeMax * 30.0)
-                                                                                                                            {
-                                                                                                                                Vector2 arg_245C_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                int arg_245C_1 = this.width;
-                                                                                                                                int arg_245C_2 = this.height;
-                                                                                                                                int arg_245C_3 = 15;
-                                                                                                                                float arg_245C_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                float arg_245C_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                int arg_245C_6 = 100;
-                                                                                                                                Color newColor = default(Color);
-                                                                                                                                int num59 = Dust.NewDust(arg_245C_0, arg_245C_1, arg_245C_2, arg_245C_3, arg_245C_4, arg_245C_5, arg_245C_6, newColor, 1.8f);
-                                                                                                                                Main.dust[num59].noLight = true;
-                                                                                                                                Main.dust[num59].noGravity = true;
-                                                                                                                                Dust expr_2487 = Main.dust[num59];
-                                                                                                                                expr_2487.velocity *= 1.3f;
-                                                                                                                                Vector2 arg_24F9_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                int arg_24F9_1 = this.width;
-                                                                                                                                int arg_24F9_2 = this.height;
-                                                                                                                                int arg_24F9_3 = 26;
-                                                                                                                                float arg_24F9_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                float arg_24F9_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                int arg_24F9_6 = 0;
-                                                                                                                                newColor = default(Color);
-                                                                                                                                num59 = Dust.NewDust(arg_24F9_0, arg_24F9_1, arg_24F9_2, arg_24F9_3, arg_24F9_4, arg_24F9_5, arg_24F9_6, newColor, 0.9f);
-                                                                                                                                Main.dust[num59].noLight = true;
-                                                                                                                                Dust expr_2516 = Main.dust[num59];
-                                                                                                                                expr_2516.velocity *= 1.3f;
-                                                                                                                                num58++;
-                                                                                                                            }
-                                                                                                                            return;
-                                                                                                                        }
-                                                                                                                        for (int num60 = 0; num60 < 15; num60++)
-                                                                                                                        {
-                                                                                                                            Vector2 arg_25B3_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                            int arg_25B3_1 = this.width;
-                                                                                                                            int arg_25B3_2 = this.height;
-                                                                                                                            int arg_25B3_3 = 15;
-                                                                                                                            float arg_25B3_4 = -this.Velocity.X * 0.2f;
-                                                                                                                            float arg_25B3_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                            int arg_25B3_6 = 100;
-                                                                                                                            Color newColor = default(Color);
-                                                                                                                            int num61 = Dust.NewDust(arg_25B3_0, arg_25B3_1, arg_25B3_2, arg_25B3_3, arg_25B3_4, arg_25B3_5, arg_25B3_6, newColor, 1.8f);
-                                                                                                                            Main.dust[num61].noLight = true;
-                                                                                                                            Main.dust[num61].noGravity = true;
-                                                                                                                            Dust expr_25DE = Main.dust[num61];
-                                                                                                                            expr_25DE.velocity *= 1.3f;
-                                                                                                                            Vector2 arg_2650_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                            int arg_2650_1 = this.width;
-                                                                                                                            int arg_2650_2 = this.height;
-                                                                                                                            int arg_2650_3 = 26;
-                                                                                                                            float arg_2650_4 = -this.Velocity.X * 0.2f;
-                                                                                                                            float arg_2650_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                            int arg_2650_6 = 0;
-                                                                                                                            newColor = default(Color);
-                                                                                                                            num61 = Dust.NewDust(arg_2650_0, arg_2650_1, arg_2650_2, arg_2650_3, arg_2650_4, arg_2650_5, arg_2650_6, newColor, 0.9f);
-                                                                                                                            Main.dust[num61].noLight = true;
-                                                                                                                            Dust expr_266D = Main.dust[num61];
-                                                                                                                            expr_266D.velocity *= 1.3f;
-                                                                                                                        }
-                                                                                                                        return;
-                                                                                                                    }
-                                                                                                                    else
-                                                                                                                    {
-                                                                                                                        if (this.type == 35 || this.type == 36)
-                                                                                                                        {
-                                                                                                                            if (this.life > 0)
-                                                                                                                            {
-                                                                                                                                int num62 = 0;
-                                                                                                                                while ((double)num62 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                {
-                                                                                                                                    Vector2 arg_26E2_0 = this.Position;
-                                                                                                                                    int arg_26E2_1 = this.width;
-                                                                                                                                    int arg_26E2_2 = this.height;
-                                                                                                                                    int arg_26E2_3 = 26;
-                                                                                                                                    float arg_26E2_4 = (float)hitDirection;
-                                                                                                                                    float arg_26E2_5 = -1f;
-                                                                                                                                    int arg_26E2_6 = 0;
-                                                                                                                                    Color newColor = default(Color);
-                                                                                                                                    Dust.NewDust(arg_26E2_0, arg_26E2_1, arg_26E2_2, arg_26E2_3, arg_26E2_4, arg_26E2_5, arg_26E2_6, newColor, 1f);
-                                                                                                                                    num62++;
-                                                                                                                                }
-                                                                                                                                return;
-                                                                                                                            }
-                                                                                                                            for (int num63 = 0; num63 < 150; num63++)
-                                                                                                                            {
-                                                                                                                                Vector2 arg_273D_0 = this.Position;
-                                                                                                                                int arg_273D_1 = this.width;
-                                                                                                                                int arg_273D_2 = this.height;
-                                                                                                                                int arg_273D_3 = 26;
-                                                                                                                                float arg_273D_4 = 2.5f * (float)hitDirection;
-                                                                                                                                float arg_273D_5 = -2.5f;
-                                                                                                                                int arg_273D_6 = 0;
-                                                                                                                                Color newColor = default(Color);
-                                                                                                                                Dust.NewDust(arg_273D_0, arg_273D_1, arg_273D_2, arg_273D_3, arg_273D_4, arg_273D_5, arg_273D_6, newColor, 1f);
-                                                                                                                            }
-                                                                                                                            if (this.type == 35)
-                                                                                                                            {
-                                                                                                                                SetGore(54);
-                                                                                                                                SetGore(55);
-                                                                                                                                return;
-                                                                                                                            }
-                                                                                                                            SetGore(56);
-                                                                                                                            SetGore(57);
-                                                                                                                            SetGore(57);
-                                                                                                                            SetGore(57);
-                                                                                                                            return;
-                                                                                                                        }
-                                                                                                                        else
-                                                                                                                        {
-                                                                                                                            if (this.type == 23)
-                                                                                                                            {
-                                                                                                                                if (this.life > 0)
-                                                                                                                                {
-                                                                                                                                    int num64 = 0;
-                                                                                                                                    while ((double)num64 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                    {
-                                                                                                                                        int num65 = 25;
-                                                                                                                                        if (Main.rand.Next(2) == 0)
-                                                                                                                                        {
-                                                                                                                                            num65 = 6;
-                                                                                                                                        }
-                                                                                                                                        Vector2 arg_2836_0 = this.Position;
-                                                                                                                                        int arg_2836_1 = this.width;
-                                                                                                                                        int arg_2836_2 = this.height;
-                                                                                                                                        int arg_2836_3 = num65;
-                                                                                                                                        float arg_2836_4 = (float)hitDirection;
-                                                                                                                                        float arg_2836_5 = -1f;
-                                                                                                                                        int arg_2836_6 = 0;
-                                                                                                                                        Color newColor = default(Color);
-                                                                                                                                        Dust.NewDust(arg_2836_0, arg_2836_1, arg_2836_2, arg_2836_3, arg_2836_4, arg_2836_5, arg_2836_6, newColor, 1f);
-                                                                                                                                        Vector2 arg_2897_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                        int arg_2897_1 = this.width;
-                                                                                                                                        int arg_2897_2 = this.height;
-                                                                                                                                        int arg_2897_3 = 6;
-                                                                                                                                        float arg_2897_4 = this.Velocity.X * 0.2f;
-                                                                                                                                        float arg_2897_5 = this.Velocity.Y * 0.2f;
-                                                                                                                                        int arg_2897_6 = 100;
-                                                                                                                                        newColor = default(Color);
-                                                                                                                                        int num66 = Dust.NewDust(arg_2897_0, arg_2897_1, arg_2897_2, arg_2897_3, arg_2897_4, arg_2897_5, arg_2897_6, newColor, 2f);
-                                                                                                                                        Main.dust[num66].noGravity = true;
-                                                                                                                                        num64++;
-                                                                                                                                    }
-                                                                                                                                    return;
-                                                                                                                                }
-                                                                                                                                for (int num67 = 0; num67 < 50; num67++)
-                                                                                                                                {
-                                                                                                                                    int num68 = 25;
-                                                                                                                                    if (Main.rand.Next(2) == 0)
-                                                                                                                                    {
-                                                                                                                                        num68 = 6;
-                                                                                                                                    }
-                                                                                                                                    Vector2 arg_2914_0 = this.Position;
-                                                                                                                                    int arg_2914_1 = this.width;
-                                                                                                                                    int arg_2914_2 = this.height;
-                                                                                                                                    int arg_2914_3 = num68;
-                                                                                                                                    float arg_2914_4 = (float)(2 * hitDirection);
-                                                                                                                                    float arg_2914_5 = -2f;
-                                                                                                                                    int arg_2914_6 = 0;
-                                                                                                                                    Color newColor = default(Color);
-                                                                                                                                    Dust.NewDust(arg_2914_0, arg_2914_1, arg_2914_2, arg_2914_3, arg_2914_4, arg_2914_5, arg_2914_6, newColor, 1f);
-                                                                                                                                }
-                                                                                                                                for (int num69 = 0; num69 < 50; num69++)
-                                                                                                                                {
-                                                                                                                                    Vector2 arg_2989_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                    int arg_2989_1 = this.width;
-                                                                                                                                    int arg_2989_2 = this.height;
-                                                                                                                                    int arg_2989_3 = 6;
-                                                                                                                                    float arg_2989_4 = this.Velocity.X * 0.2f;
-                                                                                                                                    float arg_2989_5 = this.Velocity.Y * 0.2f;
-                                                                                                                                    int arg_2989_6 = 100;
-                                                                                                                                    Color newColor = default(Color);
-                                                                                                                                    int num70 = Dust.NewDust(arg_2989_0, arg_2989_1, arg_2989_2, arg_2989_3, arg_2989_4, arg_2989_5, arg_2989_6, newColor, 2.5f);
-                                                                                                                                    Dust expr_2998 = Main.dust[num70];
-                                                                                                                                    expr_2998.velocity *= 6f;
-                                                                                                                                    Main.dust[num70].noGravity = true;
-                                                                                                                                }
-                                                                                                                                return;
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-                                                                                                                                if (this.type == 24)
-                                                                                                                                {
-                                                                                                                                    if (this.life > 0)
-                                                                                                                                    {
-                                                                                                                                        int num71 = 0;
-                                                                                                                                        while ((double)num71 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                        {
-                                                                                                                                            Vector2 arg_2A38_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                            int arg_2A38_1 = this.width;
-                                                                                                                                            int arg_2A38_2 = this.height;
-                                                                                                                                            int arg_2A38_3 = 6;
-                                                                                                                                            float arg_2A38_4 = this.Velocity.X;
-                                                                                                                                            float arg_2A38_5 = this.Velocity.Y;
-                                                                                                                                            int arg_2A38_6 = 100;
-                                                                                                                                            Color newColor = default(Color);
-                                                                                                                                            int num72 = Dust.NewDust(arg_2A38_0, arg_2A38_1, arg_2A38_2, arg_2A38_3, arg_2A38_4, arg_2A38_5, arg_2A38_6, newColor, 2.5f);
-                                                                                                                                            Main.dust[num72].noGravity = true;
-                                                                                                                                            num71++;
-                                                                                                                                        }
-                                                                                                                                        return;
-                                                                                                                                    }
-                                                                                                                                    for (int num73 = 0; num73 < 50; num73++)
-                                                                                                                                    {
-                                                                                                                                        Vector2 arg_2AC6_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                        int arg_2AC6_1 = this.width;
-                                                                                                                                        int arg_2AC6_2 = this.height;
-                                                                                                                                        int arg_2AC6_3 = 6;
-                                                                                                                                        float arg_2AC6_4 = this.Velocity.X;
-                                                                                                                                        float arg_2AC6_5 = this.Velocity.Y;
-                                                                                                                                        int arg_2AC6_6 = 100;
-                                                                                                                                        Color newColor = default(Color);
-                                                                                                                                        int num74 = Dust.NewDust(arg_2AC6_0, arg_2AC6_1, arg_2AC6_2, arg_2AC6_3, arg_2AC6_4, arg_2AC6_5, arg_2AC6_6, newColor, 2.5f);
-                                                                                                                                        Main.dust[num74].noGravity = true;
-                                                                                                                                        Dust expr_2AE3 = Main.dust[num74];
-                                                                                                                                        expr_2AE3.velocity *= 2f;
-                                                                                                                                    }
-                                                                                                                                    SetGore(45);
-                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
-                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
-                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
-                                                                                                                                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
-                                                                                                                                    return;
-                                                                                                                                }
-                                                                                                                                else
-                                                                                                                                {
-                                                                                                                                    if (this.type == 25)
-                                                                                                                                    {
-                                                                                                                                        for (int num75 = 0; num75 < 20; num75++)
-                                                                                                                                        {
-                                                                                                                                            Vector2 arg_2C6A_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                            int arg_2C6A_1 = this.width;
-                                                                                                                                            int arg_2C6A_2 = this.height;
-                                                                                                                                            int arg_2C6A_3 = 6;
-                                                                                                                                            float arg_2C6A_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                            float arg_2C6A_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                            int arg_2C6A_6 = 100;
-                                                                                                                                            Color newColor = default(Color);
-                                                                                                                                            int num76 = Dust.NewDust(arg_2C6A_0, arg_2C6A_1, arg_2C6A_2, arg_2C6A_3, arg_2C6A_4, arg_2C6A_5, arg_2C6A_6, newColor, 2f);
-                                                                                                                                            Main.dust[num76].noGravity = true;
-                                                                                                                                            Dust expr_2C87 = Main.dust[num76];
-                                                                                                                                            expr_2C87.velocity *= 2f;
-                                                                                                                                            Vector2 arg_2CF9_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                            int arg_2CF9_1 = this.width;
-                                                                                                                                            int arg_2CF9_2 = this.height;
-                                                                                                                                            int arg_2CF9_3 = 6;
-                                                                                                                                            float arg_2CF9_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                            float arg_2CF9_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                            int arg_2CF9_6 = 100;
-                                                                                                                                            newColor = default(Color);
-                                                                                                                                            num76 = Dust.NewDust(arg_2CF9_0, arg_2CF9_1, arg_2CF9_2, arg_2CF9_3, arg_2CF9_4, arg_2CF9_5, arg_2CF9_6, newColor, 1f);
-                                                                                                                                            Dust expr_2D08 = Main.dust[num76];
-                                                                                                                                            expr_2D08.velocity *= 2f;
-                                                                                                                                        }
-                                                                                                                                        return;
-                                                                                                                                    }
-                                                                                                                                    if (this.type == 33)
-                                                                                                                                    {
-                                                                                                                                        for (int num77 = 0; num77 < 20; num77++)
-                                                                                                                                        {
-                                                                                                                                            Vector2 arg_2DC0_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                            int arg_2DC0_1 = this.width;
-                                                                                                                                            int arg_2DC0_2 = this.height;
-                                                                                                                                            int arg_2DC0_3 = 29;
-                                                                                                                                            float arg_2DC0_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                            float arg_2DC0_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                            int arg_2DC0_6 = 100;
-                                                                                                                                            Color newColor = default(Color);
-                                                                                                                                            int num78 = Dust.NewDust(arg_2DC0_0, arg_2DC0_1, arg_2DC0_2, arg_2DC0_3, arg_2DC0_4, arg_2DC0_5, arg_2DC0_6, newColor, 2f);
-                                                                                                                                            Main.dust[num78].noGravity = true;
-                                                                                                                                            Dust expr_2DDD = Main.dust[num78];
-                                                                                                                                            expr_2DDD.velocity *= 2f;
-                                                                                                                                            Vector2 arg_2E50_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                            int arg_2E50_1 = this.width;
-                                                                                                                                            int arg_2E50_2 = this.height;
-                                                                                                                                            int arg_2E50_3 = 29;
-                                                                                                                                            float arg_2E50_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                            float arg_2E50_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                            int arg_2E50_6 = 100;
-                                                                                                                                            newColor = default(Color);
-                                                                                                                                            num78 = Dust.NewDust(arg_2E50_0, arg_2E50_1, arg_2E50_2, arg_2E50_3, arg_2E50_4, arg_2E50_5, arg_2E50_6, newColor, 1f);
-                                                                                                                                            Dust expr_2E5F = Main.dust[num78];
-                                                                                                                                            expr_2E5F.velocity *= 2f;
-                                                                                                                                        }
-                                                                                                                                        return;
-                                                                                                                                    }
-                                                                                                                                    if (this.type == 26 || this.type == 27 || this.type == 28 || this.type == 29)
-                                                                                                                                    {
-                                                                                                                                        if (this.life > 0)
-                                                                                                                                        {
-                                                                                                                                            int num79 = 0;
-                                                                                                                                            while ((double)num79 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                            {
-                                                                                                                                                Vector2 arg_2EE7_0 = this.Position;
-                                                                                                                                                int arg_2EE7_1 = this.width;
-                                                                                                                                                int arg_2EE7_2 = this.height;
-                                                                                                                                                int arg_2EE7_3 = 5;
-                                                                                                                                                float arg_2EE7_4 = (float)hitDirection;
-                                                                                                                                                float arg_2EE7_5 = -1f;
-                                                                                                                                                int arg_2EE7_6 = 0;
-                                                                                                                                                Color newColor = default(Color);
-                                                                                                                                                Dust.NewDust(arg_2EE7_0, arg_2EE7_1, arg_2EE7_2, arg_2EE7_3, arg_2EE7_4, arg_2EE7_5, arg_2EE7_6, newColor, 1f);
-                                                                                                                                                num79++;
-                                                                                                                                            }
-                                                                                                                                            return;
-                                                                                                                                        }
-                                                                                                                                        for (int num80 = 0; num80 < 50; num80++)
-                                                                                                                                        {
-                                                                                                                                            Vector2 arg_2F41_0 = this.Position;
-                                                                                                                                            int arg_2F41_1 = this.width;
-                                                                                                                                            int arg_2F41_2 = this.height;
-                                                                                                                                            int arg_2F41_3 = 5;
-                                                                                                                                            float arg_2F41_4 = 2.5f * (float)hitDirection;
-                                                                                                                                            float arg_2F41_5 = -2.5f;
-                                                                                                                                            int arg_2F41_6 = 0;
-                                                                                                                                            Color newColor = default(Color);
-                                                                                                                                            Dust.NewDust(arg_2F41_0, arg_2F41_1, arg_2F41_2, arg_2F41_3, arg_2F41_4, arg_2F41_5, arg_2F41_6, newColor, 1f);
-                                                                                                                                        }
-                                                                                                                                        SetGore(48);
-                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
-                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
-                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
-                                                                                                                                        Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
-                                                                                                                                        return;
-                                                                                                                                    }
-                                                                                                                                    else
-                                                                                                                                    {
-                                                                                                                                        if (this.type == 30)
-                                                                                                                                        {
-                                                                                                                                            for (int num81 = 0; num81 < 20; num81++)
-                                                                                                                                            {
-                                                                                                                                                Vector2 arg_30B7_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                                int arg_30B7_1 = this.width;
-                                                                                                                                                int arg_30B7_2 = this.height;
-                                                                                                                                                int arg_30B7_3 = 27;
-                                                                                                                                                float arg_30B7_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                                float arg_30B7_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                                int arg_30B7_6 = 100;
-                                                                                                                                                Color newColor = default(Color);
-                                                                                                                                                int num82 = Dust.NewDust(arg_30B7_0, arg_30B7_1, arg_30B7_2, arg_30B7_3, arg_30B7_4, arg_30B7_5, arg_30B7_6, newColor, 2f);
-                                                                                                                                                Main.dust[num82].noGravity = true;
-                                                                                                                                                Dust expr_30D4 = Main.dust[num82];
-                                                                                                                                                expr_30D4.velocity *= 2f;
-                                                                                                                                                Vector2 arg_3147_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                                                                int arg_3147_1 = this.width;
-                                                                                                                                                int arg_3147_2 = this.height;
-                                                                                                                                                int arg_3147_3 = 27;
-                                                                                                                                                float arg_3147_4 = -this.Velocity.X * 0.2f;
-                                                                                                                                                float arg_3147_5 = -this.Velocity.Y * 0.2f;
-                                                                                                                                                int arg_3147_6 = 100;
-                                                                                                                                                newColor = default(Color);
-                                                                                                                                                num82 = Dust.NewDust(arg_3147_0, arg_3147_1, arg_3147_2, arg_3147_3, arg_3147_4, arg_3147_5, arg_3147_6, newColor, 1f);
-                                                                                                                                                Dust expr_3156 = Main.dust[num82];
-                                                                                                                                                expr_3156.velocity *= 2f;
-                                                                                                                                            }
-                                                                                                                                            return;
-                                                                                                                                        }
-                                                                                                                                        if (this.type == 42)
-                                                                                                                                        {
-                                                                                                                                            if (this.life > 0)
-                                                                                                                                            {
-                                                                                                                                                int num83 = 0;
-                                                                                                                                                while ((double)num83 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                                {
-                                                                                                                                                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                                                                                                                                                    num83++;
-                                                                                                                                                }
-                                                                                                                                                return;
-                                                                                                                                            }
-                                                                                                                                            for (int num84 = 0; num84 < 50; num84++)
-                                                                                                                                            {
-                                                                                                                                                Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                                                                                                                                            }
-                                                                                                                                            SetGore(70);
-                                                                                                                                            SetGore(71);
-                                                                                                                                            return;
-                                                                                                                                        }
-                                                                                                                                        else
-                                                                                                                                        {
-                                                                                                                                            if (this.type == 43 || this.type == 56)
-                                                                                                                                            {
-                                                                                                                                                if (this.life > 0)
-                                                                                                                                                {
-                                                                                                                                                    int num85 = 0;
-                                                                                                                                                    while ((double)num85 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                                    {
-                                                                                                                                                        Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -1f, this.alpha, this.color, 1.2f);
-                                                                                                                                                        num85++;
-                                                                                                                                                    }
-                                                                                                                                                    return;
-                                                                                                                                                }
-                                                                                                                                                for (int num86 = 0; num86 < 50; num86++)
-                                                                                                                                                {
-                                                                                                                                                    Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -2f, this.alpha, this.color, 1.2f);
-                                                                                                                                                }
-                                                                                                                                                SetGore(72);
-                                                                                                                                                SetGore(72);
-                                                                                                                                                return;
-                                                                                                                                            }
-                                                                                                                                            else
-                                                                                                                                            {
-                                                                                                                                                if (this.type == 48)
-                                                                                                                                                {
-                                                                                                                                                    if (this.life > 0)
-                                                                                                                                                    {
-                                                                                                                                                        int num87 = 0;
-                                                                                                                                                        while ((double)num87 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                                        {
-                                                                                                                                                            Vector2 arg_337C_0 = this.Position;
-                                                                                                                                                            int arg_337C_1 = this.width;
-                                                                                                                                                            int arg_337C_2 = this.height;
-                                                                                                                                                            int arg_337C_3 = 5;
-                                                                                                                                                            float arg_337C_4 = (float)hitDirection;
-                                                                                                                                                            float arg_337C_5 = -1f;
-                                                                                                                                                            int arg_337C_6 = 0;
-                                                                                                                                                            Color newColor = default(Color);
-                                                                                                                                                            Dust.NewDust(arg_337C_0, arg_337C_1, arg_337C_2, arg_337C_3, arg_337C_4, arg_337C_5, arg_337C_6, newColor, 1f);
-                                                                                                                                                            num87++;
-                                                                                                                                                        }
-                                                                                                                                                        return;
-                                                                                                                                                    }
-                                                                                                                                                    for (int num88 = 0; num88 < 50; num88++)
-                                                                                                                                                    {
-                                                                                                                                                        Vector2 arg_33D2_0 = this.Position;
-                                                                                                                                                        int arg_33D2_1 = this.width;
-                                                                                                                                                        int arg_33D2_2 = this.height;
-                                                                                                                                                        int arg_33D2_3 = 5;
-                                                                                                                                                        float arg_33D2_4 = (float)(2 * hitDirection);
-                                                                                                                                                        float arg_33D2_5 = -2f;
-                                                                                                                                                        int arg_33D2_6 = 0;
-                                                                                                                                                        Color newColor = default(Color);
-                                                                                                                                                        Dust.NewDust(arg_33D2_0, arg_33D2_1, arg_33D2_2, arg_33D2_3, arg_33D2_4, arg_33D2_5, arg_33D2_6, newColor, 1f);
-                                                                                                                                                    }
-                                                                                                                                                    SetGore(80);
-                                                                                                                                                    SetGore(81);
-                                                                                                                                                    return;
-                                                                                                                                                }
-                                                                                                                                                else
-                                                                                                                                                {
-                                                                                                                                                    if (this.type == 62 || this.type == 66)
-                                                                                                                                                    {
-                                                                                                                                                        if (this.life > 0)
-                                                                                                                                                        {
-                                                                                                                                                            int num89 = 0;
-                                                                                                                                                            while ((double)num89 < dmg / (double)this.lifeMax * 100.0)
-                                                                                                                                                            {
-                                                                                                                                                                Vector2 arg_345C_0 = this.Position;
-                                                                                                                                                                int arg_345C_1 = this.width;
-                                                                                                                                                                int arg_345C_2 = this.height;
-                                                                                                                                                                int arg_345C_3 = 5;
-                                                                                                                                                                float arg_345C_4 = (float)hitDirection;
-                                                                                                                                                                float arg_345C_5 = -1f;
-                                                                                                                                                                int arg_345C_6 = 0;
-                                                                                                                                                                Color newColor = default(Color);
-                                                                                                                                                                Dust.NewDust(arg_345C_0, arg_345C_1, arg_345C_2, arg_345C_3, arg_345C_4, arg_345C_5, arg_345C_6, newColor, 1f);
-                                                                                                                                                                num89++;
-                                                                                                                                                            }
-                                                                                                                                                            return;
-                                                                                                                                                        }
-                                                                                                                                                        for (int num90 = 0; num90 < 50; num90++)
-                                                                                                                                                        {
-                                                                                                                                                            Vector2 arg_34B2_0 = this.Position;
-                                                                                                                                                            int arg_34B2_1 = this.width;
-                                                                                                                                                            int arg_34B2_2 = this.height;
-                                                                                                                                                            int arg_34B2_3 = 5;
-                                                                                                                                                            float arg_34B2_4 = (float)(2 * hitDirection);
-                                                                                                                                                            float arg_34B2_5 = -2f;
-                                                                                                                                                            int arg_34B2_6 = 0;
-                                                                                                                                                            Color newColor = default(Color);
-                                                                                                                                                            Dust.NewDust(arg_34B2_0, arg_34B2_1, arg_34B2_2, arg_34B2_3, arg_34B2_4, arg_34B2_5, arg_34B2_6, newColor, 1f);
-                                                                                                                                                        }
-                                                                                                                                                        SetGore(93);
-                                                                                                                                                        SetGore(94);
-                                                                                                                                                        SetGore(94);
-                                                                                                                                                    }
-                                                                                                                                                }
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        Vector2 arg_69A_0 = this.Position;
+                        int arg_69A_1 = this.width;
+                        int arg_69A_2 = this.height;
+                        int arg_69A_3 = 5;
+                        float arg_69A_4 = (float)hitDirection;
+                        float arg_69A_5 = -1f;
+                        int arg_69A_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_69A_0, arg_69A_1, arg_69A_2, arg_69A_3, arg_69A_4, arg_69A_5, arg_69A_6, newColor, 1f);
+                        num10++;
                     }
+                    return;
+                }
+                for (int n = 0; n < 15; n++)
+                {
+                    Vector2 arg_6F0_0 = this.Position;
+                    int arg_6F0_1 = this.width;
+                    int arg_6F0_2 = this.height;
+                    int arg_6F0_3 = 5;
+                    float arg_6F0_4 = (float)(2 * hitDirection);
+                    float arg_6F0_5 = -2f;
+                    int arg_6F0_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_6F0_0, arg_6F0_1, arg_6F0_2, arg_6F0_3, arg_6F0_4, arg_6F0_5, arg_6F0_6, newColor, 1f);
+                }
+                if (this.type == 51)
+                {
+                    SetGore(83);
+                    return;
+                }
+                SetGore(82);
+                return;
+            }
+            else if (this.type == 46 || this.type == 55 || this.type == 67)
+            {
+                if (this.life > 0)
+                {
+                    int num11 = 0;
+                    while ((double)num11 < dmg / (double)this.lifeMax * 20.0)
+                    {
+                        Vector2 arg_78F_0 = this.Position;
+                        int arg_78F_1 = this.width;
+                        int arg_78F_2 = this.height;
+                        int arg_78F_3 = 5;
+                        float arg_78F_4 = (float)hitDirection;
+                        float arg_78F_5 = -1f;
+                        int arg_78F_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_78F_0, arg_78F_1, arg_78F_2, arg_78F_3, arg_78F_4, arg_78F_5, arg_78F_6, newColor, 1f);
+                        num11++;
+                    }
+                    return;
+                }
+                for (int num12 = 0; num12 < 10; num12++)
+                {
+                    Vector2 arg_7E5_0 = this.Position;
+                    int arg_7E5_1 = this.width;
+                    int arg_7E5_2 = this.height;
+                    int arg_7E5_3 = 5;
+                    float arg_7E5_4 = (float)(2 * hitDirection);
+                    float arg_7E5_5 = -2f;
+                    int arg_7E5_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_7E5_0, arg_7E5_1, arg_7E5_2, arg_7E5_3, arg_7E5_4, arg_7E5_5, arg_7E5_6, newColor, 1f);
+                }
+                if (this.type == 46)
+                {
+                    SetGore(76);
+                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 77);
+                    return;
+                }
+                if (this.type == 67)
+                {
+                    SetGore(95);
+                    SetGore(95);
+                    SetGore(96);
+                    return;
+                }
+            }
+            else if (this.type == 47 || this.type == 57 || this.type == 58)
+            {
+                if (this.life > 0)
+                {
+                    int num13 = 0;
+                    while ((double)num13 < dmg / (double)this.lifeMax * 20.0)
+                    {
+                        Vector2 arg_8E2_0 = this.Position;
+                        int arg_8E2_1 = this.width;
+                        int arg_8E2_2 = this.height;
+                        int arg_8E2_3 = 5;
+                        float arg_8E2_4 = (float)hitDirection;
+                        float arg_8E2_5 = -1f;
+                        int arg_8E2_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_8E2_0, arg_8E2_1, arg_8E2_2, arg_8E2_3, arg_8E2_4, arg_8E2_5, arg_8E2_6, newColor, 1f);
+                        num13++;
+                    }
+                    return;
+                }
+                for (int num14 = 0; num14 < 10; num14++)
+                {
+                    Vector2 arg_938_0 = this.Position;
+                    int arg_938_1 = this.width;
+                    int arg_938_2 = this.height;
+                    int arg_938_3 = 5;
+                    float arg_938_4 = (float)(2 * hitDirection);
+                    float arg_938_5 = -2f;
+                    int arg_938_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_938_0, arg_938_1, arg_938_2, arg_938_3, arg_938_4, arg_938_5, arg_938_6, newColor, 1f);
+                }
+                if (this.type == 57)
+                {
+                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 84);
+                    return;
+                }
+                if (this.type == 58)
+                {
+                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 85);
+                    return;
+                }
+                SetGore(78);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 79);
+                return;
+            }
+            else if (this.type == 2)
+            {
+                if (this.life > 0)
+                {
+                    int num15 = 0;
+                    while ((double)num15 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_A34_0 = this.Position;
+                        int arg_A34_1 = this.width;
+                        int arg_A34_2 = this.height;
+                        int arg_A34_3 = 5;
+                        float arg_A34_4 = (float)hitDirection;
+                        float arg_A34_5 = -1f;
+                        int arg_A34_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_A34_0, arg_A34_1, arg_A34_2, arg_A34_3, arg_A34_4, arg_A34_5, arg_A34_6, newColor, 1f);
+                        num15++;
+                    }
+                    return;
+                }
+                for (int num16 = 0; num16 < 50; num16++)
+                {
+                    Vector2 arg_A8A_0 = this.Position;
+                    int arg_A8A_1 = this.width;
+                    int arg_A8A_2 = this.height;
+                    int arg_A8A_3 = 5;
+                    float arg_A8A_4 = (float)(2 * hitDirection);
+                    float arg_A8A_5 = -2f;
+                    int arg_A8A_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_A8A_0, arg_A8A_1, arg_A8A_2, arg_A8A_3, arg_A8A_4, arg_A8A_5, arg_A8A_6, newColor, 1f);
+                }
+                SetGore(1);
+                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 2);
+                return;
+            }
+            else if (this.type == 69)
+            {
+                if (this.life > 0)
+                {
+                    int num17 = 0;
+                    while ((double)num17 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_B23_0 = this.Position;
+                        int arg_B23_1 = this.width;
+                        int arg_B23_2 = this.height;
+                        int arg_B23_3 = 5;
+                        float arg_B23_4 = (float)hitDirection;
+                        float arg_B23_5 = -1f;
+                        int arg_B23_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_B23_0, arg_B23_1, arg_B23_2, arg_B23_3, arg_B23_4, arg_B23_5, arg_B23_6, newColor, 1f);
+                        num17++;
+                    }
+                    return;
+                }
+                for (int num18 = 0; num18 < 50; num18++)
+                {
+                    Vector2 arg_B79_0 = this.Position;
+                    int arg_B79_1 = this.width;
+                    int arg_B79_2 = this.height;
+                    int arg_B79_3 = 5;
+                    float arg_B79_4 = (float)(2 * hitDirection);
+                    float arg_B79_5 = -2f;
+                    int arg_B79_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_B79_0, arg_B79_1, arg_B79_2, arg_B79_3, arg_B79_4, arg_B79_5, arg_B79_6, newColor, 1f);
+                }
+                SetGore(97);
+                SetGore(98);
+                return;
+            }
+            else if (this.type == 61)
+            {
+                if (this.life > 0)
+                {
+                    int num19 = 0;
+                    while ((double)num19 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_BF9_0 = this.Position;
+                        int arg_BF9_1 = this.width;
+                        int arg_BF9_2 = this.height;
+                        int arg_BF9_3 = 5;
+                        float arg_BF9_4 = (float)hitDirection;
+                        float arg_BF9_5 = -1f;
+                        int arg_BF9_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_BF9_0, arg_BF9_1, arg_BF9_2, arg_BF9_3, arg_BF9_4, arg_BF9_5, arg_BF9_6, newColor, 1f);
+                        num19++;
+                    }
+                    return;
+                }
+                for (int num20 = 0; num20 < 50; num20++)
+                {
+                    Vector2 arg_C4F_0 = this.Position;
+                    int arg_C4F_1 = this.width;
+                    int arg_C4F_2 = this.height;
+                    int arg_C4F_3 = 5;
+                    float arg_C4F_4 = (float)(2 * hitDirection);
+                    float arg_C4F_5 = -2f;
+                    int arg_C4F_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_C4F_0, arg_C4F_1, arg_C4F_2, arg_C4F_3, arg_C4F_4, arg_C4F_5, arg_C4F_6, newColor, 1f);
+                }
+                SetGore(86);
+                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 87);
+                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 88);
+                return;
+            }
+            else if (this.type == 65)
+            {
+                if (this.life > 0)
+                {
+                    int num21 = 0;
+                    while ((double)num21 < dmg / (double)this.lifeMax * 150.0)
+                    {
+                        Vector2 arg_D19_0 = this.Position;
+                        int arg_D19_1 = this.width;
+                        int arg_D19_2 = this.height;
+                        int arg_D19_3 = 5;
+                        float arg_D19_4 = (float)hitDirection;
+                        float arg_D19_5 = -1f;
+                        int arg_D19_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_D19_0, arg_D19_1, arg_D19_2, arg_D19_3, arg_D19_4, arg_D19_5, arg_D19_6, newColor, 1f);
+                        num21++;
+                    }
+                    return;
+                }
+                for (int num22 = 0; num22 < 75; num22++)
+                {
+                    Vector2 arg_D6F_0 = this.Position;
+                    int arg_D6F_1 = this.width;
+                    int arg_D6F_2 = this.height;
+                    int arg_D6F_3 = 5;
+                    float arg_D6F_4 = (float)(2 * hitDirection);
+                    float arg_D6F_5 = -2f;
+                    int arg_D6F_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_D6F_0, arg_D6F_1, arg_D6F_2, arg_D6F_3, arg_D6F_4, arg_D6F_5, arg_D6F_6, newColor, 1f);
+                }
+                Gore.NewGore(this.Position, this.Velocity * 0.8f, 89);
+                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 90);
+                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 91);
+                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 92);
+                return;
+            }
+            else if (this.type == 3 || this.type == 52 || this.type == 53)
+            {
+                if (this.life > 0)
+                {
+                    int num23 = 0;
+                    while ((double)num23 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_EA3_0 = this.Position;
+                        int arg_EA3_1 = this.width;
+                        int arg_EA3_2 = this.height;
+                        int arg_EA3_3 = 5;
+                        float arg_EA3_4 = (float)hitDirection;
+                        float arg_EA3_5 = -1f;
+                        int arg_EA3_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_EA3_0, arg_EA3_1, arg_EA3_2, arg_EA3_3, arg_EA3_4, arg_EA3_5, arg_EA3_6, newColor, 1f);
+                        num23++;
+                    }
+                    return;
+                }
+                for (int num24 = 0; num24 < 50; num24++)
+                {
+                    Vector2 arg_EFD_0 = this.Position;
+                    int arg_EFD_1 = this.width;
+                    int arg_EFD_2 = this.height;
+                    int arg_EFD_3 = 5;
+                    float arg_EFD_4 = 2.5f * (float)hitDirection;
+                    float arg_EFD_5 = -2.5f;
+                    int arg_EFD_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_EFD_0, arg_EFD_1, arg_EFD_2, arg_EFD_3, arg_EFD_4, arg_EFD_5, arg_EFD_6, newColor, 1f);
+                }
+                SetGore(3);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
+                return;
+            }
+            else if (this.type == 4)
+            {
+                if (this.life > 0)
+                {
+                    int num25 = 0;
+                    while ((double)num25 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_101F_0 = this.Position;
+                        int arg_101F_1 = this.width;
+                        int arg_101F_2 = this.height;
+                        int arg_101F_3 = 5;
+                        float arg_101F_4 = (float)hitDirection;
+                        float arg_101F_5 = -1f;
+                        int arg_101F_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_101F_0, arg_101F_1, arg_101F_2, arg_101F_3, arg_101F_4, arg_101F_5, arg_101F_6, newColor, 1f);
+                        num25++;
+                    }
+                    return;
+                }
+                for (int num26 = 0; num26 < 150; num26++)
+                {
+                    Vector2 arg_1075_0 = this.Position;
+                    int arg_1075_1 = this.width;
+                    int arg_1075_2 = this.height;
+                    int arg_1075_3 = 5;
+                    float arg_1075_4 = (float)(2 * hitDirection);
+                    float arg_1075_5 = -2f;
+                    int arg_1075_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_1075_0, arg_1075_1, arg_1075_2, arg_1075_3, arg_1075_4, arg_1075_5, arg_1075_6, newColor, 1f);
+                }
+                for (int num27 = 0; num27 < 2; num27++)
+                {
+                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 2);
+                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
+                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 9);
+                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 10);
                 }
                 return;
             }
+            else if (this.type == 5)
+            {
+                if (this.life > 0)
+                {
+                    int num28 = 0;
+                    while ((double)num28 < dmg / (double)this.lifeMax * 50.0)
+                    {
+                        Vector2 arg_11F7_0 = this.Position;
+                        int arg_11F7_1 = this.width;
+                        int arg_11F7_2 = this.height;
+                        int arg_11F7_3 = 5;
+                        float arg_11F7_4 = (float)hitDirection;
+                        float arg_11F7_5 = -1f;
+                        int arg_11F7_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_11F7_0, arg_11F7_1, arg_11F7_2, arg_11F7_3, arg_11F7_4, arg_11F7_5, arg_11F7_6, newColor, 1f);
+                        num28++;
+                    }
+                    return;
+                }
+                for (int num29 = 0; num29 < 20; num29++)
+                {
+                    Vector2 arg_124D_0 = this.Position;
+                    int arg_124D_1 = this.width;
+                    int arg_124D_2 = this.height;
+                    int arg_124D_3 = 5;
+                    float arg_124D_4 = (float)(2 * hitDirection);
+                    float arg_124D_5 = -2f;
+                    int arg_124D_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_124D_0, arg_124D_1, arg_124D_2, arg_124D_3, arg_124D_4, arg_124D_5, arg_124D_6, newColor, 1f);
+                }
+                SetGore(6);
+                SetGore(7);
+                return;
+            }
+            else if (this.type == 6)
+            {
+                if (this.life > 0)
+                {
+                    int num30 = 0;
+                    while ((double)num30 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                        num30++;
+                    }
+                    return;
+                }
+                for (int num31 = 0; num31 < 50; num31++)
+                {
+                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                }
+                int num32 = SetGore(14);
+                Main.gore[num32].alpha = this.alpha;
+                num32 = SetGore(15);
+                Main.gore[num32].alpha = this.alpha;
+                return;
+            }
+            else if (this.type == 7 || this.type == 8 || this.type == 9)
+            {
+                if (this.life > 0)
+                {
+                    int num33 = 0;
+                    while ((double)num33 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                        num33++;
+                    }
+                    return;
+                }
+                for (int num34 = 0; num34 < 50; num34++)
+                {
+                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                }
+                int num35 = SetGore(this.type - 7 + 18);
+                Main.gore[num35].alpha = this.alpha;
+                return;
+            }
+            else if (this.type == 10 || this.type == 11 || this.type == 12)
+            {
+                if (this.life > 0)
+                {
+                    int num36 = 0;
+                    while ((double)num36 < dmg / (double)this.lifeMax * 50.0)
+                    {
+                        Vector2 arg_14D5_0 = this.Position;
+                        int arg_14D5_1 = this.width;
+                        int arg_14D5_2 = this.height;
+                        int arg_14D5_3 = 5;
+                        float arg_14D5_4 = (float)hitDirection;
+                        float arg_14D5_5 = -1f;
+                        int arg_14D5_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_14D5_0, arg_14D5_1, arg_14D5_2, arg_14D5_3, arg_14D5_4, arg_14D5_5, arg_14D5_6, newColor, 1f);
+                        num36++;
+                    }
+                    return;
+                }
+                for (int num37 = 0; num37 < 10; num37++)
+                {
+                    Vector2 arg_152F_0 = this.Position;
+                    int arg_152F_1 = this.width;
+                    int arg_152F_2 = this.height;
+                    int arg_152F_3 = 5;
+                    float arg_152F_4 = 2.5f * (float)hitDirection;
+                    float arg_152F_5 = -2.5f;
+                    int arg_152F_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_152F_0, arg_152F_1, arg_152F_2, arg_152F_3, arg_152F_4, arg_152F_5, arg_152F_6, newColor, 1f);
+                }
+                SetGore(this.type - 7 + 18);
+                return;
+            }
+            else if (this.type == 13 || this.type == 14 || this.type == 15)
+            {
+                if (this.life > 0)
+                {
+                    int num38 = 0;
+                    while ((double)num38 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                        num38++;
+                    }
+                    return;
+                }
+                for (int num39 = 0; num39 < 50; num39++)
+                {
+                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                }
+                if (this.type == 13)
+                {
+                    SetGore(24);
+                    SetGore(25);
+                    return;
+                }
+                if (this.type == 14)
+                {
+                    SetGore(26);
+                    SetGore(27);
+                    return;
+                }
+                SetGore(28);
+                SetGore(29);
+                return;
+            }
+            else if (this.type == 17)
+            {
+                if (this.life > 0)
+                {
+                    int num40 = 0;
+                    while ((double)num40 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_16F8_0 = this.Position;
+                        int arg_16F8_1 = this.width;
+                        int arg_16F8_2 = this.height;
+                        int arg_16F8_3 = 5;
+                        float arg_16F8_4 = (float)hitDirection;
+                        float arg_16F8_5 = -1f;
+                        int arg_16F8_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_16F8_0, arg_16F8_1, arg_16F8_2, arg_16F8_3, arg_16F8_4, arg_16F8_5, arg_16F8_6, newColor, 1f);
+                        num40++;
+                    }
+                    return;
+                }
+                for (int num41 = 0; num41 < 50; num41++)
+                {
+                    Vector2 arg_1752_0 = this.Position;
+                    int arg_1752_1 = this.width;
+                    int arg_1752_2 = this.height;
+                    int arg_1752_3 = 5;
+                    float arg_1752_4 = 2.5f * (float)hitDirection;
+                    float arg_1752_5 = -2.5f;
+                    int arg_1752_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_1752_0, arg_1752_1, arg_1752_2, arg_1752_3, arg_1752_4, arg_1752_5, arg_1752_6, newColor, 1f);
+                }
+                SetGore(30);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
+                return;
+            }
+            else if (this.type == 22)
+            {
+                ShowDamage(dmg, hitDirection, 73);
+                return;
+            }
+            else if (this.type == 37 || this.type == 54)
+            {
+                ShowDamage(dmg, hitDirection, 58);
+                return;
+            }
+            else if (this.type == 18)
+            {
+                ShowDamage(dmg, hitDirection, 33);
+                return;
+            }
+            else if (this.type == 19)
+            {
+                ShowDamage(dmg, hitDirection, 36);
+                return;
+            }
+            else if (this.type == 38)
+            {
+                ShowDamage(dmg, hitDirection, 64);
+                return;
+            }
+            else if (this.type == 20)
+            {
+                ShowDamage(dmg, hitDirection, 39);
+                return;
+            }
+            else if (this.type == 21 || this.type == 31 || this.type == 32 || this.type == 44 || this.type == 45)
+            {
+                ShowDamage(dmg, hitDirection, 42, 50d, 26);
+                return;
+            }
+            else if (this.type == 39 || this.type == 40 || this.type == 41)
+            {
+                if (this.life > 0)
+                {
+                    int num56 = 0;
+                    while ((double)num56 < dmg / (double)this.lifeMax * 50.0)
+                    {
+                        Vector2 arg_2351_0 = this.Position;
+                        int arg_2351_1 = this.width;
+                        int arg_2351_2 = this.height;
+                        int arg_2351_3 = 26;
+                        float arg_2351_4 = (float)hitDirection;
+                        float arg_2351_5 = -1f;
+                        int arg_2351_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_2351_0, arg_2351_1, arg_2351_2, arg_2351_3, arg_2351_4, arg_2351_5, arg_2351_6, newColor, 1f);
+                        num56++;
+                    }
+                    return;
+                }
+                for (int num57 = 0; num57 < 20; num57++)
+                {
+                    Vector2 arg_23AC_0 = this.Position;
+                    int arg_23AC_1 = this.width;
+                    int arg_23AC_2 = this.height;
+                    int arg_23AC_3 = 26;
+                    float arg_23AC_4 = 2.5f * (float)hitDirection;
+                    float arg_23AC_5 = -2.5f;
+                    int arg_23AC_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_23AC_0, arg_23AC_1, arg_23AC_2, arg_23AC_3, arg_23AC_4, arg_23AC_5, arg_23AC_6, newColor, 1f);
+                }
+                SetGore(this.type - 39 + 67);
+                return;
+            }
+            else if (this.type == 34)
+            {
+                if (this.life > 0)
+                {
+                    int num58 = 0;
+                    while ((double)num58 < dmg / (double)this.lifeMax * 30.0)
+                    {
+                        Vector2 arg_245C_0 = new Vector2(this.Position.X, this.Position.Y);
+                        int arg_245C_1 = this.width;
+                        int arg_245C_2 = this.height;
+                        int arg_245C_3 = 15;
+                        float arg_245C_4 = -this.Velocity.X * 0.2f;
+                        float arg_245C_5 = -this.Velocity.Y * 0.2f;
+                        int arg_245C_6 = 100;
+                        Color newColor = default(Color);
+                        int num59 = Dust.NewDust(arg_245C_0, arg_245C_1, arg_245C_2, arg_245C_3, arg_245C_4, arg_245C_5, arg_245C_6, newColor, 1.8f);
+                        Main.dust[num59].noLight = true;
+                        Main.dust[num59].noGravity = true;
+                        Dust expr_2487 = Main.dust[num59];
+                        expr_2487.velocity *= 1.3f;
+                        Vector2 arg_24F9_0 = new Vector2(this.Position.X, this.Position.Y);
+                        int arg_24F9_1 = this.width;
+                        int arg_24F9_2 = this.height;
+                        int arg_24F9_3 = 26;
+                        float arg_24F9_4 = -this.Velocity.X * 0.2f;
+                        float arg_24F9_5 = -this.Velocity.Y * 0.2f;
+                        int arg_24F9_6 = 0;
+                        newColor = default(Color);
+                        num59 = Dust.NewDust(arg_24F9_0, arg_24F9_1, arg_24F9_2, arg_24F9_3, arg_24F9_4, arg_24F9_5, arg_24F9_6, newColor, 0.9f);
+                        Main.dust[num59].noLight = true;
+                        Dust expr_2516 = Main.dust[num59];
+                        expr_2516.velocity *= 1.3f;
+                        num58++;
+                    }
+                    return;
+                }
+                for (int num60 = 0; num60 < 15; num60++)
+                {
+                    Vector2 arg_25B3_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_25B3_1 = this.width;
+                    int arg_25B3_2 = this.height;
+                    int arg_25B3_3 = 15;
+                    float arg_25B3_4 = -this.Velocity.X * 0.2f;
+                    float arg_25B3_5 = -this.Velocity.Y * 0.2f;
+                    int arg_25B3_6 = 100;
+                    Color newColor = default(Color);
+                    int num61 = Dust.NewDust(arg_25B3_0, arg_25B3_1, arg_25B3_2, arg_25B3_3, arg_25B3_4, arg_25B3_5, arg_25B3_6, newColor, 1.8f);
+                    Main.dust[num61].noLight = true;
+                    Main.dust[num61].noGravity = true;
+                    Dust expr_25DE = Main.dust[num61];
+                    expr_25DE.velocity *= 1.3f;
+                    Vector2 arg_2650_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_2650_1 = this.width;
+                    int arg_2650_2 = this.height;
+                    int arg_2650_3 = 26;
+                    float arg_2650_4 = -this.Velocity.X * 0.2f;
+                    float arg_2650_5 = -this.Velocity.Y * 0.2f;
+                    int arg_2650_6 = 0;
+                    newColor = default(Color);
+                    num61 = Dust.NewDust(arg_2650_0, arg_2650_1, arg_2650_2, arg_2650_3, arg_2650_4, arg_2650_5, arg_2650_6, newColor, 0.9f);
+                    Main.dust[num61].noLight = true;
+                    Dust expr_266D = Main.dust[num61];
+                    expr_266D.velocity *= 1.3f;
+                }
+                return;
+            }
+            else if (this.type == 35 || this.type == 36)
+            {
+                if (this.life > 0)
+                {
+                    int num62 = 0;
+                    while ((double)num62 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_26E2_0 = this.Position;
+                        int arg_26E2_1 = this.width;
+                        int arg_26E2_2 = this.height;
+                        int arg_26E2_3 = 26;
+                        float arg_26E2_4 = (float)hitDirection;
+                        float arg_26E2_5 = -1f;
+                        int arg_26E2_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_26E2_0, arg_26E2_1, arg_26E2_2, arg_26E2_3, arg_26E2_4, arg_26E2_5, arg_26E2_6, newColor, 1f);
+                        num62++;
+                    }
+                    return;
+                }
+                for (int num63 = 0; num63 < 150; num63++)
+                {
+                    Vector2 arg_273D_0 = this.Position;
+                    int arg_273D_1 = this.width;
+                    int arg_273D_2 = this.height;
+                    int arg_273D_3 = 26;
+                    float arg_273D_4 = 2.5f * (float)hitDirection;
+                    float arg_273D_5 = -2.5f;
+                    int arg_273D_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_273D_0, arg_273D_1, arg_273D_2, arg_273D_3, arg_273D_4, arg_273D_5, arg_273D_6, newColor, 1f);
+                }
+                if (this.type == 35)
+                {
+                    SetGore(54);
+                    SetGore(55);
+                    return;
+                }
+                SetGore(56);
+                SetGore(57);
+                SetGore(57);
+                SetGore(57);
+                return;
+            }
+            else if (this.type == 23)
+            {
+                if (this.life > 0)
+                {
+                    int num64 = 0;
+                    while ((double)num64 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        int num65 = 25;
+                        if (Main.rand.Next(2) == 0)
+                        {
+                            num65 = 6;
+                        }
+                        Vector2 arg_2836_0 = this.Position;
+                        int arg_2836_1 = this.width;
+                        int arg_2836_2 = this.height;
+                        int arg_2836_3 = num65;
+                        float arg_2836_4 = (float)hitDirection;
+                        float arg_2836_5 = -1f;
+                        int arg_2836_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_2836_0, arg_2836_1, arg_2836_2, arg_2836_3, arg_2836_4, arg_2836_5, arg_2836_6, newColor, 1f);
+                        Vector2 arg_2897_0 = new Vector2(this.Position.X, this.Position.Y);
+                        int arg_2897_1 = this.width;
+                        int arg_2897_2 = this.height;
+                        int arg_2897_3 = 6;
+                        float arg_2897_4 = this.Velocity.X * 0.2f;
+                        float arg_2897_5 = this.Velocity.Y * 0.2f;
+                        int arg_2897_6 = 100;
+                        newColor = default(Color);
+                        int num66 = Dust.NewDust(arg_2897_0, arg_2897_1, arg_2897_2, arg_2897_3, arg_2897_4, arg_2897_5, arg_2897_6, newColor, 2f);
+                        Main.dust[num66].noGravity = true;
+                        num64++;
+                    }
+                    return;
+                }
+                for (int num67 = 0; num67 < 50; num67++)
+                {
+                    int num68 = 25;
+                    if (Main.rand.Next(2) == 0)
+                    {
+                        num68 = 6;
+                    }
+                    Vector2 arg_2914_0 = this.Position;
+                    int arg_2914_1 = this.width;
+                    int arg_2914_2 = this.height;
+                    int arg_2914_3 = num68;
+                    float arg_2914_4 = (float)(2 * hitDirection);
+                    float arg_2914_5 = -2f;
+                    int arg_2914_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_2914_0, arg_2914_1, arg_2914_2, arg_2914_3, arg_2914_4, arg_2914_5, arg_2914_6, newColor, 1f);
+                }
+                for (int num69 = 0; num69 < 50; num69++)
+                {
+                    Vector2 arg_2989_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_2989_1 = this.width;
+                    int arg_2989_2 = this.height;
+                    int arg_2989_3 = 6;
+                    float arg_2989_4 = this.Velocity.X * 0.2f;
+                    float arg_2989_5 = this.Velocity.Y * 0.2f;
+                    int arg_2989_6 = 100;
+                    Color newColor = default(Color);
+                    int num70 = Dust.NewDust(arg_2989_0, arg_2989_1, arg_2989_2, arg_2989_3, arg_2989_4, arg_2989_5, arg_2989_6, newColor, 2.5f);
+                    Dust expr_2998 = Main.dust[num70];
+                    expr_2998.velocity *= 6f;
+                    Main.dust[num70].noGravity = true;
+                }
+                return;
+            }
+            else if (this.type == 24)
+            {
+                if (this.life > 0)
+                {
+                    int num71 = 0;
+                    while ((double)num71 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_2A38_0 = new Vector2(this.Position.X, this.Position.Y);
+                        int arg_2A38_1 = this.width;
+                        int arg_2A38_2 = this.height;
+                        int arg_2A38_3 = 6;
+                        float arg_2A38_4 = this.Velocity.X;
+                        float arg_2A38_5 = this.Velocity.Y;
+                        int arg_2A38_6 = 100;
+                        Color newColor = default(Color);
+                        int num72 = Dust.NewDust(arg_2A38_0, arg_2A38_1, arg_2A38_2, arg_2A38_3, arg_2A38_4, arg_2A38_5, arg_2A38_6, newColor, 2.5f);
+                        Main.dust[num72].noGravity = true;
+                        num71++;
+                    }
+                    return;
+                }
+                for (int num73 = 0; num73 < 50; num73++)
+                {
+                    Vector2 arg_2AC6_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_2AC6_1 = this.width;
+                    int arg_2AC6_2 = this.height;
+                    int arg_2AC6_3 = 6;
+                    float arg_2AC6_4 = this.Velocity.X;
+                    float arg_2AC6_5 = this.Velocity.Y;
+                    int arg_2AC6_6 = 100;
+                    Color newColor = default(Color);
+                    int num74 = Dust.NewDust(arg_2AC6_0, arg_2AC6_1, arg_2AC6_2, arg_2AC6_3, arg_2AC6_4, arg_2AC6_5, arg_2AC6_6, newColor, 2.5f);
+                    Main.dust[num74].noGravity = true;
+                    Dust expr_2AE3 = Main.dust[num74];
+                    expr_2AE3.velocity *= 2f;
+                }
+                SetGore(45);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
+                return;
+            }
+            else if (this.type == 25)
+            {
+                for (int num75 = 0; num75 < 20; num75++)
+                {
+                    Vector2 arg_2C6A_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_2C6A_1 = this.width;
+                    int arg_2C6A_2 = this.height;
+                    int arg_2C6A_3 = 6;
+                    float arg_2C6A_4 = -this.Velocity.X * 0.2f;
+                    float arg_2C6A_5 = -this.Velocity.Y * 0.2f;
+                    int arg_2C6A_6 = 100;
+                    Color newColor = default(Color);
+                    int num76 = Dust.NewDust(arg_2C6A_0, arg_2C6A_1, arg_2C6A_2, arg_2C6A_3, arg_2C6A_4, arg_2C6A_5, arg_2C6A_6, newColor, 2f);
+                    Main.dust[num76].noGravity = true;
+                    Dust expr_2C87 = Main.dust[num76];
+                    expr_2C87.velocity *= 2f;
+                    Vector2 arg_2CF9_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_2CF9_1 = this.width;
+                    int arg_2CF9_2 = this.height;
+                    int arg_2CF9_3 = 6;
+                    float arg_2CF9_4 = -this.Velocity.X * 0.2f;
+                    float arg_2CF9_5 = -this.Velocity.Y * 0.2f;
+                    int arg_2CF9_6 = 100;
+                    newColor = default(Color);
+                    num76 = Dust.NewDust(arg_2CF9_0, arg_2CF9_1, arg_2CF9_2, arg_2CF9_3, arg_2CF9_4, arg_2CF9_5, arg_2CF9_6, newColor, 1f);
+                    Dust expr_2D08 = Main.dust[num76];
+                    expr_2D08.velocity *= 2f;
+                }
+                return;
+            }
+            else if (this.type == 33)
+            {
+                for (int num77 = 0; num77 < 20; num77++)
+                {
+                    Vector2 arg_2DC0_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_2DC0_1 = this.width;
+                    int arg_2DC0_2 = this.height;
+                    int arg_2DC0_3 = 29;
+                    float arg_2DC0_4 = -this.Velocity.X * 0.2f;
+                    float arg_2DC0_5 = -this.Velocity.Y * 0.2f;
+                    int arg_2DC0_6 = 100;
+                    Color newColor = default(Color);
+                    int num78 = Dust.NewDust(arg_2DC0_0, arg_2DC0_1, arg_2DC0_2, arg_2DC0_3, arg_2DC0_4, arg_2DC0_5, arg_2DC0_6, newColor, 2f);
+                    Main.dust[num78].noGravity = true;
+                    Dust expr_2DDD = Main.dust[num78];
+                    expr_2DDD.velocity *= 2f;
+                    Vector2 arg_2E50_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_2E50_1 = this.width;
+                    int arg_2E50_2 = this.height;
+                    int arg_2E50_3 = 29;
+                    float arg_2E50_4 = -this.Velocity.X * 0.2f;
+                    float arg_2E50_5 = -this.Velocity.Y * 0.2f;
+                    int arg_2E50_6 = 100;
+                    newColor = default(Color);
+                    num78 = Dust.NewDust(arg_2E50_0, arg_2E50_1, arg_2E50_2, arg_2E50_3, arg_2E50_4, arg_2E50_5, arg_2E50_6, newColor, 1f);
+                    Dust expr_2E5F = Main.dust[num78];
+                    expr_2E5F.velocity *= 2f;
+                }
+                return;
+            }
+            else if (this.type == 26 || this.type == 27 || this.type == 28 || this.type == 29)
+            {
+                if (this.life > 0)
+                {
+                    int num79 = 0;
+                    while ((double)num79 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_2EE7_0 = this.Position;
+                        int arg_2EE7_1 = this.width;
+                        int arg_2EE7_2 = this.height;
+                        int arg_2EE7_3 = 5;
+                        float arg_2EE7_4 = (float)hitDirection;
+                        float arg_2EE7_5 = -1f;
+                        int arg_2EE7_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_2EE7_0, arg_2EE7_1, arg_2EE7_2, arg_2EE7_3, arg_2EE7_4, arg_2EE7_5, arg_2EE7_6, newColor, 1f);
+                        num79++;
+                    }
+                    return;
+                }
+                for (int num80 = 0; num80 < 50; num80++)
+                {
+                    Vector2 arg_2F41_0 = this.Position;
+                    int arg_2F41_1 = this.width;
+                    int arg_2F41_2 = this.height;
+                    int arg_2F41_3 = 5;
+                    float arg_2F41_4 = 2.5f * (float)hitDirection;
+                    float arg_2F41_5 = -2.5f;
+                    int arg_2F41_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_2F41_0, arg_2F41_1, arg_2F41_2, arg_2F41_3, arg_2F41_4, arg_2F41_5, arg_2F41_6, newColor, 1f);
+                }
+                SetGore(48);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
+                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
+                return;
+            }
+            else if (this.type == 30)
+            {
+                for (int num81 = 0; num81 < 20; num81++)
+                {
+                    Vector2 arg_30B7_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_30B7_1 = this.width;
+                    int arg_30B7_2 = this.height;
+                    int arg_30B7_3 = 27;
+                    float arg_30B7_4 = -this.Velocity.X * 0.2f;
+                    float arg_30B7_5 = -this.Velocity.Y * 0.2f;
+                    int arg_30B7_6 = 100;
+                    Color newColor = default(Color);
+                    int num82 = Dust.NewDust(arg_30B7_0, arg_30B7_1, arg_30B7_2, arg_30B7_3, arg_30B7_4, arg_30B7_5, arg_30B7_6, newColor, 2f);
+                    Main.dust[num82].noGravity = true;
+                    Dust expr_30D4 = Main.dust[num82];
+                    expr_30D4.velocity *= 2f;
+                    Vector2 arg_3147_0 = new Vector2(this.Position.X, this.Position.Y);
+                    int arg_3147_1 = this.width;
+                    int arg_3147_2 = this.height;
+                    int arg_3147_3 = 27;
+                    float arg_3147_4 = -this.Velocity.X * 0.2f;
+                    float arg_3147_5 = -this.Velocity.Y * 0.2f;
+                    int arg_3147_6 = 100;
+                    newColor = default(Color);
+                    num82 = Dust.NewDust(arg_3147_0, arg_3147_1, arg_3147_2, arg_3147_3, arg_3147_4, arg_3147_5, arg_3147_6, newColor, 1f);
+                    Dust expr_3156 = Main.dust[num82];
+                    expr_3156.velocity *= 2f;
+                }
+                return;
+            }
+            else if (this.type == 42)
+            {
+                if (this.life > 0)
+                {
+                    int num83 = 0;
+                    while ((double)num83 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
+                        num83++;
+                    }
+                    return;
+                }
+                for (int num84 = 0; num84 < 50; num84++)
+                {
+                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
+                }
+                SetGore(70);
+                SetGore(71);
+                return;
+            }
+            else if (this.type == 43 || this.type == 56)
+            {
+                if (this.life > 0)
+                {
+                    int num85 = 0;
+                    while ((double)num85 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -1f, this.alpha, this.color, 1.2f);
+                        num85++;
+                    }
+                    return;
+                }
+                for (int num86 = 0; num86 < 50; num86++)
+                {
+                    Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -2f, this.alpha, this.color, 1.2f);
+                }
+                SetGore(72);
+                SetGore(72);
+                return;
+            }
+            else if (this.type == 48)
+            {
+                if (this.life > 0)
+                {
+                    int num87 = 0;
+                    while ((double)num87 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_337C_0 = this.Position;
+                        int arg_337C_1 = this.width;
+                        int arg_337C_2 = this.height;
+                        int arg_337C_3 = 5;
+                        float arg_337C_4 = (float)hitDirection;
+                        float arg_337C_5 = -1f;
+                        int arg_337C_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_337C_0, arg_337C_1, arg_337C_2, arg_337C_3, arg_337C_4, arg_337C_5, arg_337C_6, newColor, 1f);
+                        num87++;
+                    }
+                    return;
+                }
+                for (int num88 = 0; num88 < 50; num88++)
+                {
+                    Vector2 arg_33D2_0 = this.Position;
+                    int arg_33D2_1 = this.width;
+                    int arg_33D2_2 = this.height;
+                    int arg_33D2_3 = 5;
+                    float arg_33D2_4 = (float)(2 * hitDirection);
+                    float arg_33D2_5 = -2f;
+                    int arg_33D2_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_33D2_0, arg_33D2_1, arg_33D2_2, arg_33D2_3, arg_33D2_4, arg_33D2_5, arg_33D2_6, newColor, 1f);
+                }
+                SetGore(80);
+                SetGore(81);
+                return;
+            }
+            else if (this.type == 62 || this.type == 66)
+            {
+                if (this.life > 0)
+                {
+                    int num89 = 0;
+                    while ((double)num89 < dmg / (double)this.lifeMax * 100.0)
+                    {
+                        Vector2 arg_345C_0 = this.Position;
+                        int arg_345C_1 = this.width;
+                        int arg_345C_2 = this.height;
+                        int arg_345C_3 = 5;
+                        float arg_345C_4 = (float)hitDirection;
+                        float arg_345C_5 = -1f;
+                        int arg_345C_6 = 0;
+                        Color newColor = default(Color);
+                        Dust.NewDust(arg_345C_0, arg_345C_1, arg_345C_2, arg_345C_3, arg_345C_4, arg_345C_5, arg_345C_6, newColor, 1f);
+                        num89++;
+                    }
+                    return;
+                }
+                for (int num90 = 0; num90 < 50; num90++)
+                {
+                    Vector2 arg_34B2_0 = this.Position;
+                    int arg_34B2_1 = this.width;
+                    int arg_34B2_2 = this.height;
+                    int arg_34B2_3 = 5;
+                    float arg_34B2_4 = (float)(2 * hitDirection);
+                    float arg_34B2_5 = -2f;
+                    int arg_34B2_6 = 0;
+                    Color newColor = default(Color);
+                    Dust.NewDust(arg_34B2_0, arg_34B2_1, arg_34B2_2, arg_34B2_3, arg_34B2_4, arg_34B2_5, arg_34B2_6, newColor, 1f);
+                }
+                SetGore(93);
+                SetGore(94);
+                SetGore(94);
+            }
+
             Color newColor2 = new Color(50, 120, 255, 100);
             if (this.type == 64)
             {
@@ -9814,9 +9474,9 @@ namespace Terraria_Server
         
         public static bool AnyNPCs(int Type)
         {
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < MAX_NPCS; i++)
             {
-                if (Main.npc[i].Active && Main.npc[i].type == Type)
+                if (Main.npcs[i].Active && Main.npcs[i].type == Type)
                 {
                     return true;
                 }
@@ -9831,23 +9491,23 @@ namespace Terraria_Server
             Vector2 vector = default(Vector2);
             int num = 0;
             int num2 = 0;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < MAX_NPCS; i++)
             {
-                if (Main.npc[i].Active && Main.npc[i].type == 35)
+                if (Main.npcs[i].Active && Main.npcs[i].type == 35)
                 {
                     flag = false;
                     break;
                 }
             }
-            for (int j = 0; j < 1000; j++)
+            for (int j = 0; j < MAX_NPCS; j++)
             {
-                if (Main.npc[j].Active && Main.npc[j].type == 37)
+                if (Main.npcs[j].Active && Main.npcs[j].type == 37)
                 {
                     flag2 = true;
-                    Main.npc[j].ai[3] = 1f;
-                    vector = Main.npc[j].Position;
-                    num = Main.npc[j].width;
-                    num2 = Main.npc[j].height;
+                    Main.npcs[j].ai[3] = 1f;
+                    vector = Main.npcs[j].Position;
+                    num = Main.npcs[j].width;
+                    num2 = Main.npcs[j].height;
                     if (Main.netMode == 2)
                     {
                         NetMessage.SendData(23, -1, -1, "", j);
@@ -9856,8 +9516,8 @@ namespace Terraria_Server
             }
             if (flag && flag2)
             {
-                int num3 = NPC.NewNPC((int)vector.X + num / 2, (int)vector.Y + num2 / 2, 35, 0);
-                Main.npc[num3].netUpdate = true;
+                int npcIndex = NPC.NewNPC((int)vector.X + num / 2, (int)vector.Y + num2 / 2, 35, 0);
+                Main.npcs[npcIndex].netUpdate = true;
                 String str = "Skeletron";
                 if (Main.netMode == 0)
                 {
@@ -9943,21 +9603,21 @@ namespace Terraria_Server
                     if (this.immune[255] == 0)
                     {
                         Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
-                        for (int k = 0; k < 1000; k++)
+                        for (int k = 0; k < MAX_NPCS; k++)
                         {
-                            if (Main.npc[k].Active && !Main.npc[k].friendly && Main.npc[k].damage > 0)
+                            if (Main.npcs[k].Active && !Main.npcs[k].friendly && Main.npcs[k].damage > 0)
                             {
-                                Rectangle rectangle2 = new Rectangle((int)Main.npc[k].Position.X, (int)Main.npc[k].Position.Y, Main.npc[k].width, Main.npc[k].height);
+                                Rectangle rectangle2 = new Rectangle((int)Main.npcs[k].Position.X, (int)Main.npcs[k].Position.Y, Main.npcs[k].width, Main.npcs[k].height);
                                 if (rectangle.Intersects(rectangle2))
                                 {
-                                    int num3 = Main.npc[k].damage;
+                                    int num3 = Main.npcs[k].damage;
                                     int num4 = 6;
                                     int num5 = 1;
-                                    if (Main.npc[k].Position.X + (float)(Main.npc[k].width / 2) > this.Position.X + (float)(this.width / 2))
+                                    if (Main.npcs[k].Position.X + (float)(Main.npcs[k].width / 2) > this.Position.X + (float)(this.width / 2))
                                     {
                                         num5 = -1;
                                     }
-                                    Main.npc[i].StrikeNPC(num3, (float)num4, num5);
+                                    Main.npcs[i].StrikeNPC(num3, (float)num4, num5);
                                     if (Main.netMode != 0)
                                     {
                                         NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5);
@@ -10215,39 +9875,39 @@ namespace Terraria_Server
             bool flag4 = false;
             bool flag5 = false;
             bool flag6 = false;
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < MAX_NPCS; i++)
             {
-                if (Main.npc[i].type == 17)
+                if (Main.npcs[i].type == 17)
                 {
                     flag = true;
                 }
                 else
                 {
-                    if (Main.npc[i].type == 18)
+                    if (Main.npcs[i].type == 18)
                     {
                         flag2 = true;
                     }
                     else
                     {
-                        if (Main.npc[i].type == 19)
+                        if (Main.npcs[i].type == 19)
                         {
                             flag3 = true;
                         }
                         else
                         {
-                            if (Main.npc[i].type == 20)
+                            if (Main.npcs[i].type == 20)
                             {
                                 flag4 = true;
                             }
                             else
                             {
-                                if (Main.npc[i].type == 37)
+                                if (Main.npcs[i].type == 37)
                                 {
                                     flag5 = true;
                                 }
                                 else
                                 {
-                                    if (Main.npc[i].type == 38)
+                                    if (Main.npcs[i].type == 38)
                                     {
                                         flag6 = true;
                                     }
@@ -10782,6 +10442,28 @@ namespace Terraria_Server
                 }
             }
             return result;
+        }
+
+        private void ShowDamage(double damage, float hitDirection, int goreStart, double lifeModifier = 100d, int type = 5, int alpha = 0, Color color = default(Color))
+        {
+            if (this.life > 0)
+            {
+                for (int i = 0; (double)i < (damage / (double)this.lifeMax * lifeModifier); i++)
+                {
+                    Dust.NewDust(new Vector2(Position.X, Position.Y), width, height, 5, hitDirection, -1f, alpha, default(Color), 1f);
+                }
+                return;
+            }
+            for (int num43 = 0; num43 < 50; num43++)
+            {
+                float speedX = 2.5f * (float)hitDirection;
+                Dust.NewDust(new Vector2(Position.X, Position.Y), width, height, type, speedX, -2.5f, 0, default(Color), 1f);
+            }
+            SetGore(goreStart++);
+            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, goreStart);
+            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, goreStart++);
+            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, goreStart);
+            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, goreStart);
         }
         
         public object Clone()

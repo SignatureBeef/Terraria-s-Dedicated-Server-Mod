@@ -159,9 +159,9 @@ namespace Terraria_Server
             NPC[] npcs = null;
 
             int npcCount = 0;
-            for (int i = 0; i < Main.npc.Length-1; i++)
+            for (int i = 0; i < NPC.MAX_NPCS; i++)
             {
-                if (Main.npc[i].Active)
+                if (Main.npcs[i].Active)
                 {
                     npcCount++;
                 }
@@ -171,11 +171,11 @@ namespace Terraria_Server
             {
                 npcs = new NPC[npcCount];
                 npcCount = 0;
-                for (int i = 0; i < Main.npc.Length-1; i++)
+                for (int i = 0; i < Main.npcs.Length-1; i++)
                 {
-                    if (Main.npc[i].Active)
+                    if (Main.npcs[i].Active)
                     {
-                        npcs[npcCount] = Main.npc[i];
+                        npcs[npcCount] = Main.npcs[i];
                         npcCount++;
                     }
                 }
@@ -189,9 +189,9 @@ namespace Terraria_Server
         public int getActiveNPCCount()
         {
             int npcCount = 0;
-            for (int i = 0; i < Main.npc.Length - 1; i++)
+            for (int i = 0; i < Main.npcs.Length - 1; i++)
             {
-                if (Main.npc[i].Active)
+                if (Main.npcs[i].Active)
                 {
                     npcCount++;
                 }

@@ -1383,8 +1383,8 @@ namespace Terraria_Server
                             if (this.talkNPC >= 0)
                             {
                                 Rectangle rectangle2 = new Rectangle((int)(this.Position.X + (float)(this.width / 2) - (float)(Player.tileRangeX * 16)), (int)(this.Position.Y + (float)(this.height / 2) - (float)(Player.tileRangeY * 16)), Player.tileRangeX * 16 * 2, Player.tileRangeY * 16 * 2);
-                                Rectangle value = new Rectangle((int)Main.npc[this.talkNPC].Position.X, (int)Main.npc[this.talkNPC].Position.Y, Main.npc[this.talkNPC].width, Main.npc[this.talkNPC].height);
-                                if (!rectangle2.Intersects(value) || this.chest != -1 || !Main.npc[this.talkNPC].Active)
+                                Rectangle value = new Rectangle((int)Main.npcs[this.talkNPC].Position.X, (int)Main.npcs[this.talkNPC].Position.Y, Main.npcs[this.talkNPC].width, Main.npcs[this.talkNPC].height);
+                                if (!rectangle2.Intersects(value) || this.chest != -1 || !Main.npcs[this.talkNPC].Active)
                                 {
                                     this.talkNPC = -1;
                                     Main.npcChatText = "";
@@ -1409,16 +1409,16 @@ namespace Terraria_Server
                                 }
                             }
                             Rectangle rectangle4 = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
-                            for (int num45 = 0; num45 < 1000; num45++)
+                            for (int num45 = 0; num45 < NPC.MAX_NPCS; num45++)
                             {
-                                if (Main.npc[num45].Active && !Main.npc[num45].friendly && rectangle4.Intersects(new Rectangle((int)Main.npc[num45].Position.X, (int)Main.npc[num45].Position.Y, Main.npc[num45].width, Main.npc[num45].height)))
+                                if (Main.npcs[num45].Active && !Main.npcs[num45].friendly && rectangle4.Intersects(new Rectangle((int)Main.npcs[num45].Position.X, (int)Main.npcs[num45].Position.Y, Main.npcs[num45].width, Main.npcs[num45].height)))
                                 {
                                     int hitDirection = -1;
-                                    if (Main.npc[num45].Position.X + (float)(Main.npc[num45].width / 2) < this.Position.X + (float)(this.width / 2))
+                                    if (Main.npcs[num45].Position.X + (float)(Main.npcs[num45].width / 2) < this.Position.X + (float)(this.width / 2))
                                     {
                                         hitDirection = 1;
                                     }
-                                    this.Hurt(Main.npc[num45].damage, hitDirection, false, false);
+                                    this.Hurt(Main.npcs[num45].damage, hitDirection, false, false);
                                 }
                             }
                             Vector2 vector = Collision.HurtTiles(this.Position, this.Velocity, this.width, this.height, this.fireWalk);
@@ -4027,21 +4027,21 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            for (int j = 0; j < 1000; j++)
+                            for (int j = 0; j < NPC.MAX_NPCS; j++)
                             {
-                                if (Main.npc[j].Active && Main.npc[j].immune[i] == 0 && this.attackCD == 0 && !Main.npc[j].friendly)
+                                if (Main.npcs[j].Active && Main.npcs[j].immune[i] == 0 && this.attackCD == 0 && !Main.npcs[j].friendly)
                                 {
-                                    Rectangle value = new Rectangle((int)Main.npc[j].Position.X, (int)Main.npc[j].Position.Y, Main.npc[j].width, Main.npc[j].height);
+                                    Rectangle value = new Rectangle((int)Main.npcs[j].Position.X, (int)Main.npcs[j].Position.Y, Main.npcs[j].width, Main.npcs[j].height);
                                     if (rectangle.Intersects(value))
                                     {
-                                        if (Main.npc[j].noTileCollide || Collision.CanHit(this.Position, this.width, this.height, Main.npc[j].Position, Main.npc[j].width, Main.npc[j].height))
+                                        if (Main.npcs[j].noTileCollide || Collision.CanHit(this.Position, this.width, this.height, Main.npcs[j].Position, Main.npcs[j].width, Main.npcs[j].height))
                                         {
-                                            Main.npc[j].StrikeNPC(selectedItem.Damage, selectedItem.KnockBack, this.direction);
+                                            Main.npcs[j].StrikeNPC(selectedItem.Damage, selectedItem.KnockBack, this.direction);
                                             if (Main.netMode == 1)
                                             {
                                                 NetMessage.SendData(24, -1, -1, "", j, (float)i);
                                             }
-                                            Main.npc[j].immune[i] = this.itemAnimation;
+                                            Main.npcs[j].immune[i] = this.itemAnimation;
                                             this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
                                         }
                                     }
@@ -4115,7 +4115,7 @@ namespace Terraria_Server
                 }
                 for (int j = 0; j < 1000; j++)
                 {
-                    if (Main.npc[j].Active && Main.npc[j].type == num25)
+                    if (Main.npcs[j].Active && Main.npcs[j].type == num25)
                     {
                         flag6 = true;
                         break;
@@ -4813,7 +4813,7 @@ namespace Terraria_Server
             {
                 if (npc >= 0)
                 {
-                    result = text + " by " + Main.npc[npc].Name + ".";
+                    result = text + " by " + Main.npcs[npc].Name + ".";
                 }
                 else
                 {

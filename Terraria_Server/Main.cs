@@ -31,7 +31,6 @@ namespace Terraria_Server
         public const int maxProjectileTypes = 55;
         public const int maxProjectiles = 1000;
         public const int maxNPCTypes = 70;
-        public const int maxNPCs = 1000;
         public const int maxGoreTypes = 99;
         public const int maxGore = 200;
         public const int maxInventory = 44;
@@ -152,7 +151,7 @@ namespace Terraria_Server
         public static Tile[,] tile = new Tile[Main.maxTilesX, Main.maxTilesY];
 		public static Dust[] dust = new Dust[2000];
 		public static Item[] item = new Item[201];
-		public static NPC[] npc = new NPC[1001];
+		public static NPC[] npcs = new NPC[NPC.MAX_NPCS + 1];
 		public static Gore[] gore = new Gore[201];
 		public static Projectile[] projectile = new Projectile[1001];
 		public static Chest[] chest = new Chest[1000];
@@ -469,10 +468,10 @@ namespace Terraria_Server
             {
                 Main.item[l] = new Item();
             }
-            for (int m = 0; m < 1001; m++)
+            for (int m = 0; m < NPC.MAX_NPCS + 1; m++)
             {
-                Main.npc[m] = new NPC();
-                Main.npc[m].whoAmI = m;
+                Main.npcs[m] = new NPC();
+                Main.npcs[m].whoAmI = m;
             }
             for (int i = 0; i < MAX_PLAYERS+1; i++)
             {
@@ -835,11 +834,11 @@ namespace Terraria_Server
                         if (flag && Main.rand.Next(3) == 0)
                         {
                             int num = 0;
-                            for (int i = 0; i < 1000; i++)
+                            for (int i = 0; i < NPC.MAX_NPCS; i++)
                             {
-                                if (Main.npc[i].Active)
+                                if (Main.npcs[i].Active)
                                 {
-                                    if (Main.npc[i].townNPC)
+                                    if (Main.npcs[i].townNPC)
                                     {
                                         num++;
                                     }
@@ -904,11 +903,11 @@ namespace Terraria_Server
                         int num9 = 0;
                         int num10 = 0;
                         int num11 = 0;
-                        for (int i = 0; i < 1000; i++)
+                        for (int i = 0; i < NPC.MAX_NPCS; i++)
                         {
-                            if (Main.npc[i].Active && Main.npc[i].townNPC)
+                            if (Main.npcs[i].Active && Main.npcs[i].townNPC)
                             {
-                                if (Main.npc[i].type != 37 && !Main.npc[i].homeless)
+                                if (Main.npcs[i].type != 37 && !Main.npcs[i].homeless)
                                 {
                                     WorldGen.QuickFindHome(i);
                                 }
@@ -916,7 +915,7 @@ namespace Terraria_Server
                                 {
                                     num8++;
                                 }
-                                switch (Main.npc[i].type)
+                                switch (Main.npcs[i].type)
                                 {
                                     case 17:
                                         num3++;
@@ -1035,9 +1034,9 @@ namespace Terraria_Server
                             if (!NPC.downedBoss3 && num8 == 0)
                             {
                                 int num15 = NPC.NewNPC(Main.dungeonX * 16 + 8, Main.dungeonY * 16, 37, 0);
-                                Main.npc[num15].homeless = false;
-                                Main.npc[num15].homeTileX = Main.dungeonX;
-                                Main.npc[num15].homeTileY = Main.dungeonY;
+                                Main.npcs[num15].homeless = false;
+                                Main.npcs[num15].homeTileX = Main.dungeonX;
+                                Main.npcs[num15].homeTileY = Main.dungeonY;
                             }
                         }
                     }
@@ -1128,17 +1127,17 @@ namespace Terraria_Server
                 player.activeNPCs = 0;
                 player.townNPCs = 0;
             }
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < NPC.MAX_NPCS; i++)
             {
                 if (Main.ignoreErrors)
                 {
                     try
                     {
-                        Main.npc[i].UpdateNPC(i);
+                        Main.npcs[i].UpdateNPC(i);
                     }
                     catch (Exception value)
                     {
-                        Main.npc[i] = new NPC();
+                        Main.npcs[i] = new NPC();
                         Debug.WriteLine(String.Concat(new object[]
 						{
 							"Error: npc[", 
@@ -1152,7 +1151,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    Main.npc[i].UpdateNPC(i);
+                    Main.npcs[i].UpdateNPC(i);
                 }
             }
             for (int i = 0; i < 200; i++)

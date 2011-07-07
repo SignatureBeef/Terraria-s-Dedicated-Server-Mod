@@ -29,7 +29,7 @@ namespace Terraria_Server.Messages
             }
 
             Player player = Main.players[(int)playerIndex];
-            Main.npc[(int)npcIndex].StrikeNPC(player.inventory[player.selectedItemIndex].Damage, player.inventory[player.selectedItemIndex].KnockBack, player.direction);
+            Main.npcs[(int)npcIndex].StrikeNPC(player.inventory[player.selectedItemIndex].Damage, player.inventory[player.selectedItemIndex].KnockBack, player.direction);
             
             if (Main.netMode == 2)
             {
