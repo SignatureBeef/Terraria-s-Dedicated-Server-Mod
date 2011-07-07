@@ -175,7 +175,7 @@ namespace Terraria_Server.Plugin
         /// Hook method for any player-initiated tile changes (place, break, etc)
         /// </summary>
         /// <param name="Event">PlayerTileChangeEvent info</param>
-        public virtual void onTileChange(PlayerTileChangeEvent Event) { }
+        public virtual void onPlayerTileChange(PlayerTileChangeEvent Event) { }
 
         /// <summary>
         /// Hash list of all hooks currently registered by the plugin
