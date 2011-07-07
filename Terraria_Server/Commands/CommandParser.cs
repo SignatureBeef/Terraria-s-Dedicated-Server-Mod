@@ -5,13 +5,25 @@ namespace Terraria_Server.Commands
 {
     public class CommandParser
     {
+        /// <summary>
+        /// Server instance current CommandParser runs on
+        /// </summary>
         public Server server = null;
 
+        /// <summary>
+        /// CommandParser constructor
+        /// </summary>
+        /// <param name="Server">Current Server instance</param>
         public CommandParser(Server Server)
         {
             server = Server;
         }
 
+        /// <summary>
+        /// Parses new console command
+        /// </summary>
+        /// <param name="Line">Command to parse</param>
+        /// <param name="server">Current Server instance</param>
         public void parseConsoleCommand(String Line, Server server)
         {
             ConsoleSender cSender = new ConsoleSender(server);
@@ -34,6 +46,11 @@ namespace Terraria_Server.Commands
             switchCommands(commands, cSender.ConsoleCommand.Sender);
         }
 
+        /// <summary>
+        /// Parses player commands
+        /// </summary>
+        /// <param name="player">Sending player</param>
+        /// <param name="Line">Command to parse</param>
         public void parsePlayerCommand(Player player, String Line)
         {
             if (Line.StartsWith("/"))
@@ -49,6 +66,11 @@ namespace Terraria_Server.Commands
             switchCommands(commands, player);
         }
 
+        /// <summary>
+        /// Executes command methods derived from parsing
+        /// </summary>
+        /// <param name="commands">Command arguments to pass to methods</param>
+        /// <param name="sender">Sending player</param>
         public void switchCommands(String[] commands, Sender sender)
         {
             switch (Commands.getCommandValue(commands[0]))
