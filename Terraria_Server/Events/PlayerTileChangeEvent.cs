@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 
 using Terraria_Server.Misc;
+using Terraria_Server.Plugin.Tile;
+
 namespace Terraria_Server.Events
 {
     public class PlayerTileChangeEvent : Event
@@ -13,6 +15,10 @@ namespace Terraria_Server.Events
         public int Type { get; set; }
 
         public Vector2 Position { get; set; }
+
+        public TileAction Action { get; set; }
+
+        public TileType TileType { get; set; }
     }
 }
 

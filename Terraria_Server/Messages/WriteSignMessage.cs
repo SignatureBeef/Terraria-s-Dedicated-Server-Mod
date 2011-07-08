@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Text;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Messages
 {
@@ -24,24 +26,36 @@ namespace Terraria_Server.Messages
             int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
 
-            String String11 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
-            Main.sign[signIndex] = new Sign();
-            Sign sign = Main.sign[signIndex];
+            String SignText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+
+            Sign sign = new Sign();
             sign.x = x;
             sign.y = y;
-            Sign.TextSign(signIndex, String11);
-            Player player = Main.players[Main.myPlayer];
 
-            if (Main.netMode == 1 
-                && sign != null
-                && signIndex != player.sign)
+            PlayerEditSignEvent signEvent = new PlayerEditSignEvent();
+            signEvent.Sender = Main.players[whoAmI];
+            signEvent.Sign = sign;
+            signEvent.Text = SignText;
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, signEvent);
+            if (signEvent.Cancelled)
             {
-                Main.playerInventory = false;
-                player.talkNPC = -1;
-                Main.editSign = false;
-                player.sign = signIndex;
-                Main.npcChatText = sign.text;
+                return;
             }
+
+            Main.sign[signIndex] = sign;
+            Sign.TextSign(signIndex, SignText);
+            //Player player = Main.players[whoAmI];
+
+            //if (Main.netMode == 1 
+            //    && sign != null
+            //    && signIndex != player.sign)
+            //{
+            //    Main.playerInventory = false;
+            //    player.talkNPC = -1;
+            //    Main.editSign = false;
+            //    player.sign = signIndex;
+            //    Main.npcChatText = sign.text;
+            //}
         }
     }
 }

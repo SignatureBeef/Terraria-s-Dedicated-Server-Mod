@@ -2942,16 +2942,16 @@ namespace Terraria_Server
                                                                             if (num80 >= 0)
                                                                             {
                                                                                 //Need to check if this works :3
-                                                                                PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
-                                                                                playerEvent.Sender = Main.players[this.Owner];
-                                                                                playerEvent.Sign = Main.sign[num80];
-                                                                                playerEvent.Text = this.miscText;
-                                                                                playerEvent.isPlayer = false;
-                                                                                Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
-                                                                                if (playerEvent.Cancelled)
-                                                                                {
-                                                                                    return;
-                                                                                }
+                                                                                //PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
+                                                                                //playerEvent.Sender = Main.players[this.Owner];
+                                                                                //playerEvent.Sign = Main.sign[num80];
+                                                                                //playerEvent.Text = this.miscText;
+                                                                                //playerEvent.isPlayer = false;
+                                                                                //Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
+                                                                                //if (playerEvent.Cancelled)
+                                                                                //{
+                                                                                //    return;
+                                                                                //}
 
                                                                                 Sign.TextSign(num80, this.miscText);
                                                                             }

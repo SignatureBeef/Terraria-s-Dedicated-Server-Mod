@@ -5,6 +5,7 @@ using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
+using Terraria_Server.Plugin.Tile;
 
 namespace Terraria_Server.Messages
 {
@@ -46,14 +47,32 @@ namespace Terraria_Server.Messages
             tile.tileX = x;
             tile.tileY = y;
 
-            //Best way to determine breakages is to see if it's changed to nothing :3
-            PlayerTileChangeEvent breakEvent = new PlayerTileChangeEvent();
-            breakEvent.Sender = Main.players[whoAmI];
-            breakEvent.Tile = tile;
-            breakEvent.Type = tileType;
-            breakEvent.Position = new Vector2(x, y);
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_TILECHANGE, breakEvent);
-            if (breakEvent.Cancelled)
+            bool placed = false;
+            bool wall = false;
+
+            switch (tileAction)
+            {
+                case 1:
+                    placed = true;
+                    break;
+                case 2:
+                    wall = true;
+                    break;
+                case 3:
+                    wall = true;
+                    placed = true;
+                    break;
+            }
+
+            PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
+            tileEvent.Sender = Main.players[whoAmI];
+            tileEvent.Tile = tile;
+            tileEvent.Type = tileType;
+            tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
+            tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;
+            tileEvent.Position = new Vector2(x, y);
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
+            if (tileEvent.Cancelled)
             {
                 NetMessage.SendTileSquare(whoAmI, x, y, 1);
                 return;
