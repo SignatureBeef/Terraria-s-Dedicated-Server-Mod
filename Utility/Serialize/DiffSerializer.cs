@@ -19,7 +19,7 @@ namespace Terraria_Utilities.Serialize
         private String[] ignoreFields;
         private bool skipName;
 
-        public DiffSerializer(Type baseType, String[] ignoreFields, bool skipName = false)
+        public DiffSerializer(Type baseType, String[] ignoreFields = null, bool skipName = false)
         {
             this.baseType = baseType;
             baseObject = Activator.CreateInstance(baseType);
@@ -75,7 +75,18 @@ namespace Terraria_Utilities.Serialize
                 if (nodeValue != null && !nodeValue.Equals(field.GetValue(baseObject)))
                 {
                     writer.WriteStartElement(field.Name);
-                    if (field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(String)))
+                    if (field.FieldType.Equals(typeof(bool)))
+                    {
+                        if ((bool)nodeValue)
+                        {
+                            writer.WriteString("true");
+                        }
+                        else
+                        {
+                            writer.WriteString("false");
+                        }
+                    }
+                    else if (field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(String)))
                     {
                         writer.WriteString(nodeValue.ToString());
                     }

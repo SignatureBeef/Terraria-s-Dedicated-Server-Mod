@@ -168,6 +168,7 @@
     <Compile Include="Messages\WorldRequestMessage.cs" />
     <Compile Include="Messages\WriteSignMessage.cs" />
     <Compile Include="Plugin\Key.cs" />
+    <Compile Include="Registry.cs" />
     <Compile Include="Shops\ArmsDealerShop.cs" />
     <Compile Include="Shops\ClothierShop.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />

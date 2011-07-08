@@ -1,4 +1,5 @@
 ﻿using System;
+using Terraria_Server;
 
 namespace Terraria_Utilities
 {
@@ -18,7 +19,8 @@ namespace Terraria_Utilities
         static void Main(string[] args)
         {
             Console.WriteLine(WELCOME_MESSAGE);
-            Terraria_Utilities.Serialize.SerializeNPC.Start();
+            Registry<NPC> npcRegistry = new Registry<NPC>("NPCs.xml");
+            //Terraria_Utilities.Serialize.SerializeNPC.Start();
         }
     }
 }
