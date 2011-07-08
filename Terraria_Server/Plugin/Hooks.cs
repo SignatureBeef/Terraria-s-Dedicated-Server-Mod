@@ -1,6 +1,9 @@
 ﻿
 namespace Terraria_Server.Plugin
 {
+    /// <summary>
+    /// All hooks currently available for processing
+    /// </summary>
     public enum Hooks
     {
         CONSOLE_COMMAND,
@@ -10,7 +13,7 @@ namespace Terraria_Server.Plugin
         PLAYER_LOGOUT,
         PLAYER_PARTYCHANGE,
         PLAYER_CHAT,
-        TILE_CHANGE,
+        PLAYER_TILECHANGE,
         PLAYER_HURT,
         PLAYER_CHEST,
         PLAYER_STATEUPDATE,
@@ -18,7 +21,10 @@ namespace Terraria_Server.Plugin
         DOOR_STATECHANGE,
         PLAYER_EDITSIGN,
         PLAYER_PROJECTILE,
-        NPC_DEATH
-        //PLAYER_DESTROYSIGN
+        NPC_DEATH,
+        NPC_SPAWN,
+        PLAYER_TELEPORT,
+        PLAYER_MOVE,
+        PLAYER_KEYPRESS
     }
 }

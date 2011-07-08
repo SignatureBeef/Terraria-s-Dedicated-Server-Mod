@@ -2,6 +2,7 @@ using System;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
 using Terraria_Server.Events;
+using Terraria_Server.Commands;
 
 namespace Terraria_Server
 {
@@ -7772,10 +7773,10 @@ namespace Terraria_Server
             }
         }
         
-        public static int NewNPC(int X, int Y, int Type, int Start = 0)
+        public static int NewNPC(int x, int y, int type, int start = 0)
         {
             int npcIndex = -1;
-            for (int i = Start; i < MAX_NPCS; i++)
+            for (int i = start; i < MAX_NPCS; i++)
             {
                 if (!Main.npcs[i].Active)
                 {
@@ -7783,20 +7784,40 @@ namespace Terraria_Server
                     break;
                 }
             }
+
             if (npcIndex >= 0)
             {
-                Main.npcs[npcIndex] = new NPC();
-                Main.npcs[npcIndex].SetDefaults(Type);
-                Main.npcs[npcIndex].Position.X = (float)(X - Main.npcs[npcIndex].width / 2);
-                Main.npcs[npcIndex].Position.Y = (float)(Y - Main.npcs[npcIndex].height);
-                Main.npcs[npcIndex].Active = true;
-                Main.npcs[npcIndex].timeLeft = (int)((double)NPC.activeTime * 1.25);
-                Main.npcs[npcIndex].wet = Collision.WetCollision(Main.npcs[npcIndex].Position, Main.npcs[npcIndex].width, Main.npcs[npcIndex].height);
-                if (Type == 50)
+                NPC npc = new NPC();
+                NPC oldNPC = Main.npcs[npcIndex];
+                npc.SetDefaults(type);
+                npc.Position.X = (float)(x - oldNPC.width / 2);
+                npc.Position.Y = (float)(y - oldNPC.height);
+                npc.Active = true;
+                npc.timeLeft = (int)((double)NPC.activeTime * 1.25);
+                npc.wet = Collision.WetCollision(oldNPC.Position, oldNPC.width, oldNPC.height);
+
+                if (!WorldGen.gen)
+                {
+                    NPCSpawnEvent npcEvent = new NPCSpawnEvent();
+                    npcEvent.NPC = npc;
+                    Sender sender = new Sender();
+                    sender.Op = true;
+                    npcEvent.Sender = sender;
+                    Program.server.getPluginManager().processHook(Hooks.NPC_SPAWN, npcEvent);
+                    if (npcEvent.Cancelled)
+                    {
+                        return 1000;
+                    }
+                }
+                
+
+                Main.npcs[npcIndex] = npc;
+
+                if (type == 50)
                 {
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(25, -1, -1, Main.npcs[npcIndex].Name + " has awoken!", 255, 175f, 75f, 255f);
+                        NetMessage.SendData(25, -1, -1, npc.Name + " has awoken!", 255, 175f, 75f, 255f);
                     }
                 }
                 return npcIndex;

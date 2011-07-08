@@ -1,6 +1,7 @@
-
 using System.Net.Sockets;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 namespace Terraria_Server
 {
     public class ServerSock
@@ -32,6 +33,16 @@ namespace Terraria_Server
         public float spamWaterMax = 50f;
         public byte[] readBuffer;
         public byte[] writeBuffer;
+        
+        private volatile Queue<byte[]> writeQueue;
+        private Thread         writeThread;
+        private AutoResetEvent writeSignal;
+        
+        public ServerSock ()
+        {
+            writeQueue = new Queue<byte[]> ();
+            writeSignal = new AutoResetEvent (false);
+        }
         
         public void SpamUpdate()
         {
@@ -91,6 +102,8 @@ namespace Terraria_Server
         
         public void Reset()
         {
+            this.writeQueue = new Queue<byte[]> ();
+
             for (int i = 0; i < Main.maxSectionsX; i++)
             {
                 for (int j = 0; j < Main.maxSectionsY; j++)
@@ -168,6 +181,77 @@ namespace Terraria_Server
             }
         IL_57:
             this.locked = false;
+        }
+        
+        public void Send (byte[] data)
+        {
+            if (data == null)
+            {
+                throw new ArgumentException ("Data to send cannot be null");
+            }
+        
+            if (writeThread == null)
+            {
+                writeThread = new Thread (this.WriteThread);
+                writeThread.IsBackground = true;
+                writeThread.Start ();
+            }
+            
+            lock (writeQueue)
+            {
+                writeQueue.Enqueue (data);
+            }
+            writeSignal.Set ();
+        }
+        
+        const int WRITE_THREAD_BATCH_SIZE = 32;
+        internal void WriteThread ()
+        {
+            byte[][] list = new byte[WRITE_THREAD_BATCH_SIZE][];
+            while (true)
+            {
+                try
+                {
+                    int items = 0;
+
+                    lock (writeQueue)
+                    {
+                        while (writeQueue.Count > 0)
+                        {
+                            list[items++] = writeQueue.Dequeue();
+                            if (items == WRITE_THREAD_BATCH_SIZE) break;
+                        }
+                    }
+
+                    if (items == 0)
+                    {
+                        writeSignal.WaitOne();
+                        continue;
+                    }
+
+                    try
+                    {
+                        for (int i = 0; i < items; i++)
+                        {
+                            networkStream.Write(list[i], 0, list[i].Length);
+                            list[i] = null;
+                            NetMessage.buffer[this.whoAmI].spamCount--;
+                            if (this.statusMax > 0)
+                            {
+                                this.statusCount++;
+                            }
+                        }
+                    }
+                    catch
+                    {
+                    }
+                }
+                catch (Exception e)
+                {
+                    Program.tConsole.WriteLine("Exception within WriteThread:Socket");
+                    Program.tConsole.WriteLine(e.Message);
+                }
+            }
         }
     }
 }

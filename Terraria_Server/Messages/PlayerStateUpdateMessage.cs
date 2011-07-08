@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Messages
 {
@@ -25,7 +28,7 @@ namespace Terraria_Server.Messages
                 return;
             }
 
-            Player player = Main.players[playerIndex];
+            Player player = (Player)Main.players[playerIndex].Clone();
             if (Main.netMode == 1 && !player.Active)
             {
                 NetMessage.SendData(15);
@@ -59,6 +62,38 @@ namespace Terraria_Server.Messages
             player.controlJump = (controlMap & 16) == 16;
             player.controlUseItem = (controlMap & 32) == 32;
             player.direction = (controlMap & 64) == 64 ? 1 : -1;
+                        
+            PlayerMoveEvent playerEvent = new PlayerMoveEvent();
+            playerEvent.Sender = Main.players[playerIndex]; //We want to use the old player. (Possibly, to keep old Data?)
+            playerEvent.Location = player.Position;
+            playerEvent.Velocity = player.Velocity;
+            playerEvent.FallStart = player.fallStart;
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_MOVE, playerEvent);
+            if (playerEvent.Cancelled)
+            {
+                return;
+            }
+
+            PlayerKeyPressEvent playerInteractEvent = new PlayerKeyPressEvent();
+            playerInteractEvent.Sender = Main.players[playerIndex];
+
+            Key playerKeysPressed = new Key();
+            playerKeysPressed.Up = player.controlUp;
+            playerKeysPressed.Down = player.controlDown;
+            playerKeysPressed.Left = player.controlLeft;
+            playerKeysPressed.Right = player.controlRight;
+            playerKeysPressed.Jump = player.controlJump;
+
+            playerInteractEvent.KeysPressed = playerKeysPressed;
+            playerInteractEvent.MouseClicked = player.controlUseItem;
+            playerInteractEvent.FacingDirection = player.direction;
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_KEYPRESS, playerInteractEvent);
+            if (playerEvent.Cancelled)
+            {
+                return;
+            }
+
+            Main.players[playerIndex] = player;
 
             if (Main.netMode == 2 && Netplay.serverSock[whoAmI].state == 10)
             {

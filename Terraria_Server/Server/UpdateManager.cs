@@ -14,15 +14,15 @@ namespace Terraria_Server
         {
             try
             {
-                Program.tConsole.Write("Attempting to retreive Build Info...");
-                String buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim().ToLower();
-                String toString = "Comments: ";
-                if (buildInfo.Contains(toString))
+                Program.tConsole.WriteLine("Attempting to retreive Build Info...");
+                String buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim();
+                String toString = "comments: ";
+                if (buildInfo.ToLower().Contains(toString))
                 {
-                    buildInfo = buildInfo.Remove(0, buildInfo.IndexOf(toString) + toString.Length).Trim().Replace("<br/>", "\n"); //This is also used for the forums, so easy use here ;D
+                    buildInfo = buildInfo.Remove(0, buildInfo.ToLower().IndexOf(toString.ToLower()) + toString.Length).Trim().Replace("<br/>", "\n"); //This is also used for the forums, so easy use here ;D
                     if (buildInfo.Length > 0)
                     {
-                        Program.tConsole.Write("Build Comments :" + buildInfo);
+                        Program.tConsole.WriteLine("Build Comments: " + buildInfo);
                     }
                 }
             }
@@ -60,9 +60,9 @@ namespace Terraria_Server
             Program.tConsole.Write("Checking for Updates...");
             if (!isUptoDate())
             {
-                printUpdateInfo();
-
                 Program.tConsole.WriteLine("Update found, Performing b" + Statics.BUILD.ToString() + " -> " + uList);
+
+                printUpdateInfo();
 
                 String savePath = "Terraria_Server.upd";
                 String backupPath = "Terraria_Server.bak";

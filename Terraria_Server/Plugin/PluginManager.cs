@@ -12,13 +12,20 @@ namespace Terraria_Server.Plugin
      *  - I would love to be able to unload a plugin from memory :3 (Todo?...Someone? xD)
      * 
      */
-
+    /// <summary>
+    /// PluginManager class.  Handles all input/output, loading, enabling, disabling, and hook processing for plugins
+    /// </summary>
     public class PluginManager
     {
         private String pluginPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
         private Server server;
 
+        /// <summary>
+        /// PluginManager class constructor
+        /// </summary>
+        /// <param name="pluginPath">Path to plugin directory</param>
+        /// <param name="server">Current Server instance</param>
         public PluginManager(String pluginPath, Server server)
         {
             this.pluginPath = pluginPath;
@@ -31,8 +38,8 @@ namespace Terraria_Server.Plugin
         /// Load the plugin located at the specified path.
         /// This only loads one plugin.
         /// </summary>
-        /// <param name="PluginPath"></param>
-        /// <returns></returns>
+        /// <param name="PluginPath">Path to plugin</param>
+        /// <returns>Instance of the successfully loaded plugin, otherwise null</returns>
         public Plugin loadPlugin(String pluginPath)
         {
             try
@@ -68,6 +75,9 @@ namespace Terraria_Server.Plugin
             return null;
         }
 
+        /// <summary>
+        /// Reloads all plugins currently running on the server
+        /// </summary>
         public void ReloadPlugins() {
             DisablePlugins();
 
@@ -86,6 +96,9 @@ namespace Terraria_Server.Plugin
             EnablePlugins();
         }
 
+        /// <summary>
+        /// Enables all plugins available to the server
+        /// </summary>
         public void EnablePlugins()
         {
             foreach (Plugin plugin in plugins.Values)
@@ -95,6 +108,9 @@ namespace Terraria_Server.Plugin
             }
         }
 
+        /// <summary>
+        /// Disables all plugins currently running on the server
+        /// </summary>
         public void DisablePlugins()
         {
             foreach (Plugin plugin in plugins.Values)
@@ -106,7 +122,11 @@ namespace Terraria_Server.Plugin
             plugins.Clear();
         }
         
-        //Returns true on plugin successfully Enabling
+        /// <summary>
+        /// Enables a plugin by name. Currently unused in core
+        /// </summary>
+        /// <param name="name">Plugin name</param>
+        /// <returns>Returns true on plugin successfully Enabling</returns>
         public bool EnablePlugin(String name)
         {
         	String cleanedName = name.ToLower().Trim();
@@ -120,7 +140,11 @@ namespace Terraria_Server.Plugin
             return false;
         }
 
-        //Returns true on plugin successfully Disabling
+        /// <summary>
+        /// Disables a plugin by name.  Currently unused in core
+        /// </summary>
+        /// <param name="name">Name of plugin</param>
+        /// <returns>Returns true on plugin successfully Disabling</returns>
         public bool DisablePlugin(String name)
         {
         	String cleanedName = name.ToLower().Trim();
@@ -134,6 +158,11 @@ namespace Terraria_Server.Plugin
             return false;
         }
 
+        /// <summary>
+        /// Gets plugin instance by name.
+        /// </summary>
+        /// <param name="name">Plugin name</param>
+        /// <returns>Returns found plugin if successful, otherwise returns null</returns>
         public Plugin getPlugin(String name)
         {
         	String cleanedName = name.ToLower().Trim();
@@ -144,6 +173,11 @@ namespace Terraria_Server.Plugin
         	return null;
         }
         
+        /// <summary>
+        /// Determines whether a plugins has registered a hook, then fires the appropriate method if so
+        /// </summary>
+        /// <param name="hook">Hook to process</param>
+        /// <param name="hookEvent">Event instance to pass to any hooked methods</param>
         public void processHook(Hooks hook, Event hookEvent)
 		{
             foreach (Plugin plugin in plugins.Values)
@@ -156,7 +190,7 @@ namespace Terraria_Server.Plugin
                         {
                             case Hooks.CONSOLE_COMMAND:
                                 {
-                                    plugin.onPlayerCommandProcess((ConsoleCommandEvent)hookEvent);
+                                    plugin.onConsoleCommand((ConsoleCommandEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_COMMAND:
@@ -189,9 +223,9 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerPartyChange((PartyChangeEvent)hookEvent);
                                     break;
                                 }
-                            case Hooks.TILE_CHANGE:
+                            case Hooks.PLAYER_TILECHANGE:
                                 {
-                                    plugin.onTileChange((PlayerTileChangeEvent)hookEvent);
+                                    plugin.onPlayerTileChange((PlayerTileChangeEvent)hookEvent);
                                     break;
                                 }
                             case Hooks.PLAYER_HURT:
@@ -232,6 +266,26 @@ namespace Terraria_Server.Plugin
                             case Hooks.NPC_DEATH:
                                 {
                                     plugin.onNPCDeath((NPCDeathEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.NPC_SPAWN:
+                                {
+                                    plugin.onNPCSpawn((NPCSpawnEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.PLAYER_TELEPORT:
+                                {
+                                    plugin.onPlayerTeleport((PlayerTeleportEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.PLAYER_MOVE:
+                                {
+                                    plugin.onPlayerMove((PlayerMoveEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.PLAYER_KEYPRESS:
+                                {
+                                    plugin.onPlayerKeyPress((PlayerKeyPressEvent)hookEvent);
                                     break;
                                 }
                         }

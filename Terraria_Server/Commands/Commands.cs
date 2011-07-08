@@ -8,7 +8,9 @@ namespace Terraria_Server.Commands
 {
     public class Commands
     {
-
+        /// <summary>
+        /// Enumerates command IDs
+        /// </summary>
         public enum Command
         {
             /*
@@ -54,9 +56,12 @@ namespace Terraria_Server.Commands
             PLAYER_OPLOGOUT = 20,
             COMMAND_NPCSPAWN = 21,
             COMMAND_KICK = 22,
-            COMMAND_RESTART = 23
+            COMMAND_RESTART = 23,
+            COMMAND_STOP = 24
         }
- 
+        /// <summary>
+        /// Defines the string values for the command names
+        /// </summary>
         public static String[] CommandDefinition = new String[] {   "exit",         "reload",       "list",
                                                                     "players",      "me",           "say",
                                                                     "save-all",     "help",         "whitelist",
@@ -64,8 +69,11 @@ namespace Terraria_Server.Commands
                                                                     "give",         "spawnnpc",     "tp",
 																	"tphere",       "settle",       "op",
                                                                     "deop",         "oplogin",      "oplogout",
-                                                                    "npcspawns",    "kick",         "restart"};
-
+                                                                    "npcspawns",    "kick",         "restart",
+                                                                    "stop"};
+        /// <summary>
+        /// Defines help text for each command
+        /// </summary>
         public static String[] CommandInformation = new String[] {  "Stop & Close The Server.",
                                                                     "Reload Plugins.",
                                                                     "Show Online Players.",
@@ -89,33 +97,19 @@ namespace Terraria_Server.Commands
                                                                     "Log out of OP status.",
                                                                     "Toggle the state of NPC Spawning.",
                                                                     "Kicks a player from the server.", 
-                                                                    "Restarts the server."};
+                                                                    "Restarts the server.",
+                                                                    "Stop & Close The Server."};
 
-            public static int[] CommandPermission = new int[] { 1,
-                                                                1,
-                                                                0,
-                                                                0,
-                                                                0,
-                                                                1, 
-                                                                1, 
-                                                                0, 
-                                                                1, 
-                                                                1, 
-                                                                1, 
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                1,
-                                                                0,
-                                                                0,
-                                                                1,
-                                                                1, 
-                                                                1};
+        /// <summary>
+        /// Defines permission required to use the command at the specified index.  1 = requires op, 0 = any player
+        /// </summary>
+        public static int[] CommandPermission = new int[] { 1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1};
 
+        /// <summary>
+        /// Utility for converting a String array into a single string
+        /// </summary>
+        /// <param name="Array">Array of strings to convert</param>
+        /// <returns>Single string representation of Array</returns>
         public static String MergeStringArray(String[] Array)
         {
             StringBuilder sb = new StringBuilder();
@@ -132,6 +126,11 @@ namespace Terraria_Server.Commands
             return sb.ToString().Trim();
         }
 
+        /// <summary>
+        /// Gets the enumerated value of a command by name
+        /// </summary>
+        /// <param name="Command">Name of command</param>
+        /// <returns>ID of command if it exists, NO_SUCH_COMMAND if not</returns>
         public static int getCommandValue(String Command)
         {
             for (int i = 0; i < CommandDefinition.Length; i++)
@@ -144,16 +143,30 @@ namespace Terraria_Server.Commands
             return (int)Commands.Command.NO_SUCH_COMMAND;
         }
 
+        /// <summary>
+        /// Executes the save/stop routine for the server
+        /// </summary>
+        /// <param name="server">Current instance of Server to stop</param>
         public static void Exit(Server server)
         {
             server.StopServer();
         }
 
+        /// <summary>
+        /// Executes the plugin reload method
+        /// </summary>
+        /// <param name="server">Current instance of Server</param>
         public static void Reload(Server server)
         {
             server.getPluginManager().ReloadPlugins();
         }
 
+        /// <summary>
+        /// Sends the list of currently active players to the requesting player
+        /// </summary>
+        /// <param name="playerIndex">Index of player requesting list</param>
+        /// <param name="sendPlayer">Unknown?  Unused</param>
+        /// <returns>A copy of the current players list</returns>
         public static String List(int playerIndex = 0, bool sendPlayer = true)
         {
             String playerList = "";
@@ -175,6 +188,11 @@ namespace Terraria_Server.Commands
             return "Current players: " + playerList.Trim() + ".";
         }
 
+        /// <summary>
+        /// Sends message to the chat, /me format for a player, "Server" for the console
+        /// </summary>
+        /// <param name="Message">Message to send</param>
+        /// <param name="playerIndex">Sending player's index number</param>
         public static void Me_Say(String Message, int playerIndex = -1)
         {
             if (Message != null && Message.Trim().Length > 0)
@@ -190,6 +208,9 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Executes the world data save routine
+        /// </summary>
         public static void SaveAll()
         {
             Program.server.notifyOps("Saving World...");
@@ -204,19 +225,32 @@ namespace Terraria_Server.Commands
             Program.server.BanList.Save();
             Program.server.WhiteList.Save();
 
-            Program.tConsole.WriteLine("Saving Complete.");
+            Program.server.notifyOps("Saving Complete.");
         }
 
+        /// <summary>
+        /// Method for retrieving current God mode status
+        /// </summary>
+        /// <returns>True if GodMode is on, false if not</returns>
         public static bool getGodMode()
         {
             return Program.server.GodMode;
         }
 
+        /// <summary>
+        /// Sets GodMode
+        /// </summary>
+        /// <param name="GodMode">Boolean value representing GodMode status</param>
         public static void setGodMode(bool GodMode)
         {
             Program.server.GodMode = GodMode;
         }
 
+        /// <summary>
+        /// Sends the help list to the requesting player's chat
+        /// </summary>
+        /// <param name="sender">Requesting player</param>
+        /// <param name="commands">Specific commands to send help on, if player provided any</param>
         public static void ShowHelp(Sender sender, String[] commands = null)
         {
             if (sender is Player)
@@ -304,6 +338,11 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Adds or removes specified player to/from the white list
+        /// </summary>
+        /// <param name="sender">Player that sent command</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void WhiteList(Sender sender, String[] commands)
         {
             // /whitelist <add:remove> <player>
@@ -357,6 +396,11 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command args Error!");
         }
 
+        /// <summary>
+        /// Adds or removes player to/from the ban list
+        /// </summary>
+        /// <param name="sender">Player that sent command</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void BanList(Sender sender, String[] commands)
         {
             // /ban  <player>
@@ -445,6 +489,11 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
+        /// <summary>
+        /// Sets the time in the game
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void Time(Sender sender, String[] commands)
         {
             if (sender is Player)
@@ -563,6 +612,11 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
+        /// <summary>
+        /// Gives specified item to the specified player
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void Give(Sender sender, String[] commands)
         {
             if (sender is Player)
@@ -684,6 +738,11 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
+        /// <summary>
+        /// Spawns specified NPC type
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void SpawnNPC(Sender sender, String[] commands)
         {
             if (sender is Player)
@@ -797,6 +856,11 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Teleports sender to specified player's location
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void Teleport(Sender sender, String[] commands)
         {
             if (sender is Player)
@@ -837,6 +901,11 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
+        /// <summary>
+        /// Teleports specified player to sending player's location
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void TeleportHere(Sender sender, String[] commands)
         {
             if (sender is Player)
@@ -876,6 +945,10 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
+        /// <summary>
+        /// Settles water like in the startup routine
+        /// </summary>
+        /// <param name="sender">Sending player</param>
         public static void SettleWater(Sender sender)
         {
             if (sender is Player)
@@ -900,6 +973,12 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Ops or deops the specified player
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="deop">Boolean value representing command's op type: True = deop command, false = op</param>
         public static void OP(Sender sender, String[] commands, bool deop = false)
         {
             if (sender is Player)
@@ -951,6 +1030,12 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Command Error!");
         }
 
+        /// <summary>
+        /// Handles all op login/logout commands
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="logout">Boolean: True means command was oplogout, false means oplogin</param>
         public static void OPLoginOut(Sender sender, String[] commands, bool logout = false)
         {
             if (sender is Player)
@@ -998,6 +1083,10 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Enables or disables NPC spawning
+        /// </summary>
+        /// <param name="sender">Sending player</param>
         public static void NPCSpawns(Sender sender)
         {
             if (sender is Player)
@@ -1022,6 +1111,11 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Kicks the specified player out of the server
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void Kick(Sender sender, String[] commands)
         {
             if (sender is Player)
@@ -1057,33 +1151,12 @@ namespace Terraria_Server.Commands
             }
             sender.sendMessage("Command Error!");
         }
-    
-        public static void Heal(Sender sender, String[] commands)
-        {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
-            if (commands != null && commands.Length > 1)
-            {
-                if (commands[0] != null && commands[0].Length > 0)
-                {
-                    Player banee = Program.server.GetPlayerByName(commands[1]);
-
-                    
-
-                    return;
-                }
-            }
-            sender.sendMessage("Command Error!");
-        }
-
+        
+        /// <summary>
+        /// Restarts the server
+        /// </summary>
+        /// <param name="sender">Sending player</param>
+        /// <param name="server">Current Server instance</param>
         public static void Restart(Sender sender, Server server)
         {
             if (sender is Player)

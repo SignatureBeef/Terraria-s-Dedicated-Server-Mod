@@ -4989,6 +4989,17 @@ namespace Terraria_Server
 
         public void teleportTo(float tileX, float tileY)
         {
+
+            PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
+            playerEvent.ToLocation = new Vector2(tileX, tileY);
+            playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
+            playerEvent.Sender = this;
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_TELEPORT, playerEvent);
+            if (playerEvent.Cancelled)
+            {
+                return;
+            }
+
             //Preserve out Spawn point.
             int xPreserve = Main.spawnTileX;
             int yPreserve = Main.spawnTileY;

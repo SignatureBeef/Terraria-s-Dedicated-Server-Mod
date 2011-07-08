@@ -4,6 +4,7 @@ using System.Net;
 using System;
 using System.Threading;
 using Terraria_Server.Messages;
+using System.Diagnostics;
 namespace Terraria_Server
 {
     public class Netplay
@@ -417,7 +418,7 @@ namespace Terraria_Server
                         }
 					}
 				}
-				Thread.Sleep(1);
+				Thread.Sleep(10);
 				if (!WorldGen.saveLock && !Main.dedServ)
 				{
 					if (num2 == 0)
@@ -520,22 +521,19 @@ namespace Terraria_Server
 
         public static bool SetIP(String newIP)
 		{
-			bool result;
 			try
 			{
 				Netplay.serverIP = IPAddress.Parse(newIP);
 			}
 			catch
 			{
-				result = false;
-				return result;
+                return false;
 			}
 			return true;
 		}
 		
         public static bool SetIP2(String newIP)
 		{
-			bool result;
 			try
 			{
 				IPHostEntry hostEntry = Dns.GetHostEntry(newIP);
@@ -545,17 +543,14 @@ namespace Terraria_Server
 					if (addressList[i].AddressFamily == AddressFamily.InterNetwork)
 					{
 						Netplay.serverIP = addressList[i];
-						result = true;
-						return result;
+                        return true;
 					}
 				}
-				result = false;
 			}
 			catch
 			{
-				result = false;
 			}
-			return result;
+			return false;
 		}
 		
         public static void Init()

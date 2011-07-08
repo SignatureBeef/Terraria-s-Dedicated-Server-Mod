@@ -44,6 +44,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -110,6 +112,10 @@
   <ItemGroup>
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
+    <Compile Include="Events\NPCSpawnEvent.cs" />
+    <Compile Include="Events\PlayerKeyPressEvent.cs" />
+    <Compile Include="Events\PlayerMoveEvent.cs" />
+    <Compile Include="Events\PlayerTeleportEvent.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\ConnectionResponseMessage.cs" />
@@ -161,6 +167,7 @@
     <Compile Include="Messages\WorldDataMessage.cs" />
     <Compile Include="Messages\WorldRequestMessage.cs" />
     <Compile Include="Messages\WriteSignMessage.cs" />
+    <Compile Include="Plugin\Key.cs" />
     <Compile Include="Shops\ArmsDealerShop.cs" />
     <Compile Include="Shops\ClothierShop.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
