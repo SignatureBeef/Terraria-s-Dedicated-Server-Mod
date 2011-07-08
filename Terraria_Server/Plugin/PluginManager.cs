@@ -54,7 +54,7 @@ namespace Terraria_Server.Plugin
         /// Load the plugin located at the specified path.
         /// This only loads one plugin.
         /// </summary>
-        /// <param name="PluginPath">Path to plugin</param>
+        /// <param name="pluginPath">Path to plugin</param>
         /// <returns>Instance of the successfully loaded plugin, otherwise null</returns>
         public Plugin loadPlugin(String pluginPath)
         {
@@ -192,7 +192,7 @@ namespace Terraria_Server.Plugin
         /// <summary>
         /// Gets the PluginManagers Loaded Plugins.
         /// </summary>
-        /// <returns>Returns the Dictionary of Pluginds, <Path, Plugin></returns>
+        /// <returns>Returns the current Dictionary of Plugins</returns>
         public Dictionary<String, Plugin> getPluginList()
         {
             return plugins;
