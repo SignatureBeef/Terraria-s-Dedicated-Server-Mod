@@ -72,7 +72,7 @@ namespace Terraria_Server
                                 byte b = (byte)number;
                                 byte b2 = (byte)Main.players[(int)b].hair;
                                 byte[] bytes11 = Encoding.ASCII.GetBytes(text);
-                                num2 += 23 + bytes11.Length;
+                                num2 += 23 + bytes11.Length + 1;
                                 byte[] bytes12 = BitConverter.GetBytes(num2 - 4);
                                 Buffer.BlockCopy(bytes12, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
                                 Buffer.BlockCopy(bytes10, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
