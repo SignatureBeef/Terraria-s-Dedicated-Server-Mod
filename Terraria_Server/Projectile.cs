@@ -6,53 +6,178 @@ using Terraria_Server.Misc;
 
 namespace Terraria_Server
 {
+    /// <summary>
+    /// Projectile includes things like bullets, arrows, knives, explosives, boomerangs, and possibly ball/chain, orbs, and flamelash/spells.
+    /// </summary>
     public class Projectile
     {
+        /// <summary>
+        /// Whether the projectile is currently wet
+        /// </summary>
         public bool wet;
+        /// <summary>
+        /// 
+        /// </summary>
         public byte wetCount;
+        /// <summary>
+        /// Whether the projectile is currently immersed in lava
+        /// </summary>
         public bool lavaWet;
+        /// <summary>
+        /// Projectile index
+        /// </summary>
         public int whoAmI;
+        /// <summary>
+        /// 
+        /// </summary>
         public const int MAX_AI = 2;
+        /// <summary>
+        /// Projectile's current location
+        /// </summary>
         public Vector2 Position;
+        /// <summary>
+        /// Projectile's current 2-direction speed
+        /// </summary>
         public Vector2 Velocity;
+        /// <summary>
+        /// Projectile's width of area effect
+        /// </summary>
         public int width;
+        /// <summary>
+        /// Projectile's height of area effect
+        /// </summary>
         public int height;
+        /// <summary>
+        /// Scaled size of projectile
+        /// </summary>
         public float scale = 1f;
+        /// <summary>
+        /// Degrees of rotation for projectile sprite
+        /// </summary>
         public float rotation;
+        /// <summary>
+        /// Projectile type
+        /// </summary>
         public int type;
+        /// <summary>
+        /// Projectile's visibility, 255 == fully visible, 0 == invisible
+        /// </summary>
         public int alpha;
+        /// <summary>
+        /// Index of owning player
+        /// </summary>
         public int Owner = 255;
+        /// <summary>
+        /// Whether the projectile is currently alive in game
+        /// </summary>
         public bool active;
+        /// <summary>
+        /// Textual name of projectile type
+        /// </summary>
         public String name = "";
+        /// <summary>
+        /// 
+        /// </summary>
         public float[] ai = new float[Projectile.MAX_AI];
+        /// <summary>
+        /// 
+        /// </summary>
         public int aiStyle;
+        /// <summary>
+        /// Amount of time left in the projectile's life cycle?
+        /// </summary>
         public int timeLeft;
+        /// <summary>
+        /// Amount of time to delay sound.  Unit unknown (likely milliseconds)
+        /// </summary>
         public int soundDelay;
+        /// <summary>
+        /// Amount of damage the projectile can cause on a target entity
+        /// </summary>
         public int damage;
+        /// <summary>
+        /// Integer representing x direction of travel.  Values unknown
+        /// </summary>
         public int direction;
+        /// <summary>
+        ///  
+        /// </summary>
         public bool hostile;
+        /// <summary>
+        /// Amount of knockback the projectile causes
+        /// </summary>
         public float knockBack;
+        /// <summary>
+        /// 
+        /// </summary>
         public bool friendly;
+        /// <summary>
+        /// How many entities the projectile can penetrate
+        /// </summary>
         public int penetrate = 1;
+        /// <summary>
+        /// 
+        /// </summary>
         public int identity;
+        /// <summary>
+        /// Amount of light the projectile gives off
+        /// </summary>
         public float light;
+        /// <summary>
+        /// 
+        /// </summary>
         public bool netUpdate;
+        /// <summary>
+        /// Delay before striking an entity the projectile has already struck
+        /// </summary>
         public int restrikeDelay;
+        /// <summary>
+        /// Whether the projectile has struck a solid tile
+        /// </summary>
         public bool tileCollide;
+        /// <summary>
+        /// 
+        /// </summary>
         public int maxUpdates;
+        /// <summary>
+        /// 
+        /// </summary>
         public int numUpdates;
+        /// <summary>
+        /// Whether or not to ignore water conditional effects
+        /// </summary>
         public bool ignoreWater;
+        /// <summary>
+        /// 
+        /// </summary>
         public bool hide;
+        /// <summary>
+        /// 
+        /// </summary>
         public bool ownerHitCheck;
+        /// <summary>
+        /// Any immune players
+        /// </summary>
         public int[] playerImmune = new int[255];
+        /// <summary>
+        /// Miscellaneous text associated with the projectile.  Only used in hardcore deaths and sign edits?
+        /// </summary>
         public String miscText = "";
 
 
+        /// <summary>
+        /// Creates a copy of the projectile's instance
+        /// </summary>
+        /// <returns>Copy of the projectile instance</returns>
         public object Clone()
         {
             return base.MemberwiseClone();
         }
 
+        /// <summary>
+        /// Sets the default properties based on the type specified
+        /// </summary>
+        /// <param name="Type">Type value of the projectile</param>
         public void SetDefaults(int Type)
         {
             for (int i = 0; i < Projectile.MAX_AI; i++)
@@ -820,6 +945,19 @@ namespace Terraria_Server
             this.width = (int)((float)this.width * this.scale);
             this.height = (int)((float)this.height * this.scale);
         }
+
+        /// <summary>
+        /// Creates a new projectile instance with the specified parameters
+        /// </summary>
+        /// <param name="X">Starting X coordinate</param>
+        /// <param name="Y">Starting Y coordinate</param>
+        /// <param name="SpeedX">Starting horizontal speed</param>
+        /// <param name="SpeedY">Starting vertical speed</param>
+        /// <param name="Type">Type of projectile to </param>
+        /// <param name="Damage">Amount of damage the projectile takes before self-destructing? (unknown)</param>
+        /// <param name="KnockBack">Whether the projectile creates knockback</param>
+        /// <param name="Owner">Index of owning player</param>
+        /// <returns>New projectile's index</returns>
         public static int NewProjectile(float X, float Y, float SpeedX, float SpeedY, int Type, int Damage, float KnockBack, int Owner = 255)
         {
             int num = 1000;
@@ -871,6 +1009,9 @@ namespace Terraria_Server
             return num;
         }
 
+        /// <summary>
+        /// Runs damage calculation on hostile mobs and players
+        /// </summary>
         public void Damage()
         {
             Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
@@ -1156,6 +1297,11 @@ namespace Terraria_Server
                 }
             }
         }
+
+        /// <summary>
+        /// Updates the projectile's position, damage variables, etc.
+        /// </summary>
+        /// <param name="i">Projectile index</param>
         public void Update(int i)
         {
             if (this.active)
@@ -1560,6 +1706,10 @@ namespace Terraria_Server
                 this.netUpdate = false;
             }
         }
+
+        /// <summary>
+        /// Moves the projectile according to the projectile's motion parameters, or AI
+        /// </summary>
         public void AI()
         {
             if (this.aiStyle == 1)
@@ -3121,6 +3271,10 @@ namespace Terraria_Server
                 }
             }
         }
+
+        /// <summary>
+        /// Destroys the projectile
+        /// </summary>
         public void Kill()
         {
             if (!this.active)
@@ -3996,6 +4150,11 @@ namespace Terraria_Server
             this.active = false;
         }
 
+        /// <summary>
+        /// Creates a new color by combining newColor with the projectiles alpha value
+        /// </summary>
+        /// <param name="newColor">New color to combine</param>
+        /// <returns>Combined color</returns>
         public Color GetAlpha(Color newColor)
         {
             int r;
