@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Terraria_Server
 {
+    /// <summary>
+    /// All available projectile types
+    /// </summary>
     public enum ProjectileType
     {
         UNKNOWN,
