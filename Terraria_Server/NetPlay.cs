@@ -219,7 +219,7 @@ namespace Terraria_Server
                 Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
                 Program.tConsole.WriteLine("Loading Plugins...");
                 Program.server.getPluginManager().LoadPlugins();
-                Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.getPluginManager().);
+                Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.getPluginManager().getPluginList().Count.ToString());
                 Statics.serverStarted = true;
 			}
 			while (!Netplay.disconnect)
