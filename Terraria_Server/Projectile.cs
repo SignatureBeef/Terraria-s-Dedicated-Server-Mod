@@ -218,729 +218,576 @@ namespace Terraria_Server
             this.damage = 0;
             this.knockBack = 0f;
             this.miscText = "";
-            if (this.type == 1)
+            switch (this.type)
             {
-                this.name = "Wooden Arrow";
-                this.width = 10;
-                this.height = 10;
-                this.aiStyle = 1;
-                this.friendly = true;
-            }
-            else
-            {
-                if (this.type == 2)
-                {
+                case 1:
+                    this.name = "Wooden Arrow";
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+
+                    break;
+                case 2:
                     this.name = "Fire Arrow";
                     this.width = 10;
                     this.height = 10;
                     this.aiStyle = 1;
                     this.friendly = true;
                     this.light = 1f;
-                }
-                else
-                {
-                    if (this.type == 3)
-                    {
-                        this.name = "Shuriken";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 2;
-                        this.friendly = true;
-                        this.penetrate = 4;
-                    }
-                    else
-                    {
-                        if (this.type == 4)
-                        {
-                            this.name = "Unholy Arrow";
-                            this.width = 10;
-                            this.height = 10;
-                            this.aiStyle = 1;
-                            this.friendly = true;
-                            this.light = 0.2f;
-                            this.penetrate = 5;
-                        }
-                        else
-                        {
-                            if (this.type == 5)
-                            {
-                                this.name = "Jester's Arrow";
-                                this.width = 10;
-                                this.height = 10;
-                                this.aiStyle = 1;
-                                this.friendly = true;
-                                this.light = 0.4f;
-                                this.penetrate = -1;
-                                this.timeLeft = 40;
-                                this.alpha = 100;
-                                this.ignoreWater = true;
-                            }
-                            else
-                            {
-                                if (this.type == 6)
-                                {
-                                    this.name = "Enchanted Boomerang";
-                                    this.width = 22;
-                                    this.height = 22;
-                                    this.aiStyle = 3;
-                                    this.friendly = true;
-                                    this.penetrate = -1;
-                                }
-                                else
-                                {
-                                    if (this.type == 7 || this.type == 8)
-                                    {
-                                        this.name = "Vilethorn";
-                                        this.width = 28;
-                                        this.height = 28;
-                                        this.aiStyle = 4;
-                                        this.friendly = true;
-                                        this.penetrate = -1;
-                                        this.tileCollide = false;
-                                        this.alpha = 255;
-                                        this.ignoreWater = true;
-                                    }
-                                    else
-                                    {
-                                        if (this.type == 9)
-                                        {
-                                            this.name = "Starfury";
-                                            this.width = 24;
-                                            this.height = 24;
-                                            this.aiStyle = 5;
-                                            this.friendly = true;
-                                            this.penetrate = 2;
-                                            this.alpha = 50;
-                                            this.scale = 0.8f;
-                                            this.light = 1f;
-                                        }
-                                        else
-                                        {
-                                            if (this.type == 10)
-                                            {
-                                                this.name = "Purification Powder";
-                                                this.width = 64;
-                                                this.height = 64;
-                                                this.aiStyle = 6;
-                                                this.friendly = true;
-                                                this.tileCollide = false;
-                                                this.penetrate = -1;
-                                                this.alpha = 255;
-                                                this.ignoreWater = true;
-                                            }
-                                            else
-                                            {
-                                                if (this.type == 11)
-                                                {
-                                                    this.name = "Vile Powder";
-                                                    this.width = 48;
-                                                    this.height = 48;
-                                                    this.aiStyle = 6;
-                                                    this.friendly = true;
-                                                    this.tileCollide = false;
-                                                    this.penetrate = -1;
-                                                    this.alpha = 255;
-                                                    this.ignoreWater = true;
-                                                }
-                                                else
-                                                {
-                                                    if (this.type == 12)
-                                                    {
-                                                        this.name = "Fallen Star";
-                                                        this.width = 16;
-                                                        this.height = 16;
-                                                        this.aiStyle = 5;
-                                                        this.friendly = true;
-                                                        this.penetrate = -1;
-                                                        this.alpha = 50;
-                                                        this.light = 1f;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (this.type == 13)
-                                                        {
-                                                            this.name = "Hook";
-                                                            this.width = 18;
-                                                            this.height = 18;
-                                                            this.aiStyle = 7;
-                                                            this.friendly = true;
-                                                            this.penetrate = -1;
-                                                            this.tileCollide = false;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (this.type == 14)
-                                                            {
-                                                                this.name = "Musket Ball";
-                                                                this.width = 4;
-                                                                this.height = 4;
-                                                                this.aiStyle = 1;
-                                                                this.friendly = true;
-                                                                this.penetrate = 1;
-                                                                this.light = 0.5f;
-                                                                this.alpha = 255;
-                                                                this.maxUpdates = 1;
-                                                                this.scale = 1.2f;
-                                                                this.timeLeft = 600;
-                                                            }
-                                                            else
-                                                            {
-                                                                if (this.type == 15)
-                                                                {
-                                                                    this.name = "Ball of Fire";
-                                                                    this.width = 16;
-                                                                    this.height = 16;
-                                                                    this.aiStyle = 8;
-                                                                    this.friendly = true;
-                                                                    this.light = 0.8f;
-                                                                    this.alpha = 100;
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (this.type == 16)
-                                                                    {
-                                                                        this.name = "Magic Missile";
-                                                                        this.width = 10;
-                                                                        this.height = 10;
-                                                                        this.aiStyle = 9;
-                                                                        this.friendly = true;
-                                                                        this.light = 0.8f;
-                                                                        this.alpha = 100;
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (this.type == 17)
-                                                                        {
-                                                                            this.name = "Dirt Ball";
-                                                                            this.width = 10;
-                                                                            this.height = 10;
-                                                                            this.aiStyle = 10;
-                                                                            this.friendly = true;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (this.type == 18)
-                                                                            {
-                                                                                this.name = "Orb of Light";
-                                                                                this.width = 32;
-                                                                                this.height = 32;
-                                                                                this.aiStyle = 11;
-                                                                                this.friendly = true;
-                                                                                this.light = 1f;
-                                                                                this.alpha = 150;
-                                                                                this.tileCollide = false;
-                                                                                this.penetrate = -1;
-                                                                                this.timeLeft *= 5;
-                                                                                this.ignoreWater = true;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (this.type == 19)
-                                                                                {
-                                                                                    this.name = "Flamarang";
-                                                                                    this.width = 22;
-                                                                                    this.height = 22;
-                                                                                    this.aiStyle = 3;
-                                                                                    this.friendly = true;
-                                                                                    this.penetrate = -1;
-                                                                                    this.light = 1f;
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (this.type == 20)
-                                                                                    {
-                                                                                        this.name = "Green Laser";
-                                                                                        this.width = 4;
-                                                                                        this.height = 4;
-                                                                                        this.aiStyle = 1;
-                                                                                        this.friendly = true;
-                                                                                        this.penetrate = 2;
-                                                                                        this.light = 0.75f;
-                                                                                        this.alpha = 255;
-                                                                                        this.maxUpdates = 2;
-                                                                                        this.scale = 1.4f;
-                                                                                        this.timeLeft = 600;
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (this.type == 21)
-                                                                                        {
-                                                                                            this.name = "Bone";
-                                                                                            this.width = 16;
-                                                                                            this.height = 16;
-                                                                                            this.aiStyle = 2;
-                                                                                            this.scale = 1.2f;
-                                                                                            this.friendly = true;
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (this.type == 22)
-                                                                                            {
-                                                                                                this.name = "Water Stream";
-                                                                                                this.width = 12;
-                                                                                                this.height = 12;
-                                                                                                this.aiStyle = 12;
-                                                                                                this.friendly = true;
-                                                                                                this.alpha = 255;
-                                                                                                this.penetrate = -1;
-                                                                                                this.maxUpdates = 1;
-                                                                                                this.ignoreWater = true;
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (this.type == 23)
-                                                                                                {
-                                                                                                    this.name = "Harpoon";
-                                                                                                    this.width = 4;
-                                                                                                    this.height = 4;
-                                                                                                    this.aiStyle = 13;
-                                                                                                    this.friendly = true;
-                                                                                                    this.penetrate = -1;
-                                                                                                    this.alpha = 255;
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (this.type == 24)
-                                                                                                    {
-                                                                                                        this.name = "Spiky Ball";
-                                                                                                        this.width = 14;
-                                                                                                        this.height = 14;
-                                                                                                        this.aiStyle = 14;
-                                                                                                        this.friendly = true;
-                                                                                                        this.penetrate = 3;
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (this.type == 25)
-                                                                                                        {
-                                                                                                            this.name = "Ball 'O Hurt";
-                                                                                                            this.width = 22;
-                                                                                                            this.height = 22;
-                                                                                                            this.aiStyle = 15;
-                                                                                                            this.friendly = true;
-                                                                                                            this.penetrate = -1;
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (this.type == 26)
-                                                                                                            {
-                                                                                                                this.name = "Blue Moon";
-                                                                                                                this.width = 22;
-                                                                                                                this.height = 22;
-                                                                                                                this.aiStyle = 15;
-                                                                                                                this.friendly = true;
-                                                                                                                this.penetrate = -1;
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                if (this.type == 27)
-                                                                                                                {
-                                                                                                                    this.name = "Water Bolt";
-                                                                                                                    this.width = 16;
-                                                                                                                    this.height = 16;
-                                                                                                                    this.aiStyle = 8;
-                                                                                                                    this.friendly = true;
-                                                                                                                    this.light = 0.8f;
-                                                                                                                    this.alpha = 200;
-                                                                                                                    this.timeLeft /= 2;
-                                                                                                                    this.penetrate = 10;
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    if (this.type == 28)
-                                                                                                                    {
-                                                                                                                        this.name = "Bomb";
-                                                                                                                        this.width = 22;
-                                                                                                                        this.height = 22;
-                                                                                                                        this.aiStyle = 16;
-                                                                                                                        this.friendly = true;
-                                                                                                                        this.penetrate = -1;
-                                                                                                                    }
-                                                                                                                    else
-                                                                                                                    {
-                                                                                                                        if (this.type == 29)
-                                                                                                                        {
-                                                                                                                            this.name = "Dynamite";
-                                                                                                                            this.width = 10;
-                                                                                                                            this.height = 10;
-                                                                                                                            this.aiStyle = 16;
-                                                                                                                            this.friendly = true;
-                                                                                                                            this.penetrate = -1;
-                                                                                                                        }
-                                                                                                                        else
-                                                                                                                        {
-                                                                                                                            if (this.type == 30)
-                                                                                                                            {
-                                                                                                                                this.name = "Grenade";
-                                                                                                                                this.width = 14;
-                                                                                                                                this.height = 14;
-                                                                                                                                this.aiStyle = 16;
-                                                                                                                                this.friendly = true;
-                                                                                                                                this.penetrate = -1;
-                                                                                                                            }
-                                                                                                                            else
-                                                                                                                            {
-                                                                                                                                if (this.type == 31)
-                                                                                                                                {
-                                                                                                                                    this.name = "Sand Ball";
-                                                                                                                                    this.knockBack = 6f;
-                                                                                                                                    this.width = 10;
-                                                                                                                                    this.height = 10;
-                                                                                                                                    this.aiStyle = 10;
-                                                                                                                                    this.friendly = true;
-                                                                                                                                    this.hostile = true;
-                                                                                                                                    this.penetrate = -1;
-                                                                                                                                }
-                                                                                                                                else
-                                                                                                                                {
-                                                                                                                                    if (this.type == 32)
-                                                                                                                                    {
-                                                                                                                                        this.name = "Ivy Whip";
-                                                                                                                                        this.width = 18;
-                                                                                                                                        this.height = 18;
-                                                                                                                                        this.aiStyle = 7;
-                                                                                                                                        this.friendly = true;
-                                                                                                                                        this.penetrate = -1;
-                                                                                                                                        this.tileCollide = false;
-                                                                                                                                    }
-                                                                                                                                    else
-                                                                                                                                    {
-                                                                                                                                        if (this.type == 33)
-                                                                                                                                        {
-                                                                                                                                            this.name = "Thorn Chakrum";
-                                                                                                                                            this.width = 28;
-                                                                                                                                            this.height = 28;
-                                                                                                                                            this.aiStyle = 3;
-                                                                                                                                            this.friendly = true;
-                                                                                                                                            this.scale = 0.9f;
-                                                                                                                                            this.penetrate = -1;
-                                                                                                                                        }
-                                                                                                                                        else
-                                                                                                                                        {
-                                                                                                                                            if (this.type == 34)
-                                                                                                                                            {
-                                                                                                                                                this.name = "Flamelash";
-                                                                                                                                                this.width = 14;
-                                                                                                                                                this.height = 14;
-                                                                                                                                                this.aiStyle = 9;
-                                                                                                                                                this.friendly = true;
-                                                                                                                                                this.light = 0.8f;
-                                                                                                                                                this.alpha = 100;
-                                                                                                                                                this.penetrate = 2;
-                                                                                                                                            }
-                                                                                                                                            else
-                                                                                                                                            {
-                                                                                                                                                if (this.type == 35)
-                                                                                                                                                {
-                                                                                                                                                    this.name = "Sunfury";
-                                                                                                                                                    this.width = 22;
-                                                                                                                                                    this.height = 22;
-                                                                                                                                                    this.aiStyle = 15;
-                                                                                                                                                    this.friendly = true;
-                                                                                                                                                    this.penetrate = -1;
-                                                                                                                                                }
-                                                                                                                                                else
-                                                                                                                                                {
-                                                                                                                                                    if (this.type == 36)
-                                                                                                                                                    {
-                                                                                                                                                        this.name = "Meteor Shot";
-                                                                                                                                                        this.width = 4;
-                                                                                                                                                        this.height = 4;
-                                                                                                                                                        this.aiStyle = 1;
-                                                                                                                                                        this.friendly = true;
-                                                                                                                                                        this.penetrate = 2;
-                                                                                                                                                        this.light = 0.6f;
-                                                                                                                                                        this.alpha = 255;
-                                                                                                                                                        this.maxUpdates = 1;
-                                                                                                                                                        this.scale = 1.4f;
-                                                                                                                                                        this.timeLeft = 600;
-                                                                                                                                                    }
-                                                                                                                                                    else
-                                                                                                                                                    {
-                                                                                                                                                        if (this.type == 37)
-                                                                                                                                                        {
-                                                                                                                                                            this.name = "Sticky Bomb";
-                                                                                                                                                            this.width = 22;
-                                                                                                                                                            this.height = 22;
-                                                                                                                                                            this.aiStyle = 16;
-                                                                                                                                                            this.friendly = true;
-                                                                                                                                                            this.penetrate = -1;
-                                                                                                                                                            this.tileCollide = false;
-                                                                                                                                                        }
-                                                                                                                                                        else
-                                                                                                                                                        {
-                                                                                                                                                            if (this.type == 38)
-                                                                                                                                                            {
-                                                                                                                                                                this.name = "Harpy Feather";
-                                                                                                                                                                this.width = 14;
-                                                                                                                                                                this.height = 14;
-                                                                                                                                                                this.aiStyle = 0;
-                                                                                                                                                                this.hostile = true;
-                                                                                                                                                                this.penetrate = -1;
-                                                                                                                                                                this.aiStyle = 1;
-                                                                                                                                                                this.tileCollide = true;
-                                                                                                                                                            }
-                                                                                                                                                            else
-                                                                                                                                                            {
-                                                                                                                                                                if (this.type == 39)
-                                                                                                                                                                {
-                                                                                                                                                                    this.name = "Mud Ball";
-                                                                                                                                                                    this.knockBack = 6f;
-                                                                                                                                                                    this.width = 10;
-                                                                                                                                                                    this.height = 10;
-                                                                                                                                                                    this.aiStyle = 10;
-                                                                                                                                                                    this.friendly = true;
-                                                                                                                                                                    this.hostile = true;
-                                                                                                                                                                    this.penetrate = -1;
-                                                                                                                                                                }
-                                                                                                                                                                else
-                                                                                                                                                                {
-                                                                                                                                                                    if (this.type == 40)
-                                                                                                                                                                    {
-                                                                                                                                                                        this.name = "Ash Ball";
-                                                                                                                                                                        this.knockBack = 6f;
-                                                                                                                                                                        this.width = 10;
-                                                                                                                                                                        this.height = 10;
-                                                                                                                                                                        this.aiStyle = 10;
-                                                                                                                                                                        this.friendly = true;
-                                                                                                                                                                        this.hostile = true;
-                                                                                                                                                                        this.penetrate = -1;
-                                                                                                                                                                    }
-                                                                                                                                                                    else
-                                                                                                                                                                    {
-                                                                                                                                                                        if (this.type == 41)
-                                                                                                                                                                        {
-                                                                                                                                                                            this.name = "Hellfire Arrow";
-                                                                                                                                                                            this.width = 10;
-                                                                                                                                                                            this.height = 10;
-                                                                                                                                                                            this.aiStyle = 1;
-                                                                                                                                                                            this.friendly = true;
-                                                                                                                                                                            this.penetrate = -1;
-                                                                                                                                                                        }
-                                                                                                                                                                        else
-                                                                                                                                                                        {
-                                                                                                                                                                            if (this.type == 42)
-                                                                                                                                                                            {
-                                                                                                                                                                                this.name = "Sand Ball";
-                                                                                                                                                                                this.knockBack = 8f;
-                                                                                                                                                                                this.width = 10;
-                                                                                                                                                                                this.height = 10;
-                                                                                                                                                                                this.aiStyle = 10;
-                                                                                                                                                                                this.friendly = true;
-                                                                                                                                                                                this.maxUpdates = 0;
-                                                                                                                                                                            }
-                                                                                                                                                                            else
-                                                                                                                                                                            {
-                                                                                                                                                                                if (this.type == 43)
-                                                                                                                                                                                {
-                                                                                                                                                                                    this.name = "Tombstone";
-                                                                                                                                                                                    this.knockBack = 12f;
-                                                                                                                                                                                    this.width = 24;
-                                                                                                                                                                                    this.height = 24;
-                                                                                                                                                                                    this.aiStyle = 17;
-                                                                                                                                                                                    this.penetrate = -1;
-                                                                                                                                                                                    this.friendly = true;
-                                                                                                                                                                                }
-                                                                                                                                                                                else
-                                                                                                                                                                                {
-                                                                                                                                                                                    if (this.type == 44)
-                                                                                                                                                                                    {
-                                                                                                                                                                                        this.name = "Demon Sickle";
-                                                                                                                                                                                        this.width = 48;
-                                                                                                                                                                                        this.height = 48;
-                                                                                                                                                                                        this.alpha = 100;
-                                                                                                                                                                                        this.light = 0.2f;
-                                                                                                                                                                                        this.aiStyle = 18;
-                                                                                                                                                                                        this.hostile = true;
-                                                                                                                                                                                        this.penetrate = -1;
-                                                                                                                                                                                        this.tileCollide = true;
-                                                                                                                                                                                        this.scale = 0.9f;
-                                                                                                                                                                                    }
-                                                                                                                                                                                    else
-                                                                                                                                                                                    {
-                                                                                                                                                                                        if (this.type == 45)
-                                                                                                                                                                                        {
-                                                                                                                                                                                            this.name = "Demon Scythe";
-                                                                                                                                                                                            this.width = 48;
-                                                                                                                                                                                            this.height = 48;
-                                                                                                                                                                                            this.alpha = 100;
-                                                                                                                                                                                            this.light = 0.2f;
-                                                                                                                                                                                            this.aiStyle = 18;
-                                                                                                                                                                                            this.friendly = true;
-                                                                                                                                                                                            this.penetrate = 5;
-                                                                                                                                                                                            this.tileCollide = true;
-                                                                                                                                                                                            this.scale = 0.9f;
-                                                                                                                                                                                        }
-                                                                                                                                                                                        else
-                                                                                                                                                                                        {
-                                                                                                                                                                                            if (this.type == 46)
-                                                                                                                                                                                            {
-                                                                                                                                                                                                this.name = "Dark Lance";
-                                                                                                                                                                                                this.width = 20;
-                                                                                                                                                                                                this.height = 20;
-                                                                                                                                                                                                this.aiStyle = 19;
-                                                                                                                                                                                                this.friendly = true;
-                                                                                                                                                                                                this.penetrate = -1;
-                                                                                                                                                                                                this.tileCollide = false;
-                                                                                                                                                                                                this.scale = 1.1f;
-                                                                                                                                                                                                this.hide = true;
-                                                                                                                                                                                                this.ownerHitCheck = true;
-                                                                                                                                                                                            }
-                                                                                                                                                                                            else
-                                                                                                                                                                                            {
-                                                                                                                                                                                                if (this.type == 47)
-                                                                                                                                                                                                {
-                                                                                                                                                                                                    this.name = "Trident";
-                                                                                                                                                                                                    this.width = 18;
-                                                                                                                                                                                                    this.height = 18;
-                                                                                                                                                                                                    this.aiStyle = 19;
-                                                                                                                                                                                                    this.friendly = true;
-                                                                                                                                                                                                    this.penetrate = -1;
-                                                                                                                                                                                                    this.tileCollide = false;
-                                                                                                                                                                                                    this.scale = 1.1f;
-                                                                                                                                                                                                    this.hide = true;
-                                                                                                                                                                                                    this.ownerHitCheck = true;
-                                                                                                                                                                                                }
-                                                                                                                                                                                                else
-                                                                                                                                                                                                {
-                                                                                                                                                                                                    if (this.type == 48)
-                                                                                                                                                                                                    {
-                                                                                                                                                                                                        this.name = "Throwing Knife";
-                                                                                                                                                                                                        this.width = 12;
-                                                                                                                                                                                                        this.height = 12;
-                                                                                                                                                                                                        this.aiStyle = 2;
-                                                                                                                                                                                                        this.friendly = true;
-                                                                                                                                                                                                        this.penetrate = 2;
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                    else
-                                                                                                                                                                                                    {
-                                                                                                                                                                                                        if (this.type == 49)
-                                                                                                                                                                                                        {
-                                                                                                                                                                                                            this.name = "Spear";
-                                                                                                                                                                                                            this.width = 18;
-                                                                                                                                                                                                            this.height = 18;
-                                                                                                                                                                                                            this.aiStyle = 19;
-                                                                                                                                                                                                            this.friendly = true;
-                                                                                                                                                                                                            this.penetrate = -1;
-                                                                                                                                                                                                            this.tileCollide = false;
-                                                                                                                                                                                                            this.scale = 1.2f;
-                                                                                                                                                                                                            this.hide = true;
-                                                                                                                                                                                                            this.ownerHitCheck = true;
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                        else
-                                                                                                                                                                                                        {
-                                                                                                                                                                                                            if (this.type == 50)
-                                                                                                                                                                                                            {
-                                                                                                                                                                                                                this.name = "Glowstick";
-                                                                                                                                                                                                                this.width = 6;
-                                                                                                                                                                                                                this.height = 6;
-                                                                                                                                                                                                                this.aiStyle = 14;
-                                                                                                                                                                                                                this.penetrate = -1;
-                                                                                                                                                                                                                this.alpha = 75;
-                                                                                                                                                                                                                this.light = 0.8f;
-                                                                                                                                                                                                                this.timeLeft *= 5;
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                            else
-                                                                                                                                                                                                            {
-                                                                                                                                                                                                                if (this.type == 51)
-                                                                                                                                                                                                                {
-                                                                                                                                                                                                                    this.name = "Seed";
-                                                                                                                                                                                                                    this.width = 8;
-                                                                                                                                                                                                                    this.height = 8;
-                                                                                                                                                                                                                    this.aiStyle = 1;
-                                                                                                                                                                                                                    this.friendly = true;
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                                else
-                                                                                                                                                                                                                {
-                                                                                                                                                                                                                    if (this.type == 52)
-                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                        this.name = "Wooden Boomerang";
-                                                                                                                                                                                                                        this.width = 22;
-                                                                                                                                                                                                                        this.height = 22;
-                                                                                                                                                                                                                        this.aiStyle = 3;
-                                                                                                                                                                                                                        this.friendly = true;
-                                                                                                                                                                                                                        this.penetrate = -1;
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                    else
-                                                                                                                                                                                                                    {
-                                                                                                                                                                                                                        if (this.type == 53)
-                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                            this.name = "Sticky Glowstick";
-                                                                                                                                                                                                                            this.width = 6;
-                                                                                                                                                                                                                            this.height = 6;
-                                                                                                                                                                                                                            this.aiStyle = 14;
-                                                                                                                                                                                                                            this.penetrate = -1;
-                                                                                                                                                                                                                            this.alpha = 75;
-                                                                                                                                                                                                                            this.light = 0.8f;
-                                                                                                                                                                                                                            this.timeLeft *= 5;
-                                                                                                                                                                                                                            this.tileCollide = false;
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                        else
-                                                                                                                                                                                                                        {
-                                                                                                                                                                                                                            if (this.type == 54)
-                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                this.name = "Poisoned Knife";
-                                                                                                                                                                                                                                this.width = 12;
-                                                                                                                                                                                                                                this.height = 12;
-                                                                                                                                                                                                                                this.aiStyle = 2;
-                                                                                                                                                                                                                                this.friendly = true;
-                                                                                                                                                                                                                                this.penetrate = 2;
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                            else
-                                                                                                                                                                                                                            {
-                                                                                                                                                                                                                                this.active = false;
-                                                                                                                                                                                                                            }
-                                                                                                                                                                                                                        }
-                                                                                                                                                                                                                    }
-                                                                                                                                                                                                                }
-                                                                                                                                                                                                            }
-                                                                                                                                                                                                        }
-                                                                                                                                                                                                    }
-                                                                                                                                                                                                }
-                                                                                                                                                                                            }
-                                                                                                                                                                                        }
-                                                                                                                                                                                    }
-                                                                                                                                                                                }
-                                                                                                                                                                            }
-                                                                                                                                                                        }
-                                                                                                                                                                    }
-                                                                                                                                                                }
-                                                                                                                                                            }
-                                                                                                                                                        }
-                                                                                                                                                    }
-                                                                                                                                                }
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    }
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        }
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+
+                    break;
+                case 3:
+                    this.name = "Shuriken";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 2;
+                    this.friendly = true;
+                    this.penetrate = 4;
+
+                    break;
+                case 4:
+                    this.name = "Unholy Arrow";
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+                    this.light = 0.2f;
+                    this.penetrate = 5;
+
+                    break;
+                case 5:
+                    this.name = "Jester's Arrow";
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+                    this.light = 0.4f;
+                    this.penetrate = -1;
+                    this.timeLeft = 40;
+                    this.alpha = 100;
+                    this.ignoreWater = true;
+
+                    break;
+                case 6:
+                    this.name = "Enchanted Boomerang";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 3;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 7:
+                case 8:
+                    this.name = "Vilethorn";
+                    this.width = 28;
+                    this.height = 28;
+                    this.aiStyle = 4;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.tileCollide = false;
+                    this.alpha = 255;
+                    this.ignoreWater = true;
+
+                    break;
+                case 9:
+                    this.name = "Starfury";
+                    this.width = 24;
+                    this.height = 24;
+                    this.aiStyle = 5;
+                    this.friendly = true;
+                    this.penetrate = 2;
+                    this.alpha = 50;
+                    this.scale = 0.8f;
+                    this.light = 1f;
+
+                    break;
+                case 10:
+                    this.name = "Purification Powder";
+                    this.width = 64;
+                    this.height = 64;
+                    this.aiStyle = 6;
+                    this.friendly = true;
+                    this.tileCollide = false;
+                    this.penetrate = -1;
+                    this.alpha = 255;
+                    this.ignoreWater = true;
+
+                    break;
+                case 11:
+                    this.name = "Vile Powder";
+                    this.width = 48;
+                    this.height = 48;
+                    this.aiStyle = 6;
+                    this.friendly = true;
+                    this.tileCollide = false;
+                    this.penetrate = -1;
+                    this.alpha = 255;
+                    this.ignoreWater = true;
+
+                    break;
+                case 12:
+                    this.name = "Fallen Star";
+                    this.width = 16;
+                    this.height = 16;
+                    this.aiStyle = 5;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.alpha = 50;
+                    this.light = 1f;
+
+                    break;
+                case 13:
+                    this.name = "Hook";
+                    this.width = 18;
+                    this.height = 18;
+                    this.aiStyle = 7;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.tileCollide = false;
+
+                    break;
+                case 14:
+                    this.name = "Musket Ball";
+                    this.width = 4;
+                    this.height = 4;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+                    this.penetrate = 1;
+                    this.light = 0.5f;
+                    this.alpha = 255;
+                    this.maxUpdates = 1;
+                    this.scale = 1.2f;
+                    this.timeLeft = 600;
+
+                    break;
+                case 15:
+                    this.name = "Ball of Fire";
+                    this.width = 16;
+                    this.height = 16;
+                    this.aiStyle = 8;
+                    this.friendly = true;
+                    this.light = 0.8f;
+                    this.alpha = 100;
+
+                    break;
+                case 16:
+                    this.name = "Magic Missile";
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 9;
+                    this.friendly = true;
+                    this.light = 0.8f;
+                    this.alpha = 100;
+
+                    break;
+                case 17:
+                    this.name = "Dirt Ball";
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 10;
+                    this.friendly = true;
+
+                    break;
+                case 18:
+                    this.name = "Orb of Light";
+                    this.width = 32;
+                    this.height = 32;
+                    this.aiStyle = 11;
+                    this.friendly = true;
+                    this.light = 1f;
+                    this.alpha = 150;
+                    this.tileCollide = false;
+                    this.penetrate = -1;
+                    this.timeLeft *= 5;
+                    this.ignoreWater = true;
+
+                    break;
+                case 19:
+                    this.name = "Flamarang";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 3;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.light = 1f;
+
+                    break;
+                case 20:
+                    this.name = "Green Laser";
+                    this.width = 4;
+                    this.height = 4;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+                    this.penetrate = 2;
+                    this.light = 0.75f;
+                    this.alpha = 255;
+                    this.maxUpdates = 2;
+                    this.scale = 1.4f;
+                    this.timeLeft = 600;
+
+                    break;
+                case 21:
+                    this.name = "Bone";
+                    this.width = 16;
+                    this.height = 16;
+                    this.aiStyle = 2;
+                    this.scale = 1.2f;
+                    this.friendly = true;
+
+                    break;
+                case 22:
+                    this.name = "Water Stream";
+                    this.width = 12;
+                    this.height = 12;
+                    this.aiStyle = 12;
+                    this.friendly = true;
+                    this.alpha = 255;
+                    this.penetrate = -1;
+                    this.maxUpdates = 1;
+                    this.ignoreWater = true;
+
+                    break;
+                case 23:
+                    this.name = "Harpoon";
+                    this.width = 4;
+                    this.height = 4;
+                    this.aiStyle = 13;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.alpha = 255;
+
+                    break;
+                case 24:
+                    this.name = "Spiky Ball";
+                    this.width = 14;
+                    this.height = 14;
+                    this.aiStyle = 14;
+                    this.friendly = true;
+                    this.penetrate = 3;
+
+                    break;
+                case 25:
+                    this.name = "Ball 'O Hurt";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 15;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 26:
+                    this.name = "Blue Moon";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 15;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 27:
+                    this.name = "Water Bolt";
+                    this.width = 16;
+                    this.height = 16;
+                    this.aiStyle = 8;
+                    this.friendly = true;
+                    this.light = 0.8f;
+                    this.alpha = 200;
+                    this.timeLeft /= 2;
+                    this.penetrate = 10;
+
+                    break;
+                case 28:
+                    this.name = "Bomb";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 16;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 29:
+                    this.name = "Dynamite";
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 16;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 30:
+                    this.name = "Grenade";
+                    this.width = 14;
+                    this.height = 14;
+                    this.aiStyle = 16;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 31:
+                    this.name = "Sand Ball";
+                    this.knockBack = 6f;
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 10;
+                    this.friendly = true;
+                    this.hostile = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 32:
+                    this.name = "Ivy Whip";
+                    this.width = 18;
+                    this.height = 18;
+                    this.aiStyle = 7;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.tileCollide = false;
+
+                    break;
+                case 33:
+                    this.name = "Thorn Chakrum";
+                    this.width = 28;
+                    this.height = 28;
+                    this.aiStyle = 3;
+                    this.friendly = true;
+                    this.scale = 0.9f;
+                    this.penetrate = -1;
+
+                    break;
+                case 34:
+                    this.name = "Flamelash";
+                    this.width = 14;
+                    this.height = 14;
+                    this.aiStyle = 9;
+                    this.friendly = true;
+                    this.light = 0.8f;
+                    this.alpha = 100;
+                    this.penetrate = 2;
+
+                    break;
+                case 35:
+                    this.name = "Sunfury";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 15;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 36:
+                    this.name = "Meteor Shot";
+                    this.width = 4;
+                    this.height = 4;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+                    this.penetrate = 2;
+                    this.light = 0.6f;
+                    this.alpha = 255;
+                    this.maxUpdates = 1;
+                    this.scale = 1.4f;
+                    this.timeLeft = 600;
+
+                    break;
+                case 37:
+                    this.name = "Sticky Bomb";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 16;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.tileCollide = false;
+
+                    break;
+                case 38:
+                    this.name = "Harpy Feather";
+                    this.width = 14;
+                    this.height = 14;
+                    this.aiStyle = 0;
+                    this.hostile = true;
+                    this.penetrate = -1;
+                    this.aiStyle = 1;
+                    this.tileCollide = true;
+
+                    break;
+                case 39:
+                    this.name = "Mud Ball";
+                    this.knockBack = 6f;
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 10;
+                    this.friendly = true;
+                    this.hostile = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 40:
+                    this.name = "Ash Ball";
+                    this.knockBack = 6f;
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 10;
+                    this.friendly = true;
+                    this.hostile = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 41:
+                    this.name = "Hellfire Arrow";
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 42:
+                    this.name = "Sand Ball";
+                    this.knockBack = 8f;
+                    this.width = 10;
+                    this.height = 10;
+                    this.aiStyle = 10;
+                    this.friendly = true;
+                    this.maxUpdates = 0;
+
+                    break;
+                case 43:
+                    this.name = "Tombstone";
+                    this.knockBack = 12f;
+                    this.width = 24;
+                    this.height = 24;
+                    this.aiStyle = 17;
+                    this.penetrate = -1;
+                    this.friendly = true;
+
+                    break;
+                case 44:
+                    this.name = "Demon Sickle";
+                    this.width = 48;
+                    this.height = 48;
+                    this.alpha = 100;
+                    this.light = 0.2f;
+                    this.aiStyle = 18;
+                    this.hostile = true;
+                    this.penetrate = -1;
+                    this.tileCollide = true;
+                    this.scale = 0.9f;
+
+                    break;
+                case 45:
+                    this.name = "Demon Scythe";
+                    this.width = 48;
+                    this.height = 48;
+                    this.alpha = 100;
+                    this.light = 0.2f;
+                    this.aiStyle = 18;
+                    this.friendly = true;
+                    this.penetrate = 5;
+                    this.tileCollide = true;
+                    this.scale = 0.9f;
+
+                    break;
+                case 46:
+                    this.name = "Dark Lance";
+                    this.width = 20;
+                    this.height = 20;
+                    this.aiStyle = 19;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.tileCollide = false;
+                    this.scale = 1.1f;
+                    this.hide = true;
+                    this.ownerHitCheck = true;
+
+                    break;
+                case 47:
+                    this.name = "Trident";
+                    this.width = 18;
+                    this.height = 18;
+                    this.aiStyle = 19;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.tileCollide = false;
+                    this.scale = 1.1f;
+                    this.hide = true;
+                    this.ownerHitCheck = true;
+
+                    break;
+                case 48:
+                    this.name = "Throwing Knife";
+                    this.width = 12;
+                    this.height = 12;
+                    this.aiStyle = 2;
+                    this.friendly = true;
+                    this.penetrate = 2;
+
+                    break;
+                case 49:
+                    this.name = "Spear";
+                    this.width = 18;
+                    this.height = 18;
+                    this.aiStyle = 19;
+                    this.friendly = true;
+                    this.penetrate = -1;
+                    this.tileCollide = false;
+                    this.scale = 1.2f;
+                    this.hide = true;
+                    this.ownerHitCheck = true;
+
+                    break;
+                case 50:
+                    this.name = "Glowstick";
+                    this.width = 6;
+                    this.height = 6;
+                    this.aiStyle = 14;
+                    this.penetrate = -1;
+                    this.alpha = 75;
+                    this.light = 0.8f;
+                    this.timeLeft *= 5;
+
+                    break;
+                case 51:
+                    this.name = "Seed";
+                    this.width = 8;
+                    this.height = 8;
+                    this.aiStyle = 1;
+                    this.friendly = true;
+
+                    break;
+                case 52:
+                    this.name = "Wooden Boomerang";
+                    this.width = 22;
+                    this.height = 22;
+                    this.aiStyle = 3;
+                    this.friendly = true;
+                    this.penetrate = -1;
+
+                    break;
+                case 53:
+                    this.name = "Sticky Glowstick";
+                    this.width = 6;
+                    this.height = 6;
+                    this.aiStyle = 14;
+                    this.penetrate = -1;
+                    this.alpha = 75;
+                    this.light = 0.8f;
+                    this.timeLeft *= 5;
+                    this.tileCollide = false;
+
+                    break;
+                case 54:
+                    this.name = "Poisoned Knife";
+                    this.width = 12;
+                    this.height = 12;
+                    this.aiStyle = 2;
+                    this.friendly = true;
+                    this.penetrate = 2;
+
+                    break;
+                default:
+                    this.active = false;
+                    break;
             }
             this.width = (int)((float)this.width * this.scale);
             this.height = (int)((float)this.height * this.scale);
