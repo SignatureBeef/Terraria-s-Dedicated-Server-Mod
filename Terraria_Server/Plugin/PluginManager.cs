@@ -35,6 +35,22 @@ namespace Terraria_Server.Plugin
         }
 
         /// <summary>
+        /// Initializes Plugin (Loads) and Checks for Out of Date Plugins.
+        /// </summary>
+        public void LoadPlugins()
+        {
+            ReloadPlugins();
+
+            foreach (Plugin plugin in plugins.Values)
+            {
+                if (plugin.TDSMBuild != Statics.BUILD)
+                {
+                    Program.tConsole.WriteLine("[WARNING] Plugin Build Incorrect: " + plugin.Name);
+                }
+            }
+        }
+
+        /// <summary>
         /// Load the plugin located at the specified path.
         /// This only loads one plugin.
         /// </summary>
@@ -172,7 +188,16 @@ namespace Terraria_Server.Plugin
         	}
         	return null;
         }
-        
+
+        /// <summary>
+        /// Gets the PluginManagers Loaded Plugins.
+        /// </summary>
+        /// <returns>Returns the Dictionary of Pluginds, <Path, Plugin></returns>
+        public Dictionary<String, Plugin> getPluginList()
+        {
+            return plugins;
+        }
+
         /// <summary>
         /// Determines whether a plugins has registered a hook, then fires the appropriate method if so
         /// </summary>
@@ -238,11 +263,11 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerOpenChest((PlayerChestOpenEvent)hookEvent);
                                     break;
                                 }
-                            case Hooks.PLAYER_STATEUPDATE:
+                            /*case Hooks.PLAYER_STATEUPDATE:
                                 {
                                     plugin.onPlayerStateUpdate((PlayerStateUpdateEvent)hookEvent);
                                     break;
-                                }
+                                }*/
                             case Hooks.PLAYER_DEATH:
                                 {
                                     plugin.onPlayerDeath((PlayerDeathEvent)hookEvent);
