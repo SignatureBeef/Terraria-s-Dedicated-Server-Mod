@@ -9,5 +9,9 @@ namespace Terraria_Server.Events
     {
         public bool isPlayer { get; set; }
         public String Text { get; set; }
+        public Player Player
+        {
+            get { return (Player)base.Sender; }
+        }
     }
 }

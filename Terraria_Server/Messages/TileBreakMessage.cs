@@ -34,18 +34,19 @@ namespace Terraria_Server.Messages
 
             Tile tile = new Tile();
 
-            if (Main.tile[x, y] != null)
-            {
-                tile = WorldGen.cloneTile(Main.tile[x, y]);
-            }
             if (Main.tile[x, y] == null)
             {
                 Main.tile[x, y] = new Tile();
+            }
+            else
+            {
+                tile = WorldGen.cloneTile(Main.tile[x, y]);
             }
 
             tile.tileX = x;
             tile.tileY = y;
 
+            //Best way to determine breakages is to see if it's changed to nothing :3
             PlayerTileChangeEvent breakEvent = new PlayerTileChangeEvent();
             breakEvent.Sender = Main.players[whoAmI];
             breakEvent.Tile = tile;

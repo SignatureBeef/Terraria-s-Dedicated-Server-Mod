@@ -47,6 +47,12 @@ namespace Terraria_Server
         public int[] playerImmune = new int[255];
         public String miscText = "";
 
+
+        public object Clone()
+        {
+            return base.MemberwiseClone();
+        }
+
         public void SetDefaults(int Type)
         {
             for (int i = 0; i < Projectile.MAX_AI; i++)
@@ -2937,7 +2943,7 @@ namespace Terraria_Server
                                                                             {
                                                                                 //Need to check if this works :3
                                                                                 PlayerEditSignEvent playerEvent = new PlayerEditSignEvent();
-                                                                                playerEvent.Sender = Main.players[Main.myPlayer];
+                                                                                playerEvent.Sender = Main.players[this.Owner];
                                                                                 playerEvent.Sign = Main.sign[num80];
                                                                                 playerEvent.Text = this.miscText;
                                                                                 playerEvent.isPlayer = false;

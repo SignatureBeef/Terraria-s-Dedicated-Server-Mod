@@ -4964,6 +4964,7 @@ namespace Terraria_Server
             {
                 return true;
             }
+
             int num = 0;
             int num2 = i;
             int num3 = j;

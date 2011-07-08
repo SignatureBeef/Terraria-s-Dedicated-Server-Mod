@@ -164,7 +164,7 @@ namespace Terraria_Server.Plugin
         /// Hook method for the player state (Byte) updating
         /// </summary>
         /// <param name="Event">PlayerStateUpdateEvent info</param>
-        public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { }
+        //public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { } //Send with KB & Movement Events instead
 
         /// <summary>
         /// Hook method for the player teleport
