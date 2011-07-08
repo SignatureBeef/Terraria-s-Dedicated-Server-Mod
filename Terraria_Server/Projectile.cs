@@ -221,572 +221,627 @@ namespace Terraria_Server
             switch (this.type)
             {
                 case 1:
-                    this.name = "Wooden Arrow";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-
+                    {
+                        this.name = "Wooden Arrow";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                    }
                     break;
                 case 2:
-                    this.name = "Fire Arrow";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-                    this.light = 1f;
-
+                    {
+                        this.name = "Fire Arrow";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                        this.light = 1f;
+                    }
                     break;
                 case 3:
-                    this.name = "Shuriken";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 2;
-                    this.friendly = true;
-                    this.penetrate = 4;
-
+                    {
+                        this.name = "Shuriken";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 2;
+                        this.friendly = true;
+                        this.penetrate = 4;
+                    }
                     break;
                 case 4:
-                    this.name = "Unholy Arrow";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-                    this.light = 0.2f;
-                    this.penetrate = 5;
-
+                    {
+                        this.name = "Unholy Arrow";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                        this.light = 0.2f;
+                        this.penetrate = 5;
+                    }
                     break;
                 case 5:
-                    this.name = "Jester's Arrow";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-                    this.light = 0.4f;
-                    this.penetrate = -1;
-                    this.timeLeft = 40;
-                    this.alpha = 100;
-                    this.ignoreWater = true;
-
+                    {
+                        this.name = "Jester's Arrow";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                        this.light = 0.4f;
+                        this.penetrate = -1;
+                        this.timeLeft = 40;
+                        this.alpha = 100;
+                        this.ignoreWater = true;
+                    }
                     break;
                 case 6:
-                    this.name = "Enchanted Boomerang";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 3;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Enchanted Boomerang";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 3;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 7:
                 case 8:
-                    this.name = "Vilethorn";
-                    this.width = 28;
-                    this.height = 28;
-                    this.aiStyle = 4;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.tileCollide = false;
-                    this.alpha = 255;
-                    this.ignoreWater = true;
-
+                    {
+                        this.name = "Vilethorn";
+                        this.width = 28;
+                        this.height = 28;
+                        this.aiStyle = 4;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.tileCollide = false;
+                        this.alpha = 255;
+                        this.ignoreWater = true;
+                    }
                     break;
                 case 9:
-                    this.name = "Starfury";
-                    this.width = 24;
-                    this.height = 24;
-                    this.aiStyle = 5;
-                    this.friendly = true;
-                    this.penetrate = 2;
-                    this.alpha = 50;
-                    this.scale = 0.8f;
-                    this.light = 1f;
-
+                    {
+                        this.name = "Starfury";
+                        this.width = 24;
+                        this.height = 24;
+                        this.aiStyle = 5;
+                        this.friendly = true;
+                        this.penetrate = 2;
+                        this.alpha = 50;
+                        this.scale = 0.8f;
+                        this.light = 1f;
+                    }
                     break;
                 case 10:
-                    this.name = "Purification Powder";
-                    this.width = 64;
-                    this.height = 64;
-                    this.aiStyle = 6;
-                    this.friendly = true;
-                    this.tileCollide = false;
-                    this.penetrate = -1;
-                    this.alpha = 255;
-                    this.ignoreWater = true;
-
+                    {
+                        this.name = "Purification Powder";
+                        this.width = 64;
+                        this.height = 64;
+                        this.aiStyle = 6;
+                        this.friendly = true;
+                        this.tileCollide = false;
+                        this.penetrate = -1;
+                        this.alpha = 255;
+                        this.ignoreWater = true;
+                    }
                     break;
                 case 11:
-                    this.name = "Vile Powder";
-                    this.width = 48;
-                    this.height = 48;
-                    this.aiStyle = 6;
-                    this.friendly = true;
-                    this.tileCollide = false;
-                    this.penetrate = -1;
-                    this.alpha = 255;
-                    this.ignoreWater = true;
-
+                    {
+                        this.name = "Vile Powder";
+                        this.width = 48;
+                        this.height = 48;
+                        this.aiStyle = 6;
+                        this.friendly = true;
+                        this.tileCollide = false;
+                        this.penetrate = -1;
+                        this.alpha = 255;
+                        this.ignoreWater = true;
+                    }
                     break;
                 case 12:
-                    this.name = "Fallen Star";
-                    this.width = 16;
-                    this.height = 16;
-                    this.aiStyle = 5;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.alpha = 50;
-                    this.light = 1f;
-
+                    {
+                        this.name = "Fallen Star";
+                        this.width = 16;
+                        this.height = 16;
+                        this.aiStyle = 5;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.alpha = 50;
+                        this.light = 1f;
+                    }
                     break;
                 case 13:
-                    this.name = "Hook";
-                    this.width = 18;
-                    this.height = 18;
-                    this.aiStyle = 7;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.tileCollide = false;
-
+                    {
+                        this.name = "Hook";
+                        this.width = 18;
+                        this.height = 18;
+                        this.aiStyle = 7;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.tileCollide = false;
+                    }
                     break;
                 case 14:
-                    this.name = "Musket Ball";
-                    this.width = 4;
-                    this.height = 4;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-                    this.penetrate = 1;
-                    this.light = 0.5f;
-                    this.alpha = 255;
-                    this.maxUpdates = 1;
-                    this.scale = 1.2f;
-                    this.timeLeft = 600;
-
+                    {
+                        this.name = "Musket Ball";
+                        this.width = 4;
+                        this.height = 4;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                        this.penetrate = 1;
+                        this.light = 0.5f;
+                        this.alpha = 255;
+                        this.maxUpdates = 1;
+                        this.scale = 1.2f;
+                        this.timeLeft = 600;
+                    }
                     break;
                 case 15:
-                    this.name = "Ball of Fire";
-                    this.width = 16;
-                    this.height = 16;
-                    this.aiStyle = 8;
-                    this.friendly = true;
-                    this.light = 0.8f;
-                    this.alpha = 100;
-
+                    {
+                        this.name = "Ball of Fire";
+                        this.width = 16;
+                        this.height = 16;
+                        this.aiStyle = 8;
+                        this.friendly = true;
+                        this.light = 0.8f;
+                        this.alpha = 100;
+                    }
                     break;
                 case 16:
-                    this.name = "Magic Missile";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 9;
-                    this.friendly = true;
-                    this.light = 0.8f;
-                    this.alpha = 100;
-
+                    {
+                        this.name = "Magic Missile";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 9;
+                        this.friendly = true;
+                        this.light = 0.8f;
+                        this.alpha = 100;
+                    }
                     break;
                 case 17:
-                    this.name = "Dirt Ball";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 10;
-                    this.friendly = true;
-
+                    {
+                        this.name = "Dirt Ball";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 10;
+                        this.friendly = true;
+                    }
                     break;
                 case 18:
-                    this.name = "Orb of Light";
-                    this.width = 32;
-                    this.height = 32;
-                    this.aiStyle = 11;
-                    this.friendly = true;
-                    this.light = 1f;
-                    this.alpha = 150;
-                    this.tileCollide = false;
-                    this.penetrate = -1;
-                    this.timeLeft *= 5;
-                    this.ignoreWater = true;
-
+                    {
+                        this.name = "Orb of Light";
+                        this.width = 32;
+                        this.height = 32;
+                        this.aiStyle = 11;
+                        this.friendly = true;
+                        this.light = 1f;
+                        this.alpha = 150;
+                        this.tileCollide = false;
+                        this.penetrate = -1;
+                        this.timeLeft *= 5;
+                        this.ignoreWater = true;
+                    }
                     break;
                 case 19:
-                    this.name = "Flamarang";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 3;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.light = 1f;
-
+                    {
+                        this.name = "Flamarang";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 3;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.light = 1f;
+                    }
                     break;
                 case 20:
-                    this.name = "Green Laser";
-                    this.width = 4;
-                    this.height = 4;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-                    this.penetrate = 2;
-                    this.light = 0.75f;
-                    this.alpha = 255;
-                    this.maxUpdates = 2;
-                    this.scale = 1.4f;
-                    this.timeLeft = 600;
-
+                    {
+                        this.name = "Green Laser";
+                        this.width = 4;
+                        this.height = 4;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                        this.penetrate = 2;
+                        this.light = 0.75f;
+                        this.alpha = 255;
+                        this.maxUpdates = 2;
+                        this.scale = 1.4f;
+                        this.timeLeft = 600;
+                    }
                     break;
                 case 21:
-                    this.name = "Bone";
-                    this.width = 16;
-                    this.height = 16;
-                    this.aiStyle = 2;
-                    this.scale = 1.2f;
-                    this.friendly = true;
-
+                    {
+                        this.name = "Bone";
+                        this.width = 16;
+                        this.height = 16;
+                        this.aiStyle = 2;
+                        this.scale = 1.2f;
+                        this.friendly = true;
+                    }
                     break;
                 case 22:
-                    this.name = "Water Stream";
-                    this.width = 12;
-                    this.height = 12;
-                    this.aiStyle = 12;
-                    this.friendly = true;
-                    this.alpha = 255;
-                    this.penetrate = -1;
-                    this.maxUpdates = 1;
-                    this.ignoreWater = true;
-
+                    {
+                        this.name = "Water Stream";
+                        this.width = 12;
+                        this.height = 12;
+                        this.aiStyle = 12;
+                        this.friendly = true;
+                        this.alpha = 255;
+                        this.penetrate = -1;
+                        this.maxUpdates = 1;
+                        this.ignoreWater = true;
+                    }
                     break;
                 case 23:
-                    this.name = "Harpoon";
-                    this.width = 4;
-                    this.height = 4;
-                    this.aiStyle = 13;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.alpha = 255;
-
+                    {
+                        this.name = "Harpoon";
+                        this.width = 4;
+                        this.height = 4;
+                        this.aiStyle = 13;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.alpha = 255;
+                    }
                     break;
                 case 24:
-                    this.name = "Spiky Ball";
-                    this.width = 14;
-                    this.height = 14;
-                    this.aiStyle = 14;
-                    this.friendly = true;
-                    this.penetrate = 3;
-
+                    {
+                        this.name = "Spiky Ball";
+                        this.width = 14;
+                        this.height = 14;
+                        this.aiStyle = 14;
+                        this.friendly = true;
+                        this.penetrate = 3;
+                    }
                     break;
                 case 25:
-                    this.name = "Ball 'O Hurt";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 15;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Ball 'O Hurt";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 15;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 26:
-                    this.name = "Blue Moon";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 15;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Blue Moon";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 15;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 27:
-                    this.name = "Water Bolt";
-                    this.width = 16;
-                    this.height = 16;
-                    this.aiStyle = 8;
-                    this.friendly = true;
-                    this.light = 0.8f;
-                    this.alpha = 200;
-                    this.timeLeft /= 2;
-                    this.penetrate = 10;
-
+                    {
+                        this.name = "Water Bolt";
+                        this.width = 16;
+                        this.height = 16;
+                        this.aiStyle = 8;
+                        this.friendly = true;
+                        this.light = 0.8f;
+                        this.alpha = 200;
+                        this.timeLeft /= 2;
+                        this.penetrate = 10;
+                    }
                     break;
                 case 28:
-                    this.name = "Bomb";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 16;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Bomb";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 16;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 29:
-                    this.name = "Dynamite";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 16;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Dynamite";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 16;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 30:
-                    this.name = "Grenade";
-                    this.width = 14;
-                    this.height = 14;
-                    this.aiStyle = 16;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Grenade";
+                        this.width = 14;
+                        this.height = 14;
+                        this.aiStyle = 16;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 31:
-                    this.name = "Sand Ball";
-                    this.knockBack = 6f;
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 10;
-                    this.friendly = true;
-                    this.hostile = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Sand Ball";
+                        this.knockBack = 6f;
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 10;
+                        this.friendly = true;
+                        this.hostile = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 32:
-                    this.name = "Ivy Whip";
-                    this.width = 18;
-                    this.height = 18;
-                    this.aiStyle = 7;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.tileCollide = false;
-
+                    {
+                        this.name = "Ivy Whip";
+                        this.width = 18;
+                        this.height = 18;
+                        this.aiStyle = 7;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.tileCollide = false;
+                    }
                     break;
                 case 33:
-                    this.name = "Thorn Chakrum";
-                    this.width = 28;
-                    this.height = 28;
-                    this.aiStyle = 3;
-                    this.friendly = true;
-                    this.scale = 0.9f;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Thorn Chakrum";
+                        this.width = 28;
+                        this.height = 28;
+                        this.aiStyle = 3;
+                        this.friendly = true;
+                        this.scale = 0.9f;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 34:
-                    this.name = "Flamelash";
-                    this.width = 14;
-                    this.height = 14;
-                    this.aiStyle = 9;
-                    this.friendly = true;
-                    this.light = 0.8f;
-                    this.alpha = 100;
-                    this.penetrate = 2;
-
+                    {
+                        this.name = "Flamelash";
+                        this.width = 14;
+                        this.height = 14;
+                        this.aiStyle = 9;
+                        this.friendly = true;
+                        this.light = 0.8f;
+                        this.alpha = 100;
+                        this.penetrate = 2;
+                    }
                     break;
                 case 35:
-                    this.name = "Sunfury";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 15;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Sunfury";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 15;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 36:
-                    this.name = "Meteor Shot";
-                    this.width = 4;
-                    this.height = 4;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-                    this.penetrate = 2;
-                    this.light = 0.6f;
-                    this.alpha = 255;
-                    this.maxUpdates = 1;
-                    this.scale = 1.4f;
-                    this.timeLeft = 600;
-
+                    {
+                        this.name = "Meteor Shot";
+                        this.width = 4;
+                        this.height = 4;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                        this.penetrate = 2;
+                        this.light = 0.6f;
+                        this.alpha = 255;
+                        this.maxUpdates = 1;
+                        this.scale = 1.4f;
+                        this.timeLeft = 600;
+                    }
                     break;
                 case 37:
-                    this.name = "Sticky Bomb";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 16;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.tileCollide = false;
-
+                    {
+                        this.name = "Sticky Bomb";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 16;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.tileCollide = false;
+                    }
                     break;
                 case 38:
-                    this.name = "Harpy Feather";
-                    this.width = 14;
-                    this.height = 14;
-                    this.aiStyle = 0;
-                    this.hostile = true;
-                    this.penetrate = -1;
-                    this.aiStyle = 1;
-                    this.tileCollide = true;
-
+                    {
+                        this.name = "Harpy Feather";
+                        this.width = 14;
+                        this.height = 14;
+                        this.aiStyle = 0;
+                        this.hostile = true;
+                        this.penetrate = -1;
+                        this.aiStyle = 1;
+                        this.tileCollide = true;
+                    }
                     break;
                 case 39:
-                    this.name = "Mud Ball";
-                    this.knockBack = 6f;
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 10;
-                    this.friendly = true;
-                    this.hostile = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Mud Ball";
+                        this.knockBack = 6f;
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 10;
+                        this.friendly = true;
+                        this.hostile = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 40:
-                    this.name = "Ash Ball";
-                    this.knockBack = 6f;
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 10;
-                    this.friendly = true;
-                    this.hostile = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Ash Ball";
+                        this.knockBack = 6f;
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 10;
+                        this.friendly = true;
+                        this.hostile = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 41:
-                    this.name = "Hellfire Arrow";
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Hellfire Arrow";
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 42:
-                    this.name = "Sand Ball";
-                    this.knockBack = 8f;
-                    this.width = 10;
-                    this.height = 10;
-                    this.aiStyle = 10;
-                    this.friendly = true;
-                    this.maxUpdates = 0;
-
+                    {
+                        this.name = "Sand Ball";
+                        this.knockBack = 8f;
+                        this.width = 10;
+                        this.height = 10;
+                        this.aiStyle = 10;
+                        this.friendly = true;
+                        this.maxUpdates = 0;
+                    }
                     break;
                 case 43:
-                    this.name = "Tombstone";
-                    this.knockBack = 12f;
-                    this.width = 24;
-                    this.height = 24;
-                    this.aiStyle = 17;
-                    this.penetrate = -1;
-                    this.friendly = true;
-
+                    {
+                        this.name = "Tombstone";
+                        this.knockBack = 12f;
+                        this.width = 24;
+                        this.height = 24;
+                        this.aiStyle = 17;
+                        this.penetrate = -1;
+                        this.friendly = true;
+                    }
                     break;
                 case 44:
-                    this.name = "Demon Sickle";
-                    this.width = 48;
-                    this.height = 48;
-                    this.alpha = 100;
-                    this.light = 0.2f;
-                    this.aiStyle = 18;
-                    this.hostile = true;
-                    this.penetrate = -1;
-                    this.tileCollide = true;
-                    this.scale = 0.9f;
-
+                    {
+                        this.name = "Demon Sickle";
+                        this.width = 48;
+                        this.height = 48;
+                        this.alpha = 100;
+                        this.light = 0.2f;
+                        this.aiStyle = 18;
+                        this.hostile = true;
+                        this.penetrate = -1;
+                        this.tileCollide = true;
+                        this.scale = 0.9f;
+                    }
                     break;
                 case 45:
-                    this.name = "Demon Scythe";
-                    this.width = 48;
-                    this.height = 48;
-                    this.alpha = 100;
-                    this.light = 0.2f;
-                    this.aiStyle = 18;
-                    this.friendly = true;
-                    this.penetrate = 5;
-                    this.tileCollide = true;
-                    this.scale = 0.9f;
-
+                    {
+                        this.name = "Demon Scythe";
+                        this.width = 48;
+                        this.height = 48;
+                        this.alpha = 100;
+                        this.light = 0.2f;
+                        this.aiStyle = 18;
+                        this.friendly = true;
+                        this.penetrate = 5;
+                        this.tileCollide = true;
+                        this.scale = 0.9f;
+                    }
                     break;
                 case 46:
-                    this.name = "Dark Lance";
-                    this.width = 20;
-                    this.height = 20;
-                    this.aiStyle = 19;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.tileCollide = false;
-                    this.scale = 1.1f;
-                    this.hide = true;
-                    this.ownerHitCheck = true;
-
+                    {
+                        this.name = "Dark Lance";
+                        this.width = 20;
+                        this.height = 20;
+                        this.aiStyle = 19;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.tileCollide = false;
+                        this.scale = 1.1f;
+                        this.hide = true;
+                        this.ownerHitCheck = true;
+                    }
                     break;
                 case 47:
-                    this.name = "Trident";
-                    this.width = 18;
-                    this.height = 18;
-                    this.aiStyle = 19;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.tileCollide = false;
-                    this.scale = 1.1f;
-                    this.hide = true;
-                    this.ownerHitCheck = true;
-
+                    {
+                        this.name = "Trident";
+                        this.width = 18;
+                        this.height = 18;
+                        this.aiStyle = 19;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.tileCollide = false;
+                        this.scale = 1.1f;
+                        this.hide = true;
+                        this.ownerHitCheck = true;
+                    }
                     break;
                 case 48:
-                    this.name = "Throwing Knife";
-                    this.width = 12;
-                    this.height = 12;
-                    this.aiStyle = 2;
-                    this.friendly = true;
-                    this.penetrate = 2;
-
+                    {
+                        this.name = "Throwing Knife";
+                        this.width = 12;
+                        this.height = 12;
+                        this.aiStyle = 2;
+                        this.friendly = true;
+                        this.penetrate = 2;
+                    }
                     break;
                 case 49:
-                    this.name = "Spear";
-                    this.width = 18;
-                    this.height = 18;
-                    this.aiStyle = 19;
-                    this.friendly = true;
-                    this.penetrate = -1;
-                    this.tileCollide = false;
-                    this.scale = 1.2f;
-                    this.hide = true;
-                    this.ownerHitCheck = true;
-
+                    {
+                        this.name = "Spear";
+                        this.width = 18;
+                        this.height = 18;
+                        this.aiStyle = 19;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                        this.tileCollide = false;
+                        this.scale = 1.2f;
+                        this.hide = true;
+                        this.ownerHitCheck = true;
+                    }
                     break;
                 case 50:
-                    this.name = "Glowstick";
-                    this.width = 6;
-                    this.height = 6;
-                    this.aiStyle = 14;
-                    this.penetrate = -1;
-                    this.alpha = 75;
-                    this.light = 0.8f;
-                    this.timeLeft *= 5;
-
+                    {
+                        this.name = "Glowstick";
+                        this.width = 6;
+                        this.height = 6;
+                        this.aiStyle = 14;
+                        this.penetrate = -1;
+                        this.alpha = 75;
+                        this.light = 0.8f;
+                        this.timeLeft *= 5;
+                    }
                     break;
                 case 51:
-                    this.name = "Seed";
-                    this.width = 8;
-                    this.height = 8;
-                    this.aiStyle = 1;
-                    this.friendly = true;
-
+                    {
+                        this.name = "Seed";
+                        this.width = 8;
+                        this.height = 8;
+                        this.aiStyle = 1;
+                        this.friendly = true;
+                    }
                     break;
                 case 52:
-                    this.name = "Wooden Boomerang";
-                    this.width = 22;
-                    this.height = 22;
-                    this.aiStyle = 3;
-                    this.friendly = true;
-                    this.penetrate = -1;
-
+                    {
+                        this.name = "Wooden Boomerang";
+                        this.width = 22;
+                        this.height = 22;
+                        this.aiStyle = 3;
+                        this.friendly = true;
+                        this.penetrate = -1;
+                    }
                     break;
                 case 53:
-                    this.name = "Sticky Glowstick";
-                    this.width = 6;
-                    this.height = 6;
-                    this.aiStyle = 14;
-                    this.penetrate = -1;
-                    this.alpha = 75;
-                    this.light = 0.8f;
-                    this.timeLeft *= 5;
-                    this.tileCollide = false;
-
+                    {
+                        this.name = "Sticky Glowstick";
+                        this.width = 6;
+                        this.height = 6;
+                        this.aiStyle = 14;
+                        this.penetrate = -1;
+                        this.alpha = 75;
+                        this.light = 0.8f;
+                        this.timeLeft *= 5;
+                        this.tileCollide = false;
+                    }
                     break;
                 case 54:
-                    this.name = "Poisoned Knife";
-                    this.width = 12;
-                    this.height = 12;
-                    this.aiStyle = 2;
-                    this.friendly = true;
-                    this.penetrate = 2;
-
+                    {
+                        this.name = "Poisoned Knife";
+                        this.width = 12;
+                        this.height = 12;
+                        this.aiStyle = 2;
+                        this.friendly = true;
+                        this.penetrate = 2;
+                    }
                     break;
                 default:
-                    this.active = false;
+                    {
+                        this.active = false;
+                    }
                     break;
             }
             this.width = (int)((float)this.width * this.scale);
@@ -3129,41 +3184,25 @@ namespace Terraria_Server
                 return;
             }
             this.timeLeft = 0;
-            if (this.type == 1)
+            switch(this.type)
             {
-                for (int i = 0; i < 10; i++)
-                {
-                    Vector2 arg_7E_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_7E_1 = this.width;
-                    int arg_7E_2 = this.height;
-                    int arg_7E_3 = 7;
-                    float arg_7E_4 = 0f;
-                    float arg_7E_5 = 0f;
-                    int arg_7E_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_7E_0, arg_7E_1, arg_7E_2, arg_7E_3, arg_7E_4, arg_7E_5, arg_7E_6, newColor, 1f);
-                }
-            }
-            else
-            {
-                if (this.type == 51)
-                {
-                    for (int j = 0; j < 5; j++)
+                case 1:
                     {
-                        Vector2 arg_101_0 = new Vector2(this.Position.X, this.Position.Y);
-                        int arg_101_1 = this.width;
-                        int arg_101_2 = this.height;
-                        int arg_101_3 = 0;
-                        float arg_101_4 = 0f;
-                        float arg_101_5 = 0f;
-                        int arg_101_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_101_0, arg_101_1, arg_101_2, arg_101_3, arg_101_4, arg_101_5, arg_101_6, newColor, 0.7f);
+                        for (int i = 0; i < 10; i++)
+                        {
+                            Vector2 arg_7E_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_7E_1 = this.width;
+                            int arg_7E_2 = this.height;
+                            int arg_7E_3 = 7;
+                            float arg_7E_4 = 0f;
+                            float arg_7E_5 = 0f;
+                            int arg_7E_6 = 0;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_7E_0, arg_7E_1, arg_7E_2, arg_7E_3, arg_7E_4, arg_7E_5, arg_7E_6, newColor, 1f);
+                        }
                     }
-                }
-                else
-                {
-                    if (this.type == 2)
+                    break;
+                case 2:
                     {
                         for (int k = 0; k < 20; k++)
                         {
@@ -3178,613 +3217,606 @@ namespace Terraria_Server
                             Dust.NewDust(arg_183_0, arg_183_1, arg_183_2, arg_183_3, arg_183_4, arg_183_5, arg_183_6, newColor, 1f);
                         }
                     }
-                    else
+                    break;
+                case 3:
+                case 48:
+                case 54:
                     {
-                        if (this.type == 3 || this.type == 48 || this.type == 54)
+                        for (int l = 0; l < 10; l++)
                         {
-                            for (int l = 0; l < 10; l++)
-                            {
-                                Vector2 arg_234_0 = new Vector2(this.Position.X, this.Position.Y);
-                                int arg_234_1 = this.width;
-                                int arg_234_2 = this.height;
-                                int arg_234_3 = 1;
-                                float arg_234_4 = this.Velocity.X * 0.1f;
-                                float arg_234_5 = this.Velocity.Y * 0.1f;
-                                int arg_234_6 = 0;
-                                Color newColor = default(Color);
-                                Dust.NewDust(arg_234_0, arg_234_1, arg_234_2, arg_234_3, arg_234_4, arg_234_5, arg_234_6, newColor, 0.75f);
-                            }
+                            Vector2 arg_234_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_234_1 = this.width;
+                            int arg_234_2 = this.height;
+                            int arg_234_3 = 1;
+                            float arg_234_4 = this.Velocity.X * 0.1f;
+                            float arg_234_5 = this.Velocity.Y * 0.1f;
+                            int arg_234_6 = 0;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_234_0, arg_234_1, arg_234_2, arg_234_3, arg_234_4, arg_234_5, arg_234_6, newColor, 0.75f);
                         }
-                        else
+                    }
+                    break;
+                case 4:
+                    {
+                        for (int m = 0; m < 10; m++)
                         {
-                            if (this.type == 4)
+                            Vector2 arg_2BF_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_2BF_1 = this.width;
+                            int arg_2BF_2 = this.height;
+                            int arg_2BF_3 = 14;
+                            float arg_2BF_4 = 0f;
+                            float arg_2BF_5 = 0f;
+                            int arg_2BF_6 = 150;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_2BF_0, arg_2BF_1, arg_2BF_2, arg_2BF_3, arg_2BF_4, arg_2BF_5, arg_2BF_6, newColor, 1.1f);
+                        }
+                    }
+                    break;
+                case 5:
+                    {
+                        for (int n = 0; n < 60; n++)
+                        {
+                            Vector2 arg_351_0 = this.Position;
+                            int arg_351_1 = this.width;
+                            int arg_351_2 = this.height;
+                            int arg_351_3 = 15;
+                            float arg_351_4 = this.Velocity.X * 0.5f;
+                            float arg_351_5 = this.Velocity.Y * 0.5f;
+                            int arg_351_6 = 150;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_351_0, arg_351_1, arg_351_2, arg_351_3, arg_351_4, arg_351_5, arg_351_6, newColor, 1.5f);
+                        }
+                    }
+                    break;
+                case 9:
+                    {
+                        for (int num = 0; num < 10; num++)
+                        {
+                            Vector2 position = this.Position;
+                            int width = this.width;
+                            int height = this.height;
+                            int type = 15;
+                            float speedX = this.Velocity.X * 0.1f;
+                            float speedY = this.Velocity.Y * 0.1f;
+                            int alpha = 150;
+                            Color newColor = default(Color);
+                            Dust.NewDust(position, width, height, type, speedX, speedY, alpha, newColor, 1.2f);
+                        }
+                        for (int num2 = 0; num2 < 3; num2++)
+                        {
+                            Gore.NewGore(this.Position, new Vector2(this.Velocity.X * 0.05f, this.Velocity.Y * 0.05f), Main.rand.Next(16, 18));
+                        }
+                    }
+                    break;
+                case 12:
+                    {
+                        if (this.damage < 100)
+                        {
+                            for (int num3 = 0; num3 < 10; num3++)
                             {
-                                for (int m = 0; m < 10; m++)
-                                {
-                                    Vector2 arg_2BF_0 = new Vector2(this.Position.X, this.Position.Y);
-                                    int arg_2BF_1 = this.width;
-                                    int arg_2BF_2 = this.height;
-                                    int arg_2BF_3 = 14;
-                                    float arg_2BF_4 = 0f;
-                                    float arg_2BF_5 = 0f;
-                                    int arg_2BF_6 = 150;
-                                    Color newColor = default(Color);
-                                    Dust.NewDust(arg_2BF_0, arg_2BF_1, arg_2BF_2, arg_2BF_3, arg_2BF_4, arg_2BF_5, arg_2BF_6, newColor, 1.1f);
-                                }
+                                Vector2 arg_4BA_0 = this.Position;
+                                int arg_4BA_1 = this.width;
+                                int arg_4BA_2 = this.height;
+                                int arg_4BA_3 = 15;
+                                float arg_4BA_4 = this.Velocity.X * 0.1f;
+                                float arg_4BA_5 = this.Velocity.Y * 0.1f;
+                                int arg_4BA_6 = 150;
+                                Color newColor = default(Color);
+                                Dust.NewDust(arg_4BA_0, arg_4BA_1, arg_4BA_2, arg_4BA_3, arg_4BA_4, arg_4BA_5, arg_4BA_6, newColor, 1.2f);
                             }
-                            else
+                            for (int num4 = 0; num4 < 3; num4++)
                             {
-                                if (this.type == 5)
-                                {
-                                    for (int n = 0; n < 60; n++)
-                                    {
-                                        Vector2 arg_351_0 = this.Position;
-                                        int arg_351_1 = this.width;
-                                        int arg_351_2 = this.height;
-                                        int arg_351_3 = 15;
-                                        float arg_351_4 = this.Velocity.X * 0.5f;
-                                        float arg_351_5 = this.Velocity.Y * 0.5f;
-                                        int arg_351_6 = 150;
-                                        Color newColor = default(Color);
-                                        Dust.NewDust(arg_351_0, arg_351_1, arg_351_2, arg_351_3, arg_351_4, arg_351_5, arg_351_6, newColor, 1.5f);
-                                    }
-                                }
-                                else
-                                {
-                                    if (this.type == 9 || this.type == 12)
-                                    {
-                                        for (int num = 0; num < 10; num++)
-                                        {
-                                            Vector2 arg_3EE_0 = this.Position;
-                                            int arg_3EE_1 = this.width;
-                                            int arg_3EE_2 = this.height;
-                                            int arg_3EE_3 = 15;
-                                            float arg_3EE_4 = this.Velocity.X * 0.1f;
-                                            float arg_3EE_5 = this.Velocity.Y * 0.1f;
-                                            int arg_3EE_6 = 150;
-                                            Color newColor = default(Color);
-                                            Dust.NewDust(arg_3EE_0, arg_3EE_1, arg_3EE_2, arg_3EE_3, arg_3EE_4, arg_3EE_5, arg_3EE_6, newColor, 1.2f);
-                                        }
-                                        for (int num2 = 0; num2 < 3; num2++)
-                                        {
-                                            Gore.NewGore(this.Position, new Vector2(this.Velocity.X * 0.05f, this.Velocity.Y * 0.05f), Main.rand.Next(16, 18));
-                                        }
-                                        if (this.type == 12 && this.damage < 100)
-                                        {
-                                            for (int num3 = 0; num3 < 10; num3++)
-                                            {
-                                                Vector2 arg_4BA_0 = this.Position;
-                                                int arg_4BA_1 = this.width;
-                                                int arg_4BA_2 = this.height;
-                                                int arg_4BA_3 = 15;
-                                                float arg_4BA_4 = this.Velocity.X * 0.1f;
-                                                float arg_4BA_5 = this.Velocity.Y * 0.1f;
-                                                int arg_4BA_6 = 150;
-                                                Color newColor = default(Color);
-                                                Dust.NewDust(arg_4BA_0, arg_4BA_1, arg_4BA_2, arg_4BA_3, arg_4BA_4, arg_4BA_5, arg_4BA_6, newColor, 1.2f);
-                                            }
-                                            for (int num4 = 0; num4 < 3; num4++)
-                                            {
-                                                Gore.NewGore(this.Position, new Vector2(this.Velocity.X * 0.05f, this.Velocity.Y * 0.05f), Main.rand.Next(16, 18));
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (this.type == 14 || this.type == 20 || this.type == 36)
-                                        {
-                                            Collision.HitTiles(this.Position, this.Velocity, this.width, this.height);
-                                        }
-                                        else
-                                        {
-                                            if (this.type == 15 || this.type == 34)
-                                            {
-                                                for (int num5 = 0; num5 < 20; num5++)
-                                                {
-                                                    Vector2 arg_61E_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                    int arg_61E_1 = this.width;
-                                                    int arg_61E_2 = this.height;
-                                                    int arg_61E_3 = 6;
-                                                    float arg_61E_4 = -this.Velocity.X * 0.2f;
-                                                    float arg_61E_5 = -this.Velocity.Y * 0.2f;
-                                                    int arg_61E_6 = 100;
-                                                    Color newColor = default(Color);
-                                                    int num6 = Dust.NewDust(arg_61E_0, arg_61E_1, arg_61E_2, arg_61E_3, arg_61E_4, arg_61E_5, arg_61E_6, newColor, 2f);
-                                                    Main.dust[num6].noGravity = true;
-                                                    Dust expr_63B = Main.dust[num6];
-                                                    expr_63B.velocity *= 2f;
-                                                    Vector2 arg_6AD_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                    int arg_6AD_1 = this.width;
-                                                    int arg_6AD_2 = this.height;
-                                                    int arg_6AD_3 = 6;
-                                                    float arg_6AD_4 = -this.Velocity.X * 0.2f;
-                                                    float arg_6AD_5 = -this.Velocity.Y * 0.2f;
-                                                    int arg_6AD_6 = 100;
-                                                    newColor = default(Color);
-                                                    num6 = Dust.NewDust(arg_6AD_0, arg_6AD_1, arg_6AD_2, arg_6AD_3, arg_6AD_4, arg_6AD_5, arg_6AD_6, newColor, 1f);
-                                                    Dust expr_6BC = Main.dust[num6];
-                                                    expr_6BC.velocity *= 2f;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (this.type == 16)
-                                                {
-                                                    for (int num7 = 0; num7 < 20; num7++)
-                                                    {
-                                                        Vector2 arg_776_0 = new Vector2(this.Position.X - this.Velocity.X, this.Position.Y - this.Velocity.Y);
-                                                        int arg_776_1 = this.width;
-                                                        int arg_776_2 = this.height;
-                                                        int arg_776_3 = 15;
-                                                        float arg_776_4 = 0f;
-                                                        float arg_776_5 = 0f;
-                                                        int arg_776_6 = 100;
-                                                        Color newColor = default(Color);
-                                                        int num8 = Dust.NewDust(arg_776_0, arg_776_1, arg_776_2, arg_776_3, arg_776_4, arg_776_5, arg_776_6, newColor, 2f);
-                                                        Main.dust[num8].noGravity = true;
-                                                        Dust expr_793 = Main.dust[num8];
-                                                        expr_793.velocity *= 2f;
-                                                        Vector2 arg_804_0 = new Vector2(this.Position.X - this.Velocity.X, this.Position.Y - this.Velocity.Y);
-                                                        int arg_804_1 = this.width;
-                                                        int arg_804_2 = this.height;
-                                                        int arg_804_3 = 15;
-                                                        float arg_804_4 = 0f;
-                                                        float arg_804_5 = 0f;
-                                                        int arg_804_6 = 100;
-                                                        newColor = default(Color);
-                                                        num8 = Dust.NewDust(arg_804_0, arg_804_1, arg_804_2, arg_804_3, arg_804_4, arg_804_5, arg_804_6, newColor, 1f);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (this.type == 17)
-                                                    {
-                                                        for (int num9 = 0; num9 < 5; num9++)
-                                                        {
-                                                            Vector2 arg_88F_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                            int arg_88F_1 = this.width;
-                                                            int arg_88F_2 = this.height;
-                                                            int arg_88F_3 = 0;
-                                                            float arg_88F_4 = 0f;
-                                                            float arg_88F_5 = 0f;
-                                                            int arg_88F_6 = 0;
-                                                            Color newColor = default(Color);
-                                                            Dust.NewDust(arg_88F_0, arg_88F_1, arg_88F_2, arg_88F_3, arg_88F_4, arg_88F_5, arg_88F_6, newColor, 1f);
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (this.type == 31 || this.type == 42)
-                                                        {
-                                                            for (int num10 = 0; num10 < 5; num10++)
-                                                            {
-                                                                Vector2 arg_923_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                int arg_923_1 = this.width;
-                                                                int arg_923_2 = this.height;
-                                                                int arg_923_3 = 32;
-                                                                float arg_923_4 = 0f;
-                                                                float arg_923_5 = 0f;
-                                                                int arg_923_6 = 0;
-                                                                Color newColor = default(Color);
-                                                                int num11 = Dust.NewDust(arg_923_0, arg_923_1, arg_923_2, arg_923_3, arg_923_4, arg_923_5, arg_923_6, newColor, 1f);
-                                                                Dust expr_932 = Main.dust[num11];
-                                                                expr_932.velocity *= 0.6f;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (this.type == 39)
-                                                            {
-                                                                for (int num12 = 0; num12 < 5; num12++)
-                                                                {
-                                                                    Vector2 arg_9CB_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                    int arg_9CB_1 = this.width;
-                                                                    int arg_9CB_2 = this.height;
-                                                                    int arg_9CB_3 = 38;
-                                                                    float arg_9CB_4 = 0f;
-                                                                    float arg_9CB_5 = 0f;
-                                                                    int arg_9CB_6 = 0;
-                                                                    Color newColor = default(Color);
-                                                                    int num13 = Dust.NewDust(arg_9CB_0, arg_9CB_1, arg_9CB_2, arg_9CB_3, arg_9CB_4, arg_9CB_5, arg_9CB_6, newColor, 1f);
-                                                                    Dust expr_9DA = Main.dust[num13];
-                                                                    expr_9DA.velocity *= 0.6f;
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                if (this.type == 40)
-                                                                {
-                                                                    for (int num14 = 0; num14 < 5; num14++)
-                                                                    {
-                                                                        Vector2 arg_A73_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                        int arg_A73_1 = this.width;
-                                                                        int arg_A73_2 = this.height;
-                                                                        int arg_A73_3 = 36;
-                                                                        float arg_A73_4 = 0f;
-                                                                        float arg_A73_5 = 0f;
-                                                                        int arg_A73_6 = 0;
-                                                                        Color newColor = default(Color);
-                                                                        int num15 = Dust.NewDust(arg_A73_0, arg_A73_1, arg_A73_2, arg_A73_3, arg_A73_4, arg_A73_5, arg_A73_6, newColor, 1f);
-                                                                        Dust expr_A82 = Main.dust[num15];
-                                                                        expr_A82.velocity *= 0.6f;
-                                                                    }
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (this.type == 21)
-                                                                    {
-                                                                        for (int num16 = 0; num16 < 10; num16++)
-                                                                        {
-                                                                            Vector2 arg_B18_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                            int arg_B18_1 = this.width;
-                                                                            int arg_B18_2 = this.height;
-                                                                            int arg_B18_3 = 26;
-                                                                            float arg_B18_4 = 0f;
-                                                                            float arg_B18_5 = 0f;
-                                                                            int arg_B18_6 = 0;
-                                                                            Color newColor = default(Color);
-                                                                            Dust.NewDust(arg_B18_0, arg_B18_1, arg_B18_2, arg_B18_3, arg_B18_4, arg_B18_5, arg_B18_6, newColor, 0.8f);
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (this.type == 24)
-                                                                        {
-                                                                            for (int num17 = 0; num17 < 10; num17++)
-                                                                            {
-                                                                                Vector2 arg_B98_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                int arg_B98_1 = this.width;
-                                                                                int arg_B98_2 = this.height;
-                                                                                int arg_B98_3 = 1;
-                                                                                float arg_B98_4 = this.Velocity.X * 0.1f;
-                                                                                float arg_B98_5 = this.Velocity.Y * 0.1f;
-                                                                                int arg_B98_6 = 0;
-                                                                                Color newColor = default(Color);
-                                                                                Dust.NewDust(arg_B98_0, arg_B98_1, arg_B98_2, arg_B98_3, arg_B98_4, arg_B98_5, arg_B98_6, newColor, 0.75f);
-                                                                            }
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (this.type == 27)
-                                                                            {
-                                                                                for (int num18 = 0; num18 < 30; num18++)
-                                                                                {
-                                                                                    Vector2 arg_C40_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                    int arg_C40_1 = this.width;
-                                                                                    int arg_C40_2 = this.height;
-                                                                                    int arg_C40_3 = 29;
-                                                                                    float arg_C40_4 = this.Velocity.X * 0.1f;
-                                                                                    float arg_C40_5 = this.Velocity.Y * 0.1f;
-                                                                                    int arg_C40_6 = 100;
-                                                                                    Color newColor = default(Color);
-                                                                                    int num19 = Dust.NewDust(arg_C40_0, arg_C40_1, arg_C40_2, arg_C40_3, arg_C40_4, arg_C40_5, arg_C40_6, newColor, 3f);
-                                                                                    Main.dust[num19].noGravity = true;
-                                                                                    Vector2 arg_CB1_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                    int arg_CB1_1 = this.width;
-                                                                                    int arg_CB1_2 = this.height;
-                                                                                    int arg_CB1_3 = 29;
-                                                                                    float arg_CB1_4 = this.Velocity.X * 0.1f;
-                                                                                    float arg_CB1_5 = this.Velocity.Y * 0.1f;
-                                                                                    int arg_CB1_6 = 100;
-                                                                                    newColor = default(Color);
-                                                                                    Dust.NewDust(arg_CB1_0, arg_CB1_1, arg_CB1_2, arg_CB1_3, arg_CB1_4, arg_CB1_5, arg_CB1_6, newColor, 2f);
-                                                                                }
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (this.type == 38)
-                                                                                {
-                                                                                    for (int num20 = 0; num20 < 10; num20++)
-                                                                                    {
-                                                                                        Vector2 arg_D35_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                        int arg_D35_1 = this.width;
-                                                                                        int arg_D35_2 = this.height;
-                                                                                        int arg_D35_3 = 42;
-                                                                                        float arg_D35_4 = this.Velocity.X * 0.1f;
-                                                                                        float arg_D35_5 = this.Velocity.Y * 0.1f;
-                                                                                        int arg_D35_6 = 0;
-                                                                                        Color newColor = default(Color);
-                                                                                        Dust.NewDust(arg_D35_0, arg_D35_1, arg_D35_2, arg_D35_3, arg_D35_4, arg_D35_5, arg_D35_6, newColor, 1f);
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if (this.type == 44 || this.type == 45)
-                                                                                    {
-                                                                                        for (int num21 = 0; num21 < 30; num21++)
-                                                                                        {
-                                                                                            Vector2 arg_DDB_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                            int arg_DDB_1 = this.width;
-                                                                                            int arg_DDB_2 = this.height;
-                                                                                            int arg_DDB_3 = 27;
-                                                                                            float arg_DDB_4 = this.Velocity.X;
-                                                                                            float arg_DDB_5 = this.Velocity.Y;
-                                                                                            int arg_DDB_6 = 100;
-                                                                                            Color newColor = default(Color);
-                                                                                            int num22 = Dust.NewDust(arg_DDB_0, arg_DDB_1, arg_DDB_2, arg_DDB_3, arg_DDB_4, arg_DDB_5, arg_DDB_6, newColor, 1.7f);
-                                                                                            Main.dust[num22].noGravity = true;
-                                                                                            Vector2 arg_E40_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                            int arg_E40_1 = this.width;
-                                                                                            int arg_E40_2 = this.height;
-                                                                                            int arg_E40_3 = 27;
-                                                                                            float arg_E40_4 = this.Velocity.X;
-                                                                                            float arg_E40_5 = this.Velocity.Y;
-                                                                                            int arg_E40_6 = 100;
-                                                                                            newColor = default(Color);
-                                                                                            Dust.NewDust(arg_E40_0, arg_E40_1, arg_E40_2, arg_E40_3, arg_E40_4, arg_E40_5, arg_E40_6, newColor, 1f);
-                                                                                        }
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (this.type == 41)
-                                                                                        {
-                                                                                            for (int num23 = 0; num23 < 10; num23++)
-                                                                                            {
-                                                                                                Vector2 arg_ED0_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                int arg_ED0_1 = this.width;
-                                                                                                int arg_ED0_2 = this.height;
-                                                                                                int arg_ED0_3 = 31;
-                                                                                                float arg_ED0_4 = 0f;
-                                                                                                float arg_ED0_5 = 0f;
-                                                                                                int arg_ED0_6 = 100;
-                                                                                                Color newColor = default(Color);
-                                                                                                Dust.NewDust(arg_ED0_0, arg_ED0_1, arg_ED0_2, arg_ED0_3, arg_ED0_4, arg_ED0_5, arg_ED0_6, newColor, 1.5f);
-                                                                                            }
-                                                                                            for (int num24 = 0; num24 < 5; num24++)
-                                                                                            {
-                                                                                                Vector2 arg_F2D_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                int arg_F2D_1 = this.width;
-                                                                                                int arg_F2D_2 = this.height;
-                                                                                                int arg_F2D_3 = 6;
-                                                                                                float arg_F2D_4 = 0f;
-                                                                                                float arg_F2D_5 = 0f;
-                                                                                                int arg_F2D_6 = 100;
-                                                                                                Color newColor = default(Color);
-                                                                                                int num25 = Dust.NewDust(arg_F2D_0, arg_F2D_1, arg_F2D_2, arg_F2D_3, arg_F2D_4, arg_F2D_5, arg_F2D_6, newColor, 2.5f);
-                                                                                                Main.dust[num25].noGravity = true;
-                                                                                                Dust expr_F4A = Main.dust[num25];
-                                                                                                expr_F4A.velocity *= 3f;
-                                                                                                Vector2 arg_FA2_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                int arg_FA2_1 = this.width;
-                                                                                                int arg_FA2_2 = this.height;
-                                                                                                int arg_FA2_3 = 6;
-                                                                                                float arg_FA2_4 = 0f;
-                                                                                                float arg_FA2_5 = 0f;
-                                                                                                int arg_FA2_6 = 100;
-                                                                                                newColor = default(Color);
-                                                                                                num25 = Dust.NewDust(arg_FA2_0, arg_FA2_1, arg_FA2_2, arg_FA2_3, arg_FA2_4, arg_FA2_5, arg_FA2_6, newColor, 1.5f);
-                                                                                                Dust expr_FB1 = Main.dust[num25];
-                                                                                                expr_FB1.velocity *= 2f;
-                                                                                            }
-                                                                                            Vector2 arg_1007_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                            Vector2 vector = default(Vector2);
-                                                                                            int num26 = Gore.NewGore(arg_1007_0, vector, Main.rand.Next(61, 64));
-                                                                                            Gore expr_1016 = Main.gore[num26];
-                                                                                            expr_1016.velocity *= 0.4f;
-                                                                                            Gore expr_1038_cp_0 = Main.gore[num26];
-                                                                                            expr_1038_cp_0.velocity.X = expr_1038_cp_0.velocity.X + (float)Main.rand.Next(-10, 11) * 0.1f;
-                                                                                            Gore expr_1066_cp_0 = Main.gore[num26];
-                                                                                            expr_1066_cp_0.velocity.Y = expr_1066_cp_0.velocity.Y + (float)Main.rand.Next(-10, 11) * 0.1f;
-                                                                                            Vector2 arg_10BA_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                            vector = default(Vector2);
-                                                                                            num26 = Gore.NewGore(arg_10BA_0, vector, Main.rand.Next(61, 64));
-                                                                                            Gore expr_10C9 = Main.gore[num26];
-                                                                                            expr_10C9.velocity *= 0.4f;
-                                                                                            Gore expr_10EB_cp_0 = Main.gore[num26];
-                                                                                            expr_10EB_cp_0.velocity.X = expr_10EB_cp_0.velocity.X + (float)Main.rand.Next(-10, 11) * 0.1f;
-                                                                                            Gore expr_1119_cp_0 = Main.gore[num26];
-                                                                                            expr_1119_cp_0.velocity.Y = expr_1119_cp_0.velocity.Y + (float)Main.rand.Next(-10, 11) * 0.1f;
-                                                                                            if (this.Owner == Main.myPlayer)
-                                                                                            {
-                                                                                                this.penetrate = -1;
-                                                                                                this.Position.X = this.Position.X + (float)(this.width / 2);
-                                                                                                this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                                                                                                this.width = 64;
-                                                                                                this.height = 64;
-                                                                                                this.Position.X = this.Position.X - (float)(this.width / 2);
-                                                                                                this.Position.Y = this.Position.Y - (float)(this.height / 2);
-                                                                                                this.Damage();
-                                                                                            }
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (this.type == 28 || this.type == 30 || this.type == 37)
-                                                                                            {
-                                                                                                this.Position.X = this.Position.X + (float)(this.width / 2);
-                                                                                                this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                                                                                                this.width = 22;
-                                                                                                this.height = 22;
-                                                                                                this.Position.X = this.Position.X - (float)(this.width / 2);
-                                                                                                this.Position.Y = this.Position.Y - (float)(this.height / 2);
-                                                                                                for (int num27 = 0; num27 < 20; num27++)
-                                                                                                {
-                                                                                                    Vector2 arg_12DE_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                    int arg_12DE_1 = this.width;
-                                                                                                    int arg_12DE_2 = this.height;
-                                                                                                    int arg_12DE_3 = 31;
-                                                                                                    float arg_12DE_4 = 0f;
-                                                                                                    float arg_12DE_5 = 0f;
-                                                                                                    int arg_12DE_6 = 100;
-                                                                                                    Color newColor = default(Color);
-                                                                                                    int num28 = Dust.NewDust(arg_12DE_0, arg_12DE_1, arg_12DE_2, arg_12DE_3, arg_12DE_4, arg_12DE_5, arg_12DE_6, newColor, 1.5f);
-                                                                                                    Dust expr_12ED = Main.dust[num28];
-                                                                                                    expr_12ED.velocity *= 1.4f;
-                                                                                                }
-                                                                                                for (int num29 = 0; num29 < 10; num29++)
-                                                                                                {
-                                                                                                    Vector2 arg_1359_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                    int arg_1359_1 = this.width;
-                                                                                                    int arg_1359_2 = this.height;
-                                                                                                    int arg_1359_3 = 6;
-                                                                                                    float arg_1359_4 = 0f;
-                                                                                                    float arg_1359_5 = 0f;
-                                                                                                    int arg_1359_6 = 100;
-                                                                                                    Color newColor = default(Color);
-                                                                                                    int num30 = Dust.NewDust(arg_1359_0, arg_1359_1, arg_1359_2, arg_1359_3, arg_1359_4, arg_1359_5, arg_1359_6, newColor, 2.5f);
-                                                                                                    Main.dust[num30].noGravity = true;
-                                                                                                    Dust expr_1376 = Main.dust[num30];
-                                                                                                    expr_1376.velocity *= 5f;
-                                                                                                    Vector2 arg_13CE_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                    int arg_13CE_1 = this.width;
-                                                                                                    int arg_13CE_2 = this.height;
-                                                                                                    int arg_13CE_3 = 6;
-                                                                                                    float arg_13CE_4 = 0f;
-                                                                                                    float arg_13CE_5 = 0f;
-                                                                                                    int arg_13CE_6 = 100;
-                                                                                                    newColor = default(Color);
-                                                                                                    num30 = Dust.NewDust(arg_13CE_0, arg_13CE_1, arg_13CE_2, arg_13CE_3, arg_13CE_4, arg_13CE_5, arg_13CE_6, newColor, 1.5f);
-                                                                                                    Dust expr_13DD = Main.dust[num30];
-                                                                                                    expr_13DD.velocity *= 3f;
-                                                                                                }
-                                                                                                Vector2 arg_1434_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                Vector2 vector = default(Vector2);
-                                                                                                int num31 = Gore.NewGore(arg_1434_0, vector, Main.rand.Next(61, 64));
-                                                                                                Gore expr_1443 = Main.gore[num31];
-                                                                                                expr_1443.velocity *= 0.4f;
-                                                                                                Gore expr_1465_cp_0 = Main.gore[num31];
-                                                                                                expr_1465_cp_0.velocity.X = expr_1465_cp_0.velocity.X + 1f;
-                                                                                                Gore expr_1483_cp_0 = Main.gore[num31];
-                                                                                                expr_1483_cp_0.velocity.Y = expr_1483_cp_0.velocity.Y + 1f;
-                                                                                                Vector2 arg_14C7_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                vector = default(Vector2);
-                                                                                                num31 = Gore.NewGore(arg_14C7_0, vector, Main.rand.Next(61, 64));
-                                                                                                Gore expr_14D6 = Main.gore[num31];
-                                                                                                expr_14D6.velocity *= 0.4f;
-                                                                                                Gore expr_14F8_cp_0 = Main.gore[num31];
-                                                                                                expr_14F8_cp_0.velocity.X = expr_14F8_cp_0.velocity.X - 1f;
-                                                                                                Gore expr_1516_cp_0 = Main.gore[num31];
-                                                                                                expr_1516_cp_0.velocity.Y = expr_1516_cp_0.velocity.Y + 1f;
-                                                                                                Vector2 arg_155A_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                vector = default(Vector2);
-                                                                                                num31 = Gore.NewGore(arg_155A_0, vector, Main.rand.Next(61, 64));
-                                                                                                Gore expr_1569 = Main.gore[num31];
-                                                                                                expr_1569.velocity *= 0.4f;
-                                                                                                Gore expr_158B_cp_0 = Main.gore[num31];
-                                                                                                expr_158B_cp_0.velocity.X = expr_158B_cp_0.velocity.X + 1f;
-                                                                                                Gore expr_15A9_cp_0 = Main.gore[num31];
-                                                                                                expr_15A9_cp_0.velocity.Y = expr_15A9_cp_0.velocity.Y - 1f;
-                                                                                                Vector2 arg_15ED_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                vector = default(Vector2);
-                                                                                                num31 = Gore.NewGore(arg_15ED_0, vector, Main.rand.Next(61, 64));
-                                                                                                Gore expr_15FC = Main.gore[num31];
-                                                                                                expr_15FC.velocity *= 0.4f;
-                                                                                                Gore expr_161E_cp_0 = Main.gore[num31];
-                                                                                                expr_161E_cp_0.velocity.X = expr_161E_cp_0.velocity.X - 1f;
-                                                                                                Gore expr_163C_cp_0 = Main.gore[num31];
-                                                                                                expr_163C_cp_0.velocity.Y = expr_163C_cp_0.velocity.Y - 1f;
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (this.type == 29)
-                                                                                                {
-                                                                                                    this.Position.X = this.Position.X + (float)(this.width / 2);
-                                                                                                    this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                                                                                                    this.width = 200;
-                                                                                                    this.height = 200;
-                                                                                                    this.Position.X = this.Position.X - (float)(this.width / 2);
-                                                                                                    this.Position.Y = this.Position.Y - (float)(this.height / 2);
-                                                                                                    for (int num32 = 0; num32 < 50; num32++)
-                                                                                                    {
-                                                                                                        Vector2 arg_174A_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                        int arg_174A_1 = this.width;
-                                                                                                        int arg_174A_2 = this.height;
-                                                                                                        int arg_174A_3 = 31;
-                                                                                                        float arg_174A_4 = 0f;
-                                                                                                        float arg_174A_5 = 0f;
-                                                                                                        int arg_174A_6 = 100;
-                                                                                                        Color newColor = default(Color);
-                                                                                                        int num33 = Dust.NewDust(arg_174A_0, arg_174A_1, arg_174A_2, arg_174A_3, arg_174A_4, arg_174A_5, arg_174A_6, newColor, 2f);
-                                                                                                        Dust expr_1759 = Main.dust[num33];
-                                                                                                        expr_1759.velocity *= 1.4f;
-                                                                                                    }
-                                                                                                    for (int num34 = 0; num34 < 80; num34++)
-                                                                                                    {
-                                                                                                        Vector2 arg_17C5_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                        int arg_17C5_1 = this.width;
-                                                                                                        int arg_17C5_2 = this.height;
-                                                                                                        int arg_17C5_3 = 6;
-                                                                                                        float arg_17C5_4 = 0f;
-                                                                                                        float arg_17C5_5 = 0f;
-                                                                                                        int arg_17C5_6 = 100;
-                                                                                                        Color newColor = default(Color);
-                                                                                                        int num35 = Dust.NewDust(arg_17C5_0, arg_17C5_1, arg_17C5_2, arg_17C5_3, arg_17C5_4, arg_17C5_5, arg_17C5_6, newColor, 3f);
-                                                                                                        Main.dust[num35].noGravity = true;
-                                                                                                        Dust expr_17E2 = Main.dust[num35];
-                                                                                                        expr_17E2.velocity *= 5f;
-                                                                                                        Vector2 arg_183A_0 = new Vector2(this.Position.X, this.Position.Y);
-                                                                                                        int arg_183A_1 = this.width;
-                                                                                                        int arg_183A_2 = this.height;
-                                                                                                        int arg_183A_3 = 6;
-                                                                                                        float arg_183A_4 = 0f;
-                                                                                                        float arg_183A_5 = 0f;
-                                                                                                        int arg_183A_6 = 100;
-                                                                                                        newColor = default(Color);
-                                                                                                        num35 = Dust.NewDust(arg_183A_0, arg_183A_1, arg_183A_2, arg_183A_3, arg_183A_4, arg_183A_5, arg_183A_6, newColor, 2f);
-                                                                                                        Dust expr_1849 = Main.dust[num35];
-                                                                                                        expr_1849.velocity *= 3f;
-                                                                                                    }
-                                                                                                    for (int num36 = 0; num36 < 2; num36++)
-                                                                                                    {
-                                                                                                        Vector2 arg_18C8_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
-                                                                                                        Vector2 vector = default(Vector2);
-                                                                                                        int num37 = Gore.NewGore(arg_18C8_0, vector, Main.rand.Next(61, 64));
-                                                                                                        Main.gore[num37].scale = 1.5f;
-                                                                                                        Gore expr_18EE_cp_0 = Main.gore[num37];
-                                                                                                        expr_18EE_cp_0.velocity.X = expr_18EE_cp_0.velocity.X + 1.5f;
-                                                                                                        Gore expr_190C_cp_0 = Main.gore[num37];
-                                                                                                        expr_190C_cp_0.velocity.Y = expr_190C_cp_0.velocity.Y + 1.5f;
-                                                                                                        Vector2 arg_1970_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
-                                                                                                        vector = default(Vector2);
-                                                                                                        num37 = Gore.NewGore(arg_1970_0, vector, Main.rand.Next(61, 64));
-                                                                                                        Main.gore[num37].scale = 1.5f;
-                                                                                                        Gore expr_1996_cp_0 = Main.gore[num37];
-                                                                                                        expr_1996_cp_0.velocity.X = expr_1996_cp_0.velocity.X - 1.5f;
-                                                                                                        Gore expr_19B4_cp_0 = Main.gore[num37];
-                                                                                                        expr_19B4_cp_0.velocity.Y = expr_19B4_cp_0.velocity.Y + 1.5f;
-                                                                                                        Vector2 arg_1A18_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
-                                                                                                        vector = default(Vector2);
-                                                                                                        num37 = Gore.NewGore(arg_1A18_0, vector, Main.rand.Next(61, 64));
-                                                                                                        Main.gore[num37].scale = 1.5f;
-                                                                                                        Gore expr_1A3E_cp_0 = Main.gore[num37];
-                                                                                                        expr_1A3E_cp_0.velocity.X = expr_1A3E_cp_0.velocity.X + 1.5f;
-                                                                                                        Gore expr_1A5C_cp_0 = Main.gore[num37];
-                                                                                                        expr_1A5C_cp_0.velocity.Y = expr_1A5C_cp_0.velocity.Y - 1.5f;
-                                                                                                        Vector2 arg_1AC0_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
-                                                                                                        vector = default(Vector2);
-                                                                                                        num37 = Gore.NewGore(arg_1AC0_0, vector, Main.rand.Next(61, 64));
-                                                                                                        Main.gore[num37].scale = 1.5f;
-                                                                                                        Gore expr_1AE6_cp_0 = Main.gore[num37];
-                                                                                                        expr_1AE6_cp_0.velocity.X = expr_1AE6_cp_0.velocity.X - 1.5f;
-                                                                                                        Gore expr_1B04_cp_0 = Main.gore[num37];
-                                                                                                        expr_1B04_cp_0.velocity.Y = expr_1B04_cp_0.velocity.Y - 1.5f;
-                                                                                                    }
-                                                                                                    this.Position.X = this.Position.X + (float)(this.width / 2);
-                                                                                                    this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                                                                                                    this.width = 10;
-                                                                                                    this.height = 10;
-                                                                                                    this.Position.X = this.Position.X - (float)(this.width / 2);
-                                                                                                    this.Position.Y = this.Position.Y - (float)(this.height / 2);
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                                Gore.NewGore(this.Position, new Vector2(this.Velocity.X * 0.05f, this.Velocity.Y * 0.05f), Main.rand.Next(16, 18));
                             }
                         }
                     }
-                }
+                    break;
+                case 14:
+                case 20:
+                case 36:
+                    {
+                        Collision.HitTiles(this.Position, this.Velocity, this.width, this.height);
+                    }
+                    break;
+                case 15:
+                case 34:
+                    {
+                        for (int num5 = 0; num5 < 20; num5++)
+                        {
+                            Vector2 arg_61E_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_61E_1 = this.width;
+                            int arg_61E_2 = this.height;
+                            int arg_61E_3 = 6;
+                            float arg_61E_4 = -this.Velocity.X * 0.2f;
+                            float arg_61E_5 = -this.Velocity.Y * 0.2f;
+                            int arg_61E_6 = 100;
+                            Color newColor = default(Color);
+                            int num6 = Dust.NewDust(arg_61E_0, arg_61E_1, arg_61E_2, arg_61E_3, arg_61E_4, arg_61E_5, arg_61E_6, newColor, 2f);
+                            Main.dust[num6].noGravity = true;
+                            Dust expr_63B = Main.dust[num6];
+                            expr_63B.velocity *= 2f;
+                            Vector2 arg_6AD_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_6AD_1 = this.width;
+                            int arg_6AD_2 = this.height;
+                            int arg_6AD_3 = 6;
+                            float arg_6AD_4 = -this.Velocity.X * 0.2f;
+                            float arg_6AD_5 = -this.Velocity.Y * 0.2f;
+                            int arg_6AD_6 = 100;
+                            newColor = default(Color);
+                            num6 = Dust.NewDust(arg_6AD_0, arg_6AD_1, arg_6AD_2, arg_6AD_3, arg_6AD_4, arg_6AD_5, arg_6AD_6, newColor, 1f);
+                            Dust expr_6BC = Main.dust[num6];
+                            expr_6BC.velocity *= 2f;
+                        }
+                    }
+                    break;
+                case 16:
+                    {
+                        for (int num7 = 0; num7 < 20; num7++)
+                        {
+                            Vector2 arg_776_0 = new Vector2(this.Position.X - this.Velocity.X, this.Position.Y - this.Velocity.Y);
+                            int arg_776_1 = this.width;
+                            int arg_776_2 = this.height;
+                            int arg_776_3 = 15;
+                            float arg_776_4 = 0f;
+                            float arg_776_5 = 0f;
+                            int arg_776_6 = 100;
+                            Color newColor = default(Color);
+                            int num8 = Dust.NewDust(arg_776_0, arg_776_1, arg_776_2, arg_776_3, arg_776_4, arg_776_5, arg_776_6, newColor, 2f);
+                            Main.dust[num8].noGravity = true;
+                            Dust expr_793 = Main.dust[num8];
+                            expr_793.velocity *= 2f;
+                            Vector2 arg_804_0 = new Vector2(this.Position.X - this.Velocity.X, this.Position.Y - this.Velocity.Y);
+                            int arg_804_1 = this.width;
+                            int arg_804_2 = this.height;
+                            int arg_804_3 = 15;
+                            float arg_804_4 = 0f;
+                            float arg_804_5 = 0f;
+                            int arg_804_6 = 100;
+                            newColor = default(Color);
+                            num8 = Dust.NewDust(arg_804_0, arg_804_1, arg_804_2, arg_804_3, arg_804_4, arg_804_5, arg_804_6, newColor, 1f);
+                        }
+                    }
+                    break;
+                case 17:
+                    {
+                        for (int num9 = 0; num9 < 5; num9++)
+                        {
+                            Vector2 arg_88F_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_88F_1 = this.width;
+                            int arg_88F_2 = this.height;
+                            int arg_88F_3 = 0;
+                            float arg_88F_4 = 0f;
+                            float arg_88F_5 = 0f;
+                            int arg_88F_6 = 0;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_88F_0, arg_88F_1, arg_88F_2, arg_88F_3, arg_88F_4, arg_88F_5, arg_88F_6, newColor, 1f);
+                        }
+                    }
+                    break;
+                case 21:
+                    {
+                        for (int num16 = 0; num16 < 10; num16++)
+                        {
+                            Vector2 arg_B18_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_B18_1 = this.width;
+                            int arg_B18_2 = this.height;
+                            int arg_B18_3 = 26;
+                            float arg_B18_4 = 0f;
+                            float arg_B18_5 = 0f;
+                            int arg_B18_6 = 0;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_B18_0, arg_B18_1, arg_B18_2, arg_B18_3, arg_B18_4, arg_B18_5, arg_B18_6, newColor, 0.8f);
+                        }
+                    }
+                    break;
+                case 24:
+                    {
+                        for (int num17 = 0; num17 < 10; num17++)
+                        {
+                            Vector2 arg_B98_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_B98_1 = this.width;
+                            int arg_B98_2 = this.height;
+                            int arg_B98_3 = 1;
+                            float arg_B98_4 = this.Velocity.X * 0.1f;
+                            float arg_B98_5 = this.Velocity.Y * 0.1f;
+                            int arg_B98_6 = 0;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_B98_0, arg_B98_1, arg_B98_2, arg_B98_3, arg_B98_4, arg_B98_5, arg_B98_6, newColor, 0.75f);
+                        }
+                    }
+                    break;
+                case 27:
+                    {
+                        for (int num18 = 0; num18 < 30; num18++)
+                        {
+                            Vector2 arg_C40_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_C40_1 = this.width;
+                            int arg_C40_2 = this.height;
+                            int arg_C40_3 = 29;
+                            float arg_C40_4 = this.Velocity.X * 0.1f;
+                            float arg_C40_5 = this.Velocity.Y * 0.1f;
+                            int arg_C40_6 = 100;
+                            Color newColor = default(Color);
+                            int num19 = Dust.NewDust(arg_C40_0, arg_C40_1, arg_C40_2, arg_C40_3, arg_C40_4, arg_C40_5, arg_C40_6, newColor, 3f);
+                            Main.dust[num19].noGravity = true;
+                            Vector2 arg_CB1_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_CB1_1 = this.width;
+                            int arg_CB1_2 = this.height;
+                            int arg_CB1_3 = 29;
+                            float arg_CB1_4 = this.Velocity.X * 0.1f;
+                            float arg_CB1_5 = this.Velocity.Y * 0.1f;
+                            int arg_CB1_6 = 100;
+                            newColor = default(Color);
+                            Dust.NewDust(arg_CB1_0, arg_CB1_1, arg_CB1_2, arg_CB1_3, arg_CB1_4, arg_CB1_5, arg_CB1_6, newColor, 2f);
+                        }
+                    }
+                    break;
+                case 28:
+                case 30:
+                case 37:
+                    {
+                        this.Position.X = this.Position.X + (float)(this.width / 2);
+                        this.Position.Y = this.Position.Y + (float)(this.height / 2);
+                        this.width = 22;
+                        this.height = 22;
+                        this.Position.X = this.Position.X - (float)(this.width / 2);
+                        this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                        for (int num27 = 0; num27 < 20; num27++)
+                        {
+                            Vector2 arg_12DE_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_12DE_1 = this.width;
+                            int arg_12DE_2 = this.height;
+                            int arg_12DE_3 = 31;
+                            float arg_12DE_4 = 0f;
+                            float arg_12DE_5 = 0f;
+                            int arg_12DE_6 = 100;
+                            Color newColor = default(Color);
+                            int num28 = Dust.NewDust(arg_12DE_0, arg_12DE_1, arg_12DE_2, arg_12DE_3, arg_12DE_4, arg_12DE_5, arg_12DE_6, newColor, 1.5f);
+                            Dust expr_12ED = Main.dust[num28];
+                            expr_12ED.velocity *= 1.4f;
+                        }
+                        for (int num29 = 0; num29 < 10; num29++)
+                        {
+                            Vector2 arg_1359_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_1359_1 = this.width;
+                            int arg_1359_2 = this.height;
+                            int arg_1359_3 = 6;
+                            float arg_1359_4 = 0f;
+                            float arg_1359_5 = 0f;
+                            int arg_1359_6 = 100;
+                            Color newColor = default(Color);
+                            int num30 = Dust.NewDust(arg_1359_0, arg_1359_1, arg_1359_2, arg_1359_3, arg_1359_4, arg_1359_5, arg_1359_6, newColor, 2.5f);
+                            Main.dust[num30].noGravity = true;
+                            Dust expr_1376 = Main.dust[num30];
+                            expr_1376.velocity *= 5f;
+                            Vector2 arg_13CE_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_13CE_1 = this.width;
+                            int arg_13CE_2 = this.height;
+                            int arg_13CE_3 = 6;
+                            float arg_13CE_4 = 0f;
+                            float arg_13CE_5 = 0f;
+                            int arg_13CE_6 = 100;
+                            newColor = default(Color);
+                            num30 = Dust.NewDust(arg_13CE_0, arg_13CE_1, arg_13CE_2, arg_13CE_3, arg_13CE_4, arg_13CE_5, arg_13CE_6, newColor, 1.5f);
+                            Dust expr_13DD = Main.dust[num30];
+                            expr_13DD.velocity *= 3f;
+                        }
+                        Vector2 arg_1434_0 = new Vector2(this.Position.X, this.Position.Y);
+                        Vector2 vector = default(Vector2);
+                        int num31 = Gore.NewGore(arg_1434_0, vector, Main.rand.Next(61, 64));
+                        Gore expr_1443 = Main.gore[num31];
+                        expr_1443.velocity *= 0.4f;
+                        Gore expr_1465_cp_0 = Main.gore[num31];
+                        expr_1465_cp_0.velocity.X = expr_1465_cp_0.velocity.X + 1f;
+                        Gore expr_1483_cp_0 = Main.gore[num31];
+                        expr_1483_cp_0.velocity.Y = expr_1483_cp_0.velocity.Y + 1f;
+                        Vector2 arg_14C7_0 = new Vector2(this.Position.X, this.Position.Y);
+                        vector = default(Vector2);
+                        num31 = Gore.NewGore(arg_14C7_0, vector, Main.rand.Next(61, 64));
+                        Gore expr_14D6 = Main.gore[num31];
+                        expr_14D6.velocity *= 0.4f;
+                        Gore expr_14F8_cp_0 = Main.gore[num31];
+                        expr_14F8_cp_0.velocity.X = expr_14F8_cp_0.velocity.X - 1f;
+                        Gore expr_1516_cp_0 = Main.gore[num31];
+                        expr_1516_cp_0.velocity.Y = expr_1516_cp_0.velocity.Y + 1f;
+                        Vector2 arg_155A_0 = new Vector2(this.Position.X, this.Position.Y);
+                        vector = default(Vector2);
+                        num31 = Gore.NewGore(arg_155A_0, vector, Main.rand.Next(61, 64));
+                        Gore expr_1569 = Main.gore[num31];
+                        expr_1569.velocity *= 0.4f;
+                        Gore expr_158B_cp_0 = Main.gore[num31];
+                        expr_158B_cp_0.velocity.X = expr_158B_cp_0.velocity.X + 1f;
+                        Gore expr_15A9_cp_0 = Main.gore[num31];
+                        expr_15A9_cp_0.velocity.Y = expr_15A9_cp_0.velocity.Y - 1f;
+                        Vector2 arg_15ED_0 = new Vector2(this.Position.X, this.Position.Y);
+                        vector = default(Vector2);
+                        num31 = Gore.NewGore(arg_15ED_0, vector, Main.rand.Next(61, 64));
+                        Gore expr_15FC = Main.gore[num31];
+                        expr_15FC.velocity *= 0.4f;
+                        Gore expr_161E_cp_0 = Main.gore[num31];
+                        expr_161E_cp_0.velocity.X = expr_161E_cp_0.velocity.X - 1f;
+                        Gore expr_163C_cp_0 = Main.gore[num31];
+                        expr_163C_cp_0.velocity.Y = expr_163C_cp_0.velocity.Y - 1f;
+                    }
+                    break;
+                case 29:
+                    {
+                        this.Position.X = this.Position.X + (float)(this.width / 2);
+                        this.Position.Y = this.Position.Y + (float)(this.height / 2);
+                        this.width = 200;
+                        this.height = 200;
+                        this.Position.X = this.Position.X - (float)(this.width / 2);
+                        this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                        for (int num32 = 0; num32 < 50; num32++)
+                        {
+                            Vector2 arg_174A_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_174A_1 = this.width;
+                            int arg_174A_2 = this.height;
+                            int arg_174A_3 = 31;
+                            float arg_174A_4 = 0f;
+                            float arg_174A_5 = 0f;
+                            int arg_174A_6 = 100;
+                            Color newColor = default(Color);
+                            int num33 = Dust.NewDust(arg_174A_0, arg_174A_1, arg_174A_2, arg_174A_3, arg_174A_4, arg_174A_5, arg_174A_6, newColor, 2f);
+                            Dust expr_1759 = Main.dust[num33];
+                            expr_1759.velocity *= 1.4f;
+                        }
+                        for (int num34 = 0; num34 < 80; num34++)
+                        {
+                            Vector2 arg_17C5_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_17C5_1 = this.width;
+                            int arg_17C5_2 = this.height;
+                            int arg_17C5_3 = 6;
+                            float arg_17C5_4 = 0f;
+                            float arg_17C5_5 = 0f;
+                            int arg_17C5_6 = 100;
+                            Color newColor = default(Color);
+                            int num35 = Dust.NewDust(arg_17C5_0, arg_17C5_1, arg_17C5_2, arg_17C5_3, arg_17C5_4, arg_17C5_5, arg_17C5_6, newColor, 3f);
+                            Main.dust[num35].noGravity = true;
+                            Dust expr_17E2 = Main.dust[num35];
+                            expr_17E2.velocity *= 5f;
+                            Vector2 arg_183A_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_183A_1 = this.width;
+                            int arg_183A_2 = this.height;
+                            int arg_183A_3 = 6;
+                            float arg_183A_4 = 0f;
+                            float arg_183A_5 = 0f;
+                            int arg_183A_6 = 100;
+                            newColor = default(Color);
+                            num35 = Dust.NewDust(arg_183A_0, arg_183A_1, arg_183A_2, arg_183A_3, arg_183A_4, arg_183A_5, arg_183A_6, newColor, 2f);
+                            Dust expr_1849 = Main.dust[num35];
+                            expr_1849.velocity *= 3f;
+                        }
+                        for (int num36 = 0; num36 < 2; num36++)
+                        {
+                            Vector2 arg_18C8_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
+                            Vector2 vector = default(Vector2);
+                            int num37 = Gore.NewGore(arg_18C8_0, vector, Main.rand.Next(61, 64));
+                            Main.gore[num37].scale = 1.5f;
+                            Gore expr_18EE_cp_0 = Main.gore[num37];
+                            expr_18EE_cp_0.velocity.X = expr_18EE_cp_0.velocity.X + 1.5f;
+                            Gore expr_190C_cp_0 = Main.gore[num37];
+                            expr_190C_cp_0.velocity.Y = expr_190C_cp_0.velocity.Y + 1.5f;
+                            Vector2 arg_1970_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
+                            vector = default(Vector2);
+                            num37 = Gore.NewGore(arg_1970_0, vector, Main.rand.Next(61, 64));
+                            Main.gore[num37].scale = 1.5f;
+                            Gore expr_1996_cp_0 = Main.gore[num37];
+                            expr_1996_cp_0.velocity.X = expr_1996_cp_0.velocity.X - 1.5f;
+                            Gore expr_19B4_cp_0 = Main.gore[num37];
+                            expr_19B4_cp_0.velocity.Y = expr_19B4_cp_0.velocity.Y + 1.5f;
+                            Vector2 arg_1A18_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
+                            vector = default(Vector2);
+                            num37 = Gore.NewGore(arg_1A18_0, vector, Main.rand.Next(61, 64));
+                            Main.gore[num37].scale = 1.5f;
+                            Gore expr_1A3E_cp_0 = Main.gore[num37];
+                            expr_1A3E_cp_0.velocity.X = expr_1A3E_cp_0.velocity.X + 1.5f;
+                            Gore expr_1A5C_cp_0 = Main.gore[num37];
+                            expr_1A5C_cp_0.velocity.Y = expr_1A5C_cp_0.velocity.Y - 1.5f;
+                            Vector2 arg_1AC0_0 = new Vector2(this.Position.X + (float)(this.width / 2) - 24f, this.Position.Y + (float)(this.height / 2) - 24f);
+                            vector = default(Vector2);
+                            num37 = Gore.NewGore(arg_1AC0_0, vector, Main.rand.Next(61, 64));
+                            Main.gore[num37].scale = 1.5f;
+                            Gore expr_1AE6_cp_0 = Main.gore[num37];
+                            expr_1AE6_cp_0.velocity.X = expr_1AE6_cp_0.velocity.X - 1.5f;
+                            Gore expr_1B04_cp_0 = Main.gore[num37];
+                            expr_1B04_cp_0.velocity.Y = expr_1B04_cp_0.velocity.Y - 1.5f;
+                        }
+                        this.Position.X = this.Position.X + (float)(this.width / 2);
+                        this.Position.Y = this.Position.Y + (float)(this.height / 2);
+                        this.width = 10;
+                        this.height = 10;
+                        this.Position.X = this.Position.X - (float)(this.width / 2);
+                        this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                    }
+                    break;
+                case 31:
+                case 42:
+                    {
+                        for (int num10 = 0; num10 < 5; num10++)
+                        {
+                            Vector2 arg_923_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_923_1 = this.width;
+                            int arg_923_2 = this.height;
+                            int arg_923_3 = 32;
+                            float arg_923_4 = 0f;
+                            float arg_923_5 = 0f;
+                            int arg_923_6 = 0;
+                            Color newColor = default(Color);
+                            int num11 = Dust.NewDust(arg_923_0, arg_923_1, arg_923_2, arg_923_3, arg_923_4, arg_923_5, arg_923_6, newColor, 1f);
+                            Dust expr_932 = Main.dust[num11];
+                            expr_932.velocity *= 0.6f;
+                        }
+                    }
+                    break;
+                case 38:
+                    {
+                        for (int num20 = 0; num20 < 10; num20++)
+                        {
+                            Vector2 arg_D35_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_D35_1 = this.width;
+                            int arg_D35_2 = this.height;
+                            int arg_D35_3 = 42;
+                            float arg_D35_4 = this.Velocity.X * 0.1f;
+                            float arg_D35_5 = this.Velocity.Y * 0.1f;
+                            int arg_D35_6 = 0;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_D35_0, arg_D35_1, arg_D35_2, arg_D35_3, arg_D35_4, arg_D35_5, arg_D35_6, newColor, 1f);
+                        }
+                    }
+                    break;
+                case 39:
+                    {
+                        for (int num12 = 0; num12 < 5; num12++)
+                        {
+                            Vector2 arg_9CB_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_9CB_1 = this.width;
+                            int arg_9CB_2 = this.height;
+                            int arg_9CB_3 = 38;
+                            float arg_9CB_4 = 0f;
+                            float arg_9CB_5 = 0f;
+                            int arg_9CB_6 = 0;
+                            Color newColor = default(Color);
+                            int num13 = Dust.NewDust(arg_9CB_0, arg_9CB_1, arg_9CB_2, arg_9CB_3, arg_9CB_4, arg_9CB_5, arg_9CB_6, newColor, 1f);
+                            Dust expr_9DA = Main.dust[num13];
+                            expr_9DA.velocity *= 0.6f;
+                        }
+                    }
+                    break;
+                case 40:
+                    {
+                        for (int num14 = 0; num14 < 5; num14++)
+                        {
+                            Vector2 arg_A73_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_A73_1 = this.width;
+                            int arg_A73_2 = this.height;
+                            int arg_A73_3 = 36;
+                            float arg_A73_4 = 0f;
+                            float arg_A73_5 = 0f;
+                            int arg_A73_6 = 0;
+                            Color newColor = default(Color);
+                            int num15 = Dust.NewDust(arg_A73_0, arg_A73_1, arg_A73_2, arg_A73_3, arg_A73_4, arg_A73_5, arg_A73_6, newColor, 1f);
+                            Dust expr_A82 = Main.dust[num15];
+                            expr_A82.velocity *= 0.6f;
+                        }
+                    }
+                    break;
+                case 41:
+                    {
+                        for (int num23 = 0; num23 < 10; num23++)
+                        {
+                            Vector2 arg_ED0_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_ED0_1 = this.width;
+                            int arg_ED0_2 = this.height;
+                            int arg_ED0_3 = 31;
+                            float arg_ED0_4 = 0f;
+                            float arg_ED0_5 = 0f;
+                            int arg_ED0_6 = 100;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_ED0_0, arg_ED0_1, arg_ED0_2, arg_ED0_3, arg_ED0_4, arg_ED0_5, arg_ED0_6, newColor, 1.5f);
+                        }
+                        for (int num24 = 0; num24 < 5; num24++)
+                        {
+                            Vector2 arg_F2D_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_F2D_1 = this.width;
+                            int arg_F2D_2 = this.height;
+                            int arg_F2D_3 = 6;
+                            float arg_F2D_4 = 0f;
+                            float arg_F2D_5 = 0f;
+                            int arg_F2D_6 = 100;
+                            Color newColor = default(Color);
+                            int num25 = Dust.NewDust(arg_F2D_0, arg_F2D_1, arg_F2D_2, arg_F2D_3, arg_F2D_4, arg_F2D_5, arg_F2D_6, newColor, 2.5f);
+                            Main.dust[num25].noGravity = true;
+                            Dust expr_F4A = Main.dust[num25];
+                            expr_F4A.velocity *= 3f;
+                            Vector2 arg_FA2_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_FA2_1 = this.width;
+                            int arg_FA2_2 = this.height;
+                            int arg_FA2_3 = 6;
+                            float arg_FA2_4 = 0f;
+                            float arg_FA2_5 = 0f;
+                            int arg_FA2_6 = 100;
+                            newColor = default(Color);
+                            num25 = Dust.NewDust(arg_FA2_0, arg_FA2_1, arg_FA2_2, arg_FA2_3, arg_FA2_4, arg_FA2_5, arg_FA2_6, newColor, 1.5f);
+                            Dust expr_FB1 = Main.dust[num25];
+                            expr_FB1.velocity *= 2f;
+                        }
+                        Vector2 arg_1007_0 = new Vector2(this.Position.X, this.Position.Y);
+                        Vector2 vector = default(Vector2);
+                        int num26 = Gore.NewGore(arg_1007_0, vector, Main.rand.Next(61, 64));
+                        Gore expr_1016 = Main.gore[num26];
+                        expr_1016.velocity *= 0.4f;
+                        Gore expr_1038_cp_0 = Main.gore[num26];
+                        expr_1038_cp_0.velocity.X = expr_1038_cp_0.velocity.X + (float)Main.rand.Next(-10, 11) * 0.1f;
+                        Gore expr_1066_cp_0 = Main.gore[num26];
+                        expr_1066_cp_0.velocity.Y = expr_1066_cp_0.velocity.Y + (float)Main.rand.Next(-10, 11) * 0.1f;
+                        Vector2 arg_10BA_0 = new Vector2(this.Position.X, this.Position.Y);
+                        vector = default(Vector2);
+                        num26 = Gore.NewGore(arg_10BA_0, vector, Main.rand.Next(61, 64));
+                        Gore expr_10C9 = Main.gore[num26];
+                        expr_10C9.velocity *= 0.4f;
+                        Gore expr_10EB_cp_0 = Main.gore[num26];
+                        expr_10EB_cp_0.velocity.X = expr_10EB_cp_0.velocity.X + (float)Main.rand.Next(-10, 11) * 0.1f;
+                        Gore expr_1119_cp_0 = Main.gore[num26];
+                        expr_1119_cp_0.velocity.Y = expr_1119_cp_0.velocity.Y + (float)Main.rand.Next(-10, 11) * 0.1f;
+                        if (this.Owner == Main.myPlayer)
+                        {
+                            this.penetrate = -1;
+                            this.Position.X = this.Position.X + (float)(this.width / 2);
+                            this.Position.Y = this.Position.Y + (float)(this.height / 2);
+                            this.width = 64;
+                            this.height = 64;
+                            this.Position.X = this.Position.X - (float)(this.width / 2);
+                            this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                            this.Damage();
+                        }
+                    }
+                    break;
+                case 44:
+                case 45:
+                    {
+                        for (int num21 = 0; num21 < 30; num21++)
+                        {
+                            Vector2 arg_DDB_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_DDB_1 = this.width;
+                            int arg_DDB_2 = this.height;
+                            int arg_DDB_3 = 27;
+                            float arg_DDB_4 = this.Velocity.X;
+                            float arg_DDB_5 = this.Velocity.Y;
+                            int arg_DDB_6 = 100;
+                            Color newColor = default(Color);
+                            int num22 = Dust.NewDust(arg_DDB_0, arg_DDB_1, arg_DDB_2, arg_DDB_3, arg_DDB_4, arg_DDB_5, arg_DDB_6, newColor, 1.7f);
+                            Main.dust[num22].noGravity = true;
+                            Vector2 arg_E40_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_E40_1 = this.width;
+                            int arg_E40_2 = this.height;
+                            int arg_E40_3 = 27;
+                            float arg_E40_4 = this.Velocity.X;
+                            float arg_E40_5 = this.Velocity.Y;
+                            int arg_E40_6 = 100;
+                            newColor = default(Color);
+                            Dust.NewDust(arg_E40_0, arg_E40_1, arg_E40_2, arg_E40_3, arg_E40_4, arg_E40_5, arg_E40_6, newColor, 1f);
+                        }
+                    }
+                    break;
+                case 51:
+                    {
+                        for (int j = 0; j < 5; j++)
+                        {
+                            Vector2 arg_101_0 = new Vector2(this.Position.X, this.Position.Y);
+                            int arg_101_1 = this.width;
+                            int arg_101_2 = this.height;
+                            int arg_101_3 = 0;
+                            float arg_101_4 = 0f;
+                            float arg_101_5 = 0f;
+                            int arg_101_6 = 0;
+                            Color newColor = default(Color);
+                            Dust.NewDust(arg_101_0, arg_101_1, arg_101_2, arg_101_3, arg_101_4, arg_101_5, arg_101_6, newColor, 0.7f);
+                        }
+                    }
+                    break;
+                default:
+                    break;
             }
             if (this.Owner == Main.myPlayer)
             {
