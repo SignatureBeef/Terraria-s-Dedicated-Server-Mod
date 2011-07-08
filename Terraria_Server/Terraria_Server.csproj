@@ -111,6 +111,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ProjectileType.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Events\NPCSpawnEvent.cs" />
