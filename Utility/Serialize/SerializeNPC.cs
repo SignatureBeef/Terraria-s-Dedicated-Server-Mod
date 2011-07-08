@@ -13,9 +13,10 @@ namespace Terraria_Utilities.Serialize
     {
         public static void Start()
         {
-            String[] ignoreFields = new String[] { "immune", "ai" };
+            /*
+            String[] ignoreFields = new String[] { "immune", "ai", "Active", "direction", "oldtarget", "target", "life" };
             DiffSerializer serializer = new DiffSerializer(typeof(NPC), ignoreFields);
-            FileStream fs = new FileStream("NPCs.xml", FileMode.Create);
+            FileStream fs = new FileStream("NPCs.xml", FileMode.OpenOrCreate);
             XmlDictionaryWriter.Create(fs);
             XmlDictionaryWriter writer = XmlDictionaryWriter.CreateTextWriter(fs);
             writer.WriteStartElement("ArrayOf" + typeof(NPC).Name);
@@ -31,6 +32,7 @@ namespace Terraria_Utilities.Serialize
             writer.WriteEndElement();
             writer.Close();
             fs.Close();
+             */
         }
     }
 }

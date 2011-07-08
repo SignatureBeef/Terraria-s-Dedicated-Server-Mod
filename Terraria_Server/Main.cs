@@ -907,7 +907,7 @@ namespace Terraria_Server
                         {
                             if (Main.npcs[i].Active && Main.npcs[i].townNPC)
                             {
-                                if (Main.npcs[i].type != 37 && !Main.npcs[i].homeless)
+                                if (Main.npcs[i].Type != 37 && !Main.npcs[i].homeless)
                                 {
                                     WorldGen.QuickFindHome(i);
                                 }
@@ -915,7 +915,7 @@ namespace Terraria_Server
                                 {
                                     num8++;
                                 }
-                                switch (Main.npcs[i].type)
+                                switch (Main.npcs[i].Type)
                                 {
                                     case 17:
                                         num3++;
@@ -1133,7 +1133,7 @@ namespace Terraria_Server
                 {
                     try
                     {
-                        Main.npcs[i].UpdateNPC(i);
+                        NPC.UpdateNPC(i);
                     }
                     catch (Exception value)
                     {
@@ -1151,7 +1151,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    Main.npcs[i].UpdateNPC(i);
+                    NPC.UpdateNPC(i);
                 }
             }
             for (int i = 0; i < 200; i++)

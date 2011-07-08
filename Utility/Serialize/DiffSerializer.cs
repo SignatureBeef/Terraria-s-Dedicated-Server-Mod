@@ -45,58 +45,70 @@ namespace Terraria_Utilities.Serialize
             }
         }
 
+        private bool IsIgnored(MemberInfo member)
+        {
+            if (ignoreFields != null)
+            {
+                foreach (String ignoreField in ignoreFields)
+                {
+                    if (member.Name.Equals(ignoreField))
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private void Process(XmlDictionaryWriter writer, object nodeValue, object baseValue, String name, Type type)
+        {
+            if (nodeValue != null && !nodeValue.Equals(baseValue))
+            {
+                writer.WriteStartElement(name);
+                if (type.Equals(typeof(bool)))
+                {
+                    if ((bool)nodeValue)
+                    {
+                        writer.WriteString("true");
+                    }
+                    else
+                    {
+                        writer.WriteString("false");
+                    }
+                }
+                else if (type.IsPrimitive || type.Equals(typeof(String)))
+                {
+                    writer.WriteString(nodeValue.ToString());
+                }
+                else
+                {
+                    DiffSerializer innerSerializer = new DiffSerializer(type, null, true);
+                    innerSerializer.WriteObject(writer, nodeValue);
+                }
+                writer.WriteEndElement();
+            }
+        }
+
         public override void WriteObjectContent(XmlDictionaryWriter writer, object graph)
         {
             foreach (PropertyInfo property in baseType.GetProperties())
             {
-                
+                if (IsIgnored(property))
+                {
+                    continue;
+                }
+
+                Process(writer, property.GetValue(graph, null),  property.GetValue(baseObject, null), property.Name, property.PropertyType);
             }
 
             foreach(FieldInfo field in baseType.GetFields())
             {
-                bool found = false;
-                if (ignoreFields != null)
+                if (IsIgnored(field))
                 {
-                    foreach (String ignoreField in ignoreFields)
-                    {
-                        if (field.Name.Equals(ignoreField))
-                        {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (found)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
-                object nodeValue = field.GetValue(graph);
-                if (nodeValue != null && !nodeValue.Equals(field.GetValue(baseObject)))
-                {
-                    writer.WriteStartElement(field.Name);
-                    if (field.FieldType.Equals(typeof(bool)))
-                    {
-                        if ((bool)nodeValue)
-                        {
-                            writer.WriteString("true");
-                        }
-                        else
-                        {
-                            writer.WriteString("false");
-                        }
-                    }
-                    else if (field.FieldType.IsPrimitive || field.FieldType.Equals(typeof(String)))
-                    {
-                        writer.WriteString(nodeValue.ToString());
-                    }
-                    else
-                    {
-                        DiffSerializer innerSerializer = new DiffSerializer(field.FieldType, null, true);
-                        innerSerializer.WriteObject(writer, nodeValue);
-                    }
-                    writer.WriteEndElement();
-                }
+                Process(writer, field.GetValue(graph), field.GetValue(baseObject), field.Name, field.FieldType);
             }
         }
 

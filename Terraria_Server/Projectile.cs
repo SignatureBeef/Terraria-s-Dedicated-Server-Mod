@@ -934,16 +934,16 @@ namespace Terraria_Server
                     {
                         for (int i = 0; i < NPC.MAX_NPCS; i++)
                         {
-                            if (Main.npcs[i].Active && (!Main.npcs[i].friendly || (Main.npcs[i].type == 22 && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || Main.npcs[i].immune[this.Owner] == 0))
+                            if (Main.npcs[i].Active && (!Main.npcs[i].friendly || (Main.npcs[i].Type == 22 && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || Main.npcs[i].immune[this.Owner] == 0))
                             {
                                 bool flag = false;
-                                if (this.type == 11 && (Main.npcs[i].type == 47 || Main.npcs[i].type == 57))
+                                if (this.type == 11 && (Main.npcs[i].Type == 47 || Main.npcs[i].Type == 57))
                                 {
                                     flag = true;
                                 }
                                 else
                                 {
-                                    if (this.type == 31 && Main.npcs[i].type == 69)
+                                    if (this.type == 31 && Main.npcs[i].Type == 69)
                                     {
                                         flag = true;
                                     }
@@ -1101,22 +1101,22 @@ namespace Terraria_Server
                     {
                         if (Main.npcs[i].Active)
                         {
-                            if (Main.npcs[i].type == 46)
+                            if (Main.npcs[i].Type == 46)
                             {
                                 Rectangle value4 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
                                 if (rectangle.Intersects(value4))
                                 {
-                                    Main.npcs[i].Transform(47);
+                                    NPC.Transform(i, 47);
                                 }
                             }
                             else
                             {
-                                if (Main.npcs[i].type == 55)
+                                if (Main.npcs[i].Type == 55)
                                 {
                                     Rectangle value5 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
                                     if (rectangle.Intersects(value5))
                                     {
-                                        Main.npcs[i].Transform(57);
+                                        NPC.Transform(i, 57);
                                     }
                                 }
                             }

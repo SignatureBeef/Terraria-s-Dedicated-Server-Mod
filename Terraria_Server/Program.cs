@@ -66,7 +66,7 @@ namespace Terraria_Server
 
 
 //#if (DEBUG == false)
-                try
+                /*try
                 {
                     if (UpdateManager.performProcess())
                     {
@@ -78,7 +78,7 @@ namespace Terraria_Server
                 {
                     Program.tConsole.WriteLine("Error updating!");
                     Program.tConsole.WriteLine(e.Message);
-                }
+                }*/
 //#endif
 
                 Statics.debugMode = properties.DebugMode;

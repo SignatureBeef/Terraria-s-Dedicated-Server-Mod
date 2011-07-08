@@ -8,6 +8,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server
 {
@@ -150,7 +151,7 @@ namespace Terraria_Server
                 int num = -1;
                 for (int i = 0; i < 1000; i++)
                 {
-                    if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].type == WorldGen.spawnNPC)
+                    if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].Type == WorldGen.spawnNPC)
                     {
                         num = i;
                         break;
@@ -322,7 +323,7 @@ namespace Terraria_Server
                 }
                 if (WorldGen.canSpawn)
                 {
-                    WorldGen.RoomNeeds(Main.npcs[npc].type);
+                    WorldGen.RoomNeeds(Main.npcs[npc].Type);
                     if (WorldGen.canSpawn)
                     {
                         WorldGen.ScoreRoom(npc);
@@ -1375,7 +1376,7 @@ namespace Terraria_Server
                             int num5 = 0;
                             while (flag)
                             {
-                                Main.npcs[num5].SetDefaults(binaryReader.ReadString());
+                                Main.npcs[num5] = NPCRegistry.Create(binaryReader.ReadString());
                                 Main.npcs[num5].Position.X = binaryReader.ReadSingle();
                                 Main.npcs[num5].Position.Y = binaryReader.ReadSingle();
                                 Main.npcs[num5].homeless = binaryReader.ReadBoolean();
@@ -11577,7 +11578,7 @@ namespace Terraria_Server
                     {
                         if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].townNPC)
                         {
-                            WorldGen.spawnNPC = Main.npcs[i].type;
+                            WorldGen.spawnNPC = Main.npcs[i].Type;
                             break;
                         }
                     }

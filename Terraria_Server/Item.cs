@@ -5976,7 +5976,7 @@ namespace Terraria_Server
                         {
                             for (int l = 0; l < NPC.MAX_NPCS; l++)
                             {
-                                if (Main.npcs[l].Active && Main.npcs[l].type == 22)
+                                if (Main.npcs[l].Active && Main.npcs[l].Type == 22)
                                 {
                                     if (Main.netMode == 2)
                                     {
