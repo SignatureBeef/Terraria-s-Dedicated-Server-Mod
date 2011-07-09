@@ -91,11 +91,8 @@ namespace Terraria_Server.Messages
                     tile.lava = (lavaFlag == 1);
                 }
             }
-
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)width, (float)left, (float)y);
-            }
+            
+            NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)width, (float)left, (float)y);
         }
     }
 }

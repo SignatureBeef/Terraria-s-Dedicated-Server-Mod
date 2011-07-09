@@ -23,15 +23,7 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex;
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
-            else
-            {
-                playerIndex = (int)readBuffer[start + 1];
-            }
+            int playerIndex = whoAmI;
 
             if (playerIndex == Main.myPlayer)
             {
@@ -61,37 +53,34 @@ namespace Terraria_Server.Messages
 
             player.Name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
 
-            if (Main.netMode == 2)
-            {
-                if (Netplay.slots[whoAmI].state < SlotState.PLAYING)
-                {
-                    int count = 0;
-                    foreach(Player otherPlayer in Main.players)
-                    {
-                        if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.slots[count].state >= SlotState.CONNECTED)
-                        {
-                            Netplay.slots[whoAmI].Kick (player.Name + " is already on this server.");
-                            return;
-                        }
-                    }
-                }
+			if (Netplay.slots[whoAmI].state < SlotState.PLAYING)
+			{
+				int count = 0;
+				foreach(Player otherPlayer in Main.players)
+				{
+					if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.slots[count].state >= SlotState.CONNECTED)
+					{
+						Netplay.slots[whoAmI].Kick (player.Name + " is already on this server.");
+						return;
+					}
+				}
+			}
 
-                if (player.Name.Length > 20)
-                {
-                    Netplay.slots[whoAmI].Kick ("Name is too long.");
-                    return;
-                }
+			if (player.Name.Length > 20)
+			{
+				Netplay.slots[whoAmI].Kick ("Name is too long.");
+				return;
+			}
 
-                if (player.Name == "")
-                {
-                    Netplay.slots[whoAmI].Kick ("Empty name.");
-                    return;
-                }
+			if (player.Name == "")
+			{
+				Netplay.slots[whoAmI].Kick ("Empty name.");
+				return;
+			}
 
-                Netplay.slots[whoAmI].oldName = player.Name;
-                Netplay.slots[whoAmI].name = player.Name;
-                NetMessage.SendData(4, -1, whoAmI, player.Name, playerIndex);
-            }
+			Netplay.slots[whoAmI].oldName = player.Name;
+			Netplay.slots[whoAmI].name = player.Name;
+			NetMessage.SendData(4, -1, whoAmI, player.Name, playerIndex);
         }
 
 

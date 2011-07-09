@@ -7,7 +7,7 @@ using Terraria_Server.Messages;
 using System.Diagnostics;
 namespace Terraria_Server
 {
-    public static class Netplay
+	public static class Netplay
 	{
 		public const int bufferSize = 1024;
 		public const int maxConnections = 256;
@@ -15,14 +15,14 @@ namespace Terraria_Server
 		public static ServerSlot[] slots = new ServerSlot[256];
 		public static TcpListener tcpListener;
 		public static IPAddress serverListenIP;
-        public static IPAddress serverIP;
-        public static int serverPort = 7777;
-        public static String serverSIP = "0.0.0.0";
+		public static IPAddress serverIP;
+		public static int serverPort = 7777;
+		public static String serverSIP = "0.0.0.0";
 		public static bool disconnect = false;
-        public static String password = "";
-        public static bool spamCheck = false;
-        public static bool ServerUp = false;
-        public static bool anyClients = false;
+		public static String password = "";
+		public static bool spamCheck = false;
+		public static bool ServerUp = false;
+		public static bool anyClients = false;
 		
 		public static void SafeClose (this Socket socket)
 		{
@@ -50,7 +50,6 @@ namespace Terraria_Server
 			Main.myPlayer = 255;
 			Netplay.serverIP = IPAddress.Parse(serverSIP);
 			Netplay.serverListenIP = Netplay.serverIP;
-			Main.netMode = 2;
 			Netplay.disconnect = false;
 			
 			for (int i = 0; i < 256; i++)
@@ -78,12 +77,12 @@ namespace Terraria_Server
 			
 			if (!Netplay.disconnect)
 			{
-                Program.updateThread.Start();
-                Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
-                Program.tConsole.WriteLine("Loading Plugins...");
-                Program.server.getPluginManager().LoadPlugins();
-                Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.getPluginManager().getPluginList().Count.ToString());
-                Statics.serverStarted = true;
+				Program.updateThread.Start();
+				Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
+				Program.tConsole.WriteLine("Loading Plugins...");
+				Program.server.getPluginManager().LoadPlugins();
+				Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.getPluginManager().getPluginList().Count.ToString());
+				Statics.serverStarted = true;
 			}
 			else
 				return;
@@ -375,21 +374,21 @@ namespace Terraria_Server
 				throw new Exception ("Unexpected exception in socket handling code", e);
 		}
 		
-        public static void StartServer()
+		public static void StartServer()
 		{
 			ThreadPool.QueueUserWorkItem(new WaitCallback(Netplay.ServerLoop), 1);
 		}
 
-        public static void StopServer()
-        {
-            Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
-            Program.tConsole.WriteLine("Disabling Plugins");
-            Program.server.getPluginManager().DisablePlugins();
-            Program.tConsole.WriteLine("Closing Connections...");
-            disconnect = true;
-        }
+		public static void StopServer()
+		{
+			Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
+			Program.tConsole.WriteLine("Disabling Plugins");
+			Program.server.getPluginManager().DisablePlugins();
+			Program.tConsole.WriteLine("Closing Connections...");
+			disconnect = true;
+		}
 
-        public static bool SetIP(String newIP)
+		public static bool SetIP(String newIP)
 		{
 			try
 			{
@@ -397,12 +396,12 @@ namespace Terraria_Server
 			}
 			catch
 			{
-                return false;
+				return false;
 			}
 			return true;
 		}
 		
-        public static bool SetIP2(String newIP)
+		public static bool SetIP2(String newIP)
 		{
 			try
 			{
@@ -413,7 +412,7 @@ namespace Terraria_Server
 					if (addressList[i].AddressFamily == AddressFamily.InterNetwork)
 					{
 						Netplay.serverIP = addressList[i];
-                        return true;
+						return true;
 					}
 				}
 			}
@@ -423,7 +422,7 @@ namespace Terraria_Server
 			return false;
 		}
 		
-        public static void Init()
+		public static void Init()
 		{
 			for (int i = 0; i < 257; i++)
 			{
@@ -436,12 +435,12 @@ namespace Terraria_Server
 			}
 		}
 		
-        public static int GetSectionX(int x)
+		public static int GetSectionX(int x)
 		{
 			return x / 200;
 		}
 		
-        public static int GetSectionY(int y)
+		public static int GetSectionY(int y)
 		{
 			return y / 150;
 		}

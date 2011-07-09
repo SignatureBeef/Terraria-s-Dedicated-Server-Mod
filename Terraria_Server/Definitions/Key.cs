@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terraria_Server.Plugin
+namespace Terraria_Server.Definitions
 {
     /// <summary>
     /// Key class for determining player's keypresses.  Currently only up, down, left, right and jump are detectable

@@ -21,21 +21,14 @@ namespace Terraria_Server.Messages
         {
             short npcIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;
-            byte playerIndex = readBuffer[num];
-
-            if (Main.netMode == 2)
-            {
-                playerIndex = (byte)whoAmI;
-            }
+            byte playerIndex = (byte)whoAmI;
 
             Player player = Main.players[(int)playerIndex];
-            Main.npc[(int)npcIndex].StrikeNPC(player.inventory[player.selectedItemIndex].Damage, player.inventory[player.selectedItemIndex].KnockBack, player.direction);
+            Main.npcs[(int)npcIndex].StrikeNPC(player.inventory[player.selectedItemIndex].Damage, player.inventory[player.selectedItemIndex].KnockBack, player.direction);
             
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(24, -1, whoAmI, "", (int)npcIndex, (float)playerIndex);
-                NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
-            }
+            
+            NetMessage.SendData(24, -1, whoAmI, "", (int)npcIndex, (float)playerIndex);
+            NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
         }
     }
 }

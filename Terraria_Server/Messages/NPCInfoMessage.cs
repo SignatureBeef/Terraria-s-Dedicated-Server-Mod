@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages
 {
@@ -45,11 +46,11 @@ namespace Terraria_Server.Messages
 
             String npcName = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
-            NPC npc = Main.npc[(int)npcIndex];
+            NPC npc = Main.npcs[(int)npcIndex];
             if (!npc.Active || npc.Name != npcName)
             {
-                npc.Active = true;
-                npc.SetDefaults(npcName);
+                npc = NPCRegistry.Create(npcName);
+                Main.npcs[(int)npcIndex] = npc;
             }
 
             npc.Position.X = x;

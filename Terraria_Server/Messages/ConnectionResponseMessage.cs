@@ -44,10 +44,6 @@ namespace Terraria_Server.Messages
             }
 
             NetMessage.SendData(6);
-//            if (Netplay.clientSock.state == 2)
-//            {
-//                Netplay.clientSock.state = 3;
-//            }
         }
     }
 }

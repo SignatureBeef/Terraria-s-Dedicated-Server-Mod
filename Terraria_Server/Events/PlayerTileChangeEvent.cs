@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin.Tile;
+using Terraria_Server.Definitions.Tile;
 
 namespace Terraria_Server.Events
 {

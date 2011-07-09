@@ -13,6 +13,8 @@ namespace Terraria_Server
         private const String PLUGINS = "Plugins";
         private const String DATA = "Data";
 
+        private const String NPCDATA = "NPCs.xml";
+
         public static bool cmdMessages = true;
         public static bool debugMode = false;
         public static bool keepRunning = false;
@@ -51,6 +53,14 @@ namespace Terraria_Server
             get
             {
                 return SavePath + Path.DirectorySeparatorChar + DATA;
+            }
+        }
+        
+        public static String NPCXmlPath
+        {
+            get
+            {
+                return SavePath + Path.DirectorySeparatorChar + DATA + Path.DirectorySeparatorChar + NPCDATA;
             }
         }
     }

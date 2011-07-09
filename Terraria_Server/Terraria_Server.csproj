@@ -42,12 +42,12 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <BaseAddress>4194304</BaseAddress>
     <Externalconsole>true</Externalconsole>
+    <DocumentationFile>bin\Debug\Terraria_Server.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -57,10 +57,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile />
     <RegisterForComInterop>False</RegisterForComInterop>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <BaseAddress>4194304</BaseAddress>
+    <DocumentationFile>bin\Release\Terraria_Server.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Terraria_Server.Program</StartupObject>
@@ -112,6 +113,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Definitions\ProjectileType.cs" />
+    <Compile Include="Collections\IRegisterableEntity.cs" />
+    <Compile Include="Collections\NPCRegistry.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Events\NPCSpawnEvent.cs" />
@@ -169,9 +173,10 @@
     <Compile Include="Messages\WorldDataMessage.cs" />
     <Compile Include="Messages\WorldRequestMessage.cs" />
     <Compile Include="Messages\WriteSignMessage.cs" />
-    <Compile Include="Plugin\Key.cs" />
-    <Compile Include="Plugin\Tile\TileAction.cs" />
-    <Compile Include="Plugin\Tile\TileType.cs" />
+    <Compile Include="Definitions\Key.cs" />
+    <Compile Include="Definitions\Tile\TileAction.cs" />
+    <Compile Include="Definitions\Tile\TileType.cs" />
+    <Compile Include="Collections\Registry.cs" />
     <Compile Include="Shops\ArmsDealerShop.cs" />
     <Compile Include="Shops\ClothierShop.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
@@ -181,7 +186,6 @@
     <Compile Include="Shops\DryadShop.cs" />
     <Compile Include="Events\BasePlayerEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
-    <Compile Include="Events\PlayerDestroySignEvent.cs" />
     <Compile Include="Events\PlayerEditSignEvent.cs" />
     <Compile Include="Events\PlayerLoginEvent.cs" />
     <Compile Include="Events\PlayerLogoutEvent.cs" />
@@ -209,14 +213,14 @@
     <Compile Include="NetMessage.cs" />
     <Compile Include="NPC.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="Plugin\DoorOpener.cs" />
+    <Compile Include="Definitions\DoorOpener.cs" />
     <Compile Include="Plugin\Hooks.cs" />
     <Compile Include="Plugin\Party.cs" />
     <Compile Include="Plugin\Plugin.cs" />
     <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
-    <Compile Include="Server\Platform.cs" />
+    <Compile Include="Definitions\Platform.cs" />
     <Compile Include="Server\ServerProperties.cs" />
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -258,6 +262,10 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Definitions\NPCs.xml" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

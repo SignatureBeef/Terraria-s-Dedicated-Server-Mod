@@ -16,30 +16,24 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = readBuffer[num++];
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            int playerIndex = whoAmI;
 
             Player player = Main.players[playerIndex];
             player.hostile = (readBuffer[num] == 1);
 
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(30, -1, whoAmI, "", playerIndex);
+            
+            NetMessage.SendData(30, -1, whoAmI, "", playerIndex);
 
-                String message;
-                if(player.hostile)
-                {
-                    message = " has enabled PvP!";
-                }
-                else
-                {
-                    message = " has disabled PvP!";
-                }
-                NetMessage.SendData(25, -1, -1, player.Name + message, 255, (float)Main.teamColor[player.team].R, (float)Main.teamColor[player.team].G, (float)Main.teamColor[player.team].B);
+            String message;
+            if(player.hostile)
+            {
+                message = " has enabled PvP!";
             }
+            else
+            {
+                message = " has disabled PvP!";
+            }
+            NetMessage.SendData(25, -1, -1, player.Name + message, 255, (float)Main.teamColor[player.team].R, (float)Main.teamColor[player.team].G, (float)Main.teamColor[player.team].B);
         }
     }
 }

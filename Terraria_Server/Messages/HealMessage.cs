@@ -18,10 +18,7 @@ namespace Terraria_Server.Messages
         {
             int playerIndex = (int)readBuffer[num++];
 
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            playerIndex = whoAmI;
 
             int heal = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
@@ -31,10 +28,7 @@ namespace Terraria_Server.Messages
                 Main.players[playerIndex].HealEffect(heal);
             }
 
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(35, -1, whoAmI, "", playerIndex, (float)heal);
-            }
+            NetMessage.SendData(35, -1, whoAmI, "", playerIndex, (float)heal);
         }
     }
 }

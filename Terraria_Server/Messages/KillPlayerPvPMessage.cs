@@ -24,11 +24,8 @@ namespace Terraria_Server.Messages
             {
                 return;
             }
-
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            
+            playerIndex = whoAmI;
 
             int direction = (int)(readBuffer[num++] - 1);
 
@@ -50,10 +47,7 @@ namespace Terraria_Server.Messages
 
             Main.players[playerIndex].KillMe((double)damage, direction, pvp, deathText);
 
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(44, -1, whoAmI, deathText, playerIndex, (float)direction, (float)damage, (float)pvpFlag);
-            }
+            NetMessage.SendData(44, -1, whoAmI, deathText, playerIndex, (float)direction, (float)damage, (float)pvpFlag);
         }
     }
 }

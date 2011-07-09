@@ -5,6 +5,7 @@ using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server.Messages
 {
@@ -29,15 +30,8 @@ namespace Terraria_Server.Messages
             }
 
             Player player = (Player)Main.players[playerIndex].Clone();
-            if (Main.netMode == 1 && !player.Active)
-            {
-                NetMessage.SendData(15);
-            }
-
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            
+            playerIndex = whoAmI;
 
             player.oldVelocity = player.Velocity;
 
@@ -95,7 +89,7 @@ namespace Terraria_Server.Messages
 
             Main.players[playerIndex] = player;
 
-            if (Main.netMode == 2 && Netplay.slots[whoAmI].state == SlotState.PLAYING)
+            if (Netplay.slots[whoAmI].state == SlotState.PLAYING)
             {
                 NetMessage.SendData(13, -1, whoAmI, "", playerIndex);
             }

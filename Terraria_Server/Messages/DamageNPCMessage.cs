@@ -24,7 +24,7 @@ namespace Terraria_Server.Messages
             num += 4;
             int direction = (int)(readBuffer[num] - 1);
 
-            NPC npc = Main.npc[(int)npcIndex];
+            NPC npc = Main.npcs[(int)npcIndex];
             if (damage >= 0)
             {
                 npc.StrikeNPC((int)damage, knockback, direction);
@@ -35,11 +35,9 @@ namespace Terraria_Server.Messages
                 npc.HitEffect(0, 10.0);
                 npc.Active = false;
             }
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction);
-                NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
-            }
+            
+            NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction);
+            NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
         }
     }
 }

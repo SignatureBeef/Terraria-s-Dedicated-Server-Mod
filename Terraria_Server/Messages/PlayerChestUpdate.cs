@@ -22,23 +22,7 @@ namespace Terraria_Server.Messages
             num += 4;
             int y = BitConverter.ToInt32(readBuffer, num);
 
-            if (Main.netMode == 1)
-            {
-                Player player = Main.players[Main.myPlayer];
-                if (player.chest == -1
-                    || (player.chest != inventoryIndex && inventoryIndex != -1))
-                {
-                    Main.playerInventory = true;
-                }
-
-                player.chest = inventoryIndex;
-                player.chestX = x;
-                player.chestY = y;
-            }
-            else
-            {
-                Main.players[whoAmI].chest = inventoryIndex;
-            }
+            Main.players[whoAmI].chest = inventoryIndex;
         }
     }
 }

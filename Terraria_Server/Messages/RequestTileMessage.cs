@@ -71,21 +71,21 @@ namespace Terraria_Server.Messages
             NetMessage.SendData(11, whoAmI, -1, "", sectionX - 2, (float)(sectionY - 1), (float)(sectionX + 2), (float)(sectionY + 1));
 
             //Can't switch to a for each because there are 201 items.
-            for (int num13 = 0; num13 < 200; num13++)
+            for (int itemIndex = 0; itemIndex < 200; itemIndex++)
             {
-                if (Main.item[num13].Active)
+                if (Main.item[itemIndex].Active)
                 {
-                    NetMessage.SendData(21, whoAmI, -1, "", num13);
-                    NetMessage.SendData(22, whoAmI, -1, "", num13);
+                    NetMessage.SendData(21, whoAmI, -1, "", itemIndex);
+                    NetMessage.SendData(22, whoAmI, -1, "", itemIndex);
                 }
             }
             
             //Can't switch to a for each because there are 1001 NPCs.
-            for (int num14 = 0; num14 < 1000; num14++)
+            for (int npcIndex = 0; npcIndex < NPC.MAX_NPCS; npcIndex++)
             {
-                if (Main.npc[num14].Active)
+                if (Main.npcs[npcIndex].Active)
                 {
-                    NetMessage.SendData(23, whoAmI, -1, "", num14);
+                    NetMessage.SendData(23, whoAmI, -1, "", npcIndex);
                 }
             }
             NetMessage.SendData(49, whoAmI);

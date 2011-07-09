@@ -1,5 +1,6 @@
 ﻿using System;
 using Terraria_Server.Plugin;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server.Messages
 {
@@ -40,11 +41,8 @@ namespace Terraria_Server.Messages
             {
                 WorldGen.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.players[whoAmI]);
             }
-
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(19, -1, whoAmI, "", (int)doorAction, (float)x, (float)y, (float)doorDirection);
-            }
+                        
+            NetMessage.SendData(19, -1, whoAmI, "", (int)doorAction, (float)x, (float)y, (float)doorDirection);
         }
     }
 }
