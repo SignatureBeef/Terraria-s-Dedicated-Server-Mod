@@ -1196,7 +1196,7 @@ namespace Terraria_Server
                                     }
                                     for (int n = 0; n < 1000; n++)
                                     {
-                                        NPC nPC = (NPC)Main.npc[n].Clone();
+                                        NPC nPC = (NPC)Main.npcs[n].Clone();
                                         if (nPC.Active && nPC.townNPC)
                                         {
                                             binaryWriter.Write(true);
