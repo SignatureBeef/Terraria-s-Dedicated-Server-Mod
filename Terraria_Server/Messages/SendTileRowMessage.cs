@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Terraria_Server.Messages
 {
-    public class SendTileLoadingMessage : IMessage
+    public class SendTileRowMessage : IMessage
     {
         public Packet GetPacket()
         {
-            return Packet.SEND_TILE_LOADING_MESSAGE;
+            return Packet.SEND_TILE_ROW;
         }
 
         public int? GetRequiredNetMode()

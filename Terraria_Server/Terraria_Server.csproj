@@ -160,7 +160,6 @@
     <Compile Include="Messages\ReceivingPlayerJoinedMessage.cs" />
     <Compile Include="Messages\RequestTileMessage.cs" />
     <Compile Include="Messages\SendSpawn.cs" />
-    <Compile Include="Messages\SendTileLoadingMessage.cs" />
     <Compile Include="Messages\SendTileLoadingRequestMessage.cs" />
     <Compile Include="Messages\SendTileResponseMessage.cs" />
     <Compile Include="Messages\StrikeNPCMessage.cs" />
@@ -241,6 +240,8 @@
     <Compile Include="Messages\messageBuffer.cs" />
     <Compile Include="NetPlay.cs" />
     <Compile Include="ServerSlot.cs" />
+    <Compile Include="Server\PacketWriter.cs" />
+    <Compile Include="Messages\SendTileRowMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

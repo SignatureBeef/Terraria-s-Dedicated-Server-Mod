@@ -282,7 +282,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes35, 0, NetMessage.buffer[num].writeBuffer, num3, bytes35.Length);
                                 break;
                             }
-                        case (int)Packet.SEND_TILE_LOADING_MESSAGE:
+                        case (int)Packet.SEND_TILE_ROW:
                             {
                                 short num4 = (short)number;
                                 int num5 = (int)number2;
@@ -974,7 +974,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes154, 0, NetMessage.buffer[num].writeBuffer, num3, bytes154.Length);
                                 break;
                             }
-                        case 35:
+                        case (int)Packet.HEAL_PLAYER:
                             {
                                 byte[] bytes156 = BitConverter.GetBytes(packetId);
                                 byte b41 = (byte)number;
@@ -988,7 +988,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes157, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
                                 break;
                             }
-                        case 36:
+                        case (int)Packet.ENTER_ZONE:
                             {
                                 byte[] bytes159 = BitConverter.GetBytes(packetId);
                                 byte b42 = (byte)number;
@@ -1107,7 +1107,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes179, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
                                 break;
                             }
-                        case 43:
+                        case (int)Packet.PLAYER_USE_MANA_UPDATE:
                             {
                                 byte[] bytes181 = BitConverter.GetBytes(packetId);
                                 byte b51 = (byte)number;
@@ -1121,7 +1121,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes182, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
                                 break;
                             }
-                        case 44:
+                        case (int)Packet.KILL_PLAYER_PVP:
                             {
                                 byte[] bytes184 = BitConverter.GetBytes(packetId);
                                 byte b52 = (byte)number;
@@ -1145,7 +1145,7 @@ namespace Terraria_Server
                                 num3 += bytes186.Length;
                                 break;
                             }
-                        case 45:
+                        case (int)Packet.PLAYER_JOIN_PARTY:
                             {
                                 byte[] bytes188 = BitConverter.GetBytes(packetId);
                                 byte b55 = (byte)number;
@@ -1159,7 +1159,7 @@ namespace Terraria_Server
                                 NetMessage.buffer[num].writeBuffer[num3] = b56;
                                 break;
                             }
-                        case 46:
+                        case (int)Packet.READ_SIGN:
                             {
                                 byte[] bytes188 = BitConverter.GetBytes(packetId);
                                 byte[] bytes189 = BitConverter.GetBytes(number);
@@ -1173,7 +1173,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes190, 0, NetMessage.buffer[num].writeBuffer, num3, bytes190.Length);
                                 break;
                             }
-                        case 47:
+                        case (int)Packet.WRITE_SIGN:
                             {
                                 byte[] bytes194 = BitConverter.GetBytes(packetId);
                                 byte[] bytes195 = BitConverter.GetBytes((short)number);
@@ -1194,7 +1194,7 @@ namespace Terraria_Server
                                 num3 += bytes198.Length;
                                 break;
                             }
-                        case 48:
+                        case (int)Packet.FLOW_LIQUID:
                             {
                                 byte[] bytes200 = BitConverter.GetBytes(packetId);
                                 byte[] bytes201 = BitConverter.GetBytes(number);
@@ -1227,7 +1227,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes202, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
                                 break;
                             }
-                        case 50:
+                        case (int)Packet.PLAYER_BUFFS:
                             {
                                 byte[] bytes206 = BitConverter.GetBytes(packetId);
                                 byte b58 = (byte)number;
@@ -1244,7 +1244,7 @@ namespace Terraria_Server
                                 }
                                 break;
                             }
-                        case 51:
+                        case (int)Packet.SUMMON_SKELETRON:
                             {
                                 byte[] bytes208 = BitConverter.GetBytes(packetId);
                                 num2++;

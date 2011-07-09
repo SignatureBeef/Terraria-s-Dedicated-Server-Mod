@@ -1,6 +1,4 @@
-﻿
-
-namespace Terraria_Server
+﻿namespace Terraria_Server
 {
     public enum Packet
     {
@@ -13,7 +11,7 @@ namespace Terraria_Server
         WORLD_DATA = 0x07,
         REQUEST_TILE_BLOCK = 0x08,
         SEND_TILE_LOADING = 0x09,
-        SEND_TILE_LOADING_MESSAGE = 0x0A,
+        SEND_TILE_ROW = 0x0A,
         SEND_TILE_CONFIRM = 0x0B,
         RECEIVING_PLAYER_JOINED = 0x0C,
         PLAYER_STATE_UPDATE = 0x0D,
