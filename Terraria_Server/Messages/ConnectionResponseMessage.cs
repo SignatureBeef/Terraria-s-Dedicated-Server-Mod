@@ -17,11 +17,6 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            if (Netplay.clientSock.state == 1)
-            {
-                Netplay.clientSock.state = 2;
-            }
-
             int myPlayerNum = (int)readBuffer[start + 1];
             if (myPlayerNum != Main.myPlayer)
             {
@@ -49,10 +44,10 @@ namespace Terraria_Server.Messages
             }
 
             NetMessage.SendData(6);
-            if (Netplay.clientSock.state == 2)
-            {
-                Netplay.clientSock.state = 3;
-            }
+//            if (Netplay.clientSock.state == 2)
+//            {
+//                Netplay.clientSock.state = 3;
+//            }
         }
     }
 }

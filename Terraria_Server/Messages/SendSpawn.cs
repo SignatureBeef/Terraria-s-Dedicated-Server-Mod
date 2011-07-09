@@ -11,16 +11,16 @@ namespace Terraria_Server.Messages
 
         public int? GetRequiredNetMode()
         {
-            return null;
+            return 1;
         }
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            if (Netplay.clientSock.state == 6)
-            {
-                Netplay.clientSock.state = 10;
-                Main.players[Main.myPlayer].Spawn();
-            }
+//            if (Netplay.clientSock.state == 6)
+//            {
+//                Netplay.clientSock.state = 10;
+//                Main.players[Main.myPlayer].Spawn();
+//            }
         }
     }
 }

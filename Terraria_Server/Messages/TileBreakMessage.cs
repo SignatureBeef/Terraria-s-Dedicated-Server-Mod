@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -84,15 +84,15 @@ namespace Terraria_Server.Messages
                 {
                     if (tileAction == 0 || tileAction == 2 || tileAction == 4)
                     {
-                        Netplay.serverSock[whoAmI].spamDelBlock += 1f;
+                        Netplay.slots[whoAmI].spamDelBlock += 1f;
                     }
                     else if (tileAction == 1 || tileAction == 3)
                     {
-                        Netplay.serverSock[whoAmI].spamAddBlock += 1f;
+                        Netplay.slots[whoAmI].spamAddBlock += 1f;
                     }
                 }
 
-                if (!Netplay.serverSock[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+                if (!Netplay.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
                 {
                     failFlag = true;
                 }

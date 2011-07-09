@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 
@@ -50,7 +50,7 @@ namespace Terraria_Server.Messages
                 projectile.SetDefaults((int)type);
                 if (Main.netMode == 2)
                 {
-                    Netplay.serverSock[whoAmI].spamProjectile += 1f;
+                    Netplay.slots[whoAmI].spamProjectile += 1f;
                 }
             }
 

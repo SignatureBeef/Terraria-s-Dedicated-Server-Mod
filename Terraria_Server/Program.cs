@@ -207,6 +207,7 @@ namespace Terraria_Server
 
                 commandParser = new CommandParser(server);
                 Program.tConsole.WriteLine("You can now insert Commands.");
+                
                 while (Statics.IsActive)
                 {
                     try
@@ -221,9 +222,8 @@ namespace Terraria_Server
                     {
                         Program.tConsole.WriteLine("Issue parsing Console Command");
                     }
-
                 }
-                while (Statics.serverStarted) { }
+                while (Statics.serverStarted) { Thread.Sleep(10); }
                 Program.tConsole.WriteLine("Exiting...");
                 Program.tConsole.Close();
             }
@@ -325,7 +325,8 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    Console.WriteLine(dataText);
+                    Console.Write ("\r");
+                    Console.Write(dataText);
                 }
             }
             else

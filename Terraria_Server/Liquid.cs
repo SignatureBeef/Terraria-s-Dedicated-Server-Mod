@@ -754,7 +754,7 @@ namespace Terraria_Server
                                     {
                                         for (int k = 0; k < Main.maxSectionsY; k++)
                                         {
-                                            Netplay.serverSock[i].tileSection[j, k] = false;
+                                            Netplay.slots[i].tileSection[j, k] = false;
                                         }
                                     }
                                 }

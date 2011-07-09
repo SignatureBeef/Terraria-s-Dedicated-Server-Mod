@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -63,14 +63,14 @@ namespace Terraria_Server.Messages
 
             if (Main.netMode == 2)
             {
-                if (Netplay.serverSock[whoAmI].state < 10)
+                if (Netplay.slots[whoAmI].state < SlotState.PLAYING)
                 {
                     int count = 0;
                     foreach(Player otherPlayer in Main.players)
                     {
-                        if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.serverSock[count].active)
+                        if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.slots[count].state >= SlotState.CONNECTED)
                         {
-                            NetMessage.SendData(2, whoAmI, -1, player.Name + " is already on this server.");
+                            Netplay.slots[whoAmI].Kick (player.Name + " is already on this server.");
                             return;
                         }
                     }
@@ -78,18 +78,18 @@ namespace Terraria_Server.Messages
 
                 if (player.Name.Length > 20)
                 {
-                    NetMessage.SendData(2, whoAmI, -1, "Name is too long.");
+                    Netplay.slots[whoAmI].Kick ("Name is too long.");
                     return;
                 }
 
                 if (player.Name == "")
                 {
-                    NetMessage.SendData(2, whoAmI, -1, "Empty name.");
+                    Netplay.slots[whoAmI].Kick ("Empty name.");
                     return;
                 }
 
-                Netplay.serverSock[whoAmI].oldName = player.Name;
-                Netplay.serverSock[whoAmI].name = player.Name;
+                Netplay.slots[whoAmI].oldName = player.Name;
+                Netplay.slots[whoAmI].name = player.Name;
                 NetMessage.SendData(4, -1, whoAmI, player.Name, playerIndex);
             }
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace Terraria_Server.Messages
@@ -20,11 +20,11 @@ namespace Terraria_Server.Messages
             String password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             if (password == Netplay.password)
             {
-                Netplay.serverSock[whoAmI].state = 1;
+                Netplay.slots[whoAmI].state = SlotState.ACCEPTED;
                 NetMessage.SendData(3, whoAmI);
                 return;
             }
-            NetMessage.SendData(2, whoAmI, -1, "Incorrect password.");
+            Netplay.slots[whoAmI].Kick ("Incorrect password.");
         }
     }
 }

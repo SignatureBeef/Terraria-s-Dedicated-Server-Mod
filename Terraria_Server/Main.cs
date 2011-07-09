@@ -658,9 +658,9 @@ namespace Terraria_Server
             }
             for (int i = 0; i < Main.maxNetplayers; i++)
             {
-                if (Main.players[i].Active && Netplay.serverSock[i].active)
+                if (Main.players[i].Active && Netplay.slots[i].state >= SlotState.CONNECTED)
                 {
-                    Netplay.serverSock[i].SpamUpdate();
+                    Netplay.slots[i].SpamUpdate();
                 }
             }
             Math.IEEERemainder((double)Main.NetplayCounter, 60.0);
@@ -699,12 +699,12 @@ namespace Terraria_Server
 
             for (int i = 0; i < 255; i++)
             {
-                if (Netplay.serverSock[i].active)
+                if (Netplay.slots[i].state >= SlotState.CONNECTED)
                 {
-                    Netplay.serverSock[i].timeOut++;
-                    if (!Main.stopTimeOuts && Netplay.serverSock[i].timeOut > 60 * Main.timeOut)
+                    Netplay.slots[i].timeOut++;
+                    if (!Main.stopTimeOuts && Netplay.slots[i].timeOut > 60 * Main.timeOut)
                     {
-                        Netplay.serverSock[i].kill = true;
+                        Netplay.slots[i].state = SlotState.SHUTDOWN;
                     }
                 }
 
@@ -720,7 +720,7 @@ namespace Terraria_Server
                         {
                             if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
                             {
-                                if (!Netplay.serverSock[i].tileSection[j, k])
+                                if (!Netplay.slots[i].tileSection[j, k])
                                 {
                                     num3++;
                                 }
@@ -732,15 +732,15 @@ namespace Terraria_Server
                     {
                         int num4 = num3 * 150;
                         NetMessage.SendData(9, i, -1, "Recieving tile data", num4);
-                        Netplay.serverSock[i].statusText2 = "is recieving tile data";
-                        Netplay.serverSock[i].statusMax += num4;
+                        Netplay.slots[i].statusText2 = "is recieving tile data";
+                        Netplay.slots[i].statusMax += num4;
                         for (int j = sectionX - 1; j < sectionX + 2; j++)
                         {
                             for (int k = sectionY - 1; k < sectionY + 2; k++)
                             {
                                 if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
                                 {
-                                    if (!Netplay.serverSock[i].tileSection[j, k])
+                                    if (!Netplay.slots[i].tileSection[j, k])
                                     {
                                         NetMessage.SendSection(i, j, k);
                                         NetMessage.SendData(11, i, -1, "", j, (float)k, (float)j, (float)k);

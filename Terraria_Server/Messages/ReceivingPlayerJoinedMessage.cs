@@ -32,11 +32,11 @@ namespace Terraria_Server.Messages
             num += 4;
             player.Spawn();
 
-            if (Main.netMode == 2 && Netplay.serverSock[whoAmI].state >= 3)
+            if (Main.netMode == 2 && Netplay.slots[whoAmI].state >= SlotState.SENDING_TILES)
             {
-                if (Netplay.serverSock[whoAmI].state == 3)
+                if (Netplay.slots[whoAmI].state == SlotState.SENDING_TILES)
                 {
-                    Netplay.serverSock[whoAmI].state = 10;
+                    Netplay.slots[whoAmI].state = SlotState.PLAYING;
                     NetMessage.greetPlayer(whoAmI);
                     NetMessage.syncPlayers();
                     NetMessage.buffer[whoAmI].broadcast = true;

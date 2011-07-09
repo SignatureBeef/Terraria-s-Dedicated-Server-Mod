@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -95,7 +95,7 @@ namespace Terraria_Server.Messages
 
             Main.players[playerIndex] = player;
 
-            if (Main.netMode == 2 && Netplay.serverSock[whoAmI].state == 10)
+            if (Main.netMode == 2 && Netplay.slots[whoAmI].state == SlotState.PLAYING)
             {
                 NetMessage.SendData(13, -1, whoAmI, "", playerIndex);
             }

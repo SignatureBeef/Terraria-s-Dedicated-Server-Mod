@@ -4939,9 +4939,9 @@ namespace Terraria_Server
             return result;
         }
 
-        public ServerSock getSocket()
+        public ServerSlot Slot
         {
-            return Netplay.serverSock[this.whoAmi];
+            get { return Netplay.slots[this.whoAmi]; }
         }
 
         public void Kick(String Reason = null)
@@ -4953,7 +4953,7 @@ namespace Terraria_Server
                 message = Reason;
             }
 
-            NetMessage.SendData(2, this.whoAmi, -1, message);
+            Netplay.slots[whoAmi].Kick (message);
         }
 
         public String getIPAddress()

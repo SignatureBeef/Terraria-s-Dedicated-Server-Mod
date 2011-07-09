@@ -258,6 +258,11 @@ namespace Terraria_Server.Commands
                     {
                         goto case (int)Commands.Command.CONSOLE_EXIT;
                     }
+                case (int)Commands.Command.COMMAND_SLOTS:
+                    {
+                        Commands.Slots (sender, server);
+                        break;
+                    }
                 default:
                     {
                         Program.tConsole.WriteLine("Uknown Command Issued.");
