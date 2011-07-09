@@ -45,9 +45,9 @@ namespace Terraria_Server.Messages
             
             int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);
             Projectile projectile = (Projectile)Main.projectile[projectileIndex].Clone();
-            if (!projectile.active || projectile.type != (int)type)
+            if (!projectile.active || projectile.type != (ProjectileType)Enum.ToObject(typeof(ProjectileType), (int)type))
             {
-                projectile.SetDefaults((int)type);
+                projectile.SetDefaults((ProjectileType)Enum.ToObject(typeof(ProjectileType), type));
                 if (Main.netMode == 2)
                 {
                     Netplay.serverSock[whoAmI].spamProjectile += 1f;
@@ -60,7 +60,7 @@ namespace Terraria_Server.Messages
             projectile.Velocity.X = vX;
             projectile.Velocity.Y = vY;
             projectile.damage = (int)damage;
-            projectile.type = (int)type;
+            projectile.type = (ProjectileType)Enum.ToObject(typeof(ProjectileType), type);
             projectile.Owner = (int)projectileOwner;
             projectile.knockBack = knockBack;
 

@@ -12676,7 +12676,7 @@ namespace Terraria_Server
                     num58 = (float)num53 / num58;
                     num56 *= num58;
                     num57 *= num58;
-                    Projectile.NewProjectile(vector.X, vector.Y, num56, num57, 12, 1000, 10f, Main.myPlayer);
+                    Projectile.NewProjectile(vector.X, vector.Y, num56, num57, ProjectileType.FALLEN_STAR, 1000, 10f, Main.myPlayer);
                 }
             }
         }
@@ -19404,14 +19404,18 @@ namespace Terraria_Server
                                     }
                                     if (flag3)
                                     {
-                                        int type = 31;
+                                        ProjectileType type;
                                         if (num9 == 59)
                                         {
-                                            type = 39;
+                                            type = ProjectileType.BALL_MUD;
                                         }
-                                        if (num9 == 57)
+                                        else if (num9 == 57)
                                         {
-                                            type = 40;
+                                            type = ProjectileType.BALL_ASH;
+                                        }
+                                        else
+                                        {
+                                            type = ProjectileType.BALL_SAND_DROP;
                                         }
                                         Main.tile[i, j].Active = false;
                                         int num25 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type, 10, 0f, Main.myPlayer);
@@ -19431,14 +19435,18 @@ namespace Terraria_Server
                                     }
                                     if (flag4)
                                     {
-                                        int type2 = 31;
+                                        ProjectileType type2;
                                         if (num9 == 59)
                                         {
-                                            type2 = 39;
+                                            type2 = ProjectileType.BALL_MUD;
                                         }
                                         if (num9 == 57)
                                         {
-                                            type2 = 40;
+                                            type2 = ProjectileType.BALL_ASH;
+                                        }
+                                        else
+                                        {
+                                            type2 = ProjectileType.BALL_SAND_DROP;
                                         }
                                         Main.tile[i, j].Active = false;
                                         int num26 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type2, 10, 0f, Main.myPlayer);

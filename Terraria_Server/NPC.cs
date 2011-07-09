@@ -5154,7 +5154,7 @@ namespace Terraria_Server
                                                                                 num128 *= num130;
                                                                                 num129 *= num130;
                                                                                 int num131 = 15;
-                                                                                int num132 = 38;
+                                                                                ProjectileType num132 = ProjectileType.FEATHER_HARPY;
                                                                                 int num133 = Projectile.NewProjectile(vector18.X, vector18.Y, num128, num129, num132, num131, 0f, Main.myPlayer);
                                                                                 Main.projectile[num133].timeLeft = 300;
                                                                             }
@@ -5180,7 +5180,7 @@ namespace Terraria_Server
                                                                                 num135 *= num137;
                                                                                 num136 *= num137;
                                                                                 int num138 = 25;
-                                                                                int num139 = 44;
+                                                                                ProjectileType num139 = ProjectileType.SICKLE_DEMON;
                                                                                 int num140 = Projectile.NewProjectile(vector19.X, vector19.Y, num135, num136, num139, num138, 0f, Main.myPlayer);
                                                                                 Main.projectile[num140].timeLeft = 300;
                                                                                 return;
@@ -5851,7 +5851,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             this.ai[0] = 200f;
                                                                                             int num162 = 10;
-                                                                                            int num163 = 31;
+                                                                                            ProjectileType num163 = ProjectileType.BALL_SAND_DROP;
                                                                                             int num164 = Projectile.NewProjectile(vector21.X, vector21.Y, num159, num160, num163, num162, 0f, Main.myPlayer);
                                                                                             Main.projectile[num164].ai[0] = 2f;
                                                                                             Main.projectile[num164].timeLeft = 300;

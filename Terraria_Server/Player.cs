@@ -2725,7 +2725,7 @@ namespace Terraria_Server
                     {
                         num += (float)Main.rand.Next(-30, 31) * 0.1f;
                     }
-                    int num2 = Projectile.NewProjectile(this.Position.X + (float)(this.width / 2), this.Position.Y + (float)(this.head / 2), (float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + num, (float)Main.rand.Next(-40, -20) * 0.1f, 43, this.statLifeMax + this.statManaMax, 0f, Main.myPlayer);
+                    int num2 = Projectile.NewProjectile(this.Position.X + (float)(this.width / 2), this.Position.Y + (float)(this.head / 2), (float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + num, (float)Main.rand.Next(-40, -20) * 0.1f, ProjectileType.TOMBSTONE, this.statLifeMax + this.statManaMax, 0f, Main.myPlayer);
                     Main.projectile[num2].miscText = this.Name + deathText;
                 }
                 if (Main.myPlayer == this.whoAmi)
@@ -2915,7 +2915,7 @@ namespace Terraria_Server
             if (controlUseItem && itemAnimation == 0 && releaseUseItem && selectedItem.UseStyle > 0)
             {
                 bool flag = true;
-                if (selectedItem.Shoot == 6 || selectedItem.Shoot == 19 || selectedItem.Shoot == 33)
+                if (selectedItem.Shoot == ProjectileType.BOOMERANG_ENCHANTED || selectedItem.Shoot == ProjectileType.FLAMARANG || selectedItem.Shoot == ProjectileType.CHAKRUM_THORN)
                 {
                     for (int j = 0; j < Main.maxProjectiles; j++)
                     {
@@ -3002,7 +3002,7 @@ namespace Terraria_Server
                     itemAnimationMax = (int)((float)selectedItem.UseAnimation * meleeSpeed);
                 }
 
-                if (flag && selectedItem.Shoot == 18)
+                if (flag && selectedItem.Shoot == ProjectileType.ORB_OF_LIGHT)
                 {
                     for (int j = 0; j < 1000; j++)
                     {
@@ -3170,12 +3170,12 @@ namespace Terraria_Server
             {
                 if (selectedItem.Shoot > 0 && itemAnimation > 0 && itemTime == 0)
                 {
-                    int shoot = selectedItem.Shoot;
+                    ProjectileType shoot = selectedItem.Shoot;
                     float shootSpeed = selectedItem.ShootSpeed;
                     bool flag2 = false;
                     int damage = selectedItem.Damage;
                     float knockBack = selectedItem.KnockBack;
-                    if (shoot == 13 || shoot == 32)
+                    if (shoot == ProjectileType.HOOK || shoot == ProjectileType.WHIP_IVY)
                     {
                         grappling[0] = -1;
                         grapCount = 0;
@@ -3183,7 +3183,7 @@ namespace Terraria_Server
                         {
                             if (Main.projectile[j].active && Main.projectile[j].Owner == i)
                             {
-                                if (Main.projectile[j].type == 13)
+                                if (Main.projectile[j].type == ProjectileType.HOOK)
                                 {
                                     Main.projectile[j].Kill();
                                 }
@@ -3223,7 +3223,7 @@ namespace Terraria_Server
                         flag2 = true;
                     }
 
-                    if (shoot == 9 && (double)Position.Y > Main.worldSurface * 16.0 + (double)(Main.screenHeight / 2))
+                    if (shoot == ProjectileType.STARFURY && (double)Position.Y > Main.worldSurface * 16.0 + (double)(Main.screenHeight / 2))
                     {
                         flag2 = false;
                     }
@@ -3235,15 +3235,15 @@ namespace Terraria_Server
                             damage = (int)Math.Round((double)((float)damage * this.magicBoost));
                         }
 
-                        if (shoot == 1 && selectedItem.Type == 120)
+                        if (shoot == ProjectileType.ARROW_WOODEN && selectedItem.Type == 120)
                         {
-                            shoot = 2;
+                            shoot = ProjectileType.ARROW_FIRE;
                         }
 
                         itemTime = selectedItem.UseTime;
                         direction = -1;
                         Vector2 vector = new Vector2(Position.X + (float)width * 0.5f, Position.Y + (float)height * 0.5f);
-                        if (shoot == 9)
+                        if (shoot == ProjectileType.STARFURY)
                         {
                             vector = new Vector2(Position.X + (float)width * 0.5f + (float)(Main.rand.Next(601) * -(float)direction), Position.Y + (float)height * 0.5f - 300f - (float)Main.rand.Next(100));
                             knockBack = 0f;
