@@ -70,20 +70,11 @@ namespace Terraria_Server.Messages
             {
                 Netplay.serverSock[whoAmI].timeOut = 0;
             }
-            else
-            {
-                Netplay.clientSock.timeOut = 0;
-            }
 
             int num = start + 1;
             byte bufferData = readBuffer[start];
 
-            if (Main.netMode == 1 && Netplay.clientSock.statusMax > 0)
-            {
-                Netplay.clientSock.statusCount++;
-            }
-
-            if (Main.netMode == 2 && bufferData != 38)
+            if (bufferData != 38)
             {
                 if (Netplay.serverSock[whoAmI].state == -1)
                 {
@@ -98,7 +89,7 @@ namespace Terraria_Server.Messages
             }
 
             IMessage message = messageArray[bufferData];
-            if (message != null && (message.GetRequiredNetMode() == null || message.GetRequiredNetMode() == Main.netMode))
+            if (message != null && (message.GetRequiredNetMode() == null || message.GetRequiredNetMode() == 2))
             {
                 message.Process(start, length, num, whoAmI, readBuffer, bufferData);
             }

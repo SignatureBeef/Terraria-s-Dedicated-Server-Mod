@@ -9,6 +9,7 @@ using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
 using Terraria_Server.Collections;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {
@@ -263,10 +264,8 @@ namespace Terraria_Server
                         }
                     }
                     Main.npcs[num7].netUpdate = true;
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendData(25, -1, -1, Main.npcs[num7].Name + " has arrived!", 255, 50f, 125f, 255f);
-                    }
+                    
+                    NetMessage.SendData(25, -1, -1, Main.npcs[num7].Name + " has arrived!", 255, 50f, 125f, 255f);
                 }
                 else
                 {
@@ -611,10 +610,6 @@ namespace Terraria_Server
         {
             bool flag = true;
             int num = 0;
-            if (Main.netMode == 1)
-            {
-                return;
-            }
             for (int i = 0; i < 255; i++)
             {
                 if (Main.players[i].Active)
@@ -767,14 +762,9 @@ namespace Terraria_Server
                 }
             }
             WorldGen.stopDrops = false;
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(25, -1, -1, "A meteorite has landed!", 255, 50f, 255f, 130f);
-            }
-            if (Main.netMode != 1)
-            {
-                NetMessage.SendTileSquare(-1, i, j, 30);
-            }
+            
+            NetMessage.SendData(25, -1, -1, "A meteorite has landed!", 255, 50f, 255f, 130f);
+            NetMessage.SendTileSquare(-1, i, j, 30);
             return true;
         }
         
@@ -784,106 +774,6 @@ namespace Terraria_Server
             Main.rightWorld = (float)(Main.maxTilesX * 16);
             Main.maxSectionsX = Main.maxTilesX / 200;
             Main.maxSectionsY = Main.maxTilesY / 150;
-        }
-
-        public static void SaveAndQuitCallBack(object threadContext)
-        {
-            Main.menuMode = 10;
-            Main.gameMenu = true;
-            Player.SavePlayer(Main.players[Main.myPlayer]);
-            if (Main.netMode == 0)
-            {
-                WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
-            }
-            else
-            {
-                Netplay.disconnect = true;
-                Main.netMode = 0;
-            }
-            Main.menuMode = 0;
-        }
-        
-        public static void SaveAndQuit()
-        {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.SaveAndQuitCallBack), 1);
-        }
-        
-        public static void playWorldCallBack(object threadContext)
-        {
-            if (Main.rand == null)
-            {
-                Main.rand = new Random((int)DateTime.Now.Ticks);
-            }
-            for (int i = 0; i < 255; i++)
-            {
-                if (i != Main.myPlayer)
-                {
-                    Main.players[i].Active = false;
-                }
-            }
-            WorldGen.loadWorld();
-            if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-            {
-                WorldGen.loadWorld();
-                if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-                {
-                    if (File.Exists(Program.server.getWorld().SavePath + ".bak"))
-                    {
-                        WorldGen.worldBackup = true;
-                    }
-                    else
-                    {
-                        WorldGen.worldBackup = false;
-                    }
-                    if (!Main.dedServ)
-                    {
-                        if (WorldGen.worldBackup)
-                        {
-                            Main.menuMode = 200;
-                            return;
-                        }
-                        Main.menuMode = 201;
-                        return;
-                    }
-                    else
-                    {
-                        if (!WorldGen.worldBackup)
-                        {
-                            Console.WriteLine("Load failed!  No backup found.");
-                            return;
-                        }
-                        File.Copy(Program.server.getWorld().SavePath + ".bak", Program.server.getWorld().SavePath, true);
-                        File.Delete(Program.server.getWorld().SavePath + ".bak");
-                        WorldGen.loadWorld();
-                        if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-                        {
-                            WorldGen.loadWorld();
-                            if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-                            {
-                                Console.WriteLine("Load failed!");
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            WorldGen.EveryTileFrame();
-            if (Main.gameMenu)
-            {
-                Main.gameMenu = false;
-            }
-            Main.players[Main.myPlayer].Spawn();
-            Main.players[Main.myPlayer].UpdatePlayer(Main.myPlayer);
-            Main.dayTime = WorldGen.tempDayTime;
-            Main.time = WorldGen.tempTime;
-            Main.moonPhase = WorldGen.tempMoonPhase;
-            Main.bloodMoon = WorldGen.tempBloodMoon;
-            Main.resetClouds = true;
-        }
-        
-        public static void playWorld()
-        {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.playWorldCallBack), 1);
         }
         
         public static void saveAndPlayCallBack(object threadContext)
@@ -904,66 +794,6 @@ namespace Terraria_Server
         public static void saveToonWhilePlaying()
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.saveToonWhilePlayingCallBack), 1);
-        }
-        
-        public static void serverLoadWorldCallBack(object threadContext)
-        {
-            WorldGen.loadWorld();
-            if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-            {
-                WorldGen.loadWorld();
-                if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-                {
-                    if (File.Exists(Program.server.getWorld().SavePath + ".bak"))
-                    {
-                        WorldGen.worldBackup = true;
-                    }
-                    else
-                    {
-                        WorldGen.worldBackup = false;
-                    }
-                    if (!Main.dedServ)
-                    {
-                        if (WorldGen.worldBackup)
-                        {
-                            Main.menuMode = 200;
-                            return;
-                        }
-                        Main.menuMode = 201;
-                        return;
-                    }
-                    else
-                    {
-                        if (!WorldGen.worldBackup)
-                        {
-                            Console.WriteLine("Load failed!  No backup found.");
-                            return;
-                        }
-                        File.Copy(Program.server.getWorld().SavePath + ".bak", Program.server.getWorld().SavePath, true);
-                        File.Delete(Program.server.getWorld().SavePath + ".bak");
-                        WorldGen.loadWorld();
-                        if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-                        {
-                            WorldGen.loadWorld();
-                            if (WorldGen.loadFailed || !WorldGen.loadSuccess)
-                            {
-                                Console.WriteLine("Load failed!");
-                                return;
-                            }
-                        }
-                    }
-                }
-            }
-            Netplay.StartServer();
-            Main.dayTime = WorldGen.tempDayTime;
-            Main.time = WorldGen.tempTime;
-            Main.moonPhase = WorldGen.tempMoonPhase;
-            Main.bloodMoon = WorldGen.tempBloodMoon;
-        }
-        
-        public static void serverLoadWorld()
-        {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(WorldGen.serverLoadWorldCallBack), 1);
         }
         
         public static void clearWorld()
@@ -988,7 +818,7 @@ namespace Terraria_Server
             WorldGen.noLiquidCheck = false;
             Liquid.numLiquid = 0;
             LiquidBuffer.numLiquidBuffer = 0;
-            if (Main.netMode == 1 || WorldGen.lastMaxTilesX > Main.maxTilesX || WorldGen.lastMaxTilesY > Main.maxTilesY)
+            if (WorldGen.lastMaxTilesX > Main.maxTilesX || WorldGen.lastMaxTilesY > Main.maxTilesY)
             {
                 for (int i = 0; i < WorldGen.lastMaxTilesX; i++)
                 {
@@ -1003,16 +833,14 @@ namespace Terraria_Server
             }
             WorldGen.lastMaxTilesX = Main.maxTilesX;
             WorldGen.lastMaxTilesY = Main.maxTilesY;
-            if (Main.netMode != 1)
+            
+            for (int k = 0; k < Main.maxTilesX; k++)
             {
-                for (int k = 0; k < Main.maxTilesX; k++)
+                float num2 = (float)k / (float)Main.maxTilesX;
+                Program.printData("Resetting game objects: " + (int)(num2 * 100f + 1f) + "%", true);
+                for (int l = 0; l < Main.maxTilesY; l++)
                 {
-                    float num2 = (float)k / (float)Main.maxTilesX;
-                    Program.printData("Resetting game objects: " + (int)(num2 * 100f + 1f) + "%", true);
-                    for (int l = 0; l < Main.maxTilesY; l++)
-                    {
-                        Main.tile[k, l] = new Tile();
-                    }
+                    Main.tile[k, l] = new Tile();
                 }
             }
             for (int m = 0; m < 1000; m++)
@@ -1230,9 +1058,9 @@ namespace Terraria_Server
                                     binaryWriter.Write(Main.worldID);
                                     binaryWriter.Close();
                                     fileStream.Close();
+                                    Program.tConsole.WriteLine();
                                     if (File.Exists(savePath))
                                     {
-                                        Program.tConsole.WriteLine();
                                         Program.tConsole.WriteLine("Backing up world file...");
                                         String destFileName = savePath + ".bak";
                                         File.Copy(savePath, destFileName, true);
@@ -1564,7 +1392,7 @@ namespace Terraria_Server
             {
                 num9 = 1;
             }
-            Program.tConsole.WriteLine();
+
             for (int i = 0; i < Main.maxTilesX; i++)
             {
                 float num10 = (float)i / (float)Main.maxTilesX;
@@ -4391,10 +4219,8 @@ namespace Terraria_Server
                 }
             }
             WorldGen.RangeFrame(i - 2, freeTilesAbove - num3 - 1, i + 2, freeTilesAbove + 1);
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendTileSquare(-1, i, (int)((double)freeTilesAbove - (double)num3 * 0.5), num3 + 1);
-            }
+            
+            NetMessage.SendTileSquare(-1, i, (int)((double)freeTilesAbove - (double)num3 * 0.5), num3 + 1);
         }
 
         public static bool GrowEpicTree(int x, int y)
@@ -4507,10 +4333,7 @@ namespace Terraria_Server
                     Main.tile[i, y - num].frameY = 36;
                 }
                 WorldGen.RangeFrame(i - 2, y - num - 1, i + 2, y + 1);
-                if (Main.netMode == 2)
-                {
-                    NetMessage.SendTileSquare(-1, i, (int)((double)y - (double)num * 0.5), num + 1);
-                }
+                NetMessage.SendTileSquare(-1, i, (int)((double)y - (double)num * 0.5), num + 1);
             }
         }
         
@@ -8118,10 +7941,8 @@ namespace Terraria_Server
                 if (Main.tile[x, y].type == 82 && WorldGen.genRand.Next(50) == 0)
                 {
                     Main.tile[x, y].type = 83;
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendTileSquare(-1, x, y, 1);
-                    }
+                    
+                    NetMessage.SendTileSquare(-1, x, y, 1);
                     WorldGen.SquareTileFrame(x, y, true);
                     return;
                 }
@@ -8135,10 +7956,7 @@ namespace Terraria_Server
                     {
                         Main.tile[x, y].type = 83;
                     }
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendTileSquare(-1, x, y, 1);
-                    }
+                    NetMessage.SendTileSquare(-1, x, y, 1);
                 }
             }
         }
@@ -8192,7 +8010,7 @@ namespace Terraria_Server
                 {
                     WorldGen.PlaceAlch(num, num2 - 1, 5);
                 }
-                if (Main.tile[num, num2 - 1].Active && Main.netMode == 2)
+                if (Main.tile[num, num2 - 1].Active)
                 {
                     NetMessage.SendTileSquare(-1, num, num2 - 1, 1);
                 }
@@ -8280,17 +8098,15 @@ namespace Terraria_Server
                                     {
                                         flag = true;
                                     }
-                                    if (Main.tile[x, y].type != 82 && !Main.tile[x, y].lava && Main.netMode != 1)
+                                    if (Main.tile[x, y].type != 82 && !Main.tile[x, y].lava)
                                     {
                                         if (Main.tile[x, y].liquid > 16)
                                         {
                                             if (Main.tile[x, y].type == 83)
                                             {
                                                 Main.tile[x, y].type = 84;
-                                                if (Main.netMode == 2)
-                                                {
-                                                    NetMessage.SendTileSquare(-1, x, y, 1);
-                                                }
+                                                
+                                                NetMessage.SendTileSquare(-1, x, y, 1);
                                             }
                                         }
                                         else
@@ -8298,10 +8114,8 @@ namespace Terraria_Server
                                             if (Main.tile[x, y].type == 84)
                                             {
                                                 Main.tile[x, y].type = 83;
-                                                if (Main.netMode == 2)
-                                                {
-                                                    NetMessage.SendTileSquare(-1, x, y, 1);
-                                                }
+                                                
+                                                NetMessage.SendTileSquare(-1, x, y, 1);
                                             }
                                         }
                                     }
@@ -8318,17 +8132,14 @@ namespace Terraria_Server
                                         {
                                             flag = true;
                                         }
-                                        if (Main.tile[x, y].type != 82 && Main.tile[x, y].lava && Main.tile[x, y].type != 82 && Main.tile[x, y].lava && Main.netMode != 1)
+                                        if (Main.tile[x, y].type != 82 && Main.tile[x, y].lava && Main.tile[x, y].type != 82 && Main.tile[x, y].lava)
                                         {
                                             if (Main.tile[x, y].liquid > 16)
                                             {
                                                 if (Main.tile[x, y].type == 83)
                                                 {
                                                     Main.tile[x, y].type = 84;
-                                                    if (Main.netMode == 2)
-                                                    {
-                                                        NetMessage.SendTileSquare(-1, x, y, 1);
-                                                    }
+                                                    NetMessage.SendTileSquare(-1, x, y, 1);
                                                 }
                                             }
                                             else
@@ -8336,10 +8147,7 @@ namespace Terraria_Server
                                                 if (Main.tile[x, y].type == 84)
                                                 {
                                                     Main.tile[x, y].type = 83;
-                                                    if (Main.netMode == 2)
-                                                    {
-                                                        NetMessage.SendTileSquare(-1, x, y, 1);
-                                                    }
+                                                    NetMessage.SendTileSquare(-1, x, y, 1);
                                                 }
                                             }
                                         }
@@ -9605,10 +9413,8 @@ namespace Terraria_Server
                 {
                     Main.tile[i, j - 1].Active = true;
                     Main.tile[i, j - 1].type = 80;
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendTileSquare(-1, i, j - 1, 1);
-                    }
+                    
+                    NetMessage.SendTileSquare(-1, i, j - 1, 1);
                     WorldGen.SquareTileFrame(num2, num - 1, true);
                     return;
                 }
@@ -9667,11 +9473,8 @@ namespace Terraria_Server
                             Main.tile[num2, num - 1].Active = true;
                             Main.tile[num2, num - 1].type = 80;
                             WorldGen.SquareTileFrame(num2, num - 1, true);
-                            if (Main.netMode == 2)
-                            {
-                                NetMessage.SendTileSquare(-1, num2, num - 1, 1);
-                                return;
-                            }
+                            
+                            NetMessage.SendTileSquare(-1, num2, num - 1, 1);
                             return;
                         }
                         else
@@ -9695,11 +9498,7 @@ namespace Terraria_Server
                                 Main.tile[num2 - 1, num].Active = true;
                                 Main.tile[num2 - 1, num].type = 80;
                                 WorldGen.SquareTileFrame(num2 - 1, num, true);
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendTileSquare(-1, num2 - 1, num, 1);
-                                    return;
-                                }
+                                NetMessage.SendTileSquare(-1, num2 - 1, num, 1);
                                 return;
                             }
                             else
@@ -9709,11 +9508,8 @@ namespace Terraria_Server
                                     Main.tile[num2 + 1, num].Active = true;
                                     Main.tile[num2 + 1, num].type = 80;
                                     WorldGen.SquareTileFrame(num2 + 1, num, true);
-                                    if (Main.netMode == 2)
-                                    {
-                                        NetMessage.SendTileSquare(-1, num2 + 1, num, 1);
-                                        return;
-                                    }
+                                    NetMessage.SendTileSquare(-1, num2 + 1, num, 1);
+
                                     return;
                                 }
                                 else
@@ -9733,11 +9529,7 @@ namespace Terraria_Server
                                     Main.tile[num2, num - 1].Active = true;
                                     Main.tile[num2, num - 1].type = 80;
                                     WorldGen.SquareTileFrame(num2, num - 1, true);
-                                    if (Main.netMode == 2)
-                                    {
-                                        NetMessage.SendTileSquare(-1, num2, num - 1, 1);
-                                        return;
-                                    }
+                                    NetMessage.SendTileSquare(-1, num2, num - 1, 1);
                                     return;
                                 }
                             }
@@ -9752,11 +9544,8 @@ namespace Terraria_Server
                         Main.tile[num2, num - 1].Active = true;
                         Main.tile[num2, num - 1].type = 80;
                         WorldGen.SquareTileFrame(num2, num - 1, true);
-                        if (Main.netMode == 2)
-                        {
-                            NetMessage.SendTileSquare(-1, num2, num - 1, 1);
-                            return;
-                        }
+                        
+                        NetMessage.SendTileSquare(-1, num2, num - 1, 1);
                         return;
                     }
                 }
@@ -11126,7 +10915,7 @@ namespace Terraria_Server
                         WorldGen.SquareTileFrame(i, j, true);
                         return;
                     }
-                    if (Main.tile[i, j].type == 21 && Main.netMode != 1)
+                    if (Main.tile[i, j].type == 21)
                     {
                         int l = (int)(Main.tile[i, j].frameX / 18);
                         int y = j - (int)(Main.tile[i, j].frameY / 18);
@@ -11140,7 +10929,7 @@ namespace Terraria_Server
                             return;
                         }
                     }
-                    if (!noItem && !WorldGen.stopDrops && Main.netMode != 1)
+                    if (!noItem && !WorldGen.stopDrops)
                     {
                         int num4 = 0;
                         if (Main.tile[i, j].type == 0 || Main.tile[i, j].type == 2)
@@ -11174,31 +10963,28 @@ namespace Terraria_Server
                                         {
                                             if (Main.tile[i, j].frameX >= 22 && Main.tile[i, j].frameY >= 198)
                                             {
-                                                if (Main.netMode != 1)
+                                                if (WorldGen.genRand.Next(2) == 0)
                                                 {
-                                                    if (WorldGen.genRand.Next(2) == 0)
+                                                    int num5 = j;
+                                                    while (Main.tile[i, num5] != null && (!Main.tile[i, num5].Active || !Main.tileSolid[(int)Main.tile[i, num5].type] || Main.tileSolidTop[(int)Main.tile[i, num5].type]))
                                                     {
-                                                        int num5 = j;
-                                                        while (Main.tile[i, num5] != null && (!Main.tile[i, num5].Active || !Main.tileSolid[(int)Main.tile[i, num5].type] || Main.tileSolidTop[(int)Main.tile[i, num5].type]))
+                                                        num5++;
+                                                    }
+                                                    if (Main.tile[i, num5] != null)
+                                                    {
+                                                        if (Main.tile[i, num5].type == 2)
                                                         {
-                                                            num5++;
+                                                            num4 = 27;
                                                         }
-                                                        if (Main.tile[i, num5] != null)
+                                                        else
                                                         {
-                                                            if (Main.tile[i, num5].type == 2)
-                                                            {
-                                                                num4 = 27;
-                                                            }
-                                                            else
-                                                            {
-                                                                num4 = 9;
-                                                            }
+                                                            num4 = 9;
                                                         }
                                                     }
-                                                    else
-                                                    {
-                                                        num4 = 9;
-                                                    }
+                                                }
+                                                else
+                                                {
+                                                    num4 = 9;
                                                 }
                                             }
                                             else
@@ -11683,10 +11469,7 @@ namespace Terraria_Server
                         if (Main.tile[num4, num5].Active && (Main.tile[num4, num5].type == 3 || Main.tile[num4, num5].type == 20 || Main.tile[num4, num5].type == 24 || Main.tile[num4, num5].type == 27 || Main.tile[num4, num5].type == 73))
                         {
                             WorldGen.KillTile(num4, num5, false, false, false);
-                            if (Main.netMode == 2)
-                            {
-                                NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)num5);
-                            }
+                            NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)num5);
                         }
                     }
                     else
@@ -11711,7 +11494,7 @@ namespace Terraria_Server
                                             if (WorldGen.genRand.Next(500) == 0 && Main.tile[num4, num8].liquid == 255 && Main.tile[num4, num8 - 1].liquid == 255 && Main.tile[num4, num8 - 2].liquid == 255 && Main.tile[num4, num8 - 3].liquid == 255 && Main.tile[num4, num8 - 4].liquid == 255)
                                             {
                                                 WorldGen.PlaceTile(num4, num8, 81, true, false, -1, 0);
-                                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
+                                                if (Main.tile[num4, num8].Active)
                                                 {
                                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                                 }
@@ -11733,7 +11516,7 @@ namespace Terraria_Server
                                         if (!Main.tile[num4, num8].Active)
                                         {
                                             WorldGen.PlaceTile(num4, num8, 3, true, false, -1, 0);
-                                            if (Main.netMode == 2 && Main.tile[num4, num8].Active)
+                                            if (Main.tile[num4, num8].Active)
                                             {
                                                 NetMessage.SendTileSquare(-1, num4, num8, 1);
                                             }
@@ -11747,7 +11530,7 @@ namespace Terraria_Server
                                             if (!Main.tile[num4, num8].Active && WorldGen.genRand.Next(12) == 0 && num10 == 2)
                                             {
                                                 WorldGen.PlaceTile(num4, num8, 3, true, false, -1, 0);
-                                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
+                                                if (Main.tile[num4, num8].Active)
                                                 {
                                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                                 }
@@ -11755,7 +11538,7 @@ namespace Terraria_Server
                                             if (!Main.tile[num4, num8].Active && WorldGen.genRand.Next(10) == 0 && num10 == 23)
                                             {
                                                 WorldGen.PlaceTile(num4, num8, 24, true, false, -1, 0);
-                                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
+                                                if (Main.tile[num4, num8].Active)
                                                 {
                                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                                 }
@@ -11787,7 +11570,7 @@ namespace Terraria_Server
                                                     }
                                                 }
                                             }
-                                            if (Main.netMode == 2 && flag2)
+                                            if (flag2)
                                             {
                                                 NetMessage.SendTileSquare(-1, num4, num5, 3);
                                             }
@@ -11805,10 +11588,7 @@ namespace Terraria_Server
                             if (Main.tile[num4, num5].type == 3 && WorldGen.genRand.Next(20) == 0 && Main.tile[num4, num5].frameX < 144)
                             {
                                 Main.tile[num4, num5].type = 73;
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendTileSquare(-1, num4, num5, 3);
-                                }
+                                NetMessage.SendTileSquare(-1, num4, num5, 3);
                             }
                             if (Main.tile[num4, num5].type == 32 && WorldGen.genRand.Next(3) == 0)
                             {
@@ -11902,10 +11682,8 @@ namespace Terraria_Server
                                                 Main.tile[num11, num12].type = 32;
                                                 Main.tile[num11, num12].Active = true;
                                                 WorldGen.SquareTileFrame(num11, num12, true);
-                                                if (Main.netMode == 2)
-                                                {
-                                                    NetMessage.SendTileSquare(-1, num11, num12, 3);
-                                                }
+                                                
+                                                NetMessage.SendTileSquare(-1, num11, num12, 3);
                                             }
                                         }
                                     }
@@ -11940,10 +11718,7 @@ namespace Terraria_Server
                                 Main.tile[num20, num21].type = 52;
                                 Main.tile[num20, num21].Active = true;
                                 WorldGen.SquareTileFrame(num20, num21, true);
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendTileSquare(-1, num20, num21, 3);
-                                }
+                                NetMessage.SendTileSquare(-1, num20, num21, 3);
                             }
                         }
                         if (Main.tile[num4, num5].type == 60)
@@ -11952,7 +11727,7 @@ namespace Terraria_Server
                             if (!Main.tile[num4, num8].Active && WorldGen.genRand.Next(7) == 0)
                             {
                                 WorldGen.PlaceTile(num4, num8, 61, true, false, -1, 0);
-                                if (Main.netMode == 2 && Main.tile[num4, num8].Active)
+                                if (Main.tile[num4, num8].Active)
                                 {
                                     NetMessage.SendTileSquare(-1, num4, num8, 1);
                                 }
@@ -11980,7 +11755,7 @@ namespace Terraria_Server
                                     }
                                 }
                             }
-                            if (Main.netMode == 2 && flag5)
+                            if (flag5)
                             {
                                 NetMessage.SendTileSquare(-1, num4, num5, 3);
                             }
@@ -11988,10 +11763,7 @@ namespace Terraria_Server
                         if (Main.tile[num4, num5].type == 61 && WorldGen.genRand.Next(3) == 0 && Main.tile[num4, num5].frameX < 144)
                         {
                             Main.tile[num4, num5].type = 74;
-                            if (Main.netMode == 2)
-                            {
-                                NetMessage.SendTileSquare(-1, num4, num5, 3);
-                            }
+                            NetMessage.SendTileSquare(-1, num4, num5, 3);
                         }
                         if ((Main.tile[num4, num5].type == 60 || Main.tile[num4, num5].type == 62) && WorldGen.genRand.Next(15) == 0 && !Main.tile[num4, num5 + 1].Active && !Main.tile[num4, num5 + 1].lava)
                         {
@@ -12011,10 +11783,7 @@ namespace Terraria_Server
                                 Main.tile[num25, num26].type = 62;
                                 Main.tile[num25, num26].Active = true;
                                 WorldGen.SquareTileFrame(num25, num26, true);
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendTileSquare(-1, num25, num26, 3);
-                                }
+                                NetMessage.SendTileSquare(-1, num25, num26, 3);
                             }
                         }
                     }
@@ -12062,7 +11831,7 @@ namespace Terraria_Server
                                 if (!Main.tile[num28, num32].Active && WorldGen.genRand.Next(10) == 0)
                                 {
                                     WorldGen.PlaceTile(num28, num32, 61, true, false, -1, 0);
-                                    if (Main.netMode == 2 && Main.tile[num28, num32].Active)
+                                    if (Main.tile[num28, num32].Active)
                                     {
                                         NetMessage.SendTileSquare(-1, num28, num32, 1);
                                     }
@@ -12083,7 +11852,7 @@ namespace Terraria_Server
                                         }
                                     }
                                 }
-                                if (Main.netMode == 2 && flag7)
+                                if (flag7)
                                 {
                                     NetMessage.SendTileSquare(-1, num28, num29, 3);
                                 }
@@ -12091,10 +11860,7 @@ namespace Terraria_Server
                             if (Main.tile[num28, num29].type == 61 && WorldGen.genRand.Next(3) == 0 && Main.tile[num28, num29].frameX < 144)
                             {
                                 Main.tile[num28, num29].type = 74;
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendTileSquare(-1, num28, num29, 3);
-                                }
+                                NetMessage.SendTileSquare(-1, num28, num29, 3);
                             }
                             if ((Main.tile[num28, num29].type == 60 || Main.tile[num28, num29].type == 62) && WorldGen.genRand.Next(5) == 0 && !Main.tile[num28, num29 + 1].Active && !Main.tile[num28, num29 + 1].lava)
                             {
@@ -12114,10 +11880,7 @@ namespace Terraria_Server
                                     Main.tile[num37, num38].type = 62;
                                     Main.tile[num37, num38].Active = true;
                                     WorldGen.SquareTileFrame(num37, num38, true);
-                                    if (Main.netMode == 2)
-                                    {
-                                        NetMessage.SendTileSquare(-1, num37, num38, 3);
-                                    }
+                                    NetMessage.SendTileSquare(-1, num37, num38, 3);
                                 }
                             }
                             if (Main.tile[num28, num29].type == 69 && WorldGen.genRand.Next(3) == 0)
@@ -12212,10 +11975,7 @@ namespace Terraria_Server
                                                 Main.tile[num39, num40].type = 69;
                                                 Main.tile[num39, num40].Active = true;
                                                 WorldGen.SquareTileFrame(num39, num40, true);
-                                                if (Main.netMode == 2)
-                                                {
-                                                    NetMessage.SendTileSquare(-1, num39, num40, 3);
-                                                }
+                                                NetMessage.SendTileSquare(-1, num39, num40, 3);
                                             }
                                         }
                                     }
@@ -12227,7 +11987,7 @@ namespace Terraria_Server
                                 if (!Main.tile[num28, num32].Active && WorldGen.genRand.Next(10) == 0)
                                 {
                                     WorldGen.PlaceTile(num28, num32, 71, true, false, -1, 0);
-                                    if (Main.netMode == 2 && Main.tile[num28, num32].Active)
+                                    if (Main.tile[num28, num32].Active)
                                     {
                                         NetMessage.SendTileSquare(-1, num28, num32, 1);
                                     }
@@ -12252,7 +12012,7 @@ namespace Terraria_Server
                                         }
                                     }
                                 }
-                                if (Main.netMode == 2 && flag10)
+                                if (flag10)
                                 {
                                     NetMessage.SendTileSquare(-1, num28, num29, 3);
                                 }
@@ -12290,7 +12050,7 @@ namespace Terraria_Server
                     num58 = (float)num53 / num58;
                     num56 *= num58;
                     num57 *= num58;
-                    Projectile.NewProjectile(vector.X, vector.Y, num56, num57, 12, 1000, 10f, Main.myPlayer);
+                    Projectile.NewProjectile(vector.X, vector.Y, num56, num57, ProjectileType.FALLEN_STAR, 1000, 10f, Main.myPlayer);
                 }
             }
         }
@@ -14597,7 +14357,7 @@ namespace Terraria_Server
         {
             if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY && Main.tile[i, j] != null)
             {
-                if (Main.tile[i, j].liquid > 0 && Main.netMode != 1 && !WorldGen.noLiquidCheck)
+                if (Main.tile[i, j].liquid > 0 && !WorldGen.noLiquidCheck)
                 {
                     Liquid.AddWater(i, j);
                 }
@@ -14790,90 +14550,83 @@ namespace Terraria_Server
                                     {
                                         WorldGen.KillTile(num10 + 1, num11 + 1, false, false, false);
                                     }
-                                    if (Main.netMode != 1)
+                                    if (num9 == 12)
                                     {
-                                        if (num9 == 12)
+                                        Item.NewItem(num10 * 16, num11 * 16, 32, 32, 29, 1, false);
+                                    }
+                                    else
+                                    {
+                                        if (num9 == 31)
                                         {
-                                            Item.NewItem(num10 * 16, num11 * 16, 32, 32, 29, 1, false);
-                                        }
-                                        else
-                                        {
-                                            if (num9 == 31)
+                                            if (WorldGen.genRand.Next(2) == 0)
                                             {
-                                                if (WorldGen.genRand.Next(2) == 0)
+                                                WorldGen.spawnMeteor = true;
+                                            }
+                                            int num12 = Main.rand.Next(5);
+                                            if (!WorldGen.shadowOrbSmashed)
+                                            {
+                                                num12 = 0;
+                                            }
+                                            if (num12 == 0)
+                                            {
+                                                Item.NewItem(num10 * 16, num11 * 16, 32, 32, 96, 1, false);
+                                                int stack = WorldGen.genRand.Next(25, 51);
+                                                Item.NewItem(num10 * 16, num11 * 16, 32, 32, 97, stack, false);
+                                            }
+                                            else
+                                            {
+                                                if (num12 == 1)
                                                 {
-                                                    WorldGen.spawnMeteor = true;
-                                                }
-                                                int num12 = Main.rand.Next(5);
-                                                if (!WorldGen.shadowOrbSmashed)
-                                                {
-                                                    num12 = 0;
-                                                }
-                                                if (num12 == 0)
-                                                {
-                                                    Item.NewItem(num10 * 16, num11 * 16, 32, 32, 96, 1, false);
-                                                    int stack = WorldGen.genRand.Next(25, 51);
-                                                    Item.NewItem(num10 * 16, num11 * 16, 32, 32, 97, stack, false);
+                                                    Item.NewItem(num10 * 16, num11 * 16, 32, 32, 64, 1, false);
                                                 }
                                                 else
                                                 {
-                                                    if (num12 == 1)
+                                                    if (num12 == 2)
                                                     {
-                                                        Item.NewItem(num10 * 16, num11 * 16, 32, 32, 64, 1, false);
+                                                        Item.NewItem(num10 * 16, num11 * 16, 32, 32, 162, 1, false);
                                                     }
                                                     else
                                                     {
-                                                        if (num12 == 2)
+                                                        if (num12 == 3)
                                                         {
-                                                            Item.NewItem(num10 * 16, num11 * 16, 32, 32, 162, 1, false);
+                                                            Item.NewItem(num10 * 16, num11 * 16, 32, 32, 115, 1, false);
                                                         }
                                                         else
                                                         {
-                                                            if (num12 == 3)
+                                                            if (num12 == 4)
                                                             {
-                                                                Item.NewItem(num10 * 16, num11 * 16, 32, 32, 115, 1, false);
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num12 == 4)
-                                                                {
-                                                                    Item.NewItem(num10 * 16, num11 * 16, 32, 32, 111, 1, false);
-                                                                }
+                                                                Item.NewItem(num10 * 16, num11 * 16, 32, 32, 111, 1, false);
                                                             }
                                                         }
                                                     }
                                                 }
-                                                WorldGen.shadowOrbSmashed = true;
-                                                WorldGen.shadowOrbCount++;
-                                                if (WorldGen.shadowOrbCount >= 3)
+                                            }
+                                            WorldGen.shadowOrbSmashed = true;
+                                            WorldGen.shadowOrbCount++;
+                                            if (WorldGen.shadowOrbCount >= 3)
+                                            {
+                                                WorldGen.shadowOrbCount = 0;
+                                                float num13 = (float)(num10 * 16);
+                                                float num14 = (float)(num11 * 16);
+                                                float num15 = -1f;
+                                                for (int k = 0; k < 255; k++)
                                                 {
-                                                    WorldGen.shadowOrbCount = 0;
-                                                    float num13 = (float)(num10 * 16);
-                                                    float num14 = (float)(num11 * 16);
-                                                    float num15 = -1f;
-                                                    for (int k = 0; k < 255; k++)
+                                                    float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
+                                                    if (num16 < num15 || num15 == -1f)
                                                     {
-                                                        float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
-                                                        if (num16 < num15 || num15 == -1f)
-                                                        {
-                                                            num15 = num16;
-                                                        }
-                                                    }
-                                                    NPC.SpawnOnPlayer(Main.players[0], 0, 13);
-                                                }
-                                                else
-                                                {
-                                                    String text = "A horrible chill goes down your spine...";
-                                                    if (WorldGen.shadowOrbCount == 2)
-                                                    {
-                                                        text = "Screams echo around you...";
-                                                    }
-
-                                                    if (Main.netMode == 2)
-                                                    {
-                                                        NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f);
+                                                        num15 = num16;
                                                     }
                                                 }
+                                                NPC.SpawnOnPlayer(Main.players[0], 0, 13);
+                                            }
+                                            else
+                                            {
+                                                String text = "A horrible chill goes down your spine...";
+                                                if (WorldGen.shadowOrbCount == 2)
+                                                {
+                                                    text = "Screams echo around you...";
+                                                }
+                                                NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f);
                                             }
                                         }
                                     }
@@ -19007,62 +18760,36 @@ namespace Terraria_Server
                         }
                         if (!WorldGen.noTileActions && (num9 == 53 || ((num9 == 59 || num9 == 57) && WorldGen.genRand.Next(5) == 0)))
                         {
-                            if (Main.netMode == 0)
+                            if (Main.tile[i, j + 1] != null && !Main.tile[i, j + 1].Active)
                             {
-                                if (Main.tile[i, j + 1] != null && !Main.tile[i, j + 1].Active)
+                                bool flag4 = true;
+                                if (Main.tile[i, j - 1].Active && Main.tile[i, j - 1].type == 21)
                                 {
-                                    bool flag3 = true;
-                                    if (Main.tile[i, j - 1].Active && Main.tile[i, j - 1].type == 21)
-                                    {
-                                        flag3 = false;
-                                    }
-                                    if (flag3)
-                                    {
-                                        int type = 31;
-                                        if (num9 == 59)
-                                        {
-                                            type = 39;
-                                        }
-                                        if (num9 == 57)
-                                        {
-                                            type = 40;
-                                        }
-                                        Main.tile[i, j].Active = false;
-                                        int num25 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type, 10, 0f, Main.myPlayer);
-                                        Main.projectile[num25].ai[0] = 1f;
-                                        WorldGen.SquareTileFrame(i, j, true);
-                                    }
+                                    flag4 = false;
                                 }
-                            }
-                            else
-                            {
-                                if (Main.netMode == 2 && Main.tile[i, j + 1] != null && !Main.tile[i, j + 1].Active)
+                                if (flag4)
                                 {
-                                    bool flag4 = true;
-                                    if (Main.tile[i, j - 1].Active && Main.tile[i, j - 1].type == 21)
+                                    ProjectileType type2;
+                                    if (num9 == 59)
                                     {
-                                        flag4 = false;
+                                        type2 = ProjectileType.BALL_MUD;
                                     }
-                                    if (flag4)
+                                    if (num9 == 57)
                                     {
-                                        int type2 = 31;
-                                        if (num9 == 59)
-                                        {
-                                            type2 = 39;
-                                        }
-                                        if (num9 == 57)
-                                        {
-                                            type2 = 40;
-                                        }
-                                        Main.tile[i, j].Active = false;
-                                        int num26 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type2, 10, 0f, Main.myPlayer);
-                                        Main.projectile[num26].Velocity.Y = 0.5f;
-                                        Projectile expr_65A3_cp_0 = Main.projectile[num26];
-                                        expr_65A3_cp_0.Position.Y = expr_65A3_cp_0.Position.Y + 2f;
-                                        Main.projectile[num26].ai[0] = 1f;
-                                        NetMessage.SendTileSquare(-1, i, j, 1);
-                                        WorldGen.SquareTileFrame(i, j, true);
+                                        type2 = ProjectileType.BALL_ASH;
                                     }
+                                    else
+                                    {
+                                        type2 = ProjectileType.BALL_SAND_DROP;
+                                    }
+                                    Main.tile[i, j].Active = false;
+                                    int num26 = Projectile.NewProjectile((float)(i * 16 + 8), (float)(j * 16 + 8), 0f, 0.41f, type2, 10, 0f, Main.myPlayer);
+                                    Main.projectile[num26].Velocity.Y = 0.5f;
+                                    Projectile expr_65A3_cp_0 = Main.projectile[num26];
+                                    expr_65A3_cp_0.Position.Y = expr_65A3_cp_0.Position.Y + 2f;
+                                    Main.projectile[num26].ai[0] = 1f;
+                                    NetMessage.SendTileSquare(-1, i, j, 1);
+                                    WorldGen.SquareTileFrame(i, j, true);
                                 }
                             }
                         }

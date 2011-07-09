@@ -5,7 +5,7 @@ using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
-using Terraria_Server.Plugin.Tile;
+using Terraria_Server.Definitions.Tile;
 
 namespace Terraria_Server.Messages
 {
@@ -77,25 +77,22 @@ namespace Terraria_Server.Messages
                 NetMessage.SendTileSquare(whoAmI, x, y, 1);
                 return;
             }
-
-            if (Main.netMode == 2)
+            
+            if (!failFlag)
             {
-                if (!failFlag)
+                if (tileAction == 0 || tileAction == 2 || tileAction == 4)
                 {
-                    if (tileAction == 0 || tileAction == 2 || tileAction == 4)
-                    {
-                        Netplay.serverSock[whoAmI].spamDelBlock += 1f;
-                    }
-                    else if (tileAction == 1 || tileAction == 3)
-                    {
-                        Netplay.serverSock[whoAmI].spamAddBlock += 1f;
-                    }
+                    Netplay.serverSock[whoAmI].spamDelBlock += 1f;
                 }
+                else if (tileAction == 1 || tileAction == 3)
+                {
+                    Netplay.serverSock[whoAmI].spamAddBlock += 1f;
+                }
+            }
 
-                if (!Netplay.serverSock[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
-                {
-                    failFlag = true;
-                }
+            if (!Netplay.serverSock[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+            {
+                failFlag = true;
             }
 
             switch (tileAction)
@@ -117,13 +114,10 @@ namespace Terraria_Server.Messages
                     break;
             }
 
-            if (Main.netMode == 2)
+            NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType);
+            if (tileAction == 1 && tileType == 53)
             {
-                NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType);
-                if (tileAction == 1 && tileType == 53)
-                {
-                    NetMessage.SendTileSquare(-1, x, y, 1);
-                }
+                NetMessage.SendTileSquare(-1, x, y, 1);
             }
         }
     }

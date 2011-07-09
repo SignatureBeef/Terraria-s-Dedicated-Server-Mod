@@ -59,10 +59,6 @@ namespace Terraria_Server.Messages
             }
 
             Main.worldName = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
-            if (Netplay.clientSock.state == 3)
-            {
-                Netplay.clientSock.state = 4;
-            }
         }
     }
 }

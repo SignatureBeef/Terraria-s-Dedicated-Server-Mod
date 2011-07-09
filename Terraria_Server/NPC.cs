@@ -4,6 +4,7 @@ using Terraria_Server.Plugin;
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
 using Terraria_Server.Collections;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {
@@ -689,16 +690,14 @@ namespace Terraria_Server
                                         npc.ai[1] = 10f;
                                     }
                                     WorldGen.KillTile(num4, num5 - 1, true, false, false);
-                                    if ((Main.netMode != 1 || !flag3) && flag3 && Main.netMode != 1)
+                                    if ((!flag3) && flag3)
                                     {
                                         if (npc.Type == 26)
                                         {
                                             WorldGen.KillTile(num4, num5 - 1, false, false, false);
-                                            if (Main.netMode == 2)
-                                            {
-                                                NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)(num5 - 1), 0f, 0);
-                                                return;
-                                            }
+                                            
+                                            NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)(num5 - 1), 0f, 0);
+                                            return;
                                         }
                                         else
                                         {
@@ -708,7 +707,7 @@ namespace Terraria_Server
                                                 npc.ai[3] = (float)num3;
                                                 npc.netUpdate = true;
                                             }
-                                            if (Main.netMode == 2 && flag4)
+                                            if (flag4)
                                             {
                                                 NetMessage.SendData(19, -1, -1, "", 0, (float)num4, (float)num5, (float)npc.direction, 0);
                                                 return;
@@ -977,16 +976,15 @@ namespace Terraria_Server
                                                         vector3.Y = num19 * num20;
                                                         vector2.X += vector3.X * 10f;
                                                         vector2.Y += vector3.Y * 10f;
-                                                        if (Main.netMode != 1)
+                                                        
+                                                        int npcIndex = NPC.NewNPC((int)vector2.X, (int)vector2.Y, 5, 0);
+                                                        Main.npcs[npcIndex].Velocity.X = vector3.X;
+                                                        Main.npcs[npcIndex].Velocity.Y = vector3.Y;
+                                                        if (npcIndex < MAX_NPCS)
                                                         {
-                                                            int npcIndex = NPC.NewNPC((int)vector2.X, (int)vector2.Y, 5, 0);
-                                                            Main.npcs[npcIndex].Velocity.X = vector3.X;
-                                                            Main.npcs[npcIndex].Velocity.Y = vector3.Y;
-                                                            if (Main.netMode == 2 && npcIndex < MAX_NPCS)
-                                                            {
-                                                                NetMessage.SendData(23, -1, -1, "", npcIndex);
-                                                            }
+                                                            NetMessage.SendData(23, -1, -1, "", npcIndex);
                                                         }
+
                                                         for (int i = 0; i < 10; i++)
                                                         {
                                                             Vector2 arg_2324_0 = vector2;
@@ -1516,131 +1514,128 @@ namespace Terraria_Server
                                         {
                                             npc.timeLeft = 10;
                                         }
-                                        if (Main.netMode != 1)
+                                        if ((npc.Type == 7 || npc.Type == 8 || npc.Type == 10 || npc.Type == 11 || npc.Type == 13 || npc.Type == 14 || npc.Type == 39 || npc.Type == 40) && npc.ai[0] == 0f)
                                         {
-                                            if ((npc.Type == 7 || npc.Type == 8 || npc.Type == 10 || npc.Type == 11 || npc.Type == 13 || npc.Type == 14 || npc.Type == 39 || npc.Type == 40) && npc.ai[0] == 0f)
+                                            if (npc.Type == 7 || npc.Type == 10 || npc.Type == 13 || npc.Type == 39)
                                             {
-                                                if (npc.Type == 7 || npc.Type == 10 || npc.Type == 13 || npc.Type == 39)
+                                                npc.ai[2] = 10f;
+                                                if (npc.Type == 10)
                                                 {
-                                                    npc.ai[2] = 10f;
-                                                    if (npc.Type == 10)
-                                                    {
-                                                        npc.ai[2] = 5f;
-                                                    }
-                                                    if (npc.Type == 13)
-                                                    {
-                                                        npc.ai[2] = 50f;
-                                                    }
-                                                    if (npc.Type == 39)
-                                                    {
-                                                        npc.ai[2] = 15f;
-                                                    }
-                                                    npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type + 1, npc.whoAmI);
+                                                    npc.ai[2] = 5f;
+                                                }
+                                                if (npc.Type == 13)
+                                                {
+                                                    npc.ai[2] = 50f;
+                                                }
+                                                if (npc.Type == 39)
+                                                {
+                                                    npc.ai[2] = 15f;
+                                                }
+                                                npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type + 1, npc.whoAmI);
+                                            }
+                                            else
+                                            {
+                                                if ((npc.Type == 8 || npc.Type == 11 || npc.Type == 14 || npc.Type == 40) && npc.ai[2] > 0f)
+                                                {
+                                                    npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type, npc.whoAmI);
                                                 }
                                                 else
                                                 {
-                                                    if ((npc.Type == 8 || npc.Type == 11 || npc.Type == 14 || npc.Type == 40) && npc.ai[2] > 0f)
-                                                    {
-                                                        npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type, npc.whoAmI);
-                                                    }
-                                                    else
-                                                    {
-                                                        npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type + 1, npc.whoAmI);
-                                                    }
+                                                    npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type + 1, npc.whoAmI);
                                                 }
-                                                Main.npcs[(int)npc.ai[0]].ai[1] = (float)npc.whoAmI;
-                                                Main.npcs[(int)npc.ai[0]].ai[2] = npc.ai[2] - 1f;
-                                                npc.netUpdate = true;
                                             }
-                                            if ((npc.Type == 8 || npc.Type == 9 || npc.Type == 11 || npc.Type == 12 || npc.Type == 40 || npc.Type == 41) && (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != npc.aiStyle))
+                                            Main.npcs[(int)npc.ai[0]].ai[1] = (float)npc.whoAmI;
+                                            Main.npcs[(int)npc.ai[0]].ai[2] = npc.ai[2] - 1f;
+                                            npc.netUpdate = true;
+                                        }
+                                        if ((npc.Type == 8 || npc.Type == 9 || npc.Type == 11 || npc.Type == 12 || npc.Type == 40 || npc.Type == 41) && (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != npc.aiStyle))
+                                        {
+                                            npc.life = 0;
+                                            npc.HitEffect(0, 10.0);
+                                            npc.Active = false;
+                                        }
+                                        if ((npc.Type == 7 || npc.Type == 8 || npc.Type == 10 || npc.Type == 11 || npc.Type == 39 || npc.Type == 40) && !Main.npcs[(int)npc.ai[0]].Active)
+                                        {
+                                            npc.life = 0;
+                                            npc.HitEffect(0, 10.0);
+                                            npc.Active = false;
+                                        }
+                                        if (npc.Type == 13 || npc.Type == 14 || npc.Type == 15)
+                                        {
+                                            if (!Main.npcs[(int)npc.ai[1]].Active && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
                                                 npc.life = 0;
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if ((npc.Type == 7 || npc.Type == 8 || npc.Type == 10 || npc.Type == 11 || npc.Type == 39 || npc.Type == 40) && !Main.npcs[(int)npc.ai[0]].Active)
+                                            if (npc.Type == 13 && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
                                                 npc.life = 0;
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 13 || npc.Type == 14 || npc.Type == 15)
+                                            if (npc.Type == 15 && !Main.npcs[(int)npc.ai[1]].Active)
                                             {
-                                                if (!Main.npcs[(int)npc.ai[1]].Active && !Main.npcs[(int)npc.ai[0]].Active)
-                                                {
-                                                    npc.life = 0;
-                                                    npc.HitEffect(0, 10.0);
-                                                    npc.Active = false;
-                                                }
-                                                if (npc.Type == 13 && !Main.npcs[(int)npc.ai[0]].Active)
-                                                {
-                                                    npc.life = 0;
-                                                    npc.HitEffect(0, 10.0);
-                                                    npc.Active = false;
-                                                }
-                                                if (npc.Type == 15 && !Main.npcs[(int)npc.ai[1]].Active)
-                                                {
-                                                    npc.life = 0;
-                                                    npc.HitEffect(0, 10.0);
-                                                    npc.Active = false;
-                                                }
-                                                if (npc.Type == 14 && !Main.npcs[(int)npc.ai[1]].Active)
-                                                {
-                                                    int num45 = npc.whoAmI;
-                                                    int num46 = npc.life;
-                                                    float num47 = npc.ai[0];
-                                                    npc = Registries.NPC.Create(13);
-                                                    Main.npcs[index] = npc;
+                                                npc.life = 0;
+                                                npc.HitEffect(0, 10.0);
+                                                npc.Active = false;
+                                            }
+                                            if (npc.Type == 14 && !Main.npcs[(int)npc.ai[1]].Active)
+                                            {
+                                                int num45 = npc.whoAmI;
+                                                int num46 = npc.life;
+                                                float num47 = npc.ai[0];
+                                                npc = Registries.NPC.Create(13);
+                                                Main.npcs[index] = npc;
 
-                                                    npc.life = num46;
-                                                    if (npc.life > npc.lifeMax)
-                                                    {
-                                                        npc.life = npc.lifeMax;
-                                                    }
-                                                    npc.ai[0] = num47;
-                                                    npc.TargetClosest(true);
-                                                    npc.netUpdate = true;
-                                                    npc.whoAmI = num45;
-                                                }
-                                                if (npc.Type == 14 && !Main.npcs[(int)npc.ai[0]].Active)
+                                                npc.life = num46;
+                                                if (npc.life > npc.lifeMax)
                                                 {
-                                                    int num48 = npc.life;
-                                                    int num49 = npc.whoAmI;
-                                                    float num50 = npc.ai[1];
-                                                    npc = Registries.NPC.Create(npc.Type);
-                                                    Main.npcs[index] = npc;
-                                                    npc.life = num48;
-                                                    if (npc.life > npc.lifeMax)
-                                                    {
-                                                        npc.life = npc.lifeMax;
-                                                    }
-                                                    npc.ai[1] = num50;
-                                                    npc.TargetClosest(true);
-                                                    npc.netUpdate = true;
-                                                    npc.whoAmI = num49;
+                                                    npc.life = npc.lifeMax;
                                                 }
-                                                if (npc.life == 0)
-                                                {
-                                                    bool flag5 = true;
-                                                    for (int l = 0; l < MAX_NPCS; l++)
-                                                    {
-                                                        if (Main.npcs[l].Active && (Main.npcs[l].Type == 13 || Main.npcs[l].Type == 14 || Main.npcs[l].Type == 15))
-                                                        {
-                                                            flag5 = false;
-                                                            break;
-                                                        }
-                                                    }
-                                                    if (flag5)
-                                                    {
-                                                        npc.boss = true;
-                                                        npc.NPCLoot();
-                                                    }
-                                                }
+                                                npc.ai[0] = num47;
+                                                npc.TargetClosest(true);
+                                                npc.netUpdate = true;
+                                                npc.whoAmI = num45;
                                             }
-                                            if (!npc.Active && Main.netMode == 2)
+                                            if (npc.Type == 14 && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
-                                                NetMessage.SendData(28, -1, -1, "", npc.whoAmI, -1f);
+                                                int num48 = npc.life;
+                                                int num49 = npc.whoAmI;
+                                                float num50 = npc.ai[1];
+                                                npc = Registries.NPC.Create(npc.Type);
+                                                Main.npcs[index] = npc;
+                                                npc.life = num48;
+                                                if (npc.life > npc.lifeMax)
+                                                {
+                                                    npc.life = npc.lifeMax;
+                                                }
+                                                npc.ai[1] = num50;
+                                                npc.TargetClosest(true);
+                                                npc.netUpdate = true;
+                                                npc.whoAmI = num49;
                                             }
+                                            if (npc.life == 0)
+                                            {
+                                                bool flag5 = true;
+                                                for (int l = 0; l < MAX_NPCS; l++)
+                                                {
+                                                    if (Main.npcs[l].Active && (Main.npcs[l].Type == 13 || Main.npcs[l].Type == 14 || Main.npcs[l].Type == 15))
+                                                    {
+                                                        flag5 = false;
+                                                        break;
+                                                    }
+                                                }
+                                                if (flag5)
+                                                {
+                                                    npc.boss = true;
+                                                    npc.NPCLoot();
+                                                }
+                                            }
+                                        }
+                                        if (!npc.Active)
+                                        {
+                                            NetMessage.SendData(28, -1, -1, "", npc.whoAmI, -1f);
                                         }
                                         int num51 = (int)(npc.Position.X / 16f) - 1;
                                         int num52 = (int)((npc.Position.X + (float)npc.width) / 16f) + 2;
@@ -1679,7 +1674,7 @@ namespace Terraria_Server
                                                         {
                                                             WorldGen.KillTile(m, n, true, true, false);
                                                         }
-                                                        if (Main.netMode != 1 && Main.tile[m, n].type == 2)
+                                                        if (Main.tile[m, n].type == 2)
                                                         {
                                                             byte arg_4132_0 = Main.tile[m, n - 1].type;
                                                         }
@@ -1886,7 +1881,7 @@ namespace Terraria_Server
                                         {
                                             int num63 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
                                             int num64 = (int)(npc.Position.Y + (float)npc.height + 1f) / 16;
-                                            if (Main.netMode == 1 || !npc.townNPC)
+                                            if (!npc.townNPC)
                                             {
                                                 npc.homeTileX = num63;
                                                 npc.homeTileY = num64;
@@ -1929,7 +1924,7 @@ namespace Terraria_Server
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 37 && Main.netMode != 1)
+                                            if (npc.Type == 37)
                                             {
                                                 npc.homeless = false;
                                                 npc.homeTileX = Main.dungeonX;
@@ -1940,7 +1935,7 @@ namespace Terraria_Server
                                                     npc.netUpdate = true;
                                                 }
                                             }
-                                            if (Main.netMode != 1 && npc.townNPC && !Main.dayTime && (num63 != npc.homeTileX || num64 != npc.homeTileY) && !npc.homeless)
+                                            if (npc.townNPC && !Main.dayTime && (num63 != npc.homeTileX || num64 != npc.homeTileY) && !npc.homeless)
                                             {
                                                 bool flag8 = true;
                                                 for (int num66 = 0; num66 < 2; num66++)
@@ -1992,47 +1987,44 @@ namespace Terraria_Server
                                                 }
                                                 if (!Main.dayTime && !flag7)
                                                 {
-                                                    if (Main.netMode != 1)
+                                                    if (num63 == npc.homeTileX && num64 == npc.homeTileY)
                                                     {
-                                                        if (num63 == npc.homeTileX && num64 == npc.homeTileY)
+                                                        if (npc.Velocity.X != 0f)
                                                         {
-                                                            if (npc.Velocity.X != 0f)
-                                                            {
-                                                                npc.netUpdate = true;
-                                                            }
-                                                            if ((double)npc.Velocity.X > 0.1)
-                                                            {
-                                                                npc.Velocity.X = npc.Velocity.X - 0.1f;
-                                                            }
-                                                            else
-                                                            {
-                                                                if ((double)npc.Velocity.X < -0.1)
-                                                                {
-                                                                    npc.Velocity.X = npc.Velocity.X + 0.1f;
-                                                                }
-                                                                else
-                                                                {
-                                                                    npc.Velocity.X = 0f;
-                                                                }
-                                                            }
+                                                            npc.netUpdate = true;
+                                                        }
+                                                        if ((double)npc.Velocity.X > 0.1)
+                                                        {
+                                                            npc.Velocity.X = npc.Velocity.X - 0.1f;
                                                         }
                                                         else
                                                         {
-                                                            if (!flag7)
+                                                            if ((double)npc.Velocity.X < -0.1)
                                                             {
-                                                                if (num63 > npc.homeTileX)
-                                                                {
-                                                                    npc.direction = -1;
-                                                                }
-                                                                else
-                                                                {
-                                                                    npc.direction = 1;
-                                                                }
-                                                                npc.ai[0] = 1f;
-                                                                npc.ai[1] = (float)(200 + Main.rand.Next(200));
-                                                                npc.ai[2] = 0f;
-                                                                npc.netUpdate = true;
+                                                                npc.Velocity.X = npc.Velocity.X + 0.1f;
                                                             }
+                                                            else
+                                                            {
+                                                                npc.Velocity.X = 0f;
+                                                            }
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (!flag7)
+                                                        {
+                                                            if (num63 > npc.homeTileX)
+                                                            {
+                                                                npc.direction = -1;
+                                                            }
+                                                            else
+                                                            {
+                                                                npc.direction = 1;
+                                                            }
+                                                            npc.ai[0] = 1f;
+                                                            npc.ai[1] = (float)(200 + Main.rand.Next(200));
+                                                            npc.ai[2] = 0f;
+                                                            npc.netUpdate = true;
                                                         }
                                                     }
                                                 }
@@ -2053,26 +2045,23 @@ namespace Terraria_Server
                                                             npc.Velocity.X = 0f;
                                                         }
                                                     }
-                                                    if (Main.netMode != 1)
+                                                    if (npc.ai[1] > 0f)
                                                     {
-                                                        if (npc.ai[1] > 0f)
+                                                        npc.ai[1] -= 1f;
+                                                    }
+                                                    if (npc.ai[1] <= 0f)
+                                                    {
+                                                        npc.ai[0] = 1f;
+                                                        npc.ai[1] = (float)(200 + Main.rand.Next(200));
+                                                        if (npc.Type == 46)
                                                         {
-                                                            npc.ai[1] -= 1f;
+                                                            npc.ai[1] += (float)Main.rand.Next(200, 400);
                                                         }
-                                                        if (npc.ai[1] <= 0f)
-                                                        {
-                                                            npc.ai[0] = 1f;
-                                                            npc.ai[1] = (float)(200 + Main.rand.Next(200));
-                                                            if (npc.Type == 46)
-                                                            {
-                                                                npc.ai[1] += (float)Main.rand.Next(200, 400);
-                                                            }
-                                                            npc.ai[2] = 0f;
-                                                            npc.netUpdate = true;
-                                                        }
+                                                        npc.ai[2] = 0f;
+                                                        npc.netUpdate = true;
                                                     }
                                                 }
-                                                if (Main.netMode != 1 && (Main.dayTime || (num63 == npc.homeTileX && num64 == npc.homeTileY)))
+                                                if ((Main.dayTime || (num63 == npc.homeTileX && num64 == npc.homeTileY)))
                                                 {
                                                     if (num63 < npc.homeTileX - 25 || num63 > npc.homeTileX + 25)
                                                     {
@@ -2108,7 +2097,7 @@ namespace Terraria_Server
                                             {
                                                 if (npc.ai[0] == 1f)
                                                 {
-                                                    if (Main.netMode != 1 && !Main.dayTime && num63 == npc.homeTileX && num64 == npc.homeTileY)
+                                                    if (!Main.dayTime && num63 == npc.homeTileX && num64 == npc.homeTileY)
                                                     {
                                                         npc.ai[0] = 0f;
                                                         npc.ai[1] = (float)(200 + Main.rand.Next(200));
@@ -2116,7 +2105,7 @@ namespace Terraria_Server
                                                         npc.netUpdate = true;
                                                         return;
                                                     }
-                                                    if (Main.netMode != 1 && !npc.homeless && (num63 < npc.homeTileX - 35 || num63 > npc.homeTileX + 35))
+                                                    if (!npc.homeless && (num63 < npc.homeTileX - 35 || num63 > npc.homeTileX + 35))
                                                     {
                                                         if (npc.Position.X < (float)(npc.homeTileX * 16) && npc.direction == -1)
                                                         {
@@ -2227,33 +2216,30 @@ namespace Terraria_Server
                                                         }
                                                         if (npc.townNPC && Main.tile[num68, num69 - 2].Active && Main.tile[num68, num69 - 2].type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
-                                                            if (Main.netMode != 1)
+                                                            bool flag10 = WorldGen.OpenDoor(num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
+                                                            if (flag10)
                                                             {
-                                                                bool flag10 = WorldGen.OpenDoor(num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
-                                                                if (flag10)
-                                                                {
-                                                                    npc.closeDoor = true;
-                                                                    npc.doorX = num68;
-                                                                    npc.doorY = num69 - 2;
-                                                                    NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)npc.direction);
-                                                                    npc.netUpdate = true;
-                                                                    npc.ai[1] += 80f;
-                                                                    return;
-                                                                }
-                                                                if (WorldGen.OpenDoor(num68, num69 - 2, -npc.direction, npc.closeDoor, DoorOpener.NPC))
-                                                                {
-                                                                    npc.closeDoor = true;
-                                                                    npc.doorX = num68;
-                                                                    npc.doorY = num69 - 2;
-                                                                    NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)(-(float)npc.direction));
-                                                                    npc.netUpdate = true;
-                                                                    npc.ai[1] += 80f;
-                                                                    return;
-                                                                }
-                                                                npc.direction *= -1;
+                                                                npc.closeDoor = true;
+                                                                npc.doorX = num68;
+                                                                npc.doorY = num69 - 2;
+                                                                NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)npc.direction);
                                                                 npc.netUpdate = true;
+                                                                npc.ai[1] += 80f;
                                                                 return;
                                                             }
+                                                            if (WorldGen.OpenDoor(num68, num69 - 2, -npc.direction, npc.closeDoor, DoorOpener.NPC))
+                                                            {
+                                                                npc.closeDoor = true;
+                                                                npc.doorX = num68;
+                                                                npc.doorY = num69 - 2;
+                                                                NetMessage.SendData(19, -1, -1, "", 0, (float)num68, (float)(num69 - 2), (float)(-(float)npc.direction));
+                                                                npc.netUpdate = true;
+                                                                npc.ai[1] += 80f;
+                                                                return;
+                                                            }
+                                                            npc.direction *= -1;
+                                                            npc.netUpdate = true;
+                                                            return;
                                                         }
                                                         else
                                                         {
@@ -2525,7 +2511,7 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    if (npc.ai[0] >= 650f && Main.netMode != 1)
+                                                    if (npc.ai[0] >= 650f)
                                                     {
                                                         npc.ai[0] = 1f;
                                                         int num78 = (int)Main.players[npc.target].Position.X / 16;
@@ -2580,22 +2566,19 @@ namespace Terraria_Server
                                                     npc.ai[1] -= 1f;
                                                     if (npc.ai[1] == 25f)
                                                     {
-                                                        if (Main.netMode != 1)
+                                                        if (npc.Type == 29 || npc.Type == 45)
                                                         {
-                                                            if (npc.Type == 29 || npc.Type == 45)
+                                                            NPC.NewNPC((int)npc.Position.X + npc.width / 2, (int)npc.Position.Y - 8, 30, 0);
+                                                        }
+                                                        else
+                                                        {
+                                                            if (npc.Type == 32)
                                                             {
-                                                                NPC.NewNPC((int)npc.Position.X + npc.width / 2, (int)npc.Position.Y - 8, 30, 0);
+                                                                NPC.NewNPC((int)npc.Position.X + npc.width / 2, (int)npc.Position.Y - 8, 33, 0);
                                                             }
                                                             else
                                                             {
-                                                                if (npc.Type == 32)
-                                                                {
-                                                                    NPC.NewNPC((int)npc.Position.X + npc.width / 2, (int)npc.Position.Y - 8, 33, 0);
-                                                                }
-                                                                else
-                                                                {
-                                                                    NPC.NewNPC((int)npc.Position.X + npc.width / 2 + npc.direction * 8, (int)npc.Position.Y + 20, 25, 0);
-                                                                }
+                                                                NPC.NewNPC((int)npc.Position.X + npc.width / 2 + npc.direction * 8, (int)npc.Position.Y + 20, 25, 0);
                                                             }
                                                         }
                                                     }
@@ -2863,7 +2846,7 @@ namespace Terraria_Server
                                                 {
                                                     if (npc.aiStyle == 11)
                                                     {
-                                                        if (npc.ai[0] == 0f && Main.netMode != 1)
+                                                        if (npc.ai[0] == 0f)
                                                         {
                                                             npc.TargetClosest(true);
                                                             npc.ai[0] = 1f;
@@ -3059,7 +3042,7 @@ namespace Terraria_Server
                                                             if (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != 11)
                                                             {
                                                                 npc.ai[2] += 10f;
-                                                                if (npc.ai[2] > 50f || Main.netMode != 2)
+                                                                if (npc.ai[2] > 50f)
                                                                 {
                                                                     npc.life = -1;
                                                                     npc.HitEffect(0, 10.0);
@@ -3646,58 +3629,55 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (Main.netMode != 1)
+                                                                    if (npc.Type == 48)
                                                                     {
-                                                                        if (npc.Type == 48)
+                                                                        npc.ai[0] += 1f;
+                                                                        if (npc.ai[0] == 30f || npc.ai[0] == 60f || npc.ai[0] == 90f)
                                                                         {
-                                                                            npc.ai[0] += 1f;
-                                                                            if (npc.ai[0] == 30f || npc.ai[0] == 60f || npc.ai[0] == 90f)
-                                                                            {
-                                                                                float num127 = 6f;
-                                                                                Vector2 vector18 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                                float num128 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
-                                                                                float num129 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
-                                                                                float num130 = (float)Math.Sqrt((double)(num128 * num128 + num129 * num129));
-                                                                                num130 = num127 / num130;
-                                                                                num128 *= num130;
-                                                                                num129 *= num130;
-                                                                                int num131 = 15;
-                                                                                int num132 = 38;
-                                                                                int num133 = Projectile.NewProjectile(vector18.X, vector18.Y, num128, num129, num132, num131, 0f, Main.myPlayer);
-                                                                                Main.projectile[num133].timeLeft = 300;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if (npc.ai[0] >= (float)(400 + Main.rand.Next(400)))
-                                                                                {
-                                                                                    npc.ai[0] = 0f;
-                                                                                }
-                                                                            }
+                                                                            float num127 = 6f;
+                                                                            Vector2 vector18 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
+                                                                            float num128 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
+                                                                            float num129 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
+                                                                            float num130 = (float)Math.Sqrt((double)(num128 * num128 + num129 * num129));
+                                                                            num130 = num127 / num130;
+                                                                            num128 *= num130;
+                                                                            num129 *= num130;
+                                                                            int num131 = 15;
+                                                                            ProjectileType num132 = ProjectileType.FEATHER_HARPY;
+                                                                            int num133 = Projectile.NewProjectile(vector18.X, vector18.Y, num128, num129, num132, num131, 0f, Main.myPlayer);
+                                                                            Main.projectile[num133].timeLeft = 300;
                                                                         }
-                                                                        if (npc.Type == 62 || npc.Type == 66)
+                                                                        else
                                                                         {
-                                                                            npc.ai[0] += 1f;
-                                                                            if (npc.ai[0] == 20f || npc.ai[0] == 40f || npc.ai[0] == 60f || npc.ai[0] == 80f)
-                                                                            {
-                                                                                float num134 = 0.2f;
-                                                                                Vector2 vector19 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                                float num135 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
-                                                                                float num136 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
-                                                                                float num137 = (float)Math.Sqrt((double)(num135 * num135 + num136 * num136));
-                                                                                num137 = num134 / num137;
-                                                                                num135 *= num137;
-                                                                                num136 *= num137;
-                                                                                int num138 = 25;
-                                                                                int num139 = 44;
-                                                                                int num140 = Projectile.NewProjectile(vector19.X, vector19.Y, num135, num136, num139, num138, 0f, Main.myPlayer);
-                                                                                Main.projectile[num140].timeLeft = 300;
-                                                                                return;
-                                                                            }
-                                                                            if (npc.ai[0] >= (float)(300 + Main.rand.Next(300)))
+                                                                            if (npc.ai[0] >= (float)(400 + Main.rand.Next(400)))
                                                                             {
                                                                                 npc.ai[0] = 0f;
-                                                                                return;
                                                                             }
+                                                                        }
+                                                                    }
+                                                                    if (npc.Type == 62 || npc.Type == 66)
+                                                                    {
+                                                                        npc.ai[0] += 1f;
+                                                                        if (npc.ai[0] == 20f || npc.ai[0] == 40f || npc.ai[0] == 60f || npc.ai[0] == 80f)
+                                                                        {
+                                                                            float num134 = 0.2f;
+                                                                            Vector2 vector19 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
+                                                                            float num135 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
+                                                                            float num136 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
+                                                                            float num137 = (float)Math.Sqrt((double)(num135 * num135 + num136 * num136));
+                                                                            num137 = num134 / num137;
+                                                                            num135 *= num137;
+                                                                            num136 *= num137;
+                                                                            int num138 = 25;
+                                                                            ProjectileType num139 = ProjectileType.SICKLE_DEMON;
+                                                                            int num140 = Projectile.NewProjectile(vector19.X, vector19.Y, num135, num136, num139, num138, 0f, Main.myPlayer);
+                                                                            Main.projectile[num140].timeLeft = 300;
+                                                                            return;
+                                                                        }
+                                                                        if (npc.ai[0] >= (float)(300 + Main.rand.Next(300)))
+                                                                        {
+                                                                            npc.ai[0] = 0f;
+                                                                            return;
                                                                         }
                                                                     }
                                                                 }
@@ -3813,29 +3793,26 @@ namespace Terraria_Server
                                                                                 npc.Position.X = npc.Position.X - (float)(npc.width / 2);
                                                                                 npc.Position.Y = npc.Position.Y - (float)npc.height;
                                                                             }
-                                                                            if (Main.netMode != 1)
+                                                                            int num143 = (int)((double)npc.lifeMax * 0.05);
+                                                                            if ((float)(npc.life + num143) < npc.ai[3])
                                                                             {
-                                                                                int num143 = (int)((double)npc.lifeMax * 0.05);
-                                                                                if ((float)(npc.life + num143) < npc.ai[3])
+                                                                                npc.ai[3] = (float)npc.life;
+                                                                                int num144 = Main.rand.Next(1, 4);
+                                                                                for (int num145 = 0; num145 < num144; num145++)
                                                                                 {
-                                                                                    npc.ai[3] = (float)npc.life;
-                                                                                    int num144 = Main.rand.Next(1, 4);
-                                                                                    for (int num145 = 0; num145 < num144; num145++)
+                                                                                    int x = (int)(npc.Position.X + (float)Main.rand.Next(npc.width - 32));
+                                                                                    int y = (int)(npc.Position.Y + (float)Main.rand.Next(npc.height - 32));
+                                                                                    int npcIndex = NPC.NewNPC(x, y, 1, 0);
+                                                                                    Main.npcs[npcIndex] = Registries.NPC.Create(1);
+                                                                                    Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
+                                                                                    Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
+                                                                                    Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
+                                                                                    if (npcIndex < MAX_NPCS)
                                                                                     {
-                                                                                        int x = (int)(npc.Position.X + (float)Main.rand.Next(npc.width - 32));
-                                                                                        int y = (int)(npc.Position.Y + (float)Main.rand.Next(npc.height - 32));
-                                                                                        int npcIndex = NPC.NewNPC(x, y, 1, 0);
-                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create(1);
-                                                                                        Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
-                                                                                        Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
-                                                                                        Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
-                                                                                        if (Main.netMode == 2 && npcIndex < MAX_NPCS)
-                                                                                        {
-                                                                                            NetMessage.SendData(23, -1, -1, "", npcIndex);
-                                                                                        }
+                                                                                        NetMessage.SendData(23, -1, -1, "", npcIndex);
                                                                                     }
-                                                                                    return;
                                                                                 }
+                                                                                return;
                                                                             }
                                                                         }
                                                                     }
@@ -3998,12 +3975,9 @@ namespace Terraria_Server
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        if (Main.netMode != 1)
-                                                                                        {
-                                                                                            npc.Velocity.Y = (float)Main.rand.Next(-50, -20) * 0.1f;
-                                                                                            npc.Velocity.X = (float)Main.rand.Next(-20, 20) * 0.1f;
-                                                                                            npc.netUpdate = true;
-                                                                                        }
+                                                                                        npc.Velocity.Y = (float)Main.rand.Next(-50, -20) * 0.1f;
+                                                                                        npc.Velocity.X = (float)Main.rand.Next(-20, 20) * 0.1f;
+                                                                                        npc.netUpdate = true;
                                                                                     }
                                                                                 }
                                                                                 npc.Velocity.Y = npc.Velocity.Y + 0.3f;
@@ -4032,23 +4006,20 @@ namespace Terraria_Server
                                                                                 if (npc.ai[0] == 0f)
                                                                                 {
                                                                                     npc.TargetClosest(true);
-                                                                                    if (Main.netMode != 1)
+                                                                                    if (npc.Velocity.X != 0f || npc.Velocity.Y != 0f)
                                                                                     {
-                                                                                        if (npc.Velocity.X != 0f || npc.Velocity.Y != 0f)
+                                                                                        npc.ai[0] = 1f;
+                                                                                        npc.netUpdate = true;
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        Rectangle rectangle3 = new Rectangle((int)Main.players[npc.target].Position.X, (int)Main.players[npc.target].Position.Y, Main.players[npc.target].width, Main.players[npc.target].height);
+                                                                                        Rectangle rectangle4 = new Rectangle((int)npc.Position.X - 100, (int)npc.Position.Y - 100, npc.width + 200, npc.height + 200);
+                                                                                        if (rectangle4.Intersects(rectangle3) || npc.life < npc.lifeMax)
                                                                                         {
                                                                                             npc.ai[0] = 1f;
+                                                                                            npc.Velocity.Y = npc.Velocity.Y - 6f;
                                                                                             npc.netUpdate = true;
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            Rectangle rectangle3 = new Rectangle((int)Main.players[npc.target].Position.X, (int)Main.players[npc.target].Position.Y, Main.players[npc.target].width, Main.players[npc.target].height);
-                                                                                            Rectangle rectangle4 = new Rectangle((int)npc.Position.X - 100, (int)npc.Position.Y - 100, npc.width + 200, npc.height + 200);
-                                                                                            if (rectangle4.Intersects(rectangle3) || npc.life < npc.lifeMax)
-                                                                                            {
-                                                                                                npc.ai[0] = 1f;
-                                                                                                npc.Velocity.Y = npc.Velocity.Y - 6f;
-                                                                                                npc.netUpdate = true;
-                                                                                            }
                                                                                         }
                                                                                     }
                                                                                 }
@@ -4355,11 +4326,11 @@ namespace Terraria_Server
                                                                                         {
                                                                                             npc.ai[0] -= 1f;
                                                                                         }
-                                                                                        if (Main.netMode != 1 && flag15 && npc.ai[0] == 0f && Collision.CanHit(npc.Position, npc.width, npc.height, Main.players[npc.target].Position, Main.players[npc.target].width, Main.players[npc.target].height))
+                                                                                        if (flag15 && npc.ai[0] == 0f && Collision.CanHit(npc.Position, npc.width, npc.height, Main.players[npc.target].Position, Main.players[npc.target].width, Main.players[npc.target].height))
                                                                                         {
                                                                                             npc.ai[0] = 200f;
                                                                                             int num162 = 10;
-                                                                                            int num163 = 31;
+                                                                                            ProjectileType num163 = ProjectileType.BALL_SAND_DROP;
                                                                                             int num164 = Projectile.NewProjectile(vector21.X, vector21.Y, num159, num160, num163, num162, 0f, Main.myPlayer);
                                                                                             Main.projectile[num164].ai[0] = 2f;
                                                                                             Main.projectile[num164].timeLeft = 300;
@@ -5301,15 +5272,13 @@ namespace Terraria_Server
                 {
                     flag = false;
                 }
-                if (!flag && Main.netMode != 1)
+                if (!flag)
                 {
                     NPC.noSpawnCycle = true;
                     this.Active = false;
-                    if (Main.netMode == 2)
-                    {
-                        this.life = 0;
-                        NetMessage.SendData(23, -1, -1, "", this.whoAmI);
-                    }
+                    
+                    this.life = 0;
+                    NetMessage.SendData(23, -1, -1, "", this.whoAmI);
                 }
             }
         }
@@ -6101,7 +6070,7 @@ namespace Terraria_Server
                         {
                             Main.npcs[npcIndex] = Registries.NPC.Create("Pinky");
                         }
-                        if (Main.netMode == 2 && npcIndex < MAX_NPCS)
+                        if (npcIndex < MAX_NPCS)
                         {
                             NetMessage.SendData(23, -1, -1, "", npcIndex);
                             return;
@@ -6114,10 +6083,6 @@ namespace Terraria_Server
         
         public static void SpawnOnPlayer(Player player, int playerIndex, int Type)
         {
-            if (Main.netMode == 1)
-            {
-                return;
-            }
             bool flag = false;
             int num = 0;
             int num2 = 0;
@@ -6251,6 +6216,7 @@ namespace Terraria_Server
             }
             if (flag)
             {
+                //Boss summon?
                 int npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
                 Main.npcs[npcIndex].target = playerIndex;
                 String str = Main.npcs[npcIndex].Name;
@@ -6262,18 +6228,12 @@ namespace Terraria_Server
                 {
                     str = "Skeletron";
                 }
-                if (Main.netMode == 2 && npcIndex < MAX_NPCS)
+                if (npcIndex < MAX_NPCS)
                 {
                     NetMessage.SendData(23, -1, -1, "", npcIndex);
                 }
-                if (Main.netMode == 0)
-                {
-                    return;
-                }
-                if (Main.netMode == 2)
-                {
-                    NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
-                }
+                
+                NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
             }
         }
         
@@ -6318,10 +6278,7 @@ namespace Terraria_Server
 
                 if (type == 50)
                 {
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendData(25, -1, -1, npc.Name + " has awoken!", 255, 175f, 75f, 255f);
-                    }
+                    NetMessage.SendData(25, -1, -1, npc.Name + " has awoken!", 255, 175f, 75f, 255f);
                 }
                 return npcIndex;
             }
@@ -6330,22 +6287,16 @@ namespace Terraria_Server
 
         public static void Transform(int npcIndex, int newType)
         {
-            if (Main.netMode != 1)
-            {
-                NPC npc = Main.npcs[npcIndex];
-                Vector2 vector = npc.Velocity;
-                int num = npc.spriteDirection;
-                npc = Registries.NPC.Create(newType);
-                Main.npcs[npcIndex] = npc;
-                npc.spriteDirection = num;
-                npc.TargetClosest(true);
-                npc.Velocity = vector;
-                if (Main.netMode == 2)
-                {
-                    npc.netUpdate = true;
-                    NetMessage.SendData(23, -1, -1, "", npc.whoAmI);
-                }
-            }
+            NPC npc = Main.npcs[npcIndex];
+            Vector2 vector = npc.Velocity;
+            int num = npc.spriteDirection;
+            npc = Registries.NPC.Create(newType);
+            Main.npcs[npcIndex] = npc;
+            npc.spriteDirection = num;
+            npc.TargetClosest(true);
+            npc.Velocity = vector;
+            npc.netUpdate = true;
+            NetMessage.SendData(23, -1, -1, "", npc.whoAmI);
         }
         
         public double StrikeNPC(int Damage, float knockBack, int hitDirection)
@@ -6366,7 +6317,7 @@ namespace Terraria_Server
                     this.direction = hitDirection;
                     this.netUpdate = true;
                 }
-                if (this.aiStyle == 8 && Main.netMode != 1)
+                if (this.aiStyle == 8)
                 {
                     this.ai[0] = 400f;
                     this.TargetClosest(true);
@@ -6391,12 +6342,9 @@ namespace Terraria_Server
                     NPC.noSpawnCycle = true;
                     if (this.townNPC && this.Type != 37)
                     {
-                        if (Main.netMode == 2)
-                        {
-                            NetMessage.SendData(25, -1, -1, this.Name + " was slain...", 255, 255f, 25f, 25f);
-                        }
+                        NetMessage.SendData(25, -1, -1, this.Name + " was slain...", 255, 255f, 25f, 25f);
                     }
-                    if (this.townNPC && Main.netMode != 1 && this.homeless && WorldGen.spawnNPC == this.Type)
+                    if (this.townNPC && this.homeless && WorldGen.spawnNPC == this.Type)
                     {
                         WorldGen.spawnNPC = 0;
                     }
@@ -6670,11 +6618,8 @@ namespace Terraria_Server
                 {
                     Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 58, 1, false);
                 }
-
-                if (Main.netMode == 2)
-                {
-                    NetMessage.SendData(25, -1, -1, this.Name + " has been defeated!", 255, 175f, 75f, 255f);
-                }
+                
+                NetMessage.SendData(25, -1, -1, this.Name + " has been defeated!", 255, 175f, 75f, 255f);
             }
             if (Main.rand.Next(7) == 0 && this.lifeMax > 1)
             {
@@ -6798,7 +6743,7 @@ namespace Terraria_Server
                     {
                         Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, this.alpha, this.color, 1f);
                     }
-                    if (Main.netMode != 1 && this.Type == 16)
+                    if (this.Type == 16)
                     {
                         int spawnedSlimes = Main.rand.Next(2) + 2;
                         for (int slimeNum = 0; slimeNum < spawnedSlimes; slimeNum++)
@@ -6811,7 +6756,7 @@ namespace Terraria_Server
                             npc.Velocity.X = npc.Velocity.X + ((float)Main.rand.Next(-20, 20) * 0.1f + (float)(slimeNum * this.direction) * 0.3f);
                             npc.Velocity.Y = npc.Velocity.Y - ((float)Main.rand.Next(0, 10) * 0.1f + (float)slimeNum);
                             npc.ai[1] = (float)slimeNum;
-                            if (Main.netMode == 2 && npcIndex < MAX_NPCS)
+                            if (npcIndex < MAX_NPCS)
                             {
                                 NetMessage.SendData(23, -1, -1, "", npcIndex);
                             }
@@ -6851,7 +6796,7 @@ namespace Terraria_Server
                     Color newColor = default(Color);
                     Dust.NewDust(arg_3AB_0, arg_3AB_1, arg_3AB_2, arg_3AB_3, arg_3AB_4, arg_3AB_5, arg_3AB_6, newColor, 1.5f);
                 }
-                if (this.Type == 59 && Main.netMode != 1)
+                if (this.Type == 59)
                 {
                     int num5 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
                     int num6 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
@@ -6880,25 +6825,22 @@ namespace Terraria_Server
                 {
                     Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 175, new Color(0, 80, 255, 100), 1f);
                 }
-                if (Main.netMode != 1)
+                int num8 = Main.rand.Next(4) + 4;
+                for (int m = 0; m < num8; m++)
                 {
-                    int num8 = Main.rand.Next(4) + 4;
-                    for (int m = 0; m < num8; m++)
+                    int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
+                    int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
+                    int npcIndex = NPC.NewNPC(x, y, 1, 0);
+                    Main.npcs[npcIndex] = Registries.NPC.Create(1);
+                    Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
+                    Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
+                    Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
+                    if (npcIndex < 1000)
                     {
-                        int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
-                        int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
-                        int npcIndex = NPC.NewNPC(x, y, 1, 0);
-                        Main.npcs[npcIndex] = Registries.NPC.Create(1);
-                        Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
-                        Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
-                        Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
-                        if (Main.netMode == 2 && npcIndex < 1000)
-                        {
-                            NetMessage.SendData(23, -1, -1, "", npcIndex);
-                        }
+                        NetMessage.SendData(23, -1, -1, "", npcIndex);
                     }
-                    return;
                 }
+                return;
             }
             else if (this.Type == 49 || this.Type == 51)
             {
@@ -8034,10 +7976,8 @@ namespace Terraria_Server
                     vector = Main.npcs[j].Position;
                     num = Main.npcs[j].width;
                     num2 = Main.npcs[j].height;
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendData(23, -1, -1, "", j);
-                    }
+
+                    NetMessage.SendData(23, -1, -1, "", j);
                 }
             }
             if (flag && flag2)
@@ -8045,14 +7985,8 @@ namespace Terraria_Server
                 int npcIndex = NPC.NewNPC((int)vector.X + num / 2, (int)vector.Y + num2 / 2, 35, 0);
                 Main.npcs[npcIndex].netUpdate = true;
                 String str = "Skeletron";
-                if (Main.netMode == 0)
-                {
-                    return;
-                }
-                if (Main.netMode == 2)
-                {
-                    NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
-                }
+                
+                NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
             }
         }
         
@@ -8062,7 +7996,7 @@ namespace Terraria_Server
             npc.whoAmI = i;
             if (npc.Active)
             {
-                if (Main.netMode != 1 && Main.bloodMoon)
+                if (Main.bloodMoon)
                 {
                     if (npc.Type == 46)
                     {
@@ -8114,7 +8048,7 @@ namespace Terraria_Server
                 {
                     npc.Velocity.X = 0f;
                 }
-                if (Main.netMode != 1 && npc.friendly && npc.Type != 37)
+                if (npc.friendly && npc.Type != 37)
                 {
                     if (npc.life < npc.lifeMax)
                     {
@@ -8144,10 +8078,7 @@ namespace Terraria_Server
                                         num5 = -1;
                                     }
                                     Main.npcs[i].StrikeNPC(num3, (float)num4, num5);
-                                    if (Main.netMode != 0)
-                                    {
-                                        NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5);
-                                    }
+                                    NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5);
                                     npc.netUpdate = true;
                                     npc.immune[255] = 30;
                                 }
@@ -8161,14 +8092,12 @@ namespace Terraria_Server
                     if (flag)
                     {
                         npc.lavaWet = true;
-                        if (!npc.lavaImmune && Main.netMode != 1 && npc.immune[255] == 0)
+                        if (!npc.lavaImmune && npc.immune[255] == 0)
                         {
                             npc.immune[255] = 30;
                             npc.StrikeNPC(50, 0f, 0);
-                            if (Main.netMode == 2 && Main.netMode != 0)
-                            {
-                                NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 50f);
-                            }
+                            
+                            NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 50f);
                         }
                     }
                     bool flag2 = Collision.WetCollision(npc.Position, npc.width, npc.height);
@@ -8319,7 +8248,7 @@ namespace Terraria_Server
                 {
                     npc.netUpdate = true;
                 }
-                if (Main.netMode == 2 && npc.netUpdate)
+                if (npc.netUpdate)
                 {
                     NetMessage.SendData(23, -1, -1, "", i);
                 }
@@ -8996,10 +8925,7 @@ namespace Terraria_Server
         {
             NPC cloned = (NPC)base.MemberwiseClone();
             NPC.npcSlots = cloned.slots;
-            if (Main.dedServ)
-            {
-                cloned.frame = default(Rectangle);
-            }
+            cloned.frame = default(Rectangle);
             cloned.width = (int)((float)cloned.width * cloned.scale);
             cloned.height = (int)((float)cloned.height * cloned.scale);
             cloned.life = cloned.lifeMax;

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class PlayerEditSignEvent : PlayerDestroySignEvent
+    public class PlayerEditSignEvent : Event
     {
         public String Text { get; set; }
         public Sign Sign { get; set; }

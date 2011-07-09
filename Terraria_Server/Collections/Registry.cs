@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using System.Reflection;
 
 namespace Terraria_Server.Collections
 {
@@ -10,13 +11,14 @@ namespace Terraria_Server.Collections
         protected Dictionary<int, T> typeLookup = new Dictionary<int, T>();
         protected Dictionary<string, T> nameLookup = new Dictionary<string, T>();
 
+        protected String DEFINITIONS = "Terraria_Server.Definitions.";
+
         private readonly T defaultValue;
 
         public Registry(String filePath, T defaultValue)
         {
             this.defaultValue = defaultValue;
-
-            StreamReader reader = new StreamReader(filePath);
+            StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(DEFINITIONS + filePath));
             XmlSerializer serializer = new XmlSerializer(typeof(T[]));
             try
             {

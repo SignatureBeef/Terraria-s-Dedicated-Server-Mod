@@ -16,22 +16,15 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = readBuffer[num++];
-
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            int playerIndex = whoAmI;
 
             float itemRotation = BitConverter.ToSingle(readBuffer, num);
             num += 4;
             int itemAnimation = (int)BitConverter.ToInt16(readBuffer, num);
             Main.players[playerIndex].itemRotation = itemRotation;
             Main.players[playerIndex].itemAnimation = itemAnimation;
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(41, -1, whoAmI, "", playerIndex);
-            }
+            
+            NetMessage.SendData(41, -1, whoAmI, "", playerIndex);
         }
     }
 }

@@ -17,10 +17,8 @@ namespace Terraria_Server.Messages
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int playerIndex = (int)readBuffer[num++];
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            
+            playerIndex = whoAmI;
 
             Player player = Main.players[playerIndex];
             player.zoneEvil = (readBuffer[num++] != 0);
@@ -28,10 +26,7 @@ namespace Terraria_Server.Messages
             player.zoneDungeon = (readBuffer[num++] != 0);
             player.zoneJungle = (readBuffer[num++] != 0);
 
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(36, -1, whoAmI, "", playerIndex);
-            }
+            NetMessage.SendData(36, -1, whoAmI, "", playerIndex);
         }
     }
 }

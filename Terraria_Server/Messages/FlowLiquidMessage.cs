@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
             byte liquid = readBuffer[num++];
             byte lavaFlag = readBuffer[num]++;
 
-            if (Main.netMode == 2 && Netplay.spamCheck)
+            if (Netplay.spamCheck)
             {
                 int playerIndex = whoAmI;
                 Player player = Main.players[playerIndex];
@@ -50,10 +50,7 @@ namespace Terraria_Server.Messages
                 tile.liquid = liquid;
                 tile.lava = (lavaFlag == 1);
 
-                if (Main.netMode == 2)
-                {
-                    WorldGen.SquareTileFrame(x, y, true);
-                }
+                WorldGen.SquareTileFrame(x, y, true);
             }
         }
     }

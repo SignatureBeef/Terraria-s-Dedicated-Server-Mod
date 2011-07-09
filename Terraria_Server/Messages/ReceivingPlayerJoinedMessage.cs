@@ -19,11 +19,7 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = (int)readBuffer[num++];
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            int playerIndex = whoAmI;
 
             Player player = Main.players[playerIndex];
             player.SpawnX = BitConverter.ToInt32(readBuffer, num);
@@ -32,7 +28,7 @@ namespace Terraria_Server.Messages
             num += 4;
             player.Spawn();
 
-            if (Main.netMode == 2 && Netplay.serverSock[whoAmI].state >= 3)
+            if (Netplay.serverSock[whoAmI].state >= 3)
             {
                 if (Netplay.serverSock[whoAmI].state == 3)
                 {

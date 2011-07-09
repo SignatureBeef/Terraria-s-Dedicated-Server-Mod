@@ -22,10 +22,8 @@ namespace Terraria_Server.Messages
             short identity = BitConverter.ToInt16(readBuffer, num);
             num += 2;
             byte owner = readBuffer[num];
-            if (Main.netMode == 2)
-            {
-                owner = (byte)whoAmI;
-            }
+            
+            owner = (byte)whoAmI;
 
             Projectile projectile;
             for (int i = 0; i < 1000; i++)
@@ -38,10 +36,7 @@ namespace Terraria_Server.Messages
                 }
             }
 
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(29, -1, whoAmI, "", (int)identity, (float)owner);
-            }
+            NetMessage.SendData(29, -1, whoAmI, "", (int)identity, (float)owner);
         }
     }
 }

@@ -17,11 +17,7 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = (int)readBuffer[num++];
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            int playerIndex = whoAmI;
 
             int statMana = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
@@ -29,10 +25,8 @@ namespace Terraria_Server.Messages
 
             Main.players[playerIndex].statMana = statMana;
             Main.players[playerIndex].statManaMax = statManaMax;
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(42, -1, whoAmI, "", playerIndex);
-            }
+            
+            NetMessage.SendData(42, -1, whoAmI, "", playerIndex);
         }
     }
 }

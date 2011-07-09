@@ -13,7 +13,6 @@ namespace Terraria_Server
 		public const int maxConnections = 256;
 		public static bool stopListen = false;
 		public static ServerSock[] serverSock = new ServerSock[256];
-		public static ClientSock clientSock = new ClientSock();
 		public static TcpListener tcpListener;
 		public static IPAddress serverListenIP;
         public static IPAddress serverIP;
@@ -24,157 +23,7 @@ namespace Terraria_Server
         public static bool spamCheck = false;
         public static bool ServerUp = false;
         public static bool anyClients = false;
-        		
-        public static void ClientLoop(object threadContext)
-		{
-			if (Main.rand == null)
-			{
-				Main.rand = new Random((int)DateTime.Now.Ticks);
-			}
-			if (WorldGen.genRand == null)
-			{
-				WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
-			}
-			Main.players[Main.myPlayer].hostile = false;
-			Main.clientPlayer = (Player)Main.players[Main.myPlayer].clientClone();
-			Main.menuMode = 10;
-			Main.menuMode = 14;
-			if (!Main.autoPass)
-			{
-				Main.statusText = "Connecting to " + Netplay.serverIP;
-			}
-			Main.netMode = 1;
-			Netplay.disconnect = false;
-			Netplay.clientSock = new ClientSock();
-			Netplay.clientSock.tcpClient.NoDelay = true;
-			Netplay.clientSock.readBuffer = new byte[1024];
-			Netplay.clientSock.writeBuffer = new byte[1024];
-			bool flag = true;
-			while (flag)
-			{
-				flag = false;
-				try
-				{
-					Netplay.clientSock.tcpClient.Connect(Netplay.serverIP, Netplay.serverPort);
-					Netplay.clientSock.networkStream = Netplay.clientSock.tcpClient.GetStream();
-					flag = false;
-				}
-				catch
-				{
-					if (!Netplay.disconnect && Main.gameMenu)
-					{
-						flag = true;
-					}
-				}
-			}
-			NetMessage.buffer[256].Reset();
-			int num = -1;
-			while (!Netplay.disconnect)
-			{
-				if (Netplay.clientSock.tcpClient.Connected)
-				{
-					if (NetMessage.buffer[256].checkBytes)
-					{
-						NetMessage.CheckBytes(256);
-					}
-					Netplay.clientSock.active = true;
-					if (Netplay.clientSock.state == 0)
-					{
-						Main.statusText = "Found server";
-						Netplay.clientSock.state = 1;
-						NetMessage.SendData(1);
-					}
-					if (Netplay.clientSock.state == 2 && num != Netplay.clientSock.state)
-					{
-						Main.statusText = "Sending player data...";
-					}
-					if (Netplay.clientSock.state == 3 && num != Netplay.clientSock.state)
-					{
-						Main.statusText = "Requesting world information";
-					}
-					if (Netplay.clientSock.state == 4)
-					{
-						WorldGen.worldCleared = false;
-						Netplay.clientSock.state = 5;
-						WorldGen.clearWorld();
-					}
-					if (Netplay.clientSock.state == 5 && WorldGen.worldCleared)
-					{
-						Netplay.clientSock.state = 6;
-						Main.players[Main.myPlayer].FindSpawn();
-						NetMessage.SendData(8, -1, -1, "", Main.players[Main.myPlayer].SpawnX, (float)Main.players[Main.myPlayer].SpawnY);
-					}
-					if (Netplay.clientSock.state == 6 && num != Netplay.clientSock.state)
-					{
-						Main.statusText = "Requesting tile data";
-					}
-					if (!Netplay.clientSock.locked && !Netplay.disconnect && Netplay.clientSock.networkStream.DataAvailable)
-					{
-						Netplay.clientSock.locked = true;
-						Netplay.clientSock.networkStream.BeginRead(Netplay.clientSock.readBuffer, 0, Netplay.clientSock.readBuffer.Length, new AsyncCallback(Netplay.clientSock.ClientReadCallBack), Netplay.clientSock.networkStream);
-					}
-					if (Netplay.clientSock.statusMax > 0 && Netplay.clientSock.statusText != "")
-					{
-						if (Netplay.clientSock.statusCount >= Netplay.clientSock.statusMax)
-						{
-							Main.statusText = Netplay.clientSock.statusText + ": Complete!";
-							Netplay.clientSock.statusText = "";
-							Netplay.clientSock.statusMax = 0;
-							Netplay.clientSock.statusCount = 0;
-						}
-						else
-						{
-							Main.statusText = String.Concat(new object[]
-							{
-								Netplay.clientSock.statusText, 
-								": ", 
-								(int)((float)Netplay.clientSock.statusCount / (float)Netplay.clientSock.statusMax * 100f), 
-								"%"
-							});
-						}
-					}
-					Thread.Sleep(1);
-				}
-				else
-				{
-					if (Netplay.clientSock.active)
-					{
-						Main.statusText = "Lost connection";
-						Netplay.disconnect = true;
-					}
-				}
-				num = Netplay.clientSock.state;
-			}
-			try
-			{
-				Netplay.clientSock.networkStream.Close();
-				Netplay.clientSock.networkStream = Netplay.clientSock.tcpClient.GetStream();
-			}
-			catch
-			{
-			}
-			if (!Main.gameMenu)
-			{
-				Main.netMode = 0;
-				Player.SavePlayer(Main.players[Main.myPlayer]);
-				Main.gameMenu = true;
-				Main.menuMode = 14;
-			}
-			NetMessage.buffer[256].Reset();
-			if (Main.menuMode == 15 && Main.statusText == "Lost connection")
-			{
-				Main.menuMode = 14;
-			}
-			if (Netplay.clientSock.statusText != "" && Netplay.clientSock.statusText != null)
-			{
-				Main.statusText = "Lost connection";
-			}
-			Netplay.clientSock.statusCount = 0;
-			Netplay.clientSock.statusMax = 0;
-			Netplay.clientSock.statusText = "";
-			Main.netMode = 0;
-		}
-		
+
         public static void ServerLoop(object threadContext)
 		{
 			if (Main.rand == null)
@@ -188,7 +37,6 @@ namespace Terraria_Server
 			Main.myPlayer = 255;
 			Netplay.serverIP = IPAddress.Parse(serverSIP);
 			Netplay.serverListenIP = Netplay.serverIP;
-			Main.netMode = 2;
 			Netplay.disconnect = false;
 			for (int i = 0; i < 256; i++)
 			{
@@ -448,7 +296,6 @@ namespace Terraria_Server
 			}
 			if (Main.menuMode != 15)
 			{
-				Main.netMode = 0;
 				Main.menuMode = 10;
                 WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
                 while (WorldGen.saveLock)
@@ -499,11 +346,6 @@ namespace Terraria_Server
 				Netplay.stopListen = true;
 				Netplay.tcpListener.Stop();
 			}
-		}
-		
-        public static void StartClient()
-		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(Netplay.ClientLoop), 1);
 		}
 		
         public static void StartServer()
@@ -566,7 +408,6 @@ namespace Terraria_Server
 				NetMessage.buffer[i] = new MessageBuffer();
 				NetMessage.buffer[i].whoAmI = i;
 			}
-			Netplay.clientSock.tcpClient.NoDelay = true;
 		}
 		
         public static int GetSectionX(int x)

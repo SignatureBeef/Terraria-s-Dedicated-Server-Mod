@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terraria_Server.Plugin.Tile
+namespace Terraria_Server.Definitions.Tile
 {
     public enum TileAction
     {

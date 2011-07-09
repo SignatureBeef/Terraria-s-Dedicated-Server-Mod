@@ -35,11 +35,9 @@ namespace Terraria_Server.Messages
                 npc.HitEffect(0, 10.0);
                 npc.Active = false;
             }
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction);
-                NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
-            }
+            
+            NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction);
+            NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
         }
     }
 }

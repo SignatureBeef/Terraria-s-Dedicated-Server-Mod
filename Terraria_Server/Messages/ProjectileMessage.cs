@@ -1,6 +1,7 @@
 ﻿using System;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server.Messages
 {
@@ -45,13 +46,10 @@ namespace Terraria_Server.Messages
             
             int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);
             Projectile projectile = (Projectile)Main.projectile[projectileIndex].Clone();
-            if (!projectile.active || projectile.type != (int)type)
+            if (!projectile.active || projectile.type != (ProjectileType)Enum.ToObject(typeof(ProjectileType), (int)type))
             {
-                projectile.SetDefaults((int)type);
-                if (Main.netMode == 2)
-                {
-                    Netplay.serverSock[whoAmI].spamProjectile += 1f;
-                }
+                projectile.SetDefaults((ProjectileType)Enum.ToObject(typeof(ProjectileType), type));
+                Netplay.serverSock[whoAmI].spamProjectile += 1f;
             }
 
             projectile.identity = (int)projectileIdentity;
@@ -60,7 +58,7 @@ namespace Terraria_Server.Messages
             projectile.Velocity.X = vX;
             projectile.Velocity.Y = vY;
             projectile.damage = (int)damage;
-            projectile.type = (int)type;
+            projectile.type = (ProjectileType)Enum.ToObject(typeof(ProjectileType), type);
             projectile.Owner = (int)projectileOwner;
             projectile.knockBack = knockBack;
 
@@ -79,10 +77,7 @@ namespace Terraria_Server.Messages
             {
                 projectile.ai[i] = aiInfo[i];
             }
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(27, -1, whoAmI, "", projectileIndex);
-            }
+            NetMessage.SendData(27, -1, whoAmI, "", projectileIndex);
         }
 
 

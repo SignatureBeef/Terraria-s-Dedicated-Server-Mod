@@ -3,6 +3,9 @@ using Terraria_Server.Commands;
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Reflection;
+using Terraria_Server.Definitions;
+using System.Xml;
 
 namespace Terraria_Server
 {

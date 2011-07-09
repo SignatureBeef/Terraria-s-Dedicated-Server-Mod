@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
 using Terraria_Server.Collections;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {
@@ -197,7 +198,7 @@ namespace Terraria_Server
 
         public void HealEffect(int healAmount, bool overrider = false, int remoteClient = -1)
 		{
-            if (overrider || (Main.netMode == 1 && this.whoAmi == Main.myPlayer))
+            if (overrider || (this.whoAmi == Main.myPlayer))
 			{
                 NetMessage.SendData(35, remoteClient, -1, "", this.whoAmi, (float)healAmount);
 			}
@@ -205,7 +206,7 @@ namespace Terraria_Server
 
         public void ManaEffect(int manaAmount, bool overrider = false, int remoteClient = -1)
 		{
-			if (overrider || (Main.netMode == 1 && this.whoAmi == Main.myPlayer))
+			if (overrider || (this.whoAmi == Main.myPlayer))
 			{
                 NetMessage.SendData(43, remoteClient, -1, "", this.whoAmi, (float)manaAmount);
 			}
@@ -1042,10 +1043,6 @@ namespace Terraria_Server
                                                 this.statLife = this.statLifeMax;
                                             }
                                             Main.item[num29] = new Item();
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.SendData(21, -1, -1, "", num29);
-                                            }
                                         }
                                         else
                                         {
@@ -1061,18 +1058,10 @@ namespace Terraria_Server
                                                     this.statMana = this.statManaMax;
                                                 }
                                                 Main.item[num29] = new Item();
-                                                if (Main.netMode == 1)
-                                                {
-                                                    NetMessage.SendData(21, -1, -1, "", num29);
-                                                }
                                             }
                                             else
                                             {
                                                 Main.item[num29] = this.GetItem(i, Main.item[num29]);
-                                                if (Main.netMode == 1)
-                                                {
-                                                    NetMessage.SendData(21, -1, -1, "", num29);
-                                                }
                                             }
                                         }
                                     }
@@ -1221,10 +1210,6 @@ namespace Terraria_Server
                                     if (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 4 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 13 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 33 || Main.tile[Player.tileTargetX, Player.tileTargetY].type == 49 || (Main.tile[Player.tileTargetX, Player.tileTargetY].type == 50 && Main.tile[Player.tileTargetX, Player.tileTargetY].frameX == 90))
                                     {
                                         WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-                                        if (Main.netMode == 1)
-                                        {
-                                            NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY);
-                                        }
                                     }
                                     else
                                     {
@@ -1267,29 +1252,17 @@ namespace Terraria_Server
                                                 }
                                                 if (flag4)
                                                 {
-                                                    if (Main.netMode == 0)
+                                                    int num38 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
+                                                    int num39 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
+                                                    while (num38 > 1)
                                                     {
-                                                        this.talkNPC = -1;
-                                                        Main.playerInventory = false;
-                                                        Main.editSign = false;
-                                                        int num37 = Sign.ReadSign(Player.tileTargetX, Player.tileTargetY);
-                                                        this.sign = num37;
-                                                        Main.npcChatText = Main.sign[num37].text;
+                                                        num38 -= 2;
                                                     }
-                                                    else
+                                                    int num40 = Player.tileTargetX - num38;
+                                                    int num41 = Player.tileTargetY - num39;
+                                                    if (Main.tile[num40, num41].type == 55)
                                                     {
-                                                        int num38 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameX / 18);
-                                                        int num39 = (int)(Main.tile[Player.tileTargetX, Player.tileTargetY].frameY / 18);
-                                                        while (num38 > 1)
-                                                        {
-                                                            num38 -= 2;
-                                                        }
-                                                        int num40 = Player.tileTargetX - num38;
-                                                        int num41 = Player.tileTargetY - num39;
-                                                        if (Main.tile[num40, num41].type == 55)
-                                                        {
-                                                            NetMessage.SendData(46, -1, -1, "", num40, (float)num41);
-                                                        }
+                                                        NetMessage.SendData(46, -1, -1, "", num40, (float)num41);
                                                     }
                                                 }
                                             }
@@ -1320,50 +1293,36 @@ namespace Terraria_Server
                                                             {
                                                                 flag5 = true;
                                                             }
-                                                            if (Main.netMode == 1 && !flag5)
+                                                            int num44 = -1;
+                                                            if (flag5)
                                                             {
-                                                                if (num42 == this.chestX && num43 == this.chestY && this.chest != -1)
+                                                                num44 = -2;
+                                                            }
+                                                            else
+                                                            {
+                                                                num44 = Chest.FindChest(num42, num43);
+                                                            }
+                                                            if (num44 != -1)
+                                                            {
+                                                                if (num44 == this.chest)
                                                                 {
                                                                     this.chest = -1;
                                                                 }
                                                                 else
                                                                 {
-                                                                    NetMessage.SendData(31, -1, -1, "", num42, (float)num43);
-                                                                }
-                                                            }
-                                                            else
-                                                            {
-                                                                int num44 = -1;
-                                                                if (flag5)
-                                                                {
-                                                                    num44 = -2;
-                                                                }
-                                                                else
-                                                                {
-                                                                    num44 = Chest.FindChest(num42, num43);
-                                                                }
-                                                                if (num44 != -1)
-                                                                {
-                                                                    if (num44 == this.chest)
+                                                                    if (num44 != this.chest && this.chest == -1)
                                                                     {
-                                                                        this.chest = -1;
+                                                                        this.chest = num44;
+                                                                        Main.playerInventory = true;
+                                                                        this.chestX = num42;
+                                                                        this.chestY = num43;
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (num44 != this.chest && this.chest == -1)
-                                                                        {
-                                                                            this.chest = num44;
-                                                                            Main.playerInventory = true;
-                                                                            this.chestX = num42;
-                                                                            this.chestY = num43;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            this.chest = num44;
-                                                                            Main.playerInventory = true;
-                                                                            this.chestX = num42;
-                                                                            this.chestY = num43;
-                                                                        }
+                                                                        this.chest = num44;
+                                                                        Main.playerInventory = true;
+                                                                        this.chestX = num42;
+                                                                        this.chestY = num43;
                                                                     }
                                                                 }
                                                             }
@@ -2520,11 +2479,7 @@ namespace Terraria_Server
 					this.SpawnY = -1;
 				}
 			}
-			if (Main.netMode == 1 && this.whoAmi == Main.myPlayer)
-			{
-				NetMessage.SendData(12, -1, -1, "", Main.myPlayer);
-				Main.gameMenu = false;
-			}
+
             this.headPosition = default(Vector2);
             this.bodyPosition = default(Vector2);
             this.legPosition = default(Vector2);
@@ -2615,17 +2570,6 @@ namespace Terraria_Server
                 double num2 = Main.CalculateDamage(num, this.statDefense);
                 if (num2 >= 1.0)
                 {
-                    if (Main.netMode == 1 && this.whoAmi == Main.myPlayer && !quiet)
-                    {
-                        int num3 = 0;
-                        if (pvp)
-                        {
-                            num3 = 1;
-                        }
-                        NetMessage.SendData(13, -1, -1, "", this.whoAmi);
-                        NetMessage.SendData(16, -1, -1, "", this.whoAmi);
-                        NetMessage.SendData(26, -1, -1, "", this.whoAmi, (float)hitDirection, (float)Damage, (float)num3);
-                    }
                     this.statLife -= (int)num2;
                     this.immune = true;
                     this.immuneTime = 40;
@@ -2691,10 +2635,6 @@ namespace Terraria_Server
                     Main.item[num].Velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
                     Main.item[num].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
                     Main.item[num].NoGrabDelay = 100;
-                    if (Main.netMode == 1)
-                    {
-                        NetMessage.SendData(21, -1, -1, "", num);
-                    }
                 }
             }
         }
@@ -2716,16 +2656,13 @@ namespace Terraria_Server
 
             if (this.hardCore)
             {
-                if (Main.netMode != 1)
+                float num = (float)Main.rand.Next(-35, 36) * 0.1f;
+                while (num < 2f && num > -2f)
                 {
-                    float num = (float)Main.rand.Next(-35, 36) * 0.1f;
-                    while (num < 2f && num > -2f)
-                    {
-                        num += (float)Main.rand.Next(-30, 31) * 0.1f;
-                    }
-                    int num2 = Projectile.NewProjectile(this.Position.X + (float)(this.width / 2), this.Position.Y + (float)(this.head / 2), (float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + num, (float)Main.rand.Next(-40, -20) * 0.1f, 43, this.statLifeMax + this.statManaMax, 0f, Main.myPlayer);
-                    Main.projectile[num2].miscText = this.Name + deathText;
+                    num += (float)Main.rand.Next(-30, 31) * 0.1f;
                 }
+                int num2 = Projectile.NewProjectile(this.Position.X + (float)(this.width / 2), this.Position.Y + (float)(this.head / 2), (float)Main.rand.Next(10, 30) * 0.1f * (float)hitDirection + num, (float)Main.rand.Next(-40, -20) * 0.1f, ProjectileType.TOMBSTONE, this.statLifeMax + this.statManaMax, 0f, Main.myPlayer);
+                Main.projectile[num2].miscText = this.Name + deathText;
                 if (Main.myPlayer == this.whoAmi)
                 {
                     this.statLifeMax = 100;
@@ -2755,20 +2692,8 @@ namespace Terraria_Server
             this.dead = true;
             this.respawnTimer = 600;
             this.immuneAlpha = 0;
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(25, -1, -1, this.Name + deathText, 255, 225f, 25f, 25f);
-            }
+            NetMessage.SendData(25, -1, -1, this.Name + deathText, 255, 225f, 25f, 25f);
 
-            if (Main.netMode == 1 && this.whoAmi == Main.myPlayer)
-            {
-                int num4 = 0;
-                if (pvp)
-                {
-                    num4 = 1;
-                }
-                NetMessage.SendData(44, -1, -1, deathText, this.whoAmi, (float)hitDirection, (float)((int)dmg), (float)num4);
-            }
             if (!pvp && this.whoAmi == Main.myPlayer && !this.hardCore)
             {
                 this.DropCoins();
@@ -2913,7 +2838,7 @@ namespace Terraria_Server
             if (controlUseItem && itemAnimation == 0 && releaseUseItem && selectedItem.UseStyle > 0)
             {
                 bool flag = true;
-                if (selectedItem.Shoot == 6 || selectedItem.Shoot == 19 || selectedItem.Shoot == 33)
+                if (selectedItem.Shoot == ProjectileType.BOOMERANG_ENCHANTED || selectedItem.Shoot == ProjectileType.FLAMARANG || selectedItem.Shoot == ProjectileType.CHAKRUM_THORN)
                 {
                     for (int j = 0; j < Main.maxProjectiles; j++)
                     {
@@ -3000,7 +2925,7 @@ namespace Terraria_Server
                     itemAnimationMax = (int)((float)selectedItem.UseAnimation * meleeSpeed);
                 }
 
-                if (flag && selectedItem.Shoot == 18)
+                if (flag && selectedItem.Shoot == ProjectileType.ORB_OF_LIGHT)
                 {
                     for (int j = 0; j < 1000; j++)
                     {
@@ -3168,12 +3093,12 @@ namespace Terraria_Server
             {
                 if (selectedItem.Shoot > 0 && itemAnimation > 0 && itemTime == 0)
                 {
-                    int shoot = selectedItem.Shoot;
+                    ProjectileType shoot = selectedItem.Shoot;
                     float shootSpeed = selectedItem.ShootSpeed;
                     bool flag2 = false;
                     int damage = selectedItem.Damage;
                     float knockBack = selectedItem.KnockBack;
-                    if (shoot == 13 || shoot == 32)
+                    if (shoot == ProjectileType.HOOK || shoot == ProjectileType.WHIP_IVY)
                     {
                         grappling[0] = -1;
                         grapCount = 0;
@@ -3181,7 +3106,7 @@ namespace Terraria_Server
                         {
                             if (Main.projectile[j].active && Main.projectile[j].Owner == i)
                             {
-                                if (Main.projectile[j].type == 13)
+                                if (Main.projectile[j].type == ProjectileType.HOOK)
                                 {
                                     Main.projectile[j].Kill();
                                 }
@@ -3221,7 +3146,7 @@ namespace Terraria_Server
                         flag2 = true;
                     }
 
-                    if (shoot == 9 && (double)Position.Y > Main.worldSurface * 16.0 + (double)(Main.screenHeight / 2))
+                    if (shoot == ProjectileType.STARFURY && (double)Position.Y > Main.worldSurface * 16.0 + (double)(Main.screenHeight / 2))
                     {
                         flag2 = false;
                     }
@@ -3233,15 +3158,15 @@ namespace Terraria_Server
                             damage = (int)Math.Round((double)((float)damage * this.magicBoost));
                         }
 
-                        if (shoot == 1 && selectedItem.Type == 120)
+                        if (shoot == ProjectileType.ARROW_WOODEN && selectedItem.Type == 120)
                         {
-                            shoot = 2;
+                            shoot = ProjectileType.ARROW_FIRE;
                         }
 
                         itemTime = selectedItem.UseTime;
                         direction = -1;
                         Vector2 vector = new Vector2(Position.X + (float)width * 0.5f, Position.Y + (float)height * 0.5f);
-                        if (shoot == 9)
+                        if (shoot == ProjectileType.STARFURY)
                         {
                             vector = new Vector2(Position.X + (float)width * 0.5f + (float)(Main.rand.Next(601) * -(float)direction), Position.Y + (float)height * 0.5f - 300f - (float)Main.rand.Next(100));
                             knockBack = 0f;
@@ -3299,14 +3224,7 @@ namespace Terraria_Server
                                     Main.tile[Player.tileTargetX, Player.tileTargetY].lava = false;
                                     WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
 
-                                    if (Main.netMode == 1)
-                                    {
-                                        NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
-                                    }
-                                    else
-                                    {
-                                        Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
-                                    }
+                                    Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
 
                                     for (int x = Player.tileTargetX - 1; x <= Player.tileTargetX + 1; x++)
                                     {
@@ -3333,14 +3251,7 @@ namespace Terraria_Server
 
                                                 WorldGen.SquareTileFrame(x, y, false);
 
-                                                if (Main.netMode == 1)
-                                                {
-                                                    NetMessage.sendWater(x, y);
-                                                }
-                                                else
-                                                {
-                                                    Liquid.AddWater(x, y);
-                                                }
+                                                Liquid.AddWater(x, y);
                                             }
                                         }
                                     }
@@ -3360,10 +3271,6 @@ namespace Terraria_Server
                                             selectedItem = Registries.Item.Create(205);
                                             inventory[selectedItemIndex] = selectedItem;
                                             this.itemTime = selectedItem.UseTime;
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
-                                            }
                                         }
                                     }
                                     else if (Main.tile[Player.tileTargetX, Player.tileTargetY].liquid == 0 || !Main.tile[Player.tileTargetX, Player.tileTargetY].lava)
@@ -3374,11 +3281,6 @@ namespace Terraria_Server
                                         selectedItem = Registries.Item.Create(205);
                                         inventory[selectedItemIndex] = selectedItem;
                                         this.itemTime = selectedItem.UseTime;
-
-                                        if (Main.netMode == 1)
-                                        {
-                                            NetMessage.sendWater(Player.tileTargetX, Player.tileTargetY);
-                                        }
                                     }
                                 }
                             }
@@ -3434,36 +3336,15 @@ namespace Terraria_Server
                                             {
                                                 Hurt(this.statLife / 2, -direction, false, false);
                                                 WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                if (Main.netMode == 1)
-                                                {
-                                                    NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                }
                                             }
                                             else if (hitTile >= 100)
                                             {
-                                                if (Main.netMode == 1 && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21)
-                                                {
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                    NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                    NetMessage.SendData(34, -1, -1, "", Player.tileTargetX, (float)Player.tileTargetY);
-                                                }
-                                                else
-                                                {
-                                                    hitTile = 0;
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY);
-                                                    }
-                                                }
+                                                hitTile = 0;
+                                                WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                             }
                                             else
                                             {
                                                 WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                if (Main.netMode == 1)
-                                                {
-                                                    NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                }
                                             }
 
                                             itemTime = inventory[this.selectedItemIndex].UseTime;
@@ -3489,18 +3370,10 @@ namespace Terraria_Server
                                                 {
                                                     hitTile = 0;
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY);
-                                                    }
                                                 }
                                                 else
                                                 {
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                    }
                                                 }
                                                 this.itemTime = selectedItem.UseTime;
                                             }
@@ -3560,18 +3433,10 @@ namespace Terraria_Server
                                                 {
                                                     hitTile = 0;
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY);
-                                                    }
                                                 }
                                                 else
                                                 {
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                    }
                                                 }
                                                 this.itemTime = selectedItem.UseTime;
                                             }
@@ -3615,18 +3480,10 @@ namespace Terraria_Server
                                         {
                                             hitTile = 0;
                                             WorldGen.KillWall(Player.tileTargetX, Player.tileTargetY, false);
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.SendData(17, -1, -1, "", 2, (float)Player.tileTargetX, (float)Player.tileTargetY);
-                                            }
                                         }
                                         else
                                         {
                                             WorldGen.KillWall(Player.tileTargetX, Player.tileTargetY, true);
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.SendData(17, -1, -1, "", 2, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                            }
                                         }
                                         this.itemTime = selectedItem.UseTime;
                                     }
@@ -3789,10 +3646,6 @@ namespace Terraria_Server
                                     if (WorldGen.PlaceTile(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateTile, false, false, this.whoAmi))
                                     {
                                         this.itemTime = selectedItem.UseTime;
-                                        if (Main.netMode == 1)
-                                        {
-                                            NetMessage.SendData(17, -1, -1, "", 1, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)selectedItem.CreateTile);
-                                        }
                                         if (selectedItem.CreateTile == 15)
                                         {
                                             if (this.direction == 1)
@@ -3801,20 +3654,6 @@ namespace Terraria_Server
                                                 expr_40C8.frameX += 18;
                                                 Tile expr_40ED = Main.tile[Player.tileTargetX, Player.tileTargetY - 1];
                                                 expr_40ED.frameX += 18;
-                                            }
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.SendTileSquare(-1, Player.tileTargetX - 1, Player.tileTargetY - 1, 3);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (selectedItem.CreateTile == 79)
-                                            {
-                                                if (Main.netMode == 1)
-                                                {
-                                                    NetMessage.SendTileSquare(-1, Player.tileTargetX, Player.tileTargetY, 5);
-                                                }
                                             }
                                         }
                                     }
@@ -3838,10 +3677,6 @@ namespace Terraria_Server
                                     if ((int)Main.tile[Player.tileTargetX, Player.tileTargetY].wall == selectedItem.CreateWall)
                                     {
                                         this.itemTime = selectedItem.UseTime;
-                                        if (Main.netMode == 1)
-                                        {
-                                            NetMessage.SendData(17, -1, -1, "", 3, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)selectedItem.CreateWall);
-                                        }
                                     }
                                 }
                             }
@@ -4021,10 +3856,6 @@ namespace Terraria_Server
                                     if (Main.tile[k, l].type == 3 || Main.tile[k, l].type == 24 || Main.tile[k, l].type == 28 || Main.tile[k, l].type == 32 || Main.tile[k, l].type == 51 || Main.tile[k, l].type == 52 || Main.tile[k, l].type == 61 || Main.tile[k, l].type == 62 || Main.tile[k, l].type == 69 || Main.tile[k, l].type == 71 || Main.tile[k, l].type == 73 || Main.tile[k, l].type == 74)
                                     {
                                         WorldGen.KillTile(k, l, false, false, false);
-                                        if (Main.netMode == 1)
-                                        {
-                                            NetMessage.SendData(17, -1, -1, "", 0, (float)k, (float)l);
-                                        }
                                     }
                                 }
                             }
@@ -4038,10 +3869,6 @@ namespace Terraria_Server
                                         if (Main.npcs[j].noTileCollide || Collision.CanHit(this.Position, this.width, this.height, Main.npcs[j].Position, Main.npcs[j].width, Main.npcs[j].height))
                                         {
                                             Main.npcs[j].StrikeNPC(selectedItem.Damage, selectedItem.KnockBack, this.direction);
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.SendData(24, -1, -1, "", j, (float)i);
-                                            }
                                             Main.npcs[j].immune[i] = this.itemAnimation;
                                             this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
                                         }
@@ -4062,10 +3889,7 @@ namespace Terraria_Server
                                                 if (Collision.CanHit(this.Position, this.width, this.height, Main.players[j].Position, Main.players[j].width, Main.players[j].height))
                                                 {
                                                     Main.players[j].Hurt(selectedItem.Damage, this.direction, true, false);
-                                                    if (Main.netMode != 0)
-                                                    {
-                                                        NetMessage.SendData(26, -1, -1, "", j, (float)this.direction, (float)selectedItem.Damage, 1f);
-                                                    }
+                                                    NetMessage.SendData(26, -1, -1, "", j, (float)this.direction, (float)selectedItem.Damage, 1f);
                                                     this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
                                                 }
                                             }
@@ -4129,7 +3953,7 @@ namespace Terraria_Server
                         this.Hurt(this.statLife * (this.statDefense + 1), -this.direction, false, false);
                     }
                 }
-                else if (Main.netMode != 1)
+                else
                 {
                     if (selectedItem.Type == 43 && !Main.dayTime)
                     {
@@ -4278,10 +4102,6 @@ namespace Terraria_Server
 					Main.item[num].Velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
 					Main.item[num].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
 					Main.item[num].NoGrabDelay = 100;
-					if (Main.netMode == 1)
-					{
-						NetMessage.SendData(21, -1, -1, "", num);
-					}
 				}
 			}
 		}

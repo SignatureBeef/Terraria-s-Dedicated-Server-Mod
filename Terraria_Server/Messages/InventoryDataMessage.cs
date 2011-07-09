@@ -18,11 +18,7 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = (int)readBuffer[start + 1];
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            int playerIndex = whoAmI;
 
             if (playerIndex != Main.myPlayer)
             {
@@ -42,10 +38,7 @@ namespace Terraria_Server.Messages
                         player.armor[inventorySlot - 44] = item;
                     }
 
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);
-                    }
+                    NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);
                 }
             }
         }

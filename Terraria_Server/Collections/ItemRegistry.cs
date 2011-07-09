@@ -3,21 +3,24 @@ using System.Collections.Generic;
 using Terraria_Server.Misc;
 using System.IO;
 using System.Xml.Serialization;
+using System.Reflection;
 
 namespace Terraria_Server.Collections
 {
     public class ItemRegistry : Registry<Item>
     {
         private const String ITEMS_BY_NAME = "ItemsByName.xml";
+        private const String ITEM_FILE = "Items.xml";
 
-        public ItemRegistry() : base("Items.xml", new Item()) 
+        public ItemRegistry()
+            : base(ITEM_FILE, new Item()) 
         { 
             /**
              * We need to load additional items into the name lookup and only the name
              * lookup dictionary. This is at least until the item list can be fixed so
              * each item has a unique type or other identifier.
              */
-            StreamReader reader = new StreamReader(ITEMS_BY_NAME);
+            StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(DEFINITIONS + ITEMS_BY_NAME));
             XmlSerializer serializer = new XmlSerializer(typeof(Item[]));
             try
             {

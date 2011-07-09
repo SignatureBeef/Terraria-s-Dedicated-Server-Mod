@@ -23,15 +23,7 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex;
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
-            else
-            {
-                playerIndex = (int)readBuffer[start + 1];
-            }
+            int playerIndex = whoAmI;
 
             if (playerIndex == Main.myPlayer)
             {
@@ -61,37 +53,34 @@ namespace Terraria_Server.Messages
 
             player.Name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
 
-            if (Main.netMode == 2)
+            if (Netplay.serverSock[whoAmI].state < 10)
             {
-                if (Netplay.serverSock[whoAmI].state < 10)
+                int count = 0;
+                foreach(Player otherPlayer in Main.players)
                 {
-                    int count = 0;
-                    foreach(Player otherPlayer in Main.players)
+                    if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.serverSock[count].active)
                     {
-                        if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.serverSock[count].active)
-                        {
-                            NetMessage.SendData(2, whoAmI, -1, player.Name + " is already on this server.");
-                            return;
-                        }
+                        NetMessage.SendData(2, whoAmI, -1, player.Name + " is already on this server.");
+                        return;
                     }
                 }
-
-                if (player.Name.Length > 20)
-                {
-                    NetMessage.SendData(2, whoAmI, -1, "Name is too long.");
-                    return;
-                }
-
-                if (player.Name == "")
-                {
-                    NetMessage.SendData(2, whoAmI, -1, "Empty name.");
-                    return;
-                }
-
-                Netplay.serverSock[whoAmI].oldName = player.Name;
-                Netplay.serverSock[whoAmI].name = player.Name;
-                NetMessage.SendData(4, -1, whoAmI, player.Name, playerIndex);
             }
+
+            if (player.Name.Length > 20)
+            {
+                NetMessage.SendData(2, whoAmI, -1, "Name is too long.");
+                return;
+            }
+
+            if (player.Name == "")
+            {
+                NetMessage.SendData(2, whoAmI, -1, "Empty name.");
+                return;
+            }
+
+            Netplay.serverSock[whoAmI].oldName = player.Name;
+            Netplay.serverSock[whoAmI].name = player.Name;
+            NetMessage.SendData(4, -1, whoAmI, player.Name, playerIndex);
         }
 
 
