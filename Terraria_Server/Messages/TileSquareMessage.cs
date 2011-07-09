@@ -1,4 +1,8 @@
 ﻿using System;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
+using Terraria_Server.Misc;
+using Terraria_Server.Plugin.Tile;
 
 namespace Terraria_Server.Messages
 {
@@ -20,6 +24,7 @@ namespace Terraria_Server.Messages
             int left = BitConverter.ToInt32(readBuffer, start + 3);
             int top = BitConverter.ToInt32(readBuffer, start + 7);
             num = start + 11;
+
             for (int x = left; x < left + (int)size; x++)
             {
                 for (int y = top; y < top + (int)size; y++)
@@ -28,7 +33,7 @@ namespace Terraria_Server.Messages
                     {
                         Main.tile[x, y] = new Tile();
                     }
-                    Tile tile = Main.tile[x, y];
+                    Tile tile = (Tile)Main.tile[x, y].Clone();
 
                     byte b9 = readBuffer[num++];
 
@@ -88,6 +93,22 @@ namespace Terraria_Server.Messages
                         byte b10 = readBuffer[num++];
                         tile.lava = (b10 == 1);
                     }
+
+                    PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
+                    tileEvent.Sender = Main.players[whoAmI];
+                    tileEvent.Tile = tile;
+                    tileEvent.Type = tile.type;
+                    tileEvent.Action = (tile.Active) ? TileAction.PLACED : TileAction.BREAK; //Not sure of this
+                    tileEvent.TileType = (tile.wall == 1) ? TileType.WALL : TileType.BLOCK;
+                    tileEvent.Position = new Vector2(x, y);
+                    Program.server.getPluginManager().processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
+                    if (tileEvent.Cancelled)
+                    {
+                        NetMessage.SendTileSquare(whoAmI, x, y, 1);
+                        return;
+                    }
+                    
+                    Main.tile[x, y] = tile;
                 }
             }
 

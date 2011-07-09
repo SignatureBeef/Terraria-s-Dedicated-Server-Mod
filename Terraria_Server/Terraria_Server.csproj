@@ -44,8 +44,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\Terraria_Server.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -55,7 +55,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile />
+    <DocumentationFile>bin\Release\Terraria_Server.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Terraria_Server.Program</StartupObject>
@@ -170,6 +171,8 @@
     <Compile Include="Messages\WorldRequestMessage.cs" />
     <Compile Include="Messages\WriteSignMessage.cs" />
     <Compile Include="Plugin\Key.cs" />
+    <Compile Include="Plugin\Tile\TileAction.cs" />
+    <Compile Include="Plugin\Tile\TileType.cs" />
     <Compile Include="Collections\Registry.cs" />
     <Compile Include="Shops\ArmsDealerShop.cs" />
     <Compile Include="Shops\ClothierShop.cs" />

@@ -5,6 +5,7 @@ using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
+using Terraria_Server.Plugin.Tile;
 
 namespace Terraria_Server.Messages
 {
@@ -34,25 +35,44 @@ namespace Terraria_Server.Messages
 
             Tile tile = new Tile();
 
-            if (Main.tile[x, y] != null)
-            {
-                tile = WorldGen.cloneTile(Main.tile[x, y]);
-            }
             if (Main.tile[x, y] == null)
             {
                 Main.tile[x, y] = new Tile();
+            }
+            else
+            {
+                tile = WorldGen.cloneTile(Main.tile[x, y]);
             }
 
             tile.tileX = x;
             tile.tileY = y;
 
-            PlayerTileChangeEvent breakEvent = new PlayerTileChangeEvent();
-            breakEvent.Sender = Main.players[whoAmI];
-            breakEvent.Tile = tile;
-            breakEvent.Type = tileType;
-            breakEvent.Position = new Vector2(x, y);
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_TILECHANGE, breakEvent);
-            if (breakEvent.Cancelled)
+            bool placed = false;
+            bool wall = false;
+
+            switch (tileAction)
+            {
+                case 1:
+                    placed = true;
+                    break;
+                case 2:
+                    wall = true;
+                    break;
+                case 3:
+                    wall = true;
+                    placed = true;
+                    break;
+            }
+
+            PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
+            tileEvent.Sender = Main.players[whoAmI];
+            tileEvent.Tile = tile;
+            tileEvent.Type = tileType;
+            tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
+            tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;
+            tileEvent.Position = new Vector2(x, y);
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
+            if (tileEvent.Cancelled)
             {
                 NetMessage.SendTileSquare(whoAmI, x, y, 1);
                 return;

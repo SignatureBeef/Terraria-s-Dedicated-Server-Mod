@@ -216,10 +216,11 @@ namespace Terraria_Server
 			{
 				ThreadPool.QueueUserWorkItem(new WaitCallback(Netplay.ListenForClients), 1);
                 Program.updateThread.Start();
-                Statics.serverStarted = true;
                 Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
                 Program.tConsole.WriteLine("Loading Plugins...");
-                Program.server.getPluginManager().ReloadPlugins();
+                Program.server.getPluginManager().LoadPlugins();
+                Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.getPluginManager().getPluginList().Count.ToString());
+                Statics.serverStarted = true;
 			}
 			while (!Netplay.disconnect)
 			{

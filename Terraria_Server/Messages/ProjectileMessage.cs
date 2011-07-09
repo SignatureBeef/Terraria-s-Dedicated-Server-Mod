@@ -1,4 +1,6 @@
 ﻿using System;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Messages
 {
@@ -42,7 +44,7 @@ namespace Terraria_Server.Messages
             }
             
             int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);
-            Projectile projectile = Main.projectile[projectileIndex];
+            Projectile projectile = (Projectile)Main.projectile[projectileIndex].Clone();
             if (!projectile.active || projectile.type != (int)type)
             {
                 projectile.SetDefaults((int)type);
@@ -61,6 +63,17 @@ namespace Terraria_Server.Messages
             projectile.type = (int)type;
             projectile.Owner = (int)projectileOwner;
             projectile.knockBack = knockBack;
+
+            PlayerProjectileEvent playerEvent = new PlayerProjectileEvent();
+            playerEvent.Sender = Main.players[whoAmI];
+            playerEvent.Projectile = Main.projectile[projectileIndex];
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
+            if (playerEvent.Cancelled)
+            {
+                return;
+            }
+
+            Main.projectile[projectileIndex] = projectile;
 
             for (int i = 0; i < Projectile.MAX_AI; i++)
             {

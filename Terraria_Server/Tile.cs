@@ -6,7 +6,7 @@ namespace Terraria_Server
 		public bool Active;
 		public bool lighted;
 		public byte type;
-		public byte wall;
+		public byte wall; //1 = yes, 0 = nothing
 		public byte wallFrameX;
 		public byte wallFrameY;
 		public byte wallFrameNumber;

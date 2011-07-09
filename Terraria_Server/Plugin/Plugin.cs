@@ -160,11 +160,12 @@ namespace Terraria_Server.Plugin
         /// <param name="Event">PlayerProjectileEvent info</param>
         public virtual void onPlayerProjectileUse(PlayerProjectileEvent Event) { }
 
+        /*
         /// <summary>
         /// Hook method for the player state (Byte) updating
         /// </summary>
-        /// <param name="Event">PlayerStateUpdateEvent info</param>
-        public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { }
+        /// <param name="Event">PlayerStateUpdateEvent info</param>*/
+        //public virtual void onPlayerStateUpdate(PlayerStateUpdateEvent Event) { } //Send with KB & Movement Events instead
 
         /// <summary>
         /// Hook method for the player teleport

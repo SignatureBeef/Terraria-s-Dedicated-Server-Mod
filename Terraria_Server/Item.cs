@@ -6139,7 +6139,7 @@ namespace Terraria_Server
                 || (num == 255 && Main.netMode == 2) 
                 || !Main.players[num].Active))
             {
-                NetMessage.SendData(21, -1, -1, "", whoAmI);
+                 NetMessage.SendData(21, -1, -1, "", whoAmI);
                 if (this.Active)
                 {
                     NetMessage.SendData(22, -1, -1, "", whoAmI);
