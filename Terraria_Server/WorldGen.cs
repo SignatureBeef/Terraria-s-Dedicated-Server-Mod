@@ -1214,9 +1214,9 @@ namespace Terraria_Server
                                     binaryWriter.Write(Main.worldID);
                                     binaryWriter.Close();
                                     fileStream.Close();
+                                    Program.tConsole.WriteLine();
                                     if (File.Exists(savePath))
                                     {
-                                        Program.tConsole.WriteLine();
                                         Program.tConsole.WriteLine("Backing up world file...");
                                         String destFileName = savePath + ".bak";
                                         try
@@ -1241,11 +1241,6 @@ namespace Terraria_Server
                                         Program.tConsole.WriteLine(e.Message);
                                         Program.tConsole.WriteLine(e.StackTrace);
                                     }
-                                }
-                                for (int n = 0; n < 1000; n++)
-                                {
-                                    NPC nPC = (NPC)Main.npcs[n].Clone();
-                                    if (nPC.Active && nPC.townNPC)
                                     try
                                     {
                                         File.Move(tempPath, savePath);
@@ -1562,7 +1557,7 @@ namespace Terraria_Server
             {
                 num9 = 1;
             }
-            Program.tConsole.WriteLine();
+
             for (int i = 0; i < Main.maxTilesX; i++)
             {
                 float num10 = (float)i / (float)Main.maxTilesX;

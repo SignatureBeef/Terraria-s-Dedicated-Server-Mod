@@ -183,7 +183,6 @@
     <Compile Include="Shops\DryadShop.cs" />
     <Compile Include="Events\BasePlayerEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
-    <Compile Include="Events\PlayerDestroySignEvent.cs" />
     <Compile Include="Events\PlayerEditSignEvent.cs" />
     <Compile Include="Events\PlayerLoginEvent.cs" />
     <Compile Include="Events\PlayerLogoutEvent.cs" />
