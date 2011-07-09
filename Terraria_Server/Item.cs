@@ -364,7 +364,7 @@ namespace Terraria_Server
 
         public void SetDefaults(int Type, bool noMatCheck = false)
         {
-            if (Main.netMode == 1 || Main.netMode == 2)
+            if (Main.netMode == 2)
             {
                 this.Owner = 255;
             }
@@ -6135,7 +6135,7 @@ namespace Terraria_Server
                 }
                 count++;
             }
-            if (this.Owner != num && ((num == Main.myPlayer && Main.netMode == 1) || (num == 255 && Main.netMode == 2) 
+            if (this.Owner != num && ((num == Main.myPlayer) || (num == 255 && Main.netMode == 2) 
                 || !Main.players[num].Active))
             {
                  NetMessage.SendData(21, -1, -1, "", whoAmI);

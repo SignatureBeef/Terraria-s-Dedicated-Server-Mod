@@ -195,7 +195,7 @@ namespace Terraria_Server
 
         public void HealEffect(int healAmount, bool overrider = false, int remoteClient = -1)
 		{
-            if (overrider || (Main.netMode == 1 && this.whoAmi == Main.myPlayer))
+            if (overrider || (this.whoAmi == Main.myPlayer))
 			{
                 NetMessage.SendData(35, remoteClient, -1, "", this.whoAmi, (float)healAmount);
 			}
@@ -203,7 +203,7 @@ namespace Terraria_Server
 
         public void ManaEffect(int manaAmount, bool overrider = false, int remoteClient = -1)
 		{
-			if (overrider || (Main.netMode == 1 && this.whoAmi == Main.myPlayer))
+			if (overrider || (this.whoAmi == Main.myPlayer))
 			{
                 NetMessage.SendData(43, remoteClient, -1, "", this.whoAmi, (float)manaAmount);
 			}
@@ -3356,25 +3356,12 @@ namespace Terraria_Server
                                             }
                                             else if (hitTile >= 100)
                                             {
-                                                if (Main.netMode == 1 && Main.tile[Player.tileTargetX, Player.tileTargetY].type == 21)
-                                                {
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                    NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                    NetMessage.SendData(34, -1, -1, "", Player.tileTargetX, (float)Player.tileTargetY);
-                                                }
-                                                else
-                                                {
-                                                    hitTile = 0;
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-                                                }
+                                                hitTile = 0;
+                                                WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                             }
                                             else
                                             {
                                                 WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                if (Main.netMode == 1)
-                                                {
-                                                    NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                }
                                             }
 
                                             itemTime = inventory[this.selectedItemIndex].UseTime;
@@ -3400,18 +3387,10 @@ namespace Terraria_Server
                                                 {
                                                     hitTile = 0;
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY);
-                                                    }
                                                 }
                                                 else
                                                 {
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, 1f);
-                                                    }
                                                 }
                                                 this.itemTime = selectedItem.UseTime;
                                             }
@@ -3471,10 +3450,6 @@ namespace Terraria_Server
                                                 {
                                                     hitTile = 0;
                                                     WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendData(17, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY);
-                                                    }
                                                 }
                                                 else
                                                 {
@@ -3697,10 +3672,6 @@ namespace Terraria_Server
                                                 Tile expr_40ED = Main.tile[Player.tileTargetX, Player.tileTargetY - 1];
                                                 expr_40ED.frameX += 18;
                                             }
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.SendTileSquare(-1, Player.tileTargetX - 1, Player.tileTargetY - 1, 3);
-                                            }
                                         }
                                     }
                                 }
@@ -3902,10 +3873,6 @@ namespace Terraria_Server
                                     if (Main.tile[k, l].type == 3 || Main.tile[k, l].type == 24 || Main.tile[k, l].type == 28 || Main.tile[k, l].type == 32 || Main.tile[k, l].type == 51 || Main.tile[k, l].type == 52 || Main.tile[k, l].type == 61 || Main.tile[k, l].type == 62 || Main.tile[k, l].type == 69 || Main.tile[k, l].type == 71 || Main.tile[k, l].type == 73 || Main.tile[k, l].type == 74)
                                     {
                                         WorldGen.KillTile(k, l, false, false, false);
-                                        if (Main.netMode == 1)
-                                        {
-                                            NetMessage.SendData(17, -1, -1, "", 0, (float)k, (float)l);
-                                        }
                                     }
                                 }
                             }
@@ -3919,10 +3886,6 @@ namespace Terraria_Server
                                         if (Main.npcs[j].noTileCollide || Collision.CanHit(this.Position, this.width, this.height, Main.npcs[j].Position, Main.npcs[j].width, Main.npcs[j].height))
                                         {
                                             Main.npcs[j].StrikeNPC(selectedItem.Damage, selectedItem.KnockBack, this.direction);
-                                            if (Main.netMode == 1)
-                                            {
-                                                NetMessage.SendData(24, -1, -1, "", j, (float)i);
-                                            }
                                             Main.npcs[j].immune[i] = this.itemAnimation;
                                             this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
                                         }
@@ -4159,10 +4122,6 @@ namespace Terraria_Server
 					Main.item[num].Velocity.Y = (float)Main.rand.Next(-20, 1) * 0.2f;
 					Main.item[num].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.2f;
 					Main.item[num].NoGrabDelay = 100;
-					if (Main.netMode == 1)
-					{
-						NetMessage.SendData(21, -1, -1, "", num);
-					}
 				}
 			}
 		}

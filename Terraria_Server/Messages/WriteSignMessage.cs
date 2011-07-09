@@ -44,18 +44,6 @@ namespace Terraria_Server.Messages
 
             Main.sign[signIndex] = sign;
             Sign.TextSign(signIndex, SignText);
-            //Player player = Main.players[whoAmI];
-
-            //if (Main.netMode == 1 
-            //    && sign != null
-            //    && signIndex != player.sign)
-            //{
-            //    Main.playerInventory = false;
-            //    player.talkNPC = -1;
-            //    Main.editSign = false;
-            //    player.sign = signIndex;
-            //    Main.npcChatText = sign.text;
-            //}
         }
     }
 }

@@ -2019,19 +2019,11 @@ namespace Terraria_Server
                                                 {
                                                     Main.tile[l, m].type = 2;
                                                     WorldGen.SquareTileFrame(l, m, true);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendTileSquare(-1, l - 1, m - 1, 3);
-                                                    }
                                                 }
                                                 if (Main.tile[l, m].type == 25)
                                                 {
                                                     Main.tile[l, m].type = 1;
                                                     WorldGen.SquareTileFrame(l, m, true);
-                                                    if (Main.netMode == 1)
-                                                    {
-                                                        NetMessage.SendTileSquare(-1, l - 1, m - 1, 3);
-                                                    }
                                                 }
                                             }
                                         }
@@ -3897,19 +3889,11 @@ namespace Terraria_Server
                                     if (flag2)
                                     {
                                         WorldGen.KillTile(num48, num49, false, false, false);
-                                        if (!Main.tile[num48, num49].Active && Main.netMode == 1)
-                                        {
-                                            NetMessage.SendData(17, -1, -1, "", 0, (float)num48, (float)num49, 0f);
-                                        }
                                     }
                                 }
                                 if (flag2 && Main.tile[num48, num49] != null && Main.tile[num48, num49].wall > 0 && flag)
                                 {
                                     WorldGen.KillWall(num48, num49, false);
-                                    if (Main.tile[num48, num49].wall == 0 && Main.netMode == 1)
-                                    {
-                                        NetMessage.SendData(17, -1, -1, "", 2, (float)num48, (float)num49);
-                                    }
                                 }
                             }
                         }
@@ -4021,10 +4005,6 @@ namespace Terraria_Server
                 if (this.type == ProjectileType.BONE && Main.rand.Next(2) == 0)
                 {
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 154, 1, false);
-                }
-                if (Main.netMode == 1 && num53 >= 0)
-                {
-                    NetMessage.SendData(21, -1, -1, "", num53);
                 }
             }
             this.active = false;

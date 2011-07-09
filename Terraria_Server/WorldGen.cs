@@ -612,10 +612,6 @@ namespace Terraria_Server
         {
             bool flag = true;
             int num = 0;
-            if (Main.netMode == 1)
-            {
-                return;
-            }
             for (int i = 0; i < 255; i++)
             {
                 if (Main.players[i].Active)
@@ -989,7 +985,7 @@ namespace Terraria_Server
             WorldGen.noLiquidCheck = false;
             Liquid.numLiquid = 0;
             LiquidBuffer.numLiquidBuffer = 0;
-            if (Main.netMode == 1 || WorldGen.lastMaxTilesX > Main.maxTilesX || WorldGen.lastMaxTilesY > Main.maxTilesY)
+            if (WorldGen.lastMaxTilesX > Main.maxTilesX || WorldGen.lastMaxTilesY > Main.maxTilesY)
             {
                 for (int i = 0; i < WorldGen.lastMaxTilesX; i++)
                 {
