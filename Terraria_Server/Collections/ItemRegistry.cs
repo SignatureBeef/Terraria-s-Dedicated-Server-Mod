@@ -53,6 +53,20 @@ namespace Terraria_Server.Collections
             {
                 item.Stack = stack;
             }
+
+            //Specialized handling for familiar armor until a better method is created.
+            switch(item.Type)
+            {
+                case 269:
+                    item.Color = Main.players[Main.myPlayer].shirtColor;
+                    break;
+                case 270:
+                    item.Color = Main.players[Main.myPlayer].pantsColor;
+                    break;
+                case 271:
+                    item.Color = Main.players[Main.myPlayer].hairColor;
+                    break;
+            }
             return cloned;
         }
     }

@@ -8,14 +8,6 @@ namespace Terraria_Server
 {
     public class Item : IRegisterableEntity
     {
-        /*
-         * if (this.Type == 269)
-            //this.Color = Main.players[Main.myPlayer].shirtColor;
-            if (this.Type == 270)
-            //this.Color = Main.players[Main.myPlayer].pantsColor;
-            if (this.Type == 271)
-            //this.Color = Main.players[Main.myPlayer].hairColor;
-         */
         public const int POTION_DELAY = 720;
 
         public bool Accessory;
@@ -107,29 +99,19 @@ namespace Terraria_Server
 
         public static String VersionName(String oldName, int release)
         {
-            String result = oldName;
             if (release <= 4)
             {
-                if (oldName == "Cobalt Helmet")
+                switch(oldName)
                 {
-                    result = "Jungle Hat";
-                }
-                else
-                {
-                    if (oldName == "Cobalt Breastplate")
-                    {
-                        result = "Jungle Shirt";
-                    }
-                    else
-                    {
-                        if (oldName == "Cobalt Greaves")
-                        {
-                            result = "Jungle Pants";
-                        }
-                    }
+                    case "Cobalt Helmet":
+                        return "Jungle Hat";
+                    case "Cobalt Breastplate":
+                        return "Jungle Shirt";
+                    case "Cobalt Greaves":
+                        return "Jungle Pants";
                 }
             }
-            return result;
+            return oldName;
         }
 
         public Color GetAlpha(Color newColor)
