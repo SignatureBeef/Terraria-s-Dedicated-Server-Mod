@@ -364,14 +364,8 @@ namespace Terraria_Server
 
         public void SetDefaults(int Type, bool noMatCheck = false)
         {
-            if (Main.netMode == 2)
-            {
-                this.Owner = 255;
-            }
-            else
-            {
-                this.Owner = Main.myPlayer;
-            }
+            this.Owner = 255;
+
             this.PlaceStyle = 0;
             this.BuffTime = 0;
             this.BuffType = 0;
@@ -5854,10 +5848,6 @@ namespace Terraria_Server
         {
             if (this.Active)
             {
-                if (Main.netMode == 0)
-                {
-                    this.Owner = Main.myPlayer;
-                }
                 float num = 0.1f;
                 float num2 = 7f;
                 if (this.Wet)
@@ -5972,16 +5962,13 @@ namespace Terraria_Server
                     }
                     if (this.Owner == Main.myPlayer && this.LavaWet && this.Type != 312 && this.Type != 318 && this.Type != 173 && this.Rare == 0)
                     {
-                        if (this.Type == 267 && Main.netMode != 1)
+                        if (this.Type == 267)
                         {
                             for (int l = 0; l < NPC.MAX_NPCS; l++)
                             {
                                 if (Main.npcs[l].Active && Main.npcs[l].Type == 22)
                                 {
-                                    if (Main.netMode == 2)
-                                    {
-                                        NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
-                                    }
+                                    NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
                                     Main.npcs[l].StrikeNPC(9999, 10f, -Main.npcs[l].direction);
                                 }
                             }
@@ -5990,10 +5977,7 @@ namespace Terraria_Server
                         this.Type = 0;
                         this.Name = "";
                         this.Stack = 0;
-                        if (Main.netMode != 0)
-                        {
-                            NetMessage.SendData(21, -1, -1, "", i);
-                        }
+                        NetMessage.SendData(21, -1, -1, "", i);
                     }
                     if (this.Type == 75 && Main.dayTime)
                     {
@@ -6008,10 +5992,7 @@ namespace Terraria_Server
                         this.Active = false;
                         this.Type = 0;
                         this.Stack = 0;
-                        if (Main.netMode == 2)
-                        {
-                            NetMessage.SendData(21, -1, -1, "", i);
-                        }
+                        NetMessage.SendData(21, -1, -1, "", i);
                     }
                 }
                 else
@@ -6034,7 +6015,7 @@ namespace Terraria_Server
                 {
                     this.SpawnTime++;
                 }
-                if (Main.netMode == 2 && this.Owner != Main.myPlayer)
+                if (this.Owner != Main.myPlayer)
                 {
                     this.Release++;
                     if (this.Release >= 300)
@@ -6065,18 +6046,15 @@ namespace Terraria_Server
             }
             int num = 200;
             Main.item[200] = new Item();
-            if (Main.netMode != 1)
+            for (int i = 0; i < 200; i++)
             {
-                for (int i = 0; i < 200; i++)
+                if (!Main.item[i].Active)
                 {
-                    if (!Main.item[i].Active)
-                    {
-                        num = i;
-                        break;
-                    }
+                    num = i;
+                    break;
                 }
             }
-            if (num == 200 && Main.netMode != 1)
+            if (num == 200)
             {
                 int num2 = 0;
                 for (int j = 0; j < 200; j++)
@@ -6098,17 +6076,10 @@ namespace Terraria_Server
             Main.item[num].Active = true;
             Main.item[num].SpawnTime = 0;
             Main.item[num].Stack = Stack;
-            if (Main.netMode == 2 && !noBroadcast)
+            if (!noBroadcast)
             {
                 NetMessage.SendData(21, -1, -1, "", num);
                 Main.item[num].FindOwner(num);
-            }
-            else
-            {
-                if (Main.netMode == 0)
-                {
-                    Main.item[num].Owner = Main.myPlayer;
-                }
             }
             return num;
         }
@@ -6135,7 +6106,7 @@ namespace Terraria_Server
                 }
                 count++;
             }
-            if (this.Owner != num && ((num == Main.myPlayer) || (num == 255 && Main.netMode == 2) 
+            if (this.Owner != num && ((num == Main.myPlayer) || (num == 255) 
                 || !Main.players[num].Active))
             {
                  NetMessage.SendData(21, -1, -1, "", whoAmI);

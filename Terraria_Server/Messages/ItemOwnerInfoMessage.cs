@@ -21,22 +21,14 @@ namespace Terraria_Server.Messages
             byte owner = readBuffer[num];
             Item item = Main.item[(int)itemIndex];
 
-            if (Main.netMode == 2)
+            if (item.Owner != whoAmI)
             {
-                if (item.Owner != whoAmI)
-                {
-                    return;
-                }
+                return;
+            }
 
-                item.Owner = 255;
-                item.KeepTime = 15;
-                NetMessage.SendData(22, -1, -1, "", (int)itemIndex);
-            }
-            else
-            {
-                item.Owner = (int)owner;
-                item.KeepTime = ((int)owner == Main.myPlayer) ? 15 : 0;
-            }
+            item.Owner = 255;
+            item.KeepTime = 15;
+            NetMessage.SendData(22, -1, -1, "", (int)itemIndex);
         }
     }
 }

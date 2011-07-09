@@ -89,7 +89,7 @@ namespace Terraria_Server.Messages
 
             Main.players[playerIndex] = player;
 
-            if (Main.netMode == 2 && Netplay.serverSock[whoAmI].state == 10)
+            if (Netplay.serverSock[whoAmI].state == 10)
             {
                 NetMessage.SendData(13, -1, whoAmI, "", playerIndex);
             }

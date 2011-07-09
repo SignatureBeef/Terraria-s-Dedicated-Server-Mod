@@ -21,7 +21,7 @@ namespace Terraria_Server
             try
             {
                 int num = 256;
-                if (Main.netMode == 2 && remoteClient >= 0)
+                if (remoteClient >= 0)
                 {
                     num = remoteClient;
                 }
@@ -597,7 +597,7 @@ namespace Terraria_Server
                                         {
                                             b24 += 4;
                                         }
-                                        if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
+                                        if (Main.tile[j, k].liquid > 0)
                                         {
                                             b24 += 8;
                                         }
@@ -623,7 +623,7 @@ namespace Terraria_Server
                                             NetMessage.buffer[num].writeBuffer[num3] = wall2;
                                             num3++;
                                         }
-                                        if (Main.tile[j, k].liquid > 0 && Main.netMode == 2)
+                                        if (Main.tile[j, k].liquid > 0)
                                         {
                                             NetMessage.buffer[num].writeBuffer[num3] = Main.tile[j, k].liquid;
                                             num3++;
@@ -1262,18 +1262,12 @@ namespace Terraria_Server
                                 return;
                             }
                     }
-
-                    if (Main.netMode != 1)
-                    {
-                        goto IL_329C;
-                    }
+                    
+                    goto IL_329C;
                     
                 IL_33DC:
                     if (Main.verboseNetplay)
                     {
-                        for (int n = 0; n < num2; n++)
-                        {
-                        }
                         for (int num10 = 0; num10 < num2; num10++)
                         {
                             byte arg_3413_0 = NetMessage.buffer[num].writeBuffer[num10];
@@ -1336,7 +1330,7 @@ namespace Terraria_Server
                     }
                     goto IL_33DC;
                 IL_3425:
-                    if (packetId == 2 && Main.netMode == 2)
+                    if (packetId == 2)
                     {
                         Netplay.serverSock[num].kill = true;
                     }

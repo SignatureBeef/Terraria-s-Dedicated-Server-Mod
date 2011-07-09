@@ -708,11 +708,8 @@ namespace Terraria_Server
         
         public static void UpdateLiquid()
         {
-            if (Main.netMode == 2)
-            {
-                Liquid.cycles = 25;
-                Liquid.maxLiquid = 5000;
-            }
+            Liquid.cycles = 25;
+            Liquid.maxLiquid = 5000;
 
             if (!WorldGen.gen)
             {
@@ -746,16 +743,13 @@ namespace Terraria_Server
                             Liquid.panicCounter = 0;
                             Liquid.panicMode = false;
                             WorldGen.WaterCheck();
-                            if (Main.netMode == 2)
+                            for (int i = 0; i < 255; i++)
                             {
-                                for (int i = 0; i < 255; i++)
+                                for (int j = 0; j < Main.maxSectionsX; j++)
                                 {
-                                    for (int j = 0; j < Main.maxSectionsX; j++)
+                                    for (int k = 0; k < Main.maxSectionsY; k++)
                                     {
-                                        for (int k = 0; k < Main.maxSectionsY; k++)
-                                        {
-                                            Netplay.serverSock[i].tileSection[j, k] = false;
-                                        }
+                                        Netplay.serverSock[i].tileSection[j, k] = false;
                                     }
                                 }
                             }
@@ -790,7 +784,6 @@ namespace Terraria_Server
             if (num4 > Liquid.numLiquid)
             {
                 num4 = Liquid.numLiquid;
-                int arg_19C_0 = Main.netMode;
                 Liquid.wetCounter = Liquid.cycles;
             }
 
@@ -901,10 +894,9 @@ namespace Terraria_Server
             Main.liquid[Liquid.numLiquid].delay = 0;
             Main.tile[x, y].skipLiquid = false;
             Liquid.numLiquid++;
-            if (Main.netMode == 2)
-            {
-                NetMessage.sendWater(x, y);
-            }
+            
+            NetMessage.sendWater(x, y);
+
             if (Main.tile[x, y].Active && (Main.tileWaterDeath[(int)Main.tile[x, y].type] || (Main.tile[x, y].lava && Main.tileLavaDeath[(int)Main.tile[x, y].type])))
             {
                 if (WorldGen.gen)
@@ -913,10 +905,7 @@ namespace Terraria_Server
                     return;
                 }
                 WorldGen.KillTile(x, y, false, false, false);
-                if (Main.netMode == 2)
-                {
-                    NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
-                }
+                NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
             }
         }
         
@@ -950,11 +939,8 @@ namespace Terraria_Server
                     WorldGen.PlaceTile(x, y, 56, true, true, -1, 0);
                     WorldGen.SquareTileFrame(x, y, true);
 
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendTileSquare(-1, x - 1, y - 1, 3);
-                        return;
-                    }
+                    NetMessage.SendTileSquare(-1, x - 1, y - 1, 3);
+                    return;
                 }
             }
             else if (Main.tile[x, y + 1].liquid > 0 && !Main.tile[x, y + 1].lava && !Main.tile[x, y + 1].Active)
@@ -962,11 +948,8 @@ namespace Terraria_Server
                 ClearLava(x, y);
                 WorldGen.PlaceTile(x, y + 1, 56, true, true, -1, 0);
                 WorldGen.SquareTileFrame(x, y + 1, true);
-
-                if (Main.netMode == 2)
-                {
-                    NetMessage.SendTileSquare(-1, x - 1, y, 3);
-                }
+                
+                NetMessage.SendTileSquare(-1, x - 1, y, 3);
             }
         }
 
@@ -1015,29 +998,23 @@ namespace Terraria_Server
                             {
                                 Main.tile[i, j].type = 0;
                                 WorldGen.SquareTileFrame(i, j, true);
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendTileSquare(-1, x, y, 3);
-                                }
+                                
+                                NetMessage.SendTileSquare(-1, x, y, 3);
                             }
                             else if (Main.tile[i, j].type == 60 || Main.tile[i, j].type == 70)
                             {
                                 Main.tile[i, j].type = 59;
                                 WorldGen.SquareTileFrame(i, j, true);
-                                if (Main.netMode == 2)
-                                {
-                                    NetMessage.SendTileSquare(-1, x, y, 3);
-                                }
+                                
+                                NetMessage.SendTileSquare(-1, x, y, 3);
                             }
                         }
                     }
                 }
             }
 
-            if (Main.netMode == 2)
-            {
-                NetMessage.sendWater(x, y);
-            }
+            
+            NetMessage.sendWater(x, y);
 
             Liquid.numLiquid--;
             Main.tile[Main.liquid[liquidIndex].x, Main.liquid[liquidIndex].y].checkingLiquid = false;

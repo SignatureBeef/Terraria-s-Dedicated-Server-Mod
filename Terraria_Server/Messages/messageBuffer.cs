@@ -74,7 +74,7 @@ namespace Terraria_Server.Messages
             int num = start + 1;
             byte bufferData = readBuffer[start];
 
-            if (Main.netMode == 2 && bufferData != 38)
+            if (bufferData != 38)
             {
                 if (Netplay.serverSock[whoAmI].state == -1)
                 {
@@ -89,7 +89,7 @@ namespace Terraria_Server.Messages
             }
 
             IMessage message = messageArray[bufferData];
-            if (message != null && (message.GetRequiredNetMode() == null || message.GetRequiredNetMode() == Main.netMode))
+            if (message != null && (message.GetRequiredNetMode() == null || message.GetRequiredNetMode() == 2))
             {
                 message.Process(start, length, num, whoAmI, readBuffer, bufferData);
             }

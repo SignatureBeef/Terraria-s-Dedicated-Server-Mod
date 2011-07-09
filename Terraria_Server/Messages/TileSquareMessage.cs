@@ -113,10 +113,7 @@ namespace Terraria_Server.Messages
             }
 
             WorldGen.RangeFrame(left, top, left + (int)size, top + (int)size);
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)size, (float)left, (float)top);
-            }
+            NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)size, (float)left, (float)top);
         }
     }
 }

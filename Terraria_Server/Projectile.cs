@@ -886,7 +886,7 @@ namespace Terraria_Server
             Main.projectile[num].knockBack = KnockBack;
             Main.projectile[num].identity = num;
             Main.projectile[num].wet = Collision.WetCollision(Main.projectile[num].Position, Main.projectile[num].width, Main.projectile[num].height);
-            if (Main.netMode != 0 && Owner == Main.myPlayer)
+            if (Owner == Main.myPlayer)
             {
                 NetMessage.SendData(27, -1, -1, "", num);
             }
@@ -939,10 +939,8 @@ namespace Terraria_Server
                                     this.direction = 1;
                                 }
                                 Main.players[myPlayer].Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
-                                if (Main.netMode != 0)
-                                {
-                                    NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), myPlayer, (float)this.direction, (float)this.damage, 1f);
-                                }
+                                
+                                NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), myPlayer, (float)this.direction, (float)this.damage, 1f);
                             }
                         }
                     }
@@ -973,10 +971,7 @@ namespace Terraria_Server
                             if (Main.tile[i, j] != null && Main.tileCut[(int)Main.tile[i, j].type] && Main.tile[i, j + 1] != null && Main.tile[i, j + 1].type != 78)
                             {
                                 WorldGen.KillTile(i, j, false, false, false);
-                                if (Main.netMode != 0)
-                                {
-                                    NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
-                                }
+                                NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
                             }
                         }
                     }
@@ -1036,10 +1031,9 @@ namespace Terraria_Server
                                             this.timeLeft = 1;
                                         }
                                         Main.npcs[i].StrikeNPC(this.damage, this.knockBack, this.direction);
-                                        if (Main.netMode != 0)
-                                        {
-                                            NetMessage.SendData(28, -1, -1, "", i, (float)this.damage, this.knockBack, (float)this.direction);
-                                        }
+                                        
+                                        NetMessage.SendData(28, -1, -1, "", i, (float)this.damage, this.knockBack, (float)this.direction);
+
                                         if (this.penetrate != 1)
                                         {
                                             Main.npcs[i].immune[this.Owner] = 10;
@@ -1113,10 +1107,9 @@ namespace Terraria_Server
                                         this.timeLeft = 1;
                                     }
                                     Main.players[l].Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
-                                    if (Main.netMode != 0)
-                                    {
-                                        NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), l, (float)this.direction, (float)this.damage, 1f);
-                                    }
+                                                                        
+                                    NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), l, (float)this.direction, (float)this.damage, 1f);
+
                                     this.playerImmune[l] = 40;
                                     if (this.penetrate > 0)
                                     {
@@ -1145,7 +1138,7 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (this.type == ProjectileType.POWDER_VILE && Main.netMode != 1)
+                if (this.type == ProjectileType.POWDER_VILE)
                 {
                     for (int i = 0; i < NPC.MAX_NPCS; i++)
                     {
@@ -1192,10 +1185,8 @@ namespace Terraria_Server
                             hitDirection = 1;
                         }
                         Main.players[myPlayer2].Hurt(this.damage * 2, hitDirection, false, false, " was slain...");
-                        if (Main.netMode != 0)
-                        {
-                            NetMessage.SendData(26, -1, -1, "", myPlayer2, (float)this.direction, (float)(this.damage * 2));
-                        }
+                        
+                        NetMessage.SendData(26, -1, -1, "", myPlayer2, (float)this.direction, (float)(this.damage * 2));
                     }
                 }
             }
@@ -2979,10 +2970,9 @@ namespace Terraria_Server
                                                                         WorldGen.PlaceTile(num78, num79, 85, false, false, -1, 0);
                                                                         if (Main.tile[num78, num79].Active)
                                                                         {
-                                                                            if (Main.netMode != 0)
-                                                                            {
-                                                                                NetMessage.SendData(17, -1, -1, "", 1, (float)num78, (float)num79, 85f);
-                                                                            }
+                                                                            
+                                                                            NetMessage.SendData(17, -1, -1, "", 1, (float)num78, (float)num79, 85f);
+
                                                                             int num80 = Sign.ReadSign(num78, num79);
                                                                             if (num80 >= 0)
                                                                             {
@@ -3899,10 +3889,9 @@ namespace Terraria_Server
                         }
                     }
                 }
-                if (Main.netMode != 0)
-                {
-                    NetMessage.SendData(29, -1, -1, "", this.identity, (float)this.Owner);
-                }
+                
+                NetMessage.SendData(29, -1, -1, "", this.identity, (float)this.Owner);
+
                 int num53 = -1;
                 if (this.aiStyle == 10)
                 {

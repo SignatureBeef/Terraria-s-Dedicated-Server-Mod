@@ -29,10 +29,7 @@ namespace Terraria_Server.Messages
             num += 2;
             int statLifeMax = (int)BitConverter.ToInt16(readBuffer, num);
 
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            playerIndex = whoAmI;
 
             Player player = Main.players[playerIndex];
             player.statLife = statLife;
@@ -43,10 +40,7 @@ namespace Terraria_Server.Messages
                 player.dead = true;
             }
 
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(16, -1, whoAmI, "", playerIndex);
-            }
+            NetMessage.SendData(16, -1, whoAmI, "", playerIndex);
         }
     }
 }

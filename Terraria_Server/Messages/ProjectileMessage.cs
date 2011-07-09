@@ -49,10 +49,7 @@ namespace Terraria_Server.Messages
             if (!projectile.active || projectile.type != (ProjectileType)Enum.ToObject(typeof(ProjectileType), (int)type))
             {
                 projectile.SetDefaults((ProjectileType)Enum.ToObject(typeof(ProjectileType), type));
-                if (Main.netMode == 2)
-                {
-                    Netplay.serverSock[whoAmI].spamProjectile += 1f;
-                }
+                Netplay.serverSock[whoAmI].spamProjectile += 1f;
             }
 
             projectile.identity = (int)projectileIdentity;
@@ -80,10 +77,7 @@ namespace Terraria_Server.Messages
             {
                 projectile.ai[i] = aiInfo[i];
             }
-            if (Main.netMode == 2)
-            {
-                NetMessage.SendData(27, -1, whoAmI, "", projectileIndex);
-            }
+            NetMessage.SendData(27, -1, whoAmI, "", projectileIndex);
         }
 
 

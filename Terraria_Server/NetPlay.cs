@@ -37,7 +37,6 @@ namespace Terraria_Server
 			Main.myPlayer = 255;
 			Netplay.serverIP = IPAddress.Parse(serverSIP);
 			Netplay.serverListenIP = Netplay.serverIP;
-			Main.netMode = 2;
 			Netplay.disconnect = false;
 			for (int i = 0; i < 256; i++)
 			{
@@ -297,7 +296,6 @@ namespace Terraria_Server
 			}
 			if (Main.menuMode != 15)
 			{
-				Main.netMode = 0;
 				Main.menuMode = 10;
                 WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
                 while (WorldGen.saveLock)
