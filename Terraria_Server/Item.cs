@@ -6135,8 +6135,7 @@ namespace Terraria_Server
                 }
                 count++;
             }
-            if (this.Owner != num && ((num == Main.myPlayer && Main.netMode == 1) 
-                || (num == 255 && Main.netMode == 2) 
+            if (this.Owner != num && ((num == Main.myPlayer && Main.netMode == 1) || (num == 255 && Main.netMode == 2) 
                 || !Main.players[num].Active))
             {
                  NetMessage.SendData(21, -1, -1, "", whoAmI);

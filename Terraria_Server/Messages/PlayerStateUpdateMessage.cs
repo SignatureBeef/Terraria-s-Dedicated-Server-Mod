@@ -30,15 +30,8 @@ namespace Terraria_Server.Messages
             }
 
             Player player = (Player)Main.players[playerIndex].Clone();
-            if (Main.netMode == 1 && !player.Active)
-            {
-                NetMessage.SendData(15);
-            }
-
-            if (Main.netMode == 2)
-            {
-                playerIndex = whoAmI;
-            }
+            
+            playerIndex = whoAmI;
 
             player.oldVelocity = player.Velocity;
 

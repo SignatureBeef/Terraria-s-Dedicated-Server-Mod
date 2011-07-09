@@ -34,13 +34,27 @@ namespace Terraria_Server.Messages
             String String4 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
             Item item = Main.item[(int)itemIndex];
-            if (Main.netMode == 1)
+            
+            if (String4 == "0")
             {
-                if (String4 == "0")
+                if (itemIndex < 200)
                 {
                     item.Active = false;
-                    return;
+                    NetMessage.SendData(21, -1, -1, "", (int)itemIndex);
                 }
+            }
+            else
+            {
+                bool isNewItem = false;
+                if (itemIndex == 200)
+                {
+                    isNewItem = true;
+                    Item newItem = new Item();
+                    newItem.SetDefaults(String4);
+                    itemIndex = (short)Item.NewItem((int)num39, (int)num40, newItem.Width, newItem.Height, newItem.Type, (int)stackSize, true);
+                    item = Main.item[(int)itemIndex];
+                }
+
                 item.SetDefaults(String4);
                 item.Stack = (int)stackSize;
                 item.Position.X = num39;
@@ -48,49 +62,17 @@ namespace Terraria_Server.Messages
                 item.Velocity.X = x3;
                 item.Velocity.Y = y2;
                 item.Active = true;
-                item.Wet = Collision.WetCollision(item.Position, item.Width, item.Height);
-            }
-            else
-            {
-                if (String4 == "0")
-                {
-                    if (itemIndex < 200)
-                    {
-                        item.Active = false;
-                        NetMessage.SendData(21, -1, -1, "", (int)itemIndex);
-                    }
-                }
-                else
-                {
-                    bool isNewItem = false;
-                    if (itemIndex == 200)
-                    {
-                        isNewItem = true;
-                        Item newItem = new Item();
-                        newItem.SetDefaults(String4);
-                        itemIndex = (short)Item.NewItem((int)num39, (int)num40, newItem.Width, newItem.Height, newItem.Type, (int)stackSize, true);
-                        item = Main.item[(int)itemIndex];
-                    }
+                item.Owner = Main.myPlayer;
 
-                    item.SetDefaults(String4);
-                    item.Stack = (int)stackSize;
-                    item.Position.X = num39;
-                    item.Position.Y = num40;
-                    item.Velocity.X = x3;
-                    item.Velocity.Y = y2;
-                    item.Active = true;
-                    item.Owner = Main.myPlayer;
-
-                    if (isNewItem)
-                    {
-                        NetMessage.SendData(21, -1, -1, "", (int)itemIndex);
-                        item.OwnIgnore = whoAmI;
-                        item.OwnTime = 100;
-                        item.FindOwner((int)itemIndex);
-                        return;
-                    }
-                    NetMessage.SendData(21, -1, whoAmI, "", (int)itemIndex);
+                if (isNewItem)
+                {
+                    NetMessage.SendData(21, -1, -1, "", (int)itemIndex);
+                    item.OwnIgnore = whoAmI;
+                    item.OwnTime = 100;
+                    item.FindOwner((int)itemIndex);
+                    return;
                 }
+                NetMessage.SendData(21, -1, whoAmI, "", (int)itemIndex);
             }
         }
     }

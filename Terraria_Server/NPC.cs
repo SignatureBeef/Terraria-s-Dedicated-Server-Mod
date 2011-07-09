@@ -1887,7 +1887,7 @@ namespace Terraria_Server
                                         {
                                             int num63 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
                                             int num64 = (int)(npc.Position.Y + (float)npc.height + 1f) / 16;
-                                            if (Main.netMode == 1 || !npc.townNPC)
+                                            if (!npc.townNPC)
                                             {
                                                 npc.homeTileX = num63;
                                                 npc.homeTileY = num64;
@@ -6115,10 +6115,6 @@ namespace Terraria_Server
         
         public static void SpawnOnPlayer(Player player, int playerIndex, int Type)
         {
-            if (Main.netMode == 1)
-            {
-                return;
-            }
             bool flag = false;
             int num = 0;
             int num2 = 0;

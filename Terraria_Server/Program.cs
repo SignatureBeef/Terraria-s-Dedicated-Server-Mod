@@ -7,9 +7,6 @@ using System.Reflection;
 using Terraria_Server.Definitions;
 using System.Xml;
 
-/// <summary>
-/// TDSM Namespace, First thing I actually named it to, So eh, Lol.
-/// </summary>
 namespace Terraria_Server
 {
     public class Program

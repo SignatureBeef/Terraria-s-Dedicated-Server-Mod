@@ -190,7 +190,6 @@
     <Compile Include="Events\PartyChangeEvent.cs" />
     <Compile Include="Events\PlayerCommandEvent.cs" />
     <Compile Include="Shops\Chest.cs" />
-    <Compile Include="ClientSock.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Events\PlayerDeathEvent.cs" />
     <Compile Include="Events\PlayerProjectileEvent.cs" />

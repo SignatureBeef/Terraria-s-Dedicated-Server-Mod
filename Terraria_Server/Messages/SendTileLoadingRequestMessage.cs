@@ -21,8 +21,8 @@ namespace Terraria_Server.Messages
         {
             int num14 = BitConverter.ToInt32(readBuffer, start + 1);
             String String4 = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5);
-            Netplay.clientSock.statusMax += num14;
-            Netplay.clientSock.statusText = String4;
+            //statusMax += num14;
+            //statusText = String4;
         }
     }
 }

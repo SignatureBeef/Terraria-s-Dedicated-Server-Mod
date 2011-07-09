@@ -70,18 +70,9 @@ namespace Terraria_Server.Messages
             {
                 Netplay.serverSock[whoAmI].timeOut = 0;
             }
-            else
-            {
-                Netplay.clientSock.timeOut = 0;
-            }
 
             int num = start + 1;
             byte bufferData = readBuffer[start];
-
-            if (Main.netMode == 1 && Netplay.clientSock.statusMax > 0)
-            {
-                Netplay.clientSock.statusCount++;
-            }
 
             if (Main.netMode == 2 && bufferData != 38)
             {

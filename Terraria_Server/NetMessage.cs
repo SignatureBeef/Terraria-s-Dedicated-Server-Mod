@@ -1267,28 +1267,7 @@ namespace Terraria_Server
                     {
                         goto IL_329C;
                     }
-                    if (Netplay.clientSock.tcpClient.Connected)
-                    {
-                        try
-                        {
-                            MessageBuffer messageBuffer = NetMessage.buffer[num];
-                            NetMessage.buffer[num].spamCount++;
-                            if (Statics.debugMode)
-                            {
-                                Netplay.clientSock.networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
-                                Netplay.clientSock.ClientWriteCallBack(null);
-                            }
-                            else
-                            {
-                                Netplay.clientSock.networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, num2, new AsyncCallback(Netplay.clientSock.ClientWriteCallBack), Netplay.clientSock.networkStream);
-                            }
-                            goto IL_33DC;
-                        }
-                        catch
-                        {
-                            goto IL_33DC;
-                        }
-                    }
+                    
                 IL_33DC:
                     if (Main.verboseNetplay)
                     {
@@ -1357,11 +1336,6 @@ namespace Terraria_Server
                     }
                     goto IL_33DC;
                 IL_3425:
-                    if (packetId == 19 && Main.netMode == 1)
-                    {
-                        int size = 5;
-                        NetMessage.SendTileSquare(num, (int)number2, (int)number3, size);
-                    }
                     if (packetId == 2 && Main.netMode == 2)
                     {
                         Netplay.serverSock[num].kill = true;
@@ -1389,16 +1363,8 @@ namespace Terraria_Server
 				}
 				catch
 				{
-					if (Main.netMode == 1)
-					{
-						Main.menuMode = 15;
-						Main.statusText = "Bad header lead to a read buffer overflow.";
-						Netplay.disconnect = true;
-					}
-					else
-					{
-						Netplay.serverSock[i].kill = true;
-					}
+					//Bad Header
+                    Netplay.serverSock[i].kill = true;
 				}
 			}
 		}
@@ -1519,11 +1485,6 @@ namespace Terraria_Server
 		
         public static void sendWater(int x, int y)
 		{
-			if (Main.netMode == 1)
-			{
-				NetMessage.SendData(48, -1, -1, "", x, (float)y, 0f, 0f);
-				return;
-			}
 			for (int i = 0; i < 256; i++)
 			{
 				if ((NetMessage.buffer[i].broadcast || Netplay.serverSock[i].state >= 3) && Netplay.serverSock[i].tcpClient.Connected)
