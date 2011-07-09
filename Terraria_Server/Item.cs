@@ -5973,15 +5973,15 @@ namespace Terraria_Server
                     {
                         if (this.Type == 267 && Main.netMode != 1)
                         {
-                            for (int l = 0; l < 1000; l++)
+                            for (int l = 0; l < NPC.MAX_NPCS; l++)
                             {
-                                if (Main.npc[l].Active && Main.npc[l].type == 22)
+                                if (Main.npcs[l].Active && Main.npcs[l].Type == 22)
                                 {
                                     if (Main.netMode == 2)
                                     {
-                                        NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npc[l].direction));
+                                        NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
                                     }
-                                    Main.npc[l].StrikeNPC(9999, 10f, -Main.npc[l].direction);
+                                    Main.npcs[l].StrikeNPC(9999, 10f, -Main.npcs[l].direction);
                                 }
                             }
                         }

@@ -3,6 +3,7 @@ using System.Text;
 
 using Terraria_Server;
 using System.Threading;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server.Commands
 {
@@ -764,8 +765,7 @@ namespace Terraria_Server.Commands
                     NPC[] npcs = new NPC[Main.maxItemTypes];
                     for (int i = 0; i < Main.maxItemTypes; i++)
                     {
-                        npcs[i] = new NPC();
-                        npcs[i].SetDefaults(i);
+                        npcs[i] = NPCRegistry.Create(i);
                     }
 
                     int npcType = -1;
@@ -778,7 +778,7 @@ namespace Terraria_Server.Commands
                                 String npc = npcs[i].Name.Trim().Replace(" ", "").ToLower();
                                 if (npc == npcName)
                                 {
-                                    npcType = npcs[i].type;
+                                    npcType = npcs[i].Type;
                                 }
                             }
                         }
@@ -800,9 +800,9 @@ namespace Terraria_Server.Commands
                         bool assumed = false;
                         for (int i = 0; i < Main.maxNPCTypes; i++)
                         {
-                            if (npcs[i].type == assumedItem)
+                            if (npcs[i].Type == assumedItem)
                             {
-                                npcType = npcs[i].type;
+                                npcType = npcs[i].Type;
                                 assumed = true;
                                 break;
                             }

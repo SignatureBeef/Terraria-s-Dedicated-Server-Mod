@@ -8,11 +8,14 @@ using Terraria_Server.Commands;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server
 {
     internal class WorldGen
     {
+        private const int TREE_RADIUS = 2;
+
         private static object padlock = new object();
         public static int lavaLine;
         public static int waterLine;
@@ -148,7 +151,7 @@ namespace Terraria_Server
                 int num = -1;
                 for (int i = 0; i < 1000; i++)
                 {
-                    if (Main.npc[i].Active && Main.npc[i].homeless && Main.npc[i].type == WorldGen.spawnNPC)
+                    if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].Type == WorldGen.spawnNPC)
                     {
                         num = i;
                         break;
@@ -246,31 +249,31 @@ namespace Terraria_Server
                         }
                     }
                     int num7 = NPC.NewNPC(num2 * 16, num3 * 16, WorldGen.spawnNPC, 1);
-                    Main.npc[num7].homeTileX = WorldGen.bestX;
-                    Main.npc[num7].homeTileY = WorldGen.bestY;
+                    Main.npcs[num7].homeTileX = WorldGen.bestX;
+                    Main.npcs[num7].homeTileY = WorldGen.bestY;
                     if (num2 < WorldGen.bestX)
                     {
-                        Main.npc[num7].direction = 1;
+                        Main.npcs[num7].direction = 1;
                     }
                     else
                     {
                         if (num2 > WorldGen.bestX)
                         {
-                            Main.npc[num7].direction = -1;
+                            Main.npcs[num7].direction = -1;
                         }
                     }
-                    Main.npc[num7].netUpdate = true;
+                    Main.npcs[num7].netUpdate = true;
                     if (Main.netMode == 2)
                     {
-                        NetMessage.SendData(25, -1, -1, Main.npc[num7].Name + " has arrived!", 255, 50f, 125f, 255f);
+                        NetMessage.SendData(25, -1, -1, Main.npcs[num7].Name + " has arrived!", 255, 50f, 125f, 255f);
                     }
                 }
                 else
                 {
                     WorldGen.spawnNPC = 0;
-                    Main.npc[num].homeTileX = WorldGen.bestX;
-                    Main.npc[num].homeTileY = WorldGen.bestY;
-                    Main.npc[num].homeless = false;
+                    Main.npcs[num].homeTileX = WorldGen.bestX;
+                    Main.npcs[num].homeTileY = WorldGen.bestY;
+                    Main.npcs[num].homeless = false;
                 }
                 WorldGen.spawnNPC = 0;
             }
@@ -291,16 +294,16 @@ namespace Terraria_Server
         
         public static void QuickFindHome(int npc)
         {
-            if (Main.npc[npc].homeTileX > 10 && Main.npc[npc].homeTileY > 10 && Main.npc[npc].homeTileX < Main.maxTilesX - 10 && Main.npc[npc].homeTileY < Main.maxTilesY)
+            if (Main.npcs[npc].homeTileX > 10 && Main.npcs[npc].homeTileY > 10 && Main.npcs[npc].homeTileX < Main.maxTilesX - 10 && Main.npcs[npc].homeTileY < Main.maxTilesY)
             {
                 WorldGen.canSpawn = false;
-                WorldGen.StartRoomCheck(Main.npc[npc].homeTileX, Main.npc[npc].homeTileY - 1);
+                WorldGen.StartRoomCheck(Main.npcs[npc].homeTileX, Main.npcs[npc].homeTileY - 1);
                 if (!WorldGen.canSpawn)
                 {
-                    for (int i = Main.npc[npc].homeTileX - 1; i < Main.npc[npc].homeTileX + 2; i++)
+                    for (int i = Main.npcs[npc].homeTileX - 1; i < Main.npcs[npc].homeTileX + 2; i++)
                     {
-                        int num = Main.npc[npc].homeTileY - 1;
-                        while (num < Main.npc[npc].homeTileY + 2 && !WorldGen.StartRoomCheck(i, num))
+                        int num = Main.npcs[npc].homeTileY - 1;
+                        while (num < Main.npcs[npc].homeTileY + 2 && !WorldGen.StartRoomCheck(i, num))
                         {
                             num++;
                         }
@@ -309,10 +312,10 @@ namespace Terraria_Server
                 if (!WorldGen.canSpawn)
                 {
                     int num2 = 10;
-                    for (int j = Main.npc[npc].homeTileX - num2; j <= Main.npc[npc].homeTileX + num2; j += 2)
+                    for (int j = Main.npcs[npc].homeTileX - num2; j <= Main.npcs[npc].homeTileX + num2; j += 2)
                     {
-                        int num3 = Main.npc[npc].homeTileY - num2;
-                        while (num3 <= Main.npc[npc].homeTileY + num2 && !WorldGen.StartRoomCheck(j, num3))
+                        int num3 = Main.npcs[npc].homeTileY - num2;
+                        while (num3 <= Main.npcs[npc].homeTileY + num2 && !WorldGen.StartRoomCheck(j, num3))
                         {
                             num3 += 2;
                         }
@@ -320,25 +323,25 @@ namespace Terraria_Server
                 }
                 if (WorldGen.canSpawn)
                 {
-                    WorldGen.RoomNeeds(Main.npc[npc].type);
+                    WorldGen.RoomNeeds(Main.npcs[npc].Type);
                     if (WorldGen.canSpawn)
                     {
                         WorldGen.ScoreRoom(npc);
                     }
                     if (WorldGen.canSpawn && WorldGen.hiScore > 0)
                     {
-                        Main.npc[npc].homeTileX = WorldGen.bestX;
-                        Main.npc[npc].homeTileY = WorldGen.bestY;
-                        Main.npc[npc].homeless = false;
+                        Main.npcs[npc].homeTileX = WorldGen.bestX;
+                        Main.npcs[npc].homeTileY = WorldGen.bestY;
+                        Main.npcs[npc].homeless = false;
                         WorldGen.canSpawn = false;
                         return;
                     }
-                    Main.npc[npc].homeless = true;
+                    Main.npcs[npc].homeless = true;
                     return;
                 }
                 else
                 {
-                    Main.npc[npc].homeless = true;
+                    Main.npcs[npc].homeless = true;
                 }
             }
         }
@@ -347,16 +350,16 @@ namespace Terraria_Server
         {
             for (int i = 0; i < 1000; i++)
             {
-                if (Main.npc[i].Active && Main.npc[i].townNPC && ignoreNPC != i && !Main.npc[i].homeless)
+                if (Main.npcs[i].Active && Main.npcs[i].townNPC && ignoreNPC != i && !Main.npcs[i].homeless)
                 {
                     for (int j = 0; j < WorldGen.numRoomTiles; j++)
                     {
-                        if (Main.npc[i].homeTileX == WorldGen.roomX[j] && Main.npc[i].homeTileY == WorldGen.roomY[j])
+                        if (Main.npcs[i].homeTileX == WorldGen.roomX[j] && Main.npcs[i].homeTileY == WorldGen.roomY[j])
                         {
                             bool flag = false;
                             for (int k = 0; k < WorldGen.numRoomTiles; k++)
                             {
-                                if (Main.npc[i].homeTileX == WorldGen.roomX[k] && Main.npc[i].homeTileY - 1 == WorldGen.roomY[k])
+                                if (Main.npcs[i].homeTileX == WorldGen.roomX[k] && Main.npcs[i].homeTileY - 1 == WorldGen.roomY[k])
                                 {
                                     flag = true;
                                     break;
@@ -688,9 +691,9 @@ namespace Terraria_Server
             }
             for (int l = 0; l < 1000; l++)
             {
-                if (Main.npc[l].Active)
+                if (Main.npcs[l].Active)
                 {
-                    Rectangle value2 = new Rectangle((int)Main.npc[l].Position.X, (int)Main.npc[l].Position.Y, Main.npc[l].width, Main.npc[l].height);
+                    Rectangle value2 = new Rectangle((int)Main.npcs[l].Position.X, (int)Main.npcs[l].Position.Y, Main.npcs[l].width, Main.npcs[l].height);
                     if (rectangle.Intersects(value2))
                     {
                         return false;
@@ -1026,7 +1029,7 @@ namespace Terraria_Server
             }
             for (int num4 = 0; num4 < 1000; num4++)
             {
-                Main.npc[num4] = new NPC();
+                Main.npcs[num4] = new NPC();
             }
             for (int num5 = 0; num5 < 1000; num5++)
             {
@@ -1193,7 +1196,7 @@ namespace Terraria_Server
                                     }
                                     for (int n = 0; n < 1000; n++)
                                     {
-                                        NPC nPC = (NPC)Main.npc[n].Clone();
+                                        NPC nPC = (NPC)Main.npcs[n].Clone();
                                         if (nPC.Active && nPC.townNPC)
                                         {
                                             binaryWriter.Write(true);
@@ -1238,6 +1241,11 @@ namespace Terraria_Server
                                         Program.tConsole.WriteLine(e.Message);
                                         Program.tConsole.WriteLine(e.StackTrace);
                                     }
+                                }
+                                for (int n = 0; n < 1000; n++)
+                                {
+                                    NPC nPC = (NPC)Main.npcs[n].Clone();
+                                    if (nPC.Active && nPC.townNPC)
                                     try
                                     {
                                         File.Move(tempPath, savePath);
@@ -1422,12 +1430,12 @@ namespace Terraria_Server
                             int num5 = 0;
                             while (flag)
                             {
-                                Main.npc[num5].SetDefaults(binaryReader.ReadString());
-                                Main.npc[num5].Position.X = binaryReader.ReadSingle();
-                                Main.npc[num5].Position.Y = binaryReader.ReadSingle();
-                                Main.npc[num5].homeless = binaryReader.ReadBoolean();
-                                Main.npc[num5].homeTileX = binaryReader.ReadInt32();
-                                Main.npc[num5].homeTileY = binaryReader.ReadInt32();
+                                Main.npcs[num5] = NPCRegistry.Create(binaryReader.ReadString());
+                                Main.npcs[num5].Position.X = binaryReader.ReadSingle();
+                                Main.npcs[num5].Position.Y = binaryReader.ReadSingle();
+                                Main.npcs[num5].homeless = binaryReader.ReadBoolean();
+                                Main.npcs[num5].homeTileX = binaryReader.ReadInt32();
+                                Main.npcs[num5].homeTileY = binaryReader.ReadInt32();
                                 flag = binaryReader.ReadBoolean();
                                 num5++;
                             }
@@ -3766,10 +3774,10 @@ namespace Terraria_Server
                 num259++;
             }
             int num262 = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
-            Main.npc[num262].homeTileX = Main.spawnTileX;
-            Main.npc[num262].homeTileY = Main.spawnTileY;
-            Main.npc[num262].direction = 1;
-            Main.npc[num262].homeless = true;
+            Main.npcs[num262].homeTileX = Main.spawnTileX;
+            Main.npcs[num262].homeTileY = Main.spawnTileY;
+            Main.npcs[num262].direction = 1;
+            Main.npcs[num262].homeless = true;
             Program.tConsole.WriteLine();
             Program.printData("Planting sunflowers...", true);
             int num263 = 0;
@@ -3959,889 +3967,493 @@ namespace Terraria_Server
             }
             WorldGen.gen = false;
         }
-        
-        public static bool GrowEpicTree(int i, int y)
+
+        private static void GrowTreeShared(int i, int y, int freeTilesAbove, int minHeight, int maxHeight)
         {
-            int num = y;
-            while (Main.tile[i, num].type == 20)
+            bool flag = false;
+            bool flag2 = false;
+            int num3 = WorldGen.genRand.Next(minHeight, maxHeight);
+            int num4;
+            for (int j = freeTilesAbove - num3; j < freeTilesAbove; j++)
             {
-                num++;
-            }
-            if (Main.tile[i, num].Active && Main.tile[i, num].type == 2 && Main.tile[i, num - 1].wall == 0 && Main.tile[i, num - 1].liquid == 0 && Main.tile[i - 1, num].Active && Main.tile[i - 1, num].type == 2 && Main.tile[i + 1, num].Active && Main.tile[i + 1, num].type == 2)
-            {
-                int num2 = 2;
-                if (WorldGen.EmptyTileCheck(i - num2, i + num2, num - 55, num - 1, 20))
+                Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
+                Main.tile[i, j].Active = true;
+                Main.tile[i, j].type = 5;
+                num4 = WorldGen.genRand.Next(3);
+                int num5 = WorldGen.genRand.Next(10);
+                if (j == freeTilesAbove - 1 || j == freeTilesAbove - num3)
                 {
-                    bool flag = false;
-                    bool flag2 = false;
-                    int num3 = WorldGen.genRand.Next(20, 30);
-                    int num4;
-                    for (int j = num - num3; j < num; j++)
+                    num5 = 0;
+                }
+                while (((num5 == 5 || num5 == 7) && flag) || ((num5 == 6 || num5 == 7) && flag2))
+                {
+                    num5 = WorldGen.genRand.Next(10);
+                }
+                flag = false;
+                flag2 = false;
+                if (num5 == 5 || num5 == 7)
+                {
+                    flag = true;
+                }
+                if (num5 == 6 || num5 == 7)
+                {
+                    flag2 = true;
+                }
+                if (num5 == 1)
+                {
+                    if (num4 == 0)
                     {
-                        Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
-                        Main.tile[i, j].Active = true;
-                        Main.tile[i, j].type = 5;
-                        num4 = WorldGen.genRand.Next(3);
-                        int num5 = WorldGen.genRand.Next(10);
-                        if (j == num - 1 || j == num - num3)
+                        Main.tile[i, j].frameX = 0;
+                        Main.tile[i, j].frameY = 66;
+                    }
+                    if (num4 == 1)
+                    {
+                        Main.tile[i, j].frameX = 0;
+                        Main.tile[i, j].frameY = 88;
+                    }
+                    if (num4 == 2)
+                    {
+                        Main.tile[i, j].frameX = 0;
+                        Main.tile[i, j].frameY = 110;
+                    }
+                }
+                else
+                {
+                    if (num5 == 2)
+                    {
+                        if (num4 == 0)
                         {
-                            num5 = 0;
+                            Main.tile[i, j].frameX = 22;
+                            Main.tile[i, j].frameY = 0;
                         }
-                        while (((num5 == 5 || num5 == 7) && flag) || ((num5 == 6 || num5 == 7) && flag2))
+                        if (num4 == 1)
                         {
-                            num5 = WorldGen.genRand.Next(10);
+                            Main.tile[i, j].frameX = 22;
+                            Main.tile[i, j].frameY = 22;
                         }
-                        flag = false;
-                        flag2 = false;
-                        if (num5 == 5 || num5 == 7)
+                        if (num4 == 2)
                         {
-                            flag = true;
+                            Main.tile[i, j].frameX = 22;
+                            Main.tile[i, j].frameY = 44;
                         }
-                        if (num5 == 6 || num5 == 7)
-                        {
-                            flag2 = true;
-                        }
-                        if (num5 == 1)
+                    }
+                    else
+                    {
+                        if (num5 == 3)
                         {
                             if (num4 == 0)
                             {
-                                Main.tile[i, j].frameX = 0;
+                                Main.tile[i, j].frameX = 44;
                                 Main.tile[i, j].frameY = 66;
                             }
                             if (num4 == 1)
                             {
-                                Main.tile[i, j].frameX = 0;
+                                Main.tile[i, j].frameX = 44;
                                 Main.tile[i, j].frameY = 88;
                             }
                             if (num4 == 2)
                             {
-                                Main.tile[i, j].frameX = 0;
+                                Main.tile[i, j].frameX = 44;
                                 Main.tile[i, j].frameY = 110;
                             }
                         }
                         else
                         {
-                            if (num5 == 2)
+                            if (num5 == 4)
                             {
                                 if (num4 == 0)
                                 {
                                     Main.tile[i, j].frameX = 22;
-                                    Main.tile[i, j].frameY = 0;
+                                    Main.tile[i, j].frameY = 66;
                                 }
                                 if (num4 == 1)
                                 {
                                     Main.tile[i, j].frameX = 22;
-                                    Main.tile[i, j].frameY = 22;
+                                    Main.tile[i, j].frameY = 88;
                                 }
                                 if (num4 == 2)
                                 {
                                     Main.tile[i, j].frameX = 22;
-                                    Main.tile[i, j].frameY = 44;
+                                    Main.tile[i, j].frameY = 110;
                                 }
                             }
                             else
                             {
-                                if (num5 == 3)
+                                if (num5 == 5)
                                 {
                                     if (num4 == 0)
                                     {
-                                        Main.tile[i, j].frameX = 44;
-                                        Main.tile[i, j].frameY = 66;
+                                        Main.tile[i, j].frameX = 88;
+                                        Main.tile[i, j].frameY = 0;
                                     }
                                     if (num4 == 1)
                                     {
-                                        Main.tile[i, j].frameX = 44;
-                                        Main.tile[i, j].frameY = 88;
+                                        Main.tile[i, j].frameX = 88;
+                                        Main.tile[i, j].frameY = 22;
                                     }
                                     if (num4 == 2)
                                     {
-                                        Main.tile[i, j].frameX = 44;
-                                        Main.tile[i, j].frameY = 110;
+                                        Main.tile[i, j].frameX = 88;
+                                        Main.tile[i, j].frameY = 44;
                                     }
                                 }
                                 else
                                 {
-                                    if (num5 == 4)
+                                    if (num5 == 6)
                                     {
                                         if (num4 == 0)
                                         {
-                                            Main.tile[i, j].frameX = 22;
+                                            Main.tile[i, j].frameX = 66;
                                             Main.tile[i, j].frameY = 66;
                                         }
                                         if (num4 == 1)
                                         {
-                                            Main.tile[i, j].frameX = 22;
+                                            Main.tile[i, j].frameX = 66;
                                             Main.tile[i, j].frameY = 88;
                                         }
                                         if (num4 == 2)
                                         {
-                                            Main.tile[i, j].frameX = 22;
+                                            Main.tile[i, j].frameX = 66;
                                             Main.tile[i, j].frameY = 110;
                                         }
                                     }
                                     else
                                     {
-                                        if (num5 == 5)
+                                        if (num5 == 7)
                                         {
                                             if (num4 == 0)
                                             {
-                                                Main.tile[i, j].frameX = 88;
-                                                Main.tile[i, j].frameY = 0;
+                                                Main.tile[i, j].frameX = 110;
+                                                Main.tile[i, j].frameY = 66;
                                             }
                                             if (num4 == 1)
                                             {
-                                                Main.tile[i, j].frameX = 88;
-                                                Main.tile[i, j].frameY = 22;
+                                                Main.tile[i, j].frameX = 110;
+                                                Main.tile[i, j].frameY = 88;
                                             }
                                             if (num4 == 2)
                                             {
-                                                Main.tile[i, j].frameX = 88;
-                                                Main.tile[i, j].frameY = 44;
+                                                Main.tile[i, j].frameX = 110;
+                                                Main.tile[i, j].frameY = 110;
                                             }
                                         }
                                         else
                                         {
-                                            if (num5 == 6)
+                                            if (num4 == 0)
                                             {
-                                                if (num4 == 0)
-                                                {
-                                                    Main.tile[i, j].frameX = 66;
-                                                    Main.tile[i, j].frameY = 66;
-                                                }
-                                                if (num4 == 1)
-                                                {
-                                                    Main.tile[i, j].frameX = 66;
-                                                    Main.tile[i, j].frameY = 88;
-                                                }
-                                                if (num4 == 2)
-                                                {
-                                                    Main.tile[i, j].frameX = 66;
-                                                    Main.tile[i, j].frameY = 110;
-                                                }
+                                                Main.tile[i, j].frameX = 0;
+                                                Main.tile[i, j].frameY = 0;
                                             }
-                                            else
+                                            if (num4 == 1)
                                             {
-                                                if (num5 == 7)
-                                                {
-                                                    if (num4 == 0)
-                                                    {
-                                                        Main.tile[i, j].frameX = 110;
-                                                        Main.tile[i, j].frameY = 66;
-                                                    }
-                                                    if (num4 == 1)
-                                                    {
-                                                        Main.tile[i, j].frameX = 110;
-                                                        Main.tile[i, j].frameY = 88;
-                                                    }
-                                                    if (num4 == 2)
-                                                    {
-                                                        Main.tile[i, j].frameX = 110;
-                                                        Main.tile[i, j].frameY = 110;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (num4 == 0)
-                                                    {
-                                                        Main.tile[i, j].frameX = 0;
-                                                        Main.tile[i, j].frameY = 0;
-                                                    }
-                                                    if (num4 == 1)
-                                                    {
-                                                        Main.tile[i, j].frameX = 0;
-                                                        Main.tile[i, j].frameY = 22;
-                                                    }
-                                                    if (num4 == 2)
-                                                    {
-                                                        Main.tile[i, j].frameX = 0;
-                                                        Main.tile[i, j].frameY = 44;
-                                                    }
-                                                }
+                                                Main.tile[i, j].frameX = 0;
+                                                Main.tile[i, j].frameY = 22;
+                                            }
+                                            if (num4 == 2)
+                                            {
+                                                Main.tile[i, j].frameX = 0;
+                                                Main.tile[i, j].frameY = 44;
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        if (num5 == 5 || num5 == 7)
-                        {
-                            Main.tile[i - 1, j].Active = true;
-                            Main.tile[i - 1, j].type = 5;
-                            num4 = WorldGen.genRand.Next(3);
-                            if (WorldGen.genRand.Next(3) < 2)
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i - 1, j].frameX = 44;
-                                    Main.tile[i - 1, j].frameY = 198;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i - 1, j].frameX = 44;
-                                    Main.tile[i - 1, j].frameY = 220;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i - 1, j].frameX = 44;
-                                    Main.tile[i - 1, j].frameY = 242;
-                                }
-                            }
-                            else
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i - 1, j].frameX = 66;
-                                    Main.tile[i - 1, j].frameY = 0;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i - 1, j].frameX = 66;
-                                    Main.tile[i - 1, j].frameY = 22;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i - 1, j].frameX = 66;
-                                    Main.tile[i - 1, j].frameY = 44;
-                                }
-                            }
-                        }
-                        if (num5 == 6 || num5 == 7)
-                        {
-                            Main.tile[i + 1, j].Active = true;
-                            Main.tile[i + 1, j].type = 5;
-                            num4 = WorldGen.genRand.Next(3);
-                            if (WorldGen.genRand.Next(3) < 2)
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i + 1, j].frameX = 66;
-                                    Main.tile[i + 1, j].frameY = 198;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i + 1, j].frameX = 66;
-                                    Main.tile[i + 1, j].frameY = 220;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i + 1, j].frameX = 66;
-                                    Main.tile[i + 1, j].frameY = 242;
-                                }
-                            }
-                            else
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i + 1, j].frameX = 88;
-                                    Main.tile[i + 1, j].frameY = 66;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i + 1, j].frameX = 88;
-                                    Main.tile[i + 1, j].frameY = 88;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i + 1, j].frameX = 88;
-                                    Main.tile[i + 1, j].frameY = 110;
-                                }
-                            }
-                        }
                     }
-                    int num6 = WorldGen.genRand.Next(3);
-                    if (num6 == 0 || num6 == 1)
-                    {
-                        Main.tile[i + 1, num - 1].Active = true;
-                        Main.tile[i + 1, num - 1].type = 5;
-                        num4 = WorldGen.genRand.Next(3);
-                        if (num4 == 0)
-                        {
-                            Main.tile[i + 1, num - 1].frameX = 22;
-                            Main.tile[i + 1, num - 1].frameY = 132;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i + 1, num - 1].frameX = 22;
-                            Main.tile[i + 1, num - 1].frameY = 154;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i + 1, num - 1].frameX = 22;
-                            Main.tile[i + 1, num - 1].frameY = 176;
-                        }
-                    }
-                    if (num6 == 0 || num6 == 2)
-                    {
-                        Main.tile[i - 1, num - 1].Active = true;
-                        Main.tile[i - 1, num - 1].type = 5;
-                        num4 = WorldGen.genRand.Next(3);
-                        if (num4 == 0)
-                        {
-                            Main.tile[i - 1, num - 1].frameX = 44;
-                            Main.tile[i - 1, num - 1].frameY = 132;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i - 1, num - 1].frameX = 44;
-                            Main.tile[i - 1, num - 1].frameY = 154;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i - 1, num - 1].frameX = 44;
-                            Main.tile[i - 1, num - 1].frameY = 176;
-                        }
-                    }
+                }
+                if (num5 == 5 || num5 == 7)
+                {
+                    Main.tile[i - 1, j].Active = true;
+                    Main.tile[i - 1, j].type = 5;
                     num4 = WorldGen.genRand.Next(3);
-                    if (num6 == 0)
-                    {
-                        if (num4 == 0)
-                        {
-                            Main.tile[i, num - 1].frameX = 88;
-                            Main.tile[i, num - 1].frameY = 132;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i, num - 1].frameX = 88;
-                            Main.tile[i, num - 1].frameY = 154;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i, num - 1].frameX = 88;
-                            Main.tile[i, num - 1].frameY = 176;
-                        }
-                    }
-                    else
-                    {
-                        if (num6 == 1)
-                        {
-                            if (num4 == 0)
-                            {
-                                Main.tile[i, num - 1].frameX = 0;
-                                Main.tile[i, num - 1].frameY = 132;
-                            }
-                            if (num4 == 1)
-                            {
-                                Main.tile[i, num - 1].frameX = 0;
-                                Main.tile[i, num - 1].frameY = 154;
-                            }
-                            if (num4 == 2)
-                            {
-                                Main.tile[i, num - 1].frameX = 0;
-                                Main.tile[i, num - 1].frameY = 176;
-                            }
-                        }
-                        else
-                        {
-                            if (num6 == 2)
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i, num - 1].frameX = 66;
-                                    Main.tile[i, num - 1].frameY = 132;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i, num - 1].frameX = 66;
-                                    Main.tile[i, num - 1].frameY = 154;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i, num - 1].frameX = 66;
-                                    Main.tile[i, num - 1].frameY = 176;
-                                }
-                            }
-                        }
-                    }
                     if (WorldGen.genRand.Next(3) < 2)
                     {
-                        num4 = WorldGen.genRand.Next(3);
                         if (num4 == 0)
                         {
-                            Main.tile[i, num - num3].frameX = 22;
-                            Main.tile[i, num - num3].frameY = 198;
+                            Main.tile[i - 1, j].frameX = 44;
+                            Main.tile[i - 1, j].frameY = 198;
                         }
                         if (num4 == 1)
                         {
-                            Main.tile[i, num - num3].frameX = 22;
-                            Main.tile[i, num - num3].frameY = 220;
+                            Main.tile[i - 1, j].frameX = 44;
+                            Main.tile[i - 1, j].frameY = 220;
                         }
                         if (num4 == 2)
                         {
-                            Main.tile[i, num - num3].frameX = 22;
-                            Main.tile[i, num - num3].frameY = 242;
+                            Main.tile[i - 1, j].frameX = 44;
+                            Main.tile[i - 1, j].frameY = 242;
                         }
                     }
                     else
                     {
-                        num4 = WorldGen.genRand.Next(3);
                         if (num4 == 0)
                         {
-                            Main.tile[i, num - num3].frameX = 0;
-                            Main.tile[i, num - num3].frameY = 198;
+                            Main.tile[i - 1, j].frameX = 66;
+                            Main.tile[i - 1, j].frameY = 0;
                         }
                         if (num4 == 1)
                         {
-                            Main.tile[i, num - num3].frameX = 0;
-                            Main.tile[i, num - num3].frameY = 220;
+                            Main.tile[i - 1, j].frameX = 66;
+                            Main.tile[i - 1, j].frameY = 22;
                         }
                         if (num4 == 2)
                         {
-                            Main.tile[i, num - num3].frameX = 0;
-                            Main.tile[i, num - num3].frameY = 242;
+                            Main.tile[i - 1, j].frameX = 66;
+                            Main.tile[i - 1, j].frameY = 44;
                         }
                     }
-                    WorldGen.RangeFrame(i - 2, num - num3 - 1, i + 2, num + 1);
-                    if (Main.netMode == 2)
+                }
+                if (num5 == 6 || num5 == 7)
+                {
+                    Main.tile[i + 1, j].Active = true;
+                    Main.tile[i + 1, j].type = 5;
+                    num4 = WorldGen.genRand.Next(3);
+                    if (WorldGen.genRand.Next(3) < 2)
                     {
-                        NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num3 * 0.5), num3 + 1);
+                        if (num4 == 0)
+                        {
+                            Main.tile[i + 1, j].frameX = 66;
+                            Main.tile[i + 1, j].frameY = 198;
+                        }
+                        if (num4 == 1)
+                        {
+                            Main.tile[i + 1, j].frameX = 66;
+                            Main.tile[i + 1, j].frameY = 220;
+                        }
+                        if (num4 == 2)
+                        {
+                            Main.tile[i + 1, j].frameX = 66;
+                            Main.tile[i + 1, j].frameY = 242;
+                        }
                     }
+                    else
+                    {
+                        if (num4 == 0)
+                        {
+                            Main.tile[i + 1, j].frameX = 88;
+                            Main.tile[i + 1, j].frameY = 66;
+                        }
+                        if (num4 == 1)
+                        {
+                            Main.tile[i + 1, j].frameX = 88;
+                            Main.tile[i + 1, j].frameY = 88;
+                        }
+                        if (num4 == 2)
+                        {
+                            Main.tile[i + 1, j].frameX = 88;
+                            Main.tile[i + 1, j].frameY = 110;
+                        }
+                    }
+                }
+            }
+            int num6 = WorldGen.genRand.Next(3);
+            if (num6 == 0 || num6 == 1)
+            {
+                Main.tile[i + 1, freeTilesAbove - 1].Active = true;
+                Main.tile[i + 1, freeTilesAbove - 1].type = 5;
+                num4 = WorldGen.genRand.Next(3);
+                if (num4 == 0)
+                {
+                    Main.tile[i + 1, freeTilesAbove - 1].frameX = 22;
+                    Main.tile[i + 1, freeTilesAbove - 1].frameY = 132;
+                }
+                if (num4 == 1)
+                {
+                    Main.tile[i + 1, freeTilesAbove - 1].frameX = 22;
+                    Main.tile[i + 1, freeTilesAbove - 1].frameY = 154;
+                }
+                if (num4 == 2)
+                {
+                    Main.tile[i + 1, freeTilesAbove - 1].frameX = 22;
+                    Main.tile[i + 1, freeTilesAbove - 1].frameY = 176;
+                }
+            }
+            if (num6 == 0 || num6 == 2)
+            {
+                Main.tile[i - 1, freeTilesAbove - 1].Active = true;
+                Main.tile[i - 1, freeTilesAbove - 1].type = 5;
+                num4 = WorldGen.genRand.Next(3);
+                if (num4 == 0)
+                {
+                    Main.tile[i - 1, freeTilesAbove - 1].frameX = 44;
+                    Main.tile[i - 1, freeTilesAbove - 1].frameY = 132;
+                }
+                if (num4 == 1)
+                {
+                    Main.tile[i - 1, freeTilesAbove - 1].frameX = 44;
+                    Main.tile[i - 1, freeTilesAbove - 1].frameY = 154;
+                }
+                if (num4 == 2)
+                {
+                    Main.tile[i - 1, freeTilesAbove - 1].frameX = 44;
+                    Main.tile[i - 1, freeTilesAbove - 1].frameY = 176;
+                }
+            }
+            num4 = WorldGen.genRand.Next(3);
+            if (num6 == 0)
+            {
+                if (num4 == 0)
+                {
+                    Main.tile[i, freeTilesAbove - 1].frameX = 88;
+                    Main.tile[i, freeTilesAbove - 1].frameY = 132;
+                }
+                if (num4 == 1)
+                {
+                    Main.tile[i, freeTilesAbove - 1].frameX = 88;
+                    Main.tile[i, freeTilesAbove - 1].frameY = 154;
+                }
+                if (num4 == 2)
+                {
+                    Main.tile[i, freeTilesAbove - 1].frameX = 88;
+                    Main.tile[i, freeTilesAbove - 1].frameY = 176;
+                }
+            }
+            else
+            {
+                if (num6 == 1)
+                {
+                    if (num4 == 0)
+                    {
+                        Main.tile[i, freeTilesAbove - 1].frameX = 0;
+                        Main.tile[i, freeTilesAbove - 1].frameY = 132;
+                    }
+                    if (num4 == 1)
+                    {
+                        Main.tile[i, freeTilesAbove - 1].frameX = 0;
+                        Main.tile[i, freeTilesAbove - 1].frameY = 154;
+                    }
+                    if (num4 == 2)
+                    {
+                        Main.tile[i, freeTilesAbove - 1].frameX = 0;
+                        Main.tile[i, freeTilesAbove - 1].frameY = 176;
+                    }
+                }
+                else
+                {
+                    if (num6 == 2)
+                    {
+                        if (num4 == 0)
+                        {
+                            Main.tile[i, freeTilesAbove - 1].frameX = 66;
+                            Main.tile[i, freeTilesAbove - 1].frameY = 132;
+                        }
+                        if (num4 == 1)
+                        {
+                            Main.tile[i, freeTilesAbove - 1].frameX = 66;
+                            Main.tile[i, freeTilesAbove - 1].frameY = 154;
+                        }
+                        if (num4 == 2)
+                        {
+                            Main.tile[i, freeTilesAbove - 1].frameX = 66;
+                            Main.tile[i, freeTilesAbove - 1].frameY = 176;
+                        }
+                    }
+                }
+            }
+            if (WorldGen.genRand.Next(3) < 2)
+            {
+                num4 = WorldGen.genRand.Next(3);
+                if (num4 == 0)
+                {
+                    Main.tile[i, freeTilesAbove - num3].frameX = 22;
+                    Main.tile[i, freeTilesAbove - num3].frameY = 198;
+                }
+                if (num4 == 1)
+                {
+                    Main.tile[i, freeTilesAbove - num3].frameX = 22;
+                    Main.tile[i, freeTilesAbove - num3].frameY = 220;
+                }
+                if (num4 == 2)
+                {
+                    Main.tile[i, freeTilesAbove - num3].frameX = 22;
+                    Main.tile[i, freeTilesAbove - num3].frameY = 242;
+                }
+            }
+            else
+            {
+                num4 = WorldGen.genRand.Next(3);
+                if (num4 == 0)
+                {
+                    Main.tile[i, freeTilesAbove - num3].frameX = 0;
+                    Main.tile[i, freeTilesAbove - num3].frameY = 198;
+                }
+                if (num4 == 1)
+                {
+                    Main.tile[i, freeTilesAbove - num3].frameX = 0;
+                    Main.tile[i, freeTilesAbove - num3].frameY = 220;
+                }
+                if (num4 == 2)
+                {
+                    Main.tile[i, freeTilesAbove - num3].frameX = 0;
+                    Main.tile[i, freeTilesAbove - num3].frameY = 242;
+                }
+            }
+            WorldGen.RangeFrame(i - 2, freeTilesAbove - num3 - 1, i + 2, freeTilesAbove + 1);
+            if (Main.netMode == 2)
+            {
+                NetMessage.SendTileSquare(-1, i, (int)((double)freeTilesAbove - (double)num3 * 0.5), num3 + 1);
+            }
+        }
+
+        public static bool GrowEpicTree(int x, int y)
+        {
+            int freeTilesAbove = y;
+            while (Main.tile[x, freeTilesAbove].type == 20)
+            {
+                freeTilesAbove++;
+            }
+
+            Tile leftTile = Main.tile[x - 1, freeTilesAbove];
+            Tile rightTile = Main.tile[x + 1, freeTilesAbove];
+            if (Main.tile[x, freeTilesAbove].Active
+                && Main.tile[x, freeTilesAbove].type == 2
+                && Main.tile[x, freeTilesAbove - 1].wall == 0
+                && Main.tile[x, freeTilesAbove - 1].liquid == 0
+                && leftTile.Active
+                && leftTile.type == 2
+                && rightTile.Active
+                && rightTile.type == 2)
+            {
+                if (WorldGen.EmptyTileCheck(x - TREE_RADIUS, x + TREE_RADIUS, freeTilesAbove - 55, freeTilesAbove - 1, 20))
+                {
+                    GrowTreeShared(x, y, freeTilesAbove, 20, 30);
                     return true;
                 }
             }
             return false;
         }
-                
-        public static void GrowTree(int i, int y)
+
+        public static void GrowTree(int x, int y)
         {
-            int num = y;
-            while (Main.tile[i, num].type == 20)
+            int freeTilesAbove = y;
+            while (Main.tile[x, freeTilesAbove].type == 20)
             {
-                num++;
+                freeTilesAbove++;
             }
-            if ((Main.tile[i - 1, num - 1].liquid != 0 || Main.tile[i - 1, num - 1].liquid != 0 || Main.tile[i + 1, num - 1].liquid != 0) && Main.tile[i, num].type != 60)
+
+            if ((Main.tile[x - 1, freeTilesAbove - 1].liquid != 0
+                || Main.tile[x - 1, freeTilesAbove - 1].liquid != 0
+                || Main.tile[x + 1, freeTilesAbove - 1].liquid != 0)
+                && Main.tile[x, freeTilesAbove].type != 60)
             {
                 return;
             }
-            if (Main.tile[i, num].Active && (Main.tile[i, num].type == 2 || Main.tile[i, num].type == 23 || Main.tile[i, num].type == 60) && Main.tile[i, num - 1].wall == 0 && Main.tile[i - 1, num].Active && (Main.tile[i - 1, num].type == 2 || Main.tile[i - 1, num].type == 23 || Main.tile[i - 1, num].type == 60) && Main.tile[i + 1, num].Active && (Main.tile[i + 1, num].type == 2 || Main.tile[i + 1, num].type == 23 || Main.tile[i + 1, num].type == 60))
+
+            if (IsValidTreeRootTile(Main.tile[x, freeTilesAbove])
+                && Main.tile[x, freeTilesAbove - 1].wall == 0
+                && IsValidTreeRootTile(Main.tile[x - 1, freeTilesAbove])
+                && IsValidTreeRootTile(Main.tile[x + 1, freeTilesAbove]))
             {
-                int num2 = 2;
-                if (WorldGen.EmptyTileCheck(i - num2, i + num2, num - 14, num - 1, 20))
+                if (WorldGen.EmptyTileCheck(x - TREE_RADIUS, x + TREE_RADIUS, freeTilesAbove - 14, freeTilesAbove - 1, 20))
                 {
-                    bool flag = false;
-                    bool flag2 = false;
-                    int num3 = WorldGen.genRand.Next(5, 15);
-                    int num4;
-                    for (int j = num - num3; j < num; j++)
-                    {
-                        Main.tile[i, j].frameNumber = (byte)WorldGen.genRand.Next(3);
-                        Main.tile[i, j].Active = true;
-                        Main.tile[i, j].type = 5;
-                        num4 = WorldGen.genRand.Next(3);
-                        int num5 = WorldGen.genRand.Next(10);
-                        if (j == num - 1 || j == num - num3)
-                        {
-                            num5 = 0;
-                        }
-                        while (((num5 == 5 || num5 == 7) && flag) || ((num5 == 6 || num5 == 7) && flag2))
-                        {
-                            num5 = WorldGen.genRand.Next(10);
-                        }
-                        flag = false;
-                        flag2 = false;
-                        if (num5 == 5 || num5 == 7)
-                        {
-                            flag = true;
-                        }
-                        if (num5 == 6 || num5 == 7)
-                        {
-                            flag2 = true;
-                        }
-                        if (num5 == 1)
-                        {
-                            if (num4 == 0)
-                            {
-                                Main.tile[i, j].frameX = 0;
-                                Main.tile[i, j].frameY = 66;
-                            }
-                            if (num4 == 1)
-                            {
-                                Main.tile[i, j].frameX = 0;
-                                Main.tile[i, j].frameY = 88;
-                            }
-                            if (num4 == 2)
-                            {
-                                Main.tile[i, j].frameX = 0;
-                                Main.tile[i, j].frameY = 110;
-                            }
-                        }
-                        else
-                        {
-                            if (num5 == 2)
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i, j].frameX = 22;
-                                    Main.tile[i, j].frameY = 0;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i, j].frameX = 22;
-                                    Main.tile[i, j].frameY = 22;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i, j].frameX = 22;
-                                    Main.tile[i, j].frameY = 44;
-                                }
-                            }
-                            else
-                            {
-                                if (num5 == 3)
-                                {
-                                    if (num4 == 0)
-                                    {
-                                        Main.tile[i, j].frameX = 44;
-                                        Main.tile[i, j].frameY = 66;
-                                    }
-                                    if (num4 == 1)
-                                    {
-                                        Main.tile[i, j].frameX = 44;
-                                        Main.tile[i, j].frameY = 88;
-                                    }
-                                    if (num4 == 2)
-                                    {
-                                        Main.tile[i, j].frameX = 44;
-                                        Main.tile[i, j].frameY = 110;
-                                    }
-                                }
-                                else
-                                {
-                                    if (num5 == 4)
-                                    {
-                                        if (num4 == 0)
-                                        {
-                                            Main.tile[i, j].frameX = 22;
-                                            Main.tile[i, j].frameY = 66;
-                                        }
-                                        if (num4 == 1)
-                                        {
-                                            Main.tile[i, j].frameX = 22;
-                                            Main.tile[i, j].frameY = 88;
-                                        }
-                                        if (num4 == 2)
-                                        {
-                                            Main.tile[i, j].frameX = 22;
-                                            Main.tile[i, j].frameY = 110;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (num5 == 5)
-                                        {
-                                            if (num4 == 0)
-                                            {
-                                                Main.tile[i, j].frameX = 88;
-                                                Main.tile[i, j].frameY = 0;
-                                            }
-                                            if (num4 == 1)
-                                            {
-                                                Main.tile[i, j].frameX = 88;
-                                                Main.tile[i, j].frameY = 22;
-                                            }
-                                            if (num4 == 2)
-                                            {
-                                                Main.tile[i, j].frameX = 88;
-                                                Main.tile[i, j].frameY = 44;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            if (num5 == 6)
-                                            {
-                                                if (num4 == 0)
-                                                {
-                                                    Main.tile[i, j].frameX = 66;
-                                                    Main.tile[i, j].frameY = 66;
-                                                }
-                                                if (num4 == 1)
-                                                {
-                                                    Main.tile[i, j].frameX = 66;
-                                                    Main.tile[i, j].frameY = 88;
-                                                }
-                                                if (num4 == 2)
-                                                {
-                                                    Main.tile[i, j].frameX = 66;
-                                                    Main.tile[i, j].frameY = 110;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (num5 == 7)
-                                                {
-                                                    if (num4 == 0)
-                                                    {
-                                                        Main.tile[i, j].frameX = 110;
-                                                        Main.tile[i, j].frameY = 66;
-                                                    }
-                                                    if (num4 == 1)
-                                                    {
-                                                        Main.tile[i, j].frameX = 110;
-                                                        Main.tile[i, j].frameY = 88;
-                                                    }
-                                                    if (num4 == 2)
-                                                    {
-                                                        Main.tile[i, j].frameX = 110;
-                                                        Main.tile[i, j].frameY = 110;
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (num4 == 0)
-                                                    {
-                                                        Main.tile[i, j].frameX = 0;
-                                                        Main.tile[i, j].frameY = 0;
-                                                    }
-                                                    if (num4 == 1)
-                                                    {
-                                                        Main.tile[i, j].frameX = 0;
-                                                        Main.tile[i, j].frameY = 22;
-                                                    }
-                                                    if (num4 == 2)
-                                                    {
-                                                        Main.tile[i, j].frameX = 0;
-                                                        Main.tile[i, j].frameY = 44;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        if (num5 == 5 || num5 == 7)
-                        {
-                            Main.tile[i - 1, j].Active = true;
-                            Main.tile[i - 1, j].type = 5;
-                            num4 = WorldGen.genRand.Next(3);
-                            if (WorldGen.genRand.Next(3) < 2)
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i - 1, j].frameX = 44;
-                                    Main.tile[i - 1, j].frameY = 198;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i - 1, j].frameX = 44;
-                                    Main.tile[i - 1, j].frameY = 220;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i - 1, j].frameX = 44;
-                                    Main.tile[i - 1, j].frameY = 242;
-                                }
-                            }
-                            else
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i - 1, j].frameX = 66;
-                                    Main.tile[i - 1, j].frameY = 0;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i - 1, j].frameX = 66;
-                                    Main.tile[i - 1, j].frameY = 22;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i - 1, j].frameX = 66;
-                                    Main.tile[i - 1, j].frameY = 44;
-                                }
-                            }
-                        }
-                        if (num5 == 6 || num5 == 7)
-                        {
-                            Main.tile[i + 1, j].Active = true;
-                            Main.tile[i + 1, j].type = 5;
-                            num4 = WorldGen.genRand.Next(3);
-                            if (WorldGen.genRand.Next(3) < 2)
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i + 1, j].frameX = 66;
-                                    Main.tile[i + 1, j].frameY = 198;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i + 1, j].frameX = 66;
-                                    Main.tile[i + 1, j].frameY = 220;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i + 1, j].frameX = 66;
-                                    Main.tile[i + 1, j].frameY = 242;
-                                }
-                            }
-                            else
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i + 1, j].frameX = 88;
-                                    Main.tile[i + 1, j].frameY = 66;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i + 1, j].frameX = 88;
-                                    Main.tile[i + 1, j].frameY = 88;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i + 1, j].frameX = 88;
-                                    Main.tile[i + 1, j].frameY = 110;
-                                }
-                            }
-                        }
-                    }
-                    int num6 = WorldGen.genRand.Next(3);
-                    if (num6 == 0 || num6 == 1)
-                    {
-                        Main.tile[i + 1, num - 1].Active = true;
-                        Main.tile[i + 1, num - 1].type = 5;
-                        num4 = WorldGen.genRand.Next(3);
-                        if (num4 == 0)
-                        {
-                            Main.tile[i + 1, num - 1].frameX = 22;
-                            Main.tile[i + 1, num - 1].frameY = 132;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i + 1, num - 1].frameX = 22;
-                            Main.tile[i + 1, num - 1].frameY = 154;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i + 1, num - 1].frameX = 22;
-                            Main.tile[i + 1, num - 1].frameY = 176;
-                        }
-                    }
-                    if (num6 == 0 || num6 == 2)
-                    {
-                        Main.tile[i - 1, num - 1].Active = true;
-                        Main.tile[i - 1, num - 1].type = 5;
-                        num4 = WorldGen.genRand.Next(3);
-                        if (num4 == 0)
-                        {
-                            Main.tile[i - 1, num - 1].frameX = 44;
-                            Main.tile[i - 1, num - 1].frameY = 132;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i - 1, num - 1].frameX = 44;
-                            Main.tile[i - 1, num - 1].frameY = 154;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i - 1, num - 1].frameX = 44;
-                            Main.tile[i - 1, num - 1].frameY = 176;
-                        }
-                    }
-                    num4 = WorldGen.genRand.Next(3);
-                    if (num6 == 0)
-                    {
-                        if (num4 == 0)
-                        {
-                            Main.tile[i, num - 1].frameX = 88;
-                            Main.tile[i, num - 1].frameY = 132;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i, num - 1].frameX = 88;
-                            Main.tile[i, num - 1].frameY = 154;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i, num - 1].frameX = 88;
-                            Main.tile[i, num - 1].frameY = 176;
-                        }
-                    }
-                    else
-                    {
-                        if (num6 == 1)
-                        {
-                            if (num4 == 0)
-                            {
-                                Main.tile[i, num - 1].frameX = 0;
-                                Main.tile[i, num - 1].frameY = 132;
-                            }
-                            if (num4 == 1)
-                            {
-                                Main.tile[i, num - 1].frameX = 0;
-                                Main.tile[i, num - 1].frameY = 154;
-                            }
-                            if (num4 == 2)
-                            {
-                                Main.tile[i, num - 1].frameX = 0;
-                                Main.tile[i, num - 1].frameY = 176;
-                            }
-                        }
-                        else
-                        {
-                            if (num6 == 2)
-                            {
-                                if (num4 == 0)
-                                {
-                                    Main.tile[i, num - 1].frameX = 66;
-                                    Main.tile[i, num - 1].frameY = 132;
-                                }
-                                if (num4 == 1)
-                                {
-                                    Main.tile[i, num - 1].frameX = 66;
-                                    Main.tile[i, num - 1].frameY = 154;
-                                }
-                                if (num4 == 2)
-                                {
-                                    Main.tile[i, num - 1].frameX = 66;
-                                    Main.tile[i, num - 1].frameY = 176;
-                                }
-                            }
-                        }
-                    }
-                    if (WorldGen.genRand.Next(3) < 2)
-                    {
-                        num4 = WorldGen.genRand.Next(3);
-                        if (num4 == 0)
-                        {
-                            Main.tile[i, num - num3].frameX = 22;
-                            Main.tile[i, num - num3].frameY = 198;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i, num - num3].frameX = 22;
-                            Main.tile[i, num - num3].frameY = 220;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i, num - num3].frameX = 22;
-                            Main.tile[i, num - num3].frameY = 242;
-                        }
-                    }
-                    else
-                    {
-                        num4 = WorldGen.genRand.Next(3);
-                        if (num4 == 0)
-                        {
-                            Main.tile[i, num - num3].frameX = 0;
-                            Main.tile[i, num - num3].frameY = 198;
-                        }
-                        if (num4 == 1)
-                        {
-                            Main.tile[i, num - num3].frameX = 0;
-                            Main.tile[i, num - num3].frameY = 220;
-                        }
-                        if (num4 == 2)
-                        {
-                            Main.tile[i, num - num3].frameX = 0;
-                            Main.tile[i, num - num3].frameY = 242;
-                        }
-                    }
-                    WorldGen.RangeFrame(i - 2, num - num3 - 1, i + 2, num + 1);
-                    if (Main.netMode == 2)
-                    {
-                        NetMessage.SendTileSquare(-1, i, (int)((double)num - (double)num3 * 0.5), num3 + 1);
-                    }
+                    GrowTreeShared(x, y, freeTilesAbove, 5, 15);
                 }
             }
+        }
+
+        public static Boolean IsValidTreeRootTile(Tile tile)
+        {
+            return tile.Active && (tile.type == 2 || tile.type == 23 || tile.type == 60);
         }
         
         public static void GrowShroom(int i, int y)
@@ -7148,9 +6760,9 @@ namespace Terraria_Server
             Main.dungeonX = (int)vector.X;
             Main.dungeonY = num7;
             int num42 = NPC.NewNPC(WorldGen.dungeonX * 16 + 8, WorldGen.dungeonY * 16, 37, 0);
-            Main.npc[num42].homeless = false;
-            Main.npc[num42].homeTileX = Main.dungeonX;
-            Main.npc[num42].homeTileY = Main.dungeonY;
+            Main.npcs[num42].homeless = false;
+            Main.npcs[num42].homeTileX = Main.dungeonX;
+            Main.npcs[num42].homeTileY = Main.dungeonY;
             if (num3 == 1)
             {
                 int num43 = 0;
@@ -12019,9 +11631,9 @@ namespace Terraria_Server
                 {
                     for (int i = 0; i < 1000; i++)
                     {
-                        if (Main.npc[i].Active && Main.npc[i].homeless && Main.npc[i].townNPC)
+                        if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].townNPC)
                         {
-                            WorldGen.spawnNPC = Main.npc[i].type;
+                            WorldGen.spawnNPC = Main.npcs[i].Type;
                             break;
                         }
                     }

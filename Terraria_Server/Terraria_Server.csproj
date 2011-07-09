@@ -111,7 +111,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectileType.cs" />
+    <Compile Include="ProjectileType.cs" />    <Compile Include="Collections\IRegisterableEntity.cs" />
+    <Compile Include="Collections\NPCRegistry.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Events\NPCSpawnEvent.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Plugin\Key.cs" />
     <Compile Include="Plugin\Tile\TileAction.cs" />
     <Compile Include="Plugin\Tile\TileType.cs" />
+    <Compile Include="Collections\Registry.cs" />
     <Compile Include="Shops\ArmsDealerShop.cs" />
     <Compile Include="Shops\ClothierShop.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
@@ -259,6 +261,12 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="NPCs.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

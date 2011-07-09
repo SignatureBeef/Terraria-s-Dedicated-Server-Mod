@@ -698,17 +698,17 @@ namespace Terraria_Server
                             {
                                 byte[] bytes99 = BitConverter.GetBytes(packetId);
                                 byte[] bytes100 = BitConverter.GetBytes((short)number);
-                                byte[] bytes101 = BitConverter.GetBytes(Main.npc[number].Position.X);
-                                byte[] bytes102 = BitConverter.GetBytes(Main.npc[number].Position.Y);
-                                byte[] bytes103 = BitConverter.GetBytes(Main.npc[number].Velocity.X);
-                                byte[] bytes104 = BitConverter.GetBytes(Main.npc[number].Velocity.Y);
-                                byte[] bytes105 = BitConverter.GetBytes((short)Main.npc[number].target);
-                                byte[] bytes106 = BitConverter.GetBytes((short)Main.npc[number].life);
-                                if (!Main.npc[number].Active)
+                                byte[] bytes101 = BitConverter.GetBytes(Main.npcs[number].Position.X);
+                                byte[] bytes102 = BitConverter.GetBytes(Main.npcs[number].Position.Y);
+                                byte[] bytes103 = BitConverter.GetBytes(Main.npcs[number].Velocity.X);
+                                byte[] bytes104 = BitConverter.GetBytes(Main.npcs[number].Velocity.Y);
+                                byte[] bytes105 = BitConverter.GetBytes((short)Main.npcs[number].target);
+                                byte[] bytes106 = BitConverter.GetBytes((short)Main.npcs[number].life);
+                                if (!Main.npcs[number].Active)
                                 {
                                     bytes106 = BitConverter.GetBytes(0);
                                 }
-                                byte[] bytes107 = Encoding.ASCII.GetBytes(Main.npc[number].Name);
+                                byte[] bytes107 = Encoding.ASCII.GetBytes(Main.npcs[number].Name);
                                 num2 += bytes100.Length + bytes101.Length + bytes102.Length + bytes103.Length + bytes104.Length + bytes105.Length + bytes106.Length + NPC.MAX_AI * 4 + bytes107.Length + 1 + 1;
                                 byte[] bytes108 = BitConverter.GetBytes(num2 - 4);
                                 Buffer.BlockCopy(bytes108, 0, NetMessage.buffer[num].writeBuffer, 0, 4);
@@ -725,15 +725,15 @@ namespace Terraria_Server
                                 num3 += 4;
                                 Buffer.BlockCopy(bytes105, 0, NetMessage.buffer[num].writeBuffer, num3, bytes105.Length);
                                 num3 += 2;
-                                NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npc[number].direction + 1);
+                                NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npcs[number].direction + 1);
                                 num3++;
-                                NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npc[number].directionY + 1);
+                                NetMessage.buffer[num].writeBuffer[num3] = (byte)(Main.npcs[number].directionY + 1);
                                 num3++;
                                 Buffer.BlockCopy(bytes106, 0, NetMessage.buffer[num].writeBuffer, num3, bytes106.Length);
                                 num3 += 2;
                                 for (int l = 0; l < NPC.MAX_AI; l++)
                                 {
-                                    byte[] bytes109 = BitConverter.GetBytes(Main.npc[number].ai[l]);
+                                    byte[] bytes109 = BitConverter.GetBytes(Main.npcs[number].ai[l]);
                                     Buffer.BlockCopy(bytes109, 0, NetMessage.buffer[num].writeBuffer, num3, bytes109.Length);
                                     num3 += 4;
                                 }

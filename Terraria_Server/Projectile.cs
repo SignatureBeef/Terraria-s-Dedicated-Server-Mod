@@ -981,25 +981,25 @@ namespace Terraria_Server
                     }
                     if (this.damage > 0)
                     {
-                        for (int k = 0; k < 1000; k++)
+                        for (int i = 0; i < NPC.MAX_NPCS; i++)
                         {
-                            if (Main.npc[k].Active && (!Main.npc[k].friendly || (Main.npc[k].type == 22 && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || Main.npc[k].immune[this.Owner] == 0))
+                            if (Main.npcs[i].Active && (!Main.npcs[i].friendly || (Main.npcs[i].Type == 22 && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || Main.npcs[i].immune[this.Owner] == 0))
                             {
                                 bool flag = false;
-                                if (this.type == ProjectileType.POWDER_VILE && (Main.npc[k].type == 47 || Main.npc[k].type == 57))
+                                if (this.type == ProjectileType.POWDER_VILE && (Main.npcs[i].Type == 47 || Main.npcs[i].Type == 57))
                                 {
                                     flag = true;
                                 }
                                 else
                                 {
-                                    if (this.type == ProjectileType.BALL_SAND_DROP && Main.npc[k].type == 69)
+                                    if (this.type == ProjectileType.BALL_SAND_DROP && Main.npcs[i].Type == 69)
                                     {
                                         flag = true;
                                     }
                                 }
-                                if (!flag && (Main.npc[k].noTileCollide || !this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, Main.npc[k].Position, Main.npc[k].width, Main.npc[k].height)))
+                                if (!flag && (Main.npcs[i].noTileCollide || !this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, Main.npcs[i].Position, Main.npcs[i].width, Main.npcs[i].height)))
                                 {
-                                    Rectangle value2 = new Rectangle((int)Main.npc[k].Position.X, (int)Main.npc[k].Position.Y, Main.npc[k].width, Main.npc[k].height);
+                                    Rectangle value2 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
                                     if (rectangle.Intersects(value2))
                                     {
                                         if (this.aiStyle == 3)
@@ -1020,7 +1020,7 @@ namespace Terraria_Server
                                                 {
                                                     this.timeLeft = 3;
                                                 }
-                                                if (Main.npc[k].Position.X + (float)(Main.npc[k].width / 2) < this.Position.X + (float)(this.width / 2))
+                                                if (Main.npcs[i].Position.X + (float)(Main.npcs[i].width / 2) < this.Position.X + (float)(this.width / 2))
                                                 {
                                                     this.direction = -1;
                                                 }
@@ -1034,14 +1034,14 @@ namespace Terraria_Server
                                         {
                                             this.timeLeft = 1;
                                         }
-                                        Main.npc[k].StrikeNPC(this.damage, this.knockBack, this.direction);
+                                        Main.npcs[i].StrikeNPC(this.damage, this.knockBack, this.direction);
                                         if (Main.netMode != 0)
                                         {
-                                            NetMessage.SendData(28, -1, -1, "", k, (float)this.damage, this.knockBack, (float)this.direction);
+                                            NetMessage.SendData(28, -1, -1, "", i, (float)this.damage, this.knockBack, (float)this.direction);
                                         }
                                         if (this.penetrate != 1)
                                         {
-                                            Main.npc[k].immune[this.Owner] = 10;
+                                            Main.npcs[i].immune[this.Owner] = 10;
                                         }
                                         if (this.penetrate > 0)
                                         {
@@ -1146,26 +1146,26 @@ namespace Terraria_Server
                 }
                 if (this.type == ProjectileType.POWDER_VILE && Main.netMode != 1)
                 {
-                    for (int m = 0; m < 1000; m++)
+                    for (int i = 0; i < NPC.MAX_NPCS; i++)
                     {
-                        if (Main.npc[m].Active)
+                        if (Main.npcs[i].Active)
                         {
-                            if (Main.npc[m].type == 46)
+                            if (Main.npcs[i].Type == 46)
                             {
-                                Rectangle value4 = new Rectangle((int)Main.npc[m].Position.X, (int)Main.npc[m].Position.Y, Main.npc[m].width, Main.npc[m].height);
+                                Rectangle value4 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
                                 if (rectangle.Intersects(value4))
                                 {
-                                    Main.npc[m].Transform(47);
+                                    NPC.Transform(i, 47);
                                 }
                             }
                             else
                             {
-                                if (Main.npc[m].type == 55)
+                                if (Main.npcs[i].Type == 55)
                                 {
-                                    Rectangle value5 = new Rectangle((int)Main.npc[m].Position.X, (int)Main.npc[m].Position.Y, Main.npc[m].width, Main.npc[m].height);
+                                    Rectangle value5 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
                                     if (rectangle.Intersects(value5))
                                     {
-                                        Main.npc[m].Transform(57);
+                                        NPC.Transform(i, 57);
                                     }
                                 }
                             }

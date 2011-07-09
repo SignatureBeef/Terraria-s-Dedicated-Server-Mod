@@ -99,9 +99,9 @@ namespace Terraria_Server
                     return false;
                 }
             }
-            for (int m = 0; m < 1000; m++)
+            for (int m = 0; m < NPC.MAX_NPCS; m++)
             {
-                if (Main.npc[m].Active && rectangle.Intersects(new Rectangle((int)Main.npc[m].Position.X, (int)Main.npc[m].Position.Y, Main.npc[m].width, Main.npc[m].height)))
+                if (Main.npcs[m].Active && rectangle.Intersects(new Rectangle((int)Main.npcs[m].Position.X, (int)Main.npcs[m].Position.Y, Main.npcs[m].width, Main.npcs[m].height)))
                 {
                     return false;
                 }
