@@ -114,68 +114,6 @@ namespace Terraria_Server
             return oldName;
         }
 
-        public Color GetAlpha(Color newColor)
-        {
-            int r = (int)newColor.R - this.Alpha;
-            int g = (int)newColor.G - this.Alpha;
-            int b = (int)newColor.B - this.Alpha;
-            int num = (int)newColor.A - this.Alpha;
-            if (num < 0)
-            {
-                num = 0;
-            }
-            if (num > 255)
-            {
-                num = 255;
-            }
-            if (this.Type >= 198 && this.Type <= 203)
-            {
-                return new Color(255, 255, 255);
-            }
-            return new Color(r, g, b, num);
-        }
-
-        public Color GetColor(Color newColor)
-        {
-            int num = (int)(this.Color.R - (255 - newColor.R));
-            int num2 = (int)(this.Color.G - (255 - newColor.G));
-            int num3 = (int)(this.Color.B - (255 - newColor.B));
-            int num4 = (int)(this.Color.A - (255 - newColor.A));
-            if (num < 0)
-            {
-                num = 0;
-            }
-            if (num > 255)
-            {
-                num = 255;
-            }
-            if (num2 < 0)
-            {
-                num2 = 0;
-            }
-            if (num2 > 255)
-            {
-                num2 = 255;
-            }
-            if (num3 < 0)
-            {
-                num3 = 0;
-            }
-            if (num3 > 255)
-            {
-                num3 = 255;
-            }
-            if (num4 < 0)
-            {
-                num4 = 0;
-            }
-            if (num4 > 255)
-            {
-                num4 = 255;
-            }
-            return new Color(num, num2, num3, num4);
-        }
-
         public void UpdateItem(int i)
         {
             if (this.Active)
@@ -377,45 +315,46 @@ namespace Terraria_Server
             {
                 return 0;
             }
-            int num = 200;
-            Main.item[200] = new Item();
+
+            int itemIndex = 200;
             for (int i = 0; i < 200; i++)
             {
                 if (!Main.item[i].Active)
                 {
-                    num = i;
+                    itemIndex = i;
                     break;
                 }
             }
 
 
-            if (num == 200)
+            if (itemIndex == 200)
             {
-                int num2 = 0;
+                int lastSpawned = 0;
                 for (int j = 0; j < 200; j++)
                 {
-                    if (Main.item[j].SpawnTime > num2)
+                    if (Main.item[j].SpawnTime > lastSpawned)
                     {
-                        num2 = Main.item[j].SpawnTime;
-                        num = j;
+                        lastSpawned = Main.item[j].SpawnTime;
+                        itemIndex = j;
                     }
                 }
             }
 
-            Main.item[num] = Registries.Item.Create(type, stack);
-            Main.item[num].Position.X = (float)(X + Width / 2 - Main.item[num].Width / 2);
-            Main.item[num].Position.Y = (float)(Y + Height / 2 - Main.item[num].Height / 2);
-            Main.item[num].Wet = Collision.WetCollision(Main.item[num].Position, Main.item[num].Width, Main.item[num].Height);
-            Main.item[num].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
-            Main.item[num].Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
-            Main.item[num].SpawnTime = 0;
+            Item item = Registries.Item.Create(type, stack);
+            item.Position.X = (float)(X + Width / 2 - Main.item[itemIndex].Width / 2);
+            item.Position.Y = (float)(Y + Height / 2 - Main.item[itemIndex].Height / 2);
+            item.Wet = Collision.WetCollision(Main.item[itemIndex].Position, Main.item[itemIndex].Width, Main.item[itemIndex].Height);
+            item.Velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
+            item.Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
+            item.SpawnTime = 0;
+            Main.item[itemIndex] = item;
 
             if (!noBroadcast)
             {
-                NetMessage.SendData(21, -1, -1, "", num);
-                Main.item[num].FindOwner(num);
+                NetMessage.SendData(21, -1, -1, "", itemIndex);
+                item.FindOwner(itemIndex);
             }
-            return num;
+            return itemIndex;
         }
 
         public void FindOwner(int whoAmI)
@@ -424,7 +363,7 @@ namespace Terraria_Server
             {
                 return;
             }
-            int num = this.Owner;
+            int playerIndex = this.Owner;
             this.Owner = 255;
             float num2 = -1f;
             int count = 0;
@@ -441,8 +380,8 @@ namespace Terraria_Server
                 }
                 count++;
             }
-            if (this.Owner != num && ((num == Main.myPlayer) || (num == 255) 
-                || !Main.players[num].Active))
+            if (this.Owner != playerIndex && ((playerIndex == Main.myPlayer) || (playerIndex == 255) 
+                || !Main.players[playerIndex].Active))
             {
                  NetMessage.SendData(21, -1, -1, "", whoAmI);
                 if (this.Active)
@@ -460,11 +399,6 @@ namespace Terraria_Server
         public bool IsTheSameAs(Item compareItem)
         {
             return this.Name == compareItem.Name;
-        }
-
-        public bool IsNotTheSameAs(Item compareItem)
-        {
-            return this.Name != compareItem.Name || this.Stack != compareItem.Stack;
         }
     }
 }

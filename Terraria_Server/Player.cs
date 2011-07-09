@@ -1457,7 +1457,7 @@ namespace Terraria_Server
                                     this.grapCount = 0;
                                     for (int num54 = 0; num54 < 1000; num54++)
                                     {
-                                        if (Main.projectile[num54].active && Main.projectile[num54].Owner == i && Main.projectile[num54].aiStyle == 7)
+                                        if (Main.projectile[num54].Active && Main.projectile[num54].Owner == i && Main.projectile[num54].aiStyle == 7)
                                         {
                                             Main.projectile[num54].Kill();
                                         }
@@ -2842,7 +2842,7 @@ namespace Terraria_Server
                 {
                     for (int j = 0; j < Main.maxProjectiles; j++)
                     {
-                        if (Main.projectile[j].active && Main.projectile[j].Owner == Main.myPlayer && Main.projectile[j].type == selectedItem.Shoot)
+                        if (Main.projectile[j].Active && Main.projectile[j].Owner == Main.myPlayer && Main.projectile[j].type == selectedItem.Shoot)
                         {
                             flag = false;
                         }
@@ -2929,7 +2929,7 @@ namespace Terraria_Server
                 {
                     for (int j = 0; j < 1000; j++)
                     {
-                        if (Main.projectile[j].active && Main.projectile[j].Owner == i && Main.projectile[j].type == selectedItem.Shoot)
+                        if (Main.projectile[j].Active && Main.projectile[j].Owner == i && Main.projectile[j].type == selectedItem.Shoot)
                         {
                             Main.projectile[j].Kill();
                         }
@@ -3104,7 +3104,7 @@ namespace Terraria_Server
                         grapCount = 0;
                         for (int j = 0; j < Main.maxProjectiles; j++)
                         {
-                            if (Main.projectile[j].active && Main.projectile[j].Owner == i)
+                            if (Main.projectile[j].Active && Main.projectile[j].Owner == i)
                             {
                                 if (Main.projectile[j].type == ProjectileType.HOOK)
                                 {
@@ -4004,7 +4004,7 @@ namespace Terraria_Server
                         this.grapCount = 0;
                         for (int j = 0; j < 1000; j++)
                         {
-                            if (Main.projectile[j].active && Main.projectile[j].Owner == i)
+                            if (Main.projectile[j].Active && Main.projectile[j].Owner == i)
                             {
                                 if (Main.projectile[j].aiStyle == 7)
                                 {
@@ -4611,7 +4611,7 @@ namespace Terraria_Server
 				" by ", 
 				Main.players[plr].Name, 
 				"'s ", 
-				Main.projectile[proj].name, 
+				Main.projectile[proj].Name, 
 				"."
 			});
                 }
@@ -4638,7 +4638,7 @@ namespace Terraria_Server
                 {
                     if (proj >= 0)
                     {
-                        result = text + " by " + Main.projectile[proj].name + ".";
+                        result = text + " by " + Main.projectile[proj].Name + ".";
                     }
                     else
                     {

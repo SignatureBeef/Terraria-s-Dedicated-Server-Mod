@@ -4,13 +4,14 @@ using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server
 {
     /// <summary>
     /// Projectile includes things like bullets, arrows, knives, explosives, boomerangs, and possibly ball/chain, orbs, and flamelash/spells.
     /// </summary>
-    public class Projectile
+    public class Projectile : IRegisterableEntity
     {
         /// <summary>
         /// Whether the projectile is currently wet
@@ -51,7 +52,7 @@ namespace Terraria_Server
         /// <summary>
         /// Scaled size of projectile
         /// </summary>
-        public float scale = 1f;
+        public float scale;
         /// <summary>
         /// Degrees of rotation for projectile sprite
         /// </summary>
@@ -59,7 +60,20 @@ namespace Terraria_Server
         /// <summary>
         /// Projectile type
         /// </summary>
-        public ProjectileType type;
+        public ProjectileType type { get; set; }
+
+        public int Type
+        {
+            get
+            {
+                return (int)type;
+            }
+            set
+            {
+                type = (ProjectileType)value;
+            }
+        }
+
         /// <summary>
         /// Projectile's visibility, 255 == fully visible, 0 == invisible
         /// </summary>
@@ -71,11 +85,11 @@ namespace Terraria_Server
         /// <summary>
         /// Whether the projectile is currently alive in game
         /// </summary>
-        public bool active;
+        public bool Active { get; set; }
         /// <summary>
         /// Textual name of projectile type
         /// </summary>
-        public String name = "";
+        public String Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -165,21 +179,7 @@ namespace Terraria_Server
         /// </summary>
         public String miscText = "";
 
-
-        /// <summary>
-        /// Creates a copy of the projectile's instance
-        /// </summary>
-        /// <returns>Copy of the projectile instance</returns>
-        public object Clone()
-        {
-            return base.MemberwiseClone();
-        }
-
-        /// <summary>
-        /// Sets the default properties based on the type specified
-        /// </summary>
-        /// <param name="Type">Type value of the projectile</param>
-        public void SetDefaults(ProjectileType Type)
+        public Projectile()
         {
             for (int i = 0; i < Projectile.MAX_AI; i++)
             {
@@ -189,664 +189,26 @@ namespace Terraria_Server
             {
                 this.playerImmune[j] = 0;
             }
-            this.ownerHitCheck = false;
-            this.hide = false;
-            this.lavaWet = false;
-            this.wetCount = 0;
-            this.wet = false;
-            this.ignoreWater = false;
-            this.hostile = false;
-            this.netUpdate = false;
-            this.numUpdates = 0;
-            this.maxUpdates = 0;
-            this.identity = 0;
-            this.restrikeDelay = 0;
-            this.light = 0f;
-            this.penetrate = 1;
-            this.tileCollide = true;
-            this.Position = default(Vector2);
-            this.Velocity = default(Vector2);
-            this.aiStyle = 0;
-            this.alpha = 0;
-            this.type = Type;
-            this.active = true;
-            this.rotation = 0f;
-            this.scale = 1f;
-            this.Owner = 255;
-            this.timeLeft = 3600;
-            this.name = "";
-            this.friendly = false;
-            this.damage = 0;
-            this.knockBack = 0f;
-            this.miscText = "";
-            switch (this.type)
-            {
-                case ProjectileType.ARROW_WOODEN:
-                    {
-                        this.name = "Wooden Arrow";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                    }
-                    break;
-                case ProjectileType.ARROW_FIRE:
-                    {
-                        this.name = "Fire Arrow";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                        this.light = 1f;
-                    }
-                    break;
-                case ProjectileType.SHURIKEN:
-                    {
-                        this.name = "Shuriken";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 2;
-                        this.friendly = true;
-                        this.penetrate = 4;
-                    }
-                    break;
-                case ProjectileType.ARROW_UNHOLY:
-                    {
-                        this.name = "Unholy Arrow";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                        this.light = 0.2f;
-                        this.penetrate = 5;
-                    }
-                    break;
-                case ProjectileType.ARROW_JESTER:
-                    {
-                        this.name = "Jester's Arrow";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                        this.light = 0.4f;
-                        this.penetrate = -1;
-                        this.timeLeft = 40;
-                        this.alpha = 100;
-                        this.ignoreWater = true;
-                    }
-                    break;
-                case ProjectileType.BOOMERANG_ENCHANTED:
-                    {
-                        this.name = "Enchanted Boomerang";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 3;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.VILETHORN:
-                case ProjectileType.VILETHORN_B:
-                    {
-                        this.name = "Vilethorn";
-                        this.width = 28;
-                        this.height = 28;
-                        this.aiStyle = 4;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.tileCollide = false;
-                        this.alpha = 255;
-                        this.ignoreWater = true;
-                    }
-                    break;
-                case ProjectileType.STARFURY:
-                    {
-                        this.name = "Starfury";
-                        this.width = 24;
-                        this.height = 24;
-                        this.aiStyle = 5;
-                        this.friendly = true;
-                        this.penetrate = 2;
-                        this.alpha = 50;
-                        this.scale = 0.8f;
-                        this.light = 1f;
-                    }
-                    break;
-                case ProjectileType.POWDER_PURIFICATION:
-                    {
-                        this.name = "Purification Powder";
-                        this.width = 64;
-                        this.height = 64;
-                        this.aiStyle = 6;
-                        this.friendly = true;
-                        this.tileCollide = false;
-                        this.penetrate = -1;
-                        this.alpha = 255;
-                        this.ignoreWater = true;
-                    }
-                    break;
-                case ProjectileType.POWDER_VILE:
-                    {
-                        this.name = "Vile Powder";
-                        this.width = 48;
-                        this.height = 48;
-                        this.aiStyle = 6;
-                        this.friendly = true;
-                        this.tileCollide = false;
-                        this.penetrate = -1;
-                        this.alpha = 255;
-                        this.ignoreWater = true;
-                    }
-                    break;
-                case ProjectileType.FALLEN_STAR:
-                    {
-                        this.name = "Fallen Star";
-                        this.width = 16;
-                        this.height = 16;
-                        this.aiStyle = 5;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.alpha = 50;
-                        this.light = 1f;
-                    }
-                    break;
-                case ProjectileType.HOOK:
-                    {
-                        this.name = "Hook";
-                        this.width = 18;
-                        this.height = 18;
-                        this.aiStyle = 7;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.tileCollide = false;
-                    }
-                    break;
-                case ProjectileType.BALL_MUSKET:
-                    {
-                        this.name = "Musket Ball";
-                        this.width = 4;
-                        this.height = 4;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                        this.penetrate = 1;
-                        this.light = 0.5f;
-                        this.alpha = 255;
-                        this.maxUpdates = 1;
-                        this.scale = 1.2f;
-                        this.timeLeft = 600;
-                    }
-                    break;
-                case ProjectileType.BALL_OF_FIRE:
-                    {
-                        this.name = "Ball of Fire";
-                        this.width = 16;
-                        this.height = 16;
-                        this.aiStyle = 8;
-                        this.friendly = true;
-                        this.light = 0.8f;
-                        this.alpha = 100;
-                    }
-                    break;
-                case ProjectileType.MISSILE_MAGIC:
-                    {
-                        this.name = "Magic Missile";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 9;
-                        this.friendly = true;
-                        this.light = 0.8f;
-                        this.alpha = 100;
-                    }
-                    break;
-                case ProjectileType.BALL_DIRT:
-                    {
-                        this.name = "Dirt Ball";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 10;
-                        this.friendly = true;
-                    }
-                    break;
-                case ProjectileType.ORB_OF_LIGHT:
-                    {
-                        this.name = "Orb of Light";
-                        this.width = 32;
-                        this.height = 32;
-                        this.aiStyle = 11;
-                        this.friendly = true;
-                        this.light = 1f;
-                        this.alpha = 150;
-                        this.tileCollide = false;
-                        this.penetrate = -1;
-                        this.timeLeft *= 5;
-                        this.ignoreWater = true;
-                    }
-                    break;
-                case ProjectileType.FLAMARANG:
-                    {
-                        this.name = "Flamarang";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 3;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.light = 1f;
-                    }
-                    break;
-                case ProjectileType.LASER_GREEN:
-                    {
-                        this.name = "Green Laser";
-                        this.width = 4;
-                        this.height = 4;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                        this.penetrate = 2;
-                        this.light = 0.75f;
-                        this.alpha = 255;
-                        this.maxUpdates = 2;
-                        this.scale = 1.4f;
-                        this.timeLeft = 600;
-                    }
-                    break;
-                case ProjectileType.BONE:
-                    {
-                        this.name = "Bone";
-                        this.width = 16;
-                        this.height = 16;
-                        this.aiStyle = 2;
-                        this.scale = 1.2f;
-                        this.friendly = true;
-                    }
-                    break;
-                case ProjectileType.STREAM_WATER:
-                    {
-                        this.name = "Water Stream";
-                        this.width = 12;
-                        this.height = 12;
-                        this.aiStyle = 12;
-                        this.friendly = true;
-                        this.alpha = 255;
-                        this.penetrate = -1;
-                        this.maxUpdates = 1;
-                        this.ignoreWater = true;
-                    }
-                    break;
-                case ProjectileType.HARPOON:
-                    {
-                        this.name = "Harpoon";
-                        this.width = 4;
-                        this.height = 4;
-                        this.aiStyle = 13;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.alpha = 255;
-                    }
-                    break;
-                case ProjectileType.BALL_SPIKY:
-                    {
-                        this.name = "Spiky Ball";
-                        this.width = 14;
-                        this.height = 14;
-                        this.aiStyle = 14;
-                        this.friendly = true;
-                        this.penetrate = 3;
-                    }
-                    break;
-                case ProjectileType.BALL_O_HURT:
-                    {
-                        this.name = "Ball 'O Hurt";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 15;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.BLUE_MOON:
-                    {
-                        this.name = "Blue Moon";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 15;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.BOLT_WATER:
-                    {
-                        this.name = "Water Bolt";
-                        this.width = 16;
-                        this.height = 16;
-                        this.aiStyle = 8;
-                        this.friendly = true;
-                        this.light = 0.8f;
-                        this.alpha = 200;
-                        this.timeLeft /= 2;
-                        this.penetrate = 10;
-                    }
-                    break;
-                case ProjectileType.BOMB:
-                    {
-                        this.name = "Bomb";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 16;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.DYNAMITE:
-                    {
-                        this.name = "Dynamite";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 16;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.GRENADE:
-                    {
-                        this.name = "Grenade";
-                        this.width = 14;
-                        this.height = 14;
-                        this.aiStyle = 16;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.BALL_SAND_DROP:
-                    {
-                        this.name = "Sand Ball";
-                        this.knockBack = 6f;
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 10;
-                        this.friendly = true;
-                        this.hostile = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.WHIP_IVY:
-                    {
-                        this.name = "Ivy Whip";
-                        this.width = 18;
-                        this.height = 18;
-                        this.aiStyle = 7;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.tileCollide = false;
-                    }
-                    break;
-                case ProjectileType.CHAKRUM_THORN:
-                    {
-                        this.name = "Thorn Chakrum";
-                        this.width = 28;
-                        this.height = 28;
-                        this.aiStyle = 3;
-                        this.friendly = true;
-                        this.scale = 0.9f;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.FLAMELASH:
-                    {
-                        this.name = "Flamelash";
-                        this.width = 14;
-                        this.height = 14;
-                        this.aiStyle = 9;
-                        this.friendly = true;
-                        this.light = 0.8f;
-                        this.alpha = 100;
-                        this.penetrate = 2;
-                    }
-                    break;
-                case ProjectileType.SUNFURY:
-                    {
-                        this.name = "Sunfury";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 15;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.SHOT_METEOR:
-                    {
-                        this.name = "Meteor Shot";
-                        this.width = 4;
-                        this.height = 4;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                        this.penetrate = 2;
-                        this.light = 0.6f;
-                        this.alpha = 255;
-                        this.maxUpdates = 1;
-                        this.scale = 1.4f;
-                        this.timeLeft = 600;
-                    }
-                    break;
-                case ProjectileType.BOMB_STICKY:
-                    {
-                        this.name = "Sticky Bomb";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 16;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.tileCollide = false;
-                    }
-                    break;
-                case ProjectileType.FEATHER_HARPY:
-                    {
-                        this.name = "Harpy Feather";
-                        this.width = 14;
-                        this.height = 14;
-                        this.aiStyle = 0;
-                        this.hostile = true;
-                        this.penetrate = -1;
-                        this.aiStyle = 1;
-                        this.tileCollide = true;
-                    }
-                    break;
-                case ProjectileType.BALL_MUD:
-                    {
-                        this.name = "Mud Ball";
-                        this.knockBack = 6f;
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 10;
-                        this.friendly = true;
-                        this.hostile = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.BALL_ASH:
-                    {
-                        this.name = "Ash Ball";
-                        this.knockBack = 6f;
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 10;
-                        this.friendly = true;
-                        this.hostile = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.ARROW_HELLFIRE:
-                    {
-                        this.name = "Hellfire Arrow";
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.BALL_SAND_GUN:
-                    {
-                        this.name = "Sand Ball";
-                        this.knockBack = 8f;
-                        this.width = 10;
-                        this.height = 10;
-                        this.aiStyle = 10;
-                        this.friendly = true;
-                        this.maxUpdates = 0;
-                    }
-                    break;
-                case ProjectileType.TOMBSTONE:
-                    {
-                        this.name = "Tombstone";
-                        this.knockBack = 12f;
-                        this.width = 24;
-                        this.height = 24;
-                        this.aiStyle = 17;
-                        this.penetrate = -1;
-                        this.friendly = true;
-                    }
-                    break;
-                case ProjectileType.SICKLE_DEMON:
-                    {
-                        this.name = "Demon Sickle";
-                        this.width = 48;
-                        this.height = 48;
-                        this.alpha = 100;
-                        this.light = 0.2f;
-                        this.aiStyle = 18;
-                        this.hostile = true;
-                        this.penetrate = -1;
-                        this.tileCollide = true;
-                        this.scale = 0.9f;
-                    }
-                    break;
-                case ProjectileType.SCYTHE_DEMON:
-                    {
-                        this.name = "Demon Scythe";
-                        this.width = 48;
-                        this.height = 48;
-                        this.alpha = 100;
-                        this.light = 0.2f;
-                        this.aiStyle = 18;
-                        this.friendly = true;
-                        this.penetrate = 5;
-                        this.tileCollide = true;
-                        this.scale = 0.9f;
-                    }
-                    break;
-                case ProjectileType.LANCE_DARK:
-                    {
-                        this.name = "Dark Lance";
-                        this.width = 20;
-                        this.height = 20;
-                        this.aiStyle = 19;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.tileCollide = false;
-                        this.scale = 1.1f;
-                        this.hide = true;
-                        this.ownerHitCheck = true;
-                    }
-                    break;
-                case ProjectileType.TRIDENT:
-                    {
-                        this.name = "Trident";
-                        this.width = 18;
-                        this.height = 18;
-                        this.aiStyle = 19;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.tileCollide = false;
-                        this.scale = 1.1f;
-                        this.hide = true;
-                        this.ownerHitCheck = true;
-                    }
-                    break;
-                case ProjectileType.KNIFE_THROWING:
-                    {
-                        this.name = "Throwing Knife";
-                        this.width = 12;
-                        this.height = 12;
-                        this.aiStyle = 2;
-                        this.friendly = true;
-                        this.penetrate = 2;
-                    }
-                    break;
-                case ProjectileType.SPEAR:
-                    {
-                        this.name = "Spear";
-                        this.width = 18;
-                        this.height = 18;
-                        this.aiStyle = 19;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                        this.tileCollide = false;
-                        this.scale = 1.2f;
-                        this.hide = true;
-                        this.ownerHitCheck = true;
-                    }
-                    break;
-                case ProjectileType.GLOWSTICK:
-                    {
-                        this.name = "Glowstick";
-                        this.width = 6;
-                        this.height = 6;
-                        this.aiStyle = 14;
-                        this.penetrate = -1;
-                        this.alpha = 75;
-                        this.light = 0.8f;
-                        this.timeLeft *= 5;
-                    }
-                    break;
-                case ProjectileType.SEED:
-                    {
-                        this.name = "Seed";
-                        this.width = 8;
-                        this.height = 8;
-                        this.aiStyle = 1;
-                        this.friendly = true;
-                    }
-                    break;
-                case ProjectileType.BOOMERANG_WOODEN:
-                    {
-                        this.name = "Wooden Boomerang";
-                        this.width = 22;
-                        this.height = 22;
-                        this.aiStyle = 3;
-                        this.friendly = true;
-                        this.penetrate = -1;
-                    }
-                    break;
-                case ProjectileType.GLOWSTICK_STICKY:
-                    {
-                        this.name = "Sticky Glowstick";
-                        this.width = 6;
-                        this.height = 6;
-                        this.aiStyle = 14;
-                        this.penetrate = -1;
-                        this.alpha = 75;
-                        this.light = 0.8f;
-                        this.timeLeft *= 5;
-                        this.tileCollide = false;
-                    }
-                    break;
-                case ProjectileType.KNIFE_POISONED:
-                    {
-                        this.name = "Poisoned Knife";
-                        this.width = 12;
-                        this.height = 12;
-                        this.aiStyle = 2;
-                        this.friendly = true;
-                        this.penetrate = 2;
-                    }
-                    break;
-                default:
-                    {
-                        this.active = false;
-                    }
-                    break;
-            }
-            this.width = (int)((float)this.width * this.scale);
-            this.height = (int)((float)this.height * this.scale);
+            penetrate = 1;
+            tileCollide = true;
+            Position = default(Vector2);
+            Velocity = default(Vector2);
+            scale = 1f;
+            Owner = 255;
+            timeLeft = 3600;
+            Name = "";
+            miscText = "";
+            width = (int)((float)this.width * this.scale);
+            height = (int)((float)this.height * this.scale);
+        }
+
+        /// <summary>
+        /// Creates a copy of the projectile's instance
+        /// </summary>
+        /// <returns>Copy of the projectile instance</returns>
+        public object Clone()
+        {
+            return base.MemberwiseClone();
         }
 
         /// <summary>
@@ -866,7 +228,7 @@ namespace Terraria_Server
             int num = 1000;
             for (int i = 0; i < 1000; i++)
             {
-                if (!Main.projectile[i].active)
+                if (!Main.projectile[i].Active)
                 {
                     num = i;
                     break;
@@ -876,7 +238,7 @@ namespace Terraria_Server
             {
                 return num;
             }
-            Main.projectile[num].SetDefaults(Type);
+            Main.projectile[num] = Registries.Projectile.Create((int)Type);
             Main.projectile[num].Position.X = X - (float)Main.projectile[num].width * 0.5f;
             Main.projectile[num].Position.Y = Y - (float)Main.projectile[num].height * 0.5f;
             Main.projectile[num].Owner = Owner;
@@ -1198,12 +560,12 @@ namespace Terraria_Server
         /// <param name="i">Projectile index</param>
         public void Update(int i)
         {
-            if (this.active)
+            if (this.Active)
             {
                 Vector2 value = this.Velocity;
                 if (this.Position.X <= Main.leftWorld || this.Position.X + (float)this.width >= Main.rightWorld || this.Position.Y <= Main.topWorld || this.Position.Y + (float)this.height >= Main.bottomWorld)
                 {
-                    this.active = false;
+                    this.Active = false;
                     return;
                 }
                 this.whoAmI = i;
@@ -1239,7 +601,7 @@ namespace Terraria_Server
                     }
                     catch
                     {
-                        this.active = false;
+                        this.Active = false;
                         return;
                     }
                     if (flag2)
@@ -1545,7 +907,7 @@ namespace Terraria_Server
                         this.direction = 1;
                     }
                 }
-                if (!this.active)
+                if (!this.Active)
                 {
                     return;
                 }
@@ -1581,11 +943,11 @@ namespace Terraria_Server
                 {
                     this.Kill();
                 }
-                if (this.active && this.netUpdate && this.Owner == Main.myPlayer)
+                if (this.Active && this.netUpdate && this.Owner == Main.myPlayer)
                 {
                     NetMessage.SendData(27, -1, -1, "", i);
                 }
-                if (this.active && this.maxUpdates > 0)
+                if (this.Active && this.maxUpdates > 0)
                 {
                     this.numUpdates--;
                     if (this.numUpdates >= 0)
@@ -2088,7 +1450,7 @@ namespace Terraria_Server
                                                         int num25 = 100000;
                                                         for (int num26 = 0; num26 < 1000; num26++)
                                                         {
-                                                            if (Main.projectile[num26].active && Main.projectile[num26].Owner == this.Owner && Main.projectile[num26].aiStyle == 7)
+                                                            if (Main.projectile[num26].Active && Main.projectile[num26].Owner == this.Owner && Main.projectile[num26].aiStyle == 7)
                                                             {
                                                                 if (Main.projectile[num26].timeLeft < num25)
                                                                 {
@@ -3162,7 +2524,7 @@ namespace Terraria_Server
         /// </summary>
         public void Kill()
         {
-            if (!this.active)
+            if (!this.Active)
             {
                 return;
             }
@@ -3996,7 +3358,7 @@ namespace Terraria_Server
                     num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 154, 1, false);
                 }
             }
-            this.active = false;
+            this.Active = false;
         }
 
         /// <summary>

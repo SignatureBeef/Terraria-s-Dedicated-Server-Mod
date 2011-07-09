@@ -1,6 +1,7 @@
 ﻿using System;
 using Terraria_Server;
 using Terraria_Server.Collections;
+using Terraria_Utilities.Serialize;
 
 namespace Terraria_Utilities
 {
@@ -20,7 +21,7 @@ namespace Terraria_Utilities
         static void Main(string[] args)
         {
             Console.WriteLine(WELCOME_MESSAGE);
-            Terraria_Utilities.Serialize.SerializeItem.Start();
+            Serializer.Serialize(typeof(Projectile), Serializer.PROJECTILE_IGNORE_FIELDS);
             Console.ReadLine();
         }
     }

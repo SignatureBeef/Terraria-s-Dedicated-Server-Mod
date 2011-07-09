@@ -47,8 +47,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Serialize\DiffSerializer.cs" />
-    <Compile Include="Serialize\SerializeItem.cs" />
-    <Compile Include="Serialize\SerializeNPC.cs" />
     <Compile Include="Serialize\Serializer.cs" />
   </ItemGroup>
   <ItemGroup />

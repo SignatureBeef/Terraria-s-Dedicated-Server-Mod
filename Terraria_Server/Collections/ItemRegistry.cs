@@ -13,7 +13,7 @@ namespace Terraria_Server.Collections
         private const String ITEM_FILE = "Items.xml";
 
         public ItemRegistry()
-            : base(ITEM_FILE, new Item()) 
+            : base(ITEM_FILE) 
         { 
             /**
              * We need to load additional items into the name lookup and only the name

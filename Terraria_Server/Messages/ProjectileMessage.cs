@@ -2,6 +2,7 @@
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Definitions;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages
 {
@@ -45,21 +46,20 @@ namespace Terraria_Server.Messages
             }
             
             int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);
-            Projectile projectile = (Projectile)Main.projectile[projectileIndex].Clone();
-            if (!projectile.active || projectile.type != (ProjectileType)Enum.ToObject(typeof(ProjectileType), (int)type))
+            Projectile oldProjectile = Main.projectile[projectileIndex];
+            Projectile projectile = Registries.Projectile.Create(type);
+            if (!projectile.Active || projectile.type != oldProjectile.type)
             {
-                projectile.SetDefaults((ProjectileType)Enum.ToObject(typeof(ProjectileType), type));
                 Netplay.serverSock[whoAmI].spamProjectile += 1f;
             }
 
-            projectile.identity = (int)projectileIdentity;
+            projectile.identity = projectileIdentity;
             projectile.Position.X = x;
             projectile.Position.Y = y;
             projectile.Velocity.X = vX;
             projectile.Velocity.Y = vY;
-            projectile.damage = (int)damage;
-            projectile.type = (ProjectileType)Enum.ToObject(typeof(ProjectileType), type);
-            projectile.Owner = (int)projectileOwner;
+            projectile.damage = damage;
+            projectile.Owner = projectileOwner;
             projectile.knockBack = knockBack;
 
             PlayerProjectileEvent playerEvent = new PlayerProjectileEvent();
@@ -91,12 +91,12 @@ namespace Terraria_Server.Messages
                 projectile = Main.projectile[i];
                 if (projectile.Owner == owner
                     && projectile.identity == identity
-                    && projectile.active)
+                    && projectile.Active)
                 {
                     return i;
                 }
 
-                if (firstInactive == index && !projectile.active)
+                if (firstInactive == index && !projectile.Active)
                 {
                     firstInactive = i;
                 }

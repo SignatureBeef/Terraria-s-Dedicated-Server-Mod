@@ -15,23 +15,36 @@ namespace Terraria_Server.Collections
 
         private readonly T defaultValue;
 
-        public Registry(String filePath, T defaultValue)
+        public Registry(String filePath)
         {
-            this.defaultValue = defaultValue;
+            this.defaultValue = Activator.CreateInstance<T>();
             StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(DEFINITIONS + filePath));
             XmlSerializer serializer = new XmlSerializer(typeof(T[]));
+            T[] deserialized;
             try
             {
-                T[] deserialized  = (T[]) serializer.Deserialize(reader);
-                foreach (T t in deserialized)
+                deserialized  = (T[]) serializer.Deserialize(reader);
+                T errored = deserialized[0];
+                try
                 {
-                    typeLookup.Add(t.Type, t);
-                    nameLookup.Add(t.Name, t);
+                    foreach (T t in deserialized)
+                    {
+                        errored = t;
+                        typeLookup.Add(t.Type, t);
+                        if (!nameLookup.ContainsKey(t.Name))
+                        {
+                            nameLookup.Add(t.Name, t);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error adding element: " + errored.ToString());
                 }
             }
-            catch (Exception e)
+            catch(Exception e)
             {
-                Console.WriteLine(e.ToString());
+                Console.WriteLine("Error deserializing: " + filePath);
             }
         }
 
