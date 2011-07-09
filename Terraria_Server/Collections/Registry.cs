@@ -5,14 +5,16 @@ using System.Xml.Serialization;
 
 namespace Terraria_Server.Collections
 {
-    public class Registry<T> where T : IRegisterableEntity, ICloneable
+    public class Registry<T> where T : IRegisterableEntity
     {
-        private Dictionary<int, T> typeLookup = new Dictionary<int, T>();
-        private Dictionary<string, T> nameLookup = new Dictionary<string, T>();
+        protected Dictionary<int, T> typeLookup = new Dictionary<int, T>();
+        protected Dictionary<string, T> nameLookup = new Dictionary<string, T>();
+
+        private readonly T defaultValue;
 
         public Registry(String filePath, T defaultValue)
         {
-            Default = defaultValue;
+            this.defaultValue = defaultValue;
 
             StreamReader reader = new StreamReader(filePath);
             XmlSerializer serializer = new XmlSerializer(typeof(T[]));
@@ -31,32 +33,42 @@ namespace Terraria_Server.Collections
             }
         }
 
-        public T Default { get; private set; }
-
-        public T this[int type]
+        public T Default
         {
             get
             {
-                T t;
-                if (typeLookup.TryGetValue(type, out t))
-                {
-                    return t;
-                }
-                return Default;
+                return CloneAndInit(defaultValue);
             }
         }
 
-        public T this[String name]
+        public T Create(int type)
         {
-            get
+            T t;
+            if (typeLookup.TryGetValue(type, out t))
             {
-                T t;
-                if (nameLookup.TryGetValue(name, out t))
-                {
-                    return t;
-                }
-                return Default;
+                return CloneAndInit(t);
             }
+            return CloneAndInit(defaultValue);
+        }
+
+        public T Create(String name)
+        {
+            T t;
+            if (nameLookup.TryGetValue(name, out t))
+            {
+                return CloneAndInit(t);
+            }
+            return CloneAndInit(defaultValue);
+        }
+
+        private static T CloneAndInit(T t)
+        {
+            T cloned = (T) t.Clone();
+            if (cloned.Type != 0)
+            {
+                cloned.Active = true;
+            }
+            return cloned;
         }
     }
 }

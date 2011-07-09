@@ -5,9 +5,10 @@ using System.Text;
 
 namespace Terraria_Server.Collections
 {
-    public interface IRegisterableEntity
+    public interface IRegisterableEntity : ICloneable
     {
         int Type { get; set; }
         String Name { get; set; }
+        bool Active { get; set; }
     }
 }

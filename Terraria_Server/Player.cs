@@ -7,11 +7,14 @@ using System.IO;
 using System.Security.Cryptography;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server
 {
 	public class Player : Sender
 	{
+        private const int MAX_INVENTORY = 44;
+
         private String ipAddress = null;
         private bool godMode = false;
 
@@ -58,7 +61,7 @@ namespace Terraria_Server
 		public int breathMax = 200;
 		public int breath = 200;
 		public String setBonus = "";
-		public Item[] inventory = new Item[44];
+		public Item[] inventory = new Item[MAX_INVENTORY];
 		public Item[] bank = new Item[Chest.MAX_ITEMS];
 		public float headRotation;
 		public float bodyRotation;
@@ -1832,8 +1835,8 @@ namespace Terraria_Server
 			{
 				return false;
 			}
-			Item[] array = new Item[44];
-			for (int i = 0; i < 44; i++)
+			Item[] array = new Item[MAX_INVENTORY];
+			for (int i = 0; i < MAX_INVENTORY; i++)
 			{
 				array[i] = new Item();
 				array[i] = (Item)this.inventory[i].Clone();
@@ -1876,7 +1879,7 @@ namespace Terraria_Server
 					}
 					else
 					{
-						this.inventory[num].SetDefaults(74);
+                        this.inventory[num] = Registries.Item.Create(74);
 						j -= 1000000;
 					}
 				}
@@ -1913,7 +1916,7 @@ namespace Terraria_Server
 					}
 					else
 					{
-						this.inventory[num2].SetDefaults(73);
+                        this.inventory[num2] = Registries.Item.Create(73);
 						j -= 10000;
 					}
 				}
@@ -1950,7 +1953,7 @@ namespace Terraria_Server
 					}
 					else
 					{
-						this.inventory[num3].SetDefaults(72);
+						this.inventory[num3] = Registries.Item.Create(72);
 						j -= 100;
 					}
 				}
@@ -1983,14 +1986,14 @@ namespace Terraria_Server
 					}
 					else
 					{
-						this.inventory[num4].SetDefaults(71);
+						this.inventory[num4] = Registries.Item.Create(71);
 						j--;
 					}
 				}
 			}
 			if (flag)
 			{
-				for (int num5 = 0; num5 < 44; num5++)
+				for (int num5 = 0; num5 < MAX_INVENTORY; num5++)
 				{
 					this.inventory[num5] = (Item)array[num5].Clone();
 				}
@@ -2007,8 +2010,8 @@ namespace Terraria_Server
 			}
 			int num = 0;
 			int i = price;
-			Item[] array = new Item[44];
-			for (int j = 0; j < 44; j++)
+			Item[] array = new Item[MAX_INVENTORY];
+			for (int j = 0; j < MAX_INVENTORY; j++)
 			{
 				array[j] = new Item();
 				array[j] = (Item)this.inventory[j].Clone();
@@ -2036,7 +2039,7 @@ namespace Terraria_Server
 				{
 					if (i >= 1000000)
 					{
-						for (int k = 0; k < 44; k++)
+						for (int k = 0; k < MAX_INVENTORY; k++)
 						{
 							if (this.inventory[k].Type == 74)
 							{
@@ -2054,7 +2057,7 @@ namespace Terraria_Server
 					}
 					if (i >= 10000)
 					{
-						for (int l = 0; l < 44; l++)
+						for (int l = 0; l < MAX_INVENTORY; l++)
 						{
 							if (this.inventory[l].Type == 73)
 							{
@@ -2072,7 +2075,7 @@ namespace Terraria_Server
 					}
 					if (i >= 100)
 					{
-						for (int m = 0; m < 44; m++)
+						for (int m = 0; m < MAX_INVENTORY; m++)
 						{
 							if (this.inventory[m].Type == 72)
 							{
@@ -2090,7 +2093,7 @@ namespace Terraria_Server
 					}
 					if (i >= 1)
 					{
-						for (int n = 0; n < 44; n++)
+						for (int n = 0; n < MAX_INVENTORY; n++)
 						{
 							if (this.inventory[n].Type == 71)
 							{
@@ -2119,7 +2122,7 @@ namespace Terraria_Server
 						}
 						if (num2 < 0)
 						{
-							for (int num4 = 0; num4 < 44; num4++)
+							for (int num4 = 0; num4 < MAX_INVENTORY; num4++)
 							{
 								this.inventory[num4] = (Item)array[num4].Clone();
 							}
@@ -2128,7 +2131,7 @@ namespace Terraria_Server
 						bool flag = true;
 						if (i >= 10000)
 						{
-							for (int num5 = 0; num5 < 44; num5++)
+							for (int num5 = 0; num5 < MAX_INVENTORY; num5++)
 							{
 								if (this.inventory[num5].Type == 74 && this.inventory[num5].Stack >= 1)
 								{
@@ -2137,8 +2140,7 @@ namespace Terraria_Server
 									{
 										this.inventory[num5].Type = 0;
 									}
-									this.inventory[num2].SetDefaults(73);
-									this.inventory[num2].Stack = 100;
+									this.inventory[num2] = Registries.Item.Create(73, 100);
 									flag = false;
 									break;
 								}
@@ -2148,7 +2150,7 @@ namespace Terraria_Server
 						{
 							if (i >= 100)
 							{
-								for (int num6 = 0; num6 < 44; num6++)
+								for (int num6 = 0; num6 < MAX_INVENTORY; num6++)
 								{
 									if (this.inventory[num6].Type == 73 && this.inventory[num6].Stack >= 1)
 									{
@@ -2157,8 +2159,7 @@ namespace Terraria_Server
 										{
 											this.inventory[num6].Type = 0;
 										}
-										this.inventory[num2].SetDefaults(72);
-										this.inventory[num2].Stack = 100;
+										this.inventory[num2] = Registries.Item.Create(72, 100);
 										flag = false;
 										break;
 									}
@@ -2168,7 +2169,7 @@ namespace Terraria_Server
 							{
 								if (i >= 1)
 								{
-									for (int num7 = 0; num7 < 44; num7++)
+									for (int num7 = 0; num7 < MAX_INVENTORY; num7++)
 									{
 										if (this.inventory[num7].Type == 72 && this.inventory[num7].Stack >= 1)
 										{
@@ -2177,8 +2178,7 @@ namespace Terraria_Server
 											{
 												this.inventory[num7].Type = 0;
 											}
-											this.inventory[num2].SetDefaults(71);
-											this.inventory[num2].Stack = 100;
+                                            this.inventory[num2] = Registries.Item.Create(71, 100);
 											flag = false;
 											break;
 										}
@@ -2190,7 +2190,7 @@ namespace Terraria_Server
 						{
 							if (i < 10000)
 							{
-								for (int num8 = 0; num8 < 44; num8++)
+								for (int num8 = 0; num8 < MAX_INVENTORY; num8++)
 								{
 									if (this.inventory[num8].Type == 73 && this.inventory[num8].Stack >= 1)
 									{
@@ -2199,8 +2199,7 @@ namespace Terraria_Server
 										{
 											this.inventory[num8].Type = 0;
 										}
-										this.inventory[num2].SetDefaults(72);
-										this.inventory[num2].Stack = 100;
+                                        this.inventory[num2] = Registries.Item.Create(72, 100);
 										flag = false;
 										break;
 									}
@@ -2208,7 +2207,7 @@ namespace Terraria_Server
 							}
 							if (flag && i < 1000000)
 							{
-								for (int num9 = 0; num9 < 44; num9++)
+								for (int num9 = 0; num9 < MAX_INVENTORY; num9++)
 								{
 									if (this.inventory[num9].Type == 74 && this.inventory[num9].Stack >= 1)
 									{
@@ -2217,8 +2216,7 @@ namespace Terraria_Server
 										{
 											this.inventory[num9].Type = 0;
 										}
-										this.inventory[num2].SetDefaults(73);
-										this.inventory[num2].Stack = 100;
+                                        this.inventory[num2] = Registries.Item.Create(73, 100);
 										flag = false;
 										break;
 									}
@@ -2677,7 +2675,7 @@ namespace Terraria_Server
 
         public void DropCoins()
         {
-            for (int i = 0; i < 44; i++)
+            for (int i = 0; i < MAX_INVENTORY; i++)
             {
                 if (this.inventory[i].Type >= 71 && this.inventory[i].Type <= 74)
                 {
@@ -2819,22 +2817,22 @@ namespace Terraria_Server
 			return false;
 		}
 		
-        public void DoCoins(int i)
+        public void DoCoins(int inventoryIndex)
 		{
-			if (this.inventory[i].Stack == 100 && (this.inventory[i].Type == 71 || this.inventory[i].Type == 72 || this.inventory[i].Type == 73))
+            Item item = inventory[inventoryIndex];
+			if ((item.Type == 71 || item.Type == 72 || item.Type == 73) && item.Stack == item.MaxStack)
 			{
-				this.inventory[i].SetDefaults(this.inventory[i].Type + 1);
-				for (int j = 0; j < 44; j++)
+                item = Registries.Item.Create(item.Type + 1);
+                inventory[inventoryIndex] = item;
+
+				for (int i = 0; i < MAX_INVENTORY; i++)
 				{
-					if (this.inventory[j].IsTheSameAs(this.inventory[i]) && j != i && this.inventory[j].Stack < this.inventory[j].MaxStack)
+                    Item compareItem = inventory[i];
+                    if (compareItem.IsTheSameAs(item) && i != inventoryIndex && compareItem.Stack < compareItem.MaxStack)
 					{
-						this.inventory[j].Stack++;
-						this.inventory[i].SetDefaults("");
-						this.inventory[i].Active = false;
-						this.inventory[i].Name = "";
-						this.inventory[i].Type = 0;
-						this.inventory[i].Stack = 0;
-						this.DoCoins(j);
+                        compareItem.Stack++;
+                        inventory[inventoryIndex] = Registries.Item.Default;
+						this.DoCoins(i);
 					}
 				}
 			}
@@ -2856,7 +2854,7 @@ namespace Terraria_Server
 				int num2 = i;
 				if (num2 < 0)
 				{
-					num2 = 44 + i;
+					num2 = MAX_INVENTORY + i;
 				}
 				if (this.inventory[num2].Type > 0 && this.inventory[num2].Stack < this.inventory[num2].MaxStack && newItem.IsTheSameAs(this.inventory[num2]))
 				{
@@ -2884,7 +2882,7 @@ namespace Terraria_Server
 				int num3 = j;
 				if (num3 < 0)
 				{
-					num3 = 44 + j;
+					num3 = MAX_INVENTORY + j;
 				}
 				if (this.inventory[num3].Type == 0)
 				{
@@ -2930,7 +2928,7 @@ namespace Terraria_Server
                 {
                     if (this.potionDelay <= 0)
                     {
-                        potionDelay = Item.potionDelay;
+                        potionDelay = Item.POTION_DELAY;
                     }
                     else
                     {
@@ -3287,12 +3285,13 @@ namespace Terraria_Server
                                     bool lava2 = Main.tile[Player.tileTargetX, Player.tileTargetY].lava;
                                     if (!Main.tile[Player.tileTargetX, Player.tileTargetY].lava)
                                     {
-                                        selectedItem.SetDefaults(206);
+                                        selectedItem = Registries.Item.Create(206);
                                     }
                                     else
                                     {
-                                        selectedItem.SetDefaults(207);
+                                        selectedItem = Registries.Item.Create(207);
                                     }
+                                    inventory[selectedItemIndex] = selectedItem;
 
                                     itemTime = selectedItem.UseTime;
                                     int num11 = (int)Main.tile[Player.tileTargetX, Player.tileTargetY].liquid;
@@ -3358,7 +3357,8 @@ namespace Terraria_Server
                                             Main.tile[Player.tileTargetX, Player.tileTargetY].lava = true;
                                             Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
                                             WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
-                                            selectedItem.SetDefaults(205);
+                                            selectedItem = Registries.Item.Create(205);
+                                            inventory[selectedItemIndex] = selectedItem;
                                             this.itemTime = selectedItem.UseTime;
                                             if (Main.netMode == 1)
                                             {
@@ -3371,7 +3371,8 @@ namespace Terraria_Server
                                         Main.tile[Player.tileTargetX, Player.tileTargetY].lava = false;
                                         Main.tile[Player.tileTargetX, Player.tileTargetY].liquid = 255;
                                         WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
-                                        selectedItem.SetDefaults(205);
+                                        selectedItem = Registries.Item.Create(205);
+                                        inventory[selectedItemIndex] = selectedItem;
                                         this.itemTime = selectedItem.UseTime;
 
                                         if (Main.netMode == 1)
@@ -4261,7 +4262,7 @@ namespace Terraria_Server
 		
         public void DropItems()
 		{
-			for (int i = 0; i < 44; i++)
+			for (int i = 0; i < MAX_INVENTORY; i++)
 			{
 				if (this.inventory[i].Type >= 71 && this.inventory[i].Type <= 74)
 				{
@@ -4312,7 +4313,7 @@ namespace Terraria_Server
 			player.Position.X = this.Position.X;
 			player.chest = this.chest;
 			player.talkNPC = this.talkNPC;
-			for (int i = 0; i < 44; i++)
+			for (int i = 0; i < MAX_INVENTORY; i++)
 			{
 				player.inventory[i] = (Item)this.inventory[i].Clone();
 				if (i < 8)
@@ -4463,7 +4464,7 @@ namespace Terraria_Server
 
         public bool HasItem(int type)
         {
-            for (int i = 0; i < 44; i++)
+            for (int i = 0; i < MAX_INVENTORY; i++)
             {
                 if (type == this.inventory[i].Type)
                 {
@@ -4533,7 +4534,7 @@ namespace Terraria_Server
 						}
 						binaryWriter.Write(newPlayer.armor[i].Name);
 					}
-					for (int j = 0; j < 44; j++)
+					for (int j = 0; j < MAX_INVENTORY; j++)
 					{
 						if (newPlayer.inventory[j].Name == null)
 						{
@@ -4626,17 +4627,15 @@ namespace Terraria_Server
 							player.shoeColor.B = binaryReader.ReadByte();
 							for (int i = 0; i < 8; i++)
 							{
-								player.armor[i].SetDefaults(Item.VersionName(binaryReader.ReadString(), release));
+                                player.armor[i] = Registries.Item.Create(Item.VersionName(binaryReader.ReadString(), release));
 							}
-							for (int j = 0; j < 44; j++)
+							for (int j = 0; j < MAX_INVENTORY; j++)
 							{
-								player.inventory[j].SetDefaults(Item.VersionName(binaryReader.ReadString(), release));
-								player.inventory[j].Stack = binaryReader.ReadInt32();
+                                player.inventory[j] = Registries.Item.Create(Item.VersionName(binaryReader.ReadString(), release), binaryReader.ReadInt32());
 							}
 							for (int k = 0; k < Chest.MAX_ITEMS; k++)
 							{
-								player.bank[k].SetDefaults(Item.VersionName(binaryReader.ReadString(), release));
-								player.bank[k].Stack = binaryReader.ReadInt32();
+                                player.bank[k] = Registries.Item.Create(Item.VersionName(binaryReader.ReadString(), release), binaryReader.ReadInt32());
 							}
 							for (int l = 0; l < 200; l++)
 							{
@@ -4678,7 +4677,7 @@ namespace Terraria_Server
 		
         public Player()
 		{
-			for (int i = 0; i < 44; i++)
+			for (int i = 0; i < MAX_INVENTORY; i++)
 			{
 				if (i < 8)
 				{
@@ -4694,8 +4693,8 @@ namespace Terraria_Server
 				this.bank[j].Name = "";
 			}
 			this.grappling[0] = -1;
-			this.inventory[0].SetDefaults("Copper Pickaxe");
-			this.inventory[1].SetDefaults("Copper Axe");
+			this.inventory[0] = Registries.Item.Create("Copper Pickaxe");
+            this.inventory[1] = Registries.Item.Create("Copper Axe");
 			for (int k = 0; k < 80; k++)
 			{
 				this.adjTile[k] = false;

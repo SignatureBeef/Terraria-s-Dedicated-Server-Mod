@@ -112,7 +112,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\IRegisterableEntity.cs" />
-    <Compile Include="Collections\NPCRegistry.cs" />
+    <Compile Include="Collections\ISetDefaults.cs" />
+    <Compile Include="Collections\ItemRegistry.cs" />
+    <Compile Include="Collections\Registries.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Events\NPCSpawnEvent.cs" />
@@ -262,6 +264,12 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Items.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="ItemsByName.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="NPCs.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

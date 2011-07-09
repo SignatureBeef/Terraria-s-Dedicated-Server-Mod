@@ -7,7 +7,7 @@ using Terraria_Server.Collections;
 
 namespace Terraria_Server
 {
-    public class NPC : IRegisterableEntity, ICloneable
+    public class NPC : IRegisterableEntity
     {
         private const int ACTIVE_TIME = 750;
         public const int MAX_NPCS = 1000;
@@ -36,7 +36,7 @@ namespace Terraria_Server
         public static int spawnRate = NPC.defaultSpawnRate;
         public static int maxSpawns = NPC.defaultMaxSpawns;
 
-        public bool Active = true;
+        public bool Active { get; set; }
         public int alpha;
         public bool behindTiles;
         public bool boss;
@@ -99,19 +99,19 @@ namespace Terraria_Server
         
         public NPC()
         {
-            slots = 1f;
+            Active = true;
             color = default(Color);
             homeTileX = -1;
             homeTileY = -1;
             knockBackResist = 1f;
             Name = "";
+            oldTarget = target;
             scale = 1f;
+            slots = 1f;
             spriteDirection = -1;
             target = 255;
-            oldTarget = target;
-            this.targetRect = default(Rectangle);
+            targetRect = default(Rectangle);
             timeLeft = NPC.ACTIVE_TIME;
-            this.Type = Type;
         }
 
         private int SetGore(int goreType)
@@ -1589,7 +1589,7 @@ namespace Terraria_Server
                                                     int num45 = npc.whoAmI;
                                                     int num46 = npc.life;
                                                     float num47 = npc.ai[0];
-                                                    npc = NPCRegistry.Create(13);
+                                                    npc = Registries.NPC.Create(13);
                                                     Main.npcs[index] = npc;
 
                                                     npc.life = num46;
@@ -1607,7 +1607,7 @@ namespace Terraria_Server
                                                     int num48 = npc.life;
                                                     int num49 = npc.whoAmI;
                                                     float num50 = npc.ai[1];
-                                                    npc = NPCRegistry.Create(npc.Type);
+                                                    npc = Registries.NPC.Create(npc.Type);
                                                     Main.npcs[index] = npc;
                                                     npc.life = num48;
                                                     if (npc.life > npc.lifeMax)
@@ -3825,7 +3825,7 @@ namespace Terraria_Server
                                                                                         int x = (int)(npc.Position.X + (float)Main.rand.Next(npc.width - 32));
                                                                                         int y = (int)(npc.Position.Y + (float)Main.rand.Next(npc.height - 32));
                                                                                         int npcIndex = NPC.NewNPC(x, y, 1, 0);
-                                                                                        Main.npcs[npcIndex] = NPCRegistry.Create(1);
+                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create(1);
                                                                                         Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
                                                                                         Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
                                                                                         Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
@@ -5789,13 +5789,13 @@ namespace Terraria_Server
                                                                     npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
                                                                     if (Main.rand.Next(4) == 0)
                                                                     {
-                                                                        Main.npcs[npcIndex] = NPCRegistry.Create("Big Boned");
+                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Big Boned");
                                                                     }
                                                                     else
                                                                     {
                                                                         if (Main.rand.Next(5) == 0)
                                                                         {
-                                                                            Main.npcs[npcIndex] = NPCRegistry.Create("Short Bones");
+                                                                            Main.npcs[npcIndex] = Registries.NPC.Create("Short Bones");
                                                                         }
                                                                     }
                                                                 }
@@ -5836,11 +5836,11 @@ namespace Terraria_Server
                                                                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
                                                                             if (Main.rand.Next(4) == 0)
                                                                             {
-                                                                                Main.npcs[npcIndex] = NPCRegistry.Create("Little Stinger");
+                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Little Stinger");
                                                                             }
                                                                             else if (Main.rand.Next(4) == 0)
                                                                             {
-                                                                                Main.npcs[npcIndex] = NPCRegistry.Create("Big Stinger");
+                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Big Stinger");
                                                                             }
                                                                         }
                                                                     }
@@ -5866,13 +5866,13 @@ namespace Terraria_Server
                                                                                     npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
                                                                                     if (Main.rand.Next(3) == 0)
                                                                                     {
-                                                                                        Main.npcs[npcIndex] = NPCRegistry.Create("Little Eater");
+                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Little Eater");
                                                                                     }
                                                                                     else
                                                                                     {
                                                                                         if (Main.rand.Next(3) == 0)
                                                                                         {
-                                                                                            Main.npcs[npcIndex] = NPCRegistry.Create("Big Eater");
+                                                                                            Main.npcs[npcIndex] = Registries.NPC.Create("Big Eater");
                                                                                         }
                                                                                     }
                                                                                 }
@@ -5910,19 +5910,19 @@ namespace Terraria_Server
                                                                                                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                                                                                             if (num20 == 60)
                                                                                                             {
-                                                                                                                Main.npcs[npcIndex] = NPCRegistry.Create("Jungle Slime");
+                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Jungle Slime");
                                                                                                             }
                                                                                                             else
                                                                                                             {
                                                                                                                 if (Main.rand.Next(3) == 0 || num22 < 200)
                                                                                                                 {
-                                                                                                                    Main.npcs[npcIndex] = NPCRegistry.Create("Green Slime");
+                                                                                                                    Main.npcs[npcIndex] = Registries.NPC.Create("Green Slime");
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
                                                                                                                     if (Main.rand.Next(10) == 0 && num22 > 400)
                                                                                                                     {
-                                                                                                                        Main.npcs[npcIndex] = NPCRegistry.Create("Purple Slime");
+                                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Purple Slime");
                                                                                                                     }
                                                                                                                 }
                                                                                                             }
@@ -5963,17 +5963,17 @@ namespace Terraria_Server
                                                                                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                                                                                 if (Main.rand.Next(5) == 0)
                                                                                                 {
-                                                                                                    Main.npcs[npcIndex] = NPCRegistry.Create("Yellow Slime");
+                                                                                                    Main.npcs[npcIndex] = Registries.NPC.Create("Yellow Slime");
                                                                                                 }
                                                                                                 else
                                                                                                 {
                                                                                                     if (Main.rand.Next(2) == 0)
                                                                                                     {
-                                                                                                        Main.npcs[npcIndex] = NPCRegistry.Create("Blue Slime");
+                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Blue Slime");
                                                                                                     }
                                                                                                     else
                                                                                                     {
-                                                                                                        Main.npcs[npcIndex] = NPCRegistry.Create("Red Slime");
+                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Red Slime");
                                                                                                     }
                                                                                                 }
                                                                                             }
@@ -6038,11 +6038,11 @@ namespace Terraria_Server
                                                                                                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                                                                                             if (Main.players[j].zoneJungle)
                                                                                                             {
-                                                                                                                Main.npcs[npcIndex] = NPCRegistry.Create("Jungle Slime");
+                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Jungle Slime");
                                                                                                             }
                                                                                                             else
                                                                                                             {
-                                                                                                                Main.npcs[npcIndex] = NPCRegistry.Create("Black Slime");
+                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Black Slime");
                                                                                                             }
                                                                                                         }
                                                                                                         else
@@ -6099,7 +6099,7 @@ namespace Terraria_Server
                         }
                         if (Main.npcs[npcIndex].Type == 1 && Main.rand.Next(250) == 0)
                         {
-                            Main.npcs[npcIndex] = NPCRegistry.Create("Pinky");
+                            Main.npcs[npcIndex] = Registries.NPC.Create("Pinky");
                         }
                         if (Main.netMode == 2 && npcIndex < MAX_NPCS)
                         {
@@ -6291,7 +6291,7 @@ namespace Terraria_Server
 
             if (npcIndex >= 0)
             {
-                NPC npc = NPCRegistry.Create(type);
+                NPC npc = Registries.NPC.Create(type);
                 NPC oldNPC = Main.npcs[npcIndex];
                 npc.Position.X = (float)(x - oldNPC.width / 2);
                 npc.Position.Y = (float)(y - oldNPC.height);
@@ -6335,7 +6335,7 @@ namespace Terraria_Server
                 NPC npc = Main.npcs[npcIndex];
                 Vector2 vector = npc.Velocity;
                 int num = npc.spriteDirection;
-                npc = NPCRegistry.Create(newType);
+                npc = Registries.NPC.Create(newType);
                 Main.npcs[npcIndex] = npc;
                 npc.spriteDirection = num;
                 npc.TargetClosest(true);
@@ -6804,7 +6804,7 @@ namespace Terraria_Server
                         for (int slimeNum = 0; slimeNum < spawnedSlimes; slimeNum++)
                         {
                             int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), 1, 0);
-                            Main.npcs[npcIndex] = NPCRegistry.Create("Baby Slime");
+                            Main.npcs[npcIndex] = Registries.NPC.Create("Baby Slime");
                             Main.npcs[npcIndex].Velocity.X = this.Velocity.X * 2f;
                             Main.npcs[npcIndex].Velocity.Y = this.Velocity.Y;
                             NPC npc = Main.npcs[npcIndex];
@@ -6888,7 +6888,7 @@ namespace Terraria_Server
                         int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
                         int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
                         int npcIndex = NPC.NewNPC(x, y, 1, 0);
-                        Main.npcs[npcIndex] = NPCRegistry.Create(1);
+                        Main.npcs[npcIndex] = Registries.NPC.Create(1);
                         Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
                         Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
                         Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
@@ -8994,7 +8994,16 @@ namespace Terraria_Server
         
         public object Clone()
         {
-            return base.MemberwiseClone();
+            NPC cloned = (NPC)base.MemberwiseClone();
+            NPC.npcSlots = cloned.slots;
+            if (Main.dedServ)
+            {
+                cloned.frame = default(Rectangle);
+            }
+            cloned.width = (int)((float)cloned.width * cloned.scale);
+            cloned.height = (int)((float)cloned.height * cloned.scale);
+            cloned.life = cloned.lifeMax;
+            return cloned;
         }
     }
 }

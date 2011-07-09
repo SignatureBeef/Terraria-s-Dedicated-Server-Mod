@@ -6,11 +6,11 @@ using System.Net;
 using System.IO;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
+using Terraria_Server.Collections;
 namespace Terraria_Server
 {
 	public class Main
 	{
-        public static String[] itemName = new String[327];
         public static int alwaysSpawn = 0;
         public static bool autoGen = false;
 		private const int MF_BYPOSITION = 1024;
@@ -485,12 +485,7 @@ namespace Terraria_Server
             {
                 Main.gore[num3] = new Gore();
             }
-            for (int num7 = 0; num7 < 327; num7++)
-            {
-                Item item = new Item();
-                item.SetDefaults(num7, false);
-                Main.itemName[num7] = item.Name;
-            }
+
             for (int num8 = 0; num8 < Recipe.maxRecipes; num8++)
             {
                 Main.recipe[num8] = new Recipe();
@@ -1137,7 +1132,7 @@ namespace Terraria_Server
                     }
                     catch (Exception value)
                     {
-                        Main.npcs[i] = new NPC();
+                        Main.npcs[i] = Registries.NPC.Default;
                         Debug.WriteLine(String.Concat(new object[]
 						{
 							"Error: npc[", 

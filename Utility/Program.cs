@@ -20,7 +20,8 @@ namespace Terraria_Utilities
         static void Main(string[] args)
         {
             Console.WriteLine(WELCOME_MESSAGE);
-            Terraria_Utilities.Serialize.SerializeNPC.Start();
+            Terraria_Utilities.Serialize.SerializeItem.Start();
+            Console.ReadLine();
         }
     }
 }
