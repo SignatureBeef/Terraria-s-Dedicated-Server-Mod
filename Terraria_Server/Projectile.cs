@@ -80,7 +80,7 @@ namespace Terraria_Server
         /// </summary>
         public float[] ai = new float[Projectile.MAX_AI];
         /// <summary>
-        /// 
+        /// Value of artificial intelligence style to use for motion
         /// </summary>
         public int aiStyle;
         /// <summary>
@@ -855,7 +855,7 @@ namespace Terraria_Server
         /// <param name="Y">Starting Y coordinate</param>
         /// <param name="SpeedX">Starting horizontal speed</param>
         /// <param name="SpeedY">Starting vertical speed</param>
-        /// <param name="Type">Type of projectile to </param>
+        /// <param name="Type">Type of projectile to create</param>
         /// <param name="Damage">Amount of damage the projectile takes before self-destructing? (unknown)</param>
         /// <param name="KnockBack">Whether the projectile creates knockback</param>
         /// <param name="Owner">Index of owning player</param>
