@@ -2,7 +2,7 @@
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin.Tile;
+using Terraria_Server.Definitions.Tile;
 
 namespace Terraria_Server.Messages
 {

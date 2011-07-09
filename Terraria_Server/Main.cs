@@ -6,6 +6,7 @@ using System.Net;
 using System.IO;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
+using Terraria_Server.Definitions;
 namespace Terraria_Server
 {
 	public class Main

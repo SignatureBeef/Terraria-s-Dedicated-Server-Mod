@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Terraria_Server.Plugin
+namespace Terraria_Server.Definitions
 {
     /// <summary>
     /// Enumerates whether a door was opened by a player, NPC, the server, or some unknown entity

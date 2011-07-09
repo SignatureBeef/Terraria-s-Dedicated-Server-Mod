@@ -7,6 +7,7 @@ using System.IO;
 using System.Security.Cryptography;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {

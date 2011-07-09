@@ -9,6 +9,7 @@ using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
 using Terraria_Server.Collections;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {

@@ -7,7 +7,7 @@ namespace Terraria_Server.Collections
 {
     public class NPCRegistry : Registry<NPC>
     {
-        private NPCRegistry() : base("NPCs.xml", new NPC()) { }
+        private NPCRegistry() : base(Statics.NPCXmlPath, new NPC()) { }
 
         private static NPCRegistry instance = new NPCRegistry();
 
@@ -25,10 +25,9 @@ namespace Terraria_Server.Collections
         {
             NPC cloned = (NPC) npc.Clone();
             NPC.npcSlots = cloned.slots;
-            if (Main.dedServ)
-            {
-                cloned.frame = default(Rectangle);
-            }
+            
+            cloned.frame = default(Rectangle);
+
             cloned.width = (int)((float)cloned.width * cloned.scale);
             cloned.height = (int)((float)cloned.height * cloned.scale);
             cloned.life = cloned.lifeMax;

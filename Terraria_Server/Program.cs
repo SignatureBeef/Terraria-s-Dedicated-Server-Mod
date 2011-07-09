@@ -3,7 +3,13 @@ using Terraria_Server.Commands;
 using System;
 using System.IO;
 using System.Diagnostics;
+using System.Reflection;
+using Terraria_Server.Definitions;
+using System.Xml;
 
+/// <summary>
+/// TDSM Namespace, First thing I actually named it to, So eh, Lol.
+/// </summary>
 namespace Terraria_Server
 {
     public class Program
@@ -27,6 +33,16 @@ namespace Terraria_Server
                 Console.Title = MODInfo;
 
                 Console.WriteLine("Initializing " + MODInfo);
+
+                if (!System.IO.File.Exists(Statics.NPCXmlPath))
+                {
+                    Assembly assembly = Assembly.GetExecutingAssembly();
+                    Stream xmlStream = assembly.GetManifestResourceStream("Terraria_Server.Definitions.NPCs.xml");
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.Load(xmlStream);
+                    xmlDoc.PreserveWhitespace = true;
+                    xmlDoc.Save(Statics.NPCXmlPath);	
+                }
 
                 Console.WriteLine("Until this notice is gone, Please make sure the 3.5 framework is supported on this System.");
 
