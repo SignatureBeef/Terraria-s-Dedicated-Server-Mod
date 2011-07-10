@@ -1178,7 +1178,7 @@ namespace Terraria_Server.Commands
             Statics.keepRunning = false;
         }
 		
-		public static void Slots (Sender sender, Server server)
+		public static void Slots (ISender sender, Server server)
 		{
 			if (sender is Player)
 				return;
