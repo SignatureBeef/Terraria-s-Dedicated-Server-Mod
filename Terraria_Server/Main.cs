@@ -458,10 +458,6 @@ namespace Terraria_Server
             {
                 this.menuItemScale[j] = 0.8f;
             }
-            //for (int k = 0; k < 1000; k++)
-            //{
-            //    Main.dust[k] = new Dust();
-            //}
             for (int l = 0; l < 201; l++)
             {
                 Main.item[l] = new Item();
@@ -479,11 +475,6 @@ namespace Terraria_Server
             {
                 Main.projectile[num2] = new Projectile();
             }
-            //for (int num3 = 0; num3 < 201; num3++)
-            //{
-            //    Main.gore[num3] = new Gore();
-            //}
-
             //for (int num8 = 0; num8 < Recipe.maxRecipes; num8++)
             //{
             //    Main.recipe[num8] = new Recipe();

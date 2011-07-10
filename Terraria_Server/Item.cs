@@ -278,7 +278,6 @@ namespace Terraria_Server
                 }
             }
 
-
             if (itemIndex == 200)
             {
                 int lastSpawned = 0;
@@ -292,19 +291,18 @@ namespace Terraria_Server
                 }
             }
 
-            Item item = Registries.Item.Create(type, stack);
-            item.Position.X = (float)(X + Width / 2 - Main.item[itemIndex].Width / 2);
-            item.Position.Y = (float)(Y + Height / 2 - Main.item[itemIndex].Height / 2);
-            item.Wet = Collision.WetCollision(Main.item[itemIndex].Position, Main.item[itemIndex].Width, Main.item[itemIndex].Height);
-            item.Velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
-            item.Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
-            item.SpawnTime = 0;
-            Main.item[itemIndex] = item;
+            Main.item[itemIndex] = Registries.Item.Create(type, stack);
+            Main.item[itemIndex].Position.X = (float)(X + Width / 2 - Main.item[itemIndex].Width / 2);
+            Main.item[itemIndex].Position.Y = (float)(Y + Height / 2 - Main.item[itemIndex].Height / 2);
+            Main.item[itemIndex].Wet = Collision.WetCollision(Main.item[itemIndex].Position, Main.item[itemIndex].Width, Main.item[itemIndex].Height);
+            Main.item[itemIndex].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
+            Main.item[itemIndex].Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
+            Main.item[itemIndex].SpawnTime = 0;
 
             if (!noBroadcast)
             {
                 NetMessage.SendData(21, -1, -1, "", itemIndex);
-                item.FindOwner(itemIndex);
+                Main.item[itemIndex].FindOwner(itemIndex);
             }
             return itemIndex;
         }
@@ -332,10 +330,10 @@ namespace Terraria_Server
                 }
                 count++;
             }
-            if (this.Owner != playerIndex && ((playerIndex == Main.myPlayer) || (playerIndex == 255) 
-                || !Main.players[playerIndex].Active))
+
+            if (this.Owner != playerIndex && ((playerIndex == 255) || !Main.players[playerIndex].Active))
             {
-                 NetMessage.SendData(21, -1, -1, "", whoAmI);
+                NetMessage.SendData(21, -1, -1, "", whoAmI);
                 if (this.Active)
                 {
                     NetMessage.SendData(22, -1, -1, "", whoAmI);
