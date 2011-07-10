@@ -6459,37 +6459,30 @@ namespace Terraria_Server
             }
             else if (this.Type == 22)
             {
-                ShowDamage(dmg, hitDirection, 73);
                 return;
             }
             else if (this.Type == 37 || this.Type == 54)
             {
-                ShowDamage(dmg, hitDirection, 58);
                 return;
             }
             else if (this.Type == 18)
             {
-                ShowDamage(dmg, hitDirection, 33);
                 return;
             }
             else if (this.Type == 19)
             {
-                ShowDamage(dmg, hitDirection, 36);
                 return;
             }
             else if (this.Type == 38)
             {
-                ShowDamage(dmg, hitDirection, 64);
                 return;
             }
             else if (this.Type == 20)
             {
-                ShowDamage(dmg, hitDirection, 39);
                 return;
             }
             else if (this.Type == 21 || this.Type == 31 || this.Type == 32 || this.Type == 44 || this.Type == 45)
             {
-                ShowDamage(dmg, hitDirection, 42, 50d, 26);
                 return;
             }
             else if (this.Type == 39 || this.Type == 40 || this.Type == 41)
@@ -7459,15 +7452,7 @@ namespace Terraria_Server
             }
             return result;
         }
-
-        private void ShowDamage(double damage, float hitDirection, int goreStart, double lifeModifier = 100d, int type = 5, int alpha = 0, Color color = default(Color))
-        {
-            if (this.life > 0)
-            {
-                return;
-            }
-        }
-        
+                
         public object Clone()
         {
             NPC cloned = (NPC)base.MemberwiseClone();

@@ -53,9 +53,8 @@ namespace Terraria_Server
 			{
 				Netplay.tcpListener.Start();
 			}
-			catch (Exception arg_11F_0)
+            catch (Exception exception)
 			{
-				Exception exception = arg_11F_0;
 				Main.menuMode = 15;
 				Main.statusText = exception.ToString();
 				Netplay.disconnect = true;
