@@ -122,6 +122,7 @@
     <Compile Include="Events\NPCSpawnEvent.cs" />
     <Compile Include="Events\PlayerKeyPressEvent.cs" />
     <Compile Include="Events\PlayerMoveEvent.cs" />
+    <Compile Include="Events\PlayerPvPChangeEvent.cs" />
     <Compile Include="Events\PlayerTeleportEvent.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
@@ -200,13 +201,11 @@
     <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Commands.cs" />
     <Compile Include="Commands\CommandParser.cs" />
-    <Compile Include="Dust.cs" />
     <Compile Include="Events\ConsoleCommandEvent.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\PlayerHurtEvent.cs" />
     <Compile Include="Events\PlayerStateUpdateEvent.cs" />
     <Compile Include="Events\PlayerTileChangeEvent.cs" />
-    <Compile Include="Gore.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />

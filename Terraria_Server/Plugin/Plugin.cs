@@ -160,6 +160,12 @@ namespace Terraria_Server.Plugin
         /// <param name="Event">PlayerProjectileEvent info</param>
         public virtual void onPlayerProjectileUse(PlayerProjectileEvent Event) { }
 
+        /// <summary>
+        /// Hook method for Player PvP Change
+        /// </summary>
+        /// <param name="Event">PlayerPvPChangeEvent info</param>
+        public virtual void onPlayerPvPChange(PlayerPvPChangeEvent Event) { }
+
         /*
         /// <summary>
         /// Hook method for the player state (Byte) updating

@@ -163,34 +163,6 @@ namespace Terraria_Server
                             if (this.WetCount == 0)
                             {
                                 this.WetCount = 20;
-                                if (!flag)
-                                {
-                                    for (int j = 0; j < 10; j++)
-                                    {
-                                        int num3 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.Height / 2) - 8f), this.Width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
-                                        Dust expr_1EC_cp_0 = Main.dust[num3];
-                                        expr_1EC_cp_0.velocity.Y = expr_1EC_cp_0.velocity.Y - 4f;
-                                        Dust expr_20A_cp_0 = Main.dust[num3];
-                                        expr_20A_cp_0.velocity.X = expr_20A_cp_0.velocity.X * 2.5f;
-                                        Main.dust[num3].scale = 1.3f;
-                                        Main.dust[num3].alpha = 100;
-                                        Main.dust[num3].noGravity = true;
-                                    }
-                                }
-                                else
-                                {
-                                    for (int k = 0; k < 5; k++)
-                                    {
-                                        int num4 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.Height / 2) - 8f), this.Width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
-                                        Dust expr_2F2_cp_0 = Main.dust[num4];
-                                        expr_2F2_cp_0.velocity.Y = expr_2F2_cp_0.velocity.Y - 1.5f;
-                                        Dust expr_310_cp_0 = Main.dust[num4];
-                                        expr_310_cp_0.velocity.X = expr_310_cp_0.velocity.X * 2.5f;
-                                        Main.dust[num4].scale = 1.3f;
-                                        Main.dust[num4].alpha = 100;
-                                        Main.dust[num4].noGravity = true;
-                                    }
-                                }
                             }
                             this.Wet = true;
                         }
@@ -251,14 +223,6 @@ namespace Terraria_Server
                     }
                     if (this.Type == 75 && Main.dayTime)
                     {
-                        for (int m = 0; m < 10; m++)
-                        {
-                            Dust.NewDust(this.Position, this.Width, this.Height, 15, this.Velocity.X, this.Velocity.Y, 150, default(Color), 1.2f);
-                        }
-                        for (int n = 0; n < 3; n++)
-                        {
-                            Gore.NewGore(this.Position, new Vector2(this.Velocity.X, this.Velocity.Y), Main.rand.Next(16, 18));
-                        }
                         this.Active = false;
                         this.Type = 0;
                         this.Stack = 0;
@@ -268,18 +232,6 @@ namespace Terraria_Server
                 else
                 {
                     this.BeingGrabbed = false;
-                }
-
-                if (this.Type == 75)
-                {
-                    if (Main.rand.Next(25) == 0)
-                    {
-                        Dust.NewDust(this.Position, this.Width, this.Height, 15, this.Velocity.X * 0.5f, this.Velocity.Y * 0.5f, 150, default(Color), 1.2f);
-                    }
-                    if (Main.rand.Next(50) == 0)
-                    {
-                        Gore.NewGore(this.Position, new Vector2(this.Velocity.X * 0.2f, this.Velocity.Y * 0.2f), Main.rand.Next(16, 18));
-                    }
                 }
                 if (this.SpawnTime < 2147483646)
                 {
@@ -326,7 +278,6 @@ namespace Terraria_Server
                 }
             }
 
-
             if (itemIndex == 200)
             {
                 int lastSpawned = 0;
@@ -340,19 +291,18 @@ namespace Terraria_Server
                 }
             }
 
-            Item item = Registries.Item.Create(type, stack);
-            item.Position.X = (float)(X + Width / 2 - Main.item[itemIndex].Width / 2);
-            item.Position.Y = (float)(Y + Height / 2 - Main.item[itemIndex].Height / 2);
-            item.Wet = Collision.WetCollision(Main.item[itemIndex].Position, Main.item[itemIndex].Width, Main.item[itemIndex].Height);
-            item.Velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
-            item.Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
-            item.SpawnTime = 0;
-            Main.item[itemIndex] = item;
+            Main.item[itemIndex] = Registries.Item.Create(type, stack);
+            Main.item[itemIndex].Position.X = (float)(X + Width / 2 - Main.item[itemIndex].Width / 2);
+            Main.item[itemIndex].Position.Y = (float)(Y + Height / 2 - Main.item[itemIndex].Height / 2);
+            Main.item[itemIndex].Wet = Collision.WetCollision(Main.item[itemIndex].Position, Main.item[itemIndex].Width, Main.item[itemIndex].Height);
+            Main.item[itemIndex].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
+            Main.item[itemIndex].Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
+            Main.item[itemIndex].SpawnTime = 0;
 
             if (!noBroadcast)
             {
                 NetMessage.SendData(21, -1, -1, "", itemIndex);
-                item.FindOwner(itemIndex);
+                Main.item[itemIndex].FindOwner(itemIndex);
             }
             return itemIndex;
         }
@@ -380,10 +330,10 @@ namespace Terraria_Server
                 }
                 count++;
             }
-            if (this.Owner != playerIndex && ((playerIndex == Main.myPlayer) || (playerIndex == 255) 
-                || !Main.players[playerIndex].Active))
+
+            if (this.Owner != playerIndex && ((playerIndex == 255) || !Main.players[playerIndex].Active))
             {
-                 NetMessage.SendData(21, -1, -1, "", whoAmI);
+                NetMessage.SendData(21, -1, -1, "", whoAmI);
                 if (this.Active)
                 {
                     NetMessage.SendData(22, -1, -1, "", whoAmI);
