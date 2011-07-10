@@ -25,6 +25,7 @@ namespace Terraria_Server.Plugin
         NPC_SPAWN,
         PLAYER_TELEPORT,
         PLAYER_MOVE,
-        PLAYER_KEYPRESS
+        PLAYER_KEYPRESS,
+        PLAYER_PVPCHANGE
     }
 }
