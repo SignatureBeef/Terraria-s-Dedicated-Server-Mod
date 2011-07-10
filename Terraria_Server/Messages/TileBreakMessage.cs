@@ -33,20 +33,6 @@ namespace Terraria_Server.Messages
             int style = (int)readBuffer[num];
             bool failFlag = (tileType == 1);
 
-            Tile tile = new Tile();
-
-            if (Main.tile[x, y] == null)
-            {
-                Main.tile[x, y] = new Tile();
-            }
-            else
-            {
-                tile = WorldGen.cloneTile(Main.tile[x, y]);
-            }
-
-            tile.tileX = x;
-            tile.tileY = y;
-
             bool placed = false;
             bool wall = false;
 
@@ -66,7 +52,7 @@ namespace Terraria_Server.Messages
 
             PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
             tileEvent.Sender = Main.players[whoAmI];
-            tileEvent.Tile = tile;
+            tileEvent.Tile = Main.tile[x, y].Data;
             tileEvent.Type = tileType;
             tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
             tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;

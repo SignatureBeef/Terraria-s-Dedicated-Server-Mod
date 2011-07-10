@@ -149,7 +149,7 @@ namespace Terraria_Server
 		public static int[] backgroundWidth = new int[7];
 		public static int[] backgroundHeight = new int[7];
         public static bool tilesLoaded = false;
-        public static Tile[,] tile = new Tile[Main.maxTilesX, Main.maxTilesY];
+        public static TileCollection tile;
 		public static Item[] item = new Item[201];
 		public static NPC[] npcs = new NPC[NPC.MAX_NPCS + 1];
 		public static Projectile[] projectile = new Projectile[1001];

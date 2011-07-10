@@ -152,11 +152,11 @@ namespace Terraria_Server
 			
 			var tile   = Main.tile[x, y];
 			var active = tile.Active;
-			var wall   = tile.wall;
-			var liquid = tile.liquid;
+			var wall   = tile.Wall;
+			var liquid = tile.Liquid;
 			
 			if (active)          flags += 1;
-			if (tile.lighted)    flags += 2;
+			if (tile.Lighted)    flags += 2;
 			if (wall > 0)        flags += 4;
 			if (liquid > 0)      flags += 8;
 			
@@ -164,14 +164,14 @@ namespace Terraria_Server
 			
 			if (active)
 			{
-				var type = tile.type;
+				var type = tile.Type;
 				
 				Byte (type);
 				
 				if (Main.tileFrameImportant [type])
 				{
-					Short (tile.frameX);
-					Short (tile.frameY);
+					Short (tile.FrameX);
+					Short (tile.FrameY);
 				}
 			}
 			
@@ -183,7 +183,7 @@ namespace Terraria_Server
 			if (liquid > 0)
 			{
 				Byte (liquid);
-				Byte (tile.lava);
+				Byte (tile.Lava);
 			}
 		}
 		
@@ -657,8 +657,8 @@ namespace Terraria_Server
 			
 			Int (x);
 			Int (y);
-			Byte (tile.liquid);
-			Byte (tile.lava);
+			Byte (tile.Liquid);
+			Byte (tile.Lava);
 		}
 		
 		public void SendSpawn ()

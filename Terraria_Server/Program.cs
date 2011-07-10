@@ -1,4 +1,4 @@
-﻿using System.Threading;
+using System.Threading;
 using Terraria_Server.Commands;
 using System;
 using System.IO;
@@ -144,7 +144,8 @@ namespace Terraria_Server
 
                     Server.maxTilesX = worldX;
                     Server.maxTilesY = worldY;
-                    Server.tile = new Tile[Server.maxTilesX + 1, Server.maxTilesY + 1];
+                    //Server.tile = new TileRef[Server.maxTilesX + 1, Server.maxTilesY + 1];
+                    Server.tile = new TileCollection (Server.maxTilesX + 1, Server.maxTilesY + 1);
 
                     WorldGen.clearWorld();
                     (new Server()).Initialize();
@@ -164,6 +165,7 @@ namespace Terraria_Server
 
                 int worldXtiles = properties.getMapSizes()[0];
                 int worldYtiles = properties.getMapSizes()[1];
+                
                 if (properties.UseCustomTiles)
                 {
                     int X = properties.MaxTilesX;
@@ -185,7 +187,6 @@ namespace Terraria_Server
                         ", " + worldYtiles.ToString() + " }");
                 }
 
-
                 World world = new World(worldXtiles, worldYtiles);
                 world.SavePath = worldFile;
 
@@ -198,6 +199,7 @@ namespace Terraria_Server
                 server.setIP(properties.ServerIP);
                 server.Initialize();
 
+                Server.tile = new TileCollection (worldXtiles, worldYtiles);
                 WorldGen.loadWorld();
 
                 tConsole.WriteLine("Starting the Server");

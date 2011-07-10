@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -26,12 +26,8 @@ namespace Terraria_Server.Messages
 
             for (int x = left; x < left + (int)width; x++)
             {
-                if (Main.tile[x, y] == null)
-                {
-                    Main.tile[x, y] = new Tile();
-                }
 
-                Tile tile = Main.tile[x, y];
+                TileRef tile = Main.tile[x, y];
 
                 byte b3 = readBuffer[num++];
                 bool active = tile.Active;
@@ -39,56 +35,56 @@ namespace Terraria_Server.Messages
 
                 if ((b3 & 2) == 2)
                 {
-                    tile.lighted = true;
+                    tile.Lighted = true;
                 }
 
                 if ((b3 & 4) == 4)
                 {
-                    tile.wall = 1;
+                    tile.Wall = 1;
                 }
                 else
                 {
-                    tile.wall = 0;
+                    tile.Wall = 0;
                 }
 
                 if ((b3 & 8) == 8)
                 {
-                    tile.liquid = 1;
+                    tile.Liquid = 1;
                 }
                 else
                 {
-                    tile.liquid = 0;
+                    tile.Liquid = 0;
                 }
 
                 if (tile.Active)
                 {
-                    int type = (int)tile.type;
-                    tile.type = readBuffer[num++];
+                    int type = (int)tile.Type;
+                    tile.Type = readBuffer[num++];
 
-                    if (Main.tileFrameImportant[(int)tile.type])
+                    if (Main.tileFrameImportant[(int)tile.Type])
                     {
-                        tile.frameX = BitConverter.ToInt16(readBuffer, num);
+                        tile.FrameX = BitConverter.ToInt16(readBuffer, num);
                         num += 2;
-                        tile.frameY = BitConverter.ToInt16(readBuffer, num);
+                        tile.FrameY = BitConverter.ToInt16(readBuffer, num);
                         num += 2;
                     }
-                    else if (!active || (int)tile.type != type)
+                    else if (!active || (int)tile.Type != type)
                     {
-                        tile.frameX = -1;
-                        tile.frameY = -1;
+                        tile.FrameX = -1;
+                        tile.FrameY = -1;
                     }
                 }
 
-                if (tile.wall > 0)
+                if (tile.Wall > 0)
                 {
-                    tile.wall = readBuffer[num++];
+                    tile.Wall = readBuffer[num++];
                 }
 
-                if (tile.liquid > 0)
+                if (tile.Liquid > 0)
                 {
-                    tile.liquid = readBuffer[num++];
+                    tile.Liquid = readBuffer[num++];
                     byte lavaFlag = readBuffer[num++];
-                    tile.lava = (lavaFlag == 1);
+                    tile.Lava = (lavaFlag == 1);
                 }
             }
             

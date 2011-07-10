@@ -234,7 +234,6 @@
     <Compile Include="Shops\Shop.cs" />
     <Compile Include="Sign.cs" />
     <Compile Include="Server\Statics.cs" />
-    <Compile Include="Tile.cs" />
     <Compile Include="Misc\Vector2.cs" />
     <Compile Include="Misc\DataRegister.cs" />
     <Compile Include="Server\World.cs" />
@@ -244,6 +243,8 @@
     <Compile Include="ServerSlot.cs" />
     <Compile Include="Messages\SendTileRowMessage.cs" />
     <Compile Include="NetMessage_Packets.cs" />
+    <Compile Include="TileCollection.cs" />
+    <Compile Include="Tile.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

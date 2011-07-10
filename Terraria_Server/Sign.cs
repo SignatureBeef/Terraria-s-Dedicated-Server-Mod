@@ -30,15 +30,15 @@ namespace Terraria_Server
 
         public static int ReadSign(int i, int j)
         {
-            int k = (int)(Main.tile[i, j].frameX / 18);
-            int num = (int)(Main.tile[i, j].frameY / 18);
+            int k = (int)(Main.tile[i, j].FrameX / 18);
+            int num = (int)(Main.tile[i, j].FrameY / 18);
             while (k > 1)
             {
                 k -= 2;
             }
             int num2 = i - k;
             int num3 = j - num;
-            if (Main.tile[num2, num3].type != 55 && Main.tile[num2, num3].type != 85)
+            if (Main.tile[num2, num3].Type != 55 && Main.tile[num2, num3].Type != 85)
             {
                 Sign.KillSign(num2, num3);
                 return -1;
@@ -71,7 +71,7 @@ namespace Terraria_Server
         }
         public static void TextSign(int i, String text)
         {
-            if (Main.tile[Main.sign[i].x, Main.sign[i].y] == null || !Main.tile[Main.sign[i].x, Main.sign[i].y].Active || (Main.tile[Main.sign[i].x, Main.sign[i].y].type != 55 && Main.tile[Main.sign[i].x, Main.sign[i].y].type != 85))
+            if (!Main.tile[Main.sign[i].x, Main.sign[i].y].Active || (Main.tile[Main.sign[i].x, Main.sign[i].y].Type != 55 && Main.tile[Main.sign[i].x, Main.sign[i].y].Type != 85))
             {
                 Main.sign[i] = null;
                 return;
