@@ -6691,7 +6691,7 @@ namespace Terraria_Server
                     preSelected = WorldGen.genRand.Next(lootTypes.Length);
                 }
 
-                item = Registries.Item.Create(preSelected, stack);
+                item = Registries.Item.Create(lootTypes[preSelected], stack);
                 chestContents[contentIndex++] = item;
             }
             return item;
