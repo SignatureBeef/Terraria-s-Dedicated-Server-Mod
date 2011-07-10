@@ -895,7 +895,7 @@ namespace Terraria_Server
             Main.tile[x, y].skipLiquid = false;
             Liquid.numLiquid++;
             
-            NetMessage.sendWater(x, y);
+            NetMessage.SendWater(x, y);
 
             if (Main.tile[x, y].Active && (Main.tileWaterDeath[(int)Main.tile[x, y].type] || (Main.tile[x, y].lava && Main.tileLavaDeath[(int)Main.tile[x, y].type])))
             {
@@ -1014,7 +1014,7 @@ namespace Terraria_Server
             }
 
             
-            NetMessage.sendWater(x, y);
+            NetMessage.SendWater(x, y);
 
             Liquid.numLiquid--;
             Main.tile[Main.liquid[liquidIndex].x, Main.liquid[liquidIndex].y].checkingLiquid = false;

@@ -1,121 +1,16 @@
 using System;
-using System.IO;
-using Terraria_Server.Misc;
 using System.Text;
+using System.IO;
+
+using Terraria_Server.Commands;
+using Terraria_Server.Events;
+using Terraria_Server.Messages;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server
 {
-	public class PacketWriter
+	public partial class NetMessage
 	{
-		private Stream sink;
-		private BinaryWriter bin;
-		private TextWriter text;
-		private int lenAt;
-		
-		public PacketWriter (Stream stream)
-		{
-			sink = stream;
-			bin = new BinaryWriter (stream, Encoding.ASCII);
-			text = new StreamWriter (stream, Encoding.ASCII); 
-		}
-		
-		private void Begin ()
-		{
-			lenAt = (int) sink.Position;
-			sink.Position += 4;
-		}
-
-		private void Begin (Packet id)
-		{
-			lenAt = (int) sink.Position;
-			sink.Position += 4;
-			sink.WriteByte ((byte) id);
-		}
-		
-		private void End ()
-		{
-			var pos = sink.Position;
-			sink.Position = lenAt;
-			bin.Write ((int) (pos - lenAt - 4));
-			sink.Position = pos;
-		}
-		
-		private void Header (Packet id, int length)
-		{
-			bin.Write (length + 1);
-			sink.WriteByte ((byte) id);
-		}
-		
-		private void Byte (byte data)
-		{
-			sink.WriteByte (data);
-		}
-
-		private void Byte (int data)
-		{
-			sink.WriteByte ((byte) data);
-		}
-
-		private void Byte (bool data)
-		{
-			sink.WriteByte ((byte) (data ? 1 : 0));
-		}
-		
-		private void Short (short data)
-		{
-			//sink.Write (BitConverter.GetBytes(data), 0, 2);
-			bin.Write (data);
-		}
-
-		private void Short (int data)
-		{
-			Short ((short) data);
-		}
-
-		private void Int (int data)
-		{
-			//sink.Write (BitConverter.GetBytes(data), 0, 4);
-			bin.Write (data);
-		}
-		
-		private void Int (double data)
-		{
-			Int ((int) data);
-		}
-
-#if UNSAFE
-		private unsafe void Float (float data)
-		{
-			var bytes = (byte*) &data;
-			sink.WriteByte (bytes[0]);
-			sink.WriteByte (bytes[1]);
-			sink.WriteByte (bytes[2]);
-			sink.WriteByte (bytes[3]);
-		}
-#else
-		private void Float (float data)
-		{
-			sink.Write (BitConverter.GetBytes(data), 0, 4);
-		}
-#endif
-		
-		private void String (string data)
-		{
-			//var buf = Encoding.ASCII.GetBytes(data ?? "");
-			//sink.Write (buf, 0, buf.Length);
-			
-			foreach (char c in data)
-			{
-				if (c < 128)
-					sink.WriteByte ((byte) c);
-				else
-					sink.WriteByte ((byte) '?');
-			}
-			
-			//text.Write (data);
-			//text.Flush ();
-		}
-		
 		public void ConnectionRequest (string version)
 		{
 			Begin (Packet.CONNECTION_REQUEST);
@@ -238,7 +133,7 @@ namespace Terraria_Server
 		
 		public void RequestTileBlock ()
 		{
-			throw new NotImplementedException ("PacketWriter.RequestTileBlock()");
+			throw new NotImplementedException ("NetMessage.RequestTileBlock()");
 		}
 		
 		public void SendTileLoading (int number, string text)
@@ -397,7 +292,7 @@ namespace Terraria_Server
 		
 		public void TimeSunMoonUpdate ()
 		{
-			throw new NotImplementedException ("PacketWriter.TimeSunMoonUpdate()");
+			throw new NotImplementedException ("NetMessage.TimeSunMoonUpdate()");
 		}
 		
 		public void DoorUpdate (int doorAction, int x, int y, int doorDirection)
@@ -584,7 +479,7 @@ namespace Terraria_Server
 		
 		public void OpenChest ()
 		{
-			throw new NotImplementedException ("PacketWriter.OpenChest()");
+			throw new NotImplementedException ("NetMessage.OpenChest()");
 		}
 		
 		public void ChestItem (int chestId, int itemId)
@@ -625,7 +520,7 @@ namespace Terraria_Server
 		
 		public void KillTile ()
 		{
-			throw new NotImplementedException ("PacketWriter.KillTile()");
+			throw new NotImplementedException ("NetMessage.KillTile()");
 		}
 		
 		public void HealPlayer (int playerId, int amount)
@@ -657,7 +552,7 @@ namespace Terraria_Server
 		
 		public void PasswordResponse ()
 		{
-			throw new NotImplementedException ("PacketWriter.PasswordResponse()");
+			throw new NotImplementedException ("NetMessage.PasswordResponse()");
 		}
 		
 		public void ItemOwnerUpdate (int itemId)
@@ -787,7 +682,7 @@ namespace Terraria_Server
 		
 		public void SummonSkeletron ()
 		{
-			throw new NotImplementedException ("PacketWriter.SummonSkeletron()");
+			throw new NotImplementedException ("NetMessage.SummonSkeletron()");
 		}
 	}
 }

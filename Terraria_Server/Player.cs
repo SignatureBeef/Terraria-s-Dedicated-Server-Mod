@@ -4310,7 +4310,7 @@ namespace Terraria_Server
 
             NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
 
-            NetMessage.syncPlayers(); //Sync the Players Position.
+            NetMessage.SyncPlayers(); //Sync the Players Position.
         }
 
         public void teleportTo(Player player)

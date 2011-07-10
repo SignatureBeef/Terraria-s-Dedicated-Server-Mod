@@ -48,7 +48,6 @@ namespace Terraria_Server.Messages
         public bool checkBytes;
 
         public byte[] readBuffer = new byte[BUFFER_MAX];
-        public byte[] writeBuffer = new byte[BUFFER_MAX];
 
         public int messageLength;
         public int spamCount;
@@ -58,7 +57,6 @@ namespace Terraria_Server.Messages
         public void Reset()
         {
             readBuffer = new byte[BUFFER_MAX];
-            writeBuffer = new byte[BUFFER_MAX];
             messageLength = 0;
             totalData = 0;
             spamCount = 0;

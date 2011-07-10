@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,8 +33,8 @@ namespace Terraria_Server.Messages
                 if (Netplay.slots[whoAmI].state == SlotState.SENDING_TILES)
                 {
                     Netplay.slots[whoAmI].state = SlotState.PLAYING;
-                    NetMessage.greetPlayer(whoAmI);
-                    NetMessage.syncPlayers();
+                    NetMessage.GreetPlayer(whoAmI);
+                    NetMessage.SyncPlayers();
                     NetMessage.buffer[whoAmI].broadcast = true;
                     NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
                     return;
