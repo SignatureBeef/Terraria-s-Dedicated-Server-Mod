@@ -15,11 +15,6 @@ namespace Terraria_Server.Messages
             return Packet.OPEN_CHEST;
         }
 
-        public int? GetRequiredNetMode()
-        {
-            return 2;
-        }
-
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int x = BitConverter.ToInt32(readBuffer, num);

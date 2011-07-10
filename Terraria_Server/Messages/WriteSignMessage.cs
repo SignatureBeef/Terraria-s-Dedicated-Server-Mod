@@ -12,11 +12,6 @@ namespace Terraria_Server.Messages
             return Packet.WRITE_SIGN;
         }
 
-        public int? GetRequiredNetMode()
-        {
-            return null;
-        }
-
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int signIndex = (int)BitConverter.ToInt16(readBuffer, num);

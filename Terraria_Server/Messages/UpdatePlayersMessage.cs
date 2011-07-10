@@ -9,11 +9,6 @@ namespace Terraria_Server.Messages
             return Packet.UPDATE_PLAYERS;
         }
 
-        public int? GetRequiredNetMode()
-        {
-            return 2;
-        }
-
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             NetMessage.syncPlayers();
