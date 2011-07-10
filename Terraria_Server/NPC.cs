@@ -8,7 +8,7 @@ using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {
-    public class NPC : IRegisterableEntity
+    public class NPC : BaseEntity
     {
         private const int ACTIVE_TIME = 750;
         public const int MAX_NPCS = 1000;
@@ -37,7 +37,6 @@ namespace Terraria_Server
         public static int spawnRate = NPC.defaultSpawnRate;
         public static int maxSpawns = NPC.defaultMaxSpawns;
 
-        public bool Active { get; set; }
         public int alpha;
         public bool behindTiles;
         public bool boss;
@@ -53,7 +52,6 @@ namespace Terraria_Server
         public float knockBackResist;
         public bool lavaImmune;
         public bool lavaWet;
-        public String Name { get; set; }
         public bool netUpdate;
         public bool noGravity;
         public bool noTileCollide;
@@ -69,12 +67,10 @@ namespace Terraria_Server
         public Rectangle targetRect;
         public int timeLeft;
         public bool townNPC;
-        public int Type { get; set; }
         public float value;
         public bool wet;
         public byte wetCount;
         
-        public Vector2 Position;
         public Vector2 Velocity;
         public float[] ai = new float[NPC.MAX_AI];
         public int aiAction;
@@ -87,7 +83,6 @@ namespace Terraria_Server
         public int doorY;
         public Rectangle frame;
         public int friendlyRegen;
-        public int height;
         public int[] immune = new int[256];
         public int life;
         public int lifeMax;
@@ -95,12 +90,10 @@ namespace Terraria_Server
         public Vector2 oldPosition;
         public Vector2 oldVelocity;
         public int soundDelay;
-        public int width;
         public int whoAmI;
         
         public NPC()
         {
-            Active = false;
             color = default(Color);
             homeTileX = -1;
             homeTileY = -1;
@@ -7453,7 +7446,7 @@ namespace Terraria_Server
             return result;
         }
                 
-        public object Clone()
+        public override object Clone()
         {
             NPC cloned = (NPC)base.MemberwiseClone();
             NPC.npcSlots = cloned.slots;
@@ -7461,6 +7454,8 @@ namespace Terraria_Server
             cloned.width = (int)((float)cloned.width * cloned.scale);
             cloned.height = (int)((float)cloned.height * cloned.scale);
             cloned.life = cloned.lifeMax;
+            cloned.ai = new float[NPC.MAX_AI];
+            Array.Copy(ai, cloned.ai, NPC.MAX_AI);
             return cloned;
         }
     }

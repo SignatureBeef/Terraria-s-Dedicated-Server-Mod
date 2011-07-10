@@ -111,6 +111,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseEntity.cs" />
+    <Compile Include="Commands\ISender.cs" />
     <Compile Include="Definitions\ProjectileType.cs" />
     <Compile Include="Collections\IRegisterableEntity.cs" />
     <Compile Include="Collections\ItemRegistry.cs" />
