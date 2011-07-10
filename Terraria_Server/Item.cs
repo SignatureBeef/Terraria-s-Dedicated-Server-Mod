@@ -298,8 +298,6 @@ namespace Terraria_Server
             Main.item[itemIndex].Velocity.X = (float)Main.rand.Next(-20, 21) * 0.1f;
             Main.item[itemIndex].Velocity.Y = (float)Main.rand.Next(-30, -10) * 0.1f;
             Main.item[itemIndex].SpawnTime = 0;
-            Main.item[itemIndex].Active = true;
-            Main.item[itemIndex].Stack = stack;
 
             if (!noBroadcast)
             {

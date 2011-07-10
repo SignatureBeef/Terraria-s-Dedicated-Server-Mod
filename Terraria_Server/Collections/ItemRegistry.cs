@@ -38,7 +38,8 @@ namespace Terraria_Server.Collections
 
         public Item Create(int type, int stack = 1)
         {
-            return CloneAndInit(base.Create(type), stack);
+            Item item = CloneAndInit(base.Create(type), stack);
+            return item;
         }
 
         public Item Create(String name, int stack = 1)
@@ -51,7 +52,7 @@ namespace Terraria_Server.Collections
             Item cloned = (Item) item.Clone();
             if (cloned.Active)
             {
-                item.Stack = stack;
+                cloned.Stack = stack;
             }
 
             //Specialized handling for familiar armor until a better method is created.
