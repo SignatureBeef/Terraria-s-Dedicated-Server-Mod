@@ -12,12 +12,11 @@ using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {
-	public class Player : Sender
+	public class Player : BaseEntity, ISender
 	{
         private const int MAX_INVENTORY = 44;
 
         private String ipAddress = null;
-        private bool godMode = false;
 
         public bool enemySpawns;
         public int heldProj = -1;
@@ -32,7 +31,6 @@ namespace Terraria_Server
 		public bool zoneJungle;
 		public bool boneArmor;
 		public int townNPCs;
-		public Vector2 Position;
         public Vector2 Velocity;
         public Vector2 oldVelocity;
 		public double headFrameCounter;
@@ -75,7 +73,6 @@ namespace Terraria_Server
         public Vector2 legVelocity;
 		public bool dead;
 		public int respawnTimer;
-		public String Name = "";
 		public int attackCD;
 		public int potionDelay;
 		public bool wet;
@@ -106,9 +103,6 @@ namespace Terraria_Server
 		public bool releaseUseTile;
 		public bool releaseInventory;
 		public bool delayUseItem;
-		public bool Active;
-		public int width = 20;
-		public int height = 42;
 		public int direction = 1;
 		public bool showItemIcon;
 		public int showItemIcon2;
@@ -186,12 +180,9 @@ namespace Terraria_Server
 		public int fallStart;
 		public int slowCount;
 
-        public override String getName()
-        {
-            return Name;
-        }
+        public bool Op { get; set; }
 
-        public override void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, A, R, G, B);
         }
@@ -2641,7 +2632,7 @@ namespace Terraria_Server
 
         public void KillMe(double dmg, int hitDirection, bool pvp = false, String deathText = " was slain...")
         {
-            if ((Main.godMode && Main.myPlayer == this.whoAmi) || this.godMode)
+            if ((Main.godMode && Main.myPlayer == this.whoAmi) || GodMode)
             {
                 return;
             }
@@ -4106,7 +4097,7 @@ namespace Terraria_Server
 			}
 		}
 		
-        public object Clone()
+        public override object Clone()
 		{
 			return base.MemberwiseClone();
 		}
@@ -4497,6 +4488,9 @@ namespace Terraria_Server
 		
         public Player()
 		{
+            width = 20;
+		    height = 42;
+
 			for (int i = 0; i < MAX_INVENTORY; i++)
 			{
 				if (i < 8)
@@ -4878,7 +4872,7 @@ namespace Terraria_Server
 
         public String getPassword()
         {
-            return Player.getPassword(this.Name, this.getServer());
+            return Player.getPassword(this.Name, Program.server);
         }
 
         public static bool isInOpList(String Name, Server Server)
@@ -4902,7 +4896,7 @@ namespace Terraria_Server
 
         public bool isInOpList()
         {
-            return Player.isInOpList(this.Name, this.getServer());
+            return Player.isInOpList(this.Name, Program.server);
         }
 
         public String getOpListKey()
@@ -4910,15 +4904,6 @@ namespace Terraria_Server
             return this.Name.Trim().ToLower() + getPassword();
         }
 
-        public bool getGodMode()
-        {
-            return this.godMode;
-        }
-
-        public void setGodMode(bool State)
-        {
-            this.godMode = State;
-        }
-
+        public bool GodMode { get; set; }
     }
 }

@@ -5,6 +5,6 @@ namespace Terraria_Server.Events
     {
         public bool Cancelled { get; set; }
 
-        public Sender Sender { get; set; }
+        public ISender Sender { get; set; }
     }
 }
