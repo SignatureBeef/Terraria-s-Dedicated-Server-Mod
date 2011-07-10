@@ -11,7 +11,7 @@ namespace Terraria_Server
     /// <summary>
     /// Projectile includes things like bullets, arrows, knives, explosives, boomerangs, and possibly ball/chain, orbs, and flamelash/spells.
     /// </summary>
-    public class Projectile : IRegisterableEntity
+    public class Projectile : BaseEntity
     {
         /// <summary>
         /// Whether the projectile is currently wet
@@ -33,22 +33,12 @@ namespace Terraria_Server
         /// 
         /// </summary>
         public const int MAX_AI = 2;
-        /// <summary>
-        /// Projectile's current location
-        /// </summary>
-        public Vector2 Position;
+
         /// <summary>
         /// Projectile's current 2-direction speed
         /// </summary>
         public Vector2 Velocity;
-        /// <summary>
-        /// Projectile's width of area effect
-        /// </summary>
-        public int width;
-        /// <summary>
-        /// Projectile's height of area effect
-        /// </summary>
-        public int height;
+
         /// <summary>
         /// Scaled size of projectile
         /// </summary>
@@ -62,7 +52,7 @@ namespace Terraria_Server
         /// </summary>
         public ProjectileType type { get; set; }
 
-        public int Type
+        public override int Type
         {
             get
             {
@@ -82,14 +72,6 @@ namespace Terraria_Server
         /// Index of owning player
         /// </summary>
         public int Owner = 255;
-        /// <summary>
-        /// Whether the projectile is currently alive in game
-        /// </summary>
-        public bool Active { get; set; }
-        /// <summary>
-        /// Textual name of projectile type
-        /// </summary>
-        public String Name { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -206,7 +188,7 @@ namespace Terraria_Server
         /// Creates a copy of the projectile's instance
         /// </summary>
         /// <returns>Copy of the projectile instance</returns>
-        public object Clone()
+        public override object Clone()
         {
             return base.MemberwiseClone();
         }

@@ -10,7 +10,7 @@ namespace Terraria_Server
         public int height { get; set; }
         public String Name { get; set; }
         public Vector2 Position;
-        public int Type { get; set; }
+        public virtual int Type { get; set; }
         public int width { get; set; }
 
         public abstract object Clone();
