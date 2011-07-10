@@ -100,7 +100,7 @@ namespace Terraria_Server
         
         public NPC()
         {
-            Active = true;
+            Active = false;
             color = default(Color);
             homeTileX = -1;
             homeTileY = -1;
@@ -6252,12 +6252,12 @@ namespace Terraria_Server
             if (npcIndex >= 0)
             {
                 NPC npc = Registries.NPC.Create(type);
-                NPC oldNPC = Main.npcs[npcIndex];
-                npc.Position.X = (float)(x - oldNPC.width / 2);
-                npc.Position.Y = (float)(y - oldNPC.height);
+                //NPC oldNPC = Main.npcs[npcIndex];
+                npc.Position.X = (float)(x - npc.width / 2);
+                npc.Position.Y = (float)(y - npc.height);
                 npc.Active = true;
                 npc.timeLeft = (int)((double)NPC.ACTIVE_TIME * 1.25);
-                npc.wet = Collision.WetCollision(oldNPC.Position, oldNPC.width, oldNPC.height);
+                npc.wet = Collision.WetCollision(npc.Position, npc.width, npc.height);
 
                 if (!WorldGen.gen)
                 {

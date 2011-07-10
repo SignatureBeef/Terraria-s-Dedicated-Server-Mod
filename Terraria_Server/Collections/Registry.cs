@@ -37,12 +37,12 @@ namespace Terraria_Server.Collections
                         }
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
                     Console.WriteLine("Error adding element: " + errored.ToString());
                 }
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 Console.WriteLine("Error deserializing: " + filePath);
             }

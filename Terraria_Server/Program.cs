@@ -68,7 +68,7 @@ namespace Terraria_Server
                 }
 
 
-//#if (DEBUG == false)
+#if (DEBUG == false) //I'll comment this for each release, Updates are annoying when testing :3
                 try
                 {
                     if (UpdateManager.performProcess())
@@ -82,7 +82,7 @@ namespace Terraria_Server
                     Program.tConsole.WriteLine("Error updating!");
                     Program.tConsole.WriteLine(e.Message);
                 }
-//#endif
+#endif
 
                 Statics.debugMode = properties.DebugMode;
                 if (Statics.debugMode)

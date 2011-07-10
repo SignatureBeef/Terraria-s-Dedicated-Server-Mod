@@ -1260,7 +1260,8 @@ namespace Terraria_Server
                             int num5 = 0;
                             while (flag)
                             {
-                                Main.npcs[num5] = Registries.NPC.Create(binaryReader.ReadString());
+                                String NPCName = binaryReader.ReadString();
+                                Main.npcs[num5] = Registries.NPC.Create(NPCName);
                                 Main.npcs[num5].Position.X = binaryReader.ReadSingle();
                                 Main.npcs[num5].Position.Y = binaryReader.ReadSingle();
                                 Main.npcs[num5].homeless = binaryReader.ReadBoolean();
@@ -3603,11 +3604,11 @@ namespace Terraria_Server
                 }
                 num259++;
             }
-            int num262 = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
-            Main.npcs[num262].homeTileX = Main.spawnTileX;
-            Main.npcs[num262].homeTileY = Main.spawnTileY;
-            Main.npcs[num262].direction = 1;
-            Main.npcs[num262].homeless = true;
+            int GuideIndex = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
+            Main.npcs[GuideIndex].homeTileX = Main.spawnTileX;
+            Main.npcs[GuideIndex].homeTileY = Main.spawnTileY;
+            Main.npcs[GuideIndex].direction = 1;
+            Main.npcs[GuideIndex].homeless = true;
             Program.tConsole.WriteLine();
             Program.printData("Planting sunflowers...", true);
             int num263 = 0;

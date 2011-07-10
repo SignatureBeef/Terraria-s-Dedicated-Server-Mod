@@ -15,7 +15,7 @@ namespace Terraria_Server.Collections
         public ItemRegistry()
             : base(ITEM_FILE) 
         { 
-            /**
+            /*
              * We need to load additional items into the name lookup and only the name
              * lookup dictionary. This is at least until the item list can be fixed so
              * each item has a unique type or other identifier.
