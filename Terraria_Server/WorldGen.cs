@@ -7763,138 +7763,128 @@ namespace Terraria_Server
                 Main.tile[x, y + 1].type = (byte)type;
             }
         }
-        
-        public static void Check1x2Top(int x, int j, byte type)
+
+        private static Tile GetTile(int x, int y)
+        {
+            if (Main.tile[x, y] == null)
+            {
+                Main.tile[x, y] = new Tile();
+            }
+            return Main.tile[x, y];
+        }
+
+        private static Tile[,] GetTiles(int x, int y)
+        {
+            Tile[,] tiles = new Tile[3,3];
+            for (int modX = 0; modX < 3; modX++)
+            {
+                for (int modY = 0; modY < 3; modY++)
+                {
+                    tiles[modX, modY] = GetTile(x - 1 + modX, y - 1 + modY);
+                }
+            }
+            return tiles;
+        }
+
+        public static void Check1x2Top(int x, int y, byte type)
         {
             if (WorldGen.destroyObject)
             {
                 return;
             }
-            int num = j;
+
+            Tile[,] tiles = GetTiles(x, y);
+            if (tiles[1, 1].frameY == 18)
+            {
+                tiles = GetTiles(x, --y);
+            }
+
             bool flag = true;
-            if (Main.tile[x, num] == null)
-            {
-                Main.tile[x, num] = new Tile();
-            }
-            if (Main.tile[x, num + 1] == null)
-            {
-                Main.tile[x, num + 1] = new Tile();
-            }
-            if (Main.tile[x, num].frameY == 18)
-            {
-                num--;
-            }
-            if (Main.tile[x, num] == null)
-            {
-                Main.tile[x, num] = new Tile();
-            }
-            if (Main.tile[x, num].frameY == 0 && Main.tile[x, num + 1].frameY == 18 && Main.tile[x, num].type == type && Main.tile[x, num + 1].type == type)
+            if (tiles[1, 2].frameY == 0 && tiles[1, 2].frameY == 18 && tiles[1, 1].type == type && tiles[1, 2].type == type)
             {
                 flag = false;
+
+                if (!tiles[1, 0].Active || !Main.tileSolid[(int)tiles[1, 0].type] || Main.tileSolidTop[(int)tiles[1, 0].type])
+                {
+                    flag = true;
+                }
             }
-            if (Main.tile[x, num - 1] == null)
-            {
-                Main.tile[x, num - 1] = new Tile();
-            }
-            if (!Main.tile[x, num - 1].Active || !Main.tileSolid[(int)Main.tile[x, num - 1].type] || Main.tileSolidTop[(int)Main.tile[x, num - 1].type])
-            {
-                flag = true;
-            }
+
             if (flag)
             {
                 WorldGen.destroyObject = true;
-                if (Main.tile[x, num].type == type)
+                if (tiles[1, 1].type == type)
                 {
-                    WorldGen.KillTile(x, num, false, false, false);
+                    WorldGen.KillTile(x, y, false, false, false);
                 }
-                if (Main.tile[x, num + 1].type == type)
+                if (tiles[1, 2].type == type)
                 {
-                    WorldGen.KillTile(x, num + 1, false, false, false);
+                    WorldGen.KillTile(x, y + 1, false, false, false);
                 }
                 if (type == 42)
                 {
-                    Item.NewItem(x * 16, num * 16, 32, 32, 136, 1, false);
+                    Item.NewItem(x * 16, y * 16, 32, 32, 136, 1, false);
                 }
                 WorldGen.destroyObject = false;
             }
         }
         
-        public static void Check2x1(int i, int y, byte type)
+        public static void Check2x1(int x, int y, byte type)
         {
             if (WorldGen.destroyObject)
             {
                 return;
             }
-            int num = i;
+
+            Tile[,] tiles = GetTiles(x, y);
+            if (tiles[1,1].frameX == 18)
+            {
+                tiles = GetTiles(--x, y);
+            }
+
             bool flag = true;
-            if (Main.tile[num, y] == null)
-            {
-                Main.tile[num, y] = new Tile();
-            }
-            if (Main.tile[num + 1, y] == null)
-            {
-                Main.tile[num + 1, y] = new Tile();
-            }
-            if (Main.tile[num, y + 1] == null)
-            {
-                Main.tile[num, y + 1] = new Tile();
-            }
-            if (Main.tile[num + 1, y + 1] == null)
-            {
-                Main.tile[num + 1, y + 1] = new Tile();
-            }
-            if (Main.tile[num, y].frameX == 18)
-            {
-                num--;
-            }
-            if (Main.tile[num, y].frameX == 0 && Main.tile[num + 1, y].frameX == 18 && Main.tile[num, y].type == type && Main.tile[num + 1, y].type == type)
+            if (tiles[1, 1].frameX == 0 && tiles[2, 1].frameX == 18 && tiles[1, 1].type == type && tiles[2, 1].type == type)
             {
                 flag = false;
-            }
-            if (type == 29)
-            {
-                if (!Main.tile[num, y + 1].Active || !Main.tileTable[(int)Main.tile[num, y + 1].type])
+                if(!tiles[1, 2].Active || !tiles[2, 2].Active)
                 {
                     flag = true;
-                }
-                if (!Main.tile[num + 1, y + 1].Active || !Main.tileTable[(int)Main.tile[num + 1, y + 1].type])
+                } 
+                else if(type == 29)
                 {
-                    flag = true;
+                    if(!Main.tileTable[(int)tiles[1, 2].type] || !Main.tileTable[(int)tiles[2, 2].type])
+                    {
+                        flag = true;
+                    }
                 }
-            }
-            else
-            {
-                if (!Main.tile[num, y + 1].Active || !Main.tileSolid[(int)Main.tile[num, y + 1].type])
-                {
-                    flag = true;
-                }
-                if (!Main.tile[num + 1, y + 1].Active || !Main.tileSolid[(int)Main.tile[num + 1, y + 1].type])
+                else if (type != 29 && (!Main.tileSolid[(int)tiles[1, 2].type] || !Main.tileSolid[(int)tiles[2, 2].type]))
                 {
                     flag = true;
                 }
             }
+
             if (flag)
             {
                 WorldGen.destroyObject = true;
-                if (Main.tile[num, y].type == type)
+                if (tiles[1,1].type == type)
                 {
-                    WorldGen.KillTile(num, y, false, false, false);
+                    WorldGen.KillTile(x, y, false, false, false);
                 }
-                if (Main.tile[num + 1, y].type == type)
+                if (tiles[2,1].type == type)
                 {
-                    WorldGen.KillTile(num + 1, y, false, false, false);
+                    WorldGen.KillTile(x + 1, y, false, false, false);
                 }
                 if (type == 16)
                 {
-                    Item.NewItem(num * 16, y * 16, 32, 32, 35, 1, false);
+                    Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 35, 1, false);
                 }
                 if (type == 18)
                 {
-                    Item.NewItem(num * 16, y * 16, 32, 32, 36, 1, false);
+                    Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 36, 1, false);
                 }
                 if (type == 29)
                 {
-                    Item.NewItem(num * 16, y * 16, 32, 32, 87, 1, false);
+                    Item.NewItem(x * TILE_OFFSET_3, y * TILE_OFFSET_3, 32, 32, 87, 1, false);
                 }
                 WorldGen.destroyObject = false;
             }
@@ -7902,44 +7892,30 @@ namespace Terraria_Server
         
         public static void Place2x1(int x, int y, int type)
         {
-            if (Main.tile[x, y] == null)
-            {
-                Main.tile[x, y] = new Tile();
-            }
-            if (Main.tile[x + 1, y] == null)
-            {
-                Main.tile[x + 1, y] = new Tile();
-            }
-            if (Main.tile[x, y + 1] == null)
-            {
-                Main.tile[x, y + 1] = new Tile();
-            }
-            if (Main.tile[x + 1, y + 1] == null)
-            {
-                Main.tile[x + 1, y + 1] = new Tile();
-            }
+            Tile[,] tiles = GetTiles(x, y);
+
             bool flag = false;
-            if (type != 29 && Main.tile[x, y + 1].Active && Main.tile[x + 1, y + 1].Active && Main.tileSolid[(int)Main.tile[x, y + 1].type] && Main.tileSolid[(int)Main.tile[x + 1, y + 1].type] && !Main.tile[x, y].Active && !Main.tile[x + 1, y].Active)
+            if (type != 29 && tiles[1, 2].Active && tiles[2, 2].Active && Main.tileSolid[(int)tiles[1, 2].type]
+                && Main.tileSolid[(int)tiles[2, 2].type] && !tiles[1, 1].Active && !tiles[2, 1].Active)
             {
                 flag = true;
             }
-            else
+            else if (type == 29 && tiles[1, 2].Active && tiles[2, 2].Active && Main.tileTable[(int)tiles[1, 2].type]
+                && Main.tileTable[(int)tiles[2, 2].type] && !tiles[1, 1].Active && !tiles[2, 1].Active)
             {
-                if (type == 29 && Main.tile[x, y + 1].Active && Main.tile[x + 1, y + 1].Active && Main.tileTable[(int)Main.tile[x, y + 1].type] && Main.tileTable[(int)Main.tile[x + 1, y + 1].type] && !Main.tile[x, y].Active && !Main.tile[x + 1, y].Active)
-                {
-                    flag = true;
-                }
+                flag = true;
             }
+
             if (flag)
             {
-                Main.tile[x, y].Active = true;
-                Main.tile[x, y].frameY = 0;
-                Main.tile[x, y].frameX = 0;
-                Main.tile[x, y].type = (byte)type;
-                Main.tile[x + 1, y].Active = true;
-                Main.tile[x + 1, y].frameY = 0;
-                Main.tile[x + 1, y].frameX = 18;
-                Main.tile[x + 1, y].type = (byte)type;
+                tiles[1, 1].Active = true;
+                tiles[1, 1].frameY = 0;
+                tiles[1, 1].frameX = 0;
+                tiles[1, 1].type = (byte)type;
+                tiles[2, 1].Active = true;
+                tiles[2, 1].frameY = 0;
+                tiles[2, 1].frameX = 18;
+                tiles[2, 1].type = (byte)type;
             }
         }
         
@@ -9498,28 +9474,22 @@ namespace Terraria_Server
         {
             bool flag = true;
             int num = -1;
-            for (int i = x; i < x + 2; i++)
+            for (int modX = x; modX < x + 2; modX++)
             {
-                for (int j = y - 1; j < y + 1; j++)
+                for (int modY = y - 1; modY < y + 1; modY++)
                 {
-                    if (Main.tile[i, j] == null)
-                    {
-                        Main.tile[i, j] = new Tile();
-                    }
-                    if (Main.tile[i, j].Active)
-                    {
-                        flag = false;
-                    }
-                    if (Main.tile[i, j].lava)
+                    Tile tile = GetTile(modX, modY);
+                    if (tile.Active || tile.lava)
                     {
                         flag = false;
                     }
                 }
-                if (Main.tile[i, y + 1] == null)
+
+                if (Main.tile[modX, y + 1] == null)
                 {
-                    Main.tile[i, y + 1] = new Tile();
+                    Main.tile[modX, y + 1] = new Tile();
                 }
-                if (!Main.tile[i, y + 1].Active || !Main.tileSolid[(int)Main.tile[i, y + 1].type])
+                if (!Main.tile[modX, y + 1].Active || !Main.tileSolid[(int)Main.tile[modX, y + 1].type])
                 {
                     flag = false;
                 }
