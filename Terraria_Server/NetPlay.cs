@@ -48,6 +48,7 @@ namespace Terraria_Server
 			}
 		
 			Main.myPlayer = 255;
+			Main.players[255].whoAmi = 255;
 			Netplay.serverIP = IPAddress.Parse(serverSIP);
 			Netplay.serverListenIP = Netplay.serverIP;
 			Netplay.disconnect = false;

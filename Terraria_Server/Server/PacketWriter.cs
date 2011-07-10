@@ -9,12 +9,14 @@ namespace Terraria_Server
 	{
 		private Stream sink;
 		private BinaryWriter bin;
+		private TextWriter text;
 		private int lenAt;
 		
 		public PacketWriter (Stream stream)
 		{
 			sink = stream;
 			bin = new BinaryWriter (stream, Encoding.ASCII);
+			text = new StreamWriter (stream, Encoding.ASCII); 
 		}
 		
 		private void Begin ()
@@ -61,32 +63,57 @@ namespace Terraria_Server
 		
 		private void Short (short data)
 		{
+			//sink.Write (BitConverter.GetBytes(data), 0, 2);
 			bin.Write (data);
 		}
 
 		private void Short (int data)
 		{
-			bin.Write ((short) data);
+			Short ((short) data);
 		}
 
 		private void Int (int data)
 		{
+			//sink.Write (BitConverter.GetBytes(data), 0, 4);
 			bin.Write (data);
 		}
 		
 		private void Int (double data)
 		{
-			bin.Write ((int) data);
+			Int ((int) data);
 		}
-		
+
+#if UNSAFE
+		private unsafe void Float (float data)
+		{
+			var bytes = (byte*) &data;
+			sink.WriteByte (bytes[0]);
+			sink.WriteByte (bytes[1]);
+			sink.WriteByte (bytes[2]);
+			sink.WriteByte (bytes[3]);
+		}
+#else
 		private void Float (float data)
 		{
-			bin.Write (data);
+			sink.Write (BitConverter.GetBytes(data), 0, 4);
 		}
+#endif
 		
 		private void String (string data)
 		{
-			bin.Write (data);
+			//var buf = Encoding.ASCII.GetBytes(data ?? "");
+			//sink.Write (buf, 0, buf.Length);
+			
+			foreach (char c in data)
+			{
+				if (c < 128)
+					sink.WriteByte ((byte) c);
+				else
+					sink.WriteByte ((byte) '?');
+			}
+			
+			//text.Write (data);
+			//text.Flush ();
 		}
 		
 		public void ConnectionRequest (string version)
@@ -110,11 +137,13 @@ namespace Terraria_Server
 			Int (clientId);
 		}
 		
-		public void PlayerData (Player player)
+		public void PlayerData (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Begin (Packet.PLAYER_DATA);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 
 			Byte (player.hair);
 			Byte (player.hairColor.R);
@@ -151,17 +180,19 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void InventoryData (Player player, int invId, string text = "")
+		public void InventoryData (int playerId, int invId, string text = "")
 		{
+			var player = Main.players[playerId];
+			
 			Begin (Packet.INVENTORY_DATA);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Byte (invId);
 			
 			if (invId < 44)
 				Byte (Math.Max (0, player.inventory[invId].Stack));
 			else
-				Byte (Math.Max (0, player.armor[invId].Stack));
+				Byte (Math.Max (0, player.armor[invId - 44].Stack));
 				
 			String (text ?? "");
 			
@@ -289,19 +320,23 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void ReceivingPlayerJoined (Player player)
+		public void ReceivingPlayerJoined (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Begin (Packet.RECEIVING_PLAYER_JOINED);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Int (player.SpawnX);
 			Int (player.SpawnY);
 			
 			End ();
 		}
 		
-		public void PlayerStateUpdate (Player player)
+		public void PlayerStateUpdate (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Begin (Packet.PLAYER_STATE_UPDATE);
 			
 			byte flags = 0;
@@ -313,7 +348,7 @@ namespace Terraria_Server
 			if (player.controlUseItem) flags += 32;
 			if (player.direction == 1) flags += 64;
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Byte (flags);
 			Byte (player.selectedItemIndex);
 			
@@ -325,12 +360,12 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void SynchBegin (Player player, int foo)
+		public void SynchBegin (int foo, int bar)
 		{
 			Header (Packet.SYNCH_BEGIN, 2);
 			
-			Byte (player.whoAmi);
 			Byte (foo);
+			Byte (bar);
 		}
 		
 		public void UpdatePlayers ()
@@ -338,11 +373,13 @@ namespace Terraria_Server
 			Header (Packet.UPDATE_PLAYERS, 0);
 		}
 		
-		public void PlayerHealthUpdate (Player player)
+		public void PlayerHealthUpdate (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.PLAYER_HEALTH_UPDATE, 5);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Short (player.statLife);
 			Short (player.statLifeMax);
 		}
@@ -407,7 +444,10 @@ namespace Terraria_Server
 			
 			Byte (item.Stack);
 			
-			String (item.Name);
+			if (item.Active && item.Stack > 0)
+				String (item.Name ?? "0");
+			else
+				String ("0");
 			
 			End ();
 		}
@@ -422,11 +462,13 @@ namespace Terraria_Server
 			Byte (item.Owner);
 		}
 		
-		public void NPCInfo (NPC npc)
+		public void NPCInfo (int npcId)
 		{
+			var npc = Main.npcs[npcId];
+			
 			Begin (Packet.NPC_INFO);
 			
-			Short (npc.whoAmI);
+			Short (npcId);
 			
 			Float (npc.Position.X);
 			Float (npc.Position.Y);
@@ -451,33 +493,33 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void StrikeNPC (NPC npc, Player player)
+		public void StrikeNPC (int npcId, int playerId)
 		{
 			Header (Packet.STRIKE_NPC, 3);
 			
-			Short (npc.whoAmI);
-			Byte (player.whoAmi);
+			Short (npcId);
+			Byte (playerId);
 		}
 		
-		public void PlayerChat (Player player, string text, Color color)
+		public void PlayerChat (int playerId, string text, int r, int g, int b)
 		{
 			Begin (Packet.PLAYER_CHAT);
 			
-			Byte (player.whoAmi);
-			Byte (color.R);
-			Byte (color.G);
-			Byte (color.B);
+			Byte (playerId);
+			Byte (r);
+			Byte (g);
+			Byte (b);
 			
 			String (text);
 			
 			End ();
 		}
 		
-		public void StrikePlayer (Player victim, string deathText, int direction, int damage, int pvpFlag)
+		public void StrikePlayer (int victimId, string deathText, int direction, int damage, int pvpFlag)
 		{
 			Begin (Packet.STRIKE_PLAYER);
 			
-			Byte (victim.whoAmi);
+			Byte (victimId);
 			Byte (direction + 1);
 			Short (damage);
 			Byte (pvpFlag);
@@ -510,11 +552,11 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void DamageNPC (NPC npc, int damage, float knockback, int direction)
+		public void DamageNPC (int npcId, int damage, float knockback, int direction)
 		{
 			Header (Packet.DAMAGE_NPC, 9);
 			
-			Short (npc.whoAmI);
+			Short (npcId);
 			Short (damage);
 			
 			Float (knockback);
@@ -530,11 +572,13 @@ namespace Terraria_Server
 			Byte (proj.Owner);
 		}
 		
-		public void PlayerPVPChange (Player player)
+		public void PlayerPVPChange (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.PLAYER_PVP_CHANGE, 2);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Byte (player.hostile);
 		}
 		
@@ -579,19 +623,26 @@ namespace Terraria_Server
 			}
 		}
 		
-		public void HealPlayer (Player player, int amount)
+		public void KillTile ()
+		{
+			throw new NotImplementedException ("PacketWriter.KillTile()");
+		}
+		
+		public void HealPlayer (int playerId, int amount)
 		{
 			Header (Packet.HEAL_PLAYER, 3);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Short (amount);
 		}
 		
-		public void EnterZone (Player player)
+		public void EnterZone (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.ENTER_ZONE, 5);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			
 			Byte (player.zoneEvil);
 			Byte (player.zoneMeteor);
@@ -616,45 +667,51 @@ namespace Terraria_Server
 			Short (itemId);
 		}
 		
-		public void NPCTalk (Player player)
+		public void NPCTalk (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.NPC_TALK, 3);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Short (player.talkNPC);
 		}
 		
-		public void PlayerBallswing (Player player)
+		public void PlayerBallswing (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.PLAYER_BALLSWING, 7);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Float (player.itemRotation);
 			Short (player.itemAnimation);
 		}
 		
-		public void PlayerManaUpdate (Player player)
+		public void PlayerManaUpdate (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.PLAYER_MANA_UPDATE, 5);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Short (player.statMana);
 			Short (player.statManaMax);
 		}
 		
-		public void PlayerUseManaUpdate (Player player, int amount)
+		public void PlayerUseManaUpdate (int playerId, int amount)
 		{
 			Header (Packet.PLAYER_USE_MANA_UPDATE, 3);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Short (amount);
 		}
 		
-		public void KillPlayerPVP (Player victim, string deathText, int direction, int damage, int pvpFlag)
+		public void KillPlayerPVP (int victimId, string deathText, int direction, int damage, int pvpFlag)
 		{
 			Begin (Packet.KILL_PLAYER_PVP);
 			
-			Byte (victim.whoAmi);
+			Byte (victimId);
 			Byte (direction + 1);
 			Short (damage);
 			Byte (pvpFlag);
@@ -664,11 +721,13 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void PlayerJoinParty (Player player)
+		public void PlayerJoinParty (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.PLAYER_JOIN_PARTY, 2);
 			
-			Byte (player.whoAmi);
+			Byte (playerId);
 			Byte (player.team);
 		}
 		
@@ -712,11 +771,13 @@ namespace Terraria_Server
 			Header (Packet.SEND_SPAWN, 0);
 		}
 		
-		public void PlayerBuffs (Player player)
+		public void PlayerBuffs (int playerId)
 		{
+			var player = Main.players[playerId];
+			
 			Header (Packet.PLAYER_BUFFS, 11);
 		
-			Byte (player.whoAmi);
+			Byte (playerId);
 			
 			for (int i = 0; i < 10; i++)
 			{

@@ -1,9 +1,11 @@
 using System;
 using System.Text;
+using System.IO;
 
 using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Messages;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server
 {
@@ -15,6 +17,32 @@ namespace Terraria_Server
         {
             Netplay.slots[plr].Kick (msg);
         }
+		
+		private class PacketWriterContext
+		{
+			public PacketWriter writer;
+			public byte[]       buffer;
+			public MemoryStream stream;
+		}
+		
+		[ThreadStatic]
+		private static PacketWriterContext tsCtx;
+		private static PacketWriterContext InitializePacketWriter ()
+		{
+			if (tsCtx == null)
+			{
+				tsCtx = new PacketWriterContext ();
+				tsCtx.buffer = new byte [65535];
+				tsCtx.stream = new MemoryStream (tsCtx.buffer);
+				tsCtx.writer = new PacketWriter (tsCtx.stream);
+			}
+			else
+			{
+			    tsCtx.stream.Position = 0;
+			}
+			
+			return tsCtx;
+		}  
 
         public static void SendData(int packetId, int remoteClient = -1, int ignoreClient = -1, String text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
         {
@@ -25,7 +53,309 @@ namespace Terraria_Server
                 {
                     num = remoteClient;
                 }
-                lock (NetMessage.buffer[num])
+                //lock (NetMessage.buffer[num])
+                //    OldSendData (packetId, remoteClient, ignoreClient, text, number, number2, number3, number4, number5);
+                //return;
+
+                {
+                    int num2 = 5;
+                    int num3 = num2;
+                    
+                    var ts = InitializePacketWriter ();
+                    var make = ts.writer;
+
+                    switch (packetId)
+                    {
+                        case (int)Packet.CONNECTION_REQUEST:
+                            make.ConnectionRequest (Statics.CURRENT_TERRARIA_RELEASE_STR);
+                            break;
+
+                        case (int)Packet.DISCONNECT:
+                            make.Disconnect (text);
+                            break;
+                            
+                        case (int)Packet.CONNECTION_RESPONSE:
+                            make.ConnectionResponse (remoteClient);
+                            break;
+
+                        case (int)Packet.PLAYER_DATA:
+                            make.PlayerData (number);
+                            break;
+                            
+                        case (int)Packet.INVENTORY_DATA:
+                            make.InventoryData (number, (byte)number2, text);
+                            break;
+                            
+                        case (int)Packet.WORLD_REQUEST:
+                            make.WorldRequest ();
+                            break;
+                            
+                        case (int)Packet.WORLD_DATA:
+                            make.WorldData ();
+                            break;
+                            
+                        case (int)Packet.REQUEST_TILE_BLOCK:
+                            make.RequestTileBlock ();
+                            break;
+                            
+                        case (int)Packet.SEND_TILE_LOADING:
+                            make.SendTileLoading (number, text);
+                            break;
+                            
+                        case (int)Packet.SEND_TILE_ROW:
+                            make.SendTileRow (number, (int)number2, (int)number3);
+                            break;
+                            
+                        case (int)Packet.SEND_TILE_CONFIRM:
+                            make.SendTileConfirm (number, (int)number2, (int)number3, (int)number4);
+                            break;
+                            
+                        case (int)Packet.RECEIVING_PLAYER_JOINED:
+                            make.ReceivingPlayerJoined (number);
+                            break;
+                            
+                        case (int)Packet.PLAYER_STATE_UPDATE:
+                            make.PlayerStateUpdate (number);
+                            break;
+                            
+                        case (int)Packet.SYNCH_BEGIN:
+                            make.SynchBegin (number, (int)number2);
+                            break;
+                            
+                        case (int)Packet.UPDATE_PLAYERS:
+                            make.UpdatePlayers ();
+                            break;
+                            
+                        case (int)Packet.PLAYER_HEALTH_UPDATE:
+                            make.PlayerHealthUpdate (number);
+                            break;
+                            
+                        case (int)Packet.TILE_BREAK:
+                            make.TileBreak (number, (int)number2, (int)number3, (int)number4, (int)number5);
+                            break;
+                            
+                        case (int)Packet.TIME_SUN_MOON_UPDATE:
+                            make.TimeSunMoonUpdate ();
+                            break;
+                            
+                        case (int)Packet.DOOR_UPDATE:
+                            make.DoorUpdate (number, (int)number2, (int)number3, (int)number4);
+                            break;
+                            
+                        case (int)Packet.TILE_SQUARE:
+                            make.TileSquare (number, (int)number2, (int)number3);
+                            break;
+                            
+                        case (int)Packet.ITEM_INFO:
+                            make.ItemInfo (number);
+                            break;
+                            
+                        case (int)Packet.ITEM_OWNER_INFO:
+                            make.ItemOwnerInfo (number);
+                            break;
+                            
+                        case (int)Packet.NPC_INFO:
+                            make.NPCInfo (number);
+                            break;
+                            
+                        case (int)Packet.STRIKE_NPC:
+                            make.StrikeNPC (number, (int)number2);
+                            break;
+                            
+                        case (int)Packet.PLAYER_CHAT:
+                            make.PlayerChat (number, text, (byte)number2, (byte)number3, (byte)number4);
+                            break;
+                            
+                        case (int)Packet.STRIKE_PLAYER:
+                            make.StrikePlayer (number, text, (int)number2, (int)number3, (int)number4);
+                            break;
+                            
+                        case (int)Packet.PROJECTILE:
+                            make.Projectile (Main.projectile[number]);
+                            break;
+
+                        case (int)Packet.DAMAGE_NPC:
+                            make.DamageNPC (number, (int)number2, number3, (int)number4);
+                            break;
+
+                        case (int)Packet.KILL_PROJECTILE:
+                            make.KillProjectile (Main.projectile[number]);
+                            break;
+                            
+                        case (int)Packet.PLAYER_PVP_CHANGE:
+                            make.PlayerPVPChange (number);
+                            break;
+
+                        case (int)Packet.OPEN_CHEST:
+                            make.OpenChest ();
+                            break;
+                            
+                        case (int)Packet.CHEST_ITEM:
+                            make.ChestItem (number, (int)number2);
+                            break;
+                            
+                        case (int)Packet.PLAYER_CHEST_UPDATE:
+                            make.PlayerChestUpdate (number);
+                            break;
+
+                        case (int)Packet.KILL_TILE:
+                            make.KillTile ();
+                            break;
+                            
+                        case (int)Packet.HEAL_PLAYER:
+                            make.HealPlayer (number, (int)number2);
+                            break;
+                            
+                        case (int)Packet.ENTER_ZONE:
+                            make.EnterZone (number);
+                            break;
+                            
+                        case (int)Packet.PASSWORD_REQUEST:
+                            make.PasswordRequest ();
+                            break;
+                            
+                        case (int)Packet.PASSWORD_RESPONSE:
+                            make.PasswordResponse ();
+                            break;
+                            
+                        case (int)Packet.ITEM_OWNER_UPDATE:
+                            make.ItemOwnerUpdate (number);
+                            break;
+                            
+                        case (int)Packet.NPC_TALK:
+                            make.NPCTalk (number);
+                            break;
+
+                        case (int)Packet.PLAYER_BALLSWING:
+                            make.PlayerBallswing (number);
+                            break;
+                            
+                        case (int)Packet.PLAYER_MANA_UPDATE:
+                            make.PlayerManaUpdate (number);
+                            break;
+                            
+                        case (int)Packet.PLAYER_USE_MANA_UPDATE:
+                            make.PlayerUseManaUpdate (number, (int)number2);
+                            break;
+                            
+                        case (int)Packet.KILL_PLAYER_PVP:
+                            make.KillPlayerPVP (number, text, (int)number2, (int)number3, (int)number4);
+                            break;
+                            
+                        case (int)Packet.PLAYER_JOIN_PARTY:
+                            make.PlayerJoinParty (number);
+                            break;
+                            
+                        case (int)Packet.READ_SIGN:
+                            make.ReadSign (number, (int)number2);
+                            break;
+                            
+                        case (int)Packet.WRITE_SIGN:
+                            make.WriteSign (number);
+                            break;
+                            
+                        case (int)Packet.FLOW_LIQUID:
+                            make.FlowLiquid (number, (int)number2);
+                            break;
+                            
+                        case (int)Packet.SEND_SPAWN:
+                            make.SendSpawn ();
+                            break;
+                            
+                        case (int)Packet.PLAYER_BUFFS:
+                            make.PlayerBuffs (number);
+                            break;
+                            
+                        case (int)Packet.SUMMON_SKELETRON:
+                            make.SummonSkeletron ();
+                            break;
+                            
+                        default:
+                            {
+                                //Unknown packet :3
+                                return;
+                            }
+                    }
+
+#if FALSE
+					//if (packetId != 36 && packetId != 27)
+					{
+					lock (NetMessage.buffer[num])
+					{
+                    var old = OldSendData (packetId, remoteClient, ignoreClient, text, number, number2, number3, number4, number5);
+                    bool same = true; //num2 != ts.stream.Position;
+                    
+                    for (int i = 4; i < Math.Min (old, ts.stream.Position); i++)
+                    {
+                        if (NetMessage.buffer[num].writeBuffer[i] != ts.buffer[i])
+                        {
+                            same = false;
+                            break;
+                        }
+                    }
+                    if (!same)
+                    {
+                        Console.WriteLine ("{6}: {0}, {1}, {2}, {3}, {4}, {5}", text, number, number2, number3, number4, number5, packetId);
+                        Console.Error.Write ("Old: ");
+                        for (int i = 0; i < old; i++)
+                        {
+                            Console.Error.Write ("{0},", NetMessage.buffer[num].writeBuffer[i]);
+                        }
+						
+						Console.Error.Write ("\nNew: ");
+                        for (int i = 0; i < ts.stream.Position; i++)
+                        {
+                            Console.Error.Write ("{0},", ts.buffer[i]);
+                        }
+                        
+                        Console.Error.WriteLine ("");
+                    }
+                    }
+                    return;
+                    }
+#endif
+                    if (remoteClient == -1)
+                    {
+                        var len = (int)ts.stream.Position;
+                        var copy = new byte [len];
+                        Array.Copy (ts.buffer, copy, len);
+                        
+                        for (int num11 = 0; num11 < 256; num11++)
+                        {
+                            if (num11 != ignoreClient && (NetMessage.buffer[num11].broadcast || (Netplay.slots[num11].state >= SlotState.PLAYING && packetId == 10)) && Netplay.slots[num11].Connected)
+                            {
+                                NetMessage.buffer[num11].spamCount++;
+                                Netplay.slots[num11].Send (copy);
+                            }
+                        }
+                        
+                    }
+                    else if (Netplay.slots[remoteClient].Connected)
+                    {
+                        NetMessage.buffer[remoteClient].spamCount++;
+                        Netplay.slots[remoteClient].Send (ts.buffer, 0, (int)ts.stream.Position);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Program.tConsole.WriteLine("Issue sending Data - NetMessage Error!");
+                Program.tConsole.WriteLine(e.Message);
+                Program.tConsole.WriteLine(e.StackTrace);
+            }
+			
+		}
+		
+        public static int OldSendData(int packetId, int remoteClient = -1, int ignoreClient = -1, String text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
+        {
+            try
+            {
+                int num = 256;
+                if (remoteClient >= 0)
+                {
+                    num = remoteClient;
+                }
+                //lock (NetMessage.buffer[num])
                 {
                     int num2 = 5;
                     int num3 = num2;
@@ -705,7 +1035,7 @@ namespace Terraria_Server
                                 byte[] bytes106 = BitConverter.GetBytes((short)Main.npcs[number].life);
                                 if (!Main.npcs[number].Active)
                                 {
-                                    bytes106 = BitConverter.GetBytes(0);
+                                    bytes106 = BitConverter.GetBytes((short) 0);
                                 }
                                 byte[] bytes107 = Encoding.ASCII.GetBytes(Main.npcs[number].Name);
                                 num2 += bytes100.Length + bytes101.Length + bytes102.Length + bytes103.Length + bytes104.Length + bytes105.Length + bytes106.Length + NPC.MAX_AI * 4 + bytes107.Length + 1 + 1;
@@ -974,7 +1304,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes154, 0, NetMessage.buffer[num].writeBuffer, num3, bytes154.Length);
                                 break;
                             }
-                        case (int)Packet.HEAL_PLAYER:
+                        case 35:
                             {
                                 byte[] bytes156 = BitConverter.GetBytes(packetId);
                                 byte b41 = (byte)number;
@@ -988,7 +1318,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes157, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
                                 break;
                             }
-                        case (int)Packet.ENTER_ZONE:
+                        case 36:
                             {
                                 byte[] bytes159 = BitConverter.GetBytes(packetId);
                                 byte b42 = (byte)number;
@@ -1107,7 +1437,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes179, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
                                 break;
                             }
-                        case (int)Packet.PLAYER_USE_MANA_UPDATE:
+                        case 43:
                             {
                                 byte[] bytes181 = BitConverter.GetBytes(packetId);
                                 byte b51 = (byte)number;
@@ -1121,7 +1451,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes182, 0, NetMessage.buffer[num].writeBuffer, num3, 2);
                                 break;
                             }
-                        case (int)Packet.KILL_PLAYER_PVP:
+                        case 44:
                             {
                                 byte[] bytes184 = BitConverter.GetBytes(packetId);
                                 byte b52 = (byte)number;
@@ -1145,7 +1475,7 @@ namespace Terraria_Server
                                 num3 += bytes186.Length;
                                 break;
                             }
-                        case (int)Packet.PLAYER_JOIN_PARTY:
+                        case 45:
                             {
                                 byte[] bytes188 = BitConverter.GetBytes(packetId);
                                 byte b55 = (byte)number;
@@ -1159,7 +1489,7 @@ namespace Terraria_Server
                                 NetMessage.buffer[num].writeBuffer[num3] = b56;
                                 break;
                             }
-                        case (int)Packet.READ_SIGN:
+                        case 46:
                             {
                                 byte[] bytes188 = BitConverter.GetBytes(packetId);
                                 byte[] bytes189 = BitConverter.GetBytes(number);
@@ -1173,7 +1503,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes190, 0, NetMessage.buffer[num].writeBuffer, num3, bytes190.Length);
                                 break;
                             }
-                        case (int)Packet.WRITE_SIGN:
+                        case 47:
                             {
                                 byte[] bytes194 = BitConverter.GetBytes(packetId);
                                 byte[] bytes195 = BitConverter.GetBytes((short)number);
@@ -1194,7 +1524,7 @@ namespace Terraria_Server
                                 num3 += bytes198.Length;
                                 break;
                             }
-                        case (int)Packet.FLOW_LIQUID:
+                        case 48:
                             {
                                 byte[] bytes200 = BitConverter.GetBytes(packetId);
                                 byte[] bytes201 = BitConverter.GetBytes(number);
@@ -1227,7 +1557,7 @@ namespace Terraria_Server
                                 Buffer.BlockCopy(bytes202, 0, NetMessage.buffer[num].writeBuffer, 4, 1);
                                 break;
                             }
-                        case (int)Packet.PLAYER_BUFFS:
+                        case 50:
                             {
                                 byte[] bytes206 = BitConverter.GetBytes(packetId);
                                 byte b58 = (byte)number;
@@ -1244,7 +1574,7 @@ namespace Terraria_Server
                                 }
                                 break;
                             }
-                        case (int)Packet.SUMMON_SKELETRON:
+                        case 51:
                             {
                                 byte[] bytes208 = BitConverter.GetBytes(packetId);
                                 num2++;
@@ -1258,22 +1588,12 @@ namespace Terraria_Server
                         default:
                             {
                                 //Unknown packet :3
-                                return;
+                                return 0;
                             }
                     }
-                    
+
                     goto IL_329C;
-                    
-                IL_33DC:
-                    if (Main.verboseNetplay)
-                    {
-                        for (int num10 = 0; num10 < num2; num10++)
-                        {
-                            byte arg_3413_0 = NetMessage.buffer[num].writeBuffer[num10];
-                        }
-                        goto IL_3425;
-                    }
-                    goto IL_3425;
+
                 IL_329C:
                     if (remoteClient == -1)
                     {
@@ -1329,8 +1649,12 @@ namespace Terraria_Server
                     }
                     goto IL_33DC;
                 IL_3425:
-                    var placeholder = 0;
+                    {
+                    }
+                IL_33DC:
+                    return num2;
                 }
+                
             }
             catch (Exception e)
             {
@@ -1338,8 +1662,10 @@ namespace Terraria_Server
                 Program.tConsole.WriteLine(e.Message);
                 Program.tConsole.WriteLine(e.StackTrace);
             }
+            return 0;
 			
 		}
+
 		
 		public static void CheckBytes(int i = 256)
 		{
@@ -1407,6 +1733,9 @@ namespace Terraria_Server
 		{
 			try
 			{
+				var ts = InitializePacketWriter ();
+				var pkt = ts.writer;
+
 				if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
 				{
 					Netplay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
@@ -1414,9 +1743,16 @@ namespace Terraria_Server
 					int num2 = sectionY * 150;
 					for (int i = num2; i < num2 + 150; i++)
 					{
-						NetMessage.SendData(10, whoAmi, -1, "", 200, (float)num, (float)i, 0f);
+						//NetMessage.SendData(10, whoAmi, -1, "", 200, (float)num, (float)i, 0f);
+						ts.stream.Position = 0;
+						pkt.SendTileRow (200, num, i);
+						Netplay.slots[whoAmi].Send (ts.buffer, 0, (int)ts.stream.Position);
 					}
+					
+					//Console.WriteLine ("SendSection: {0} bytes", ts.stream.Position);
+					//Netplay.slots[whoAmi].Send (ts.buffer, 0, (int)ts.stream.Position);
 				}
+				
 			}
 			catch
 			{
@@ -1499,33 +1835,35 @@ namespace Terraria_Server
 							flag = true;
 						}
 					}
-                    NetMessage.SendData(14, -1, i, "", i, (float)num, 0f, 0f, 0);
-                    NetMessage.SendData(13, -1, i, "", i, 0f, 0f, 0f, 0);
-                    NetMessage.SendData(16, -1, i, "", i, 0f, 0f, 0f, 0);
-                    NetMessage.SendData(30, -1, i, "", i, 0f, 0f, 0f, 0);
-                    NetMessage.SendData(45, -1, i, "", i, 0f, 0f, 0f, 0);
-                    NetMessage.SendData(42, -1, i, "", i, 0f, 0f, 0f, 0);
-                    NetMessage.SendData(50, -1, i, "", i, 0f, 0f, 0f, 0);
-                    NetMessage.SendData(4, -1, i, Main.players[i].Name, i, 0f, 0f, 0f, 0);
-                    for (int k = 0; k < 44; k++)
-                    {
-                        NetMessage.SendData(5, -1, i, Main.players[i].inventory[k].Name, i, (float)k, 0f, 0f, 0);
-                    }
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[0].Name, i, 44f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[1].Name, i, 45f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[2].Name, i, 46f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[3].Name, i, 47f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[4].Name, i, 48f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[5].Name, i, 49f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[6].Name, i, 50f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[7].Name, i, 51f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[8].Name, i, 52f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[9].Name, i, 53f, 0f, 0f, 0);
-                    NetMessage.SendData(5, -1, i, Main.players[i].armor[10].Name, i, 54f, 0f, 0f, 0);
-                    if (!Netplay.slots[i].announced)
+
+					var ts = InitializePacketWriter ();
+					var pkt = ts.writer;
+					
+					pkt.SynchBegin (i, num);
+					pkt.PlayerStateUpdate (i);
+					pkt.PlayerHealthUpdate (i);
+					pkt.PlayerPVPChange (i);
+					pkt.PlayerJoinParty (i);
+					pkt.PlayerManaUpdate (i);
+					pkt.PlayerBuffs (i);
+					pkt.PlayerData (i);
+					
+					for (int k = 0; k < 44; k++)
 					{
+						pkt.InventoryData (i, k, Main.players[i].inventory[k].Name);
+					}
+					
+					for (int k = 0; k < 11; k++)
+					{
+						pkt.InventoryData (i, k+44, Main.players[i].armor[k].Name);
+					}
+					
+					if (!Netplay.slots[i].announced)
+					{
+						pkt.PlayerChat (255, Main.players[i].Name + " has joined.", 255, 240, 20);
+						
 						Netplay.slots[i].announced = true;
-						NetMessage.SendData(25, -1, i, Main.players[i].Name + " has joined.", 255, 255f, 240f, 20f);
+						
 						if (Main.dedServ)
 						{
 							Program.tConsole.WriteLine(Main.players[i].Name + " has joined.");
@@ -1536,6 +1874,19 @@ namespace Terraria_Server
                             Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_LOGIN, Event);
 						}
 					}
+					
+					var copy = new byte [ts.stream.Position];
+					Array.Copy (ts.buffer, copy, ts.stream.Position);
+					
+                    for (int k = 0; k < 256; k++)
+                    {
+                        if (k != i && (NetMessage.buffer[k].broadcast) && Netplay.slots[k].Connected)
+                        {
+                            NetMessage.buffer[k].spamCount++;
+                            Netplay.slots[k].Send (copy);
+                        }
+                    }
+
 				}
 				else
 				{

@@ -690,7 +690,7 @@ namespace Terraria_Server
                                         npc.ai[1] = 10f;
                                     }
                                     WorldGen.KillTile(num4, num5 - 1, true, false, false);
-                                    if ((!flag3) && flag3)
+                                    if (flag3)
                                     {
                                         if (npc.Type == 26)
                                         {

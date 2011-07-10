@@ -187,20 +187,44 @@ namespace Terraria_Server
 				throw new ArgumentException ("Data to send cannot be null");
 			}
 	
-			if (writeThread == null)
-			{
-				writeThread = new Thread (this.WriteThread);
-				writeThread.IsBackground = true;
-				writeThread.Start ();
-			}
-			
 			lock (writeQueue)
 			{
+				if (writeThread == null)
+				{
+					writeThread = new Thread (this.WriteThread);
+					writeThread.IsBackground = true;
+					writeThread.Start ();
+				}
+
 				writeQueue.Enqueue (data);
 			}
 			writeSignal.Set ();
 		}
-		
+
+		public void Send (byte[] data, int offset, int length)
+		{
+			if (data == null)
+			{
+				throw new ArgumentException ("Data to send cannot be null");
+			}
+			
+			var copy = new byte [length];
+			Array.Copy (data, offset, copy, 0, length);
+	
+			lock (writeQueue)
+			{
+				if (writeThread == null)
+				{
+					writeThread = new Thread (this.WriteThread);
+					writeThread.IsBackground = true;
+					writeThread.Start ();
+				}
+
+				writeQueue.Enqueue (copy);
+			}
+			writeSignal.Set ();
+		}
+
 		const int WRITE_THREAD_BATCH_SIZE = 32;
 		internal void WriteThread ()
 		{
