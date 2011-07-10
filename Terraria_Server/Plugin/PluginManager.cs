@@ -313,6 +313,11 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerKeyPress((PlayerKeyPressEvent)hookEvent);
                                     break;
                                 }
+                            case Hooks.PLAYER_PVPCHANGE:
+                                {
+                                    plugin.onPlayerPvPChange((PlayerPvPChangeEvent)hookEvent);
+                                    break;
+                                }
                         }
                     }
                 }

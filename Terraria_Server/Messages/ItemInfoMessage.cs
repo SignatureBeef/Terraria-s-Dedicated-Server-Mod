@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages
 {
@@ -45,17 +46,15 @@ namespace Terraria_Server.Messages
             }
             else
             {
-                bool isNewItem = false;
-                if (itemIndex == 200)
+                bool isNewItem = (itemIndex == 200);
+                if(isNewItem)
                 {
-                    isNewItem = true;
-                    Item newItem = new Item();
-                    newItem.SetDefaults(String4);
+                    Item newItem = Registries.Item.Create(String4);
                     itemIndex = (short)Item.NewItem((int)num39, (int)num40, newItem.Width, newItem.Height, newItem.Type, (int)stackSize, true);
-                    item = Main.item[(int)itemIndex];
                 }
 
-                item.SetDefaults(String4);
+                Main.item[(int)itemIndex] = Registries.Item.Create(String4);
+                item = Main.item[(int)itemIndex];
                 item.Stack = (int)stackSize;
                 item.Position.X = num39;
                 item.Position.Y = num40;

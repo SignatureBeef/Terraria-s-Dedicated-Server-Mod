@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using Terraria_Server.Shops;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages
 {
@@ -29,14 +30,7 @@ namespace Terraria_Server.Messages
             {
                 Main.chest[chestIndex] = new Chest();
             }
-            
-            if (Main.chest[chestIndex].contents[contentsIndex] == null)
-            {
-                Main.chest[chestIndex].contents[contentsIndex] = new Item();
-            }
-
-            Main.chest[chestIndex].contents[contentsIndex].SetDefaults(String8);
-            Main.chest[chestIndex].contents[contentsIndex].Stack = stackSize;
+            Main.chest[chestIndex].contents[contentsIndex] = Registries.Item.Create(String8, stackSize);
         }
     }
 }

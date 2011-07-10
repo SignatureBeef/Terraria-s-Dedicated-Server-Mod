@@ -1,4 +1,5 @@
 ﻿
+using Terraria_Server.Collections;
 namespace Terraria_Server.Shops
 {
     public class DemolitionistShop : Shop
@@ -6,9 +7,9 @@ namespace Terraria_Server.Shops
         protected override void Setup()
         {
             int i = 0;
-            contents[i++].SetDefaults("Grenade");
-            contents[i++].SetDefaults("Bomb");
-            contents[i].SetDefaults("Dynamite");
+            contents[i++] = Registries.Item.Create(168);
+            contents[i++] = Registries.Item.Create(166);
+            contents[i] = Registries.Item.Create(167);
         }
     }
 }

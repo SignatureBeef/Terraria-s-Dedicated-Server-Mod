@@ -115,12 +115,14 @@
   <ItemGroup>
     <Compile Include="Definitions\ProjectileType.cs" />
     <Compile Include="Collections\IRegisterableEntity.cs" />
-    <Compile Include="Collections\NPCRegistry.cs" />
+    <Compile Include="Collections\ItemRegistry.cs" />
+    <Compile Include="Collections\Registries.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Events\NPCSpawnEvent.cs" />
     <Compile Include="Events\PlayerKeyPressEvent.cs" />
     <Compile Include="Events\PlayerMoveEvent.cs" />
+    <Compile Include="Events\PlayerPvPChangeEvent.cs" />
     <Compile Include="Events\PlayerTeleportEvent.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
@@ -198,13 +200,11 @@
     <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Commands.cs" />
     <Compile Include="Commands\CommandParser.cs" />
-    <Compile Include="Dust.cs" />
     <Compile Include="Events\ConsoleCommandEvent.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\PlayerHurtEvent.cs" />
     <Compile Include="Events\PlayerStateUpdateEvent.cs" />
     <Compile Include="Events\PlayerTileChangeEvent.cs" />
-    <Compile Include="Gore.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />
@@ -266,7 +266,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Definitions\NPCs.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Definitions\Items.xml" />
+    <EmbeddedResource Include="Definitions\ItemsByName.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Definitions\Projectiles.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

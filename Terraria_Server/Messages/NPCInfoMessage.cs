@@ -49,7 +49,7 @@ namespace Terraria_Server.Messages
             NPC npc = Main.npcs[(int)npcIndex];
             if (!npc.Active || npc.Name != npcName)
             {
-                npc = NPCRegistry.Create(npcName);
+                npc = Registries.NPC.Create(npcName);
                 Main.npcs[(int)npcIndex] = npc;
             }
 

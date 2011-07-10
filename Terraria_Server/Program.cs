@@ -31,16 +31,6 @@ namespace Terraria_Server
 
                 Console.WriteLine("Initializing " + MODInfo);
 
-                if (!System.IO.File.Exists(Statics.NPCXmlPath))
-                {
-                    Assembly assembly = Assembly.GetExecutingAssembly();
-                    Stream xmlStream = assembly.GetManifestResourceStream("Terraria_Server.Definitions.NPCs.xml");
-                    XmlDocument xmlDoc = new XmlDocument();
-                    xmlDoc.Load(xmlStream);
-                    xmlDoc.PreserveWhitespace = true;
-                    xmlDoc.Save(Statics.NPCXmlPath);	
-                }
-
                 Console.WriteLine("Until this notice is gone, Please make sure the 3.5 framework is supported on this System.");
 
                 if (args != null && args.Length > 0)
@@ -78,7 +68,7 @@ namespace Terraria_Server
                 }
 
 
-//#if (DEBUG == false)
+#if (DEBUG == false) //I'll comment this for each release, Updates are annoying when testing :3
                 try
                 {
                     if (UpdateManager.performProcess())
@@ -92,7 +82,7 @@ namespace Terraria_Server
                     Program.tConsole.WriteLine("Error updating!");
                     Program.tConsole.WriteLine(e.Message);
                 }
-//#endif
+#endif
 
                 Statics.debugMode = properties.DebugMode;
                 if (Statics.debugMode)

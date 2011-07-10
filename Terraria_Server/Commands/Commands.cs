@@ -642,8 +642,7 @@ namespace Terraria_Server.Commands
                     Item[] items = new Item[Main.maxItemTypes];
                     for (int i = 0; i < Main.maxItemTypes; i++)
                     {
-                        items[i] = new Item();
-                        items[i].SetDefaults(i);
+                        items[i] = Registries.Item.Create(i);
                     }
 
                     Item item = null;
@@ -764,7 +763,7 @@ namespace Terraria_Server.Commands
                     NPC[] npcs = new NPC[Main.maxItemTypes];
                     for (int i = 0; i < Main.maxItemTypes; i++)
                     {
-                        npcs[i] = NPCRegistry.Create(i);
+                        npcs[i] = Registries.NPC.Create(i);
                     }
 
                     int npcType = -1;

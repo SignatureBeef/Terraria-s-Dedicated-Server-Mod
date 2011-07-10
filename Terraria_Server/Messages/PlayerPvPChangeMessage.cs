@@ -1,4 +1,6 @@
 ﻿using System;
+using Terraria_Server.Plugin;
+using Terraria_Server.Events;
 
 namespace Terraria_Server.Messages
 {
@@ -18,10 +20,19 @@ namespace Terraria_Server.Messages
         {
             int playerIndex = whoAmI;
 
-            Player player = Main.players[playerIndex];
+            Player player = (Player)Main.players[playerIndex].Clone();
             player.hostile = (readBuffer[num] == 1);
 
-            
+            PlayerPvPChangeEvent playerEvent = new PlayerPvPChangeEvent();
+            playerEvent.Sender = player;
+            Program.server.getPluginManager().processHook(Hooks.PLAYER_PVPCHANGE, playerEvent);
+            if (playerEvent.Cancelled)
+            {
+                return;
+            }
+
+            Main.players[playerIndex] = player;
+
             NetMessage.SendData(30, -1, whoAmI, "", playerIndex);
 
             String message;
