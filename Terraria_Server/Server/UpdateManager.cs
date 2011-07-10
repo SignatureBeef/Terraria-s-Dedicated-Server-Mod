@@ -7,8 +7,8 @@ namespace Terraria_Server
     public class UpdateManager
     {
         public static String UpdateList = "http://update.tdsm.org/updatelist.txt";
-        public static String UpdateLink = "http://kangaroo.olympus-gaming.net/Terraria_Server.exe"; // <3 Olympus Gaming! Check em out some time ;)
-        public static String UpdateInfo = "http://kangaroo.olympus-gaming.net/buildinfo.txt";
+        public static String UpdateLink = "http://update.tdsm.org/Terraria_Server.exe"; // <3 Olympus Gaming! Check em out some time ;)
+        public static String UpdateInfo = "http://update.tdsm.org/buildinfo.txt";
 
         public static void printUpdateInfo()
         {

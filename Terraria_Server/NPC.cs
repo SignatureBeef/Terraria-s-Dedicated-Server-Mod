@@ -7461,6 +7461,8 @@ namespace Terraria_Server
             cloned.width = (int)((float)cloned.width * cloned.scale);
             cloned.height = (int)((float)cloned.height * cloned.scale);
             cloned.life = cloned.lifeMax;
+            cloned.ai = new float[NPC.MAX_AI];
+            Array.Copy(ai, cloned.ai, NPC.MAX_AI);
             return cloned;
         }
     }
