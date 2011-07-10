@@ -163,34 +163,6 @@ namespace Terraria_Server
                             if (this.WetCount == 0)
                             {
                                 this.WetCount = 20;
-                                if (!flag)
-                                {
-                                    for (int j = 0; j < 10; j++)
-                                    {
-                                        int num3 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.Height / 2) - 8f), this.Width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
-                                        Dust expr_1EC_cp_0 = Main.dust[num3];
-                                        expr_1EC_cp_0.velocity.Y = expr_1EC_cp_0.velocity.Y - 4f;
-                                        Dust expr_20A_cp_0 = Main.dust[num3];
-                                        expr_20A_cp_0.velocity.X = expr_20A_cp_0.velocity.X * 2.5f;
-                                        Main.dust[num3].scale = 1.3f;
-                                        Main.dust[num3].alpha = 100;
-                                        Main.dust[num3].noGravity = true;
-                                    }
-                                }
-                                else
-                                {
-                                    for (int k = 0; k < 5; k++)
-                                    {
-                                        int num4 = Dust.NewDust(new Vector2(this.Position.X - 6f, this.Position.Y + (float)(this.Height / 2) - 8f), this.Width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
-                                        Dust expr_2F2_cp_0 = Main.dust[num4];
-                                        expr_2F2_cp_0.velocity.Y = expr_2F2_cp_0.velocity.Y - 1.5f;
-                                        Dust expr_310_cp_0 = Main.dust[num4];
-                                        expr_310_cp_0.velocity.X = expr_310_cp_0.velocity.X * 2.5f;
-                                        Main.dust[num4].scale = 1.3f;
-                                        Main.dust[num4].alpha = 100;
-                                        Main.dust[num4].noGravity = true;
-                                    }
-                                }
                             }
                             this.Wet = true;
                         }
@@ -251,14 +223,6 @@ namespace Terraria_Server
                     }
                     if (this.Type == 75 && Main.dayTime)
                     {
-                        for (int m = 0; m < 10; m++)
-                        {
-                            Dust.NewDust(this.Position, this.Width, this.Height, 15, this.Velocity.X, this.Velocity.Y, 150, default(Color), 1.2f);
-                        }
-                        for (int n = 0; n < 3; n++)
-                        {
-                            Gore.NewGore(this.Position, new Vector2(this.Velocity.X, this.Velocity.Y), Main.rand.Next(16, 18));
-                        }
                         this.Active = false;
                         this.Type = 0;
                         this.Stack = 0;
@@ -268,18 +232,6 @@ namespace Terraria_Server
                 else
                 {
                     this.BeingGrabbed = false;
-                }
-
-                if (this.Type == 75)
-                {
-                    if (Main.rand.Next(25) == 0)
-                    {
-                        Dust.NewDust(this.Position, this.Width, this.Height, 15, this.Velocity.X * 0.5f, this.Velocity.Y * 0.5f, 150, default(Color), 1.2f);
-                    }
-                    if (Main.rand.Next(50) == 0)
-                    {
-                        Gore.NewGore(this.Position, new Vector2(this.Velocity.X * 0.2f, this.Velocity.Y * 0.2f), Main.rand.Next(16, 18));
-                    }
                 }
                 if (this.SpawnTime < 2147483646)
                 {

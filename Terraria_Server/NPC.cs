@@ -115,11 +115,6 @@ namespace Terraria_Server
             timeLeft = NPC.ACTIVE_TIME;
         }
 
-        private int SetGore(int goreType)
-        {
-            return Gore.NewGore(this.Position, this.Velocity, goreType);
-        }
-
         public static void AI(int index)
         {
             NPC npc = Main.npcs[index];
@@ -136,19 +131,6 @@ namespace Terraria_Server
             {
                 if (npc.aiStyle == 1)
                 {
-                    if (npc.Type == 59)
-                    {
-                        Vector2 arg_D5_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                        int arg_D5_1 = npc.width;
-                        int arg_D5_2 = npc.height;
-                        int arg_D5_3 = 6;
-                        float arg_D5_4 = npc.Velocity.X * 0.2f;
-                        float arg_D5_5 = npc.Velocity.Y * 0.2f;
-                        int arg_D5_6 = 100;
-                        Color newColor = default(Color);
-                        int num = Dust.NewDust(arg_D5_0, arg_D5_1, arg_D5_2, arg_D5_3, arg_D5_4, arg_D5_5, arg_D5_6, newColor, 1.7f);
-                        Main.dust[num].noGravity = true;
-                    }
                     if (npc.wet)
                     {
                         if (npc.Type == 59)
@@ -394,22 +376,6 @@ namespace Terraria_Server
                                     npc.Velocity.Y = 1.5f;
                                 }
                             }
-                        }
-                        if (npc.Type == 2 && Main.rand.Next(40) == 0)
-                        {
-                            Vector2 arg_ADF_0 = new Vector2(npc.Position.X, npc.Position.Y + (float)npc.height * 0.25f);
-                            int arg_ADF_1 = npc.width;
-                            int arg_ADF_2 = (int)((float)npc.height * 0.5f);
-                            int arg_ADF_3 = 5;
-                            float arg_ADF_4 = npc.Velocity.X;
-                            float arg_ADF_5 = 2f;
-                            int arg_ADF_6 = 0;
-                            Color newColor = default(Color);
-                            int num2 = Dust.NewDust(arg_ADF_0, arg_ADF_1, arg_ADF_2, arg_ADF_3, arg_ADF_4, arg_ADF_5, arg_ADF_6, newColor, 1f);
-                            Dust expr_AF1_cp_0 = Main.dust[num2];
-                            expr_AF1_cp_0.velocity.X = expr_AF1_cp_0.velocity.X * 0.5f;
-                            Dust expr_B0E_cp_0 = Main.dust[num2];
-                            expr_B0E_cp_0.velocity.Y = expr_B0E_cp_0.velocity.Y * 0.1f;
                         }
                         if (npc.wet)
                         {
@@ -865,22 +831,6 @@ namespace Terraria_Server
                                 {
                                     npc.rotation = num8;
                                 }
-                                if (Main.rand.Next(5) == 0)
-                                {
-                                    Vector2 arg_1DAB_0 = new Vector2(npc.Position.X, npc.Position.Y + (float)npc.height * 0.25f);
-                                    int arg_1DAB_1 = npc.width;
-                                    int arg_1DAB_2 = (int)((float)npc.height * 0.5f);
-                                    int arg_1DAB_3 = 5;
-                                    float arg_1DAB_4 = npc.Velocity.X;
-                                    float arg_1DAB_5 = 2f;
-                                    int arg_1DAB_6 = 0;
-                                    Color newColor = default(Color);
-                                    int num10 = Dust.NewDust(arg_1DAB_0, arg_1DAB_1, arg_1DAB_2, arg_1DAB_3, arg_1DAB_4, arg_1DAB_5, arg_1DAB_6, newColor, 1f);
-                                    Dust expr_1DBF_cp_0 = Main.dust[num10];
-                                    expr_1DBF_cp_0.velocity.X = expr_1DBF_cp_0.velocity.X * 0.5f;
-                                    Dust expr_1DDD_cp_0 = Main.dust[num10];
-                                    expr_1DDD_cp_0.velocity.Y = expr_1DDD_cp_0.velocity.Y * 0.1f;
-                                }
                                 if (Main.dayTime || dead)
                                 {
                                     npc.Velocity.Y = npc.Velocity.Y - 0.04f;
@@ -984,19 +934,6 @@ namespace Terraria_Server
                                                         {
                                                             NetMessage.SendData(23, -1, -1, "", npcIndex);
                                                         }
-
-                                                        for (int i = 0; i < 10; i++)
-                                                        {
-                                                            Vector2 arg_2324_0 = vector2;
-                                                            int arg_2324_1 = 20;
-                                                            int arg_2324_2 = 20;
-                                                            int arg_2324_3 = 5;
-                                                            float arg_2324_4 = vector3.X * 0.4f;
-                                                            float arg_2324_5 = vector3.Y * 0.4f;
-                                                            int arg_2324_6 = 0;
-                                                            Color newColor = default(Color);
-                                                            Dust.NewDust(arg_2324_0, arg_2324_1, arg_2324_2, arg_2324_3, arg_2324_4, arg_2324_5, arg_2324_6, newColor, 1f);
-                                                        }
                                                     }
                                                 }
                                             }
@@ -1089,7 +1026,7 @@ namespace Terraria_Server
                                             }
                                             npc.rotation += npc.ai[2];
                                             npc.ai[1] += 1f;
-                                            Color newColor;
+
                                             if (npc.ai[1] == 100f)
                                             {
                                                 npc.ai[0] += 1f;
@@ -1098,37 +1035,7 @@ namespace Terraria_Server
                                                 {
                                                     npc.ai[2] = 0f;
                                                 }
-                                                else
-                                                {
-                                                    for (int j = 0; j < 2; j++)
-                                                    {
-                                                        Gore.NewGore(npc.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 8);
-                                                        Gore.NewGore(npc.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
-                                                        Gore.NewGore(npc.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 6);
-                                                    }
-                                                    for (int k = 0; k < 20; k++)
-                                                    {
-                                                        Vector2 arg_28B3_0 = npc.Position;
-                                                        int arg_28B3_1 = npc.width;
-                                                        int arg_28B3_2 = npc.height;
-                                                        int arg_28B3_3 = 5;
-                                                        float arg_28B3_4 = (float)Main.rand.Next(-30, 31) * 0.2f;
-                                                        float arg_28B3_5 = (float)Main.rand.Next(-30, 31) * 0.2f;
-                                                        int arg_28B3_6 = 0;
-                                                        newColor = default(Color);
-                                                        Dust.NewDust(arg_28B3_0, arg_28B3_1, arg_28B3_2, arg_28B3_3, arg_28B3_4, arg_28B3_5, arg_28B3_6, newColor, 1f);
-                                                    }
-                                                }
                                             }
-                                            Vector2 arg_2932_0 = npc.Position;
-                                            int arg_2932_1 = npc.width;
-                                            int arg_2932_2 = npc.height;
-                                            int arg_2932_3 = 5;
-                                            float arg_2932_4 = (float)Main.rand.Next(-30, 31) * 0.2f;
-                                            float arg_2932_5 = (float)Main.rand.Next(-30, 31) * 0.2f;
-                                            int arg_2932_6 = 0;
-                                            newColor = default(Color);
-                                            Dust.NewDust(arg_2932_0, arg_2932_1, arg_2932_2, arg_2932_3, arg_2932_4, arg_2932_5, arg_2932_6, newColor, 1f);
                                             npc.Velocity.X = npc.Velocity.X * 0.98f;
                                             npc.Velocity.Y = npc.Velocity.Y * 0.98f;
                                             if ((double)npc.Velocity.X > -0.1 && (double)npc.Velocity.X < 0.1)
@@ -1443,53 +1350,6 @@ namespace Terraria_Server
                                             {
                                                 npc.Velocity.Y = -2f;
                                             }
-                                        }
-                                        if (npc.Type == 23)
-                                        {
-                                            Vector2 arg_368F_0 = new Vector2(npc.Position.X - npc.Velocity.X, npc.Position.Y - npc.Velocity.Y);
-                                            int arg_368F_1 = npc.width;
-                                            int arg_368F_2 = npc.height;
-                                            int arg_368F_3 = 6;
-                                            float arg_368F_4 = npc.Velocity.X * 0.2f;
-                                            float arg_368F_5 = npc.Velocity.Y * 0.2f;
-                                            int arg_368F_6 = 100;
-                                            Color newColor = default(Color);
-                                            int num42 = Dust.NewDust(arg_368F_0, arg_368F_1, arg_368F_2, arg_368F_3, arg_368F_4, arg_368F_5, arg_368F_6, newColor, 2f);
-                                            Main.dust[num42].noGravity = true;
-                                            Dust expr_36B1_cp_0 = Main.dust[num42];
-                                            expr_36B1_cp_0.velocity.X = expr_36B1_cp_0.velocity.X * 0.3f;
-                                            Dust expr_36CF_cp_0 = Main.dust[num42];
-                                            expr_36CF_cp_0.velocity.Y = expr_36CF_cp_0.velocity.Y * 0.3f;
-                                        }
-                                        else
-                                        {
-                                            if (Main.rand.Next(20) == 0)
-                                            {
-                                                int num43 = Dust.NewDust(new Vector2(npc.Position.X, npc.Position.Y + (float)npc.height * 0.25f), npc.width, (int)((float)npc.height * 0.5f), 18, npc.Velocity.X, 2f, npc.alpha, npc.color, npc.scale);
-                                                Dust expr_376B_cp_0 = Main.dust[num43];
-                                                expr_376B_cp_0.velocity.X = expr_376B_cp_0.velocity.X * 0.5f;
-                                                Dust expr_3789_cp_0 = Main.dust[num43];
-                                                expr_3789_cp_0.velocity.Y = expr_3789_cp_0.velocity.Y * 0.1f;
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (Main.rand.Next(40) == 0)
-                                        {
-                                            Vector2 arg_380E_0 = new Vector2(npc.Position.X, npc.Position.Y + (float)npc.height * 0.25f);
-                                            int arg_380E_1 = npc.width;
-                                            int arg_380E_2 = (int)((float)npc.height * 0.5f);
-                                            int arg_380E_3 = 5;
-                                            float arg_380E_4 = npc.Velocity.X;
-                                            float arg_380E_5 = 2f;
-                                            int arg_380E_6 = 0;
-                                            Color newColor = default(Color);
-                                            int num44 = Dust.NewDust(arg_380E_0, arg_380E_1, arg_380E_2, arg_380E_3, arg_380E_4, arg_380E_5, arg_380E_6, newColor, 1f);
-                                            Dust expr_3822_cp_0 = Main.dust[num44];
-                                            expr_3822_cp_0.velocity.X = expr_3822_cp_0.velocity.X * 0.5f;
-                                            Dust expr_3840_cp_0 = Main.dust[num44];
-                                            expr_3840_cp_0.velocity.Y = expr_3840_cp_0.velocity.Y * 0.1f;
                                         }
                                     }
                                     if ((Main.dayTime && npc.Type != 6 && npc.Type != 23 && npc.Type != 42) || Main.players[npc.target].dead)
@@ -2388,120 +2248,12 @@ namespace Terraria_Server
                                                 }
                                                 if (npc.ai[2] != 0f && npc.ai[3] != 0f)
                                                 {
-                                                    for (int num70 = 0; num70 < 50; num70++)
-                                                    {
-                                                        if (npc.Type == 29 || npc.Type == 45)
-                                                        {
-                                                            Vector2 arg_5FFC_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                                                            int arg_5FFC_1 = npc.width;
-                                                            int arg_5FFC_2 = npc.height;
-                                                            int arg_5FFC_3 = 27;
-                                                            float arg_5FFC_4 = 0f;
-                                                            float arg_5FFC_5 = 0f;
-                                                            int arg_5FFC_6 = 100;
-                                                            Color newColor = default(Color);
-                                                            int num71 = Dust.NewDust(arg_5FFC_0, arg_5FFC_1, arg_5FFC_2, arg_5FFC_3, arg_5FFC_4, arg_5FFC_5, arg_5FFC_6, newColor, (float)Main.rand.Next(1, 3));
-                                                            Dust expr_600B = Main.dust[num71];
-                                                            expr_600B.velocity *= 3f;
-                                                            if (Main.dust[num71].scale > 1f)
-                                                            {
-                                                                Main.dust[num71].noGravity = true;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (npc.Type == 32)
-                                                            {
-                                                                Vector2 arg_6098_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                                                                int arg_6098_1 = npc.width;
-                                                                int arg_6098_2 = npc.height;
-                                                                int arg_6098_3 = 29;
-                                                                float arg_6098_4 = 0f;
-                                                                float arg_6098_5 = 0f;
-                                                                int arg_6098_6 = 100;
-                                                                Color newColor = default(Color);
-                                                                int num72 = Dust.NewDust(arg_6098_0, arg_6098_1, arg_6098_2, arg_6098_3, arg_6098_4, arg_6098_5, arg_6098_6, newColor, 2.5f);
-                                                                Dust expr_60A7 = Main.dust[num72];
-                                                                expr_60A7.velocity *= 3f;
-                                                                Main.dust[num72].noGravity = true;
-                                                            }
-                                                            else
-                                                            {
-                                                                Vector2 arg_610F_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                                                                int arg_610F_1 = npc.width;
-                                                                int arg_610F_2 = npc.height;
-                                                                int arg_610F_3 = 6;
-                                                                float arg_610F_4 = 0f;
-                                                                float arg_610F_5 = 0f;
-                                                                int arg_610F_6 = 100;
-                                                                Color newColor = default(Color);
-                                                                int num73 = Dust.NewDust(arg_610F_0, arg_610F_1, arg_610F_2, arg_610F_3, arg_610F_4, arg_610F_5, arg_610F_6, newColor, 2.5f);
-                                                                Dust expr_611E = Main.dust[num73];
-                                                                expr_611E.velocity *= 3f;
-                                                                Main.dust[num73].noGravity = true;
-                                                            }
-                                                        }
-                                                    }
                                                     npc.Position.X = npc.ai[2] * 16f - (float)(npc.width / 2) + 8f;
                                                     npc.Position.Y = npc.ai[3] * 16f - (float)npc.height;
                                                     npc.Velocity.X = 0f;
                                                     npc.Velocity.Y = 0f;
                                                     npc.ai[2] = 0f;
                                                     npc.ai[3] = 0f;
-                                                    for (int num74 = 0; num74 < 50; num74++)
-                                                    {
-                                                        if (npc.Type == 29 || npc.Type == 45)
-                                                        {
-                                                            Vector2 arg_625E_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                                                            int arg_625E_1 = npc.width;
-                                                            int arg_625E_2 = npc.height;
-                                                            int arg_625E_3 = 27;
-                                                            float arg_625E_4 = 0f;
-                                                            float arg_625E_5 = 0f;
-                                                            int arg_625E_6 = 100;
-                                                            Color newColor = default(Color);
-                                                            int num75 = Dust.NewDust(arg_625E_0, arg_625E_1, arg_625E_2, arg_625E_3, arg_625E_4, arg_625E_5, arg_625E_6, newColor, (float)Main.rand.Next(1, 3));
-                                                            Dust expr_626D = Main.dust[num75];
-                                                            expr_626D.velocity *= 3f;
-                                                            if (Main.dust[num75].scale > 1f)
-                                                            {
-                                                                Main.dust[num75].noGravity = true;
-                                                            }
-                                                        }
-                                                        else
-                                                        {
-                                                            if (npc.Type == 32)
-                                                            {
-                                                                Vector2 arg_62FA_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                                                                int arg_62FA_1 = npc.width;
-                                                                int arg_62FA_2 = npc.height;
-                                                                int arg_62FA_3 = 29;
-                                                                float arg_62FA_4 = 0f;
-                                                                float arg_62FA_5 = 0f;
-                                                                int arg_62FA_6 = 100;
-                                                                Color newColor = default(Color);
-                                                                int num76 = Dust.NewDust(arg_62FA_0, arg_62FA_1, arg_62FA_2, arg_62FA_3, arg_62FA_4, arg_62FA_5, arg_62FA_6, newColor, 2.5f);
-                                                                Dust expr_6309 = Main.dust[num76];
-                                                                expr_6309.velocity *= 3f;
-                                                                Main.dust[num76].noGravity = true;
-                                                            }
-                                                            else
-                                                            {
-                                                                Vector2 arg_6371_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                                                                int arg_6371_1 = npc.width;
-                                                                int arg_6371_2 = npc.height;
-                                                                int arg_6371_3 = 6;
-                                                                float arg_6371_4 = 0f;
-                                                                float arg_6371_5 = 0f;
-                                                                int arg_6371_6 = 100;
-                                                                Color newColor = default(Color);
-                                                                int num77 = Dust.NewDust(arg_6371_0, arg_6371_1, arg_6371_2, arg_6371_3, arg_6371_4, arg_6371_5, arg_6371_6, newColor, 2.5f);
-                                                                Dust expr_6380 = Main.dust[num77];
-                                                                expr_6380.velocity *= 3f;
-                                                                Main.dust[num77].noGravity = true;
-                                                            }
-                                                        }
-                                                    }
                                                 }
                                                 npc.ai[0] += 1f;
                                                 if (npc.ai[0] == 100f || npc.ai[0] == 200f || npc.ai[0] == 300f)
@@ -2587,19 +2339,6 @@ namespace Terraria_Server
                                                 {
                                                     if (Main.rand.Next(5) == 0)
                                                     {
-                                                        Vector2 arg_680C_0 = new Vector2(npc.Position.X, npc.Position.Y + 2f);
-                                                        int arg_680C_1 = npc.width;
-                                                        int arg_680C_2 = npc.height;
-                                                        int arg_680C_3 = 27;
-                                                        float arg_680C_4 = npc.Velocity.X * 0.2f;
-                                                        float arg_680C_5 = npc.Velocity.Y * 0.2f;
-                                                        int arg_680C_6 = 100;
-                                                        Color newColor = default(Color);
-                                                        int num87 = Dust.NewDust(arg_680C_0, arg_680C_1, arg_680C_2, arg_680C_3, arg_680C_4, arg_680C_5, arg_680C_6, newColor, 1.5f);
-                                                        Main.dust[num87].noGravity = true;
-                                                        Dust expr_682E_cp_0 = Main.dust[num87];
-                                                        expr_682E_cp_0.velocity.X = expr_682E_cp_0.velocity.X * 0.5f;
-                                                        Main.dust[num87].velocity.Y = -2f;
                                                         return;
                                                     }
                                                 }
@@ -2609,20 +2348,6 @@ namespace Terraria_Server
                                                     {
                                                         if (Main.rand.Next(2) == 0)
                                                         {
-                                                            Vector2 arg_68D6_0 = new Vector2(npc.Position.X, npc.Position.Y + 2f);
-                                                            int arg_68D6_1 = npc.width;
-                                                            int arg_68D6_2 = npc.height;
-                                                            int arg_68D6_3 = 29;
-                                                            float arg_68D6_4 = npc.Velocity.X * 0.2f;
-                                                            float arg_68D6_5 = npc.Velocity.Y * 0.2f;
-                                                            int arg_68D6_6 = 100;
-                                                            Color newColor = default(Color);
-                                                            int num88 = Dust.NewDust(arg_68D6_0, arg_68D6_1, arg_68D6_2, arg_68D6_3, arg_68D6_4, arg_68D6_5, arg_68D6_6, newColor, 2f);
-                                                            Main.dust[num88].noGravity = true;
-                                                            Dust expr_68F8_cp_0 = Main.dust[num88];
-                                                            expr_68F8_cp_0.velocity.X = expr_68F8_cp_0.velocity.X * 1f;
-                                                            Dust expr_6916_cp_0 = Main.dust[num88];
-                                                            expr_6916_cp_0.velocity.Y = expr_6916_cp_0.velocity.Y * 1f;
                                                             return;
                                                         }
                                                     }
@@ -2630,20 +2355,6 @@ namespace Terraria_Server
                                                     {
                                                         if (Main.rand.Next(2) == 0)
                                                         {
-                                                            Vector2 arg_6999_0 = new Vector2(npc.Position.X, npc.Position.Y + 2f);
-                                                            int arg_6999_1 = npc.width;
-                                                            int arg_6999_2 = npc.height;
-                                                            int arg_6999_3 = 6;
-                                                            float arg_6999_4 = npc.Velocity.X * 0.2f;
-                                                            float arg_6999_5 = npc.Velocity.Y * 0.2f;
-                                                            int arg_6999_6 = 100;
-                                                            Color newColor = default(Color);
-                                                            int num89 = Dust.NewDust(arg_6999_0, arg_6999_1, arg_6999_2, arg_6999_3, arg_6999_4, arg_6999_5, arg_6999_6, newColor, 2f);
-                                                            Main.dust[num89].noGravity = true;
-                                                            Dust expr_69BB_cp_0 = Main.dust[num89];
-                                                            expr_69BB_cp_0.velocity.X = expr_69BB_cp_0.velocity.X * 1f;
-                                                            Dust expr_69D9_cp_0 = Main.dust[num89];
-                                                            expr_69D9_cp_0.velocity.Y = expr_69D9_cp_0.velocity.Y * 1f;
                                                             return;
                                                         }
                                                     }
@@ -2672,65 +2383,6 @@ namespace Terraria_Server
                                                     if (npc.timeLeft > 100)
                                                     {
                                                         npc.timeLeft = 100;
-                                                    }
-                                                    for (int num94 = 0; num94 < 2; num94++)
-                                                    {
-                                                        if (npc.Type == 30)
-                                                        {
-                                                            Vector2 arg_6B8D_0 = new Vector2(npc.Position.X, npc.Position.Y + 2f);
-                                                            int arg_6B8D_1 = npc.width;
-                                                            int arg_6B8D_2 = npc.height;
-                                                            int arg_6B8D_3 = 27;
-                                                            float arg_6B8D_4 = npc.Velocity.X * 0.2f;
-                                                            float arg_6B8D_5 = npc.Velocity.Y * 0.2f;
-                                                            int arg_6B8D_6 = 100;
-                                                            Color newColor = default(Color);
-                                                            int num95 = Dust.NewDust(arg_6B8D_0, arg_6B8D_1, arg_6B8D_2, arg_6B8D_3, arg_6B8D_4, arg_6B8D_5, arg_6B8D_6, newColor, 2f);
-                                                            Main.dust[num95].noGravity = true;
-                                                            Dust expr_6BAA = Main.dust[num95];
-                                                            expr_6BAA.velocity *= 0.3f;
-                                                            Dust expr_6BCC_cp_0 = Main.dust[num95];
-                                                            expr_6BCC_cp_0.velocity.X = expr_6BCC_cp_0.velocity.X - npc.Velocity.X * 0.2f;
-                                                            Dust expr_6BF6_cp_0 = Main.dust[num95];
-                                                            expr_6BF6_cp_0.velocity.Y = expr_6BF6_cp_0.velocity.Y - npc.Velocity.Y * 0.2f;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (npc.Type == 33)
-                                                            {
-                                                                Vector2 arg_6C87_0 = new Vector2(npc.Position.X, npc.Position.Y + 2f);
-                                                                int arg_6C87_1 = npc.width;
-                                                                int arg_6C87_2 = npc.height;
-                                                                int arg_6C87_3 = 29;
-                                                                float arg_6C87_4 = npc.Velocity.X * 0.2f;
-                                                                float arg_6C87_5 = npc.Velocity.Y * 0.2f;
-                                                                int arg_6C87_6 = 100;
-                                                                Color newColor = default(Color);
-                                                                int num96 = Dust.NewDust(arg_6C87_0, arg_6C87_1, arg_6C87_2, arg_6C87_3, arg_6C87_4, arg_6C87_5, arg_6C87_6, newColor, 2f);
-                                                                Main.dust[num96].noGravity = true;
-                                                                Dust expr_6CA9_cp_0 = Main.dust[num96];
-                                                                expr_6CA9_cp_0.velocity.X = expr_6CA9_cp_0.velocity.X * 0.3f;
-                                                                Dust expr_6CC7_cp_0 = Main.dust[num96];
-                                                                expr_6CC7_cp_0.velocity.Y = expr_6CC7_cp_0.velocity.Y * 0.3f;
-                                                            }
-                                                            else
-                                                            {
-                                                                Vector2 arg_6D3E_0 = new Vector2(npc.Position.X, npc.Position.Y + 2f);
-                                                                int arg_6D3E_1 = npc.width;
-                                                                int arg_6D3E_2 = npc.height;
-                                                                int arg_6D3E_3 = 6;
-                                                                float arg_6D3E_4 = npc.Velocity.X * 0.2f;
-                                                                float arg_6D3E_5 = npc.Velocity.Y * 0.2f;
-                                                                int arg_6D3E_6 = 100;
-                                                                Color newColor = default(Color);
-                                                                int num97 = Dust.NewDust(arg_6D3E_0, arg_6D3E_1, arg_6D3E_2, arg_6D3E_3, arg_6D3E_4, arg_6D3E_5, arg_6D3E_6, newColor, 2f);
-                                                                Main.dust[num97].noGravity = true;
-                                                                Dust expr_6D60_cp_0 = Main.dust[num97];
-                                                                expr_6D60_cp_0.velocity.X = expr_6D60_cp_0.velocity.X * 0.3f;
-                                                                Dust expr_6D7E_cp_0 = Main.dust[num97];
-                                                                expr_6D7E_cp_0.velocity.Y = expr_6D7E_cp_0.velocity.Y * 0.3f;
-                                                            }
-                                                        }
                                                     }
                                                     npc.rotation += 0.4f * (float)npc.direction;
                                                     return;
@@ -2998,39 +2650,6 @@ namespace Terraria_Server
                                                         }
                                                         if (npc.ai[1] != 2f && npc.ai[1] != 3f && npc.Type != 68)
                                                         {
-                                                            Vector2 arg_7AE4_0 = new Vector2(npc.Position.X + (float)(npc.width / 2) - 15f - npc.Velocity.X * 5f, npc.Position.Y + (float)npc.height - 2f);
-                                                            int arg_7AE4_1 = 30;
-                                                            int arg_7AE4_2 = 10;
-                                                            int arg_7AE4_3 = 5;
-                                                            float arg_7AE4_4 = -npc.Velocity.X * 0.2f;
-                                                            float arg_7AE4_5 = 3f;
-                                                            int arg_7AE4_6 = 0;
-                                                            Color newColor = default(Color);
-                                                            int num111 = Dust.NewDust(arg_7AE4_0, arg_7AE4_1, arg_7AE4_2, arg_7AE4_3, arg_7AE4_4, arg_7AE4_5, arg_7AE4_6, newColor, 2f);
-                                                            Main.dust[num111].noGravity = true;
-                                                            Dust expr_7B06_cp_0 = Main.dust[num111];
-                                                            expr_7B06_cp_0.velocity.X = expr_7B06_cp_0.velocity.X * 1.3f;
-                                                            Dust expr_7B24_cp_0 = Main.dust[num111];
-                                                            expr_7B24_cp_0.velocity.X = expr_7B24_cp_0.velocity.X + npc.Velocity.X * 0.4f;
-                                                            Dust expr_7B4E_cp_0 = Main.dust[num111];
-                                                            expr_7B4E_cp_0.velocity.Y = expr_7B4E_cp_0.velocity.Y + (2f + npc.Velocity.Y);
-                                                            for (int num112 = 0; num112 < 2; num112++)
-                                                            {
-                                                                Vector2 arg_7BC3_0 = new Vector2(npc.Position.X, npc.Position.Y + 120f);
-                                                                int arg_7BC3_1 = npc.width;
-                                                                int arg_7BC3_2 = 60;
-                                                                int arg_7BC3_3 = 5;
-                                                                float arg_7BC3_4 = npc.Velocity.X;
-                                                                float arg_7BC3_5 = npc.Velocity.Y;
-                                                                int arg_7BC3_6 = 0;
-                                                                newColor = default(Color);
-                                                                num111 = Dust.NewDust(arg_7BC3_0, arg_7BC3_1, arg_7BC3_2, arg_7BC3_3, arg_7BC3_4, arg_7BC3_5, arg_7BC3_6, newColor, 2f);
-                                                                Main.dust[num111].noGravity = true;
-                                                                Dust expr_7BE0 = Main.dust[num111];
-                                                                expr_7BE0.velocity -= npc.Velocity;
-                                                                Dust expr_7C03_cp_0 = Main.dust[num111];
-                                                                expr_7C03_cp_0.velocity.Y = expr_7C03_cp_0.velocity.Y + 5f;
-                                                            }
                                                             return;
                                                         }
                                                     }
@@ -3410,19 +3029,6 @@ namespace Terraria_Server
                                                             {
                                                                 if (npc.aiStyle == 14)
                                                                 {
-                                                                    if (npc.Type == 60)
-                                                                    {
-                                                                        Vector2 arg_908E_0 = new Vector2(npc.Position.X, npc.Position.Y);
-                                                                        int arg_908E_1 = npc.width;
-                                                                        int arg_908E_2 = npc.height;
-                                                                        int arg_908E_3 = 6;
-                                                                        float arg_908E_4 = npc.Velocity.X * 0.2f;
-                                                                        float arg_908E_5 = npc.Velocity.Y * 0.2f;
-                                                                        int arg_908E_6 = 100;
-                                                                        Color newColor = default(Color);
-                                                                        int num126 = Dust.NewDust(arg_908E_0, arg_908E_1, arg_908E_2, arg_908E_3, arg_908E_4, arg_908E_5, arg_908E_6, newColor, 2f);
-                                                                        Main.dust[num126].noGravity = true;
-                                                                    }
                                                                     npc.noGravity = true;
                                                                     if (npc.collideX)
                                                                     {
@@ -3775,10 +3381,6 @@ namespace Terraria_Server
                                                                                 }
                                                                             }
                                                                         }
-                                                                        int num141 = Dust.NewDust(npc.Position, npc.width, npc.height, 4, npc.Velocity.X, npc.Velocity.Y, 255, new Color(0, 80, 255, 80), npc.scale * 1.2f);
-                                                                        Main.dust[num141].noGravity = true;
-                                                                        Dust expr_A082 = Main.dust[num141];
-                                                                        expr_A082.velocity *= 0.5f;
                                                                         if (npc.life > 0)
                                                                         {
                                                                             float num142 = (float)npc.life / (float)npc.lifeMax;
@@ -4371,27 +3973,6 @@ namespace Terraria_Server
                                                                                             {
                                                                                                 npc.noGravity = false;
                                                                                                 npc.noTileCollide = false;
-                                                                                                if (Main.rand.Next(2) == 0)
-                                                                                                {
-                                                                                                    Vector2 arg_BA65_0 = new Vector2(npc.Position.X - 4f, npc.Position.Y + (float)npc.height - 8f);
-                                                                                                    int arg_BA65_1 = npc.width + 8;
-                                                                                                    int arg_BA65_2 = 24;
-                                                                                                    int arg_BA65_3 = 32;
-                                                                                                    float arg_BA65_4 = 0f;
-                                                                                                    float arg_BA65_5 = npc.Velocity.Y / 2f;
-                                                                                                    int arg_BA65_6 = 0;
-                                                                                                    Color newColor = default(Color);
-                                                                                                    int num169 = Dust.NewDust(arg_BA65_0, arg_BA65_1, arg_BA65_2, arg_BA65_3, arg_BA65_4, arg_BA65_5, arg_BA65_6, newColor, 1f);
-                                                                                                    Dust expr_BA79_cp_0 = Main.dust[num169];
-                                                                                                    expr_BA79_cp_0.velocity.X = expr_BA79_cp_0.velocity.X * 0.4f;
-                                                                                                    Dust expr_BA97_cp_0 = Main.dust[num169];
-                                                                                                    expr_BA97_cp_0.velocity.Y = expr_BA97_cp_0.velocity.Y * -1f;
-                                                                                                    if (Main.rand.Next(2) == 0)
-                                                                                                    {
-                                                                                                        Main.dust[num169].noGravity = true;
-                                                                                                        Main.dust[num169].scale += 0.2f;
-                                                                                                    }
-                                                                                                }
                                                                                             }
                                                                                         }
                                                                                         catch
@@ -6733,16 +6314,11 @@ namespace Terraria_Server
                     int num = 0;
                     while ((double)num < dmg / (double)this.lifeMax * 100.0)
                     {
-                        Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, this.alpha, this.color, 1f);
                         num++;
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < 50; i++)
-                    {
-                        Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, this.alpha, this.color, 1f);
-                    }
                     if (this.Type == 16)
                     {
                         int spawnedSlimes = Main.rand.Next(2) + 2;
@@ -6768,33 +6344,7 @@ namespace Terraria_Server
             {
                 if (this.life > 0)
                 {
-                    int num4 = 0;
-                    while ((double)num4 < dmg / (double)this.lifeMax * 80.0)
-                    {
-                        Vector2 arg_350_0 = this.Position;
-                        int arg_350_1 = this.width;
-                        int arg_350_2 = this.height;
-                        int arg_350_3 = 6;
-                        float arg_350_4 = (float)(hitDirection * 2);
-                        float arg_350_5 = -1f;
-                        int arg_350_6 = this.alpha;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_350_0, arg_350_1, arg_350_2, arg_350_3, arg_350_4, arg_350_5, arg_350_6, newColor, 1.5f);
-                        num4++;
-                    }
                     return;
-                }
-                for (int k = 0; k < 40; k++)
-                {
-                    Vector2 arg_3AB_0 = this.Position;
-                    int arg_3AB_1 = this.width;
-                    int arg_3AB_2 = this.height;
-                    int arg_3AB_3 = 6;
-                    float arg_3AB_4 = (float)(hitDirection * 2);
-                    float arg_3AB_5 = -1f;
-                    int arg_3AB_6 = this.alpha;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_3AB_0, arg_3AB_1, arg_3AB_2, arg_3AB_3, arg_3AB_4, arg_3AB_5, arg_3AB_6, newColor, 1.5f);
                 }
                 if (this.Type == 59)
                 {
@@ -6813,17 +6363,7 @@ namespace Terraria_Server
             {
                 if (this.life > 0)
                 {
-                    int num7 = 0;
-                    while ((double)num7 < dmg / (double)this.lifeMax * 300.0)
-                    {
-                        Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, 175, new Color(0, 80, 255, 100), 1f);
-                        num7++;
-                    }
                     return;
-                }
-                for (int l = 0; l < 200; l++)
-                {
-                    Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 175, new Color(0, 80, 255, 100), 1f);
                 }
                 int num8 = Main.rand.Next(4) + 4;
                 for (int m = 0; m < num8; m++)
@@ -6844,545 +6384,77 @@ namespace Terraria_Server
             }
             else if (this.Type == 49 || this.Type == 51)
             {
-                if (this.life > 0)
-                {
-                    int num10 = 0;
-                    while ((double)num10 < dmg / (double)this.lifeMax * 30.0)
-                    {
-                        Vector2 arg_69A_0 = this.Position;
-                        int arg_69A_1 = this.width;
-                        int arg_69A_2 = this.height;
-                        int arg_69A_3 = 5;
-                        float arg_69A_4 = (float)hitDirection;
-                        float arg_69A_5 = -1f;
-                        int arg_69A_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_69A_0, arg_69A_1, arg_69A_2, arg_69A_3, arg_69A_4, arg_69A_5, arg_69A_6, newColor, 1f);
-                        num10++;
-                    }
-                    return;
-                }
-                for (int n = 0; n < 15; n++)
-                {
-                    Vector2 arg_6F0_0 = this.Position;
-                    int arg_6F0_1 = this.width;
-                    int arg_6F0_2 = this.height;
-                    int arg_6F0_3 = 5;
-                    float arg_6F0_4 = (float)(2 * hitDirection);
-                    float arg_6F0_5 = -2f;
-                    int arg_6F0_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_6F0_0, arg_6F0_1, arg_6F0_2, arg_6F0_3, arg_6F0_4, arg_6F0_5, arg_6F0_6, newColor, 1f);
-                }
-                if (this.Type == 51)
-                {
-                    SetGore(83);
-                    return;
-                }
-                SetGore(82);
                 return;
             }
             else if (this.Type == 46 || this.Type == 55 || this.Type == 67)
             {
                 if (this.life > 0)
                 {
-                    int num11 = 0;
-                    while ((double)num11 < dmg / (double)this.lifeMax * 20.0)
-                    {
-                        Vector2 arg_78F_0 = this.Position;
-                        int arg_78F_1 = this.width;
-                        int arg_78F_2 = this.height;
-                        int arg_78F_3 = 5;
-                        float arg_78F_4 = (float)hitDirection;
-                        float arg_78F_5 = -1f;
-                        int arg_78F_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_78F_0, arg_78F_1, arg_78F_2, arg_78F_3, arg_78F_4, arg_78F_5, arg_78F_6, newColor, 1f);
-                        num11++;
-                    }
                     return;
-                }
-                for (int num12 = 0; num12 < 10; num12++)
-                {
-                    Vector2 arg_7E5_0 = this.Position;
-                    int arg_7E5_1 = this.width;
-                    int arg_7E5_2 = this.height;
-                    int arg_7E5_3 = 5;
-                    float arg_7E5_4 = (float)(2 * hitDirection);
-                    float arg_7E5_5 = -2f;
-                    int arg_7E5_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_7E5_0, arg_7E5_1, arg_7E5_2, arg_7E5_3, arg_7E5_4, arg_7E5_5, arg_7E5_6, newColor, 1f);
                 }
                 if (this.Type == 46)
                 {
-                    SetGore(76);
-                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 77);
                     return;
                 }
                 if (this.Type == 67)
                 {
-                    SetGore(95);
-                    SetGore(95);
-                    SetGore(96);
                     return;
                 }
             }
             else if (this.Type == 47 || this.Type == 57 || this.Type == 58)
             {
-                if (this.life > 0)
-                {
-                    int num13 = 0;
-                    while ((double)num13 < dmg / (double)this.lifeMax * 20.0)
-                    {
-                        Vector2 arg_8E2_0 = this.Position;
-                        int arg_8E2_1 = this.width;
-                        int arg_8E2_2 = this.height;
-                        int arg_8E2_3 = 5;
-                        float arg_8E2_4 = (float)hitDirection;
-                        float arg_8E2_5 = -1f;
-                        int arg_8E2_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_8E2_0, arg_8E2_1, arg_8E2_2, arg_8E2_3, arg_8E2_4, arg_8E2_5, arg_8E2_6, newColor, 1f);
-                        num13++;
-                    }
-                    return;
-                }
-                for (int num14 = 0; num14 < 10; num14++)
-                {
-                    Vector2 arg_938_0 = this.Position;
-                    int arg_938_1 = this.width;
-                    int arg_938_2 = this.height;
-                    int arg_938_3 = 5;
-                    float arg_938_4 = (float)(2 * hitDirection);
-                    float arg_938_5 = -2f;
-                    int arg_938_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_938_0, arg_938_1, arg_938_2, arg_938_3, arg_938_4, arg_938_5, arg_938_6, newColor, 1f);
-                }
-                if (this.Type == 57)
-                {
-                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 84);
-                    return;
-                }
-                if (this.Type == 58)
-                {
-                    Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 85);
-                    return;
-                }
-                SetGore(78);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y), this.Velocity, 79);
                 return;
             }
             else if (this.Type == 2)
             {
-                if (this.life > 0)
-                {
-                    int num15 = 0;
-                    while ((double)num15 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_A34_0 = this.Position;
-                        int arg_A34_1 = this.width;
-                        int arg_A34_2 = this.height;
-                        int arg_A34_3 = 5;
-                        float arg_A34_4 = (float)hitDirection;
-                        float arg_A34_5 = -1f;
-                        int arg_A34_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_A34_0, arg_A34_1, arg_A34_2, arg_A34_3, arg_A34_4, arg_A34_5, arg_A34_6, newColor, 1f);
-                        num15++;
-                    }
-                    return;
-                }
-                for (int num16 = 0; num16 < 50; num16++)
-                {
-                    Vector2 arg_A8A_0 = this.Position;
-                    int arg_A8A_1 = this.width;
-                    int arg_A8A_2 = this.height;
-                    int arg_A8A_3 = 5;
-                    float arg_A8A_4 = (float)(2 * hitDirection);
-                    float arg_A8A_5 = -2f;
-                    int arg_A8A_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_A8A_0, arg_A8A_1, arg_A8A_2, arg_A8A_3, arg_A8A_4, arg_A8A_5, arg_A8A_6, newColor, 1f);
-                }
-                SetGore(1);
-                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 2);
                 return;
             }
             else if (this.Type == 69)
             {
-                if (this.life > 0)
-                {
-                    int num17 = 0;
-                    while ((double)num17 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_B23_0 = this.Position;
-                        int arg_B23_1 = this.width;
-                        int arg_B23_2 = this.height;
-                        int arg_B23_3 = 5;
-                        float arg_B23_4 = (float)hitDirection;
-                        float arg_B23_5 = -1f;
-                        int arg_B23_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_B23_0, arg_B23_1, arg_B23_2, arg_B23_3, arg_B23_4, arg_B23_5, arg_B23_6, newColor, 1f);
-                        num17++;
-                    }
-                    return;
-                }
-                for (int num18 = 0; num18 < 50; num18++)
-                {
-                    Vector2 arg_B79_0 = this.Position;
-                    int arg_B79_1 = this.width;
-                    int arg_B79_2 = this.height;
-                    int arg_B79_3 = 5;
-                    float arg_B79_4 = (float)(2 * hitDirection);
-                    float arg_B79_5 = -2f;
-                    int arg_B79_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_B79_0, arg_B79_1, arg_B79_2, arg_B79_3, arg_B79_4, arg_B79_5, arg_B79_6, newColor, 1f);
-                }
-                SetGore(97);
-                SetGore(98);
                 return;
             }
             else if (this.Type == 61)
             {
-                if (this.life > 0)
-                {
-                    int num19 = 0;
-                    while ((double)num19 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_BF9_0 = this.Position;
-                        int arg_BF9_1 = this.width;
-                        int arg_BF9_2 = this.height;
-                        int arg_BF9_3 = 5;
-                        float arg_BF9_4 = (float)hitDirection;
-                        float arg_BF9_5 = -1f;
-                        int arg_BF9_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_BF9_0, arg_BF9_1, arg_BF9_2, arg_BF9_3, arg_BF9_4, arg_BF9_5, arg_BF9_6, newColor, 1f);
-                        num19++;
-                    }
-                    return;
-                }
-                for (int num20 = 0; num20 < 50; num20++)
-                {
-                    Vector2 arg_C4F_0 = this.Position;
-                    int arg_C4F_1 = this.width;
-                    int arg_C4F_2 = this.height;
-                    int arg_C4F_3 = 5;
-                    float arg_C4F_4 = (float)(2 * hitDirection);
-                    float arg_C4F_5 = -2f;
-                    int arg_C4F_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_C4F_0, arg_C4F_1, arg_C4F_2, arg_C4F_3, arg_C4F_4, arg_C4F_5, arg_C4F_6, newColor, 1f);
-                }
-                SetGore(86);
-                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 87);
-                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity, 88);
                 return;
             }
             else if (this.Type == 65)
             {
-                if (this.life > 0)
-                {
-                    int num21 = 0;
-                    while ((double)num21 < dmg / (double)this.lifeMax * 150.0)
-                    {
-                        Vector2 arg_D19_0 = this.Position;
-                        int arg_D19_1 = this.width;
-                        int arg_D19_2 = this.height;
-                        int arg_D19_3 = 5;
-                        float arg_D19_4 = (float)hitDirection;
-                        float arg_D19_5 = -1f;
-                        int arg_D19_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_D19_0, arg_D19_1, arg_D19_2, arg_D19_3, arg_D19_4, arg_D19_5, arg_D19_6, newColor, 1f);
-                        num21++;
-                    }
-                    return;
-                }
-                for (int num22 = 0; num22 < 75; num22++)
-                {
-                    Vector2 arg_D6F_0 = this.Position;
-                    int arg_D6F_1 = this.width;
-                    int arg_D6F_2 = this.height;
-                    int arg_D6F_3 = 5;
-                    float arg_D6F_4 = (float)(2 * hitDirection);
-                    float arg_D6F_5 = -2f;
-                    int arg_D6F_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_D6F_0, arg_D6F_1, arg_D6F_2, arg_D6F_3, arg_D6F_4, arg_D6F_5, arg_D6F_6, newColor, 1f);
-                }
-                Gore.NewGore(this.Position, this.Velocity * 0.8f, 89);
-                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 90);
-                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 91);
-                Gore.NewGore(new Vector2(this.Position.X + 14f, this.Position.Y), this.Velocity * 0.8f, 92);
                 return;
             }
             else if (this.Type == 3 || this.Type == 52 || this.Type == 53)
             {
-                if (this.life > 0)
-                {
-                    int num23 = 0;
-                    while ((double)num23 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_EA3_0 = this.Position;
-                        int arg_EA3_1 = this.width;
-                        int arg_EA3_2 = this.height;
-                        int arg_EA3_3 = 5;
-                        float arg_EA3_4 = (float)hitDirection;
-                        float arg_EA3_5 = -1f;
-                        int arg_EA3_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_EA3_0, arg_EA3_1, arg_EA3_2, arg_EA3_3, arg_EA3_4, arg_EA3_5, arg_EA3_6, newColor, 1f);
-                        num23++;
-                    }
-                    return;
-                }
-                for (int num24 = 0; num24 < 50; num24++)
-                {
-                    Vector2 arg_EFD_0 = this.Position;
-                    int arg_EFD_1 = this.width;
-                    int arg_EFD_2 = this.height;
-                    int arg_EFD_3 = 5;
-                    float arg_EFD_4 = 2.5f * (float)hitDirection;
-                    float arg_EFD_5 = -2.5f;
-                    int arg_EFD_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_EFD_0, arg_EFD_1, arg_EFD_2, arg_EFD_3, arg_EFD_4, arg_EFD_5, arg_EFD_6, newColor, 1f);
-                }
-                SetGore(3);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 4);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 5);
                 return;
             }
             else if (this.Type == 4)
             {
-                if (this.life > 0)
-                {
-                    int num25 = 0;
-                    while ((double)num25 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_101F_0 = this.Position;
-                        int arg_101F_1 = this.width;
-                        int arg_101F_2 = this.height;
-                        int arg_101F_3 = 5;
-                        float arg_101F_4 = (float)hitDirection;
-                        float arg_101F_5 = -1f;
-                        int arg_101F_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_101F_0, arg_101F_1, arg_101F_2, arg_101F_3, arg_101F_4, arg_101F_5, arg_101F_6, newColor, 1f);
-                        num25++;
-                    }
-                    return;
-                }
-                for (int num26 = 0; num26 < 150; num26++)
-                {
-                    Vector2 arg_1075_0 = this.Position;
-                    int arg_1075_1 = this.width;
-                    int arg_1075_2 = this.height;
-                    int arg_1075_3 = 5;
-                    float arg_1075_4 = (float)(2 * hitDirection);
-                    float arg_1075_5 = -2f;
-                    int arg_1075_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_1075_0, arg_1075_1, arg_1075_2, arg_1075_3, arg_1075_4, arg_1075_5, arg_1075_6, newColor, 1f);
-                }
-                for (int num27 = 0; num27 < 2; num27++)
-                {
-                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 2);
-                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 7);
-                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 9);
-                    Gore.NewGore(this.Position, new Vector2((float)Main.rand.Next(-30, 31) * 0.2f, (float)Main.rand.Next(-30, 31) * 0.2f), 10);
-                }
                 return;
             }
             else if (this.Type == 5)
             {
-                if (this.life > 0)
-                {
-                    int num28 = 0;
-                    while ((double)num28 < dmg / (double)this.lifeMax * 50.0)
-                    {
-                        Vector2 arg_11F7_0 = this.Position;
-                        int arg_11F7_1 = this.width;
-                        int arg_11F7_2 = this.height;
-                        int arg_11F7_3 = 5;
-                        float arg_11F7_4 = (float)hitDirection;
-                        float arg_11F7_5 = -1f;
-                        int arg_11F7_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_11F7_0, arg_11F7_1, arg_11F7_2, arg_11F7_3, arg_11F7_4, arg_11F7_5, arg_11F7_6, newColor, 1f);
-                        num28++;
-                    }
-                    return;
-                }
-                for (int num29 = 0; num29 < 20; num29++)
-                {
-                    Vector2 arg_124D_0 = this.Position;
-                    int arg_124D_1 = this.width;
-                    int arg_124D_2 = this.height;
-                    int arg_124D_3 = 5;
-                    float arg_124D_4 = (float)(2 * hitDirection);
-                    float arg_124D_5 = -2f;
-                    int arg_124D_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_124D_0, arg_124D_1, arg_124D_2, arg_124D_3, arg_124D_4, arg_124D_5, arg_124D_6, newColor, 1f);
-                }
-                SetGore(6);
-                SetGore(7);
                 return;
             }
             else if (this.Type == 6)
             {
-                if (this.life > 0)
-                {
-                    int num30 = 0;
-                    while ((double)num30 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                        num30++;
-                    }
-                    return;
-                }
-                for (int num31 = 0; num31 < 50; num31++)
-                {
-                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                }
-                int num32 = SetGore(14);
-                Main.gore[num32].alpha = this.alpha;
-                num32 = SetGore(15);
-                Main.gore[num32].alpha = this.alpha;
                 return;
             }
             else if (this.Type == 7 || this.Type == 8 || this.Type == 9)
             {
-                if (this.life > 0)
-                {
-                    int num33 = 0;
-                    while ((double)num33 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                        num33++;
-                    }
-                    return;
-                }
-                for (int num34 = 0; num34 < 50; num34++)
-                {
-                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                }
-                int num35 = SetGore(this.Type - 7 + 18);
-                Main.gore[num35].alpha = this.alpha;
                 return;
             }
             else if (this.Type == 10 || this.Type == 11 || this.Type == 12)
             {
-                if (this.life > 0)
-                {
-                    int num36 = 0;
-                    while ((double)num36 < dmg / (double)this.lifeMax * 50.0)
-                    {
-                        Vector2 arg_14D5_0 = this.Position;
-                        int arg_14D5_1 = this.width;
-                        int arg_14D5_2 = this.height;
-                        int arg_14D5_3 = 5;
-                        float arg_14D5_4 = (float)hitDirection;
-                        float arg_14D5_5 = -1f;
-                        int arg_14D5_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_14D5_0, arg_14D5_1, arg_14D5_2, arg_14D5_3, arg_14D5_4, arg_14D5_5, arg_14D5_6, newColor, 1f);
-                        num36++;
-                    }
-                    return;
-                }
-                for (int num37 = 0; num37 < 10; num37++)
-                {
-                    Vector2 arg_152F_0 = this.Position;
-                    int arg_152F_1 = this.width;
-                    int arg_152F_2 = this.height;
-                    int arg_152F_3 = 5;
-                    float arg_152F_4 = 2.5f * (float)hitDirection;
-                    float arg_152F_5 = -2.5f;
-                    int arg_152F_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_152F_0, arg_152F_1, arg_152F_2, arg_152F_3, arg_152F_4, arg_152F_5, arg_152F_6, newColor, 1f);
-                }
-                SetGore(this.Type - 7 + 18);
                 return;
             }
             else if (this.Type == 13 || this.Type == 14 || this.Type == 15)
             {
-                if (this.life > 0)
-                {
-                    int num38 = 0;
-                    while ((double)num38 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                        num38++;
-                    }
-                    return;
-                }
-                for (int num39 = 0; num39 < 50; num39++)
-                {
-                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                }
-                if (this.Type == 13)
-                {
-                    SetGore(24);
-                    SetGore(25);
-                    return;
-                }
-                if (this.Type == 14)
-                {
-                    SetGore(26);
-                    SetGore(27);
-                    return;
-                }
-                SetGore(28);
-                SetGore(29);
                 return;
             }
             else if (this.Type == 17)
             {
                 if (this.life > 0)
                 {
-                    int num40 = 0;
-                    while ((double)num40 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_16F8_0 = this.Position;
-                        int arg_16F8_1 = this.width;
-                        int arg_16F8_2 = this.height;
-                        int arg_16F8_3 = 5;
-                        float arg_16F8_4 = (float)hitDirection;
-                        float arg_16F8_5 = -1f;
-                        int arg_16F8_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_16F8_0, arg_16F8_1, arg_16F8_2, arg_16F8_3, arg_16F8_4, arg_16F8_5, arg_16F8_6, newColor, 1f);
-                        num40++;
-                    }
                     return;
                 }
-                for (int num41 = 0; num41 < 50; num41++)
-                {
-                    Vector2 arg_1752_0 = this.Position;
-                    int arg_1752_1 = this.width;
-                    int arg_1752_2 = this.height;
-                    int arg_1752_3 = 5;
-                    float arg_1752_4 = 2.5f * (float)hitDirection;
-                    float arg_1752_5 = -2.5f;
-                    int arg_1752_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_1752_0, arg_1752_1, arg_1752_2, arg_1752_3, arg_1752_4, arg_1752_5, arg_1752_6, newColor, 1f);
-                }
-                SetGore(30);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 31);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 32);
                 return;
             }
             else if (this.Type == 22)
@@ -7422,501 +6494,59 @@ namespace Terraria_Server
             }
             else if (this.Type == 39 || this.Type == 40 || this.Type == 41)
             {
-                if (this.life > 0)
-                {
-                    int num56 = 0;
-                    while ((double)num56 < dmg / (double)this.lifeMax * 50.0)
-                    {
-                        Vector2 arg_2351_0 = this.Position;
-                        int arg_2351_1 = this.width;
-                        int arg_2351_2 = this.height;
-                        int arg_2351_3 = 26;
-                        float arg_2351_4 = (float)hitDirection;
-                        float arg_2351_5 = -1f;
-                        int arg_2351_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_2351_0, arg_2351_1, arg_2351_2, arg_2351_3, arg_2351_4, arg_2351_5, arg_2351_6, newColor, 1f);
-                        num56++;
-                    }
-                    return;
-                }
-                for (int num57 = 0; num57 < 20; num57++)
-                {
-                    Vector2 arg_23AC_0 = this.Position;
-                    int arg_23AC_1 = this.width;
-                    int arg_23AC_2 = this.height;
-                    int arg_23AC_3 = 26;
-                    float arg_23AC_4 = 2.5f * (float)hitDirection;
-                    float arg_23AC_5 = -2.5f;
-                    int arg_23AC_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_23AC_0, arg_23AC_1, arg_23AC_2, arg_23AC_3, arg_23AC_4, arg_23AC_5, arg_23AC_6, newColor, 1f);
-                }
-                SetGore(this.Type - 39 + 67);
                 return;
             }
             else if (this.Type == 34)
             {
-                if (this.life > 0)
-                {
-                    int num58 = 0;
-                    while ((double)num58 < dmg / (double)this.lifeMax * 30.0)
-                    {
-                        Vector2 arg_245C_0 = new Vector2(this.Position.X, this.Position.Y);
-                        int arg_245C_1 = this.width;
-                        int arg_245C_2 = this.height;
-                        int arg_245C_3 = 15;
-                        float arg_245C_4 = -this.Velocity.X * 0.2f;
-                        float arg_245C_5 = -this.Velocity.Y * 0.2f;
-                        int arg_245C_6 = 100;
-                        Color newColor = default(Color);
-                        int num59 = Dust.NewDust(arg_245C_0, arg_245C_1, arg_245C_2, arg_245C_3, arg_245C_4, arg_245C_5, arg_245C_6, newColor, 1.8f);
-                        Main.dust[num59].noLight = true;
-                        Main.dust[num59].noGravity = true;
-                        Dust expr_2487 = Main.dust[num59];
-                        expr_2487.velocity *= 1.3f;
-                        Vector2 arg_24F9_0 = new Vector2(this.Position.X, this.Position.Y);
-                        int arg_24F9_1 = this.width;
-                        int arg_24F9_2 = this.height;
-                        int arg_24F9_3 = 26;
-                        float arg_24F9_4 = -this.Velocity.X * 0.2f;
-                        float arg_24F9_5 = -this.Velocity.Y * 0.2f;
-                        int arg_24F9_6 = 0;
-                        newColor = default(Color);
-                        num59 = Dust.NewDust(arg_24F9_0, arg_24F9_1, arg_24F9_2, arg_24F9_3, arg_24F9_4, arg_24F9_5, arg_24F9_6, newColor, 0.9f);
-                        Main.dust[num59].noLight = true;
-                        Dust expr_2516 = Main.dust[num59];
-                        expr_2516.velocity *= 1.3f;
-                        num58++;
-                    }
-                    return;
-                }
-                for (int num60 = 0; num60 < 15; num60++)
-                {
-                    Vector2 arg_25B3_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_25B3_1 = this.width;
-                    int arg_25B3_2 = this.height;
-                    int arg_25B3_3 = 15;
-                    float arg_25B3_4 = -this.Velocity.X * 0.2f;
-                    float arg_25B3_5 = -this.Velocity.Y * 0.2f;
-                    int arg_25B3_6 = 100;
-                    Color newColor = default(Color);
-                    int num61 = Dust.NewDust(arg_25B3_0, arg_25B3_1, arg_25B3_2, arg_25B3_3, arg_25B3_4, arg_25B3_5, arg_25B3_6, newColor, 1.8f);
-                    Main.dust[num61].noLight = true;
-                    Main.dust[num61].noGravity = true;
-                    Dust expr_25DE = Main.dust[num61];
-                    expr_25DE.velocity *= 1.3f;
-                    Vector2 arg_2650_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_2650_1 = this.width;
-                    int arg_2650_2 = this.height;
-                    int arg_2650_3 = 26;
-                    float arg_2650_4 = -this.Velocity.X * 0.2f;
-                    float arg_2650_5 = -this.Velocity.Y * 0.2f;
-                    int arg_2650_6 = 0;
-                    newColor = default(Color);
-                    num61 = Dust.NewDust(arg_2650_0, arg_2650_1, arg_2650_2, arg_2650_3, arg_2650_4, arg_2650_5, arg_2650_6, newColor, 0.9f);
-                    Main.dust[num61].noLight = true;
-                    Dust expr_266D = Main.dust[num61];
-                    expr_266D.velocity *= 1.3f;
-                }
                 return;
             }
             else if (this.Type == 35 || this.Type == 36)
             {
-                if (this.life > 0)
-                {
-                    int num62 = 0;
-                    while ((double)num62 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_26E2_0 = this.Position;
-                        int arg_26E2_1 = this.width;
-                        int arg_26E2_2 = this.height;
-                        int arg_26E2_3 = 26;
-                        float arg_26E2_4 = (float)hitDirection;
-                        float arg_26E2_5 = -1f;
-                        int arg_26E2_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_26E2_0, arg_26E2_1, arg_26E2_2, arg_26E2_3, arg_26E2_4, arg_26E2_5, arg_26E2_6, newColor, 1f);
-                        num62++;
-                    }
-                    return;
-                }
-                for (int num63 = 0; num63 < 150; num63++)
-                {
-                    Vector2 arg_273D_0 = this.Position;
-                    int arg_273D_1 = this.width;
-                    int arg_273D_2 = this.height;
-                    int arg_273D_3 = 26;
-                    float arg_273D_4 = 2.5f * (float)hitDirection;
-                    float arg_273D_5 = -2.5f;
-                    int arg_273D_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_273D_0, arg_273D_1, arg_273D_2, arg_273D_3, arg_273D_4, arg_273D_5, arg_273D_6, newColor, 1f);
-                }
-                if (this.Type == 35)
-                {
-                    SetGore(54);
-                    SetGore(55);
-                    return;
-                }
-                SetGore(56);
-                SetGore(57);
-                SetGore(57);
-                SetGore(57);
                 return;
             }
             else if (this.Type == 23)
             {
-                if (this.life > 0)
-                {
-                    int num64 = 0;
-                    while ((double)num64 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        int num65 = 25;
-                        if (Main.rand.Next(2) == 0)
-                        {
-                            num65 = 6;
-                        }
-                        Vector2 arg_2836_0 = this.Position;
-                        int arg_2836_1 = this.width;
-                        int arg_2836_2 = this.height;
-                        int arg_2836_3 = num65;
-                        float arg_2836_4 = (float)hitDirection;
-                        float arg_2836_5 = -1f;
-                        int arg_2836_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_2836_0, arg_2836_1, arg_2836_2, arg_2836_3, arg_2836_4, arg_2836_5, arg_2836_6, newColor, 1f);
-                        Vector2 arg_2897_0 = new Vector2(this.Position.X, this.Position.Y);
-                        int arg_2897_1 = this.width;
-                        int arg_2897_2 = this.height;
-                        int arg_2897_3 = 6;
-                        float arg_2897_4 = this.Velocity.X * 0.2f;
-                        float arg_2897_5 = this.Velocity.Y * 0.2f;
-                        int arg_2897_6 = 100;
-                        newColor = default(Color);
-                        int num66 = Dust.NewDust(arg_2897_0, arg_2897_1, arg_2897_2, arg_2897_3, arg_2897_4, arg_2897_5, arg_2897_6, newColor, 2f);
-                        Main.dust[num66].noGravity = true;
-                        num64++;
-                    }
-                    return;
-                }
-                for (int num67 = 0; num67 < 50; num67++)
-                {
-                    int num68 = 25;
-                    if (Main.rand.Next(2) == 0)
-                    {
-                        num68 = 6;
-                    }
-                    Vector2 arg_2914_0 = this.Position;
-                    int arg_2914_1 = this.width;
-                    int arg_2914_2 = this.height;
-                    int arg_2914_3 = num68;
-                    float arg_2914_4 = (float)(2 * hitDirection);
-                    float arg_2914_5 = -2f;
-                    int arg_2914_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_2914_0, arg_2914_1, arg_2914_2, arg_2914_3, arg_2914_4, arg_2914_5, arg_2914_6, newColor, 1f);
-                }
-                for (int num69 = 0; num69 < 50; num69++)
-                {
-                    Vector2 arg_2989_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_2989_1 = this.width;
-                    int arg_2989_2 = this.height;
-                    int arg_2989_3 = 6;
-                    float arg_2989_4 = this.Velocity.X * 0.2f;
-                    float arg_2989_5 = this.Velocity.Y * 0.2f;
-                    int arg_2989_6 = 100;
-                    Color newColor = default(Color);
-                    int num70 = Dust.NewDust(arg_2989_0, arg_2989_1, arg_2989_2, arg_2989_3, arg_2989_4, arg_2989_5, arg_2989_6, newColor, 2.5f);
-                    Dust expr_2998 = Main.dust[num70];
-                    expr_2998.velocity *= 6f;
-                    Main.dust[num70].noGravity = true;
-                }
                 return;
             }
             else if (this.Type == 24)
             {
-                if (this.life > 0)
-                {
-                    int num71 = 0;
-                    while ((double)num71 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_2A38_0 = new Vector2(this.Position.X, this.Position.Y);
-                        int arg_2A38_1 = this.width;
-                        int arg_2A38_2 = this.height;
-                        int arg_2A38_3 = 6;
-                        float arg_2A38_4 = this.Velocity.X;
-                        float arg_2A38_5 = this.Velocity.Y;
-                        int arg_2A38_6 = 100;
-                        Color newColor = default(Color);
-                        int num72 = Dust.NewDust(arg_2A38_0, arg_2A38_1, arg_2A38_2, arg_2A38_3, arg_2A38_4, arg_2A38_5, arg_2A38_6, newColor, 2.5f);
-                        Main.dust[num72].noGravity = true;
-                        num71++;
-                    }
-                    return;
-                }
-                for (int num73 = 0; num73 < 50; num73++)
-                {
-                    Vector2 arg_2AC6_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_2AC6_1 = this.width;
-                    int arg_2AC6_2 = this.height;
-                    int arg_2AC6_3 = 6;
-                    float arg_2AC6_4 = this.Velocity.X;
-                    float arg_2AC6_5 = this.Velocity.Y;
-                    int arg_2AC6_6 = 100;
-                    Color newColor = default(Color);
-                    int num74 = Dust.NewDust(arg_2AC6_0, arg_2AC6_1, arg_2AC6_2, arg_2AC6_3, arg_2AC6_4, arg_2AC6_5, arg_2AC6_6, newColor, 2.5f);
-                    Main.dust[num74].noGravity = true;
-                    Dust expr_2AE3 = Main.dust[num74];
-                    expr_2AE3.velocity *= 2f;
-                }
-                SetGore(45);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 46);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 47);
                 return;
             }
             else if (this.Type == 25)
             {
-                for (int num75 = 0; num75 < 20; num75++)
-                {
-                    Vector2 arg_2C6A_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_2C6A_1 = this.width;
-                    int arg_2C6A_2 = this.height;
-                    int arg_2C6A_3 = 6;
-                    float arg_2C6A_4 = -this.Velocity.X * 0.2f;
-                    float arg_2C6A_5 = -this.Velocity.Y * 0.2f;
-                    int arg_2C6A_6 = 100;
-                    Color newColor = default(Color);
-                    int num76 = Dust.NewDust(arg_2C6A_0, arg_2C6A_1, arg_2C6A_2, arg_2C6A_3, arg_2C6A_4, arg_2C6A_5, arg_2C6A_6, newColor, 2f);
-                    Main.dust[num76].noGravity = true;
-                    Dust expr_2C87 = Main.dust[num76];
-                    expr_2C87.velocity *= 2f;
-                    Vector2 arg_2CF9_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_2CF9_1 = this.width;
-                    int arg_2CF9_2 = this.height;
-                    int arg_2CF9_3 = 6;
-                    float arg_2CF9_4 = -this.Velocity.X * 0.2f;
-                    float arg_2CF9_5 = -this.Velocity.Y * 0.2f;
-                    int arg_2CF9_6 = 100;
-                    newColor = default(Color);
-                    num76 = Dust.NewDust(arg_2CF9_0, arg_2CF9_1, arg_2CF9_2, arg_2CF9_3, arg_2CF9_4, arg_2CF9_5, arg_2CF9_6, newColor, 1f);
-                    Dust expr_2D08 = Main.dust[num76];
-                    expr_2D08.velocity *= 2f;
-                }
+                
                 return;
             }
             else if (this.Type == 33)
             {
-                for (int num77 = 0; num77 < 20; num77++)
-                {
-                    Vector2 arg_2DC0_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_2DC0_1 = this.width;
-                    int arg_2DC0_2 = this.height;
-                    int arg_2DC0_3 = 29;
-                    float arg_2DC0_4 = -this.Velocity.X * 0.2f;
-                    float arg_2DC0_5 = -this.Velocity.Y * 0.2f;
-                    int arg_2DC0_6 = 100;
-                    Color newColor = default(Color);
-                    int num78 = Dust.NewDust(arg_2DC0_0, arg_2DC0_1, arg_2DC0_2, arg_2DC0_3, arg_2DC0_4, arg_2DC0_5, arg_2DC0_6, newColor, 2f);
-                    Main.dust[num78].noGravity = true;
-                    Dust expr_2DDD = Main.dust[num78];
-                    expr_2DDD.velocity *= 2f;
-                    Vector2 arg_2E50_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_2E50_1 = this.width;
-                    int arg_2E50_2 = this.height;
-                    int arg_2E50_3 = 29;
-                    float arg_2E50_4 = -this.Velocity.X * 0.2f;
-                    float arg_2E50_5 = -this.Velocity.Y * 0.2f;
-                    int arg_2E50_6 = 100;
-                    newColor = default(Color);
-                    num78 = Dust.NewDust(arg_2E50_0, arg_2E50_1, arg_2E50_2, arg_2E50_3, arg_2E50_4, arg_2E50_5, arg_2E50_6, newColor, 1f);
-                    Dust expr_2E5F = Main.dust[num78];
-                    expr_2E5F.velocity *= 2f;
-                }
                 return;
             }
             else if (this.Type == 26 || this.Type == 27 || this.Type == 28 || this.Type == 29)
             {
-                if (this.life > 0)
-                {
-                    int num79 = 0;
-                    while ((double)num79 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_2EE7_0 = this.Position;
-                        int arg_2EE7_1 = this.width;
-                        int arg_2EE7_2 = this.height;
-                        int arg_2EE7_3 = 5;
-                        float arg_2EE7_4 = (float)hitDirection;
-                        float arg_2EE7_5 = -1f;
-                        int arg_2EE7_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_2EE7_0, arg_2EE7_1, arg_2EE7_2, arg_2EE7_3, arg_2EE7_4, arg_2EE7_5, arg_2EE7_6, newColor, 1f);
-                        num79++;
-                    }
-                    return;
-                }
-                for (int num80 = 0; num80 < 50; num80++)
-                {
-                    Vector2 arg_2F41_0 = this.Position;
-                    int arg_2F41_1 = this.width;
-                    int arg_2F41_2 = this.height;
-                    int arg_2F41_3 = 5;
-                    float arg_2F41_4 = 2.5f * (float)hitDirection;
-                    float arg_2F41_5 = -2.5f;
-                    int arg_2F41_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_2F41_0, arg_2F41_1, arg_2F41_2, arg_2F41_3, arg_2F41_4, arg_2F41_5, arg_2F41_6, newColor, 1f);
-                }
-                SetGore(48);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, 49);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
-                Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, 50);
                 return;
             }
             else if (this.Type == 30)
             {
-                for (int num81 = 0; num81 < 20; num81++)
-                {
-                    Vector2 arg_30B7_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_30B7_1 = this.width;
-                    int arg_30B7_2 = this.height;
-                    int arg_30B7_3 = 27;
-                    float arg_30B7_4 = -this.Velocity.X * 0.2f;
-                    float arg_30B7_5 = -this.Velocity.Y * 0.2f;
-                    int arg_30B7_6 = 100;
-                    Color newColor = default(Color);
-                    int num82 = Dust.NewDust(arg_30B7_0, arg_30B7_1, arg_30B7_2, arg_30B7_3, arg_30B7_4, arg_30B7_5, arg_30B7_6, newColor, 2f);
-                    Main.dust[num82].noGravity = true;
-                    Dust expr_30D4 = Main.dust[num82];
-                    expr_30D4.velocity *= 2f;
-                    Vector2 arg_3147_0 = new Vector2(this.Position.X, this.Position.Y);
-                    int arg_3147_1 = this.width;
-                    int arg_3147_2 = this.height;
-                    int arg_3147_3 = 27;
-                    float arg_3147_4 = -this.Velocity.X * 0.2f;
-                    float arg_3147_5 = -this.Velocity.Y * 0.2f;
-                    int arg_3147_6 = 100;
-                    newColor = default(Color);
-                    num82 = Dust.NewDust(arg_3147_0, arg_3147_1, arg_3147_2, arg_3147_3, arg_3147_4, arg_3147_5, arg_3147_6, newColor, 1f);
-                    Dust expr_3156 = Main.dust[num82];
-                    expr_3156.velocity *= 2f;
-                }
                 return;
             }
             else if (this.Type == 42)
             {
-                if (this.life > 0)
-                {
-                    int num83 = 0;
-                    while ((double)num83 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -1f, this.alpha, this.color, this.scale);
-                        num83++;
-                    }
-                    return;
-                }
-                for (int num84 = 0; num84 < 50; num84++)
-                {
-                    Dust.NewDust(this.Position, this.width, this.height, 18, (float)hitDirection, -2f, this.alpha, this.color, this.scale);
-                }
-                SetGore(70);
-                SetGore(71);
                 return;
             }
             else if (this.Type == 43 || this.Type == 56)
             {
-                if (this.life > 0)
-                {
-                    int num85 = 0;
-                    while ((double)num85 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -1f, this.alpha, this.color, 1.2f);
-                        num85++;
-                    }
-                    return;
-                }
-                for (int num86 = 0; num86 < 50; num86++)
-                {
-                    Dust.NewDust(this.Position, this.width, this.height, 40, (float)hitDirection, -2f, this.alpha, this.color, 1.2f);
-                }
-                SetGore(72);
-                SetGore(72);
                 return;
             }
             else if (this.Type == 48)
             {
-                if (this.life > 0)
-                {
-                    int num87 = 0;
-                    while ((double)num87 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_337C_0 = this.Position;
-                        int arg_337C_1 = this.width;
-                        int arg_337C_2 = this.height;
-                        int arg_337C_3 = 5;
-                        float arg_337C_4 = (float)hitDirection;
-                        float arg_337C_5 = -1f;
-                        int arg_337C_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_337C_0, arg_337C_1, arg_337C_2, arg_337C_3, arg_337C_4, arg_337C_5, arg_337C_6, newColor, 1f);
-                        num87++;
-                    }
-                    return;
-                }
-                for (int num88 = 0; num88 < 50; num88++)
-                {
-                    Vector2 arg_33D2_0 = this.Position;
-                    int arg_33D2_1 = this.width;
-                    int arg_33D2_2 = this.height;
-                    int arg_33D2_3 = 5;
-                    float arg_33D2_4 = (float)(2 * hitDirection);
-                    float arg_33D2_5 = -2f;
-                    int arg_33D2_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_33D2_0, arg_33D2_1, arg_33D2_2, arg_33D2_3, arg_33D2_4, arg_33D2_5, arg_33D2_6, newColor, 1f);
-                }
-                SetGore(80);
-                SetGore(81);
                 return;
             }
             else if (this.Type == 62 || this.Type == 66)
             {
                 if (this.life > 0)
                 {
-                    int num89 = 0;
-                    while ((double)num89 < dmg / (double)this.lifeMax * 100.0)
-                    {
-                        Vector2 arg_345C_0 = this.Position;
-                        int arg_345C_1 = this.width;
-                        int arg_345C_2 = this.height;
-                        int arg_345C_3 = 5;
-                        float arg_345C_4 = (float)hitDirection;
-                        float arg_345C_5 = -1f;
-                        int arg_345C_6 = 0;
-                        Color newColor = default(Color);
-                        Dust.NewDust(arg_345C_0, arg_345C_1, arg_345C_2, arg_345C_3, arg_345C_4, arg_345C_5, arg_345C_6, newColor, 1f);
-                        num89++;
-                    }
                     return;
                 }
-                for (int num90 = 0; num90 < 50; num90++)
-                {
-                    Vector2 arg_34B2_0 = this.Position;
-                    int arg_34B2_1 = this.width;
-                    int arg_34B2_2 = this.height;
-                    int arg_34B2_3 = 5;
-                    float arg_34B2_4 = (float)(2 * hitDirection);
-                    float arg_34B2_5 = -2f;
-                    int arg_34B2_6 = 0;
-                    Color newColor = default(Color);
-                    Dust.NewDust(arg_34B2_0, arg_34B2_1, arg_34B2_2, arg_34B2_3, arg_34B2_4, arg_34B2_5, arg_34B2_6, newColor, 1f);
-                }
-                SetGore(93);
-                SetGore(94);
-                SetGore(94);
             }
 
             Color newColor2 = new Color(50, 120, 255, 100);
@@ -7926,17 +6556,7 @@ namespace Terraria_Server
             }
             if (this.life > 0)
             {
-                int num91 = 0;
-                while ((double)num91 < dmg / (double)this.lifeMax * 50.0)
-                {
-                    Dust.NewDust(this.Position, this.width, this.height, 4, (float)hitDirection, -1f, 0, newColor2, 1f);
-                    num91++;
-                }
                 return;
-            }
-            for (int num92 = 0; num92 < 25; num92++)
-            {
-                Dust.NewDust(this.Position, this.width, this.height, 4, (float)(2 * hitDirection), -2f, 0, newColor2, 1f);
             }
         }
         
@@ -7984,9 +6604,7 @@ namespace Terraria_Server
             {
                 int npcIndex = NPC.NewNPC((int)vector.X + num / 2, (int)vector.Y + num2 / 2, 35, 0);
                 Main.npcs[npcIndex].netUpdate = true;
-                String str = "Skeletron";
-                
-                NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
+                NetMessage.SendData(25, -1, -1, "Skeletron has awoken!", 255, 175f, 75f, 255f);
             }
         }
         
@@ -8106,35 +6724,6 @@ namespace Terraria_Server
                         if (!npc.wet && npc.wetCount == 0)
                         {
                             npc.wetCount = 10;
-                            if (!flag)
-                            {
-                                for (int l = 0; l < 30; l++)
-                                {
-                                    int num6 = Dust.NewDust(new Vector2(npc.Position.X - 6f, npc.Position.Y + (float)(npc.height / 2) - 8f), npc.width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
-                                    Dust expr_4DC_cp_0 = Main.dust[num6];
-                                    expr_4DC_cp_0.velocity.Y = expr_4DC_cp_0.velocity.Y - 4f;
-                                    Dust expr_4FA_cp_0 = Main.dust[num6];
-                                    expr_4FA_cp_0.velocity.X = expr_4FA_cp_0.velocity.X * 2.5f;
-                                    Main.dust[num6].scale = 1.3f;
-                                    Main.dust[num6].alpha = 100;
-                                    Main.dust[num6].noGravity = true;
-                                }
-
-                            }
-                            else
-                            {
-                                for (int m = 0; m < 10; m++)
-                                {
-                                    int num7 = Dust.NewDust(new Vector2(npc.Position.X - 6f, npc.Position.Y + (float)(npc.height / 2) - 8f), npc.width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
-                                    Dust expr_606_cp_0 = Main.dust[num7];
-                                    expr_606_cp_0.velocity.Y = expr_606_cp_0.velocity.Y - 1.5f;
-                                    Dust expr_624_cp_0 = Main.dust[num7];
-                                    expr_624_cp_0.velocity.X = expr_624_cp_0.velocity.X * 2.5f;
-                                    Main.dust[num7].scale = 1.3f;
-                                    Main.dust[num7].alpha = 100;
-                                    Main.dust[num7].noGravity = true;
-                                }
-                            }
                         }
                         npc.wet = true;
                     }
@@ -8147,34 +6736,6 @@ namespace Terraria_Server
                             if (npc.wetCount == 0)
                             {
                                 npc.wetCount = 10;
-                                if (!npc.lavaWet)
-                                {
-                                    for (int n = 0; n < 30; n++)
-                                    {
-                                        int num8 = Dust.NewDust(new Vector2(npc.Position.X - 6f, npc.Position.Y + (float)(npc.height / 2) - 8f), npc.width + 12, 24, 33, 0f, 0f, 0, default(Color), 1f);
-                                        Dust expr_775_cp_0 = Main.dust[num8];
-                                        expr_775_cp_0.velocity.Y = expr_775_cp_0.velocity.Y - 4f;
-                                        Dust expr_793_cp_0 = Main.dust[num8];
-                                        expr_793_cp_0.velocity.X = expr_793_cp_0.velocity.X * 2.5f;
-                                        Main.dust[num8].scale = 1.3f;
-                                        Main.dust[num8].alpha = 100;
-                                        Main.dust[num8].noGravity = true;
-                                    }
-                                }
-                                else
-                                {
-                                    for (int num9 = 0; num9 < 10; num9++)
-                                    {
-                                        int num10 = Dust.NewDust(new Vector2(npc.Position.X - 6f, npc.Position.Y + (float)(npc.height / 2) - 8f), npc.width + 12, 24, 35, 0f, 0f, 0, default(Color), 1f);
-                                        Dust expr_89F_cp_0 = Main.dust[num10];
-                                        expr_89F_cp_0.velocity.Y = expr_89F_cp_0.velocity.Y - 1.5f;
-                                        Dust expr_8BD_cp_0 = Main.dust[num10];
-                                        expr_8BD_cp_0.velocity.X = expr_8BD_cp_0.velocity.X * 2.5f;
-                                        Main.dust[num10].scale = 1.3f;
-                                        Main.dust[num10].alpha = 100;
-                                        Main.dust[num10].noGravity = true;
-                                    }
-                                }
                             }
                         }
                     }
@@ -8903,22 +7464,8 @@ namespace Terraria_Server
         {
             if (this.life > 0)
             {
-                for (int i = 0; (double)i < (damage / (double)this.lifeMax * lifeModifier); i++)
-                {
-                    Dust.NewDust(new Vector2(Position.X, Position.Y), width, height, 5, hitDirection, -1f, alpha, default(Color), 1f);
-                }
                 return;
             }
-            for (int num43 = 0; num43 < 50; num43++)
-            {
-                float speedX = 2.5f * (float)hitDirection;
-                Dust.NewDust(new Vector2(Position.X, Position.Y), width, height, type, speedX, -2.5f, 0, default(Color), 1f);
-            }
-            SetGore(goreStart++);
-            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, goreStart);
-            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 20f), this.Velocity, goreStart++);
-            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, goreStart);
-            Gore.NewGore(new Vector2(this.Position.X, this.Position.Y + 34f), this.Velocity, goreStart);
         }
         
         public object Clone()

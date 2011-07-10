@@ -150,10 +150,8 @@ namespace Terraria_Server
 		public static int[] backgroundHeight = new int[7];
         public static bool tilesLoaded = false;
         public static Tile[,] tile = new Tile[Main.maxTilesX, Main.maxTilesY];
-		public static Dust[] dust = new Dust[2000];
 		public static Item[] item = new Item[201];
 		public static NPC[] npcs = new NPC[NPC.MAX_NPCS + 1];
-		public static Gore[] gore = new Gore[201];
 		public static Projectile[] projectile = new Projectile[1001];
 		public static Chest[] chest = new Chest[1000];
 		public static Sign[] sign = new Sign[1000];
@@ -460,10 +458,10 @@ namespace Terraria_Server
             {
                 this.menuItemScale[j] = 0.8f;
             }
-            for (int k = 0; k < 1000; k++)
-            {
-                Main.dust[k] = new Dust();
-            }
+            //for (int k = 0; k < 1000; k++)
+            //{
+            //    Main.dust[k] = new Dust();
+            //}
             for (int l = 0; l < 201; l++)
             {
                 Main.item[l] = new Item();
@@ -481,10 +479,10 @@ namespace Terraria_Server
             {
                 Main.projectile[num2] = new Projectile();
             }
-            for (int num3 = 0; num3 < 201; num3++)
-            {
-                Main.gore[num3] = new Gore();
-            }
+            //for (int num3 = 0; num3 < 201; num3++)
+            //{
+            //    Main.gore[num3] = new Gore();
+            //}
 
             for (int num8 = 0; num8 < Recipe.maxRecipes; num8++)
             {
@@ -1127,25 +1125,25 @@ namespace Terraria_Server
                     NPC.UpdateNPC(i);
                 }
             }
-            for (int i = 0; i < 200; i++)
-            {
-                if (Main.ignoreErrors)
-                {
-                    try
-                    {
-                        Main.gore[i].Update();
-                    }
-                    catch
-                    {
-                        Main.gore[i] = new Gore();
-                        Debug.WriteLine("Error: gore[" + i + "].Update()");
-                    }
-                }
-                else
-                {
-                    Main.gore[i].Update();
-                }
-            }
+            //for (int i = 0; i < 200; i++)
+            //{
+            //    if (Main.ignoreErrors)
+            //    {
+            //        try
+            //        {
+            //            Main.gore[i].Update();
+            //        }
+            //        catch
+            //        {
+            //            Main.gore[i] = new Gore();
+            //            Debug.WriteLine("Error: gore[" + i + "].Update()");
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Main.gore[i].Update();
+            //    }
+            //}
             for (int i = 0; i < 1000; i++)
             {
                 if (Main.ignoreErrors)
@@ -1198,25 +1196,25 @@ namespace Terraria_Server
                     Main.item[i].UpdateItem(i);
                 }
             }
-            if (Main.ignoreErrors)
-            {
-                try
-                {
-                    Dust.UpdateDust();
-                }
-                catch
-                {
-                    for (int i = 0; i < 2000; i++)
-                    {
-                        Main.dust[i] = new Dust();
-                    }
-                    Debug.WriteLine("Error: Dust.Update()");
-                }
-            }
-            else
-            {
-                Dust.UpdateDust();
-            }
+            //if (Main.ignoreErrors)
+            //{
+            //    try
+            //    {
+            //        Dust.UpdateDust();
+            //    }
+            //    catch
+            //    {
+            //        for (int i = 0; i < 2000; i++)
+            //        {
+            //            Main.dust[i] = new Dust();
+            //        }
+            //        Debug.WriteLine("Error: Dust.Update()");
+            //    }
+            //}
+            //else
+            //{
+            //    Dust.UpdateDust();
+            //}
 
             if (Main.ignoreErrors)
             {

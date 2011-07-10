@@ -199,13 +199,11 @@
     <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Commands.cs" />
     <Compile Include="Commands\CommandParser.cs" />
-    <Compile Include="Dust.cs" />
     <Compile Include="Events\ConsoleCommandEvent.cs" />
     <Compile Include="Events\Event.cs" />
     <Compile Include="Events\PlayerHurtEvent.cs" />
     <Compile Include="Events\PlayerStateUpdateEvent.cs" />
     <Compile Include="Events\PlayerTileChangeEvent.cs" />
-    <Compile Include="Gore.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />

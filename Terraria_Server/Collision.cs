@@ -692,10 +692,6 @@ namespace Terraria_Server
                         vector2.Y = (float)(j * 16);
                         if (vector.X + (float)Width > vector2.X && vector.X < vector2.X + 16f && vector.Y + (float)Height > vector2.Y && (double)vector.Y < (double)vector2.Y + 16.01)
                         {
-                            if ((double)(Math.Abs(Velocity.X) + Math.Abs(Velocity.Y)) > 0.7 && Main.rand.Next(30) == 0)
-                            {
-                                Dust.NewDust(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16, 30, 0f, 0f, 0, default(Color), 1f);
-                            }
                             result = true;
                         }
                     }
