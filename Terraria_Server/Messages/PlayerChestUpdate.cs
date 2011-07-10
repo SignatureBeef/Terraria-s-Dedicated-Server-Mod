@@ -9,11 +9,6 @@ namespace Terraria_Server.Messages
             return Packet.PLAYER_CHEST_UPDATE;
         }
 
-        public int? GetRequiredNetMode()
-        {
-            return null;
-        }
-
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int inventoryIndex = BitConverter.ToInt32(readBuffer, num);

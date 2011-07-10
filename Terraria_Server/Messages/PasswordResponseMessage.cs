@@ -10,11 +10,6 @@ namespace Terraria_Server.Messages
             return Packet.PASSWORD_RESPONSE;
         }
 
-        public int? GetRequiredNetMode()
-        {
-            return 2;
-        }
-
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             String password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
