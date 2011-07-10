@@ -7,7 +7,7 @@ namespace Terraria_Server
     public class UpdateManager
     {
         public static String UpdateList = "http://update.tdsm.org/updatelist.txt";
-        public static String UpdateLink = "http://update.tdsm.org/Terraria_Server.exe"; // <3 Olympus Gaming! Check em out some time ;)
+        public static String UpdateLink = "http://update.tdsm.org/Terraria_Server.exe"; //Still hosted by Olympus, <3 Olympus Gaming! Check em out some time ;)
         public static String UpdateInfo = "http://update.tdsm.org/buildinfo.txt";
 
         public static void printUpdateInfo()
@@ -68,7 +68,7 @@ namespace Terraria_Server
                 String backupPath = "Terraria_Server.bak";
                 String myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
-                if (File.Exists(savePath))
+                if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
                 {
                     try
                     {
@@ -81,27 +81,9 @@ namespace Terraria_Server
                         return false;
                     }
                 }
-                if (File.Exists(backupPath))
-                {
-                    try
-                    {
-                        File.Delete(backupPath);
-                    }
-                    catch (Exception e)
-                    {
-                        Program.tConsole.WriteLine("Error deleting old backup!");
-                        Program.tConsole.WriteLine(e.Message);
-                        return false;
-                    }
-                }
-                try
-                {
-                    File.Move(myFile, backupPath);
-                }
-                catch (Exception e)
-                {
+
+                if(!MoveFile(myFile, backupPath)) {
                     Program.tConsole.WriteLine("Error moving current executable!");
-                    Program.tConsole.WriteLine(e.Message);
                     return false;
                 }
 
@@ -109,16 +91,11 @@ namespace Terraria_Server
                 new System.Net.WebClient().DownloadFile(UpdateLink, savePath);
                 Program.tConsole.Write("Ok");
 
-
                 Program.tConsole.Write("Finishing Update...");
-                try
-                {
-                    File.Move(savePath, myFile);
-                }
-                catch (Exception e)
+
+                if (!MoveFile(savePath, myFile))
                 {
                     Program.tConsole.WriteLine("Error moving updated executable!");
-                    Program.tConsole.WriteLine(e.Message);
                     return false;
                 }
 
@@ -142,5 +119,29 @@ namespace Terraria_Server
             return false;
         }
 
+        //Seems Mono had an issue when files were overwriting.
+        public static bool MoveFile(String Location, String Destination)
+        {
+            if (File.Exists(Destination))
+            {
+                try
+                {
+                    File.Delete(Destination);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+            }
+            try
+            {
+                File.Move(Location, Destination);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }
