@@ -254,7 +254,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Requesting player</param>
         /// <param name="commands">Specific commands to send help on, if player provided any</param>
-        public static void ShowHelp(Sender sender, String[] commands = null)
+        public static void ShowHelp(ISender sender, String[] commands = null)
         {
             if (sender is Player)
             {
@@ -346,7 +346,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Player that sent command</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void WhiteList(Sender sender, String[] commands)
+        public static void WhiteList(ISender sender, String[] commands)
         {
             // /whitelist <add:remove> <player>
             // arg  0         1           2
@@ -386,11 +386,11 @@ namespace Terraria_Server.Commands
 
                     }
 
-                    Program.server.notifyOps(sender.getName() + " used WhiteList command " + caseType + " for: " + commands[2], true);
+                    Program.server.notifyOps(sender.Name + " used WhiteList command " + caseType + " for: " + commands[2], true);
 
                     if (!Program.server.WhiteList.Save())
                     {
-                        Program.server.notifyOps("WhiteList Failed to Save due to " + sender.getName() + "'s command", true);
+                        Program.server.notifyOps("WhiteList Failed to Save due to " + sender.Name + "'s command", true);
                     }
                     return;
                 }
@@ -404,7 +404,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Player that sent command</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void BanList(Sender sender, String[] commands)
+        public static void BanList(ISender sender, String[] commands)
         {
             // /ban  <player>
             // /unban <player>
@@ -475,11 +475,11 @@ namespace Terraria_Server.Commands
 
                     }
 
-                    Program.server.notifyOps(sender.getName() + " used Ban command case " + caseType + " for: " + commands[1], true);
+                    Program.server.notifyOps(sender.Name + " used Ban command case " + caseType + " for: " + commands[1], true);
 
                     if (!Program.server.BanList.Save())
                     {
-                        Program.server.notifyOps("BanList Failed to Save due to " + sender.getName() + "'s command", true);
+                        Program.server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
                     }
                     return;
                 }
@@ -494,7 +494,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Time(Sender sender, String[] commands)
+        public static void Time(ISender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -603,7 +603,7 @@ namespace Terraria_Server.Commands
                             }
                     }
                     NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-                    Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.getName());
+                    Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.Name);
                     return;
                 }
             }
@@ -617,7 +617,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Give(Sender sender, String[] commands)
+        public static void Give(ISender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -717,7 +717,7 @@ namespace Terraria_Server.Commands
 
                         Item.NewItem((int)player.Position.X, (int)player.Position.Y, player.width, player.height, itemType, stackSize, false);
 
-                        Program.server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.getName() + "}", true);
+                        Program.server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.Name + "}", true);
 
                         return;
                     }
@@ -742,7 +742,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void SpawnNPC(Sender sender, String[] commands)
+        public static void SpawnNPC(ISender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -859,7 +859,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Teleport(Sender sender, String[] commands)
+        public static void Teleport(ISender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -886,7 +886,7 @@ namespace Terraria_Server.Commands
                 player.teleportTo(toplayer);
 
                 Program.server.notifyOps("Teleported " + player.Name + " to " +
-                    toplayer.Name + " {" + sender.getName() + "}", true);
+                    toplayer.Name + " {" + sender.Name + "}", true);
 
                 return;
             }
@@ -904,7 +904,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void TeleportHere(Sender sender, String[] commands)
+        public static void TeleportHere(ISender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -929,7 +929,7 @@ namespace Terraria_Server.Commands
                     toplayer.teleportTo(player);
 
                     Program.server.notifyOps("Teleported " + toplayer.Name + " to " +
-                        player.Name + " {" + sender.getName() + "}", true);
+                        player.Name + " {" + sender.Name + "}", true);
 
                     return;
                 }
@@ -947,7 +947,7 @@ namespace Terraria_Server.Commands
         /// Settles water like in the startup routine
         /// </summary>
         /// <param name="sender">Sending player</param>
-        public static void SettleWater(Sender sender)
+        public static void SettleWater(ISender sender)
         {
             if (sender is Player)
             {
@@ -977,7 +977,7 @@ namespace Terraria_Server.Commands
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
         /// <param name="deop">Boolean value representing command's op type: True = deop command, false = op</param>
-        public static void OP(Sender sender, String[] commands, bool deop = false)
+        public static void OP(ISender sender, String[] commands, bool deop = false)
         {
             if (sender is Player)
             {
@@ -999,7 +999,7 @@ namespace Terraria_Server.Commands
 
                 if (deop)
                 {
-                    Program.server.notifyOps("De-Opping " + player_OP + " {" + sender.getName() + "}", true);
+                    Program.server.notifyOps("De-Opping " + player_OP + " {" + sender.Name + "}", true);
 
                     if (Player.isInOpList(player_OP, Program.server))
                     {
@@ -1009,13 +1009,13 @@ namespace Terraria_Server.Commands
                 else
                 {
                     String player_Password = commands[2].Trim().ToLower();
-                    Program.server.notifyOps("Opping " + player_OP + " {" + sender.getName() + "}", true);
+                    Program.server.notifyOps("Opping " + player_OP + " {" + sender.Name + "}", true);
                     Program.server.OpList.addException(player_OP + ":" + player_Password);
                 }
 
                 if (!Program.server.OpList.Save())
                 {
-                    Program.server.notifyOps("OpList Failed to Save due to " + sender.getName() + "'s command", true);
+                    Program.server.notifyOps("OpList Failed to Save due to " + sender.Name + "'s command", true);
                 } 
                 return;
             }
@@ -1034,7 +1034,7 @@ namespace Terraria_Server.Commands
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
         /// <param name="logout">Boolean: True means command was oplogout, false means oplogin</param>
-        public static void OPLoginOut(Sender sender, String[] commands, bool logout = false)
+        public static void OPLoginOut(ISender sender, String[] commands, bool logout = false)
         {
             if (sender is Player)
             {
@@ -1052,7 +1052,7 @@ namespace Terraria_Server.Commands
                 {
                     String player_Password = commands[1].Trim().ToLower();
 
-                    if (Player.isInOpList(sender.getName(), Program.server))
+                    if (Player.isInOpList(sender.Name, Program.server))
                     {
                         if (((Player)sender).getPassword().Trim().ToLower() == player_Password)
                         {
@@ -1085,7 +1085,7 @@ namespace Terraria_Server.Commands
         /// Enables or disables NPC spawning
         /// </summary>
         /// <param name="sender">Sending player</param>
-        public static void NPCSpawns(Sender sender)
+        public static void NPCSpawns(ISender sender)
         {
             if (sender is Player)
             {
@@ -1114,7 +1114,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Kick(Sender sender, String[] commands)
+        public static void Kick(ISender sender, String[] commands)
         {
             if (sender is Player)
             {
@@ -1142,7 +1142,7 @@ namespace Terraria_Server.Commands
                     }
 
 
-                    Program.server.notifyOps(sender.getName() + " has kicked " + commands[1], true);
+                    Program.server.notifyOps(sender.Name + " has kicked " + commands[1], true);
 
                     return;
                 }
@@ -1155,7 +1155,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="server">Current Server instance</param>
-        public static void Restart(Sender sender, Server server)
+        public static void Restart(ISender sender, Server server)
         {
             if (sender is Player)
             {

@@ -4,17 +4,8 @@ namespace Terraria_Server.Commands
     /// <summary>
     /// Sender class for command sending/parsing
     /// </summary>
-    public class Sender
+    public class Sender : ISender
     {
-        /// <summary>
-        /// Gets current Server instance
-        /// </summary>
-        /// <returns>Current Server instance</returns>
-        public Server getServer()
-        {
-            return Program.server;
-        }
-
         /// <summary>
         /// Get/set method for Sender's Op status
         /// </summary>
@@ -24,9 +15,12 @@ namespace Terraria_Server.Commands
         /// Gets the name of the sending entity; defaults to Console
         /// </summary>
         /// <returns>Sending entity name</returns>
-        public virtual String getName()
+        public virtual String Name
         {
-            return "CONSOLE";
+            get
+            {
+                return "CONSOLE";
+            }
         }
 
         /// <summary>

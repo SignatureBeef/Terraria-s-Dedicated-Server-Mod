@@ -279,20 +279,21 @@ namespace Terraria_Server
         /// </summary>
         public void Damage()
         {
+            int playerIndex = Main.myPlayer;
+            Player player = Main.players[playerIndex];
+
             Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
             if (this.friendly && this.type != ProjectileType.ORB_OF_LIGHT)
             {
-                if (this.Owner == Main.myPlayer)
+                if (this.Owner == playerIndex)
                 {
                     if ((this.aiStyle == 16 || this.type == ProjectileType.ARROW_HELLFIRE) && this.timeLeft <= 1)
                     {
-                        int myPlayer = Main.myPlayer;
-                        if (Main.players[myPlayer].Active && !Main.players[myPlayer].dead && !Main.players[myPlayer].immune && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, Main.players[myPlayer].Position, Main.players[myPlayer].width, Main.players[myPlayer].height)))
+                        if (player.Active && !player.dead && !player.immune && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, player.Position, player.width, player.height)))
                         {
-                            Rectangle value = new Rectangle((int)Main.players[myPlayer].Position.X, (int)Main.players[myPlayer].Position.Y, Main.players[myPlayer].width, Main.players[myPlayer].height);
-                            if (rectangle.Intersects(value))
+                            if (player.Intersects(rectangle))
                             {
-                                if (Main.players[myPlayer].Position.X + (float)(Main.players[myPlayer].width / 2) < this.Position.X + (float)(this.width / 2))
+                                if (player.Position.X + (float)(player.width / 2) < this.Position.X + (float)(this.width / 2))
                                 {
                                     this.direction = -1;
                                 }
@@ -300,9 +301,9 @@ namespace Terraria_Server
                                 {
                                     this.direction = 1;
                                 }
-                                Main.players[myPlayer].Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
+                                player.Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
                                 
-                                NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), myPlayer, (float)this.direction, (float)this.damage, 1f);
+                                NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), playerIndex, (float)this.direction, (float)this.damage, 1f);
                             }
                         }
                     }
@@ -339,26 +340,27 @@ namespace Terraria_Server
                     }
                     if (this.damage > 0)
                     {
+                        NPC npc;
                         for (int i = 0; i < NPC.MAX_NPCS; i++)
                         {
-                            if (Main.npcs[i].Active && (!Main.npcs[i].friendly || (Main.npcs[i].Type == 22 && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || Main.npcs[i].immune[this.Owner] == 0))
+                            npc = Main.npcs[i];
+                            if (npc.Active && (!npc.friendly || (npc.Type == 22 && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || npc.immune[this.Owner] == 0))
                             {
                                 bool flag = false;
-                                if (this.type == ProjectileType.POWDER_VILE && (Main.npcs[i].Type == 47 || Main.npcs[i].Type == 57))
+                                if (this.type == ProjectileType.POWDER_VILE && (npc.Type == 47 || npc.Type == 57))
                                 {
                                     flag = true;
                                 }
                                 else
                                 {
-                                    if (this.type == ProjectileType.BALL_SAND_DROP && Main.npcs[i].Type == 69)
+                                    if (this.type == ProjectileType.BALL_SAND_DROP && npc.Type == 69)
                                     {
                                         flag = true;
                                     }
                                 }
-                                if (!flag && (Main.npcs[i].noTileCollide || !this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, Main.npcs[i].Position, Main.npcs[i].width, Main.npcs[i].height)))
+                                if (!flag && (npc.noTileCollide || !this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, npc.Position, npc.width, npc.height)))
                                 {
-                                    Rectangle value2 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
-                                    if (rectangle.Intersects(value2))
+                                    if(npc.Intersects(rectangle))
                                     {
                                         if (this.aiStyle == 3)
                                         {
@@ -378,7 +380,7 @@ namespace Terraria_Server
                                                 {
                                                     this.timeLeft = 3;
                                                 }
-                                                if (Main.npcs[i].Position.X + (float)(Main.npcs[i].width / 2) < this.Position.X + (float)(this.width / 2))
+                                                if (npc.Position.X + (float)(npc.width / 2) < this.Position.X + (float)(this.width / 2))
                                                 {
                                                     this.direction = -1;
                                                 }
@@ -392,13 +394,13 @@ namespace Terraria_Server
                                         {
                                             this.timeLeft = 1;
                                         }
-                                        Main.npcs[i].StrikeNPC(this.damage, this.knockBack, this.direction);
+                                        npc.StrikeNPC(this.damage, this.knockBack, this.direction);
                                         
                                         NetMessage.SendData(28, -1, -1, "", i, (float)this.damage, this.knockBack, (float)this.direction);
 
                                         if (this.penetrate != 1)
                                         {
-                                            Main.npcs[i].immune[this.Owner] = 10;
+                                            npc.immune[this.Owner] = 10;
                                         }
                                         if (this.penetrate > 0)
                                         {
@@ -427,14 +429,15 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (this.damage > 0 && Main.players[Main.myPlayer].hostile)
+                    if (this.damage > 0 && player.hostile)
                     {
-                        for (int l = 0; l < 255; l++)
+                        Player playerIt;
+                        for (int i = 0; i < Main.MAX_PLAYERS; i++)
                         {
-                            if (l != this.Owner && Main.players[l].Active && !Main.players[l].dead && !Main.players[l].immune && Main.players[l].hostile && this.playerImmune[l] <= 0 && (Main.players[Main.myPlayer].team == 0 || Main.players[Main.myPlayer].team != Main.players[l].team) && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, Main.players[l].Position, Main.players[l].width, Main.players[l].height)))
+                            playerIt = Main.players[i];
+                            if (i != this.Owner && playerIt.Active && !playerIt.dead && !playerIt.immune && playerIt.hostile && this.playerImmune[i] <= 0 && (player.team == 0 || player.team != playerIt.team) && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, playerIt.Position, playerIt.width, playerIt.height)))
                             {
-                                Rectangle value3 = new Rectangle((int)Main.players[l].Position.X, (int)Main.players[l].Position.Y, Main.players[l].width, Main.players[l].height);
-                                if (rectangle.Intersects(value3))
+                                if (playerIt.Intersects(rectangle))
                                 {
                                     if (this.aiStyle == 3)
                                     {
@@ -454,7 +457,7 @@ namespace Terraria_Server
                                             {
                                                 this.timeLeft = 3;
                                             }
-                                            if (Main.players[l].Position.X + (float)(Main.players[l].width / 2) < this.Position.X + (float)(this.width / 2))
+                                            if (playerIt.Position.X + (float)(playerIt.width / 2) < this.Position.X + (float)(this.width / 2))
                                             {
                                                 this.direction = -1;
                                             }
@@ -468,11 +471,11 @@ namespace Terraria_Server
                                     {
                                         this.timeLeft = 1;
                                     }
-                                    Main.players[l].Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
+                                    playerIt.Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
                                                                         
-                                    NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), l, (float)this.direction, (float)this.damage, 1f);
+                                    NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), i, (float)this.direction, (float)this.damage, 1f);
 
-                                    this.playerImmune[l] = 40;
+                                    this.playerImmune[i] = 40;
                                     if (this.penetrate > 0)
                                     {
                                         this.penetrate--;
@@ -502,24 +505,24 @@ namespace Terraria_Server
                 }
                 if (this.type == ProjectileType.POWDER_VILE)
                 {
+                    NPC npc;
                     for (int i = 0; i < NPC.MAX_NPCS; i++)
                     {
-                        if (Main.npcs[i].Active)
+                        npc = Main.npcs[i];
+                        if (npc.Active)
                         {
-                            if (Main.npcs[i].Type == 46)
+                            if (npc.Type == 46)
                             {
-                                Rectangle value4 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
-                                if (rectangle.Intersects(value4))
+                                if (npc.Intersects(rectangle))
                                 {
                                     NPC.Transform(i, 47);
                                 }
                             }
                             else
                             {
-                                if (Main.npcs[i].Type == 55)
+                                if (npc.Type == 55)
                                 {
-                                    Rectangle value5 = new Rectangle((int)Main.npcs[i].Position.X, (int)Main.npcs[i].Position.Y, Main.npcs[i].width, Main.npcs[i].height);
-                                    if (rectangle.Intersects(value5))
+                                    if (npc.Intersects(rectangle))
                                     {
                                         NPC.Transform(i, 57);
                                     }
@@ -531,14 +534,12 @@ namespace Terraria_Server
             }
             if (this.hostile && Main.myPlayer < 255 && this.damage > 0)
             {
-                int myPlayer2 = Main.myPlayer;
-                if (Main.players[myPlayer2].Active && !Main.players[myPlayer2].dead && !Main.players[myPlayer2].immune)
+                if (player.Active && !player.dead && !player.immune)
                 {
-                    Rectangle value6 = new Rectangle((int)Main.players[myPlayer2].Position.X, (int)Main.players[myPlayer2].Position.Y, Main.players[myPlayer2].width, Main.players[myPlayer2].height);
-                    if (rectangle.Intersects(value6))
+                    if (player.Intersects(rectangle))
                     {
                         int hitDirection = this.direction;
-                        if (Main.players[myPlayer2].Position.X + (float)(Main.players[myPlayer2].width / 2) < this.Position.X + (float)(this.width / 2))
+                        if (player.Position.X + (float)(player.width / 2) < this.Position.X + (float)(this.width / 2))
                         {
                             hitDirection = -1;
                         }
@@ -546,9 +547,9 @@ namespace Terraria_Server
                         {
                             hitDirection = 1;
                         }
-                        Main.players[myPlayer2].Hurt(this.damage * 2, hitDirection, false, false, " was slain...");
+                        player.Hurt(this.damage * 2, hitDirection, false, false, " was slain...");
                         
-                        NetMessage.SendData(26, -1, -1, "", myPlayer2, (float)this.direction, (float)(this.damage * 2));
+                        NetMessage.SendData(26, -1, -1, "", playerIndex, (float)this.direction, (float)(this.damage * 2));
                     }
                 }
             }
@@ -1027,8 +1028,7 @@ namespace Terraria_Server
                             if (Main.myPlayer == this.Owner)
                             {
                                 Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
-                                Rectangle value = new Rectangle((int)Main.players[this.Owner].Position.X, (int)Main.players[this.Owner].Position.Y, Main.players[this.Owner].width, Main.players[this.Owner].height);
-                                if (rectangle.Intersects(value))
+                                if(Main.players[Owner].Intersects(rectangle))
                                 {
                                     this.Kill();
                                 }

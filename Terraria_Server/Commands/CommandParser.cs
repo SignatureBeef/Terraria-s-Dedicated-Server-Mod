@@ -71,7 +71,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="commands">Command arguments to pass to methods</param>
         /// <param name="sender">Sending player</param>
-        public void switchCommands(String[] commands, Sender sender)
+        public void switchCommands(String[] commands, ISender sender)
         {
             switch (Commands.getCommandValue(commands[0]))
             {
@@ -93,7 +93,7 @@ namespace Terraria_Server.Commands
                         }
 
                         Program.server.notifyOps("Stopping Server...");
-                        Commands.Exit(sender.getServer());
+                        Commands.Exit(Program.server);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_RELOAD:
@@ -109,7 +109,7 @@ namespace Terraria_Server.Commands
                         }
 
                         Program.server.notifyOps("Reloading Plugins.");
-                        Commands.Reload(sender.getServer());
+                        Commands.Reload(Program.server);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_LIST:
