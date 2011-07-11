@@ -15,11 +15,11 @@ namespace Terraria_Server
             {
                 return;
             }
-            if (Main.tile[x, y].checkingLiquid)
+            if (Main.tile[x, y].CheckingLiquid)
             {
                 return;
             }
-            Main.tile[x, y].checkingLiquid = true;
+            Main.tile[x, y].CheckingLiquid = true;
             Main.liquidBuffer[LiquidBuffer.numLiquidBuffer].x = x;
             Main.liquidBuffer[LiquidBuffer.numLiquidBuffer].y = y;
             LiquidBuffer.numLiquidBuffer++;

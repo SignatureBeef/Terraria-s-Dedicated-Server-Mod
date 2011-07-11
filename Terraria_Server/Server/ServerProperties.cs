@@ -19,6 +19,7 @@ namespace Terraria_Server
         private const bool DEFAULT_WHITE_LIST = false;
         private const String DEFAULT_WORLD = "world1.wld";
         private const String DEFAULT_PID_FILE = "";
+        private const bool DEFAULT_SIMPLE_LOOP = false;
 
         private const String AUTOMATIC_UPDATES = "allowupdates";
         private const String DUNGEON_AMOUNT = "opt-numdungeons";
@@ -38,6 +39,7 @@ namespace Terraria_Server
         private const String WHITE_LIST = "whitelist";
         private const String WORLD_PATH = "worldpath";
         private const String PID_FILE = "pid-file";
+        private const String SIMPLE_LOOP = "simple-loop";
 
         public ServerProperties(String propertiesPath) : base(propertiesPath) { }
 
@@ -60,6 +62,7 @@ namespace Terraria_Server
             temp = DungeonAmount;
             temp = FloatingIslandAmount;
             temp = PIDFile;
+            temp = SimpleLoop;
         }
 
         public int MaxPlayers
@@ -283,6 +286,14 @@ namespace Terraria_Server
             get
             {
                 return getValue(PID_FILE, DEFAULT_PID_FILE);
+            }
+        }
+
+        public bool SimpleLoop
+        {
+            get
+            {
+                return getValue(SIMPLE_LOOP, DEFAULT_SIMPLE_LOOP);
             }
         }
     }

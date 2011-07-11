@@ -7,6 +7,7 @@ namespace Terraria_Server
     {
         public const int BUILD = 24;
         public const int CURRENT_TERRARIA_RELEASE = 12;
+        public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 
         private const String WORLDS = "Worlds";
         private const String PLAYERS = "Players";

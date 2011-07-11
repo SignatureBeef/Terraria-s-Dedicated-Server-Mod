@@ -48,7 +48,6 @@ namespace Terraria_Server.Messages
         public bool checkBytes;
 
         public byte[] readBuffer = new byte[BUFFER_MAX];
-        public byte[] writeBuffer = new byte[BUFFER_MAX];
 
         public int messageLength;
         public int spamCount;
@@ -58,7 +57,6 @@ namespace Terraria_Server.Messages
         public void Reset()
         {
             readBuffer = new byte[BUFFER_MAX];
-            writeBuffer = new byte[BUFFER_MAX];
             messageLength = 0;
             totalData = 0;
             spamCount = 0;
@@ -68,7 +66,7 @@ namespace Terraria_Server.Messages
         {
             if (whoAmI < 256)
             {
-                Netplay.serverSock[whoAmI].timeOut = 0;
+                Netplay.slots[whoAmI].timeOut = 0;
             }
 
             int num = start + 1;
@@ -76,13 +74,13 @@ namespace Terraria_Server.Messages
 
             if (bufferData != 38)
             {
-                if (Netplay.serverSock[whoAmI].state == -1)
+                if (Netplay.slots[whoAmI].state == SlotState.AUTHENTICATION)
                 {
-                    NetMessage.SendData(2, whoAmI, -1, "Incorrect password.");
+                    Netplay.slots[whoAmI].Kick ("Incorrect password.");
                     return;
                 }
 
-                if (Netplay.serverSock[whoAmI].state < 10 && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
+                if (Netplay.slots[whoAmI].state < SlotState.PLAYING && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
                 {
                     NetMessage.BootPlayer(whoAmI, "Invalid operation at this state.");
                 }

@@ -1,7 +1,7 @@
-﻿namespace Terraria_Server.Events
+namespace Terraria_Server.Events
 {
     public class PlayerLoginEvent : BasePlayerEvent
     {
-        public ServerSock Socket { get; set; }
+        public ServerSlot Socket { get; set; }
     }
 }

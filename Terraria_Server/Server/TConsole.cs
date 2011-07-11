@@ -21,7 +21,14 @@ namespace Terraria_Server
             streamWriter.WriteLine(Line);
             streamWriter.Flush();
         }
-
+		
+		public void WriteLine (string fmt, params object[] args)
+		{
+            Console.WriteLine (fmt, args);
+            streamWriter.WriteLine (fmt, args);
+            streamWriter.Flush();
+		}
+		
         public void WriteLine()
         {
             //if (platformType == Platform.PlatformType.WINDOWS)

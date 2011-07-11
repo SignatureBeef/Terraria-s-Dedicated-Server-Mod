@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Terraria_Server.Messages
 {
@@ -14,7 +14,7 @@ namespace Terraria_Server.Messages
             int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             int y = BitConverter.ToInt32(readBuffer, num);
-            if (Main.tile[x, y].type == 21)
+            if (Main.tile[x, y].Type == 21)
             {
                 WorldGen.KillTile(x, y);
                 if (!Main.tile[x, y].Active)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,9 +14,9 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            if (Netplay.serverSock[whoAmI].state == 1)
+            if (Netplay.slots[whoAmI].state == SlotState.ACCEPTED)
             {
-                Netplay.serverSock[whoAmI].state = 2;
+                Netplay.slots[whoAmI].state = SlotState.SENDING_WORLD;
             }
             NetMessage.SendData(7, whoAmI);
         }
