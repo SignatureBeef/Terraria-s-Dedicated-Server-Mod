@@ -1929,19 +1929,19 @@ namespace Terraria_Server
 			}
 			if (Main.playerInventory)
 			{
-				bool flag = false;
+				//bool flag = false;
 				for (int l = 0; l < 80; l++)
 				{
 					if (this.oldAdjTile[l] != this.adjTile[l])
 					{
-						flag = true;
+						//flag = true;
 						break;
 					}
 				}
-				if (flag)
-				{
-					Recipe.FindRecipes();
-				}
+                //if (flag)
+                //{
+                //    Recipe.FindRecipes();
+                //}
 			}
 		}
 		
@@ -2480,19 +2480,19 @@ namespace Terraria_Server
 					{
 						this.inventory[num2].Stack += newItem.Stack;
 						this.DoCoins(num2);
-						if (plr == Main.myPlayer)
-						{
-							Recipe.FindRecipes();
-						}
+                        //if (plr == Main.myPlayer)
+                        //{
+                        //    Recipe.FindRecipes();
+                        //}
 						return new Item();
 					}
 					newItem.Stack -= this.inventory[num2].MaxStack - this.inventory[num2].Stack;
 					this.inventory[num2].Stack = this.inventory[num2].MaxStack;
 					this.DoCoins(num2);
-					if (plr == Main.myPlayer)
-					{
-						Recipe.FindRecipes();
-					}
+                    //if (plr == Main.myPlayer)
+                    //{
+                    //    Recipe.FindRecipes();
+                    //}
 				}
 			}
 			for (int j = num; j < 40; j++)
@@ -2506,10 +2506,10 @@ namespace Terraria_Server
 				{
 					this.inventory[num3] = newItem;
 					this.DoCoins(num3);
-					if (plr == Main.myPlayer)
-					{
-						Recipe.FindRecipes();
-					}
+                    //if (plr == Main.myPlayer)
+                    //{
+                    //    Recipe.FindRecipes();
+                    //}
 					return new Item();
 				}
 			}

@@ -215,7 +215,6 @@
     <Compile Include="Server\ServerProperties.cs" />
     <Compile Include="Misc\PropertiesFile.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Recipe.cs" />
     <Compile Include="Rectangle.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Packet.cs" />

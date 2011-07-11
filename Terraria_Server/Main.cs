@@ -188,9 +188,9 @@ namespace Terraria_Server
 		public static int stackDelay = 7;
 		public static Item mouseItem = new Item();
 		public static bool hasFocus = true;
-		public static Recipe[] recipe = new Recipe[Recipe.maxRecipes];
-		public static int[] availableRecipe = new int[Recipe.maxRecipes];
-		public static float[] availableRecipeY = new float[Recipe.maxRecipes];
+		//public static Recipe[] recipe = new Recipe[Recipe.maxRecipes];
+		//public static int[] availableRecipe = new int[Recipe.maxRecipes];
+		//public static float[] availableRecipeY = new float[Recipe.maxRecipes];
 		public static int numAvailableRecipes;
 		public static int focusRecipe;
 		public static int myPlayer = 0;
@@ -475,12 +475,12 @@ namespace Terraria_Server
             {
                 Main.projectile[num2] = new Projectile();
             }
-            for (int num8 = 0; num8 < Recipe.maxRecipes; num8++)
-            {
-                Main.recipe[num8] = new Recipe();
-                Main.availableRecipeY[num8] = (float)(65 * num8);
-            }
-            Recipe.SetupRecipes();
+            //for (int num8 = 0; num8 < Recipe.maxRecipes; num8++)
+            //{
+            //    Main.recipe[num8] = new Recipe();
+            //    Main.availableRecipeY[num8] = (float)(65 * num8);
+            //}
+            //Recipe.SetupRecipes();
             for (int num10 = 0; num10 < Liquid.resLiquid; num10++)
             {
                 Main.liquid[num10] = new Liquid();
