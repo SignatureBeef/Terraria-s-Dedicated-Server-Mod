@@ -500,7 +500,7 @@ namespace Terraria_Server
 		
 		public void PlayerChestUpdate (int chestId)
 		{
-			Header (Packet.PLAYER_CHEST_UPDATE, 9);
+			Header (Packet.PLAYER_CHEST_UPDATE, 10);
 			
 			Short (chestId);
 			
