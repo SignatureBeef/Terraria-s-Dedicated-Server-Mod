@@ -36,7 +36,7 @@ namespace Terraria_Server
 			catch (ObjectDisposedException) {}
 		}
 		
-		public static void ServerLoop (object threadContext)
+		public static void ServerLoop ()
 		{
 			if (Main.rand == null)
 			{
@@ -374,9 +374,18 @@ namespace Terraria_Server
 				throw new Exception ("Unexpected exception in socket handling code", e);
 		}
 		
+		private static Thread serverThread;
+		
 		public static void StartServer()
 		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(Netplay.ServerLoop), 1);
+			if (serverThread == null)
+			{
+				serverThread = new Thread (Netplay.ServerLoopLoop);
+				serverThread.Name = "ServerLoop";
+				serverThread.IsBackground = true;
+				serverThread.Start();
+			}
+			disconnect = false;
 		}
 
 		public static void StopServer()
@@ -386,6 +395,15 @@ namespace Terraria_Server
 			Program.server.getPluginManager().DisablePlugins();
 			Program.tConsole.WriteLine("Closing Connections...");
 			disconnect = true;
+		}
+		
+		private static void ServerLoopLoop ()
+		{
+			while (true)
+			{
+				ServerLoop ();
+				while (disconnect) Thread.Sleep (100);
+			}
 		}
 
 		public static bool SetIP(String newIP)

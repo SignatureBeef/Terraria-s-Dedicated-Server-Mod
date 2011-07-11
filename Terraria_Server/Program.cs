@@ -181,8 +181,8 @@ namespace Terraria_Server
 
                     Server.maxTilesX = worldX;
                     Server.maxTilesY = worldY;
-                    //Server.tile = new TileRef[Server.maxTilesX + 1, Server.maxTilesY + 1];
-                    Server.tile = new TileCollection (Server.maxTilesX + 1, Server.maxTilesY + 1);
+
+                    Server.tile = new TileCollection (Server.maxTilesX, Server.maxTilesY);
 
                     WorldGen.clearWorld();
                     (new Server()).Initialize();
@@ -242,7 +242,8 @@ namespace Terraria_Server
                 tConsole.WriteLine("Starting the Server");
                 server.StartServer();
 
-                updateThread = new Thread(Program.Updater);
+                updateThread = new Thread(Program.UpdateLoop);
+                updateThread.Name = "UpdateLoop";
 
                 Statics.IsActive = true;
                 while (!Statics.serverStarted) { }
@@ -382,11 +383,11 @@ namespace Terraria_Server
             }
         }
 
-        public static void Updater()
+        public static void UpdateLoop()
         {
             if (server == null)
             {
-                Program.tConsole.WriteLine("Issue in updater thread!");
+                Program.tConsole.WriteLine("Issue in UpdateLoop thread!");
                 return;
             }
 
@@ -395,13 +396,37 @@ namespace Terraria_Server
                Server.rand = new Random((int)DateTime.Now.Ticks);
             }
 
+			if (properties.SimpleLoop)
+			{
+				long updateTime = 166667;
+				long nextUpdate = Stopwatch.GetTimestamp() + updateTime;
+				
+				while (!Netplay.disconnect)
+				{
+					long now = Stopwatch.GetTimestamp();
+					long left = nextUpdate - now;
+					nextUpdate += updateTime;
+					
+					if (left > 0)
+						Thread.Sleep (TimeSpan.FromTicks (left));
+					else
+						nextUpdate = now + updateTime;
+					
+					if (Netplay.anyClients)
+					{
+						server.Update();
+					}
+				}
+				
+				return;
+			}
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
             //double num6 = 16.666666666666668;
             double serverProceesAverage = 16.25; //Still calculating.
             double num7 = 0.0;
-
             while (!Netplay.disconnect)
             {
                 double num8 = (double)stopwatch.ElapsedMilliseconds;
