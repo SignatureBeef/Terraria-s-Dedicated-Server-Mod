@@ -6212,10 +6212,10 @@ namespace Terraria_Server
                 {
                     int num5 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
                     int num6 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
-                    Main.tile.At(num5, num6).Lava = true;
+                    Main.tile.At(num5, num6).SetLava (true);
                     if (Main.tile.At(num5, num6).Liquid < 200)
                     {
-                        Main.tile.At(num5, num6).Liquid = 200;
+                        Main.tile.At(num5, num6).SetLiquid (200);
                     }
                     WorldGen.TileFrame(num5, num6, false, false);
                     return;

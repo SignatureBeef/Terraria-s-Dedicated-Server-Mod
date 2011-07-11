@@ -2230,8 +2230,8 @@ namespace Terraria_Server
 						{
 							if (Main.tile.At(i, j).Liquid > 0)
 							{
-								Main.tile.At(i, j).Lava = false;
-								Main.tile.At(i, j).Liquid = 0;
+								Main.tile.At(i, j).SetLava (false);
+								Main.tile.At(i, j).SetLiquid (0);
 								WorldGen.SquareTileFrame(i, j, true);
 							}
 							WorldGen.KillTile(i, j, false, false, false);
@@ -2802,8 +2802,8 @@ namespace Terraria_Server
 
                                     itemTime = selectedItem.UseTime;
                                     int num11 = (int)Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid;
-                                    Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid = 0;
-                                    Main.tile.At(Player.tileTargetX, Player.tileTargetY).Lava = false;
+                                    Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (0);
+                                    Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (false);
                                     WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
 
                                     Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
@@ -2823,12 +2823,12 @@ namespace Terraria_Server
 
                                                 num11 += num12;
                                                 TileRef expr_20A0 = Main.tile.At(x, y);
-                                                expr_20A0.Liquid -= (byte)num12;
-                                                Main.tile.At(x, y).Lava = lava2;
+                                                expr_20A0.SetLiquid ((byte) (expr_20A0.Liquid - (byte)num12));
+                                                Main.tile.At(x, y).SetLava (lava2);
 
                                                 if (Main.tile.At(x, y).Liquid == 0)
                                                 {
-                                                    Main.tile.At(x, y).Lava = false;
+                                                    Main.tile.At(x, y).SetLava (false);
                                                 }
 
                                                 WorldGen.SquareTileFrame(x, y, false);
@@ -2847,8 +2847,8 @@ namespace Terraria_Server
                                     {
                                         if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid == 0 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Lava)
                                         {
-                                            Main.tile.At(Player.tileTargetX, Player.tileTargetY).Lava = true;
-                                            Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid = 255;
+                                            Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (true);
+                                            Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
                                             WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                             selectedItem = Registries.Item.Create(205);
                                             inventory[selectedItemIndex] = selectedItem;
@@ -2857,8 +2857,8 @@ namespace Terraria_Server
                                     }
                                     else if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid == 0 || !Main.tile.At(Player.tileTargetX, Player.tileTargetY).Lava)
                                     {
-                                        Main.tile.At(Player.tileTargetX, Player.tileTargetY).Lava = false;
-                                        Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid = 255;
+                                        Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (false);
+                                        Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
                                         WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                         selectedItem = Registries.Item.Create(205);
                                         inventory[selectedItemIndex] = selectedItem;
@@ -3233,9 +3233,9 @@ namespace Terraria_Server
                                             if (this.direction == 1)
                                             {
                                                 TileRef expr_40C8 = Main.tile.At(Player.tileTargetX, Player.tileTargetY);
-                                                expr_40C8.FrameX += 18;
+                                                expr_40C8.SetFrameX ((short) (expr_40C8.FrameX + 18));
                                                 TileRef expr_40ED = Main.tile.At(Player.tileTargetX, Player.tileTargetY - 1);
-                                                expr_40ED.FrameX += 18;
+                                                expr_40ED.SetFrameX ((short) (expr_40ED.FrameX + 18));
                                             }
                                         }
                                     }

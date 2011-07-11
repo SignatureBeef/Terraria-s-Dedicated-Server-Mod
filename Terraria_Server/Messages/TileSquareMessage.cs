@@ -99,7 +99,7 @@ namespace Terraria_Server.Messages
                         return;
                     }
                     
-                    Main.tile.At(x, y).Data = tile;
+                    Main.tile.At(x, y).SetData (tile);
                 }
             }
 

@@ -74,7 +74,7 @@ namespace Terraria_Server
                             int num10 = i;
                             bool flag2 = Main.tile.At(num7, i).Lava;
                             byte b = Main.tile.At(num7, i).Liquid;
-                            Main.tile.At(num7, i).Liquid = 0;
+                            Main.tile.At(num7, i).SetLiquid (0);
                             bool flag3 = true;
                             int num11 = 0;
                             while (flag3 && num9 > 3 && num9 < Main.maxTilesX - 3 && num10 < Main.maxTilesY - 3)
@@ -100,7 +100,7 @@ namespace Terraria_Server
                                         num12 = (int)b;
                                     }
                                     TileRef expr_25A = Main.tile.At(num9, num10 + 1);
-                                    expr_25A.Liquid += (byte)num12;
+                                    expr_25A.SetLiquid ((byte) (expr_25A.Liquid + (byte)num12));
                                     b -= (byte)num12;
                                     if (b <= 0)
                                     {
@@ -139,8 +139,8 @@ namespace Terraria_Server
                             {
                                 num++;
                             }
-                            Main.tile.At(num9, num10).Liquid = b;
-                            Main.tile.At(num9, num10).Lava = flag2;
+                            Main.tile.At(num9, num10).SetLiquid (b);
+                            Main.tile.At(num9, num10).SetLava (flag2);
                             if (Main.tile.At(num9 - 1, num10).Liquid > 0 && Main.tile.At(num9 - 1, num10).Lava != flag2)
                             {
                                 if (flag2)
@@ -207,7 +207,7 @@ namespace Terraria_Server
             {
                 if (Main.tile.At(this.x, this.y).Type != 10)
                 {
-                    Main.tile.At(this.x, this.y).Liquid = 0;
+                    Main.tile.At(this.x, this.y).SetLiquid (0);
                 }
                 this.kill = 9;
                 return;
@@ -223,7 +223,7 @@ namespace Terraria_Server
                     b = Main.tile.At(this.x, this.y).Liquid;
                 }
                 TileRef expr_16F = Main.tile.At(this.x, this.y);
-                expr_16F.Liquid -= b;
+                expr_16F.SetLiquid ((byte) (expr_16F.Liquid - b));
             }
 
             if (Main.tile.At(this.x, this.y).Liquid == 0)
@@ -273,16 +273,16 @@ namespace Terraria_Server
                     num = (float)Main.tile.At(this.x, this.y).Liquid;
                 }
                 TileRef expr_42E = Main.tile.At(this.x, this.y);
-                expr_42E.Liquid -= (byte)num;
+                expr_42E.SetLiquid ((byte) (expr_42E.Liquid - (byte)num));
                 TileRef expr_455 = Main.tile.At(this.x, this.y + 1);
-                expr_455.Liquid += (byte)num;
-                Main.tile.At(this.x, this.y + 1).Lava = Main.tile.At(this.x, this.y).Lava;
+                expr_455.SetLiquid ((byte) (expr_455.Liquid + (byte)num));
+                Main.tile.At(this.x, this.y + 1).SetLava (Main.tile.At(this.x, this.y).Lava);
                 Liquid.AddWater(this.x, this.y + 1);
-                Main.tile.At(this.x, this.y + 1).SkipLiquid = true;
-                Main.tile.At(this.x, this.y).SkipLiquid = true;
+                Main.tile.At(this.x, this.y + 1).SetSkipLiquid (true);
+                Main.tile.At(this.x, this.y).SetSkipLiquid (true);
                 if (Main.tile.At(this.x, this.y).Liquid > 250)
                 {
-                    Main.tile.At(this.x, this.y).Liquid = 255;
+                    Main.tile.At(this.x, this.y).SetLiquid (255);
                 }
                 else
                 {
@@ -402,61 +402,61 @@ namespace Terraria_Server
                             num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x - 2, this.y).Liquid + Main.tile.At(this.x + 2, this.y).Liquid + Main.tile.At(this.x - 3, this.y).Liquid + Main.tile.At(this.x + 3, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
                             num = (float)Math.Round((double)(num / 7f));
                             int num3 = 0;
-                            Main.tile.At(this.x - 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x - 1, this.y);
-                                Main.tile.At(this.x - 1, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x + 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x + 1, this.y);
-                                Main.tile.At(this.x + 1, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x - 2, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x - 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x - 2, this.y);
-                                Main.tile.At(this.x - 2, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x - 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x + 2, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x + 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x + 2, this.y);
-                                Main.tile.At(this.x + 2, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x + 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x - 3, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x - 3, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x - 3, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x - 3, this.y);
-                                Main.tile.At(this.x - 3, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x - 3, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num3++;
                             }
-                            Main.tile.At(this.x + 3, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x + 3, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x + 3, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x + 3, this.y);
-                                Main.tile.At(this.x + 3, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x + 3, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
@@ -488,7 +488,7 @@ namespace Terraria_Server
                             }
                             if (num3 != 6 || Main.tile.At(this.x, this.y - 1).Liquid <= 0)
                             {
-                                Main.tile.At(this.x, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
                             }
                         }
                         else
@@ -496,41 +496,41 @@ namespace Terraria_Server
                             int num4 = 0;
                             num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x - 2, this.y).Liquid + Main.tile.At(this.x + 2, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
                             num = (float)Math.Round((double)(num / 5f));
-                            Main.tile.At(this.x - 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x - 1, this.y);
-                                Main.tile.At(this.x - 1, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num4++;
                             }
-                            Main.tile.At(this.x + 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x + 1, this.y);
-                                Main.tile.At(this.x + 1, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num4++;
                             }
-                            Main.tile.At(this.x - 2, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x - 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x - 2, this.y);
-                                Main.tile.At(this.x - 2, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x - 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num4++;
                             }
-                            Main.tile.At(this.x + 2, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x + 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x + 2, this.y);
-                                Main.tile.At(this.x + 2, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x + 2, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
@@ -554,7 +554,7 @@ namespace Terraria_Server
                             }
                             if (num4 != 4 || Main.tile.At(this.x, this.y - 1).Liquid <= 0)
                             {
-                                Main.tile.At(this.x, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
                             }
                         }
                     }
@@ -564,25 +564,25 @@ namespace Terraria_Server
                         {
                             num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x - 2, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
                             num = (float)Math.Round((double)(num / 4f) + 0.001);
-                            Main.tile.At(this.x - 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x - 1, this.y);
-                                Main.tile.At(this.x - 1, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
                             }
-                            Main.tile.At(this.x + 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x + 1, this.y);
-                                Main.tile.At(this.x + 1, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
-                            Main.tile.At(this.x - 2, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x - 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x - 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
                             {
-                                Main.tile.At(this.x - 2, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x - 2, this.y).SetLiquid ((byte)num);
                                 Liquid.AddWater(this.x - 2, this.y);
                             }
-                            Main.tile.At(this.x, this.y).Liquid = (byte)num;
+                            Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
                         }
                         else
                         {
@@ -590,49 +590,49 @@ namespace Terraria_Server
                             {
                                 num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x + 2, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
                                 num = (float)Math.Round((double)(num / 4f) + 0.001);
-                                Main.tile.At(this.x - 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                                Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                                 if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
                                 {
                                     Liquid.AddWater(this.x - 1, this.y);
-                                    Main.tile.At(this.x - 1, this.y).Liquid = (byte)num;
+                                    Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
                                 }
-                                Main.tile.At(this.x + 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                                Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                                 if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
                                 {
                                     Liquid.AddWater(this.x + 1, this.y);
-                                    Main.tile.At(this.x + 1, this.y).Liquid = (byte)num;
+                                    Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
                                 }
-                                Main.tile.At(this.x + 2, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                                Main.tile.At(this.x + 2, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                                 if (Main.tile.At(this.x + 2, this.y).Liquid != (byte)num || Main.tile.At(this.x, this.y).Liquid != (byte)num)
                                 {
-                                    Main.tile.At(this.x + 2, this.y).Liquid = (byte)num;
+                                    Main.tile.At(this.x + 2, this.y).SetLiquid ((byte)num);
                                     Liquid.AddWater(this.x + 2, this.y);
                                 }
-                                Main.tile.At(this.x, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
                             }
                             else
                             {
                                 num = (float)((int)(Main.tile.At(this.x - 1, this.y).Liquid + Main.tile.At(this.x + 1, this.y).Liquid + Main.tile.At(this.x, this.y).Liquid) + num2);
                                 num = (float)Math.Round((double)(num / 3f) + 0.001);
-                                Main.tile.At(this.x - 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                                Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                                 if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
                                 {
-                                    Main.tile.At(this.x - 1, this.y).Liquid = (byte)num;
+                                    Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
                                 }
                                 if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
                                 {
                                     Liquid.AddWater(this.x - 1, this.y);
                                 }
-                                Main.tile.At(this.x + 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                                Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                                 if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
                                 {
-                                    Main.tile.At(this.x + 1, this.y).Liquid = (byte)num;
+                                    Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
                                 }
                                 if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
                                 {
                                     Liquid.AddWater(this.x + 1, this.y);
                                 }
-                                Main.tile.At(this.x, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
                             }
                         }
                     }
@@ -645,14 +645,14 @@ namespace Terraria_Server
                         num = (float)Math.Round((double)(num / 2f) + 0.001);
                         if (Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
                         {
-                            Main.tile.At(this.x - 1, this.y).Liquid = (byte)num;
+                            Main.tile.At(this.x - 1, this.y).SetLiquid ((byte)num);
                         }
-                        Main.tile.At(this.x - 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                        Main.tile.At(this.x - 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                         if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x - 1, this.y).Liquid != (byte)num)
                         {
                             Liquid.AddWater(this.x - 1, this.y);
                         }
-                        Main.tile.At(this.x, this.y).Liquid = (byte)num;
+                        Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
                     }
                     else
                     {
@@ -662,14 +662,14 @@ namespace Terraria_Server
                             num = (float)Math.Round((double)(num / 2f) + 0.001);
                             if (Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
                             {
-                                Main.tile.At(this.x + 1, this.y).Liquid = (byte)num;
+                                Main.tile.At(this.x + 1, this.y).SetLiquid ((byte)num);
                             }
-                            Main.tile.At(this.x + 1, this.y).Lava = Main.tile.At(this.x, this.y).Lava;
+                            Main.tile.At(this.x + 1, this.y).SetLava (Main.tile.At(this.x, this.y).Lava);
                             if (Main.tile.At(this.x, this.y).Liquid != (byte)num || Main.tile.At(this.x + 1, this.y).Liquid != (byte)num)
                             {
                                 Liquid.AddWater(this.x + 1, this.y);
                             }
-                            Main.tile.At(this.x, this.y).Liquid = (byte)num;
+                            Main.tile.At(this.x, this.y).SetLiquid ((byte)num);
                         }
                     }
                 }
@@ -681,7 +681,7 @@ namespace Terraria_Server
             }
             if (Main.tile.At(this.x, this.y).Liquid == 254 && liquid == 255)
             {
-                Main.tile.At(this.x, this.y).Liquid = 255;
+                Main.tile.At(this.x, this.y).SetLiquid (255);
                 this.kill++;
                 return;
             }
@@ -793,7 +793,7 @@ namespace Terraria_Server
                 {
                     Main.liquid[l].delay = 10;
                     Main.liquid[l].Update();
-                    Main.tile.At(Main.liquid[l].x, Main.liquid[l].y).SkipLiquid = false;
+                    Main.tile.At(Main.liquid[l].x, Main.liquid[l].y).SetSkipLiquid (false);
                 }
             }
             else
@@ -807,7 +807,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        Main.tile.At(Main.liquid[m].x, Main.liquid[m].y).SkipLiquid = false;
+                        Main.tile.At(Main.liquid[m].x, Main.liquid[m].y).SetSkipLiquid (false);
                     }
                 }
             }
@@ -832,7 +832,7 @@ namespace Terraria_Server
 
                 for (int num6 = 0; num6 < num5; num6++)
                 {
-                    Main.tile.At(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y).CheckingLiquid = false;
+                    Main.tile.At(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y).SetCheckingLiquid (false);
                     Liquid.AddWater(Main.liquidBuffer[0].x, Main.liquidBuffer[0].y);
                     LiquidBuffer.DelBuffer(0);
                 }
@@ -883,12 +883,12 @@ namespace Terraria_Server
                 LiquidBuffer.AddBuffer(x, y);
                 return;
             }
-            Main.tile.At(x, y).CheckingLiquid = true;
+            Main.tile.At(x, y).SetCheckingLiquid (true);
             Main.liquid[Liquid.numLiquid].kill = 0;
             Main.liquid[Liquid.numLiquid].x = x;
             Main.liquid[Liquid.numLiquid].y = y;
             Main.liquid[Liquid.numLiquid].delay = 0;
-            Main.tile.At(x, y).SkipLiquid = false;
+            Main.tile.At(x, y).SetSkipLiquid (false);
             Liquid.numLiquid++;
             
             NetMessage.SendWater(x, y);
@@ -897,7 +897,7 @@ namespace Terraria_Server
             {
                 if (WorldGen.gen)
                 {
-                    Main.tile.At(x, y).Active = false;
+                    Main.tile.At(x, y).SetActive (false);
                     return;
                 }
                 WorldGen.KillTile(x, y, false, false, false);
@@ -914,19 +914,19 @@ namespace Terraria_Server
                 if (!Main.tile.At(x - 1, y).Lava)
                 {
                     num += (int)Main.tile.At(x - 1, y).Liquid;
-                    Main.tile.At(x - 1, y).Liquid = 0;
+                    Main.tile.At(x - 1, y).SetLiquid (0);
                 }
 
                 if (!Main.tile.At(x + 1, y).Lava)
                 {
                     num += (int)Main.tile.At(x + 1, y).Liquid;
-                    Main.tile.At(x + 1, y).Liquid = 0;
+                    Main.tile.At(x + 1, y).SetLiquid (0);
                 }
 
                 if (!Main.tile.At(x, y - 1).Lava)
                 {
                     num += (int)Main.tile.At(x, y - 1).Liquid;
-                    Main.tile.At(x, y - 1).Liquid = 0;
+                    Main.tile.At(x, y - 1).SetLiquid (0);
                 }
 
                 if (num >= 128 && !Main.tile.At(x, y).Active)
@@ -951,8 +951,8 @@ namespace Terraria_Server
 
         private static void ClearLava(int x, int y)
         {
-            Main.tile.At(x, y).Liquid = 0;
-            Main.tile.At(x, y).Lava = false;
+            Main.tile.At(x, y).SetLiquid (0);
+            Main.tile.At(x, y).SetLava (false);
         }
         
         public static void DelWater(int liquidIndex)
@@ -962,13 +962,13 @@ namespace Terraria_Server
 
             if (Main.tile.At(x, y).Liquid < 2)
             {
-                Main.tile.At(x, y).Liquid = 0;
+                Main.tile.At(x, y).SetLiquid (0);
             }
             else if (Main.tile.At(x, y).Liquid < 20)
             {
                 if ((Main.tile.At(x - 1, y).Liquid < Main.tile.At(x, y).Liquid && (!Main.tile.At(x - 1, y).Active || !Main.tileSolid[(int)Main.tile.At(x - 1, y).Type] || Main.tileSolidTop[(int)Main.tile.At(x - 1, y).Type])) || (Main.tile.At(x + 1, y).Liquid < Main.tile.At(x, y).Liquid && (!Main.tile.At(x + 1, y).Active || !Main.tileSolid[(int)Main.tile.At(x + 1, y).Type] || Main.tileSolidTop[(int)Main.tile.At(x + 1, y).Type])) || (Main.tile.At(x, y + 1).Liquid < 255 && (!Main.tile.At(x, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] || Main.tileSolidTop[(int)Main.tile.At(x, y + 1).Type])))
                 {
-                    Main.tile.At(x, y).Liquid = 0;
+                    Main.tile.At(x, y).SetLiquid (0);
                 }
             }
             else if (Main.tile.At(x, y + 1).Liquid < 255 && (!Main.tile.At(x, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y + 1).Type] || Main.tileSolidTop[(int)Main.tile.At(x, y + 1).Type]) && !Liquid.stuck)
@@ -979,7 +979,7 @@ namespace Terraria_Server
 
             if (Main.tile.At(x, y).Liquid == 0)
             {
-                Main.tile.At(x, y).Lava = false;
+                Main.tile.At(x, y).SetLava (false);
             }
             else if (Main.tile.At(x, y).Lava)
             {
@@ -992,14 +992,14 @@ namespace Terraria_Server
                         {
                             if (Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 23)
                             {
-                                Main.tile.At(i, j).Type = 0;
+                                Main.tile.At(i, j).SetType (0);
                                 WorldGen.SquareTileFrame(i, j, true);
                                 
                                 NetMessage.SendTileSquare(-1, x, y, 3);
                             }
                             else if (Main.tile.At(i, j).Type == 60 || Main.tile.At(i, j).Type == 70)
                             {
-                                Main.tile.At(i, j).Type = 59;
+                                Main.tile.At(i, j).SetType (59);
                                 WorldGen.SquareTileFrame(i, j, true);
                                 
                                 NetMessage.SendTileSquare(-1, x, y, 3);
@@ -1013,7 +1013,7 @@ namespace Terraria_Server
             NetMessage.SendWater(x, y);
 
             Liquid.numLiquid--;
-            Main.tile.At(Main.liquid[liquidIndex].x, Main.liquid[liquidIndex].y).CheckingLiquid = false;
+            Main.tile.At(Main.liquid[liquidIndex].x, Main.liquid[liquidIndex].y).SetCheckingLiquid (false);
             Main.liquid[liquidIndex].x = Main.liquid[Liquid.numLiquid].x;
             Main.liquid[liquidIndex].y = Main.liquid[Liquid.numLiquid].y;
             Main.liquid[liquidIndex].kill = Main.liquid[Liquid.numLiquid].kill;

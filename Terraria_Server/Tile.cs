@@ -17,9 +17,13 @@ namespace Terraria_Server
   
 		public TileData Data {
 			get { return Main.tile.data [x, y]; }
-			set { Main.tile.data [x, y] = value; }
 		}
-		
+
+		public void SetData (TileData value)
+		{
+			Main.tile.data [x, y] = value;
+		}
+
 		public bool Exists {
 			get {
 				return x >= 0 && y >= 0 && x < Main.tile.data.GetLength (0) && y < Main.tile.data.GetLength (1);
@@ -28,72 +32,128 @@ namespace Terraria_Server
 		
 		public bool Active {
 			get { return Exists && Main.tile.data [x, y].Active; }
-			set { Main.tile.data [x, y].Active = value; }
 		}
-		
+
+		public void SetActive (bool value)
+		{
+			Main.tile.data [x, y].Active = value;
+		}
+
 		public bool Lighted {
 			get { return Main.tile.data [x, y].Lighted; }
-			set { Main.tile.data [x, y].Lighted = value; }
+		}
+
+		public void SetLighted (bool value)
+		{
+			Main.tile.data [x, y].Lighted = value;
 		}
 
 		public byte Type {
 			get { return Main.tile.data [x, y].type; }
-			set { Main.tile.data [x, y].type = value; }
+		}
+		
+		public void SetType (byte value)
+		{
+			Main.tile.data [x, y].type = value;
 		}
 
 		public byte Wall {
 			get { return Main.tile.data [x, y].wall; }
-			set { Main.tile.data [x, y].wall = value; }
+		}
+		
+		public void SetWall (byte value)
+		{
+			Main.tile.data [x, y].wall = value;
 		}
 
 		public byte WallFrameX {
 			get { return Main.tile.data [x, y].wallFrameX; }
-			set { Main.tile.data [x, y].wallFrameX = value; }
+		}
+		
+		public void SetWallFrameX (byte value)
+		{
+			Main.tile.data [x, y].wallFrameX = value;
 		}
 
 		public byte WallFrameY {
 			get { return Main.tile.data [x, y].wallFrameY; }
-			set { Main.tile.data [x, y].wallFrameY = value; }
+		}
+
+		public void SetWallFrameY (byte value)
+		{
+			Main.tile.data [x, y].wallFrameY = value;
 		}
 
 		public byte WallFrameNumber {
 			get { return Main.tile.data [x, y].wallFrameNumber; }
-			set { Main.tile.data [x, y].wallFrameNumber = value; }
+		}
+		
+		public void SetWallFrameNumber (byte value)
+		{
+			Main.tile.data [x, y].wallFrameNumber = value;
 		}
 
 		public byte Liquid {
 			get { return Main.tile.data [x, y].liquid; }
-			set { Main.tile.data [x, y].liquid = value; }
+		}
+
+		public void SetLiquid (byte value)
+		{
+			Main.tile.data [x, y].liquid = value;
 		}
 
 		public bool CheckingLiquid {
 			get { return Main.tile.data [x, y].CheckingLiquid; }
-			set { Main.tile.data [x, y].CheckingLiquid = value; }
+		}
+
+		public void SetCheckingLiquid (bool value)
+		{
+			Main.tile.data [x, y].CheckingLiquid = value;
 		}
 
 		public bool SkipLiquid {
 			get { return Main.tile.data [x, y].SkipLiquid; }
-			set { Main.tile.data [x, y].SkipLiquid = value; }
+		}
+
+		public void SetSkipLiquid (bool value)
+		{
+			Main.tile.data [x, y].SkipLiquid = value;
 		}
 
 		public bool Lava {
 			get { return Main.tile.data [x, y].Lava; }
-			set { Main.tile.data [x, y].Lava = value; }
+		}
+
+		public void SetLava (bool value)
+		{
+			Main.tile.data [x, y].Lava = value;
 		}
 
 		public byte FrameNumber {
 			get { return Main.tile.data [x, y].frameNumber; }
-			set { Main.tile.data [x, y].frameNumber = value; }
+		}
+
+		public void SetFrameNumber (byte value)
+		{
+			Main.tile.data [x, y].frameNumber = value;
 		}
 
 		public short FrameX {
 			get { return Main.tile.data [x, y].frameX; }
-			set { Main.tile.data [x, y].frameX = value; }
+		}
+		
+		public void SetFrameX (short value)
+		{
+			Main.tile.data [x, y].frameX = value;
 		}
 
 		public short FrameY {
 			get { return Main.tile.data [x, y].frameY; }
-			set { Main.tile.data [x, y].frameY = value; }
+		}
+		
+		public void SetFrameY (short value)
+		{
+			Main.tile.data [x, y].frameY = value;
 		}
 	}
 	

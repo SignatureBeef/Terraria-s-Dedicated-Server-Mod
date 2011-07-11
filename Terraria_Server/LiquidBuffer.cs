@@ -19,7 +19,7 @@ namespace Terraria_Server
             {
                 return;
             }
-            Main.tile.At(x, y).CheckingLiquid = true;
+            Main.tile.At(x, y).SetCheckingLiquid (true);
             Main.liquidBuffer[LiquidBuffer.numLiquidBuffer].x = x;
             Main.liquidBuffer[LiquidBuffer.numLiquidBuffer].y = y;
             LiquidBuffer.numLiquidBuffer++;

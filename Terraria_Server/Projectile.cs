@@ -1131,12 +1131,12 @@ namespace Terraria_Server
                                             {
                                                 if (Main.tile.At(l, m).Type == 23)
                                                 {
-                                                    Main.tile.At(l, m).Type = 2;
+                                                    Main.tile.At(l, m).SetType (2);
                                                     WorldGen.SquareTileFrame(l, m, true);
                                                 }
                                                 if (Main.tile.At(l, m).Type == 25)
                                                 {
-                                                    Main.tile.At(l, m).Type = 1;
+                                                    Main.tile.At(l, m).SetType (1);
                                                     WorldGen.SquareTileFrame(l, m, true);
                                                 }
                                             }
