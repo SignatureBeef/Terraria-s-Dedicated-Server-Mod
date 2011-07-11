@@ -86,10 +86,13 @@ namespace Terraria_Server.Messages
                 }
             }
 
-            IMessage message = messageArray[bufferData];
-            if (message != null && (message.GetRequiredNetMode() == null || message.GetRequiredNetMode() == 2))
+            if (bufferData > 0 && bufferData < messageArray.Length)
             {
-                message.Process(start, length, num, whoAmI, readBuffer, bufferData);
+                IMessage message = messageArray[bufferData];
+                if (message != null)
+                {
+                    message.Process(start, length, num, whoAmI, readBuffer, bufferData);
+                }
             }
         }
     }

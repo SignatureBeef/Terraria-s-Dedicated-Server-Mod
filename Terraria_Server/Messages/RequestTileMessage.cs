@@ -9,11 +9,6 @@ namespace Terraria_Server.Messages
             return Packet.REQUEST_TILE_BLOCK;
         }
 
-        public int? GetRequiredNetMode()
-        {
-            return 2;
-        }
-
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int num8 = BitConverter.ToInt32(readBuffer, num);

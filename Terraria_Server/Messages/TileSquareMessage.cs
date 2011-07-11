@@ -13,11 +13,6 @@ namespace Terraria_Server.Messages
             return Packet.TILE_SQUARE;
         }
 
-        public int? GetRequiredNetMode()
-        {
-            return null;
-        }
-
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             short size = BitConverter.ToInt16(readBuffer, start + 1);
