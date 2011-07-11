@@ -47,7 +47,7 @@ namespace Terraria_Server.Messages
 
             PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
             tileEvent.Sender = Main.players[whoAmI];
-            tileEvent.Tile = Main.tile[x, y].Data;
+            tileEvent.Tile = Main.tile.At(x, y).Data;
             tileEvent.Type = tileType;
             tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
             tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;

@@ -35,7 +35,7 @@ namespace Terraria_Server.Messages
                     return;
                 }
             }
-            TileRef tile = Main.tile[x, y];
+            TileRef tile = Main.tile.At(x, y);
             {
                 tile.Liquid = liquid;
                 tile.Lava = (lavaFlag == 1);

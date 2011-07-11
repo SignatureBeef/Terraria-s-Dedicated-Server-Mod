@@ -20,10 +20,9 @@ namespace Terraria_Server
 			get { return data.GetLength (1); }
 		}
      
-		public TileRef this [int x, int y] {
-			get {
-				return new TileRef (x, y);
-			}
+		public TileRef At (int x, int y)
+		{
+			return new TileRef (x, y);
 		}
      
 		public TileRef CreateTileAt (int x, int y)
