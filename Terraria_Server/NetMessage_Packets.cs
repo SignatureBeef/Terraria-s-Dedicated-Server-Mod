@@ -150,7 +150,7 @@ namespace Terraria_Server
 		{
 			byte flags = 0;
 			
-			var tile   = Main.tile[x, y];
+			var tile   = Main.tile.At(x, y);
 			var active = tile.Active;
 			var wall   = tile.Wall;
 			var liquid = tile.Liquid;
@@ -651,7 +651,7 @@ namespace Terraria_Server
 		
 		public void FlowLiquid (int x, int y)
 		{
-			var tile = Main.tile[x, y];
+			var tile = Main.tile.At(x, y);
 			
 			Header (Packet.FLOW_LIQUID, 10);
 			

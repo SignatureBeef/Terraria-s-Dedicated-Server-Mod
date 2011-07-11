@@ -14,10 +14,10 @@ namespace Terraria_Server.Messages
             int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             int y = BitConverter.ToInt32(readBuffer, num);
-            if (Main.tile[x, y].Type == 21)
+            if (Main.tile.At(x, y).Type == 21)
             {
                 WorldGen.KillTile(x, y);
-                if (!Main.tile[x, y].Active)
+                if (!Main.tile.At(x, y).Active)
                 {
                     NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
                 }

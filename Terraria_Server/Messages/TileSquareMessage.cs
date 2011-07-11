@@ -24,7 +24,7 @@ namespace Terraria_Server.Messages
             {
                 for (int y = top; y < top + (int)size; y++)
                 {
-                    TileData tile = Main.tile[x, y].Data;
+                    TileData tile = Main.tile.At(x, y).Data;
 
                     byte b9 = readBuffer[num++];
 
@@ -99,7 +99,7 @@ namespace Terraria_Server.Messages
                         return;
                     }
                     
-                    Main.tile[x, y].Data = tile;
+                    Main.tile.At(x, y).SetData (tile);
                 }
             }
 

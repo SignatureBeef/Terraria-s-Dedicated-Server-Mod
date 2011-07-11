@@ -313,7 +313,7 @@ namespace Terraria_Server
                     {
                         for (int j = num3; j < num4; j++)
                         {
-                            if (Main.tile[i, j + 1].Exists && Main.tileCut[(int)Main.tile[i, j].Type] && Main.tile[i, j + 1].Type != 78)
+                            if (Main.tile.At(i, j + 1).Exists && Main.tileCut[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j + 1).Type != 78)
                             {
                                 WorldGen.KillTile(i, j, false, false, false);
                                 NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
@@ -1127,16 +1127,16 @@ namespace Terraria_Server
                                             Vector2 vector2;
                                             vector2.X = (float)(l * 16);
                                             vector2.Y = (float)(m * 16);
-                                            if (this.Position.X + (float)this.width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.height > vector2.Y && this.Position.Y < vector2.Y + 16f && Main.myPlayer == this.Owner && Main.tile[l, m].Active)
+                                            if (this.Position.X + (float)this.width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.height > vector2.Y && this.Position.Y < vector2.Y + 16f && Main.myPlayer == this.Owner && Main.tile.At(l, m).Active)
                                             {
-                                                if (Main.tile[l, m].Type == 23)
+                                                if (Main.tile.At(l, m).Type == 23)
                                                 {
-                                                    Main.tile[l, m].Type = 2;
+                                                    Main.tile.At(l, m).SetType (2);
                                                     WorldGen.SquareTileFrame(l, m, true);
                                                 }
-                                                if (Main.tile[l, m].Type == 25)
+                                                if (Main.tile.At(l, m).Type == 25)
                                                 {
-                                                    Main.tile[l, m].Type = 1;
+                                                    Main.tile.At(l, m).SetType (1);
                                                     WorldGen.SquareTileFrame(l, m, true);
                                                 }
                                             }
@@ -1193,7 +1193,7 @@ namespace Terraria_Server
                                                 Vector2 vector4;
                                                 vector4.X = (float)(n * 16);
                                                 vector4.Y = (float)(num22 * 16);
-                                                if (this.Position.X + (float)this.width > vector4.X && this.Position.X < vector4.X + 16f && this.Position.Y + (float)this.height > vector4.Y && this.Position.Y < vector4.Y + 16f && Main.tile[n, num22].Active && Main.tileSolid[(int)Main.tile[n, num22].Type])
+                                                if (this.Position.X + (float)this.width > vector4.X && this.Position.X < vector4.X + 16f && this.Position.Y + (float)this.height > vector4.Y && this.Position.Y < vector4.Y + 16f && Main.tile.At(n, num22).Active && Main.tileSolid[(int)Main.tile.At(n, num22).Type])
                                                 {
                                                     if (Main.players[this.Owner].grapCount < 10)
                                                     {
@@ -1297,7 +1297,7 @@ namespace Terraria_Server
                                                 Vector2 vector5;
                                                 vector5.X = (float)(num32 * 16);
                                                 vector5.Y = (float)(num33 * 16);
-                                                if (this.Position.X + (float)(this.width / 2) > vector5.X && this.Position.X + (float)(this.width / 2) < vector5.X + 16f && this.Position.Y + (float)(this.height / 2) > vector5.Y && this.Position.Y + (float)(this.height / 2) < vector5.Y + 16f && Main.tile[num32, num33].Active && Main.tileSolid[(int)Main.tile[num32, num33].Type])
+                                                if (this.Position.X + (float)(this.width / 2) > vector5.X && this.Position.X + (float)(this.width / 2) < vector5.X + 16f && this.Position.Y + (float)(this.height / 2) > vector5.Y && this.Position.Y + (float)(this.height / 2) < vector5.Y + 16f && Main.tile.At(num32, num33).Active && Main.tileSolid[(int)Main.tile.At(num32, num33).Type])
                                                 {
                                                     flag = false;
                                                 }
@@ -1581,7 +1581,7 @@ namespace Terraria_Server
                                                                     {
                                                                         for (int num71 = num68; num71 < num69; num71++)
                                                                         {
-                                                                            if ((Main.tile[num70, num71].Active) && (Main.tileSolid[Main.tile[num70, num71].Type] || (Main.tileSolidTop[Main.tile[num70, num71].Type] && (Main.tile[num70, num71].FrameY == 0))))
+                                                                            if ((Main.tile.At(num70, num71).Active) && (Main.tileSolid[Main.tile.At(num70, num71).Type] || (Main.tileSolidTop[Main.tile.At(num70, num71).Type] && (Main.tile.At(num70, num71).FrameY == 0))))
                                                                             {
                                                                                 Vector2 vector11;
                                                                                 vector11.X = num70 * 0x10;
@@ -1713,7 +1713,7 @@ namespace Terraria_Server
                                                                         {
                                                                             for (int num77 = num74; num77 < num75; num77++)
                                                                             {
-                                                                                if (Main.tile[num76, num77].Active && (Main.tileSolid[(int)Main.tile[num76, num77].Type] || (Main.tileSolidTop[(int)Main.tile[num76, num77].Type] && Main.tile[num76, num77].FrameY == 0)))
+                                                                                if (Main.tile.At(num76, num77).Active && (Main.tileSolid[(int)Main.tile.At(num76, num77).Type] || (Main.tileSolidTop[(int)Main.tile.At(num76, num77).Type] && Main.tile.At(num76, num77).FrameY == 0)))
                                                                                 {
                                                                                     Vector2 vector12;
                                                                                     vector12.X = (float)(num76 * 16);
@@ -1818,10 +1818,10 @@ namespace Terraria_Server
                                                                 {
                                                                     int num78 = (int)((this.Position.X + (float)this.width) / 16f);
                                                                     int num79 = (int)((this.Position.Y + (float)this.height) / 16f);
-                                                                    if (Main.tile[num78, num79].Exists && !Main.tile[num78, num79].Active)
+                                                                    if (Main.tile.At(num78, num79).Exists && !Main.tile.At(num78, num79).Active)
                                                                     {
                                                                         WorldGen.PlaceTile(num78, num79, 85, false, false, -1, 0);
-                                                                        if (Main.tile[num78, num79].Active)
+                                                                        if (Main.tile.At(num78, num79).Active)
                                                                         {
                                                                             
                                                                             NetMessage.SendData(17, -1, -1, "", 1, (float)num78, (float)num79, 85f);
@@ -2081,7 +2081,7 @@ namespace Terraria_Server
                             float num45 = Math.Abs((float)num43 - this.Position.X / 16f);
                             float num46 = Math.Abs((float)num44 - this.Position.Y / 16f);
                             double num47 = Math.Sqrt((double)(num45 * num45 + num46 * num46));
-                            if (num47 < (double)num38 && Main.tile[num43, num44].Exists && Main.tile[num43, num44].Wall == 0)
+                            if (num47 < (double)num38 && Main.tile.At(num43, num44).Exists && Main.tile.At(num43, num44).Wall == 0)
                             {
                                 flag = true;
                                 break;
@@ -2098,12 +2098,12 @@ namespace Terraria_Server
                             if (num52 < (double)num38)
                             {
                                 bool flag2 = true;
-                                if (Main.tile[num48, num49].Active)
+                                if (Main.tile.At(num48, num49).Active)
                                 {
                                     flag2 = false;
                                     if (this.type == ProjectileType.BOMB || this.type == ProjectileType.BOMB_STICKY)
                                     {
-                                        if (!Main.tileSolid[(int)Main.tile[num48, num49].Type] || Main.tileSolidTop[(int)Main.tile[num48, num49].Type] || Main.tile[num48, num49].Type == 0 || Main.tile[num48, num49].Type == 1 || Main.tile[num48, num49].Type == 2 || Main.tile[num48, num49].Type == 23 || Main.tile[num48, num49].Type == 30 || Main.tile[num48, num49].Type == 40 || Main.tile[num48, num49].Type == 6 || Main.tile[num48, num49].Type == 7 || Main.tile[num48, num49].Type == 8 || Main.tile[num48, num49].Type == 9 || Main.tile[num48, num49].Type == 10 || Main.tile[num48, num49].Type == 53 || Main.tile[num48, num49].Type == 54 || Main.tile[num48, num49].Type == 57 || Main.tile[num48, num49].Type == 59 || Main.tile[num48, num49].Type == 60 || Main.tile[num48, num49].Type == 63 || Main.tile[num48, num49].Type == 64 || Main.tile[num48, num49].Type == 65 || Main.tile[num48, num49].Type == 66 || Main.tile[num48, num49].Type == 67 || Main.tile[num48, num49].Type == 68 || Main.tile[num48, num49].Type == 70 || Main.tile[num48, num49].Type == 37)
+                                        if (!Main.tileSolid[(int)Main.tile.At(num48, num49).Type] || Main.tileSolidTop[(int)Main.tile.At(num48, num49).Type] || Main.tile.At(num48, num49).Type == 0 || Main.tile.At(num48, num49).Type == 1 || Main.tile.At(num48, num49).Type == 2 || Main.tile.At(num48, num49).Type == 23 || Main.tile.At(num48, num49).Type == 30 || Main.tile.At(num48, num49).Type == 40 || Main.tile.At(num48, num49).Type == 6 || Main.tile.At(num48, num49).Type == 7 || Main.tile.At(num48, num49).Type == 8 || Main.tile.At(num48, num49).Type == 9 || Main.tile.At(num48, num49).Type == 10 || Main.tile.At(num48, num49).Type == 53 || Main.tile.At(num48, num49).Type == 54 || Main.tile.At(num48, num49).Type == 57 || Main.tile.At(num48, num49).Type == 59 || Main.tile.At(num48, num49).Type == 60 || Main.tile.At(num48, num49).Type == 63 || Main.tile.At(num48, num49).Type == 64 || Main.tile.At(num48, num49).Type == 65 || Main.tile.At(num48, num49).Type == 66 || Main.tile.At(num48, num49).Type == 67 || Main.tile.At(num48, num49).Type == 68 || Main.tile.At(num48, num49).Type == 70 || Main.tile.At(num48, num49).Type == 37)
                                         {
                                             flag2 = true;
                                         }
@@ -2115,7 +2115,7 @@ namespace Terraria_Server
                                             flag2 = true;
                                         }
                                     }
-                                    if (Main.tileDungeon[(int)Main.tile[num48, num49].Type] || Main.tile[num48, num49].Type == 26 || Main.tile[num48, num49].Type == 58 || Main.tile[num48, num49].Type == 21)
+                                    if (Main.tileDungeon[(int)Main.tile.At(num48, num49).Type] || Main.tile.At(num48, num49).Type == 26 || Main.tile.At(num48, num49).Type == 58 || Main.tile.At(num48, num49).Type == 21)
                                     {
                                         flag2 = false;
                                     }
@@ -2124,7 +2124,7 @@ namespace Terraria_Server
                                         WorldGen.KillTile(num48, num49, false, false, false);
                                     }
                                 }
-                                if (flag2 && Main.tile[num48, num49].Exists && Main.tile[num48, num49].Wall > 0 && flag)
+                                if (flag2 && Main.tile.At(num48, num49).Exists && Main.tile.At(num48, num49).Wall > 0 && flag)
                                 {
                                     WorldGen.KillWall(num48, num49, false);
                                 }
@@ -2168,10 +2168,10 @@ namespace Terraria_Server
                             }
                         }
                     }
-                    if (!Main.tile[num54, num55].Active)
+                    if (!Main.tile.At(num54, num55).Active)
                     {
                         WorldGen.PlaceTile(num54, num55, num56, false, true, -1, 0);
-                        if (Main.tile[num54, num55].Active && (int)Main.tile[num54, num55].Type == num56)
+                        if (Main.tile.At(num54, num55).Active && (int)Main.tile.At(num54, num55).Type == num56)
                         {
                             NetMessage.SendData(17, -1, -1, "", 1, (float)num54, (float)num55, (float)num56);
                         }
