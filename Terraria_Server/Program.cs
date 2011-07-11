@@ -84,12 +84,6 @@ namespace Terraria_Server
                 }
 #endif
 
-                Statics.debugMode = properties.DebugMode;
-                if (Statics.debugMode)
-                {
-                    Program.tConsole.WriteLine("CAUTION: Running Debug Mode! Unexpected errors may occur!");
-                }
-
                 Program.tConsole.WriteLine("Preparing Server Data...");
 
                 String worldFile = properties.InitialWorldPath;

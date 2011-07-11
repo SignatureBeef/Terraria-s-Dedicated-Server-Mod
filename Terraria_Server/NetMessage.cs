@@ -1286,17 +1286,9 @@ namespace Terraria_Server
                                 {
                                     MessageBuffer messageBuffer = NetMessage.buffer[num];
                                     NetMessage.buffer[num11].spamCount++;
-                                    if (Statics.debugMode)
-                                    {
-                                        Netplay.serverSock[num11].networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
-                                        Netplay.serverSock[num11].ServerWriteCallBack(null);
-                                    }
-                                    else
-                                    {
-                                        byte[] copy = new byte[num2];
-                                        Array.Copy(NetMessage.buffer[num].writeBuffer, copy, num2);
-                                        Netplay.serverSock[num11].Send(copy);
-                                    }
+                                    byte[] copy = new byte[num2];
+                                    Array.Copy(NetMessage.buffer[num].writeBuffer, copy, num2);
+                                    Netplay.serverSock[num11].Send(copy);
                                 }
                                 catch
                                 {
@@ -1311,17 +1303,9 @@ namespace Terraria_Server
                         {
                             MessageBuffer messageBuffer = NetMessage.buffer[num];
                             NetMessage.buffer[remoteClient].spamCount++;
-                            if (Statics.debugMode)
-                            {
-                                Netplay.serverSock[remoteClient].networkStream.Write(NetMessage.buffer[num].writeBuffer, 0, num2);
-                                Netplay.serverSock[remoteClient].ServerWriteCallBack(null);
-                            }
-                            else
-                            {
-                                byte[] copy = new byte[num2];
-                                Array.Copy(NetMessage.buffer[num].writeBuffer, copy, num2);
-                                Netplay.serverSock[remoteClient].Send(copy);
-                            }
+                            byte[] copy = new byte[num2];
+                            Array.Copy(NetMessage.buffer[num].writeBuffer, copy, num2);
+                            Netplay.serverSock[remoteClient].Send(copy);
                         }
                         catch
                         {

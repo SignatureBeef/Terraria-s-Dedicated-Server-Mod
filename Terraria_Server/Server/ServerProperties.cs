@@ -7,7 +7,6 @@ namespace Terraria_Server
     public class ServerProperties : PropertiesFile
     {
         private const bool DEFAULT_AUTOMATIC_UPDATES = true;
-        private const bool DEFAULT_DEBUG_MODE = false;
         private const String DEFAULT_GREETING = "Welcome to a TDSM Server!";
         private const String DEFAULT_MAP_SIZE = "small";
         private const int DEFAULT_MAX_PLAYERS = 8;
@@ -21,7 +20,6 @@ namespace Terraria_Server
         private const String DEFAULT_WORLD = "world1.wld";
 
         private const String AUTOMATIC_UPDATES = "allowupdates";
-        private const String DEBUG_MODE = "debugmode";
         private const String DUNGEON_AMOUNT = "opt-numdungeons";
         private const String FLOATING_ISLAND_AMOUNT = "opt-num-floating-islands";
         private const String GREETING = "greeting";
@@ -59,7 +57,6 @@ namespace Terraria_Server
             temp = UseCustomGenOpts;
             temp = DungeonAmount;
             temp = FloatingIslandAmount;
-            temp = DebugMode;
         }
 
         public int MaxPlayers
@@ -267,14 +264,6 @@ namespace Terraria_Server
                     setValue(FLOATING_ISLAND_AMOUNT, amount);
                 }
                 return amount;
-            }
-        }
-
-        public bool DebugMode
-        {
-            get
-            {
-                return getValue(DEBUG_MODE, DEFAULT_DEBUG_MODE);
             }
         }
 

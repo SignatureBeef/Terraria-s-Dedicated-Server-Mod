@@ -14,7 +14,6 @@ namespace Terraria_Server
         private const String DATA = "Data";
 
         public static bool cmdMessages = true;
-        public static bool debugMode = false;
         public static bool keepRunning = false;
 
         public static bool IsActive = false;
