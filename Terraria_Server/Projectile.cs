@@ -313,7 +313,7 @@ namespace Terraria_Server
                     {
                         for (int j = num3; j < num4; j++)
                         {
-                            if (Main.tile[i, j + 1].Exists && Main.tile[i, j + 1].Type != 78)
+                            if (Main.tile[i, j + 1].Exists && Main.tileCut[(int)Main.tile[i, j].Type] && Main.tile[i, j + 1].Type != 78)
                             {
                                 WorldGen.KillTile(i, j, false, false, false);
                                 NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
