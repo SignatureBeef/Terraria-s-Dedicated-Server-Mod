@@ -67,6 +67,49 @@ namespace Terraria_Server
                     }
                 }
 
+                String PIDFile = properties.PIDFile.ToString();
+                if (PIDFile.Length > 0)
+                {
+                    String ProcessUID = Process.GetCurrentProcess().Id.ToString();
+                    bool Issue = false;
+                    if (File.Exists(PIDFile))
+                    {
+                        try
+                        {
+                            File.Delete(PIDFile);
+                        }
+                        catch (Exception)
+                        {
+                            Console.Write("Issue deleting PID file, Continue? [Y/n]: ");
+                            if (Console.ReadLine().ToLower() == "n")
+                            {
+                                Console.WriteLine("Press any Key to Exit...");
+                                Console.ReadKey(true);
+                                return;
+                            }
+                            Issue = true;
+                        }
+                    }
+                    if (!Issue)
+                    {
+                        try
+                        {
+                            File.WriteAllText(PIDFile, ProcessUID);
+                        }
+                        catch (Exception)
+                        {
+                            Console.Write("Issue creating PID file, Continue? [Y/n]: ");
+                            if (Console.ReadLine().ToLower() == "n")
+                            {
+                                Console.WriteLine("Press any Key to Exit...");
+                                Console.ReadKey(true);
+                                return;
+                            }
+                        }
+                        Console.WriteLine("PID File Created, Process ID: " + ProcessUID);
+                    }
+                }
+
 
 #if (DEBUG == false) //I'll comment this for each release, Updates are annoying when testing :3
                 try
@@ -350,16 +393,18 @@ namespace Terraria_Server
             }
 
             Stopwatch stopwatch = new Stopwatch();
-
             stopwatch.Start();
-            double num6 = 16.666666666666668;
+
+            //double num6 = 16.666666666666668;
+            double serverProceesAverage = 16.25; //Still calculating.
             double num7 = 0.0;
+
             while (!Netplay.disconnect)
             {
                 double num8 = (double)stopwatch.ElapsedMilliseconds;
-                if (num8 + num7 >= num6)
+                if (num8 + num7 >= serverProceesAverage)
                 {
-                    num7 += num8 - num6;
+                    num7 += num8 - serverProceesAverage;
                     stopwatch.Reset();
                     stopwatch.Start();
 
@@ -372,9 +417,9 @@ namespace Terraria_Server
                         server.Update();
                     }
                     double num9 = (double)stopwatch.ElapsedMilliseconds + num7;
-                    if (num9 < num6)
+                    if (num9 < serverProceesAverage)
                     {
-                        int num10 = (int)(num6 - num9) - 1;
+                        int num10 = (int)(serverProceesAverage - num9) - 1;
                         if (num10 > 1)
                         {
                             Thread.Sleep(num10);
