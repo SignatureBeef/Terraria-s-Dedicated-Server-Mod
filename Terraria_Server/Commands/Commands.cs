@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 using Terraria_Server;
@@ -58,7 +58,8 @@ namespace Terraria_Server.Commands
             COMMAND_NPCSPAWN = 21,
             COMMAND_KICK = 22,
             COMMAND_RESTART = 23,
-            COMMAND_STOP = 24
+            COMMAND_STOP = 24,
+            COMMAND_SLOTS = 25,
         }
         /// <summary>
         /// Defines the string values for the command names
@@ -71,7 +72,7 @@ namespace Terraria_Server.Commands
 																	"tphere",       "settle",       "op",
                                                                     "deop",         "oplogin",      "oplogout",
                                                                     "npcspawns",    "kick",         "restart",
-                                                                    "stop"};
+                                                                    "stop",         "slots"};
         /// <summary>
         /// Defines help text for each command
         /// </summary>
@@ -99,12 +100,13 @@ namespace Terraria_Server.Commands
                                                                     "Toggle the state of NPC Spawning.",
                                                                     "Kicks a player from the server.", 
                                                                     "Restarts the server.",
-                                                                    "Stop & Close The Server."};
+                                                                    "Stop & Close The Server.",
+                                                                    "Check the state of connection slots"};
 
         /// <summary>
         /// Defines permission required to use the command at the specified index.  1 = requires op, 0 = any player
         /// </summary>
-        public static int[] CommandPermission = new int[] { 1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1};
+        public static int[] CommandPermission = new int[] { 1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1};
 
         /// <summary>
         /// Utility for converting a String array into a single string
@@ -443,13 +445,10 @@ namespace Terraria_Server.Commands
                                 {
                                     foreach (Player player in Program.server.getPlayerList())
                                     {
-                                        if (Netplay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint != null)
+                                        var ip = Netplay.slots[player.whoAmi].remoteAddress.Split(':')[0];
+                                        if (ip == commands[1])
                                         {
-                                            if (Netplay.serverSock[player.whoAmi].tcpClient.Client.RemoteEndPoint.ToString()
-                                            .Split(':')[0].Equals(commands[1]))
-                                            {
-                                                banee = player;
-                                            }
+                                            banee = player;
                                         }
                                     }
                                 }
@@ -459,8 +458,8 @@ namespace Terraria_Server.Commands
                                 if (banee != null)
                                 {
                                     banee.Kick("You have been banned from this Server.");
-                                    Program.server.BanList.addException(Netplay.serverSock[banee.whoAmi].
-                                        tcpClient.Client.RemoteEndPoint.ToString().Split(':')[0]);
+                                    Program.server.BanList.addException(Netplay.slots[banee.whoAmi].
+                                        remoteAddress.Split(':')[0]);
                                 }
                                 break;
                             }
@@ -1170,14 +1169,33 @@ namespace Terraria_Server.Commands
 
             Statics.keepRunning = true;
             server.StopServer();
-            while (Statics.serverStarted);
+            while (Statics.serverStarted) { Thread.Sleep (10); }
             Program.tConsole.WriteLine("Starting the Server");
             server.Initialize();
             WorldGen.loadWorld();
             server.StartServer();
-            Program.updateThread = new Thread(Program.Updater);
+            Program.updateThread = new Thread(Program.UpdateLoop);
             Statics.keepRunning = false;
         }
-
+		
+		public static void Slots (ISender sender, Server server)
+		{
+			if (sender is Player)
+				return;
+			
+			for (int i = 0; i < 255; i++)
+			{
+				var slot = Netplay.slots[i];
+				var player = Main.players[i];
+				
+				if (slot.state != SlotState.VACANT)
+				{
+					var name = "";
+					if (player != null)
+						name = ", " + player.Name;
+					Program.tConsole.WriteLine ("slot {0}: {1}, {2}{3}", i, slot.state, slot.remoteAddress, name);
+				}
+			}
+		}
     }
 }

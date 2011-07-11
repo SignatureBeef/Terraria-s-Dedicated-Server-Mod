@@ -13,7 +13,7 @@ namespace Terraria_Server
         private const int ACTIVE_TIME = 750;
         public const int MAX_NPCS = 1000;
         public const int MAX_AI = 4;
-
+        
         public static int immuneTime = 20;
         private static int spawnSpaceX = 3;
         private static int spawnSpaceY = 3;
@@ -588,40 +588,12 @@ namespace Terraria_Server
                             }
                             int num4 = (int)((npc.Position.X + (float)(npc.width / 2) + (float)(15 * npc.direction)) / 16f);
                             int num5 = (int)((npc.Position.Y + (float)npc.height - 15f) / 16f);
-                            if (Main.tile[num4, num5] == null)
-                            {
-                                Main.tile[num4, num5] = new Tile();
-                            }
-                            if (Main.tile[num4, num5 - 1] == null)
-                            {
-                                Main.tile[num4, num5 - 1] = new Tile();
-                            }
-                            if (Main.tile[num4, num5 - 2] == null)
-                            {
-                                Main.tile[num4, num5 - 2] = new Tile();
-                            }
-                            if (Main.tile[num4, num5 - 3] == null)
-                            {
-                                Main.tile[num4, num5 - 3] = new Tile();
-                            }
-                            if (Main.tile[num4, num5 + 1] == null)
-                            {
-                                Main.tile[num4, num5 + 1] = new Tile();
-                            }
-                            if (Main.tile[num4 + npc.direction, num5 - 1] == null)
-                            {
-                                Main.tile[num4 + npc.direction, num5 - 1] = new Tile();
-                            }
-                            if (Main.tile[num4 + npc.direction, num5 + 1] == null)
-                            {
-                                Main.tile[num4 + npc.direction, num5 + 1] = new Tile();
-                            }
                             bool flag2 = true;
                             if (npc.Type == 47 || npc.Type == 67)
                             {
                                 flag2 = false;
                             }
-                            if (Main.tile[num4, num5 - 1].Active && Main.tile[num4, num5 - 1].type == 10 && flag2)
+                            if (Main.tile[num4, num5 - 1].Active && Main.tile[num4, num5 - 1].Type == 10 && flag2)
                             {
                                 npc.ai[2] += 1f;
                                 npc.ai[3] = 0f;
@@ -649,7 +621,7 @@ namespace Terraria_Server
                                         npc.ai[1] = 10f;
                                     }
                                     WorldGen.KillTile(num4, num5 - 1, true, false, false);
-                                    if ((!flag3) && flag3)
+                                    if (flag3)
                                     {
                                         if (npc.Type == 26)
                                         {
@@ -679,9 +651,9 @@ namespace Terraria_Server
                             {
                                 if ((npc.Velocity.X < 0f && npc.spriteDirection == -1) || (npc.Velocity.X > 0f && npc.spriteDirection == 1))
                                 {
-                                    if (Main.tile[num4, num5 - 2].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 2].type])
+                                    if (Main.tile[num4, num5 - 2].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 2].Type])
                                     {
-                                        if (Main.tile[num4, num5 - 3].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 3].type])
+                                        if (Main.tile[num4, num5 - 3].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 3].Type])
                                         {
                                             npc.Velocity.Y = -8f;
                                             npc.netUpdate = true;
@@ -694,21 +666,21 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (Main.tile[num4, num5 - 1].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 1].type])
+                                        if (Main.tile[num4, num5 - 1].Active && Main.tileSolid[(int)Main.tile[num4, num5 - 1].Type])
                                         {
                                             npc.Velocity.Y = -6f;
                                             npc.netUpdate = true;
                                         }
                                         else
                                         {
-                                            if (Main.tile[num4, num5].Active && Main.tileSolid[(int)Main.tile[num4, num5].type])
+                                            if (Main.tile[num4, num5].Active && Main.tileSolid[(int)Main.tile[num4, num5].Type])
                                             {
                                                 npc.Velocity.Y = -5f;
                                                 npc.netUpdate = true;
                                             }
                                             else
                                             {
-                                                if (npc.directionY < 0 && npc.Type != 67 && (!Main.tile[num4, num5 + 1].Active || !Main.tileSolid[(int)Main.tile[num4, num5 + 1].type]) && (!Main.tile[num4 + npc.direction, num5 + 1].Active || !Main.tileSolid[(int)Main.tile[num4 + npc.direction, num5 + 1].type]))
+                                                if (npc.directionY < 0 && npc.Type != 67 && (!Main.tile[num4, num5 + 1].Active || !Main.tileSolid[(int)Main.tile[num4, num5 + 1].Type]) && (!Main.tile[num4 + npc.direction, num5 + 1].Active || !Main.tileSolid[(int)Main.tile[num4 + npc.direction, num5 + 1].Type]))
                                                 {
                                                     npc.Velocity.Y = -8f;
                                                     npc.Velocity.X = npc.Velocity.X * 1.5f;
@@ -1515,7 +1487,7 @@ namespace Terraria_Server
                                         {
                                             for (int n = num53; n < num54; n++)
                                             {
-                                                if (Main.tile[m, n] != null && ((Main.tile[m, n].Active && (Main.tileSolid[(int)Main.tile[m, n].type] || (Main.tileSolidTop[(int)Main.tile[m, n].type] && Main.tile[m, n].frameY == 0))) || Main.tile[m, n].liquid > 64))
+                                                if (((Main.tile[m, n].Active && (Main.tileSolid[(int)Main.tile[m, n].Type] || (Main.tileSolidTop[(int)Main.tile[m, n].Type] && Main.tile[m, n].FrameY == 0))) || Main.tile[m, n].Liquid > 64))
                                                 {
                                                     Vector2 vector8;
                                                     vector8.X = (float)(m * 16);
@@ -1527,9 +1499,9 @@ namespace Terraria_Server
                                                         {
                                                             WorldGen.KillTile(m, n, true, true, false);
                                                         }
-                                                        if (Main.tile[m, n].type == 2)
+                                                        if (Main.tile[m, n].Type == 2)
                                                         {
-                                                            byte arg_4132_0 = Main.tile[m, n - 1].type;
+                                                            byte arg_4132_0 = Main.tile[m, n - 1].Type;
                                                         }
                                                     }
                                                 }
@@ -2039,35 +2011,7 @@ namespace Terraria_Server
                                                         npc.ai[2] = -1f;
                                                         int num68 = (int)((npc.Position.X + (float)(npc.width / 2) + (float)(15 * npc.direction)) / 16f);
                                                         int num69 = (int)((npc.Position.Y + (float)npc.height - 16f) / 16f);
-                                                        if (Main.tile[num68, num69] == null)
-                                                        {
-                                                            Main.tile[num68, num69] = new Tile();
-                                                        }
-                                                        if (Main.tile[num68, num69 - 1] == null)
-                                                        {
-                                                            Main.tile[num68, num69 - 1] = new Tile();
-                                                        }
-                                                        if (Main.tile[num68, num69 - 2] == null)
-                                                        {
-                                                            Main.tile[num68, num69 - 2] = new Tile();
-                                                        }
-                                                        if (Main.tile[num68, num69 - 3] == null)
-                                                        {
-                                                            Main.tile[num68, num69 - 3] = new Tile();
-                                                        }
-                                                        if (Main.tile[num68, num69 + 1] == null)
-                                                        {
-                                                            Main.tile[num68, num69 + 1] = new Tile();
-                                                        }
-                                                        if (Main.tile[num68 + npc.direction, num69 - 1] == null)
-                                                        {
-                                                            Main.tile[num68 + npc.direction, num69 - 1] = new Tile();
-                                                        }
-                                                        if (Main.tile[num68 + npc.direction, num69 + 1] == null)
-                                                        {
-                                                            Main.tile[num68 + npc.direction, num69 + 1] = new Tile();
-                                                        }
-                                                        if (npc.townNPC && Main.tile[num68, num69 - 2].Active && Main.tile[num68, num69 - 2].type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
+                                                        if (npc.townNPC && Main.tile[num68, num69 - 2].Active && Main.tile[num68, num69 - 2].Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
                                                             bool flag10 = WorldGen.OpenDoor(num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
                                                             if (flag10)
@@ -2098,7 +2042,7 @@ namespace Terraria_Server
                                                         {
                                                             if ((npc.Velocity.X < 0f && npc.spriteDirection == -1) || (npc.Velocity.X > 0f && npc.spriteDirection == 1))
                                                             {
-                                                                if (Main.tile[num68, num69 - 2].Active && Main.tileSolid[(int)Main.tile[num68, num69 - 2].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 2].type])
+                                                                if (Main.tile[num68, num69 - 2].Active && Main.tileSolid[(int)Main.tile[num68, num69 - 2].Type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 2].Type])
                                                                 {
                                                                     if ((npc.direction == 1 && !Collision.SolidTiles(num68 - 2, num68 - 1, num69 - 5, num69 - 1)) || (npc.direction == -1 && !Collision.SolidTiles(num68 + 1, num68 + 2, num69 - 5, num69 - 1)))
                                                                     {
@@ -2121,7 +2065,7 @@ namespace Terraria_Server
                                                                 }
                                                                 else
                                                                 {
-                                                                    if (Main.tile[num68, num69 - 1].Active && Main.tileSolid[(int)Main.tile[num68, num69 - 1].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 1].type])
+                                                                    if (Main.tile[num68, num69 - 1].Active && Main.tileSolid[(int)Main.tile[num68, num69 - 1].Type] && !Main.tileSolidTop[(int)Main.tile[num68, num69 - 1].Type])
                                                                     {
                                                                         if ((npc.direction == 1 && !Collision.SolidTiles(num68 - 2, num68 - 1, num69 - 4, num69 - 1)) || (npc.direction == -1 && !Collision.SolidTiles(num68 + 1, num68 + 2, num69 - 4, num69 - 1)))
                                                                         {
@@ -2144,7 +2088,7 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (Main.tile[num68, num69].Active && Main.tileSolid[(int)Main.tile[num68, num69].type] && !Main.tileSolidTop[(int)Main.tile[num68, num69].type])
+                                                                        if (Main.tile[num68, num69].Active && Main.tileSolid[(int)Main.tile[num68, num69].Type] && !Main.tileSolidTop[(int)Main.tile[num68, num69].Type])
                                                                         {
                                                                             if ((npc.direction == 1 && !Collision.SolidTiles(num68 - 2, num68, num69 - 3, num69 - 1)) || (npc.direction == -1 && !Collision.SolidTiles(num68, num68 + 2, num69 - 3, num69 - 1)))
                                                                             {
@@ -2161,47 +2105,12 @@ namespace Terraria_Server
                                                                 }
                                                                 try
                                                                 {
-                                                                    if (Main.tile[num68, num69 + 1] == null)
-                                                                    {
-                                                                        Main.tile[num68, num69 + 1] = new Tile();
-                                                                    }
-                                                                    if (Main.tile[num68 - npc.direction, num69 + 1] == null)
-                                                                    {
-                                                                        Main.tile[num68 - npc.direction, num69 + 1] = new Tile();
-                                                                    }
-                                                                    if (Main.tile[num68, num69 + 2] == null)
-                                                                    {
-                                                                        Main.tile[num68, num69 + 2] = new Tile();
-                                                                    }
-                                                                    if (Main.tile[num68 - npc.direction, num69 + 2] == null)
-                                                                    {
-                                                                        Main.tile[num68 - npc.direction, num69 + 2] = new Tile();
-                                                                    }
-                                                                    if (Main.tile[num68, num69 + 3] == null)
-                                                                    {
-                                                                        Main.tile[num68, num69 + 3] = new Tile();
-                                                                    }
-                                                                    if (Main.tile[num68 - npc.direction, num69 + 3] == null)
-                                                                    {
-                                                                        Main.tile[num68 - npc.direction, num69 + 3] = new Tile();
-                                                                    }
-                                                                    if (Main.tile[num68, num69 + 4] == null)
-                                                                    {
-                                                                        Main.tile[num68, num69 + 4] = new Tile();
-                                                                    }
-                                                                    if (Main.tile[num68 - npc.direction, num69 + 4] == null)
-                                                                    {
-                                                                        Main.tile[num68 - npc.direction, num69 + 4] = new Tile();
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (num63 >= npc.homeTileX - 35 && num63 <= npc.homeTileX + 35 && (!Main.tile[num68, num69 + 1].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 1].type]) && (!Main.tile[num68 - npc.direction, num69 + 1].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 1].type]) && (!Main.tile[num68, num69 + 2].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 2].type]) && (!Main.tile[num68 - npc.direction, num69 + 2].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 2].type]) && (!Main.tile[num68, num69 + 3].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 3].type]) && (!Main.tile[num68 - npc.direction, num69 + 3].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 3].type]) && (!Main.tile[num68, num69 + 4].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 4].type]) && (!Main.tile[num68 - npc.direction, num69 + 4].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 4].type]) && npc.Type != 46)
+                                                                        if (num63 >= npc.homeTileX - 35 && num63 <= npc.homeTileX + 35 && (!Main.tile[num68, num69 + 1].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 1].Type]) && (!Main.tile[num68 - npc.direction, num69 + 1].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 1].Type]) && (!Main.tile[num68, num69 + 2].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 2].Type]) && (!Main.tile[num68 - npc.direction, num69 + 2].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 2].Type]) && (!Main.tile[num68, num69 + 3].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 3].Type]) && (!Main.tile[num68 - npc.direction, num69 + 3].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 3].Type]) && (!Main.tile[num68, num69 + 4].Active || !Main.tileSolid[(int)Main.tile[num68, num69 + 4].Type]) && (!Main.tile[num68 - npc.direction, num69 + 4].Active || !Main.tileSolid[(int)Main.tile[num68 - npc.direction, num69 + 4].Type]) && npc.Type != 46)
                                                                         {
                                                                             npc.direction *= -1;
                                                                             npc.Velocity.X = npc.Velocity.X * -1f;
                                                                             npc.netUpdate = true;
                                                                         }
-                                                                    }
                                                                 }
                                                                 catch
                                                                 {
@@ -2281,18 +2190,18 @@ namespace Terraria_Server
                                                                 if ((num86 < num79 - 4 || num86 > num79 + 4 || num84 < num78 - 4 || num84 > num78 + 4) && (num86 < num81 - 1 || num86 > num81 + 1 || num84 < num80 - 1 || num84 > num80 + 1) && Main.tile[num84, num86].Active)
                                                                 {
                                                                     bool flag12 = true;
-                                                                    if (npc.Type == 32 && Main.tile[num84, num86 - 1].wall == 0)
+                                                                    if (npc.Type == 32 && Main.tile[num84, num86 - 1].Wall == 0)
                                                                     {
                                                                         flag12 = false;
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (Main.tile[num84, num86 - 1].lava)
+                                                                        if (Main.tile[num84, num86 - 1].Lava)
                                                                         {
                                                                             flag12 = false;
                                                                         }
                                                                     }
-                                                                    if (flag12 && Main.tileSolid[(int)Main.tile[num84, num86].type] && !Collision.SolidTiles(num84 - 1, num84 + 1, num86 - 4, num86 - 1))
+                                                                    if (flag12 && Main.tileSolid[(int)Main.tile[num84, num86].Type] && !Collision.SolidTiles(num84 - 1, num84 + 1, num86 - 4, num86 - 1))
                                                                     {
                                                                         npc.ai[1] = 20f;
                                                                         npc.ai[2] = (float)num84;
@@ -2876,10 +2785,6 @@ namespace Terraria_Server
                                                         {
                                                             if (npc.aiStyle == 13)
                                                             {
-                                                                if (Main.tile[(int)npc.ai[0], (int)npc.ai[1]] == null)
-                                                                {
-                                                                    Main.tile[(int)npc.ai[0], (int)npc.ai[1]] = new Tile();
-                                                                }
                                                                 if (!Main.tile[(int)npc.ai[0], (int)npc.ai[1]].Active)
                                                                 {
                                                                     npc.life = -1;
@@ -3524,19 +3429,7 @@ namespace Terraria_Server
                                                                                     }
                                                                                     int num147 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
                                                                                     int num148 = (int)(npc.Position.Y + (float)(npc.height / 2)) / 16;
-                                                                                    if (Main.tile[num147, num148 - 1] == null)
-                                                                                    {
-                                                                                        Main.tile[num147, num148 - 1] = new Tile();
-                                                                                    }
-                                                                                    if (Main.tile[num147, num148 + 1] == null)
-                                                                                    {
-                                                                                        Main.tile[num147, num148 + 1] = new Tile();
-                                                                                    }
-                                                                                    if (Main.tile[num147, num148 + 2] == null)
-                                                                                    {
-                                                                                        Main.tile[num147, num148 + 2] = new Tile();
-                                                                                    }
-                                                                                    if (Main.tile[num147, num148 - 1].liquid > 128)
+                                                                                    if (Main.tile[num147, num148 - 1].Liquid > 128)
                                                                                     {
                                                                                         if (Main.tile[num147, num148 + 1].Active)
                                                                                         {
@@ -3841,19 +3734,7 @@ namespace Terraria_Server
                                                                                         }
                                                                                         int num156 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
                                                                                         int num157 = (int)(npc.Position.Y + (float)(npc.height / 2)) / 16;
-                                                                                        if (Main.tile[num156, num157 - 1] == null)
-                                                                                        {
-                                                                                            Main.tile[num156, num157 - 1] = new Tile();
-                                                                                        }
-                                                                                        if (Main.tile[num156, num157 + 1] == null)
-                                                                                        {
-                                                                                            Main.tile[num156, num157 + 1] = new Tile();
-                                                                                        }
-                                                                                        if (Main.tile[num156, num157 + 2] == null)
-                                                                                        {
-                                                                                            Main.tile[num156, num157 + 2] = new Tile();
-                                                                                        }
-                                                                                        if (Main.tile[num156, num157 - 1].liquid > 128)
+                                                                                        if (Main.tile[num156, num157 - 1].Liquid > 128)
                                                                                         {
                                                                                             if (Main.tile[num156, num157 + 1].Active)
                                                                                             {
@@ -3940,19 +3821,7 @@ namespace Terraria_Server
                                                                                             int num167 = (int)(npc.Position.X + (float)npc.width) / 16;
                                                                                             int num168 = (int)(npc.Position.Y + (float)npc.height) / 16;
                                                                                             bool flag16 = false;
-                                                                                            if (Main.tile[num165, num168] == null)
-                                                                                            {
-                                                                                                Main.tile[num165, num168] = new Tile();
-                                                                                            }
-                                                                                            if (Main.tile[num166, num168] == null)
-                                                                                            {
-                                                                                                Main.tile[num165, num168] = new Tile();
-                                                                                            }
-                                                                                            if (Main.tile[num167, num168] == null)
-                                                                                            {
-                                                                                                Main.tile[num165, num168] = new Tile();
-                                                                                            }
-                                                                                            if ((Main.tile[num165, num168].Active && Main.tileSolid[(int)Main.tile[num165, num168].type]) || (Main.tile[num166, num168].Active && Main.tileSolid[(int)Main.tile[num166, num168].type]) || (Main.tile[num167, num168].Active && Main.tileSolid[(int)Main.tile[num167, num168].type]))
+                                                                                            if ((Main.tile[num165, num168].Active && Main.tileSolid[(int)Main.tile[num165, num168].Type]) || (Main.tile[num166, num168].Active && Main.tileSolid[(int)Main.tile[num166, num168].Type]) || (Main.tile[num167, num168].Active && Main.tileSolid[(int)Main.tile[num167, num168].Type]))
                                                                                             {
                                                                                                 flag16 = true;
                                                                                             }
@@ -5092,15 +4961,15 @@ namespace Terraria_Server
                         {
                             int num13 = Main.rand.Next(num5, num6);
                             int num14 = Main.rand.Next(num7, num8);
-                            if (Main.tile[num13, num14].Active && Main.tileSolid[(int)Main.tile[num13, num14].type])
+                            if (Main.tile[num13, num14].Active && Main.tileSolid[(int)Main.tile[num13, num14].Type])
                             {
                                 goto IL_ACE;
                             }
-                            if (!Main.wallHouse[(int)Main.tile[num13, num14].wall])
+                            if (!Main.wallHouse[(int)Main.tile[num13, num14].Wall])
                             {
                                 if (!flag3 && (double)num14 < Main.worldSurface * 0.30000001192092896 && !flag5 && ((double)num13 < (double)Main.maxTilesX * 0.35 || (double)num13 > (double)Main.maxTilesX * 0.65))
                                 {
-                                    byte arg_986_0 = Main.tile[num13, num14].type;
+                                    byte arg_986_0 = Main.tile[num13, num14].Type;
                                     num = num13;
                                     num2 = num14;
                                     flag = true;
@@ -5111,11 +4980,11 @@ namespace Terraria_Server
                                     int l = num14;
                                     while (l < Main.maxTilesY)
                                     {
-                                        if (Main.tile[num13, l].Active && Main.tileSolid[(int)Main.tile[num13, l].type])
+                                        if (Main.tile[num13, l].Active && Main.tileSolid[(int)Main.tile[num13, l].Type])
                                         {
                                             if (num13 < num9 || num13 > num10 || l < num11 || l > num12)
                                             {
-                                                byte arg_9F4_0 = Main.tile[num13, l].type;
+                                                byte arg_9F4_0 = Main.tile[num13, l].Type;
                                                 num = num13;
                                                 num2 = l;
                                                 flag = true;
@@ -5159,12 +5028,12 @@ namespace Terraria_Server
                                     {
                                         for (int n = num17; n < num18; n++)
                                         {
-                                            if (Main.tile[m, n].Active && Main.tileSolid[(int)Main.tile[m, n].type])
+                                            if (Main.tile[m, n].Active && Main.tileSolid[(int)Main.tile[m, n].Type])
                                             {
                                                 flag = false;
                                                 break;
                                             }
-                                            if (Main.tile[m, n].lava)
+                                            if (Main.tile[m, n].Lava)
                                             {
                                                 flag = false;
                                                 break;
@@ -5203,11 +5072,11 @@ namespace Terraria_Server
                     }
                     if (flag)
                     {
-                        if (Main.players[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile[num, num2].type] || Main.tile[num, num2 - 1].wall == 0))
+                        if (Main.players[j].zoneDungeon && (!Main.tileDungeon[(int)Main.tile[num, num2].Type] || Main.tile[num, num2 - 1].Wall == 0))
                         {
                             flag = false;
                         }
-                        if (Main.tile[num, num2 - 1].liquid > 0 && Main.tile[num, num2 - 2].liquid > 0 && !Main.tile[num, num2 - 1].lava)
+                        if (Main.tile[num, num2 - 1].Liquid > 0 && Main.tile[num, num2 - 2].Liquid > 0 && !Main.tile[num, num2 - 1].Lava)
                         {
                             flag4 = true;
                         }
@@ -5215,7 +5084,7 @@ namespace Terraria_Server
                     if (flag)
                     {
                         flag = false;
-                        int num20 = (int)Main.tile[num, num2].type;
+                        int num20 = (int)Main.tile[num, num2].Type;
                         int npcIndex = 1000;
                         if (flag2)
                         {
@@ -5691,20 +5560,20 @@ namespace Terraria_Server
                 {
                     int num11 = Main.rand.Next(num3, num4);
                     int num12 = Main.rand.Next(num5, num6);
-                    if (Main.tile[num11, num12].Active && Main.tileSolid[(int)Main.tile[num11, num12].type])
+                    if (Main.tile[num11, num12].Active && Main.tileSolid[(int)Main.tile[num11, num12].Type])
                     {
                         goto IL_2E1;
                     }
-                    if (Main.tile[num11, num12].wall != 1)
+                    if (Main.tile[num11, num12].Wall != 1)
                     {
                         int k = num12;
                         while (k < Main.maxTilesY)
                         {
-                            if (Main.tile[num11, k].Active && Main.tileSolid[(int)Main.tile[num11, k].type])
+                            if (Main.tile[num11, k].Active && Main.tileSolid[(int)Main.tile[num11, k].Type])
                             {
                                 if (num11 < num7 || num11 > num8 || k < num9 || k > num10)
                                 {
-                                    byte arg_220_0 = Main.tile[num11, k].type;
+                                    byte arg_220_0 = Main.tile[num11, k].Type;
                                     num = num11;
                                     num2 = k;
                                     flag = true;
@@ -5747,7 +5616,7 @@ namespace Terraria_Server
                             {
                                 for (int m = num15; m < num16; m++)
                                 {
-                                    if (Main.tile[l, m].Active && Main.tileSolid[(int)Main.tile[l, m].type])
+                                    if (Main.tile[l, m].Active && Main.tileSolid[(int)Main.tile[l, m].Type])
                                     {
                                         flag = false;
                                         break;
@@ -6343,10 +6212,10 @@ namespace Terraria_Server
                 {
                     int num5 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
                     int num6 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
-                    Main.tile[num5, num6].lava = true;
-                    if (Main.tile[num5, num6].liquid < 200)
+                    Main.tile[num5, num6].Lava = true;
+                    if (Main.tile[num5, num6].Liquid < 200)
                     {
-                        Main.tile[num5, num6].liquid = 200;
+                        Main.tile[num5, num6].Liquid = 200;
                     }
                     WorldGen.TileFrame(num5, num6, false, false);
                     return;

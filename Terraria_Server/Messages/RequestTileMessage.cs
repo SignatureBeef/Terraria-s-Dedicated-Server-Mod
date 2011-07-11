@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Terraria_Server.Messages
 {
@@ -29,10 +29,10 @@ namespace Terraria_Server.Messages
                 num10 *= 2;
             }
 
-            ServerSock serverSock = Netplay.serverSock[whoAmI];
-            if (serverSock.state == 2)
+            ServerSlot serverSock = Netplay.slots[whoAmI];
+            if (serverSock.state == SlotState.SENDING_WORLD)
             {
-                serverSock.state = 3;
+                serverSock.state = SlotState.SENDING_TILES;
             }
 
             NetMessage.SendData(9, whoAmI, -1, "Receiving tile data", num10);

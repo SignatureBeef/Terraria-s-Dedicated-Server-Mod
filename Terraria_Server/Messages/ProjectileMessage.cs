@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Definitions;
@@ -45,7 +45,7 @@ namespace Terraria_Server.Messages
             Projectile projectile = Registries.Projectile.Create(type);
             if (!projectile.Active || projectile.type != oldProjectile.type)
             {
-                Netplay.serverSock[whoAmI].spamProjectile += 1f;
+                Netplay.slots[whoAmI].spamProjectile += 1f;
             }
 
             projectile.identity = projectileIdentity;

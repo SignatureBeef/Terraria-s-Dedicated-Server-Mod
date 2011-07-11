@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,20 +28,6 @@ namespace Terraria_Server.Messages
             int style = (int)readBuffer[num];
             bool failFlag = (tileType == 1);
 
-            Tile tile = new Tile();
-
-            if (Main.tile[x, y] == null)
-            {
-                Main.tile[x, y] = new Tile();
-            }
-            else
-            {
-                tile = WorldGen.cloneTile(Main.tile[x, y]);
-            }
-
-            tile.tileX = x;
-            tile.tileY = y;
-
             bool placed = false;
             bool wall = false;
 
@@ -61,7 +47,7 @@ namespace Terraria_Server.Messages
 
             PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
             tileEvent.Sender = Main.players[whoAmI];
-            tileEvent.Tile = tile;
+            tileEvent.Tile = Main.tile[x, y].Data;
             tileEvent.Type = tileType;
             tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
             tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;
@@ -73,22 +59,22 @@ namespace Terraria_Server.Messages
                 return;
             }
             
-            if (!failFlag)
-            {
-                if (tileAction == 0 || tileAction == 2 || tileAction == 4)
-                {
-                    Netplay.serverSock[whoAmI].spamDelBlock += 1f;
-                }
-                else if (tileAction == 1 || tileAction == 3)
-                {
-                    Netplay.serverSock[whoAmI].spamAddBlock += 1f;
-                }
-            }
+			if (!failFlag)
+			{
+				if (tileAction == 0 || tileAction == 2 || tileAction == 4)
+				{
+					Netplay.slots[whoAmI].spamDelBlock += 1f;
+				}
+				else if (tileAction == 1 || tileAction == 3)
+				{
+					Netplay.slots[whoAmI].spamAddBlock += 1f;
+				}
+			}
 
-            if (!Netplay.serverSock[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
-            {
-                failFlag = true;
-            }
+			if (!Netplay.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+			{
+				failFlag = true;
+			}
 
             switch (tileAction)
             {

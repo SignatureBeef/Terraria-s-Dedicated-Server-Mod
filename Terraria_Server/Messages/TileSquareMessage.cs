@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
@@ -24,11 +24,7 @@ namespace Terraria_Server.Messages
             {
                 for (int y = top; y < top + (int)size; y++)
                 {
-                    if (Main.tile[x, y] == null)
-                    {
-                        Main.tile[x, y] = new Tile();
-                    }
-                    Tile tile = (Tile)Main.tile[x, y].Clone();
+                    TileData tile = Main.tile[x, y].Data;
 
                     byte b9 = readBuffer[num++];
 
@@ -38,55 +34,55 @@ namespace Terraria_Server.Messages
 
                     if ((b9 & 2) == 2)
                     {
-                        tile.lighted = true;
+                        tile.Lighted = true;
                     }
 
                     if ((b9 & 4) == 4)
                     {
-                        tile.wall = 1;
+                        tile.Wall = 1;
                     }
                     else
                     {
-                        tile.wall = 0;
+                        tile.Wall = 0;
                     }
 
                     if ((b9 & 8) == 8)
                     {
-                        tile.liquid = 1;
+                        tile.Liquid = 1;
                     }
                     else
                     {
-                        tile.liquid = 0;
+                        tile.Liquid = 0;
                     }
 
                     if (tile.Active)
                     {
-                        int wasType = (int)tile.type;
-                        tile.type = readBuffer[num++];
-                        if (Main.tileFrameImportant[(int)tile.type])
+                        int wasType = (int)tile.Type;
+                        tile.Type = readBuffer[num++];
+                        if (Main.tileFrameImportant[(int)tile.Type])
                         {
-                            tile.frameX = BitConverter.ToInt16(readBuffer, num);
+                            tile.FrameX = BitConverter.ToInt16(readBuffer, num);
                             num += 2;
-                            tile.frameY = BitConverter.ToInt16(readBuffer, num);
+                            tile.FrameY = BitConverter.ToInt16(readBuffer, num);
                             num += 2;
                         }
-                        else if (!wasActive || (int)tile.type != wasType)
+                        else if (!wasActive || (int)tile.Type != wasType)
                         {
-                            tile.frameX = -1;
-                            tile.frameY = -1;
+                            tile.FrameX = -1;
+                            tile.FrameY = -1;
                         }
                     }
 
-                    if (tile.wall > 0)
+                    if (tile.Wall > 0)
                     {
-                        tile.wall = readBuffer[num++];
+                        tile.Wall = readBuffer[num++];
                     }
 
-                    if (tile.liquid > 0)
+                    if (tile.Liquid > 0)
                     {
-                        tile.liquid = readBuffer[num++];
+                        tile.Liquid = readBuffer[num++];
                         byte b10 = readBuffer[num++];
-                        tile.lava = (b10 == 1);
+                        tile.Lava = (b10 == 1);
                     }
 
                     PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
@@ -103,7 +99,7 @@ namespace Terraria_Server.Messages
                         return;
                     }
                     
-                    Main.tile[x, y] = tile;
+                    Main.tile[x, y].Data = tile;
                 }
             }
 
