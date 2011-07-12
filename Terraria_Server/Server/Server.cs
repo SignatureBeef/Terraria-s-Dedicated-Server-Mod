@@ -38,7 +38,7 @@ namespace Terraria_Server
             String lowercaseName = name.ToLower();
             foreach (Player player in Main.players)
             {
-                if (player.Active && player.Name.ToLower().Replace(" ", "").Equals(lowercaseName))
+                if (player.Active && player.Name.ToLower().Equals(lowercaseName))
                 {
                     return player;
                 }
