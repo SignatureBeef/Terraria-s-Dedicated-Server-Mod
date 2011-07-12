@@ -126,7 +126,6 @@ namespace Terraria_Server
                     try
                     {
                         file.Directory.Create();
-
                     }
                     catch (Exception exception)
                     {

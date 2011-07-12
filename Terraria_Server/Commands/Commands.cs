@@ -230,25 +230,7 @@ namespace Terraria_Server.Commands
 
             Program.server.notifyOps("Saving Complete.");
         }
-
-        /// <summary>
-        /// Method for retrieving current God mode status
-        /// </summary>
-        /// <returns>True if GodMode is on, false if not</returns>
-        public static bool getGodMode()
-        {
-            return Program.server.GodMode;
-        }
-
-        /// <summary>
-        /// Sets GodMode
-        /// </summary>
-        /// <param name="GodMode">Boolean value representing GodMode status</param>
-        public static void setGodMode(bool GodMode)
-        {
-            Program.server.GodMode = GodMode;
-        }
-
+        
         /// <summary>
         /// Sends the help list to the requesting player's chat
         /// </summary>

@@ -120,20 +120,6 @@ namespace Terraria_Server
         }
 
         // Summary:
-        //       Gets Terraria's God mode (Un-Usable?)
-        public bool GodMode
-        {
-            get
-            {
-                return Main.godMode;
-            }
-            set
-            {
-                Main.godMode = value;
-            }
-        }
-
-        // Summary:
         //       Gets the Servers Player List
         public Player[] getPlayerList()
         {

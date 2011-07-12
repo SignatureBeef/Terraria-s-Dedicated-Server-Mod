@@ -2346,7 +2346,7 @@ namespace Terraria_Server
 
         public void KillMe(double dmg, int hitDirection, bool pvp = false, String deathText = " was slain...")
         {
-            if ((Main.godMode && Main.myPlayer == this.whoAmi) || GodMode)
+            if ((Main.myPlayer == this.whoAmi))
             {
                 return;
             }
@@ -4356,7 +4356,5 @@ namespace Terraria_Server
         {
             return this.Name.Trim().ToLower() + getPassword();
         }
-
-        public bool GodMode { get; set; }
     }
 }
