@@ -53,7 +53,6 @@ namespace Terraria_Server
 
 		public static bool grabSun = false;
 		//public static bool debugMode = false;
-		public static bool godMode = false;
         public static bool stopSpawns = false;
 		public static bool dumbAI = false;
 		public static bool skipMenu = false;

@@ -71,6 +71,10 @@ namespace Terraria_Server
             {
                 return getValue(MAX_PLAYERS, DEFAULT_MAX_PLAYERS);
             }
+            set
+            {
+                setValue(MAX_PLAYERS, value);
+            }
         }
 
         public int Port
@@ -78,6 +82,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(PORT, DEFAULT_PORT);
+            }
+            set
+            {
+                setValue(PORT, value);
             }
         }
 
@@ -95,8 +103,11 @@ namespace Terraria_Server
             {
                 return getValue(SERVER_IP, DEFAULT_SERVER_IP);
             }
+            set
+            {
+                setValue(SERVER_IP, value);
+            }
         }
-
 
         public String InitialWorldPath
         {
@@ -111,6 +122,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(PASSWORD, String.Empty);
+            }
+            set
+            {
+                setValue(PASSWORD, value);
             }
         }
 

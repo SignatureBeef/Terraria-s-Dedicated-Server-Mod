@@ -4,6 +4,7 @@ using System.Text;
 using Terraria_Server;
 using System.Threading;
 using Terraria_Server.Collections;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Commands
 {
@@ -161,7 +162,7 @@ namespace Terraria_Server.Commands
         /// <param name="server">Current instance of Server</param>
         public static void Reload(Server server)
         {
-            server.getPluginManager().ReloadPlugins();
+            server.PluginManager.ReloadPlugins();
         }
 
         /// <summary>
@@ -218,7 +219,7 @@ namespace Terraria_Server.Commands
         {
             Program.server.notifyOps("Saving World...");
 
-            WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
+            WorldGen.saveWorld(Program.server.World.SavePath, false);
             while (WorldGen.saveLock)
             {
             }
@@ -230,25 +231,7 @@ namespace Terraria_Server.Commands
 
             Program.server.notifyOps("Saving Complete.");
         }
-
-        /// <summary>
-        /// Method for retrieving current God mode status
-        /// </summary>
-        /// <returns>True if GodMode is on, false if not</returns>
-        public static bool getGodMode()
-        {
-            return Program.server.GodMode;
-        }
-
-        /// <summary>
-        /// Sets GodMode
-        /// </summary>
-        /// <param name="GodMode">Boolean value representing GodMode status</param>
-        public static void setGodMode(bool GodMode)
-        {
-            Program.server.GodMode = GodMode;
-        }
-
+        
         /// <summary>
         /// Sends the help list to the requesting player's chat
         /// </summary>
@@ -443,7 +426,7 @@ namespace Terraria_Server.Commands
 
                                 if (banee == null)
                                 {
-                                    foreach (Player player in Program.server.getPlayerList())
+                                    foreach (Player player in Program.server.PlayerList)
                                     {
                                         var ip = Netplay.slots[player.whoAmi].remoteAddress.Split(':')[0];
                                         if (ip == commands[1])
@@ -520,7 +503,7 @@ namespace Terraria_Server.Commands
                                 {
                                     try
                                     {
-                                    Program.server.getWorld().setTime(Double.Parse(commands[2]), true);
+                                    Program.server.World.setTime(Double.Parse(commands[2]), true);
                                     } catch(Exception) {
                                         goto ERROR;
                                     }
@@ -533,27 +516,27 @@ namespace Terraria_Server.Commands
                             }
                         case "day":
                             {
-                                Program.server.getWorld().setTime(13500.0);
+                                Program.server.World.setTime(13500.0);
                                 break;
                             }
                         case "dawn":
                             {
-                                Program.server.getWorld().setTime(0);
+                                Program.server.World.setTime(0);
                                 break;
                             }
                         case "dusk":
                             {
-                                Program.server.getWorld().setTime(0, false, false);
+                                Program.server.World.setTime(0, false, false);
                                 break;
                             }
                         case "noon":
                             {
-                                Program.server.getWorld().setTime(27000.0);
+                                Program.server.World.setTime(27000.0);
                                 break;
                             }
                         case "night":
                             {
-                                Program.server.getWorld().setTime(16200.0, false, false);
+                                Program.server.World.setTime(16200.0, false, false);
                                 break;
                             }
                         case "now":
@@ -834,9 +817,10 @@ namespace Terraria_Server.Commands
                     {
                         for (int i = 0; i < amount; i++)
                         {
-                            NPC.NewNPC((int)player.Position.X + 3, (int)player.Position.Y, npcType);
+                            Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+                            NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), npcType);
+                            NPC.SpawnNPC();
                         }
-                        NPC.SpawnNPC();
 
                         Program.server.notifyOps("Spawned " + amount.ToString() + " of " +
                             npcType.ToString() + " {" + player.Name + "}", true);
@@ -961,13 +945,13 @@ namespace Terraria_Server.Commands
 
             if (!Liquid.panicMode)
             {
-                sender.sendMessage("Settling Water...");
+                sender.sendMessage("Settling Liquids...");
                 Liquid.StartPanic();
                 sender.sendMessage("Complete.");
             }
             else
             {
-                sender.sendMessage("Water is already settling");
+                sender.sendMessage("Liquids are already settling");
             }
         }
 

@@ -80,8 +80,8 @@ namespace Terraria_Server
 				Program.updateThread.Start();
 				Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
 				Program.tConsole.WriteLine("Loading Plugins...");
-				Program.server.getPluginManager().LoadPlugins();
-				Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.getPluginManager().getPluginList().Count.ToString());
+				Program.server.PluginManager.LoadPlugins();
+				Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.PluginManager.getPluginList().Count.ToString());
 				Statics.serverStarted = true;
 			}
 			else
@@ -392,7 +392,7 @@ namespace Terraria_Server
 		{
 			Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
 			Program.tConsole.WriteLine("Disabling Plugins");
-			Program.server.getPluginManager().DisablePlugins();
+			Program.server.PluginManager.DisablePlugins();
 			Program.tConsole.WriteLine("Closing Connections...");
 			disconnect = true;
 		}

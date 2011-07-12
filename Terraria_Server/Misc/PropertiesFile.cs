@@ -107,7 +107,7 @@ namespace Terraria_Server.Misc
             return defaultValue;
         }
 
-        private void setValue(String key, String value)
+        public void setValue(String key, String value)
         {
             propertiesMap[key] = value;
         }

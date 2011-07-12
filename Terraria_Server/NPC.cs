@@ -5709,7 +5709,7 @@ namespace Terraria_Server
                     Sender sender = new Sender();
                     sender.Op = true;
                     npcEvent.Sender = sender;
-                    Program.server.getPluginManager().processHook(Hooks.NPC_SPAWN, npcEvent);
+                    Program.server.PluginManager.processHook(Hooks.NPC_SPAWN, npcEvent);
                     if (npcEvent.Cancelled)
                     {
                         return 1000;
@@ -5797,7 +5797,7 @@ namespace Terraria_Server
                     Event.Damage = Damage;
                     Event.KnockBack = knockBack;
                     Event.HitDirection = hitDirection;
-                    Program.server.getPluginManager().processHook(Plugin.Hooks.NPC_DEATH, Event);
+                    Program.server.PluginManager.processHook(Plugin.Hooks.NPC_DEATH, Event);
                     if (Event.Cancelled)
                     {
                         return 0.0;

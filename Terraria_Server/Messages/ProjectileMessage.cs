@@ -60,7 +60,7 @@ namespace Terraria_Server.Messages
             PlayerProjectileEvent playerEvent = new PlayerProjectileEvent();
             playerEvent.Sender = Main.players[whoAmI];
             playerEvent.Projectile = Main.projectile[projectileIndex];
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
             if (playerEvent.Cancelled)
             {
                 return;

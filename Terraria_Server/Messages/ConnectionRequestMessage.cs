@@ -18,7 +18,7 @@ namespace Terraria_Server.Messages
             PlayerLoginEvent loginEvent = new PlayerLoginEvent();
             loginEvent.Socket = slot;
             loginEvent.Sender = Main.players[whoAmI];
-            Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_PRELOGIN, loginEvent);
+            Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_PRELOGIN, loginEvent);
             if (loginEvent.Cancelled)
             {
                 slot.Kick ("Disconnected By Server.");

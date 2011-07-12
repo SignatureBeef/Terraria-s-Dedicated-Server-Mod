@@ -31,18 +31,6 @@ namespace Terraria_Server
 
                 Console.WriteLine("Initializing " + MODInfo);
 
-                Console.WriteLine("Until this notice is gone, Please make sure the 3.5 framework is supported on this System.");
-
-                if (args != null && args.Length > 0)
-                {
-                    String commandMessage = args[0].ToLower().Trim();
-                    // 0 for Ops
-                    if (commandMessage.Equals("-ignoremessages:0"))
-                    {
-                        Statics.cmdMessages = false;
-                    }
-                }
-
                 Console.WriteLine("Setting up Paths.");
                 if (!SetupPaths())
                 {
@@ -110,6 +98,7 @@ namespace Terraria_Server
                     }
                 }
 
+                ParseArgs(args);
 
 #if (DEBUG == false) //I'll comment this for each release, Updates are annoying when testing :3
                 try
@@ -137,7 +126,6 @@ namespace Terraria_Server
                     try
                     {
                         file.Directory.Create();
-
                     }
                     catch (Exception exception)
                     {
@@ -231,9 +219,9 @@ namespace Terraria_Server
                     Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt",
                     Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt",
                     Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
-                server.setOpPassword(properties.Password);
-                server.setPort(properties.Port);
-                server.setIP(properties.ServerIP);
+                server.OpPassword = properties.Password;
+                server.Port = properties.Port;
+                server.ServerIP = properties.ServerIP;
                 server.Initialize();
 
                 Server.tile = new TileCollection (worldXtiles, worldYtiles);
@@ -381,6 +369,55 @@ namespace Terraria_Server
                 }
                 Console.Write(dataText);
                 preserve = dataText.Length;
+            }
+        }
+
+        public static void ParseArgs(String[] args)
+        {
+            if (args != null && args.Length > 0)
+            {
+                for (int i = 0; i < args.Length; i++)
+                {
+                    if (i == (args.Length - 1)) { break; }
+                    String commandMessage = args[i].ToLower().Trim();
+                    // 0 for Ops
+                    if (commandMessage.Equals("-ignoremessages:0"))
+                    {
+                        Statics.cmdMessages = false;
+                    }
+                    else if (commandMessage.Equals("-port"))
+                    {
+                        try
+                        {
+                            properties.Port = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-maxplayers"))
+                    {
+                        try
+                        {
+                            properties.MaxPlayers = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-ip"))
+                    {
+                        properties.ServerIP = args[i + 1];
+                    }
+                    else if (commandMessage.Equals("-password"))
+                    {
+                        properties.Password = args[i + 1];
+                    }
+                }
+
+                properties.Save();
             }
         }
 

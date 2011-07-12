@@ -19,7 +19,7 @@ namespace Terraria_Server.Messages
             int left = BitConverter.ToInt32(readBuffer, start + 3);
             int top = BitConverter.ToInt32(readBuffer, start + 7);
             num = start + 11;
-
+            
             for (int x = left; x < left + (int)size; x++)
             {
                 for (int y = top; y < top + (int)size; y++)
@@ -88,18 +88,17 @@ namespace Terraria_Server.Messages
                     PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
                     tileEvent.Sender = Main.players[whoAmI];
                     tileEvent.Tile = tile;
-                    tileEvent.Type = tile.type;
                     tileEvent.Action = (tile.Active) ? TileAction.PLACED : TileAction.BREAK; //Not sure of this
                     tileEvent.TileType = (tile.wall == 1) ? TileType.WALL : TileType.BLOCK;
                     tileEvent.Position = new Vector2(x, y);
-                    Program.server.getPluginManager().processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
+                    Program.server.PluginManager.processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
                     if (tileEvent.Cancelled)
                     {
                         NetMessage.SendTileSquare(whoAmI, x, y, 1);
                         return;
                     }
                     
-                    Main.tile.At(x, y).SetData (tile);
+                    Main.tile.At(x, y).SetData(tile);
                 }
             }
 
