@@ -22,8 +22,8 @@ namespace Terraria_Server.Messages
             {
                 int playerIndex = whoAmI;
                 Player player = Main.players[playerIndex];
-                int centerX = (int)(player.Position.X + (float)(player.width / 2));
-                int centerY = (int)(player.Position.Y + (float)(player.height / 2));
+                int centerX = (int)(player.Position.X + (float)(player.Width / 2));
+                int centerY = (int)(player.Position.Y + (float)(player.Height / 2));
                 int disperseDistance = 10;
                 int left = centerX - disperseDistance;
                 int right = centerX + disperseDistance;

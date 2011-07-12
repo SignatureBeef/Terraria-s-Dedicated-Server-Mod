@@ -6,12 +6,11 @@ using Terraria_Server.Definitions;
 
 namespace Terraria_Server
 {
-    public class Item : IRegisterableEntity
+    public class Item : BaseEntity
     {
         public const int POTION_DELAY = 720;
 
         public bool Accessory;
-        public bool Active { get; set; }
         public int Alpha;
         public ProjectileType Ammo;
         public bool AutoReuse;
@@ -32,7 +31,6 @@ namespace Terraria_Server
         public int HeadSlot;
         public int HealLife;
         public int HealMana;
-        public int Height;
         public int HoldStyle;
         public int KeepTime;
         public float KnockBack;
@@ -44,7 +42,6 @@ namespace Terraria_Server
         public bool Material;
         public int MaxStack;
         public bool Melee;
-        public String Name { get; set; }
         public int NoGrabDelay;
         public bool NoMelee;
         public bool NoUseGraphic;
@@ -54,7 +51,6 @@ namespace Terraria_Server
         public int OwnTime;
         public int Pick;
         public int PlaceStyle;
-        public Vector2 Position;
         public bool Potion;
         public int Rare;
         public int Release;
@@ -65,7 +61,6 @@ namespace Terraria_Server
         public int Stack;
         public int TileBoost;
         public String ToolTip;
-        public int Type { get; set; }
         public ProjectileType UseAmmo;
         public int UseAnimation;
         public int UseSound;
@@ -77,7 +72,6 @@ namespace Terraria_Server
         public Vector2 Velocity;
         public bool Wet;
         public byte WetCount;
-        public int Width;
         public bool WornArmor;
 
         public Item()
@@ -321,7 +315,7 @@ namespace Terraria_Server
             {
                 if (this.OwnIgnore != count && player.Active && player.ItemSpace(Main.item[whoAmI]))
                 {
-                    float num3 = Math.Abs(player.Position.X + (float)(player.width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(player.Position.Y + (float)(player.height / 2) - this.Position.Y - (float)this.Height);
+                    float num3 = Math.Abs(player.Position.X + (float)(player.Width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(player.Position.Y + (float)(player.Height / 2) - this.Position.Y - (float)this.Height);
                     if (num3 < (float)(Main.screenWidth / 2 + Main.screenHeight / 2) && (num2 == -1f || num3 < num2))
                     {
                         num2 = num3;
@@ -341,7 +335,7 @@ namespace Terraria_Server
             }
         }
 
-        public object Clone()
+        public override object Clone()
         {
             return base.MemberwiseClone();
         }

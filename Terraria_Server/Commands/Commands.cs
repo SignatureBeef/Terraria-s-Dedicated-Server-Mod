@@ -715,7 +715,7 @@ namespace Terraria_Server.Commands
                             stackSize = 1;
                         }
 
-                        Item.NewItem((int)player.Position.X, (int)player.Position.Y, player.width, player.height, itemType, stackSize, false);
+                        Item.NewItem((int)player.Position.X, (int)player.Position.Y, player.Width, player.Height, itemType, stackSize, false);
 
                         Program.server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.Name + "}", true);
 

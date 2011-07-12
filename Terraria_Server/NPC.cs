@@ -586,8 +586,8 @@ namespace Terraria_Server
                                 npc.ai[2] = 0f;
                                 return;
                             }
-                            int num4 = (int)((npc.Position.X + (float)(npc.width / 2) + (float)(15 * npc.direction)) / 16f);
-                            int num5 = (int)((npc.Position.Y + (float)npc.height - 15f) / 16f);
+                            int num4 = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
+                            int num5 = (int)((npc.Position.Y + (float)npc.Height - 15f) / 16f);
                             bool flag2 = true;
                             if (npc.Type == 47 || npc.Type == 67)
                             {
@@ -695,7 +695,7 @@ namespace Terraria_Server
                                         }
                                     }
                                 }
-                                if ((npc.Type == 31 || npc.Type == 47) && npc.Velocity.Y == 0f && Math.Abs(npc.Position.X + (float)(npc.width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2))) < 100f && Math.Abs(npc.Position.Y + (float)(npc.height / 2) - (Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2))) < 50f && ((npc.direction > 0 && npc.Velocity.X >= 1f) || (npc.direction < 0 && npc.Velocity.X <= -1f)))
+                                if ((npc.Type == 31 || npc.Type == 47) && npc.Velocity.Y == 0f && Math.Abs(npc.Position.X + (float)(npc.Width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))) < 100f && Math.Abs(npc.Position.Y + (float)(npc.Height / 2) - (Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2))) < 50f && ((npc.direction > 0 && npc.Velocity.X >= 1f) || (npc.direction < 0 && npc.Velocity.X <= -1f)))
                                 {
                                     npc.Velocity.X = npc.Velocity.X * 2f;
                                     if (npc.Velocity.X > 3f)
@@ -721,8 +721,8 @@ namespace Terraria_Server
                                     npc.TargetClosest(true);
                                 }
                                 bool dead = Main.players[npc.target].dead;
-                                float num6 = npc.Position.X + (float)(npc.width / 2) - Main.players[npc.target].Position.X - (float)(Main.players[npc.target].width / 2);
-                                float num7 = npc.Position.Y + (float)npc.height - 59f - Main.players[npc.target].Position.Y - (float)(Main.players[npc.target].height / 2);
+                                float num6 = npc.Position.X + (float)(npc.Width / 2) - Main.players[npc.target].Position.X - (float)(Main.players[npc.target].Width / 2);
+                                float num7 = npc.Position.Y + (float)npc.Height - 59f - Main.players[npc.target].Position.Y - (float)(Main.players[npc.target].Height / 2);
                                 float num8 = (float)Math.Atan2((double)num7, (double)num6) + 1.57f;
                                 if (num8 < 0f)
                                 {
@@ -813,9 +813,9 @@ namespace Terraria_Server
                                         {
                                             float num11 = 5f;
                                             float num12 = 0.04f;
-                                            Vector2 vector = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                            float num13 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector.X;
-                                            float num14 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - 200f - vector.Y;
+                                            Vector2 vector = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                            float num13 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector.X;
+                                            float num14 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - 200f - vector.Y;
                                             float num15 = (float)Math.Sqrt((double)(num13 * num13 + num14 * num14));
                                             float num16 = num15;
                                             num15 = num11 / num15;
@@ -870,7 +870,7 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if (npc.Position.Y + (float)npc.height < Main.players[npc.target].Position.Y && num16 < 500f)
+                                                if (npc.Position.Y + (float)npc.Height < Main.players[npc.target].Position.Y && num16 < 500f)
                                                 {
                                                     if (!Main.players[npc.target].dead)
                                                     {
@@ -881,8 +881,8 @@ namespace Terraria_Server
                                                         npc.ai[3] = 0f;
                                                         npc.rotation = num8;
                                                         float num17 = 5f;
-                                                        float num18 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector.X;
-                                                        float num19 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector.Y;
+                                                        float num18 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector.X;
+                                                        float num19 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector.Y;
                                                         float num20 = (float)Math.Sqrt((double)(num18 * num18 + num19 * num19));
                                                         num20 = num17 / num20;
                                                         Vector2 vector2 = vector;
@@ -909,9 +909,9 @@ namespace Terraria_Server
                                             {
                                                 npc.rotation = num8;
                                                 float num22 = 7f;
-                                                Vector2 vector4 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                float num23 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector4.X;
-                                                float num24 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector4.Y;
+                                                Vector2 vector4 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                float num23 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector4.X;
+                                                float num24 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector4.Y;
                                                 float num25 = (float)Math.Sqrt((double)(num23 * num23 + num24 * num24));
                                                 num25 = num22 / num25;
                                                 npc.Velocity.X = num23 * num25;
@@ -1021,9 +1021,9 @@ namespace Terraria_Server
                                             {
                                                 float num26 = 6f;
                                                 float num27 = 0.07f;
-                                                Vector2 vector5 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                float num28 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector5.X;
-                                                float num29 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - 120f - vector5.Y;
+                                                Vector2 vector5 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                float num28 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector5.X;
+                                                float num29 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - 120f - vector5.Y;
                                                 float num30 = (float)Math.Sqrt((double)(num28 * num28 + num29 * num29));
                                                 num30 = num26 / num30;
                                                 num28 *= num30;
@@ -1083,9 +1083,9 @@ namespace Terraria_Server
                                                 {
                                                     npc.rotation = num8;
                                                     float num31 = 8f;
-                                                    Vector2 vector6 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                    float num32 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector6.X;
-                                                    float num33 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector6.Y;
+                                                    Vector2 vector6 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                    float num32 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector6.X;
+                                                    float num33 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector6.Y;
                                                     float num34 = (float)Math.Sqrt((double)(num32 * num32 + num33 * num33));
                                                     num34 = num31 / num34;
                                                     npc.Velocity.X = num32 * num34;
@@ -1157,9 +1157,9 @@ namespace Terraria_Server
                                             num36 = 0.03f;
                                         }
                                     }
-                                    Vector2 vector7 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                    float num37 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector7.X;
-                                    float num38 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector7.Y;
+                                    Vector2 vector7 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                    float num37 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector7.X;
+                                    float num38 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector7.Y;
                                     float num39 = (float)Math.Sqrt((double)(num37 * num37 + num38 * num38));
                                     float num40 = num39;
                                     num39 = num35 / num39;
@@ -1356,17 +1356,17 @@ namespace Terraria_Server
                                                 {
                                                     npc.ai[2] = 15f;
                                                 }
-                                                npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type + 1, npc.whoAmI);
+                                                npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), npc.Type + 1, npc.whoAmI);
                                             }
                                             else
                                             {
                                                 if ((npc.Type == 8 || npc.Type == 11 || npc.Type == 14 || npc.Type == 40) && npc.ai[2] > 0f)
                                                 {
-                                                    npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type, npc.whoAmI);
+                                                    npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), npc.Type, npc.whoAmI);
                                                 }
                                                 else
                                                 {
-                                                    npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)(npc.Position.Y + (float)npc.height), npc.Type + 1, npc.whoAmI);
+                                                    npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), npc.Type + 1, npc.whoAmI);
                                                 }
                                             }
                                             Main.npcs[(int)npc.ai[0]].ai[1] = (float)npc.whoAmI;
@@ -1463,9 +1463,9 @@ namespace Terraria_Server
                                             NetMessage.SendData(28, -1, -1, "", npc.whoAmI, -1f);
                                         }
                                         int num51 = (int)(npc.Position.X / 16f) - 1;
-                                        int num52 = (int)((npc.Position.X + (float)npc.width) / 16f) + 2;
+                                        int num52 = (int)((npc.Position.X + (float)npc.Width) / 16f) + 2;
                                         int num53 = (int)(npc.Position.Y / 16f) - 1;
-                                        int num54 = (int)((npc.Position.Y + (float)npc.height) / 16f) + 2;
+                                        int num54 = (int)((npc.Position.Y + (float)npc.Height) / 16f) + 2;
                                         if (num51 < 0)
                                         {
                                             num51 = 0;
@@ -1492,7 +1492,7 @@ namespace Terraria_Server
                                                     Vector2 vector8;
                                                     vector8.X = (float)(m * 16);
                                                     vector8.Y = (float)(n * 16);
-                                                    if (npc.Position.X + (float)npc.width > vector8.X && npc.Position.X < vector8.X + 16f && npc.Position.Y + (float)npc.height > vector8.Y && npc.Position.Y < vector8.Y + 16f)
+                                                    if (npc.Position.X + (float)npc.Width > vector8.X && npc.Position.X < vector8.X + 16f && npc.Position.Y + (float)npc.Height > vector8.Y && npc.Position.Y < vector8.Y + 16f)
                                                     {
                                                         flag6 = true;
                                                         if (Main.rand.Next(40) == 0 && Main.tile.At(m, n).Active)
@@ -1519,17 +1519,17 @@ namespace Terraria_Server
                                             num55 = 11f;
                                             num56 = 0.08f;
                                         }
-                                        Vector2 vector9 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                        float num57 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector9.X;
-                                        float num58 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector9.Y;
+                                        Vector2 vector9 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                        float num57 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector9.X;
+                                        float num58 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector9.Y;
                                         float num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
                                         if (npc.ai[1] > 0f)
                                         {
-                                            num57 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - vector9.X;
-                                            num58 = Main.npcs[(int)npc.ai[1]].Position.Y + (float)(Main.npcs[(int)npc.ai[1]].height / 2) - vector9.Y;
+                                            num57 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - vector9.X;
+                                            num58 = Main.npcs[(int)npc.ai[1]].Position.Y + (float)(Main.npcs[(int)npc.ai[1]].Height / 2) - vector9.Y;
                                             npc.rotation = (float)Math.Atan2((double)num58, (double)num57) + 1.57f;
                                             num59 = (float)Math.Sqrt((double)(num57 * num57 + num58 * num58));
-                                            num59 = (num59 - (float)npc.width) / num59;
+                                            num59 = (num59 - (float)npc.Width) / num59;
                                             num57 *= num59;
                                             num58 *= num59;
                                             npc.Velocity = default(Vector2);
@@ -1704,8 +1704,8 @@ namespace Terraria_Server
                                     {
                                         if (npc.aiStyle == 7)
                                         {
-                                            int num63 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
-                                            int num64 = (int)(npc.Position.Y + (float)npc.height + 1f) / 16;
+                                            int num63 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
+                                            int num64 = (int)(npc.Position.Y + (float)npc.Height + 1f) / 16;
                                             if (!npc.townNPC)
                                             {
                                                 npc.homeTileX = num63;
@@ -1733,7 +1733,7 @@ namespace Terraria_Server
                                                     npc.ai[0] = 0f;
                                                     npc.ai[1] = 300f;
                                                     npc.ai[2] = 100f;
-                                                    if (Main.players[num65].Position.X + (float)(Main.players[num65].width / 2) < npc.Position.X + (float)(npc.width / 2))
+                                                    if (Main.players[num65].Position.X + (float)(Main.players[num65].Width / 2) < npc.Position.X + (float)(npc.Width / 2))
                                                     {
                                                         npc.direction = -1;
                                                     }
@@ -1765,7 +1765,7 @@ namespace Terraria_Server
                                                 bool flag8 = true;
                                                 for (int num66 = 0; num66 < 2; num66++)
                                                 {
-                                                    Rectangle rectangle = new Rectangle((int)(npc.Position.X + (float)(npc.width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(npc.Position.Y + (float)(npc.height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                                    Rectangle rectangle = new Rectangle((int)(npc.Position.X + (float)(npc.Width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(npc.Position.Y + (float)(npc.Height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                                                     if (num66 == 1)
                                                     {
                                                         rectangle = new Rectangle(npc.homeTileX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, npc.homeTileY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
@@ -1774,7 +1774,7 @@ namespace Terraria_Server
                                                     {
                                                         if (Main.players[num67].Active)
                                                         {
-                                                            Rectangle rectangle2 = new Rectangle((int)Main.players[num67].Position.X, (int)Main.players[num67].Position.Y, Main.players[num67].width, Main.players[num67].height);
+                                                            Rectangle rectangle2 = new Rectangle((int)Main.players[num67].Position.X, (int)Main.players[num67].Position.Y, Main.players[num67].Width, Main.players[num67].Height);
                                                             if (rectangle2.Intersects(rectangle))
                                                             {
                                                                 flag8 = false;
@@ -1793,8 +1793,8 @@ namespace Terraria_Server
                                                     {
                                                         npc.Velocity.X = 0f;
                                                         npc.Velocity.Y = 0f;
-                                                        npc.Position.X = (float)(npc.homeTileX * 16 + 8 - npc.width / 2);
-                                                        npc.Position.Y = (float)(npc.homeTileY * 16 - npc.height) - 0.1f;
+                                                        npc.Position.X = (float)(npc.homeTileX * 16 + 8 - npc.Width / 2);
+                                                        npc.Position.Y = (float)(npc.homeTileY * 16 - npc.Height) - 0.1f;
                                                         npc.netUpdate = true;
                                                     }
                                                     else
@@ -1960,7 +1960,7 @@ namespace Terraria_Server
                                                         npc.ai[2] = 60f;
                                                         npc.netUpdate = true;
                                                     }
-                                                    if (npc.closeDoor && ((npc.Position.X + (float)(npc.width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.width / 2)) / 16f < (float)(npc.doorX - 2)))
+                                                    if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
                                                     {
                                                         bool flag9 = WorldGen.CloseDoor(npc.doorX, npc.doorY, false, DoorOpener.NPC);
                                                         if (flag9)
@@ -1968,7 +1968,7 @@ namespace Terraria_Server
                                                             npc.closeDoor = false;
                                                             NetMessage.SendData(19, -1, -1, "", 1, (float)npc.doorX, (float)npc.doorY, (float)npc.direction);
                                                         }
-                                                        if ((npc.Position.X + (float)(npc.width / 2)) / 16f > (float)(npc.doorX + 4) || (npc.Position.X + (float)(npc.width / 2)) / 16f < (float)(npc.doorX - 4) || (npc.Position.Y + (float)(npc.height / 2)) / 16f > (float)(npc.doorY + 4) || (npc.Position.Y + (float)(npc.height / 2)) / 16f < (float)(npc.doorY - 4))
+                                                        if ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 4) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 4) || (npc.Position.Y + (float)(npc.Height / 2)) / 16f > (float)(npc.doorY + 4) || (npc.Position.Y + (float)(npc.Height / 2)) / 16f < (float)(npc.doorY - 4))
                                                         {
                                                             npc.closeDoor = false;
                                                         }
@@ -2009,8 +2009,8 @@ namespace Terraria_Server
                                                             npc.direction *= -1;
                                                         }
                                                         npc.ai[2] = -1f;
-                                                        int num68 = (int)((npc.Position.X + (float)(npc.width / 2) + (float)(15 * npc.direction)) / 16f);
-                                                        int num69 = (int)((npc.Position.Y + (float)npc.height - 16f) / 16f);
+                                                        int num68 = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
+                                                        int num69 = (int)((npc.Position.Y + (float)npc.Height - 16f) / 16f);
                                                         if (npc.townNPC && Main.tile.At(num68, num69 - 2).Active && Main.tile.At(num68, num69 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
                                                             bool flag10 = WorldGen.OpenDoor(num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
@@ -2150,8 +2150,8 @@ namespace Terraria_Server
                                                 }
                                                 if (npc.ai[2] != 0f && npc.ai[3] != 0f)
                                                 {
-                                                    npc.Position.X = npc.ai[2] * 16f - (float)(npc.width / 2) + 8f;
-                                                    npc.Position.Y = npc.ai[3] * 16f - (float)npc.height;
+                                                    npc.Position.X = npc.ai[2] * 16f - (float)(npc.Width / 2) + 8f;
+                                                    npc.Position.Y = npc.ai[3] * 16f - (float)npc.Height;
                                                     npc.Velocity.X = 0f;
                                                     npc.Velocity.Y = 0f;
                                                     npc.ai[2] = 0f;
@@ -2222,17 +2222,17 @@ namespace Terraria_Server
                                                     {
                                                         if (npc.Type == 29 || npc.Type == 45)
                                                         {
-                                                            NPC.NewNPC((int)npc.Position.X + npc.width / 2, (int)npc.Position.Y - 8, 30, 0);
+                                                            NPC.NewNPC((int)npc.Position.X + npc.Width / 2, (int)npc.Position.Y - 8, 30, 0);
                                                         }
                                                         else
                                                         {
                                                             if (npc.Type == 32)
                                                             {
-                                                                NPC.NewNPC((int)npc.Position.X + npc.width / 2, (int)npc.Position.Y - 8, 33, 0);
+                                                                NPC.NewNPC((int)npc.Position.X + npc.Width / 2, (int)npc.Position.Y - 8, 33, 0);
                                                             }
                                                             else
                                                             {
-                                                                NPC.NewNPC((int)npc.Position.X + npc.width / 2 + npc.direction * 8, (int)npc.Position.Y + 20, 25, 0);
+                                                                NPC.NewNPC((int)npc.Position.X + npc.Width / 2 + npc.direction * 8, (int)npc.Position.Y + 20, 25, 0);
                                                             }
                                                         }
                                                     }
@@ -2274,9 +2274,9 @@ namespace Terraria_Server
                                                         {
                                                             NPC.maxSpawns = 8;
                                                         }
-                                                        Vector2 vector10 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                        float num91 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector10.X;
-                                                        float num92 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector10.Y;
+                                                        Vector2 vector10 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                        float num91 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector10.X;
+                                                        float num92 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector10.Y;
                                                         float num93 = (float)Math.Sqrt((double)(num91 * num91 + num92 * num92));
                                                         num93 = num90 / num93;
                                                         npc.Velocity.X = num91 * num93;
@@ -2294,9 +2294,9 @@ namespace Terraria_Server
                                                     float num98 = 1f;
                                                     float num99 = 0.011f;
                                                     npc.TargetClosest(true);
-                                                    Vector2 vector11 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                    float num100 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector11.X;
-                                                    float num101 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector11.Y;
+                                                    Vector2 vector11 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                    float num100 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector11.X;
+                                                    float num101 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector11.Y;
                                                     float num102 = (float)Math.Sqrt((double)(num100 * num100 + num101 * num101));
                                                     float num103 = num102;
                                                     npc.ai[1] += 1f;
@@ -2406,12 +2406,12 @@ namespace Terraria_Server
                                                             npc.ai[0] = 1f;
                                                             if (npc.Type != 68)
                                                             {
-                                                                int npcIndex = NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)npc.Position.Y + npc.height / 2, 36, npc.whoAmI);
+                                                                int npcIndex = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)npc.Position.Y + npc.Height / 2, 36, npc.whoAmI);
                                                                 Main.npcs[npcIndex].ai[0] = -1f;
                                                                 Main.npcs[npcIndex].ai[1] = (float)npc.whoAmI;
                                                                 Main.npcs[npcIndex].target = npc.target;
                                                                 Main.npcs[npcIndex].netUpdate = true;
-                                                                npcIndex = NPC.NewNPC((int)(npc.Position.X + (float)(npc.width / 2)), (int)npc.Position.Y + npc.height / 2, 36, npc.whoAmI);
+                                                                npcIndex = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)npc.Position.Y + npc.Height / 2, 36, npc.whoAmI);
                                                                 Main.npcs[npcIndex].ai[0] = 1f;
                                                                 Main.npcs[npcIndex].ai[1] = (float)npc.whoAmI;
                                                                 Main.npcs[npcIndex].ai[3] = 150f;
@@ -2473,7 +2473,7 @@ namespace Terraria_Server
                                                                     }
                                                                 }
                                                             }
-                                                            if (npc.Position.X + (float)(npc.width / 2) > Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2))
+                                                            if (npc.Position.X + (float)(npc.Width / 2) > Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))
                                                             {
                                                                 if (npc.Velocity.X > 0f)
                                                                 {
@@ -2485,7 +2485,7 @@ namespace Terraria_Server
                                                                     npc.Velocity.X = 8f;
                                                                 }
                                                             }
-                                                            if (npc.Position.X + (float)(npc.width / 2) < Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2))
+                                                            if (npc.Position.X + (float)(npc.Width / 2) < Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))
                                                             {
                                                                 if (npc.Velocity.X < 0f)
                                                                 {
@@ -2509,9 +2509,9 @@ namespace Terraria_Server
                                                                     npc.ai[1] = 0f;
                                                                 }
                                                                 npc.rotation += (float)npc.direction * 0.3f;
-                                                                Vector2 vector12 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                float num105 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector12.X;
-                                                                float num106 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector12.Y;
+                                                                Vector2 vector12 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                float num105 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector12.X;
+                                                                float num106 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector12.Y;
                                                                 float num107 = (float)Math.Sqrt((double)(num105 * num105 + num106 * num106));
                                                                 num107 = 2f / num107;
                                                                 npc.Velocity.X = num105 * num107;
@@ -2524,9 +2524,9 @@ namespace Terraria_Server
                                                                     npc.damage = 9999;
                                                                     npc.defense = 9999;
                                                                     npc.rotation += (float)npc.direction * 0.3f;
-                                                                    Vector2 vector13 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                    float num108 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector13.X;
-                                                                    float num109 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector13.Y;
+                                                                    Vector2 vector13 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                    float num108 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector13.X;
+                                                                    float num109 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector13.Y;
                                                                     float num110 = (float)Math.Sqrt((double)(num108 * num108 + num109 * num109));
                                                                     num110 = 8f / num110;
                                                                     npc.Velocity.X = num108 * num110;
@@ -2605,7 +2605,7 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (npc.Position.X + (float)(npc.width / 2) > Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 120f * npc.ai[0])
+                                                                    if (npc.Position.X + (float)(npc.Width / 2) > Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 120f * npc.ai[0])
                                                                     {
                                                                         if (npc.Velocity.X > 0f)
                                                                         {
@@ -2617,7 +2617,7 @@ namespace Terraria_Server
                                                                             npc.Velocity.X = 8f;
                                                                         }
                                                                     }
-                                                                    if (npc.Position.X + (float)(npc.width / 2) < Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 120f * npc.ai[0])
+                                                                    if (npc.Position.X + (float)(npc.Width / 2) < Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 120f * npc.ai[0])
                                                                     {
                                                                         if (npc.Velocity.X < 0f)
                                                                         {
@@ -2666,7 +2666,7 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (npc.Position.X + (float)(npc.width / 2) > Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 200f * npc.ai[0])
+                                                                    if (npc.Position.X + (float)(npc.Width / 2) > Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 200f * npc.ai[0])
                                                                     {
                                                                         if (npc.Velocity.X > 0f)
                                                                         {
@@ -2678,7 +2678,7 @@ namespace Terraria_Server
                                                                             npc.Velocity.X = 8f;
                                                                         }
                                                                     }
-                                                                    if (npc.Position.X + (float)(npc.width / 2) < Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 200f * npc.ai[0])
+                                                                    if (npc.Position.X + (float)(npc.Width / 2) < Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 200f * npc.ai[0])
                                                                     {
                                                                         if (npc.Velocity.X < 0f)
                                                                         {
@@ -2691,8 +2691,8 @@ namespace Terraria_Server
                                                                         }
                                                                     }
                                                                 }
-                                                                Vector2 vector14 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                float num113 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 200f * npc.ai[0] - vector14.X;
+                                                                Vector2 vector14 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                float num113 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 200f * npc.ai[0] - vector14.X;
                                                                 float num114 = Main.npcs[(int)npc.ai[1]].Position.Y + 230f - vector14.Y;
                                                                 Math.Sqrt((double)(num113 * num113 + num114 * num114));
                                                                 npc.rotation = (float)Math.Atan2((double)num114, (double)num113) + 1.57f;
@@ -2700,8 +2700,8 @@ namespace Terraria_Server
                                                             }
                                                             if (npc.ai[2] == 1f)
                                                             {
-                                                                Vector2 vector15 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                float num115 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 200f * npc.ai[0] - vector15.X;
+                                                                Vector2 vector15 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                float num115 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 200f * npc.ai[0] - vector15.X;
                                                                 float num116 = Main.npcs[(int)npc.ai[1]].Position.Y + 230f - vector15.Y;
                                                                 float num117 = (float)Math.Sqrt((double)(num115 * num115 + num116 * num116));
                                                                 npc.rotation = (float)Math.Atan2((double)num116, (double)num115) + 1.57f;
@@ -2715,9 +2715,9 @@ namespace Terraria_Server
                                                                 {
                                                                     npc.TargetClosest(true);
                                                                     npc.ai[2] = 2f;
-                                                                    vector15 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                    num115 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector15.X;
-                                                                    num116 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector15.Y;
+                                                                    vector15 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                    num115 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector15.X;
+                                                                    num116 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector15.Y;
                                                                     num117 = (float)Math.Sqrt((double)(num115 * num115 + num116 * num116));
                                                                     num117 = 20f / num117;
                                                                     npc.Velocity.X = num115 * num117;
@@ -2740,8 +2740,8 @@ namespace Terraria_Server
                                                                 {
                                                                     if (npc.ai[2] == 4f)
                                                                     {
-                                                                        Vector2 vector16 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                        float num118 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 200f * npc.ai[0] - vector16.X;
+                                                                        Vector2 vector16 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                        float num118 = Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 200f * npc.ai[0] - vector16.X;
                                                                         float num119 = Main.npcs[(int)npc.ai[1]].Position.Y + 230f - vector16.Y;
                                                                         float num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
                                                                         npc.rotation = (float)Math.Atan2((double)num119, (double)num118) + 1.57f;
@@ -2755,13 +2755,13 @@ namespace Terraria_Server
                                                                         {
                                                                             npc.Velocity.X = 8f;
                                                                         }
-                                                                        if (npc.Position.X + (float)(npc.width / 2) < Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) - 500f || npc.Position.X + (float)(npc.width / 2) > Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].width / 2) + 500f)
+                                                                        if (npc.Position.X + (float)(npc.Width / 2) < Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) - 500f || npc.Position.X + (float)(npc.Width / 2) > Main.npcs[(int)npc.ai[1]].Position.X + (float)(Main.npcs[(int)npc.ai[1]].Width / 2) + 500f)
                                                                         {
                                                                             npc.TargetClosest(true);
                                                                             npc.ai[2] = 5f;
-                                                                            vector16 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                            num118 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector16.X;
-                                                                            num119 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector16.Y;
+                                                                            vector16 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                            num118 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector16.X;
+                                                                            num119 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector16.Y;
                                                                             num120 = (float)Math.Sqrt((double)(num118 * num118 + num119 * num119));
                                                                             num120 = 20f / num120;
                                                                             npc.Velocity.X = num118 * num120;
@@ -2772,7 +2772,7 @@ namespace Terraria_Server
                                                                     }
                                                                     else
                                                                     {
-                                                                        if (npc.ai[2] == 5f && ((npc.Velocity.X > 0f && npc.Position.X + (float)(npc.width / 2) > Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2)) || (npc.Velocity.X < 0f && npc.Position.X + (float)(npc.width / 2) < Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2))))
+                                                                        if (npc.ai[2] == 5f && ((npc.Velocity.X > 0f && npc.Position.X + (float)(npc.Width / 2) > Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2)) || (npc.Velocity.X < 0f && npc.Position.X + (float)(npc.Width / 2) < Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))))
                                                                         {
                                                                             npc.ai[2] = 0f;
                                                                             return;
@@ -2800,8 +2800,8 @@ namespace Terraria_Server
                                                                     num122 = 200f;
                                                                 }
                                                                 Vector2 vector17 = new Vector2(npc.ai[0] * 16f + 8f, npc.ai[1] * 16f + 8f);
-                                                                float num123 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - (float)(npc.width / 2) - vector17.X;
-                                                                float num124 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - (float)(npc.height / 2) - vector17.Y;
+                                                                float num123 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - (float)(npc.Width / 2) - vector17.X;
+                                                                float num124 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - (float)(npc.Height / 2) - vector17.Y;
                                                                 float num125 = (float)Math.Sqrt((double)(num123 * num123 + num124 * num124));
                                                                 if (num125 > num122)
                                                                 {
@@ -3139,9 +3139,9 @@ namespace Terraria_Server
                                                                         if (npc.ai[0] == 30f || npc.ai[0] == 60f || npc.ai[0] == 90f)
                                                                         {
                                                                             float num127 = 6f;
-                                                                            Vector2 vector18 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                            float num128 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
-                                                                            float num129 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
+                                                                            Vector2 vector18 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                            float num128 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].Width * 0.5f - vector18.X + (float)Main.rand.Next(-100, 101);
+                                                                            float num129 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].Height * 0.5f - vector18.Y + (float)Main.rand.Next(-100, 101);
                                                                             float num130 = (float)Math.Sqrt((double)(num128 * num128 + num129 * num129));
                                                                             num130 = num127 / num130;
                                                                             num128 *= num130;
@@ -3165,9 +3165,9 @@ namespace Terraria_Server
                                                                         if (npc.ai[0] == 20f || npc.ai[0] == 40f || npc.ai[0] == 60f || npc.ai[0] == 80f)
                                                                         {
                                                                             float num134 = 0.2f;
-                                                                            Vector2 vector19 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                            float num135 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
-                                                                            float num136 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
+                                                                            Vector2 vector19 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                            float num135 = Main.players[npc.target].Position.X + (float)Main.players[npc.target].Width * 0.5f - vector19.X + (float)Main.rand.Next(-100, 101);
+                                                                            float num136 = Main.players[npc.target].Position.Y + (float)Main.players[npc.target].Height * 0.5f - vector19.Y + (float)Main.rand.Next(-100, 101);
                                                                             float num137 = (float)Math.Sqrt((double)(num135 * num135 + num136 * num136));
                                                                             num137 = num134 / num137;
                                                                             num135 *= num137;
@@ -3285,13 +3285,13 @@ namespace Terraria_Server
                                                                             num142 = num142 * 0.5f + 0.75f;
                                                                             if (num142 != npc.scale)
                                                                             {
-                                                                                npc.Position.X = npc.Position.X + (float)(npc.width / 2);
-                                                                                npc.Position.Y = npc.Position.Y + (float)npc.height;
+                                                                                npc.Position.X = npc.Position.X + (float)(npc.Width / 2);
+                                                                                npc.Position.Y = npc.Position.Y + (float)npc.Height;
                                                                                 npc.scale = num142;
-                                                                                npc.width = (int)(98f * npc.scale);
-                                                                                npc.height = (int)(92f * npc.scale);
-                                                                                npc.Position.X = npc.Position.X - (float)(npc.width / 2);
-                                                                                npc.Position.Y = npc.Position.Y - (float)npc.height;
+                                                                                npc.Width = (int)(98f * npc.scale);
+                                                                                npc.Height = (int)(92f * npc.scale);
+                                                                                npc.Position.X = npc.Position.X - (float)(npc.Width / 2);
+                                                                                npc.Position.Y = npc.Position.Y - (float)npc.Height;
                                                                             }
                                                                             int num143 = (int)((double)npc.lifeMax * 0.05);
                                                                             if ((float)(npc.life + num143) < npc.ai[3])
@@ -3300,8 +3300,8 @@ namespace Terraria_Server
                                                                                 int num144 = Main.rand.Next(1, 4);
                                                                                 for (int num145 = 0; num145 < num144; num145++)
                                                                                 {
-                                                                                    int x = (int)(npc.Position.X + (float)Main.rand.Next(npc.width - 32));
-                                                                                    int y = (int)(npc.Position.Y + (float)Main.rand.Next(npc.height - 32));
+                                                                                    int x = (int)(npc.Position.X + (float)Main.rand.Next(npc.Width - 32));
+                                                                                    int y = (int)(npc.Position.Y + (float)Main.rand.Next(npc.Height - 32));
                                                                                     int npcIndex = NPC.NewNPC(x, y, 1, 0);
                                                                                     Main.npcs[npcIndex] = Registries.NPC.Create(1);
                                                                                     Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
@@ -3427,8 +3427,8 @@ namespace Terraria_Server
                                                                                             npc.ai[0] = -1f;
                                                                                         }
                                                                                     }
-                                                                                    int num147 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
-                                                                                    int num148 = (int)(npc.Position.Y + (float)(npc.height / 2)) / 16;
+                                                                                    int num147 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
+                                                                                    int num148 = (int)(npc.Position.Y + (float)(npc.Height / 2)) / 16;
                                                                                     if (Main.tile.At(num147, num148 - 1).Liquid > 128)
                                                                                     {
                                                                                         if (Main.tile.At(num147, num148 + 1).Active)
@@ -3501,8 +3501,8 @@ namespace Terraria_Server
                                                                                     }
                                                                                     else
                                                                                     {
-                                                                                        Rectangle rectangle3 = new Rectangle((int)Main.players[npc.target].Position.X, (int)Main.players[npc.target].Position.Y, Main.players[npc.target].width, Main.players[npc.target].height);
-                                                                                        Rectangle rectangle4 = new Rectangle((int)npc.Position.X - 100, (int)npc.Position.Y - 100, npc.width + 200, npc.height + 200);
+                                                                                        Rectangle rectangle3 = new Rectangle((int)Main.players[npc.target].Position.X, (int)Main.players[npc.target].Position.Y, Main.players[npc.target].Width, Main.players[npc.target].Height);
+                                                                                        Rectangle rectangle4 = new Rectangle((int)npc.Position.X - 100, (int)npc.Position.Y - 100, npc.Width + 200, npc.Height + 200);
                                                                                         if (rectangle4.Intersects(rectangle3) || npc.life < npc.lifeMax)
                                                                                         {
                                                                                             npc.ai[0] = 1f;
@@ -3581,8 +3581,8 @@ namespace Terraria_Server
                                                                                                 }
                                                                                             }
                                                                                         }
-                                                                                        float num149 = Math.Abs(npc.Position.X + (float)(npc.width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2)));
-                                                                                        float num150 = Main.players[npc.target].Position.Y - (float)(npc.height / 2);
+                                                                                        float num149 = Math.Abs(npc.Position.X + (float)(npc.Width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2)));
+                                                                                        float num150 = Main.players[npc.target].Position.Y - (float)(npc.Height / 2);
                                                                                         if (num149 > 50f)
                                                                                         {
                                                                                             num150 -= 100f;
@@ -3696,9 +3696,9 @@ namespace Terraria_Server
                                                                                         {
                                                                                             npc.TargetClosest(true);
                                                                                             float num152 = 7f;
-                                                                                            Vector2 vector20 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                                            float num153 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector20.X;
-                                                                                            float num154 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].height / 2) - vector20.Y;
+                                                                                            Vector2 vector20 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                                            float num153 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector20.X;
+                                                                                            float num154 = Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2) - vector20.Y;
                                                                                             float num155 = (float)Math.Sqrt((double)(num153 * num153 + num154 * num154));
                                                                                             num155 = num152 / num155;
                                                                                             num153 *= num155;
@@ -3732,8 +3732,8 @@ namespace Terraria_Server
                                                                                                 npc.ai[0] = -1f;
                                                                                             }
                                                                                         }
-                                                                                        int num156 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
-                                                                                        int num157 = (int)(npc.Position.Y + (float)(npc.height / 2)) / 16;
+                                                                                        int num156 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
+                                                                                        int num157 = (int)(npc.Position.Y + (float)(npc.Height / 2)) / 16;
                                                                                         if (Main.tile.At(num156, num157 - 1).Liquid > 128)
                                                                                         {
                                                                                             if (Main.tile.At(num156, num157 + 1).Active)
@@ -3765,8 +3765,8 @@ namespace Terraria_Server
                                                                                     {
                                                                                         npc.TargetClosest(true);
                                                                                         float num158 = 12f;
-                                                                                        Vector2 vector21 = new Vector2(npc.Position.X + (float)npc.width * 0.5f, npc.Position.Y + (float)npc.height * 0.5f);
-                                                                                        float num159 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].width / 2) - vector21.X;
+                                                                                        Vector2 vector21 = new Vector2(npc.Position.X + (float)npc.Width * 0.5f, npc.Position.Y + (float)npc.Height * 0.5f);
+                                                                                        float num159 = Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2) - vector21.X;
                                                                                         float num160 = Main.players[npc.target].Position.Y - vector21.Y;
                                                                                         float num161 = (float)Math.Sqrt((double)(num159 * num159 + num160 * num160));
                                                                                         num161 = num158 / num161;
@@ -3802,7 +3802,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             npc.ai[0] -= 1f;
                                                                                         }
-                                                                                        if (flag15 && npc.ai[0] == 0f && Collision.CanHit(npc.Position, npc.width, npc.height, Main.players[npc.target].Position, Main.players[npc.target].width, Main.players[npc.target].height))
+                                                                                        if (flag15 && npc.ai[0] == 0f && Collision.CanHit(npc.Position, npc.Width, npc.Height, Main.players[npc.target].Position, Main.players[npc.target].Width, Main.players[npc.target].Height))
                                                                                         {
                                                                                             npc.ai[0] = 200f;
                                                                                             int num162 = 10;
@@ -3817,9 +3817,9 @@ namespace Terraria_Server
                                                                                         try
                                                                                         {
                                                                                             int num165 = (int)npc.Position.X / 16;
-                                                                                            int num166 = (int)(npc.Position.X + (float)(npc.width / 2)) / 16;
-                                                                                            int num167 = (int)(npc.Position.X + (float)npc.width) / 16;
-                                                                                            int num168 = (int)(npc.Position.Y + (float)npc.height) / 16;
+                                                                                            int num166 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
+                                                                                            int num167 = (int)(npc.Position.X + (float)npc.Width) / 16;
+                                                                                            int num168 = (int)(npc.Position.Y + (float)npc.Height) / 16;
                                                                                             bool flag16 = false;
                                                                                             if ((Main.tile.At(num165, num168).Active && Main.tileSolid[(int)Main.tile.At(num165, num168).Type]) || (Main.tile.At(num166, num168).Active && Main.tileSolid[(int)Main.tile.At(num166, num168).Type]) || (Main.tile.At(num167, num168).Active && Main.tileSolid[(int)Main.tile.At(num167, num168).Type]))
                                                                                             {
@@ -4628,9 +4628,9 @@ namespace Terraria_Server
             float num = -1f;
             for (int i = 0; i < 255; i++)
             {
-                if (Main.players[i].Active && !Main.players[i].dead && (num == -1f || Math.Abs(Main.players[i].Position.X + (float)(Main.players[i].width / 2) - this.Position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].Position.Y + (float)(Main.players[i].height / 2) - this.Position.Y + (float)(this.height / 2)) < num))
+                if (Main.players[i].Active && !Main.players[i].dead && (num == -1f || Math.Abs(Main.players[i].Position.X + (float)(Main.players[i].Width / 2) - this.Position.X + (float)(this.Width / 2)) + Math.Abs(Main.players[i].Position.Y + (float)(Main.players[i].Height / 2) - this.Position.Y + (float)(this.Height / 2)) < num))
                 {
-                    num = Math.Abs(Main.players[i].Position.X + (float)(Main.players[i].width / 2) - this.Position.X + (float)(this.width / 2)) + Math.Abs(Main.players[i].Position.Y + (float)(Main.players[i].height / 2) - this.Position.Y + (float)(this.height / 2));
+                    num = Math.Abs(Main.players[i].Position.X + (float)(Main.players[i].Width / 2) - this.Position.X + (float)(this.Width / 2)) + Math.Abs(Main.players[i].Position.Y + (float)(Main.players[i].Height / 2) - this.Position.Y + (float)(this.Height / 2));
                     this.target = i;
                 }
             }
@@ -4638,16 +4638,16 @@ namespace Terraria_Server
             {
                 this.target = 0;
             }
-            this.targetRect = new Rectangle((int)Main.players[this.target].Position.X, (int)Main.players[this.target].Position.Y, Main.players[this.target].width, Main.players[this.target].height);
+            this.targetRect = new Rectangle((int)Main.players[this.target].Position.X, (int)Main.players[this.target].Position.Y, Main.players[this.target].Width, Main.players[this.target].Height);
             if (faceTarget)
             {
                 this.direction = 1;
-                if ((float)(this.targetRect.X + this.targetRect.Width / 2) < this.Position.X + (float)(this.width / 2))
+                if ((float)(this.targetRect.X + this.targetRect.Width / 2) < this.Position.X + (float)(this.Width / 2))
                 {
                     this.direction = -1;
                 }
                 this.directionY = 1;
-                if ((float)(this.targetRect.Y + this.targetRect.Height / 2) < this.Position.Y + (float)(this.height / 2))
+                if ((float)(this.targetRect.Y + this.targetRect.Height / 2) < this.Position.Y + (float)(this.Height / 2))
                 {
                     this.directionY = -1;
                 }
@@ -4670,10 +4670,10 @@ namespace Terraria_Server
                 {
                     if ((double)this.Position.Y < Main.worldSurface * 18.0)
                     {
-                        Rectangle rectangle = new Rectangle((int)(this.Position.X + (float)(this.width / 2) - (float)NPC.townRangeX), (int)(this.Position.Y + (float)(this.height / 2) - (float)NPC.townRangeY), NPC.townRangeX * 2, NPC.townRangeY * 2);
+                        Rectangle rectangle = new Rectangle((int)(this.Position.X + (float)(this.Width / 2) - (float)NPC.townRangeX), (int)(this.Position.Y + (float)(this.Height / 2) - (float)NPC.townRangeY), NPC.townRangeX * 2, NPC.townRangeY * 2);
                         for (int i = 0; i < 255; i++)
                         {
-                            if (Main.players[i].Active && rectangle.Intersects(new Rectangle((int)Main.players[i].Position.X, (int)Main.players[i].Position.Y, Main.players[i].width, Main.players[i].height)))
+                            if (Main.players[i].Active && rectangle.Intersects(new Rectangle((int)Main.players[i].Position.X, (int)Main.players[i].Position.Y, Main.players[i].Width, Main.players[i].Height)))
                             {
                                 Main.players[i].townNPCs += (int)NPC.npcSlots;
                             }
@@ -4682,13 +4682,13 @@ namespace Terraria_Server
                     return;
                 }
                 bool flag = false;
-                Rectangle rectangle2 = new Rectangle((int)(this.Position.X + (float)(this.width / 2) - (float)NPC.activeRangeX), (int)(this.Position.Y + (float)(this.height / 2) - (float)NPC.activeRangeY), NPC.activeRangeX * 2, NPC.activeRangeY * 2);
-                Rectangle rectangle3 = new Rectangle((int)((double)(this.Position.X + (float)(this.width / 2)) - (double)NPC.sWidth * 0.5 - (double)this.width), (int)((double)(this.Position.Y + (float)(this.height / 2)) - (double)NPC.sHeight * 0.5 - (double)this.height), NPC.sWidth + this.width * 2, NPC.sHeight + this.height * 2);
+                Rectangle rectangle2 = new Rectangle((int)(this.Position.X + (float)(this.Width / 2) - (float)NPC.activeRangeX), (int)(this.Position.Y + (float)(this.Height / 2) - (float)NPC.activeRangeY), NPC.activeRangeX * 2, NPC.activeRangeY * 2);
+                Rectangle rectangle3 = new Rectangle((int)((double)(this.Position.X + (float)(this.Width / 2)) - (double)NPC.sWidth * 0.5 - (double)this.Width), (int)((double)(this.Position.Y + (float)(this.Height / 2)) - (double)NPC.sHeight * 0.5 - (double)this.Height), NPC.sWidth + this.Width * 2, NPC.sHeight + this.Height * 2);
                 for (int j = 0; j < 255; j++)
                 {
                     if (Main.players[j].Active)
                     {
-                        if (rectangle2.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].width, Main.players[j].height)))
+                        if (rectangle2.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height)))
                         {
                             flag = true;
                             if (this.Type != 25 && this.Type != 30 && this.Type != 33)
@@ -4696,7 +4696,7 @@ namespace Terraria_Server
                                 Main.players[j].activeNPCs += (int)NPC.npcSlots;
                             }
                         }
-                        if (rectangle3.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].width, Main.players[j].height)))
+                        if (rectangle3.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height)))
                         {
                             this.timeLeft = NPC.ACTIVE_TIME;
                         }
@@ -5062,7 +5062,7 @@ namespace Terraria_Server
                         {
                             if (Main.players[num19].Active)
                             {
-                                Rectangle rectangle2 = new Rectangle((int)(Main.players[num19].Position.X + (float)(Main.players[num19].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[num19].Position.Y + (float)(Main.players[num19].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                Rectangle rectangle2 = new Rectangle((int)(Main.players[num19].Position.X + (float)(Main.players[num19].Width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[num19].Position.Y + (float)(Main.players[num19].Height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                                 if (rectangle.Intersects(rectangle2))
                                 {
                                     flag = false;
@@ -5644,7 +5644,7 @@ namespace Terraria_Server
                     {
                         if (Main.players[n].Active)
                         {
-                            Rectangle rectangle2 = new Rectangle((int)(Main.players[n].Position.X + (float)(Main.players[n].width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[n].Position.Y + (float)(Main.players[n].height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                            Rectangle rectangle2 = new Rectangle((int)(Main.players[n].Position.X + (float)(Main.players[n].Width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(Main.players[n].Position.Y + (float)(Main.players[n].Height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
                             if (rectangle.Intersects(rectangle2))
                             {
                                 flag = false;
@@ -5696,11 +5696,11 @@ namespace Terraria_Server
             {
                 NPC npc = Registries.NPC.Create(type);
                 //NPC oldNPC = Main.npcs[npcIndex];
-                npc.Position.X = (float)(x - npc.width / 2);
-                npc.Position.Y = (float)(y - npc.height);
+                npc.Position.X = (float)(x - npc.Width / 2);
+                npc.Position.Y = (float)(y - npc.Height);
                 npc.Active = true;
                 npc.timeLeft = (int)((double)NPC.ACTIVE_TIME * 1.25);
-                npc.wet = Collision.WetCollision(npc.Position, npc.width, npc.height);
+                npc.wet = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
 
                 if (!WorldGen.gen)
                 {
@@ -5819,19 +5819,19 @@ namespace Terraria_Server
         {
             if (this.Type == 1 || this.Type == 16)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 23, Main.rand.Next(1, 3), false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(1, 3), false);
             }
             if (this.Type == 2)
             {
                 if (Main.rand.Next(3) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 38, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 38, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(100) == 0)
                     {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 236, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 236, 1, false);
                     }
                 }
             }
@@ -5839,204 +5839,204 @@ namespace Terraria_Server
             {
                 if (Main.rand.Next(500) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 263, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 263, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(40) == 0)
                     {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 118, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 118, 1, false);
                     }
                 }
             }
             if (this.Type == 3 && Main.rand.Next(50) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 216, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 216, 1, false);
             }
             if (this.Type == 66)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 267, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 267, 1, false);
             }
             if (this.Type == 62 && Main.rand.Next(50) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 272, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 272, 1, false);
             }
             if (this.Type == 52)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 251, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 251, 1, false);
             }
             if (this.Type == 53)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 239, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 239, 1, false);
             }
             if (this.Type == 54)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 260, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 260, 1, false);
             }
             if (this.Type == 55)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 261, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 261, 1, false);
             }
             if (this.Type == 69 && Main.rand.Next(10) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 323, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 323, 1, false);
             }
             if (this.Type == 4)
             {
                 int stack = Main.rand.Next(30) + 20;
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 47, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, stack, false);
                 stack = Main.rand.Next(20) + 10;
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false);
                 stack = Main.rand.Next(20) + 10;
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false);
                 stack = Main.rand.Next(20) + 10;
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack, false);
                 stack = Main.rand.Next(3) + 1;
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 59, stack, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 59, stack, false);
             }
             if (this.Type == 6 && Main.rand.Next(3) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 68, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, 1, false);
             }
             if (this.Type == 7 || this.Type == 8 || this.Type == 9)
             {
                 if (Main.rand.Next(3) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 68, Main.rand.Next(1, 3), false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, Main.rand.Next(1, 3), false);
                 }
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 69, Main.rand.Next(3, 9), false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 69, Main.rand.Next(3, 9), false);
             }
             if ((this.Type == 10 || this.Type == 11 || this.Type == 12) && Main.rand.Next(500) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 215, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 215, 1, false);
             }
             if (this.Type == 47 && Main.rand.Next(75) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 243, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 243, 1, false);
             }
             if (this.Type == 39 || this.Type == 40 || this.Type == 41)
             {
                 if (Main.rand.Next(100) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 220, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 220, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(100) == 0)
                     {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 218, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 218, 1, false);
                     }
                 }
             }
             if (this.Type == 13 || this.Type == 14 || this.Type == 15)
             {
                 int stack2 = Main.rand.Next(1, 4);
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 86, stack2, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 86, stack2, false);
                 if (Main.rand.Next(2) == 0)
                 {
                     stack2 = Main.rand.Next(2, 6);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack2, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
                 }
                 if (this.boss)
                 {
                     stack2 = Main.rand.Next(10, 30);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack2, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
                     stack2 = Main.rand.Next(10, 31);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 56, stack2, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
                 }
             }
             if (this.Type == 63 || this.Type == 64)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 282, Main.rand.Next(1, 5), false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, Main.rand.Next(1, 5), false);
             }
             if (this.Type == 21 || this.Type == 44)
             {
                 if (Main.rand.Next(25) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 118, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 118, 1, false);
                 }
                 else
                 {
                     if (this.Type == 44)
                     {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 166, Main.rand.Next(1, 4), false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 166, Main.rand.Next(1, 4), false);
                     }
                 }
             }
             if (this.Type == 45)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 238, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 238, 1, false);
             }
             if (this.Type == 50)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, Main.rand.Next(256, 259), 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(256, 259), 1, false);
             }
             if (this.Type == 23 && Main.rand.Next(50) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 116, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 116, 1, false);
             }
             if (this.Type == 24)
             {
                 if (Main.rand.Next(50) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 112, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 112, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(500) == 0)
                     {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 244, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 244, 1, false);
                     }
                 }
             }
             if (this.Type == 31 || this.Type == 32)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 154, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, 1, false);
             }
             if (this.Type == 26 || this.Type == 27 || this.Type == 28 || this.Type == 29)
             {
                 if (Main.rand.Next(400) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 128, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 128, 1, false);
                 }
                 else
                 {
                     if (Main.rand.Next(200) == 0)
                     {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 160, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 160, 1, false);
                     }
                     else
                     {
                         if (Main.rand.Next(2) == 0)
                         {
                             int stack3 = Main.rand.Next(1, 6);
-                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 161, stack3, false);
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 161, stack3, false);
                         }
                     }
                 }
             }
             if (this.Type == 42)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 209, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 209, 1, false);
             }
             if (this.Type == 43 && Main.rand.Next(5) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 210, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 210, 1, false);
             }
             if (this.Type == 65)
             {
                 if (Main.rand.Next(50) == 0)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 268, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 268, 1, false);
                 }
                 else
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 319, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 319, 1, false);
                 }
             }
             if (this.Type == 48 && Main.rand.Next(5) == 0)
             {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 320, 1, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 320, 1, false);
             }
             if (this.boss)
             {
@@ -6055,26 +6055,26 @@ namespace Terraria_Server
                     this.Name = "Skeletron";
                 }
                 int stack4 = Main.rand.Next(5, 16);
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 28, stack4, false);
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 28, stack4, false);
                 int num = Main.rand.Next(5) + 5;
                 for (int i = 0; i < num; i++)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 58, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false);
                 }
                 
                 NetMessage.SendData(25, -1, -1, this.Name + " has been defeated!", 255, 175f, 75f, 255f);
             }
             if (Main.rand.Next(7) == 0 && this.lifeMax > 1)
             {
-                if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statMana < Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statManaMax)
+                if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statMana < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statManaMax)
                 {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 184, 1, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 184, 1, false);
                 }
                 else
                 {
-                    if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statLife < Main.players[(int)Player.FindClosest(this.Position, this.width, this.height)].statLifeMax)
+                    if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLife < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLifeMax)
                     {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 58, 1, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false);
                     }
                 }
             }
@@ -6110,7 +6110,7 @@ namespace Terraria_Server
                         num3 /= Main.rand.Next(3) + 1;
                     }
                     num2 -= (float)(1000000 * num3);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 74, num3, false);
+                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 74, num3, false);
                 }
                 else
                 {
@@ -6126,7 +6126,7 @@ namespace Terraria_Server
                             num4 /= Main.rand.Next(3) + 1;
                         }
                         num2 -= (float)(10000 * num4);
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 73, num4, false);
+                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 73, num4, false);
                     }
                     else
                     {
@@ -6142,7 +6142,7 @@ namespace Terraria_Server
                                 num5 /= Main.rand.Next(3) + 1;
                             }
                             num2 -= (float)(100 * num5);
-                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 72, num5, false);
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 72, num5, false);
                         }
                         else
                         {
@@ -6160,7 +6160,7 @@ namespace Terraria_Server
                                 num6 = 1;
                             }
                             num2 -= (float)num6;
-                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 71, num6, false);
+                            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 71, num6, false);
                         }
                     }
                 }
@@ -6186,7 +6186,7 @@ namespace Terraria_Server
                         int spawnedSlimes = Main.rand.Next(2) + 2;
                         for (int slimeNum = 0; slimeNum < spawnedSlimes; slimeNum++)
                         {
-                            int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.width / 2)), (int)(this.Position.Y + (float)this.height), 1, 0);
+                            int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.Width / 2)), (int)(this.Position.Y + (float)this.Height), 1, 0);
                             Main.npcs[npcIndex] = Registries.NPC.Create("Baby Slime");
                             Main.npcs[npcIndex].Velocity.X = this.Velocity.X * 2f;
                             Main.npcs[npcIndex].Velocity.Y = this.Velocity.Y;
@@ -6210,8 +6210,8 @@ namespace Terraria_Server
                 }
                 if (this.Type == 59)
                 {
-                    int num5 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
-                    int num6 = (int)(this.Position.Y + (float)(this.height / 2)) / 16;
+                    int num5 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
+                    int num6 = (int)(this.Position.Y + (float)(this.Height / 2)) / 16;
                     Main.tile.At(num5, num6).SetLava (true);
                     if (Main.tile.At(num5, num6).Liquid < 200)
                     {
@@ -6230,8 +6230,8 @@ namespace Terraria_Server
                 int num8 = Main.rand.Next(4) + 4;
                 for (int m = 0; m < num8; m++)
                 {
-                    int x = (int)(this.Position.X + (float)Main.rand.Next(this.width - 32));
-                    int y = (int)(this.Position.Y + (float)Main.rand.Next(this.height - 32));
+                    int x = (int)(this.Position.X + (float)Main.rand.Next(this.Width - 32));
+                    int y = (int)(this.Position.Y + (float)Main.rand.Next(this.Height - 32));
                     int npcIndex = NPC.NewNPC(x, y, 1, 0);
                     Main.npcs[npcIndex] = Registries.NPC.Create(1);
                     Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
@@ -6449,8 +6449,8 @@ namespace Terraria_Server
                     flag2 = true;
                     Main.npcs[j].ai[3] = 1f;
                     vector = Main.npcs[j].Position;
-                    num = Main.npcs[j].width;
-                    num2 = Main.npcs[j].height;
+                    num = Main.npcs[j].Width;
+                    num2 = Main.npcs[j].Height;
 
                     NetMessage.SendData(23, -1, -1, "", j);
                 }
@@ -6535,18 +6535,18 @@ namespace Terraria_Server
                     }
                     if (npc.immune[255] == 0)
                     {
-                        Rectangle rectangle = new Rectangle((int)npc.Position.X, (int)npc.Position.Y, npc.width, npc.height);
+                        Rectangle rectangle = new Rectangle((int)npc.Position.X, (int)npc.Position.Y, npc.Width, npc.Height);
                         for (int k = 0; k < MAX_NPCS; k++)
                         {
                             if (Main.npcs[k].Active && !Main.npcs[k].friendly && Main.npcs[k].damage > 0)
                             {
-                                Rectangle rectangle2 = new Rectangle((int)Main.npcs[k].Position.X, (int)Main.npcs[k].Position.Y, Main.npcs[k].width, Main.npcs[k].height);
+                                Rectangle rectangle2 = new Rectangle((int)Main.npcs[k].Position.X, (int)Main.npcs[k].Position.Y, Main.npcs[k].Width, Main.npcs[k].Height);
                                 if (rectangle.Intersects(rectangle2))
                                 {
                                     int num3 = Main.npcs[k].damage;
                                     int num4 = 6;
                                     int num5 = 1;
-                                    if (Main.npcs[k].Position.X + (float)(Main.npcs[k].width / 2) > npc.Position.X + (float)(npc.width / 2))
+                                    if (Main.npcs[k].Position.X + (float)(Main.npcs[k].Width / 2) > npc.Position.X + (float)(npc.Width / 2))
                                     {
                                         num5 = -1;
                                     }
@@ -6561,7 +6561,7 @@ namespace Terraria_Server
                 }
                 if (!npc.noTileCollide)
                 {
-                    bool flag = Collision.LavaCollision(npc.Position, npc.width, npc.height);
+                    bool flag = Collision.LavaCollision(npc.Position, npc.Width, npc.Height);
                     if (flag)
                     {
                         npc.lavaWet = true;
@@ -6573,7 +6573,7 @@ namespace Terraria_Server
                             NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 50f);
                         }
                     }
-                    bool flag2 = Collision.WetCollision(npc.Position, npc.width, npc.height);
+                    bool flag2 = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
                     if (flag2)
                     {
                         if (!npc.wet && npc.wetCount == 0)
@@ -6617,7 +6617,7 @@ namespace Terraria_Server
                     if (npc.wet)
                     {
                         Vector2 vector = npc.Velocity;
-                        npc.Velocity = Collision.TileCollision(npc.Position, npc.Velocity, npc.width, npc.height, flag3, flag3);
+                        npc.Velocity = Collision.TileCollision(npc.Position, npc.Velocity, npc.Width, npc.Height, flag3, flag3);
                         if (Collision.up)
                         {
                             npc.Velocity.Y = 0.01f;
@@ -6638,7 +6638,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        npc.Velocity = Collision.TileCollision(npc.Position, npc.Velocity, npc.width, npc.height, flag3, flag3);
+                        npc.Velocity = Collision.TileCollision(npc.Position, npc.Velocity, npc.Width, npc.Height, flag3, flag3);
                         if (Collision.up)
                         {
                             npc.Velocity.Y = 0.01f;
@@ -7320,8 +7320,8 @@ namespace Terraria_Server
             NPC cloned = (NPC)base.MemberwiseClone();
             NPC.npcSlots = cloned.slots;
             cloned.frame = default(Rectangle);
-            cloned.width = (int)((float)cloned.width * cloned.scale);
-            cloned.height = (int)((float)cloned.height * cloned.scale);
+            cloned.Width = (int)((float)cloned.Width * cloned.scale);
+            cloned.Height = (int)((float)cloned.Height * cloned.scale);
             cloned.life = cloned.lifeMax;
             cloned.ai = new float[NPC.MAX_AI];
             Array.Copy(ai, cloned.ai, NPC.MAX_AI);
