@@ -1118,7 +1118,7 @@ namespace Terraria_Server.Commands
 
                     if (banee != null)
                     {
-                        banee.Kick("You have been kicked from this Server.");
+                        banee.Kick("You have been kicked from this server.");
                     }
                     else
                     {

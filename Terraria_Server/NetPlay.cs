@@ -134,6 +134,11 @@ namespace Terraria_Server
 									clientList.Add (client);
 									Netplay.anyClients = true;
 									socketToId[client] = id;
+									
+									if (clientList.Count > Main.maxNetplayers)
+									{
+										slots[id].Kick ("Server full, sorry.");
+									}
 								}
 							}
 						}

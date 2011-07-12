@@ -65,7 +65,6 @@ namespace Terraria_Server
 		public static bool webProtect = false;
 		public static bool showSplash = true;
         public static String defaultIP = "";
-        private Process tServer = new Process();
 		private static bool webAuth = false;
 		public static int updateTime = 0;
 		public static int drawTime = 0;
