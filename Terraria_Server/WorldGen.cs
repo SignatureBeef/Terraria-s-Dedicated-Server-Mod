@@ -18031,10 +18031,10 @@ namespace Terraria_Server
                                     num2 = (int)Main.tile.At(i, j - 1).Type;
                                 }
                             }
-                            else
-                            {
-                                num2 = num9;
-                            }
+                            //else
+                            //{
+                            //    num2 = num9;
+                            //}
                             if (num2 != num9 && num2 != 2 && num2 != 60)
                             {
                                 WorldGen.KillTile(i, j, false, false, false);
