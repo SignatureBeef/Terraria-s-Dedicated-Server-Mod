@@ -508,7 +508,7 @@ namespace Terraria_Server
 							PlayerLoginEvent Event = new PlayerLoginEvent();
 							Event.Socket = Netplay.slots[i];
 							Event.Sender = Main.players[i];
-							Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_LOGIN, Event);
+							Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, Event);
 						}
 					}
 					
@@ -537,7 +537,7 @@ namespace Terraria_Server
 							PlayerLogoutEvent Event = new PlayerLogoutEvent();
 							Event.Socket = Netplay.slots[i];
 							Event.Sender = Main.players[i];
-							Program.server.getPluginManager().processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
+							Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
 						}
 					}
 				}

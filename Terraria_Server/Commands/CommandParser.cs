@@ -31,7 +31,7 @@ namespace Terraria_Server.Commands
             Sender sender = new Sender();
             sender.Op = true;
             cSender.ConsoleCommand.Sender = sender;
-            server.getPluginManager().processHook(Hooks.CONSOLE_COMMAND, cSender.ConsoleCommand);
+            server.PluginManager.processHook(Hooks.CONSOLE_COMMAND, cSender.ConsoleCommand);
             if (cSender.ConsoleCommand.Cancelled)
             {
                 return;

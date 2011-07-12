@@ -34,7 +34,7 @@ namespace Terraria_Server.Messages
             PlayerDeathEvent pDeath = new PlayerDeathEvent();
             pDeath.DeathMessage = deathText;
             pDeath.Sender = Main.players[playerIndex];
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_DEATH, pDeath);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_DEATH, pDeath);
             if (pDeath.Cancelled)
             {
                 return;

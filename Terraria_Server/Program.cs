@@ -219,9 +219,9 @@ namespace Terraria_Server
                     Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt",
                     Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt",
                     Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
-                server.setOpPassword(properties.Password);
-                server.setPort(properties.Port);
-                server.setIP(properties.ServerIP);
+                server.OpPassword = properties.Password;
+                server.Port = properties.Port;
+                server.ServerIP = properties.ServerIP;
                 server.Initialize();
 
                 Server.tile = new TileCollection (worldXtiles, worldYtiles);

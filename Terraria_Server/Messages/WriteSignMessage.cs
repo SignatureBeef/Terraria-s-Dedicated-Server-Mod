@@ -31,7 +31,7 @@ namespace Terraria_Server.Messages
             signEvent.Sender = Main.players[whoAmI];
             signEvent.Sign = sign;
             signEvent.Text = SignText;
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_EDITSIGN, signEvent);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_EDITSIGN, signEvent);
             if (signEvent.Cancelled)
             {
                 return;

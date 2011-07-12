@@ -48,7 +48,7 @@ namespace Terraria_Server.Messages
         {
             messageEvent.Message = text;
             messageEvent.Sender = Main.players[whoAmI];
-            Program.server.getPluginManager().processHook(hook, messageEvent);
+            Program.server.PluginManager.processHook(hook, messageEvent);
 
             return !messageEvent.Cancelled;
         }

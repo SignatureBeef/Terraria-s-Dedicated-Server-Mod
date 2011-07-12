@@ -48,37 +48,64 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets the Plugin Manager
-        public PluginManager getPluginManager()
+        public PluginManager PluginManager
         {
-            return pluginManager;
+            get
+            {
+                return pluginManager;
+            }
         }
 
         // Summary:
         //       Gets the World Loaded for the Server
-        public World getWorld()
+        public World World
         {
-            return world;
+            get
+            {
+                return world;
+            }
         }
 
         // Summary:
-        //       Sets the Server Password
-        public void setOpPassword(String Password)
+        //       Gets/Sets the Server Password
+        public String OpPassword
         {
-            Netplay.password = Password;
+            get 
+            {
+                return Netplay.password;
+            } 
+            set 
+            {
+                Netplay.password = value;
+            }
         }
 
         // Summary:
-        //       Sets the Terraria Binding Port
-        public void setPort(int Port)
+        //       Gets/Sets the Terraria Binding Port
+        public int Port
         {
-            Netplay.serverPort = Port;
+            get
+            {
+                return Netplay.serverPort;
+            }
+            set
+            {
+                Netplay.serverPort = value;
+            }
         }
 
         // Summary:
-        //       Sets the Terraria Binding IP
-        public void setIP(String IPAddress)
+        //       Gets/Sets the Terraria Binding IP
+        public String ServerIP
         {
-            Netplay.serverSIP = IPAddress;
+            get 
+            {
+                return Netplay.serverSIP;
+            } 
+            set 
+            {
+                Netplay.serverSIP = value;
+            }
         }
 
         // Summary:
@@ -121,9 +148,12 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets the Servers Player List
-        public Player[] getPlayerList()
+        public Player[] PlayerList
         {
-            return Main.players;
+            get
+            {
+                return Main.players;
+            }
         }
 
         // Summary:
@@ -186,35 +216,33 @@ namespace Terraria_Server
         }
 
         // Summary:
-        //       Gets the maximum allowed NPCs
-        public int getMaxNPCs()
+        //       Gets/Sets the maximum allowed NPCs
+        public int MaxNPCs
         {
-            return NPC.maxSpawns;
+            get
+            {
+                return NPC.maxSpawns;
+            }
+            set
+            {
+                NPC.defaultMaxSpawns = value;
+                NPC.maxSpawns = value;
+            }
         }
 
         // Summary:
-        //       Sets the maximum allowed NPCs
-        public void setMaxNPCs(int Max)
+        //       Gets/Sets the max spawn rate of NPCs\
+        public int SpawnRate
         {
-            NPC.defaultMaxSpawns = Max;
-            NPC.maxSpawns = Max;
-        }
-
-        // Summary:
-        //       Gets the max spawn rate of NPCs
-
-        public int getSpawnRate()
-        {
-            return NPC.spawnRate;
-        }
-
-        // Summary:
-        //       Sets the max spawn rate of NPCs
-        public void setSpawnRate(int Max)
-        {
-            NPC.defaultSpawnRate = Max;
-            NPC.spawnRate = Max;
-        }
-        
+            get
+            {
+                return NPC.spawnRate;
+            }
+            set
+            {
+                NPC.defaultSpawnRate = value;
+                NPC.spawnRate = value;
+            }
+        }        
     }
 }
