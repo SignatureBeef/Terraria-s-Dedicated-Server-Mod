@@ -12,11 +12,15 @@ namespace Terraria_Server
 
 		VACANT = 4,          //                this socket has no client and is available
 		CONNECTED = 8,       // previously 0,  the client socket has been accepted
-		AUTHENTICATION = 16, //           -1,  the client has been asked for a password
+		SERVER_AUTH = 16,    //           -1,  the client has been asked for a server password
 		ACCEPTED = 32,       //            1,  the client has successfully authenticated
-		SENDING_WORLD = 64,  //            2,  the client requested world info
-		SENDING_TILES = 128, //            3,  the client requested tiles
-		PLAYING = 256,       //            10
+		PLAYER_AUTH = 64,    //                the client has been asked for a character password
+		SENDING_WORLD = 128, //            2,  the client requested world info
+		SENDING_TILES = 256, //            3,  the client requested tiles
+		PLAYING = 512,       //            10
+		
+		// composites
+		DISCONNECTING = 3,   // SHUTDOWN or KICK
 	}
 
 	public class ServerSlot
@@ -43,6 +47,7 @@ namespace Terraria_Server
 		public float spamAddBlockMax = 100f;
 		public float spamDelBlockMax = 500f;
 		public float spamWaterMax = 50f;
+		
 		public byte[] readBuffer;
 		
 		private volatile Queue<byte[]> writeQueue;
@@ -175,8 +180,11 @@ namespace Terraria_Server
 			if (state == SlotState.VACANT) return;
 			
 			Program.tConsole.WriteLine ("{0} @ {1}: disconnecting for: {2}", remoteAddress, whoAmI, reason);
-			NetMessage.SendData (2, whoAmI, -1, reason);
-			state = SlotState.KICK;
+			if (state != SlotState.SHUTDOWN)
+			{
+				NetMessage.SendData (2, whoAmI, -1, reason);
+				state = SlotState.KICK;
+			}
 		}
 		
 		public void Send (byte[] data)
@@ -197,6 +205,11 @@ namespace Terraria_Server
 
 				writeQueue.Enqueue (data);
 			}
+			writeSignal.Set ();
+		}
+		
+		public void Signal ()
+		{
 			writeSignal.Set ();
 		}
 

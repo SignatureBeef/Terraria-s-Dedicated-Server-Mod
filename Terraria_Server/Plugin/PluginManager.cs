@@ -318,6 +318,13 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerPvPChange((PlayerPvPChangeEvent)hookEvent);
                                     break;
                                 }
+                            case Hooks.PLAYER_AUTH_QUERY:
+                                plugin.onPlayerAuthQuery ((PlayerLoginEvent) hookEvent);
+                                break;
+                            
+                            case Hooks.PLAYER_AUTH_REPLY:
+                                plugin.onPlayerAuthReply ((PlayerLoginEvent) hookEvent);
+                                break;
                         }
                     }
                 }

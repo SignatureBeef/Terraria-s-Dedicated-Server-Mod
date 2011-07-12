@@ -26,6 +26,8 @@ namespace Terraria_Server.Plugin
         PLAYER_TELEPORT,
         PLAYER_MOVE,
         PLAYER_KEYPRESS,
-        PLAYER_PVPCHANGE
+        PLAYER_PVPCHANGE,
+        PLAYER_AUTH_QUERY,
+        PLAYER_AUTH_REPLY,
     }
 }

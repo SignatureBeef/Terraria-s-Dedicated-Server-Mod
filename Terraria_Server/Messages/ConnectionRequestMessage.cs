@@ -16,12 +16,12 @@ namespace Terraria_Server.Messages
         {
             ServerSlot slot = Netplay.slots[whoAmI];
             PlayerLoginEvent loginEvent = new PlayerLoginEvent();
-            loginEvent.Socket = slot;
+            loginEvent.Slot = slot;
             loginEvent.Sender = Main.players[whoAmI];
             Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_PRELOGIN, loginEvent);
-            if (loginEvent.Cancelled)
+            if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (slot.state & SlotState.DISCONNECTING) == 0)
             {
-                slot.Kick ("Disconnected By Server.");
+                slot.Kick ("Disconnected by server.");
                 return;
             }
 
@@ -55,7 +55,7 @@ namespace Terraria_Server.Messages
                     return;
                 }
 
-                slot.state = SlotState.AUTHENTICATION;
+                slot.state = SlotState.SERVER_AUTH;
                 NetMessage.SendData(37, whoAmI);
             }
         }

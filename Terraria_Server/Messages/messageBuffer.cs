@@ -44,9 +44,11 @@ namespace Terraria_Server.Messages
 
         private const int MAX_HAIR_ID = 17;
 
-        public bool checkBytes;
-
         public byte[] readBuffer;
+        public byte[] sideBuffer; // used to store player information packets before auth
+        
+        public int sideBufferBytes;  // totalData for side buffer
+        public int sideBufferMsgLen; // messageLength for side buffer
 
         public int messageLength;
         public int spamCount;
@@ -58,9 +60,19 @@ namespace Terraria_Server.Messages
             messageLength = 0;
             totalData = 0;
             spamCount = 0;
+            sideBuffer = null;
+            sideBufferBytes = 0;
+            sideBufferMsgLen = 0;
         }
 
-		public void GetData(int start, int length)
+		public void ResetSideBuffer ()
+		{
+			sideBuffer = null;
+			sideBufferBytes = 0;
+			sideBufferMsgLen = 0;
+		}
+		
+		public void GetData (byte[] readBuffer, int start, int length)
 		{
 			try
 			{
@@ -74,7 +86,7 @@ namespace Terraria_Server.Messages
 	
 				if (bufferData != 38)
 				{
-					if (Netplay.slots[whoAmI].state == SlotState.AUTHENTICATION)
+					if (Netplay.slots[whoAmI].state == SlotState.SERVER_AUTH)
 					{
 						Netplay.slots[whoAmI].Kick ("Incorrect password.");
 						return;
@@ -91,6 +103,7 @@ namespace Terraria_Server.Messages
 					IMessage message = messageArray[bufferData];
 					if (message != null)
 					{
+						//Console.WriteLine ("packet {0}, len {1}", (Packet)readBuffer[start], length);
 						message.Process(start, length, num, whoAmI, readBuffer, bufferData);
 					}
 				}

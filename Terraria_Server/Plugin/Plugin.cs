@@ -155,6 +155,18 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerPreLogin(PlayerLoginEvent Event) { }
 
         /// <summary>
+        /// Hook method allowing to request the player to authenticate his name using a password
+        /// </summary>
+        /// <param name="Event">PlayerLoginEvent info</param>
+        public virtual void onPlayerAuthQuery (PlayerLoginEvent Event) { }
+
+        /// <summary>
+        /// Hook method for player's initial connection to the server, before they can start playing
+        /// </summary>
+        /// <param name="Event">PlayerLoginEvent info</param>
+        public virtual void onPlayerAuthReply (PlayerLoginEvent Event) { }
+
+        /// <summary>
         /// Hook method for all player projectile firing
         /// </summary>
         /// <param name="Event">PlayerProjectileEvent info</param>

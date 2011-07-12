@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Terraria_Server.Misc;
+using Terraria_Server;
+using Terraria_Server.Events;
 
 namespace Terraria_Server.Messages
 {
@@ -19,6 +21,7 @@ namespace Terraria_Server.Messages
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int playerIndex = whoAmI;
+            var slot = Netplay.slots[whoAmI];
 
             if (playerIndex == Main.myPlayer)
             {
@@ -47,15 +50,15 @@ namespace Terraria_Server.Messages
             player.hardCore = (readBuffer[num++] != 0);
 
             player.Name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
-
-			if (Netplay.slots[whoAmI].state < SlotState.PLAYING)
+			
+			if (slot.state < SlotState.PLAYING)
 			{
 				int count = 0;
 				foreach(Player otherPlayer in Main.players)
 				{
-					if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && Netplay.slots[count].state >= SlotState.CONNECTED)
+					if (count++ != playerIndex && player.Name.Equals(otherPlayer.Name) && slot.state >= SlotState.CONNECTED)
 					{
-						Netplay.slots[whoAmI].Kick (player.Name + " is already on this server.");
+						slot.Kick (player.Name + " is already on this server.");
 						return;
 					}
 				}
@@ -63,19 +66,39 @@ namespace Terraria_Server.Messages
 
 			if (player.Name.Length > 20)
 			{
-				Netplay.slots[whoAmI].Kick ("Name is too long.");
+				slot.Kick ("Name is too long.");
 				return;
 			}
 
 			if (player.Name == "")
 			{
-				Netplay.slots[whoAmI].Kick ("Empty name.");
+				slot.Kick ("Empty name.");
 				return;
 			}
 
 			Netplay.slots[whoAmI].oldName = player.Name;
 			Netplay.slots[whoAmI].name = player.Name;
-			NetMessage.SendData(4, -1, whoAmI, player.Name, playerIndex);
+
+			var loginEvent = new PlayerLoginEvent();
+			loginEvent.Slot = slot;
+			loginEvent.Sender = Main.players[whoAmI];
+			Program.server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_QUERY, loginEvent);
+			
+			if (loginEvent.Action == PlayerLoginAction.REJECT)
+			{
+				if ((slot.state & SlotState.DISCONNECTING) == 0)
+					slot.Kick ("Disconnected by server.");
+				return;
+			}
+			else if (loginEvent.Action == PlayerLoginAction.ASK_PASS)
+			{
+				slot.state = SlotState.PLAYER_AUTH;
+				NetMessage.SendData (37, whoAmI, -1, "");
+				return;
+			}
+			
+			// PlayerLoginAction.ACCEPT
+			NetMessage.SendData (4, -1, whoAmI, player.Name, playerIndex);
         }
 
 

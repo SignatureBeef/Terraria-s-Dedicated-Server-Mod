@@ -302,44 +302,69 @@ namespace Terraria_Server
 			return 0;
 		}
 		
-		public static void CheckBytes(int i = 256)
+		public static void CheckBytes (int i)
 		{
-			lock (NetMessage.buffer[i])
+			var msgBuf = NetMessage.buffer[i];
+			CheckBytes (i, msgBuf.readBuffer, ref msgBuf.totalData, ref msgBuf.messageLength);
+		}
+		
+		public static void CheckBytes (int i, byte[] readBuffer, ref int totalData, ref int msgLen)
+		{
+			var msgBuf = NetMessage.buffer[i];
+			var slot = Netplay.slots[i];
+			int num = 0;
+			if (msgBuf.totalData >= 4)
 			{
-				int num = 0;
-				if (NetMessage.buffer[i].totalData >= 4)
+				if (msgLen == 0)
 				{
-					if (NetMessage.buffer[i].messageLength == 0)
+					msgLen = BitConverter.ToInt32 (readBuffer, 0) + 4;
+				}
+				while (totalData >= msgLen + num && msgLen > 0)
+				{
+					if (slot.state == SlotState.PLAYER_AUTH && msgLen > 4
+						&& (Packet) readBuffer[num + 4] != Packet.PASSWORD_RESPONSE)
 					{
-						NetMessage.buffer[i].messageLength = BitConverter.ToInt32(NetMessage.buffer[i].readBuffer, 0) + 4;
+						// put player packets aside until password response
+						
+						if (readBuffer == msgBuf.sideBuffer)
+							throw new Exception ("Sidebuffer reads shouldn't be done during USER_AUTH.");
+						
+						if (msgBuf.sideBufferBytes + msgLen > 4096)
+						{
+							slot.Kick ("Player data too big.");
+							return;
+						}
+						
+						if (msgBuf.sideBuffer == null) msgBuf.sideBuffer = new byte [4096];
+						
+						Buffer.BlockCopy (readBuffer, num, msgBuf.sideBuffer, msgBuf.sideBufferBytes, msgLen);
+						
+						msgBuf.sideBufferBytes += msgLen;
 					}
-					while (NetMessage.buffer[i].totalData >= NetMessage.buffer[i].messageLength + num && NetMessage.buffer[i].messageLength > 0)
-					{
-						NetMessage.buffer[i].GetData(num + 4, NetMessage.buffer[i].messageLength - 4);
+					else
+						msgBuf.GetData (readBuffer, num + 4, msgLen - 4);
 
-						num += NetMessage.buffer[i].messageLength;
-						if (NetMessage.buffer[i].totalData - num >= 4)
-						{
-							NetMessage.buffer[i].messageLength = BitConverter.ToInt32(NetMessage.buffer[i].readBuffer, num) + 4;
-						}
-						else
-						{
-							NetMessage.buffer[i].messageLength = 0;
-						}
-					}
-					if (num == NetMessage.buffer[i].totalData)
+					num += msgLen;
+					if (totalData - num >= 4)
 					{
-						NetMessage.buffer[i].totalData = 0;
+						msgLen = BitConverter.ToInt32 (readBuffer, num) + 4;
 					}
 					else
 					{
-						if (num > 0)
-						{
-							Buffer.BlockCopy(NetMessage.buffer[i].readBuffer, num, NetMessage.buffer[i].readBuffer, 0, NetMessage.buffer[i].totalData - num);
-							NetMessage.buffer[i].totalData -= num;
-						}
+						msgLen = 0;
 					}
-					NetMessage.buffer[i].checkBytes = false;
+				}
+				if (num == totalData)
+				{
+					totalData = 0;
+				}
+				else
+				{
+					if (num > 0)
+					{
+						Buffer.BlockCopy (readBuffer, num, readBuffer, 0, totalData - num);
+						totalData -= num;
+					}
 				}
 			}
 		}
@@ -493,10 +518,13 @@ namespace Terraria_Server
 						{
 							Program.tConsole.WriteLine(Main.players[i].Name + " has joined.");
 
-							PlayerLoginEvent Event = new PlayerLoginEvent();
-							Event.Socket = Netplay.slots[i];
-							Event.Sender = Main.players[i];
-							Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, Event);
+							PlayerLoginEvent loginEvent = new PlayerLoginEvent();
+							loginEvent.Slot = Netplay.slots[i];
+							loginEvent.Sender = Main.players[i];
+							Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, loginEvent);
+							
+							if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (loginEvent.Slot.state & SlotState.DISCONNECTING) == 0)
+								Netplay.slots[i].Kick ("Disconnected by server.");
 						}
 					}
 					
@@ -523,7 +551,7 @@ namespace Terraria_Server
 							Program.tConsole.WriteLine(Netplay.slots[i].oldName + " has left.");
 
 							PlayerLogoutEvent Event = new PlayerLogoutEvent();
-							Event.Socket = Netplay.slots[i];
+							Event.Slot = Netplay.slots[i];
 							Event.Sender = Main.players[i];
 							Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
 						}

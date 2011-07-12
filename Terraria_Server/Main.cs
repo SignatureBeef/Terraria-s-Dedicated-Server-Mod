@@ -679,7 +679,7 @@ namespace Terraria_Server
                     Netplay.slots[i].timeOut++;
                     if (!Main.stopTimeOuts && Netplay.slots[i].timeOut > 60 * Main.timeOut)
                     {
-                        Netplay.slots[i].state = SlotState.SHUTDOWN;
+                        Netplay.slots[i].Kick ("Timed out.");
                     }
                 }
 
