@@ -261,9 +261,10 @@ namespace Terraria_Server
                             commandParser.parseConsoleCommand(line, server);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        Program.tConsole.WriteLine("Issue parsing Console Command");
+                        Program.tConsole.WriteLine ("Issue parsing Console Command");
+                        Program.tConsole.WriteLine (e.ToString());
                     }
                 }
                 while (Statics.serverStarted) { Thread.Sleep(10); }
