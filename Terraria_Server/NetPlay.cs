@@ -305,9 +305,12 @@ namespace Terraria_Server
 			
 			if (recv > 0)
 			{
-				NetMessage.buffer[id].totalData += recv;
-				NetMessage.CheckBytes (id);
-				return true;
+				if ((slots[id].state & (SlotState.KICK | SlotState.SHUTDOWN)) == 0)
+				{
+					NetMessage.buffer[id].totalData += recv;
+					NetMessage.CheckBytes (id);
+				}
+				return true; // don't close connection even if kicking, let the sending thread finish
 			}
 			else
 			{

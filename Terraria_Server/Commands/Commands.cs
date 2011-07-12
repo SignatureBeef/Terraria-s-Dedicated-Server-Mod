@@ -1118,16 +1118,14 @@ namespace Terraria_Server.Commands
 
                     if (banee != null)
                     {
+                        Program.server.notifyOps (sender.Name + " has kicked " + (banee.Name ?? commands[1]), true);
                         banee.Kick("You have been kicked from this server.");
                     }
                     else
                     {
                         sender.sendMessage("Cannot find player online!.");
                     }
-
-
-                    Program.server.notifyOps(sender.Name + " has kicked " + commands[1], true);
-
+                    
                     return;
                 }
             }
