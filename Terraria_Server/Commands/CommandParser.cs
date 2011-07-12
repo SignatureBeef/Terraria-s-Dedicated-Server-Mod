@@ -37,13 +37,38 @@ namespace Terraria_Server.Commands
                 return;
             }
 
-            String[] commands = Line.Trim().ToLower().Split(' ');
-            if (commands == null || commands.Length <= 0)
+            if (Line.Contains("\""))
             {
-                Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
-                return;
+                String[] commands = new String[Line.Substring(0, Line.IndexOf("\"")).Split(' ').Length + Line.Substring(Line.LastIndexOf("\"")).Split(' ').Length - 1];
+                String[] temp = Line.Substring(0, Line.IndexOf("\"")).Trim().Split(' ');
+                String[] temp2 = Line.Substring(Line.LastIndexOf("\"") + 1).Trim().Split(' ');
+                String[] temp3 = new String[temp.Length + 1];
+                temp.CopyTo(temp3, 0);
+
+                temp3[temp3.Length - 1] = Line.Substring(Line.IndexOf("\""), Line.LastIndexOf("\"") - Line.IndexOf("\"")).Replace("\"", "");
+
+                temp3.CopyTo(commands, 0);
+                temp2.CopyTo(commands, temp3.Length);
+
+                if (commands == null || commands.Length <= 0)
+                {
+                    Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
+                    return;
+                }
+                switchCommands(commands, cSender.ConsoleCommand.Sender);
+
             }
-            switchCommands(commands, cSender.ConsoleCommand.Sender);
+            else
+            {
+                String[] commands = Line.Trim().ToLower().Split(' ');
+
+                if (commands == null || commands.Length <= 0)
+                {
+                    Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
+                    return;
+                }
+                switchCommands(commands, cSender.ConsoleCommand.Sender);
+            }
         }
 
         /// <summary>
@@ -57,13 +82,38 @@ namespace Terraria_Server.Commands
             {
                 Line = Line.Remove(0, 1);
             }
-            String[] commands = Line.Trim().ToLower().Split(' ');
-            if (commands == null || commands.Length <= 0)
+            if (Line.Contains("\""))
             {
-                Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.Name);
-                return;
+                String[] commands = new String[Line.Substring(0, Line.IndexOf("\"")).Split(' ').Length + Line.Substring(Line.LastIndexOf("\"")).Split(' ').Length - 1];
+                String[] temp = Line.Substring(0, Line.IndexOf("\"")).Trim().Split(' ');
+                String[] temp2 = Line.Substring(Line.LastIndexOf("\"") + 1).Trim().Split(' ');
+                String[] temp3 = new String[temp.Length + 1];
+                temp.CopyTo(temp3, 0);
+
+                temp3[temp3.Length - 1] = Line.Substring(Line.IndexOf("\""), Line.LastIndexOf("\"") - Line.IndexOf("\"")).Replace("\"", "");
+
+                temp3.CopyTo(commands, 0);
+                temp2.CopyTo(commands, temp3.Length);
+
+                if (commands == null || commands.Length <= 0)
+                {
+                    Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.Name);
+                    return;
+                }
+                switchCommands(commands, player);
+
             }
-            switchCommands(commands, player);
+            else
+            {
+                String[] commands = Line.Trim().ToLower().Split(' ');
+
+                if (commands == null || commands.Length <= 0)
+                {
+                    Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.Name);
+                    return;
+                }
+                switchCommands(commands, player);
+            }
         }
 
         /// <summary>
