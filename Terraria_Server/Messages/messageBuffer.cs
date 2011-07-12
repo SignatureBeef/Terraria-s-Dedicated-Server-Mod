@@ -60,38 +60,53 @@ namespace Terraria_Server.Messages
             spamCount = 0;
         }
 
-        public void GetData(int start, int length)
-        {
-            if (whoAmI < 256)
-            {
-                Netplay.slots[whoAmI].timeOut = 0;
-            }
+		public void GetData(int start, int length)
+		{
+			try
+			{
+				if (whoAmI < 256)
+				{
+					Netplay.slots[whoAmI].timeOut = 0;
+				}
+	
+				int num = start + 1;
+				byte bufferData = readBuffer[start];
+	
+				if (bufferData != 38)
+				{
+					if (Netplay.slots[whoAmI].state == SlotState.AUTHENTICATION)
+					{
+						Netplay.slots[whoAmI].Kick ("Incorrect password.");
+						return;
+					}
+	
+					if (Netplay.slots[whoAmI].state < SlotState.PLAYING && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
+					{
+						NetMessage.BootPlayer(whoAmI, "Invalid operation at this state.");
+					}
+				}
+	
+				if (bufferData > 0 && bufferData < messageArray.Length)
+				{
+					IMessage message = messageArray[bufferData];
+					if (message != null)
+					{
+						message.Process(start, length, num, whoAmI, readBuffer, bufferData);
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				string pkt = "invalid packet";
+				if (NetMessage.buffer[whoAmI].readBuffer.Length > start)
+					pkt = string.Format ("packet {0}", (Packet)NetMessage.buffer[whoAmI].readBuffer[start]);
 
-            int num = start + 1;
-            byte bufferData = readBuffer[start];
-
-            if (bufferData != 38)
-            {
-                if (Netplay.slots[whoAmI].state == SlotState.AUTHENTICATION)
-                {
-                    Netplay.slots[whoAmI].Kick ("Incorrect password.");
-                    return;
-                }
-
-                if (Netplay.slots[whoAmI].state < SlotState.PLAYING && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
-                {
-                    NetMessage.BootPlayer(whoAmI, "Invalid operation at this state.");
-                }
-            }
-
-            if (bufferData > 0 && bufferData < messageArray.Length)
-            {
-                IMessage message = messageArray[bufferData];
-                if (message != null)
-                {
-                    message.Process(start, length, num, whoAmI, readBuffer, bufferData);
-                }
-            }
-        }
-    }
+				Program.tConsole.WriteLine ("Exception handling {0} of length {1} from {2}@{3}",
+					pkt, length, Main.players[whoAmI].Name ?? "", Netplay.slots[whoAmI].remoteAddress);
+				Program.tConsole.WriteLine (e.ToString());
+					
+				Netplay.slots[whoAmI].Kick ("Server malfunction, please reconnect.");
+			}
+		}
+	}
 }

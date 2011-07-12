@@ -75,7 +75,7 @@ namespace Terraria_Server
 			
 			if (!Netplay.disconnect)
 			{
-				Program.updateThread.Start();
+				if (! Program.updateThread.IsAlive) Program.updateThread.Start();
 				Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
 				Program.tConsole.WriteLine("Loading Plugins...");
 				Program.server.PluginManager.LoadPlugins();

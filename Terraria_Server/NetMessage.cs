@@ -315,20 +315,8 @@ namespace Terraria_Server
 					}
 					while (NetMessage.buffer[i].totalData >= NetMessage.buffer[i].messageLength + num && NetMessage.buffer[i].messageLength > 0)
 					{
-						if (!Main.ignoreErrors)
-						{
-							NetMessage.buffer[i].GetData(num + 4, NetMessage.buffer[i].messageLength - 4);
-						}
-						else
-						{
-							try
-							{
-								NetMessage.buffer[i].GetData(num + 4, NetMessage.buffer[i].messageLength - 4);
-							}
-							catch
-							{
-							}
-						}
+						NetMessage.buffer[i].GetData(num + 4, NetMessage.buffer[i].messageLength - 4);
+
 						num += NetMessage.buffer[i].messageLength;
 						if (NetMessage.buffer[i].totalData - num >= 4)
 						{
