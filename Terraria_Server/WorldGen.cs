@@ -6649,181 +6649,640 @@ namespace Terraria_Server
             WorldGen.PlaceTile((int)vector.X, (int)vector.Y + 1, 10, false, false, -1, 0);
         }
 
-        public static Item GenerateRandomLoot(int[] lootTypes, Item[] chestContents, ref int contentIndex, 
-            int chanceToCreate = 1, int stack = 1, int preSelected = -1)
-        {
-            Item item = null;
-            if (0 == WorldGen.genRand.Next(chanceToCreate))
-            {
-                if(preSelected == -1)
-                {
-                    preSelected = WorldGen.genRand.Next(lootTypes.Length);
-                }
 
-                item = Registries.Item.Create(lootTypes[preSelected], stack);
-                chestContents[contentIndex++] = item;
-            }
-            return item;
-        }
-        
-        public static bool AddBuriedChest(int x, int origY, int contain = 0, bool notNearOtherChests = false)
+        public static bool AddBuriedChest(int i, int j, int contain = 0, bool notNearOtherChests = false)
         {
             if (WorldGen.genRand == null)
             {
                 WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
             }
-            int y = origY;
-            while (y < Main.maxTilesY)
+            int k = j;
+            while (k < Main.maxTilesY)
             {
-                if (Main.tile.At(x, y).Active && Main.tileSolid[(int)Main.tile.At(x, y).Type])
+                if (Main.tile.At(i,k).Active && Main.tileSolid[(int)Main.tile.At(i, k).Type])
                 {
-                    int num = y;
+                    int num = k;
                     int style = 0;
                     if ((double)num >= Main.worldSurface + 25.0 || contain > 0)
                     {
                         style = 1;
                     }
-                    int chestIndex = WorldGen.PlaceChest(x - 1, num - 1, 21, notNearOtherChests, style);
-                    if (chestIndex >= 0)
+                    int num2 = WorldGen.PlaceChest(i - 1, num - 1, 21, notNearOtherChests, style);
+                    if (num2 >= 0)
                     {
-                        Item[] chestContents = Main.chest[chestIndex].contents;
-                        int contentIndex = 0;
-                        while (contentIndex == 0)
+                        int num3 = 0;
+                        while (num3 == 0)
                         {
                             if ((double)num < Main.worldSurface + 25.0)
                             {
                                 if (contain > 0)
                                 {
-                                    chestContents[contentIndex++] = Registries.Item.Create(contain);
+                                    Main.chest[num2].contents[num3] = Registries.Item.Create(contain);
+                                    num3++;
                                 }
                                 else
                                 {
-                                    Item item = GenerateRandomLoot(new int[] { 280, 281, 284, 282, 279, 285 }, chestContents, ref contentIndex);
-                                    switch (item.Type)
+                                    int num4 = WorldGen.genRand.Next(6);
+                                    if (num4 == 0)
                                     {
-                                        case 282:
-                                            item.Stack = WorldGen.genRand.Next(50, 75);
-                                            break;
-                                        case 279:
-                                            item.Stack = WorldGen.genRand.Next(25, 50);
-                                            break;
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(280);
                                     }
+                                    if (num4 == 1)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(281);
+                                    }
+                                    if (num4 == 2)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(284);
+                                    }
+                                    if (num4 == 3)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(282);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(50, 75);
+                                    }
+                                    if (num4 == 4)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(279);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(25, 50);
+                                    }
+                                    if (num4 == 5)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(285);
+                                    }
+                                    num3++;
                                 }
-
-                                GenerateRandomLoot(new int[] { 168 }, chestContents, ref contentIndex, 3, WorldGen.genRand.Next(3, 6));
-                                GenerateRandomLoot(new int[] { 20, 22 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(8) + 3);
-                                GenerateRandomLoot(new int[] { 40, 42 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(26) + 25);
-                                GenerateRandomLoot(new int[] { 28 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(3) + 3);
-
+                                if (WorldGen.genRand.Next(3) == 0)
+                                {
+                                    Main.chest[num2].contents[num3] = Registries.Item.Create(168);
+                                    Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(3, 6);
+                                    num3++;
+                                }
+                                if (WorldGen.genRand.Next(2) == 0)
+                                {
+                                    int num5 = WorldGen.genRand.Next(2);
+                                    int stack = WorldGen.genRand.Next(8) + 3;
+                                    if (num5 == 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(20);
+                                    }
+                                    if (num5 == 1)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(22);
+                                    }
+                                    Main.chest[num2].contents[num3].Stack = stack;
+                                    num3++;
+                                }
+                                if (WorldGen.genRand.Next(2) == 0)
+                                {
+                                    int num6 = WorldGen.genRand.Next(2);
+                                    int stack2 = WorldGen.genRand.Next(26) + 25;
+                                    if (num6 == 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(40);
+                                    }
+                                    if (num6 == 1)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(42);
+                                    }
+                                    Main.chest[num2].contents[num3].Stack = stack2;
+                                    num3++;
+                                }
+                                if (WorldGen.genRand.Next(2) == 0)
+                                {
+                                    int num7 = WorldGen.genRand.Next(1);
+                                    int stack3 = WorldGen.genRand.Next(3) + 3;
+                                    if (num7 == 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(28);
+                                    }
+                                    Main.chest[num2].contents[num3].Stack = stack3;
+                                    num3++;
+                                }
                                 if (WorldGen.genRand.Next(3) > 0)
                                 {
-                                    GenerateRandomLoot(new int[] { 292, 298, 299, 290 }, chestContents, ref contentIndex, 1, WorldGen.genRand.Next(1, 3));
-                                }
-
-                                GenerateRandomLoot(new int[] { 8, 31 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(11) + 10);
-                                GenerateRandomLoot(new int[] { 72 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(10, 30));
-                            }
-                            else if ((double)num < Main.rockLayer)
-                            {
-                                if (contain > 0)
-                                {
-                                    chestContents[contentIndex++] = Registries.Item.Create(contain);
-                                }
-                                else
-                                {
-                                    Item item = GenerateRandomLoot(new int[] { 49, 50, 51, 52, 53, 54, 55, 56 }, chestContents, ref contentIndex, 1, WorldGen.genRand.Next(26) + 25);
-                                    if (item.Type == 51)
+                                    int num8 = WorldGen.genRand.Next(4);
+                                    int stack4 = WorldGen.genRand.Next(1, 3);
+                                    if (num8 == 0)
                                     {
-                                        item.Stack = WorldGen.genRand.Next(26) + 25;
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(292);
                                     }
-                                }
-
-                                GenerateRandomLoot(new[] { 166 }, chestContents, ref contentIndex, 3, WorldGen.genRand.Next(10, 20));
-                                GenerateRandomLoot(new[] { 21, 22 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(10) + 5);
-                                GenerateRandomLoot(new[] { 40, 42 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(25) + 25);
-                                GenerateRandomLoot(new[] { 28 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(3) + 3);
-
-                                if (WorldGen.genRand.Next(3) > 0)
-                                {
-                                    GenerateRandomLoot(new[] { 289, 298, 299, 290, 303, 291, 304 }, chestContents, ref contentIndex, 1, WorldGen.genRand.Next(1, 3));
-                                }
-
-                                GenerateRandomLoot(new[] { 8 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(11) + 10);
-                                GenerateRandomLoot(new[] { 72 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(50, 90));
-                            }
-                            else if (num < Main.maxTilesY - 250)
-                            {
-                                if (contain > 0)
-                                {
-                                    chestContents[contentIndex++] = Registries.Item.Create(contain);
-                                }
-                                else
-                                {
-                                    int preselected = WorldGen.genRand.Next(7);
-                                    if (preselected == 2 && WorldGen.genRand.Next(2) == 0)
+                                    if (num8 == 1)
                                     {
-                                        preselected = -1;
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(298);
                                     }
-
-                                    Item item = GenerateRandomLoot(new int[] { 49, 50, 51, 52, 53, 54, 55 }, chestContents, ref contentIndex, 1, 1, preselected);
-                                    if (item.Type == 51)
+                                    if (num8 == 2)
                                     {
-                                        item.Stack = WorldGen.genRand.Next(26) + 25;
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(299);
                                     }
+                                    if (num8 == 3)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(290);
+                                    }
+                                    Main.chest[num2].contents[num3].Stack = stack4;
+                                    num3++;
                                 }
-
-                                GenerateRandomLoot(new int[] { 167 }, chestContents, ref contentIndex, 3);
-                                GenerateRandomLoot(new int[] { 19, 21 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(8) + 3);
-                                GenerateRandomLoot(new int[] { 41, 279 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(26) + 25);
-                                GenerateRandomLoot(new int[] { 188 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(3) + 3);
-
-                                if (WorldGen.genRand.Next(3) > 0)
+                                if (WorldGen.genRand.Next(2) == 0)
                                 {
-                                    GenerateRandomLoot(new int[] { 296, 295, 299, 302, 303, 305 }, chestContents, ref contentIndex, 1, WorldGen.genRand.Next(1, 3));
+                                    int num9 = WorldGen.genRand.Next(2);
+                                    int stack5 = WorldGen.genRand.Next(11) + 10;
+                                    if (num9 == 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(8);
+                                    }
+                                    if (num9 == 1)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(31);
+                                    }
+                                    Main.chest[num2].contents[num3].Stack = stack5;
+                                    num3++;
                                 }
-
-                                if (WorldGen.genRand.Next(3) > 1)
+                                if (WorldGen.genRand.Next(2) == 0)
                                 {
-                                    GenerateRandomLoot(new int[] { 301, 302, 297, 304 }, chestContents, ref contentIndex, 1, WorldGen.genRand.Next(1, 3));
+                                    Main.chest[num2].contents[num3] = Registries.Item.Create(72);
+                                    Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(10, 30);
+                                    num3++;
                                 }
-
-                                GenerateRandomLoot(new int[] { 8, 282 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(15) + 15);
-                                GenerateRandomLoot(new int[] { 73 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(1, 3));
-                            }
-                            else if (contain > 0)
-                            {
-                                chestContents[contentIndex++] = Registries.Item.Create(contain);
                             }
                             else
                             {
-                                if (WorldGen.hellChest == 0)
+                                if ((double)num < Main.rockLayer)
                                 {
-                                    chestContents[contentIndex++] = Registries.Item.Create(274);
+                                    if (contain > 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(contain);
+                                        num3++;
+                                    }
+                                    else
+                                    {
+                                        int num10 = WorldGen.genRand.Next(7);
+                                        if (num10 == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(49);
+                                        }
+                                        if (num10 == 1)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(50);
+                                        }
+                                        if (num10 == 2)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(52);
+                                        }
+                                        if (num10 == 3)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(53);
+                                        }
+                                        if (num10 == 4)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(54);
+                                        }
+                                        if (num10 == 5)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(55);
+                                        }
+                                        if (num10 == 6)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(51);
+                                            Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(26) + 25;
+                                        }
+                                        num3++;
+                                    }
+                                    if (WorldGen.genRand.Next(3) == 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(166);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(10, 20);
+                                        num3++;
+                                    }
+                                    if (WorldGen.genRand.Next(2) == 0)
+                                    {
+                                        int num11 = WorldGen.genRand.Next(2);
+                                        int stack6 = WorldGen.genRand.Next(10) + 5;
+                                        if (num11 == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(22);
+                                        }
+                                        if (num11 == 1)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(21);
+                                        }
+                                        Main.chest[num2].contents[num3].Stack = stack6;
+                                        num3++;
+                                    }
+                                    if (WorldGen.genRand.Next(2) == 0)
+                                    {
+                                        int num12 = WorldGen.genRand.Next(2);
+                                        int stack7 = WorldGen.genRand.Next(25) + 25;
+                                        if (num12 == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(40);
+                                        }
+                                        if (num12 == 1)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(42);
+                                        }
+                                        Main.chest[num2].contents[num3].Stack = stack7;
+                                        num3++;
+                                    }
+                                    if (WorldGen.genRand.Next(2) == 0)
+                                    {
+                                        int num13 = WorldGen.genRand.Next(1);
+                                        int stack8 = WorldGen.genRand.Next(3) + 3;
+                                        if (num13 == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(28);
+                                        }
+                                        Main.chest[num2].contents[num3].Stack = stack8;
+                                        num3++;
+                                    }
+                                    if (WorldGen.genRand.Next(3) > 0)
+                                    {
+                                        int num14 = WorldGen.genRand.Next(7);
+                                        int stack9 = WorldGen.genRand.Next(1, 3);
+                                        if (num14 == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(289);
+                                        }
+                                        if (num14 == 1)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(298);
+                                        }
+                                        if (num14 == 2)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(299);
+                                        }
+                                        if (num14 == 3)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(290);
+                                        }
+                                        if (num14 == 4)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(303);
+                                        }
+                                        if (num14 == 5)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(291);
+                                        }
+                                        if (num14 == 6)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(304);
+                                        }
+                                        Main.chest[num2].contents[num3].Stack = stack9;
+                                        num3++;
+                                    }
+                                    if (WorldGen.genRand.Next(2) == 0)
+                                    {
+                                        int stack10 = WorldGen.genRand.Next(11) + 10;
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(8);
+                                        Main.chest[num2].contents[num3].Stack = stack10;
+                                        num3++;
+                                    }
+                                    if (WorldGen.genRand.Next(2) == 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(72);
+                                        Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(50, 90);
+                                        num3++;
+                                    }
                                 }
                                 else
                                 {
-                                    GenerateRandomLoot(new int[] { 49, 50, 53, 54 }, chestContents, ref contentIndex);
+                                    if (num < Main.maxTilesY - 250)
+                                    {
+                                        if (contain > 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(contain);
+                                            num3++;
+                                        }
+                                        else
+                                        {
+                                            int num15 = WorldGen.genRand.Next(7);
+                                            if (num15 == 2 && WorldGen.genRand.Next(2) == 0)
+                                            {
+                                                num15 = WorldGen.genRand.Next(7);
+                                            }
+                                            if (num15 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(49);
+                                            }
+                                            if (num15 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(50);
+                                            }
+                                            if (num15 == 2)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(52);
+                                            }
+                                            if (num15 == 3)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(53);
+                                            }
+                                            if (num15 == 4)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(54);
+                                            }
+                                            if (num15 == 5)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(55);
+                                            }
+                                            if (num15 == 6)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(51);
+                                                Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(26) + 25;
+                                            }
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(3) == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(167);
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num16 = WorldGen.genRand.Next(2);
+                                            int stack11 = WorldGen.genRand.Next(8) + 3;
+                                            if (num16 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(19);
+                                            }
+                                            if (num16 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(21);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack11;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num17 = WorldGen.genRand.Next(2);
+                                            int stack12 = WorldGen.genRand.Next(26) + 25;
+                                            if (num17 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(41);
+                                            }
+                                            if (num17 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(279);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack12;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num18 = WorldGen.genRand.Next(1);
+                                            int stack13 = WorldGen.genRand.Next(3) + 3;
+                                            if (num18 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(188);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack13;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(3) > 0)
+                                        {
+                                            int num19 = WorldGen.genRand.Next(6);
+                                            int stack14 = WorldGen.genRand.Next(1, 3);
+                                            if (num19 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(296);
+                                            }
+                                            if (num19 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(295);
+                                            }
+                                            if (num19 == 2)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(299);
+                                            }
+                                            if (num19 == 3)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(302);
+                                            }
+                                            if (num19 == 4)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(303);
+                                            }
+                                            if (num19 == 5)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(305);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack14;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(3) > 1)
+                                        {
+                                            int num20 = WorldGen.genRand.Next(4);
+                                            int stack15 = WorldGen.genRand.Next(1, 3);
+                                            if (num20 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(301);
+                                            }
+                                            if (num20 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(302);
+                                            }
+                                            if (num20 == 2)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(297);
+                                            }
+                                            if (num20 == 3)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(304);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack15;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num21 = WorldGen.genRand.Next(2);
+                                            int stack16 = WorldGen.genRand.Next(15) + 15;
+                                            if (num21 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(8);
+                                            }
+                                            if (num21 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(282);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack16;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(73);
+                                            Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(1, 3);
+                                            num3++;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (contain > 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(contain);
+                                            num3++;
+                                        }
+                                        else
+                                        {
+                                            if (WorldGen.hellChest == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(274);
+                                            }
+                                            else
+                                            {
+                                                int num22 = WorldGen.genRand.Next(4);
+                                                if (num22 == 0)
+                                                {
+                                                    Main.chest[num2].contents[num3] = Registries.Item.Create(49);
+                                                }
+                                                if (num22 == 1)
+                                                {
+                                                    Main.chest[num2].contents[num3] = Registries.Item.Create(50);
+                                                }
+                                                if (num22 == 2)
+                                                {
+                                                    Main.chest[num2].contents[num3] = Registries.Item.Create(53);
+                                                }
+                                                if (num22 == 3)
+                                                {
+                                                    Main.chest[num2].contents[num3] = Registries.Item.Create(54);
+                                                }
+                                            }
+                                            num3++;
+                                            WorldGen.hellChest++;
+                                        }
+                                        if (WorldGen.genRand.Next(3) == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(167);
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num23 = WorldGen.genRand.Next(2);
+                                            int stack17 = WorldGen.genRand.Next(15) + 15;
+                                            if (num23 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(117);
+                                            }
+                                            if (num23 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(19);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack17;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num24 = WorldGen.genRand.Next(2);
+                                            int stack18 = WorldGen.genRand.Next(25) + 50;
+                                            if (num24 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(265);
+                                            }
+                                            if (num24 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(278);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack18;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num25 = WorldGen.genRand.Next(2);
+                                            int stack19 = WorldGen.genRand.Next(15) + 15;
+                                            if (num25 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(226);
+                                            }
+                                            if (num25 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(227);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack19;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(4) > 0)
+                                        {
+                                            int num26 = WorldGen.genRand.Next(7);
+                                            int stack20 = WorldGen.genRand.Next(1, 3);
+                                            if (num26 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(296);
+                                            }
+                                            if (num26 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(295);
+                                            }
+                                            if (num26 == 2)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(293);
+                                            }
+                                            if (num26 == 3)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(288);
+                                            }
+                                            if (num26 == 4)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(294);
+                                            }
+                                            if (num26 == 5)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(297);
+                                            }
+                                            if (num26 == 6)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(304);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack20;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(3) > 0)
+                                        {
+                                            int num27 = WorldGen.genRand.Next(5);
+                                            int stack21 = WorldGen.genRand.Next(1, 3);
+                                            if (num27 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(305);
+                                            }
+                                            if (num27 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(301);
+                                            }
+                                            if (num27 == 2)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(302);
+                                            }
+                                            if (num27 == 3)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(288);
+                                            }
+                                            if (num27 == 4)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(300);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack21;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            int num28 = WorldGen.genRand.Next(2);
+                                            int stack22 = WorldGen.genRand.Next(15) + 15;
+                                            if (num28 == 0)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(8);
+                                            }
+                                            if (num28 == 1)
+                                            {
+                                                Main.chest[num2].contents[num3] = Registries.Item.Create(282);
+                                            }
+                                            Main.chest[num2].contents[num3].Stack = stack22;
+                                            num3++;
+                                        }
+                                        if (WorldGen.genRand.Next(2) == 0)
+                                        {
+                                            Main.chest[num2].contents[num3] = Registries.Item.Create(73);
+                                            Main.chest[num2].contents[num3].Stack = WorldGen.genRand.Next(2, 5);
+                                            num3++;
+                                        }
+                                    }
                                 }
-                                WorldGen.hellChest++;
                             }
-
-                            GenerateRandomLoot(new int[] { 167 }, chestContents, ref contentIndex, 3);
-                            GenerateRandomLoot(new int[] { 117, 19 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(15) + 15);
-                            GenerateRandomLoot(new int[] { 265, 278 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(25) + 50);
-                            GenerateRandomLoot(new int[] { 226, 227 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(15) + 15);
-
-                            if (WorldGen.genRand.Next(4) > 0)
-                            {
-                                GenerateRandomLoot(new int[] { 296, 295, 293, 288, 294, 297, 304 }, chestContents, ref contentIndex, 1, WorldGen.genRand.Next(1, 3));
-                            }
-
-                            if (WorldGen.genRand.Next(3) > 0)
-                            {
-                                GenerateRandomLoot(new int[] { 305, 301, 302, 288, 300 }, chestContents, ref contentIndex, 1, WorldGen.genRand.Next(1, 3));
-                            }
-
-                            GenerateRandomLoot(new int[] { 8, 282 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(15) + 15);
-                            GenerateRandomLoot(new int[] { 73 }, chestContents, ref contentIndex, 2, WorldGen.genRand.Next(2, 5));
                         }
                         return true;
                     }
@@ -6831,11 +7290,12 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    y++;
+                    k++;
                 }
             }
             return false;
         }
+
 
         public static bool OpenDoor(int x, int y, int direction, bool state = false, DoorOpener opener = DoorOpener.SERVER, ISender sender = null)
         {
