@@ -58,8 +58,6 @@ namespace Terraria_Server
 				Netplay.slots[i] = new ServerSlot();
 				Netplay.slots[i].Reset();
 				Netplay.slots[i].whoAmI = i;
-				Netplay.slots[i].readBuffer = new byte[1024];
-				Netplay.slots[i].writeBuffer = new byte[1024];
 			}
 			
 			Netplay.tcpListener = new TcpListener(Netplay.serverListenIP, Netplay.serverPort);
@@ -279,6 +277,8 @@ namespace Terraria_Server
 			Main.players[id].setIPAddress(remoteAddress);
 			slot.state = SlotState.CONNECTED;
 			slot.socket = client;
+			if (slot.readBuffer == null) slot.readBuffer = new byte[1024];
+			if (NetMessage.buffer[id].readBuffer == null) NetMessage.buffer[id].readBuffer = new byte [MessageBuffer.BUFFER_MAX];
 			Program.tConsole.WriteLine ("Slot {1} assigned to {0}.", remoteAddress, id);
 		}
 		
@@ -296,7 +296,6 @@ namespace Terraria_Server
 						NetMessage.buffer[id].totalData,
 						buf.Length - NetMessage.buffer[id].totalData,
 						0);
-				//Program.tConsole.WriteLine ("{0}: read {1} bytes", slot.remoteAddress, recv);
 			}
 			catch (Exception e)
 			{

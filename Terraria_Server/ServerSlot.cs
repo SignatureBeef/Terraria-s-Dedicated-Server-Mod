@@ -44,7 +44,6 @@ namespace Terraria_Server
 		public float spamDelBlockMax = 500f;
 		public float spamWaterMax = 50f;
 		public byte[] readBuffer;
-		public byte[] writeBuffer;
 		
 		private volatile Queue<byte[]> writeQueue;
 		private Thread         writeThread;
