@@ -278,7 +278,7 @@ namespace Terraria_Server
 				{
 					for (int num11 = 0; num11 < 256; num11++)
 					{
-						if (num11 != ignoreClient && (NetMessage.buffer[num11].broadcast || (Netplay.slots[num11].state >= SlotState.PLAYING && packetId == 10)) && Netplay.slots[num11].Connected)
+						if (num11 != ignoreClient && Netplay.slots[num11].state >= SlotState.PLAYING && Netplay.slots[num11].Connected)
 						{
 							NetMessage.buffer[num11].spamCount++;
 							Netplay.slots[num11].Send (bytes);
@@ -433,7 +433,7 @@ namespace Terraria_Server
 			
 			for (int i = 0; i < 256; i++)
 			{
-				if ((NetMessage.buffer[i].broadcast || Netplay.slots[i].state >= SlotState.PLAYING) && Netplay.slots[i].Connected)
+				if (Netplay.slots[i].state >= SlotState.PLAYING && Netplay.slots[i].Connected)
 				{
 					int num = x / 200;
 					int num2 = y / 150;
@@ -515,7 +515,7 @@ namespace Terraria_Server
 					var bytes = msg.Output;
 					for (int k = 0; k < 256; k++)
 					{
-						if (k != i && (NetMessage.buffer[k].broadcast) && Netplay.slots[k].Connected)
+						if (k != i && Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
 						{
 							NetMessage.buffer[k].spamCount++;
 							Netplay.slots[k].Send (bytes);

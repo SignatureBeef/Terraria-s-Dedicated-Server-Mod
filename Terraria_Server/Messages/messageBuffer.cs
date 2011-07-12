@@ -44,7 +44,6 @@ namespace Terraria_Server.Messages
 
         private const int MAX_HAIR_ID = 17;
 
-        public bool broadcast;
         public bool checkBytes;
 
         public byte[] readBuffer = new byte[BUFFER_MAX];
