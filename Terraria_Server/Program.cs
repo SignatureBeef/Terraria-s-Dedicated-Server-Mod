@@ -31,16 +31,6 @@ namespace Terraria_Server
 
                 Console.WriteLine("Initializing " + MODInfo);
 
-                if (args != null && args.Length > 0)
-                {
-                    String commandMessage = args[0].ToLower().Trim();
-                    // 0 for Ops
-                    if (commandMessage.Equals("-ignoremessages:0"))
-                    {
-                        Statics.cmdMessages = false;
-                    }
-                }
-
                 Console.WriteLine("Setting up Paths.");
                 if (!SetupPaths())
                 {
