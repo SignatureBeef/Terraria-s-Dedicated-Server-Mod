@@ -43,8 +43,8 @@ namespace Terraria_Server
                 Program.tConsole.WriteLine("Setting up Properties.");
                 bool propertiesExist = File.Exists("server.properties");
                 SetupProperties();
-                
-                if(!propertiesExist)
+
+                if (!propertiesExist)
                 {
                     Console.Write("New properties file created. Would you like to exit for editing? [Y/n]: ");
                     if (Console.ReadLine().ToLower() == "y")
@@ -118,7 +118,7 @@ namespace Terraria_Server
 
                 Program.tConsole.WriteLine("Preparing Server Data...");
 
-                String worldFile = properties.InitialWorldPath;
+                String worldFile = properties.WorldPath;
                 FileInfo file = new FileInfo(worldFile);
 
                 if (!file.Exists)
@@ -188,7 +188,7 @@ namespace Terraria_Server
 
                 int worldXtiles = properties.getMapSizes()[0];
                 int worldYtiles = properties.getMapSizes()[1];
-                
+
                 if (properties.UseCustomTiles)
                 {
                     int X = properties.MaxTilesX;
@@ -235,7 +235,7 @@ namespace Terraria_Server
 
                 commandParser = new CommandParser(server);
                 Program.tConsole.WriteLine("You can now insert Commands.");
-                
+
                 while (Statics.IsActive)
                 {
                     try
@@ -248,8 +248,8 @@ namespace Terraria_Server
                     }
                     catch (Exception e)
                     {
-                        Program.tConsole.WriteLine ("Issue parsing Console Command");
-                        Program.tConsole.WriteLine (e.ToString());
+                        Program.tConsole.WriteLine("Issue parsing Console Command");
+                        Program.tConsole.WriteLine(e.ToString());
                     }
                 }
                 while (Statics.serverStarted) { Thread.Sleep(10); }
@@ -354,7 +354,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    Console.Write ("\r");
+                    Console.Write("\r");
                     Console.Write(dataText);
                 }
             }
@@ -382,17 +382,6 @@ namespace Terraria_Server
                     {
                         Statics.cmdMessages = false;
                     }
-                    else if (commandMessage.Equals("-port"))
-                    {
-                        try
-                        {
-                            properties.Port = Convert.ToInt32(args[i + 1]);
-                        }
-                        catch (Exception)
-                        {
-
-                        }
-                    }
                     else if (commandMessage.Equals("-maxplayers"))
                     {
                         try
@@ -408,9 +397,142 @@ namespace Terraria_Server
                     {
                         properties.ServerIP = args[i + 1];
                     }
+                    else if (commandMessage.Equals("-port"))
+                    {
+                        try
+                        {
+                            properties.Port = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-greeting"))
+                    {
+                        properties.Greeting = args[i + 1];
+                    }
+                    else if (commandMessage.Equals("-worldpath"))
+                    {
+                        properties.WorldPath = args[i + 1];
+                    }
                     else if (commandMessage.Equals("-password"))
                     {
                         properties.Password = args[i + 1];
+                    }
+                    else if (commandMessage.Equals("-allowupdates"))
+                    {
+                        try
+                        {
+                            properties.AutomaticUpdates = Convert.ToBoolean(args[i + 1]);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-npcdoorcancel"))
+                    {
+                        try
+                        {
+                            properties.NPCDoorOpenCancel = Convert.ToBoolean(args[i + 1]);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-seed"))
+                    {
+                        try
+                        {
+                            properties.Seed = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-mapsize"))
+                    {
+                        properties.MapSize = args[i + 1];
+                    }
+                    else if (commandMessage.Equals("-usecustomtiles"))
+                    {
+                        try
+                        {
+                            properties.UseCustomTiles = Convert.ToBoolean(args[i + 1]);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-maxtilesx"))
+                    {
+                        try
+                        {
+                            properties.MaxTilesX = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-maxtilesy"))
+                    {
+                        try
+                        {
+                            properties.MaxTilesY = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-numdungeons"))
+                    {
+                        try
+                        {
+                            properties.DungeonAmount = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-customworldgen"))
+                    {
+                        try
+                        {
+                            properties.UseCustomGenOpts = Convert.ToBoolean(args[i + 1]);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-numfloatingislands"))
+                    {
+                        try
+                        {
+                            properties.FloatingIslandAmount = Convert.ToInt32(args[i + 1]);
+                        }
+                        catch (Exception)
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-whitelist"))
+                    {
+                        try
+                        {
+                            properties.UseWhiteList = Convert.ToBoolean(args[i + 1]);
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
 
@@ -428,33 +550,33 @@ namespace Terraria_Server
 
             if (Server.rand == null)
             {
-               Server.rand = new Random((int)DateTime.Now.Ticks);
+                Server.rand = new Random((int)DateTime.Now.Ticks);
             }
 
-			if (properties.SimpleLoop)
-			{
-				long updateTime = 166667;
-				long nextUpdate = Stopwatch.GetTimestamp() + updateTime;
-				
-				while (!Netplay.disconnect)
-				{
-					long now = Stopwatch.GetTimestamp();
-					long left = nextUpdate - now;
-					nextUpdate += updateTime;
-					
-					if (left > 0)
-						Thread.Sleep (TimeSpan.FromTicks (left));
-					else
-						nextUpdate = now + updateTime;
-					
-					if (Netplay.anyClients)
-					{
-						server.Update();
-					}
-				}
-				
-				return;
-			}
+            if (properties.SimpleLoop)
+            {
+                long updateTime = 166667;
+                long nextUpdate = Stopwatch.GetTimestamp() + updateTime;
+
+                while (!Netplay.disconnect)
+                {
+                    long now = Stopwatch.GetTimestamp();
+                    long left = nextUpdate - now;
+                    nextUpdate += updateTime;
+
+                    if (left > 0)
+                        Thread.Sleep(TimeSpan.FromTicks(left));
+                    else
+                        nextUpdate = now + updateTime;
+
+                    if (Netplay.anyClients)
+                    {
+                        server.Update();
+                    }
+                }
+
+                return;
+            }
 
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -497,6 +619,6 @@ namespace Terraria_Server
                 Thread.Sleep(0);
             }
         }
-    
+
     }
 }

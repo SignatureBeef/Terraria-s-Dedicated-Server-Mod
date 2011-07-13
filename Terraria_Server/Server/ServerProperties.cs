@@ -49,7 +49,7 @@ namespace Terraria_Server
             temp = ServerIP;
             temp = Port;
             temp = Greeting;
-            temp = InitialWorldPath;
+            temp = WorldPath;
             temp = Password;
             temp = AutomaticUpdates;
             temp = NPCDoorOpenCancel;
@@ -95,6 +95,10 @@ namespace Terraria_Server
             {
                 return getValue(GREETING, DEFAULT_GREETING);
             }
+            set
+            {
+                setValue(GREETING, value);
+            }
         }
 
         public String ServerIP
@@ -109,11 +113,15 @@ namespace Terraria_Server
             }
         }
 
-        public String InitialWorldPath
+        public String WorldPath
         {
             get
             {
                 return getValue(WORLD_PATH, Statics.WorldPath + Path.DirectorySeparatorChar + DEFAULT_WORLD);
+            }
+            set
+            {
+                setValue(WORLD_PATH, value);
             }
         }
 
@@ -135,6 +143,10 @@ namespace Terraria_Server
             {
                 return getValue(SEED, DEFAULT_SEED);
             }
+            set
+            {
+                setValue(SEED, value);
+            }
         }
 
         public int MaxTilesX
@@ -143,6 +155,11 @@ namespace Terraria_Server
             {
                 return getValue(MAX_TILES_X, World.MAP_SIZE.SMALL_X);
             }
+            set
+            {
+
+                setValue(MAX_TILES_X, value);
+            }
         }
 
         public int MaxTilesY
@@ -150,6 +167,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(MAX_TILES_Y, World.MAP_SIZE.SMALL_Y);
+            }
+            set
+            {
+                setValue(MAX_TILES_Y, value);
             }
         }
 
@@ -163,6 +184,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(USE_CUSTOM_TILES, DEFAULT_USE_CUSTOM_TILES);
+            }
+            set
+            {
+                setValue(USE_CUSTOM_TILES, value);
             }
         }
 
@@ -224,6 +249,10 @@ namespace Terraria_Server
                         }
                 }
             }
+            set
+            {
+                setValue(MAP_SIZE, value);
+            }
         }
 
         public bool UseWhiteList
@@ -232,6 +261,10 @@ namespace Terraria_Server
             {
                 return getValue(WHITE_LIST, DEFAULT_WHITE_LIST);
             }
+            set
+            {
+                setValue(WHITE_LIST, value);
+            }
         }
 
         public bool NPCDoorOpenCancel
@@ -239,6 +272,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(NPC_DOOR_OPEN_CANCEL, DEFAULT_NPC_DOOR_OPEN_CANCEL);
+            }
+            set
+            {
+                setValue(NPC_DOOR_OPEN_CANCEL, value);
             }
         }
 
@@ -259,6 +296,10 @@ namespace Terraria_Server
                 }
                 return amount;
             }
+            set
+            {
+                setValue(DUNGEON_AMOUNT, value);
+            }
         }
 
         public bool UseCustomGenOpts
@@ -266,6 +307,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(USE_CUSTOM_GEN_OPTS, DEFAULT_USE_CUSTOM_GEN_OPTS);
+            }
+            set
+            {
+                setValue(USE_CUSTOM_GEN_OPTS, value);
             }
         }
 
@@ -286,6 +331,10 @@ namespace Terraria_Server
                 }
                 return amount;
             }
+            set
+            {
+                setValue(FLOATING_ISLAND_AMOUNT, value);
+            }
         }
 
         public bool AutomaticUpdates
@@ -293,6 +342,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(AUTOMATIC_UPDATES, DEFAULT_AUTOMATIC_UPDATES);
+            }
+            set
+            {
+                setValue(AUTOMATIC_UPDATES, value);
             }
         }
 
@@ -309,6 +362,10 @@ namespace Terraria_Server
             get
             {
                 return getValue(SIMPLE_LOOP, DEFAULT_SIMPLE_LOOP);
+            }
+            set
+            {
+                setValue(SIMPLE_LOOP, value);
             }
         }
     }
