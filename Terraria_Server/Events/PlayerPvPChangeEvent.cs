@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class PlayerPvPChangeEvent : Event
+    public class PlayerPvPChangeEvent : CancellableEvent
     {
         public Player Player() {
             return (Player)Sender;

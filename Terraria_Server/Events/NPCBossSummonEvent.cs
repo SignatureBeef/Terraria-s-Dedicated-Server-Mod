@@ -5,8 +5,8 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class MessageEvent : CancellableEvent
+    public class NPCBossSummonEvent : BasePlayerEvent
     {
-        public String Message { get; set; }
+        public int BossType { get; set; }
     }
 }

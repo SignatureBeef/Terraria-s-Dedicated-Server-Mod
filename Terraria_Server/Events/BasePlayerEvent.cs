@@ -1,6 +1,6 @@
 ﻿namespace Terraria_Server.Events
 {
-    public class BasePlayerEvent : Event
+    public class BasePlayerEvent : CancellableEvent
     {
         public Player Player
         {
