@@ -57,7 +57,7 @@ namespace Terraria_Server.Messages
             playerEvent.Location = player.Position;
             playerEvent.Velocity = player.Velocity;
             playerEvent.FallStart = player.fallStart;
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_MOVE, playerEvent);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_MOVE, playerEvent);
             if (playerEvent.Cancelled)
             {
                 return;
@@ -76,7 +76,7 @@ namespace Terraria_Server.Messages
             playerInteractEvent.KeysPressed = playerKeysPressed;
             playerInteractEvent.MouseClicked = player.controlUseItem;
             playerInteractEvent.FacingDirection = player.direction;
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_KEYPRESS, playerInteractEvent);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_KEYPRESS, playerInteractEvent);
             if (playerEvent.Cancelled)
             {
                 return;

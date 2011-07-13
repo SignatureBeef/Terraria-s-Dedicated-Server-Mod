@@ -1,5 +1,5 @@
-﻿
-using System;
+﻿using System;
+using Terraria_Server.Misc;
 namespace Terraria_Server
 {
     public class World
@@ -71,9 +71,12 @@ namespace Terraria_Server
             MaxSectionsY = maxTilesY / 150;
         }
 
-        public double getTime()
+        public double Time
         {
-            return Main.time;
+            get
+            {
+                return Main.time;
+            }
         }
 
         public void setTime(double Time, bool baseDay = false, bool dayTime = true)
@@ -94,9 +97,11 @@ namespace Terraria_Server
             }
         }
 
-        public int getMaxTilesY()
+        public int MaxTilesY
         {
-            return maxTilesY;
+            get {
+                return maxTilesY;
+            }
         }
 
         public void setMaxTilesY(int MaxTilesY, bool updateSection = true)
@@ -108,9 +113,12 @@ namespace Terraria_Server
             }
         }
 
-        public int getMaxTilesX()
+        public int MaxTilesX
         {
-            return maxTilesX;
+            get
+            {
+                return maxTilesX;
+            }
         }
 
         public void setMaxTilesX(int MaxTilesX, bool updateSection = true)
@@ -121,5 +129,54 @@ namespace Terraria_Server
                 UpdateWorldCoords(false);
             }
         }
+
+        public bool isTileValid(int TileX, int TileY)
+        {
+            return (TileX >= 0 && TileX <= maxTilesX && TileY >= 0 && TileY <= maxTilesY);
+        }
+
+        public bool isTileClear(int TileX, int TileY)
+        {
+            return (!Main.tile.At(TileX, TileY).Active);
+        }
+
+        public static Vector2 GetRandomClearTile(int TileX, int TileY, int Attempts, bool forceRange = false, int RangeX = 0, int RangeY = 0)
+        {
+            Vector2 tileLocation = new Vector2(0, 0);
+            try
+            {
+                if (Main.rand == null)
+                {
+                    Main.rand = new Random();
+                }
+
+                if (!forceRange)
+                {
+                    RangeX = (Main.tile.SizeX) - TileX;
+                    RangeY = (Main.tile.SizeY) - TileY;
+                }
+
+                for (int i = 0; i < Attempts; i++)
+                {
+                    tileLocation.X = TileX + ((Main.rand.Next(RangeX * -1, RangeX)) / 2);
+                    tileLocation.Y = TileY + ((Main.rand.Next(RangeY * -1, RangeY)) / 2);
+                    if ((Program.server.World.isTileValid((int)tileLocation.X, (int)tileLocation.Y) && 
+                        Program.server.World.isTileClear((int)tileLocation.X, (int)tileLocation.Y)))
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+            }
+            if (tileLocation.X == 0 && tileLocation.Y == 0)
+            {
+                return new Vector2(TileX, TileY);
+            }
+            return tileLocation;
+        }
+
     }
 }

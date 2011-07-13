@@ -764,7 +764,7 @@ namespace Terraria_Server
         
         public static void saveAndPlayCallBack(object threadContext)
         {
-            WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
+            WorldGen.saveWorld(Program.server.World.SavePath, false);
         }
         
         public static void saveAndPlay()
@@ -1102,26 +1102,26 @@ namespace Terraria_Server
         
         public static void loadWorld()
         {
-            if (!File.Exists(Program.server.getWorld().SavePath) && Main.autoGen)
+            if (!File.Exists(Program.server.World.SavePath) && Main.autoGen)
             {
-                for (int i = Program.server.getWorld().SavePath.Length - 1; i >= 0; i--)
+                for (int i = Program.server.World.SavePath.Length - 1; i >= 0; i--)
                 {
-                    if (Program.server.getWorld().SavePath.Substring(i, 1) == "\\")
+                    if (Program.server.World.SavePath.Substring(i, 1) == "\\")
                     {
-                        String path = Program.server.getWorld().SavePath.Substring(0, i);
+                        String path = Program.server.World.SavePath.Substring(0, i);
                         Directory.CreateDirectory(path);
                         break;
                     }
                 }
                 WorldGen.clearWorld();
                 WorldGen.generateWorld(-1);
-                WorldGen.saveWorld(Program.server.getWorld().SavePath, false);
+                WorldGen.saveWorld(Program.server.World.SavePath, false);
             }
             if (WorldGen.genRand == null)
             {
                 WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
             }
-            using (FileStream fileStream = new FileStream(Program.server.getWorld().SavePath, FileMode.Open))
+            using (FileStream fileStream = new FileStream(Program.server.World.SavePath, FileMode.Open))
             {
                 using (BinaryReader binaryReader = new BinaryReader(fileStream))
                 {
@@ -4432,7 +4432,7 @@ namespace Terraria_Server
             doorEvent.Direction = 1;
             doorEvent.Opener = opener;
             doorEvent.isOpened = forced;
-            Program.server.getPluginManager().processHook(Hooks.DOOR_STATECHANGE, doorEvent);
+            Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
             if (doorEvent.Cancelled)
             {
                 return true;
@@ -7313,7 +7313,7 @@ namespace Terraria_Server
             doorEvent.Direction = direction;
             doorEvent.Opener = opener;
             doorEvent.isOpened = state;
-            Program.server.getPluginManager().processHook(Hooks.DOOR_STATECHANGE, doorEvent);
+            Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
             if (doorEvent.Cancelled)
             {
                 return true;

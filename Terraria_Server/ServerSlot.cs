@@ -7,16 +7,16 @@ namespace Terraria_Server
 	[Flags]
 	public enum SlotState : int
 	{
-		SHUTDOWN = 0,       // the client's socket is being shut down unconditionally
-		KICK = 1,           // the client is being kicked, disconnect him after sending him all remaining data
+		SHUTDOWN = 1,        // the client's socket is being shut down unconditionally
+		KICK = 2,            // the client is being kicked, disconnect him after sending him all remaining data
 
-		VACANT = 2,         //                this socket has no client and is available
-		CONNECTED = 4,      // previously 0,  the client socket has been accepted
-		AUTHENTICATION = 8, //           -1,  the client has been asked for a password
-		ACCEPTED = 16,      //            1,  the client has successfully authenticated
-		SENDING_WORLD = 32, //            2,  the client requested world info
-		SENDING_TILES = 64, //            3,  the client requested tiles
-		PLAYING = 128,      //            10
+		VACANT = 4,          //                this socket has no client and is available
+		CONNECTED = 8,       // previously 0,  the client socket has been accepted
+		AUTHENTICATION = 16, //           -1,  the client has been asked for a password
+		ACCEPTED = 32,       //            1,  the client has successfully authenticated
+		SENDING_WORLD = 64,  //            2,  the client requested world info
+		SENDING_TILES = 128, //            3,  the client requested tiles
+		PLAYING = 256,       //            10
 	}
 
 	public class ServerSlot
@@ -44,7 +44,6 @@ namespace Terraria_Server
 		public float spamDelBlockMax = 500f;
 		public float spamWaterMax = 50f;
 		public byte[] readBuffer;
-		public byte[] writeBuffer;
 		
 		private volatile Queue<byte[]> writeQueue;
 		private Thread         writeThread;

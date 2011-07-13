@@ -58,8 +58,6 @@ namespace Terraria_Server
 				Netplay.slots[i] = new ServerSlot();
 				Netplay.slots[i].Reset();
 				Netplay.slots[i].whoAmI = i;
-				Netplay.slots[i].readBuffer = new byte[1024];
-				Netplay.slots[i].writeBuffer = new byte[1024];
 			}
 			
 			Netplay.tcpListener = new TcpListener(Netplay.serverListenIP, Netplay.serverPort);
@@ -77,11 +75,11 @@ namespace Terraria_Server
 			
 			if (!Netplay.disconnect)
 			{
-				Program.updateThread.Start();
+				if (! Program.updateThread.IsAlive) Program.updateThread.Start();
 				Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
 				Program.tConsole.WriteLine("Loading Plugins...");
-				Program.server.getPluginManager().LoadPlugins();
-				Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.getPluginManager().getPluginList().Count.ToString());
+				Program.server.PluginManager.LoadPlugins();
+				Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.PluginManager.getPluginList().Count.ToString());
 				Statics.serverStarted = true;
 			}
 			else
@@ -134,6 +132,11 @@ namespace Terraria_Server
 									clientList.Add (client);
 									Netplay.anyClients = true;
 									socketToId[client] = id;
+									
+									if (clientList.Count > Main.maxNetplayers)
+									{
+										slots[id].Kick ("Server full, sorry.");
+									}
 								}
 							}
 						}
@@ -274,6 +277,8 @@ namespace Terraria_Server
 			Main.players[id].setIPAddress(remoteAddress);
 			slot.state = SlotState.CONNECTED;
 			slot.socket = client;
+			if (slot.readBuffer == null) slot.readBuffer = new byte[1024];
+			if (NetMessage.buffer[id].readBuffer == null) NetMessage.buffer[id].readBuffer = new byte [MessageBuffer.BUFFER_MAX];
 			Program.tConsole.WriteLine ("Slot {1} assigned to {0}.", remoteAddress, id);
 		}
 		
@@ -291,7 +296,6 @@ namespace Terraria_Server
 						NetMessage.buffer[id].totalData,
 						buf.Length - NetMessage.buffer[id].totalData,
 						0);
-				//Program.tConsole.WriteLine ("{0}: read {1} bytes", slot.remoteAddress, recv);
 			}
 			catch (Exception e)
 			{
@@ -300,9 +304,12 @@ namespace Terraria_Server
 			
 			if (recv > 0)
 			{
-				NetMessage.buffer[id].totalData += recv;
-				NetMessage.CheckBytes (id);
-				return true;
+				if ((slots[id].state & (SlotState.KICK | SlotState.SHUTDOWN)) == 0)
+				{
+					NetMessage.buffer[id].totalData += recv;
+					NetMessage.CheckBytes (id);
+				}
+				return true; // don't close connection even if kicking, let the sending thread finish
 			}
 			else
 			{
@@ -392,7 +399,7 @@ namespace Terraria_Server
 		{
 			Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
 			Program.tConsole.WriteLine("Disabling Plugins");
-			Program.server.getPluginManager().DisablePlugins();
+			Program.server.PluginManager.DisablePlugins();
 			Program.tConsole.WriteLine("Closing Connections...");
 			disconnect = true;
 		}

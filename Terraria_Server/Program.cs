@@ -126,7 +126,6 @@ namespace Terraria_Server
                     try
                     {
                         file.Directory.Create();
-
                     }
                     catch (Exception exception)
                     {
@@ -218,9 +217,9 @@ namespace Terraria_Server
                     Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt",
                     Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt",
                     Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
-                server.setOpPassword(properties.Password);
-                server.setPort(properties.Port);
-                server.setIP(properties.ServerIP);
+                server.OpPassword = properties.Password;
+                server.Port = properties.Port;
+                server.ServerIP = properties.ServerIP;
                 server.Initialize();
 
                 WorldGen.loadWorld();
@@ -247,9 +246,10 @@ namespace Terraria_Server
                             commandParser.parseConsoleCommand(line, server);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
-                        Program.tConsole.WriteLine("Issue parsing Console Command");
+                        Program.tConsole.WriteLine ("Issue parsing Console Command");
+                        Program.tConsole.WriteLine (e.ToString());
                     }
                 }
                 while (Statics.serverStarted) { Thread.Sleep(10); }

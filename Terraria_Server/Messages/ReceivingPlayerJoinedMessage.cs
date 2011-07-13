@@ -30,7 +30,6 @@ namespace Terraria_Server.Messages
                     Netplay.slots[whoAmI].state = SlotState.PLAYING;
                     NetMessage.GreetPlayer(whoAmI);
                     NetMessage.SyncPlayers();
-                    NetMessage.buffer[whoAmI].broadcast = true;
                     NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
                     return;
                 }

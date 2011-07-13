@@ -53,7 +53,6 @@ namespace Terraria_Server
 
 		public static bool grabSun = false;
 		//public static bool debugMode = false;
-		public static bool godMode = false;
         public static bool stopSpawns = false;
 		public static bool dumbAI = false;
 		public static bool skipMenu = false;
@@ -66,7 +65,6 @@ namespace Terraria_Server
 		public static bool webProtect = false;
 		public static bool showSplash = true;
         public static String defaultIP = "";
-        private Process tServer = new Process();
 		private static bool webAuth = false;
 		public static int updateTime = 0;
 		public static int drawTime = 0;

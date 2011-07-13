@@ -2268,7 +2268,7 @@ namespace Terraria_Server
                 PlayerHurtEvent playerEvent = new PlayerHurtEvent();
                 playerEvent.Sender = this;
                 playerEvent.Damage = Damage;
-                Program.server.getPluginManager().processHook(Hooks.PLAYER_HURT, playerEvent);
+                Program.server.PluginManager.processHook(Hooks.PLAYER_HURT, playerEvent);
                 if (playerEvent.Cancelled)
                 {
                     return 0.0;
@@ -2346,7 +2346,7 @@ namespace Terraria_Server
 
         public void KillMe(double dmg, int hitDirection, bool pvp = false, String deathText = " was slain...")
         {
-            if ((Main.godMode && Main.myPlayer == this.whoAmi) || GodMode)
+            if ((Main.myPlayer == this.whoAmi))
             {
                 return;
             }
@@ -4260,7 +4260,7 @@ namespace Terraria_Server
             playerEvent.ToLocation = new Vector2(tileX, tileY);
             playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
             playerEvent.Sender = this;
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_TELEPORT, playerEvent);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
             if (playerEvent.Cancelled)
             {
                 return;
@@ -4356,7 +4356,5 @@ namespace Terraria_Server
         {
             return this.Name.Trim().ToLower() + getPassword();
         }
-
-        public bool GodMode { get; set; }
     }
 }

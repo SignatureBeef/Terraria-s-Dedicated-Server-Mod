@@ -12,8 +12,6 @@ namespace Terraria_Server.Events
     {
         public TileData Tile { get; set; }
 
-        public int Type { get; set; }
-
         public Vector2 Position { get; set; }
 
         public TileAction Action { get; set; }

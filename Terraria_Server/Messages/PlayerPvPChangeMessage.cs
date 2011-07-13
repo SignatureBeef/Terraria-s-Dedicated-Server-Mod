@@ -20,7 +20,7 @@ namespace Terraria_Server.Messages
 
             PlayerPvPChangeEvent playerEvent = new PlayerPvPChangeEvent();
             playerEvent.Sender = player;
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_PVPCHANGE, playerEvent);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_PVPCHANGE, playerEvent);
             if (playerEvent.Cancelled)
             {
                 return;

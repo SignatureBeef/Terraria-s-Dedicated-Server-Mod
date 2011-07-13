@@ -48,7 +48,7 @@ namespace Terraria_Server.Messages
             PartyChangeEvent changeEvent = new PartyChangeEvent();
             changeEvent.PartyType = party;
             changeEvent.Sender = Main.players[whoAmI];
-            Program.server.getPluginManager().processHook(Hooks.PLAYER_PARTYCHANGE, changeEvent);
+            Program.server.PluginManager.processHook(Hooks.PLAYER_PARTYCHANGE, changeEvent);
             if (changeEvent.Cancelled)
             {
                 return;
