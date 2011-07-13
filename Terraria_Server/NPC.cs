@@ -130,7 +130,7 @@ namespace Terraria_Server
                         {
                             if (npc.Velocity.Y > 2f)
                             {
-                                npc.Velocity.Y = npc.Velocity.Y * 0.9f;
+                                npc.Velocity.Y = npc.Velocity.Y * 0.9f;                                
                             }
                             else
                             {

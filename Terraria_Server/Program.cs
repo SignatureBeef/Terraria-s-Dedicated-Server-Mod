@@ -612,15 +612,14 @@ namespace Terraria_Server
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            //double num6 = 16.666666666666668;
-            double serverProceesAverage = 16.25; //Still calculating.
+            double serverProcessAverage = 16.666666666666668;
             double num7 = 0.0;
             while (!Netplay.disconnect)
             {
                 double num8 = (double)stopwatch.ElapsedMilliseconds;
-                if (num8 + num7 >= serverProceesAverage)
+                if (num8 + num7 >= serverProcessAverage)
                 {
-                    num7 += num8 - serverProceesAverage;
+                    num7 += num8 - serverProcessAverage;
                     stopwatch.Reset();
                     stopwatch.Start();
 
@@ -633,9 +632,9 @@ namespace Terraria_Server
                         server.Update();
                     }
                     double num9 = (double)stopwatch.ElapsedMilliseconds + num7;
-                    if (num9 < serverProceesAverage)
+                    if (num9 < serverProcessAverage)
                     {
-                        int num10 = (int)(serverProceesAverage - num9) - 1;
+                        int num10 = (int)(serverProcessAverage - num9) - 1;
                         if (num10 > 1)
                         {
                             Thread.Sleep(num10);
