@@ -2414,25 +2414,43 @@ namespace Terraria_Server
                 }
                 WorldGen.Lakinater(num142, num143);
             }
-            int x = 0;
-            if (num9 == -1)
-            {
-                x = WorldGen.genRand.Next((int)((double)Main.maxTilesX * 0.05), (int)((double)Main.maxTilesX * 0.2));
-                num9 = -1;
-            }
-            else
-            {
-                x = WorldGen.genRand.Next((int)((double)Main.maxTilesX * 0.8), (int)((double)Main.maxTilesX * 0.95));
-                num9 = 1;
-            }
+
             Program.tConsole.WriteLine();
-            int y = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldGen.genRand.Next(-200, 200);
+
+            int x = WorldGen.genRand.Next((int)((double)Main.maxTilesX * 0.05), (int)((double)Main.maxTilesX * 0.2)); //Left?
+            int x2 = WorldGen.genRand.Next((int)((double)Main.maxTilesX * 0.8), (int)((double)Main.maxTilesX * 0.95)); //Right?
+            int y = 0;
+
+            if (numDungeons >= 2) //Custom Dungeons (0 allowed?)
+            {
+                numDungeons = 2; //Limt dungeons at 2, May not fit?
+            }
+            else //1 dungeon
+            {
+                if (num9 != -1) 
+                {
+                    x = x2; //X axis = right
+                }
+            }
+
             for (int dnum = 0; dnum < numDungeons; dnum++)
             {
+                y = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldGen.genRand.Next(-200, 200); //Generate a custon Y each time
+                if (dnum == 1)
+                {
+                    //num9 = direction
+                    x = ((x == x2) ? x : x2); //we want the opposite of the original
+                }
                 WorldGen.MakeDungeon(x, y, 41, 7);
             }
+
+            if (num9 != -1)
+            {
+                num9 = 1;
+            }
+
             int num144 = 0;
-            Program.tConsole.WriteLine();
+
             while ((double)num144 < (double)Main.maxTilesX * 0.00045)
             {
                 float num145 = (float)((double)num144 / ((double)Main.maxTilesX * 0.00045));
@@ -5546,6 +5564,7 @@ namespace Terraria_Server
                     num12 = 0;
                 }
             }
+            Console.WriteLine();
         }
         
         public static void DungeonStairs(int i, int j, int tileType, int wallType)

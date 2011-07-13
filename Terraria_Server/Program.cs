@@ -391,7 +391,7 @@ namespace Terraria_Server
                         {
                             properties.MaxPlayers = Convert.ToInt32(args[i + 1]);
                         }
-                        catch (Exception)
+                        catch
                         {
 
                         }
@@ -406,7 +406,7 @@ namespace Terraria_Server
                         {
                             properties.Port = Convert.ToInt32(args[i + 1]);
                         }
-                        catch (Exception)
+                        catch
                         {
 
                         }
@@ -477,7 +477,7 @@ namespace Terraria_Server
                         {
                             properties.MaxTilesX = Convert.ToInt32(args[i + 1]);
                         }
-                        catch (Exception)
+                        catch
                         {
 
                         }
@@ -488,7 +488,7 @@ namespace Terraria_Server
                         {
                             properties.MaxTilesY = Convert.ToInt32(args[i + 1]);
                         }
-                        catch (Exception)
+                        catch
                         {
 
                         }
@@ -499,7 +499,7 @@ namespace Terraria_Server
                         {
                             properties.DungeonAmount = Convert.ToInt32(args[i + 1]);
                         }
-                        catch (Exception)
+                        catch
                         {
 
                         }
@@ -521,7 +521,7 @@ namespace Terraria_Server
                         {
                             properties.FloatingIslandAmount = Convert.ToInt32(args[i + 1]);
                         }
-                        catch (Exception)
+                        catch
                         {
 
                         }
