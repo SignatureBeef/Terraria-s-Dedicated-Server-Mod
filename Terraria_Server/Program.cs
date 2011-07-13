@@ -587,10 +587,16 @@ namespace Terraria_Server
                 {
                     long now = Stopwatch.GetTimestamp();
                     long left = nextUpdate - now;
-                    nextUpdate += updateTime;
-
+                    
                     if (left > 0)
-                        Thread.Sleep(TimeSpan.FromTicks(left));
+                    {
+                        while (left > 10000)
+                        {
+                            Thread.Sleep (TimeSpan.FromTicks(left));
+                            left = nextUpdate - Stopwatch.GetTimestamp();
+                        }
+                        nextUpdate += updateTime;
+                    }
                     else
                         nextUpdate = now + updateTime;
 
