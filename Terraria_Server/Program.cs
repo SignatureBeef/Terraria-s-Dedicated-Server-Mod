@@ -609,29 +609,30 @@ namespace Terraria_Server
                 return;
             }
 
+            double serverProcessAverage = 16.666666666666668;
+            double leftOver = 0.0;
+
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            double serverProcessAverage = 16.666666666666668;
-            double num7 = 0.0;
             while (!Netplay.disconnect)
             {
-                double num8 = (double)stopwatch.ElapsedMilliseconds;
-                if (num8 + num7 >= serverProcessAverage)
+                double elapsed = (double)stopwatch.ElapsedMilliseconds;
+                if (elapsed + leftOver >= serverProcessAverage)
                 {
-                    num7 += num8 - serverProcessAverage;
+                    leftOver += elapsed - serverProcessAverage;
                     stopwatch.Reset();
                     stopwatch.Start();
 
-                    if (num7 > 1000.0)
+                    if (leftOver > 1000.0)
                     {
-                        num7 = 1000.0;
+                        leftOver = 1000.0;
                     }
                     if (Netplay.anyClients)
                     {
                         server.Update();
                     }
-                    double num9 = (double)stopwatch.ElapsedMilliseconds + num7;
+                    double num9 = (double)stopwatch.ElapsedMilliseconds + leftOver;
                     if (num9 < serverProcessAverage)
                     {
                         int num10 = (int)(serverProcessAverage - num9) - 1;
@@ -640,7 +641,7 @@ namespace Terraria_Server
                             Thread.Sleep(num10);
                             if (!Netplay.anyClients)
                             {
-                                num7 = 0.0;
+                                leftOver = 0.0;
                                 Thread.Sleep(10);
                             }
                         }

@@ -189,7 +189,7 @@ namespace Terraria_Server
 			{
 				try
 				{
-					slots[i].Kick ("Server restarting, please reconnect");
+					slots[i].Kick("Server is shutting down.");
 				}
 				catch {}
 			}
@@ -213,6 +213,8 @@ namespace Terraria_Server
 				}
 				catch {}
 			}
+
+            WorldGen.saveWorld(Program.server.World.SavePath, true);
 			
 			Statics.serverStarted = false;
 		}
