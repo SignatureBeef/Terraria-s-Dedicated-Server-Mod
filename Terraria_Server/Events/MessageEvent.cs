@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class MessageEvent : Event
+    public class MessageEvent : CancellableEvent
     {
         public String Message { get; set; }
     }

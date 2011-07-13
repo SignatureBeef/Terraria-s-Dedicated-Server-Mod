@@ -5660,6 +5660,15 @@ namespace Terraria_Server
             if (flag)
             {
                 //Boss summon?
+                NPCBossSummonEvent npcEvent = new NPCBossSummonEvent();
+                npcEvent.BossType = Type;
+                npcEvent.Sender = Main.players[playerIndex];
+                Program.server.PluginManager.processHook(Hooks.NPC_BOSSSUMMON, npcEvent);
+                if (npcEvent.Cancelled)
+                {
+                    return;
+                }
+
                 int npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
                 Main.npcs[npcIndex].target = playerIndex;
                 String str = Main.npcs[npcIndex].Name;
@@ -5712,7 +5721,7 @@ namespace Terraria_Server
                     Program.server.PluginManager.processHook(Hooks.NPC_SPAWN, npcEvent);
                     if (npcEvent.Cancelled)
                     {
-                        return 1000;
+                        return MAX_NPCS;
                     }
                 }
                 
@@ -6040,19 +6049,24 @@ namespace Terraria_Server
             }
             if (this.boss)
             {
+                //boss kill
+                int BossType = 0;
                 if (this.Type == 4)
                 {
                     NPC.downedBoss1 = true;
+                    BossType = 1;
                 }
                 if (this.Type == 13 || this.Type == 14 || this.Type == 15)
                 {
                     NPC.downedBoss2 = true;
                     this.Name = "Eater of Worlds";
+                    BossType = 2;
                 }
                 if (this.Type == 35)
                 {
                     NPC.downedBoss3 = true;
                     this.Name = "Skeletron";
+                    BossType = 3;
                 }
                 int stack4 = Main.rand.Next(5, 16);
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 28, stack4, false);
@@ -6063,6 +6077,13 @@ namespace Terraria_Server
                 }
                 
                 NetMessage.SendData(25, -1, -1, this.Name + " has been defeated!", 255, 175f, 75f, 255f);
+
+                NPCBossDeathEvent npcEvent = new NPCBossDeathEvent();
+                npcEvent.Boss = BossType;
+                Sender sender = new Sender();
+                sender.Op = true;
+                npcEvent.Sender = sender;
+                Program.server.PluginManager.processHook(Hooks.NPC_BOSSDEATH, npcEvent);
             }
             if (Main.rand.Next(7) == 0 && this.lifeMax > 1)
             {

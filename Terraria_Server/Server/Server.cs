@@ -170,7 +170,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Get the array of Active NPCs
-        public NPC[] getActiveNPCs()
+        public NPC[] ActiveNPCs()
         {
             NPC[] npcs = null;
 
@@ -202,7 +202,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets the total of all active NPCs
-        public int getActiveNPCCount()
+        public int ActiveNPCCount()
         {
             int npcCount = 0;
             for (int i = 0; i < Main.npcs.Length - 1; i++)

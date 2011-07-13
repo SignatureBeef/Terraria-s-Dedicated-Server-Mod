@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Events
 {
-    public class NPCDeathEvent : Event
+    public class NPCDeathEvent : CancellableEvent
     {
         public NPC Npc { get; set; }
         public int Damage { get; set; }

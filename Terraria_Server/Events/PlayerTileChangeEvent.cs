@@ -8,7 +8,7 @@ using Terraria_Server.Definitions.Tile;
 
 namespace Terraria_Server.Events
 {
-    public class PlayerTileChangeEvent : Event
+    public class PlayerTileChangeEvent : CancellableEvent
     {
         public TileData Tile { get; set; }
 
