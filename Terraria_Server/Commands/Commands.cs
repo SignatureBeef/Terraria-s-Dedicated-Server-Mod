@@ -107,7 +107,12 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Defines permission required to use the command at the specified index.  1 = requires op, 0 = any player
         /// </summary>
-        public static int[] CommandPermission = new int[] { 1,1,0,0,0,1,1,0,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1};
+        public static int[] CommandPermission = new int[] { 1, /* 0 */  1, /* 1 */  0, /* 2 */  0, /* 3 */  0, /* 4 */ 
+                                                            1, /* 5 */  1, /* 6 */  0, /* 7 */  1, /* 8 */  1, /* 9 */ 
+                                                            1, /* 10 */ 1, /* 11 */ 1, /* 12 */ 1, /* 13 */ 1, /* 14 */ 
+                                                            1, /* 15 */ 1, /* 16 */ 1, /* 17 */ 1, /* 18 */ 0, /* 19 */ 
+                                                            0, /* 20 */ 1, /* 21 */ 1, /* 22 */ 1, /* 23 */ 1, /* 24 */ 
+                                                            1, /* 25 */ };
 
         /// <summary>
         /// Utility for converting a String array into a single string
@@ -151,8 +156,20 @@ namespace Terraria_Server.Commands
         /// Executes the save/stop routine for the server
         /// </summary>
         /// <param name="server">Current instance of Server to stop</param>
-        public static void Exit(Server server)
+        /// <param name="sender">Player/Console instance</param>
+        public static void Exit(Server server, ISender sender)
         {
+            if (sender is Player)
+            {
+                Player player = (Player)sender;
+                if (!player.Op)
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            Program.server.notifyOps("Stopping Server...");
             server.StopServer();
         }
 
@@ -160,8 +177,20 @@ namespace Terraria_Server.Commands
         /// Executes the plugin reload method
         /// </summary>
         /// <param name="server">Current instance of Server</param>
-        public static void Reload(Server server)
+        /// <param name="sender">Player/Console instance</param>
+        public static void Reload(Server server, ISender sender)
         {
+            if (sender is Player)
+            {
+                Player player = (Player)sender;
+                if (!player.Op)
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
+            Program.server.notifyOps("Reloading Plugins.");
             server.PluginManager.ReloadPlugins();
         }
 
@@ -187,7 +216,7 @@ namespace Terraria_Server.Commands
             }
             if (sendPlayer)
             {
-                NetMessage.SendData(25, playerIndex, -1, "Current players: " + playerList.Trim() + ".", 255, 238f, 130f, 238f);
+                NetMessage.SendData(25, playerIndex, -1, "Current players: " + playerList.Trim() + ".", 255, 255f, 240f, 20f);
             }
             return "Current players: " + playerList.Trim() + ".";
         }
@@ -214,9 +243,20 @@ namespace Terraria_Server.Commands
 
         /// <summary>
         /// Executes the world data save routine
+        /// <param name="sender">Player/Console instance (null to just save)</param>
         /// </summary>
-        public static void SaveAll()
+        public static void SaveAll(ISender sender)
         {
+            if (sender is Player)
+            {
+                Player player = (Player)sender;
+                if (!player.Op)
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+                    return;
+                }
+            }
+
             Program.server.notifyOps("Saving World...");
 
             WorldGen.saveWorld(Program.server.World.SavePath, false);

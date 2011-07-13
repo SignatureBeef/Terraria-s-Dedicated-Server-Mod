@@ -127,39 +127,17 @@ namespace Terraria_Server.Commands
             {
                 case (int)Commands.Command.NO_SUCH_COMMAND:
                     {
-                        Program.tConsole.WriteLine("No such command!");
+                        sender.sendMessage("No such command!");
                         return;
                     }
                 case (int)Commands.Command.CONSOLE_EXIT:
                     {
-                        if (sender is Player)
-                        {
-                            Player player = (Player)sender;
-                            if (!player.Op)
-                            {
-                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                                return;
-                            }
-                        }
-
-                        Program.server.notifyOps("Stopping Server...");
-                        Commands.Exit(Program.server);
+                        Commands.Exit(Program.server, sender);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_RELOAD:
                     {
-                        if (sender is Player)
-                        {
-                            Player player = (Player)sender;
-                            if (!player.Op)
-                            {
-                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                                return;
-                            }
-                        }
-
-                        Program.server.notifyOps("Reloading Plugins.");
-                        Commands.Reload(Program.server);
+                        Commands.Reload(Program.server, sender);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_LIST:
@@ -200,16 +178,7 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.COMMAND_SAVE_ALL:
                     {
-                        if (sender is Player)
-                        {
-                            Player player = (Player)sender;
-                            if (!player.Op)
-                            {
-                                NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, "You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                                return;
-                            }
-                        }
-                        Commands.SaveAll();
+                        Commands.SaveAll(sender);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_HELP:

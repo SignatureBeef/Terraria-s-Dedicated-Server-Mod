@@ -560,7 +560,7 @@ namespace Terraria_Server
 			}
 			if (Main.autoShutdown && !flag)
 			{
-				Commands.Commands.SaveAll();
+				Commands.Commands.SaveAll(null);
 				Netplay.disconnect = true;
 			}
 		}
