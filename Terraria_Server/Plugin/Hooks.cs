@@ -29,5 +29,7 @@ namespace Terraria_Server.Plugin
         PLAYER_PVPCHANGE,
         PLAYER_AUTH_QUERY,
         PLAYER_AUTH_REPLY,
+        NPC_BOSSDEATH,
+        NPC_BOSSSUMMON,
     }
 }

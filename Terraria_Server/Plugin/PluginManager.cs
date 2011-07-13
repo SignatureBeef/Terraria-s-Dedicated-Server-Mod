@@ -318,6 +318,7 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerPvPChange((PlayerPvPChangeEvent)hookEvent);
                                     break;
                                 }
+
                             case Hooks.PLAYER_AUTH_QUERY:
                                 plugin.onPlayerAuthQuery ((PlayerLoginEvent) hookEvent);
                                 break;
@@ -325,6 +326,17 @@ namespace Terraria_Server.Plugin
                             case Hooks.PLAYER_AUTH_REPLY:
                                 plugin.onPlayerAuthReply ((PlayerLoginEvent) hookEvent);
                                 break;
+
+                            case Hooks.NPC_BOSSDEATH:
+                                {
+                                    plugin.onNPCBossDeath((NPCBossDeathEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.NPC_BOSSSUMMON:
+                                {
+                                    plugin.onNPCBossSummon((NPCBossSummonEvent)hookEvent);
+                                    break;
+                                }
                         }
                     }
                 }

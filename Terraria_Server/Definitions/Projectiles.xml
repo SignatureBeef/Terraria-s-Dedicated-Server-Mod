@@ -2,8 +2,8 @@
   <Projectile>
     <Type>1</Type>
     <Name>Wooden Arrow</Name>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>1</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -12,8 +12,8 @@
   <Projectile>
     <Name>Fire Arrow</Name>
     <Type>2</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>1</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -23,8 +23,8 @@
   <Projectile>
     <Name>Shuriken</Name>
     <Type>3</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>2</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -34,8 +34,8 @@
   <Projectile>
     <Name>Unholy Arrow</Name>
     <Type>4</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>1</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -46,8 +46,8 @@
   <Projectile>
     <Name>Jester's Arrow</Name>
     <Type>5</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <alpha>100</alpha>
     <aiStyle>1</aiStyle>
     <timeLeft>40</timeLeft>
@@ -60,8 +60,8 @@
   <Projectile>
     <Name>Enchanted Boomerang</Name>
     <Type>6</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>3</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -71,8 +71,8 @@
   <Projectile>
     <Name>Vilethorn</Name>
     <Type>7</Type>
-    <width>28</width>
-    <height>28</height>
+    <Width>28</Width>
+    <Height>28</Height>
     <alpha>255</alpha>
     <aiStyle>4</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -83,8 +83,8 @@
   <Projectile>
     <Name>Vilethorn</Name>
     <Type>8</Type>
-    <width>28</width>
-    <height>28</height>
+    <Width>28</Width>
+    <Height>28</Height>
     <alpha>255</alpha>
     <aiStyle>4</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -95,8 +95,8 @@
   <Projectile>
     <Name>Starfury</Name>
     <Type>9</Type>
-    <width>19</width>
-    <height>19</height>
+    <Width>19</Width>
+    <Height>19</Height>
     <scale>0.8</scale>
     <alpha>50</alpha>
     <aiStyle>5</aiStyle>
@@ -109,8 +109,8 @@
   <Projectile>
     <Name>Purification Powder</Name>
     <Type>10</Type>
-    <width>64</width>
-    <height>64</height>
+    <Width>64</Width>
+    <Height>64</Height>
     <alpha>255</alpha>
     <aiStyle>6</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -121,8 +121,8 @@
   <Projectile>
     <Name>Vile Powder</Name>
     <Type>11</Type>
-    <width>48</width>
-    <height>48</height>
+    <Width>48</Width>
+    <Height>48</Height>
     <alpha>255</alpha>
     <aiStyle>6</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -133,8 +133,8 @@
   <Projectile>
     <Name>Fallen Star</Name>
     <Type>12</Type>
-    <width>16</width>
-    <height>16</height>
+    <Width>16</Width>
+    <Height>16</Height>
     <alpha>50</alpha>
     <aiStyle>5</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -146,8 +146,8 @@
   <Projectile>
     <Name>Hook</Name>
     <Type>13</Type>
-    <width>18</width>
-    <height>18</height>
+    <Width>18</Width>
+    <Height>18</Height>
     <aiStyle>7</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -156,8 +156,8 @@
   <Projectile>
     <Name>Musket Ball</Name>
     <Type>14</Type>
-    <width>4</width>
-    <height>4</height>
+    <Width>4</Width>
+    <Height>4</Height>
     <scale>1.2</scale>
     <alpha>255</alpha>
     <aiStyle>1</aiStyle>
@@ -170,8 +170,8 @@
   <Projectile>
     <Name>Ball of Fire</Name>
     <Type>15</Type>
-    <width>16</width>
-    <height>16</height>
+    <Width>16</Width>
+    <Height>16</Height>
     <alpha>100</alpha>
     <aiStyle>8</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -182,8 +182,8 @@
   <Projectile>
     <Name>Magic Missile</Name>
     <Type>16</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <alpha>100</alpha>
     <aiStyle>9</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -194,8 +194,8 @@
   <Projectile>
     <Name>Dirt Ball</Name>
     <Type>17</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>10</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -204,8 +204,8 @@
   <Projectile>
     <Name>Orb of Light</Name>
     <Type>18</Type>
-    <width>32</width>
-    <height>32</height>
+    <Width>32</Width>
+    <Height>32</Height>
     <alpha>150</alpha>
     <aiStyle>11</aiStyle>
     <timeLeft>18000</timeLeft>
@@ -217,8 +217,8 @@
   <Projectile>
     <Name>Flamarang</Name>
     <Type>19</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>3</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -229,8 +229,8 @@
   <Projectile>
     <Name>Green Laser</Name>
     <Type>20</Type>
-    <width>5</width>
-    <height>5</height>
+    <Width>5</Width>
+    <Height>5</Height>
     <scale>1.4</scale>
     <alpha>255</alpha>
     <aiStyle>1</aiStyle>
@@ -244,8 +244,8 @@
   <Projectile>
     <Name>Bone</Name>
     <Type>21</Type>
-    <width>19</width>
-    <height>19</height>
+    <Width>19</Width>
+    <Height>19</Height>
     <scale>1.2</scale>
     <aiStyle>2</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -255,8 +255,8 @@
   <Projectile>
     <Name>Water Stream</Name>
     <Type>22</Type>
-    <width>12</width>
-    <height>12</height>
+    <Width>12</Width>
+    <Height>12</Height>
     <alpha>255</alpha>
     <aiStyle>12</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -269,8 +269,8 @@
   <Projectile>
     <Name>Harpoon</Name>
     <Type>23</Type>
-    <width>4</width>
-    <height>4</height>
+    <Width>4</Width>
+    <Height>4</Height>
     <alpha>255</alpha>
     <aiStyle>13</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -281,8 +281,8 @@
   <Projectile>
     <Name>Spiky Ball</Name>
     <Type>24</Type>
-    <width>14</width>
-    <height>14</height>
+    <Width>14</Width>
+    <Height>14</Height>
     <aiStyle>14</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -292,8 +292,8 @@
   <Projectile>
     <Name>Ball 'O Hurt</Name>
     <Type>25</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>15</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -303,8 +303,8 @@
   <Projectile>
     <Name>Blue Moon</Name>
     <Type>26</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>15</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -314,8 +314,8 @@
   <Projectile>
     <Name>Water Bolt</Name>
     <Type>27</Type>
-    <width>16</width>
-    <height>16</height>
+    <Width>16</Width>
+    <Height>16</Height>
     <alpha>200</alpha>
     <aiStyle>8</aiStyle>
     <timeLeft>1800</timeLeft>
@@ -327,8 +327,8 @@
   <Projectile>
     <Name>Bomb</Name>
     <Type>28</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>16</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -338,8 +338,8 @@
   <Projectile>
     <Name>Dynamite</Name>
     <Type>29</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>16</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -349,8 +349,8 @@
   <Projectile>
     <Name>Grenade</Name>
     <Type>30</Type>
-    <width>14</width>
-    <height>14</height>
+    <Width>14</Width>
+    <Height>14</Height>
     <aiStyle>16</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -360,8 +360,8 @@
   <Projectile>
     <Name>Sand Ball</Name>
     <Type>31</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>10</aiStyle>
     <timeLeft>3600</timeLeft>
     <hostile>true</hostile>
@@ -373,8 +373,8 @@
   <Projectile>
     <Name>Ivy Whip</Name>
     <Type>32</Type>
-    <width>18</width>
-    <height>18</height>
+    <Width>18</Width>
+    <Height>18</Height>
     <aiStyle>7</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -383,8 +383,8 @@
   <Projectile>
     <Name>Thorn Chakrum</Name>
     <Type>33</Type>
-    <width>25</width>
-    <height>25</height>
+    <Width>25</Width>
+    <Height>25</Height>
     <scale>0.9</scale>
     <aiStyle>3</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -395,8 +395,8 @@
   <Projectile>
     <Name>Flamelash</Name>
     <Type>34</Type>
-    <width>14</width>
-    <height>14</height>
+    <Width>14</Width>
+    <Height>14</Height>
     <alpha>100</alpha>
     <aiStyle>9</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -408,8 +408,8 @@
   <Projectile>
     <Name>Sunfury</Name>
     <Type>35</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>15</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -419,8 +419,8 @@
   <Projectile>
     <Name>Meteor Shot</Name>
     <Type>36</Type>
-    <width>5</width>
-    <height>5</height>
+    <Width>5</Width>
+    <Height>5</Height>
     <scale>1.4</scale>
     <alpha>255</alpha>
     <aiStyle>1</aiStyle>
@@ -434,8 +434,8 @@
   <Projectile>
     <Name>Sticky Bomb</Name>
     <Type>37</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>16</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -444,8 +444,8 @@
   <Projectile>
     <Name>Harpy Feather</Name>
     <Type>38</Type>
-    <width>14</width>
-    <height>14</height>
+    <Width>14</Width>
+    <Height>14</Height>
     <aiStyle>1</aiStyle>
     <timeLeft>3600</timeLeft>
     <hostile>true</hostile>
@@ -455,8 +455,8 @@
   <Projectile>
     <Name>Mud Ball</Name>
     <Type>39</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>10</aiStyle>
     <timeLeft>3600</timeLeft>
     <hostile>true</hostile>
@@ -468,8 +468,8 @@
   <Projectile>
     <Name>Ash Ball</Name>
     <Type>40</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>10</aiStyle>
     <timeLeft>3600</timeLeft>
     <hostile>true</hostile>
@@ -481,8 +481,8 @@
   <Projectile>
     <Name>Hellfire Arrow</Name>
     <Type>41</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>1</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -492,8 +492,8 @@
   <Projectile>
     <Name>Sand Ball</Name>
     <Type>42</Type>
-    <width>10</width>
-    <height>10</height>
+    <Width>10</Width>
+    <Height>10</Height>
     <aiStyle>10</aiStyle>
     <timeLeft>3600</timeLeft>
     <knockBack>8</knockBack>
@@ -503,8 +503,8 @@
   <Projectile>
     <Name>Tombstone</Name>
     <Type>43</Type>
-    <width>24</width>
-    <height>24</height>
+    <Width>24</Width>
+    <Height>24</Height>
     <aiStyle>17</aiStyle>
     <timeLeft>3600</timeLeft>
     <knockBack>12</knockBack>
@@ -515,8 +515,8 @@
   <Projectile>
     <Name>Demon Sickle</Name>
     <Type>44</Type>
-    <width>43</width>
-    <height>43</height>
+    <Width>43</Width>
+    <Height>43</Height>
     <scale>0.9</scale>
     <alpha>100</alpha>
     <aiStyle>18</aiStyle>
@@ -529,8 +529,8 @@
   <Projectile>
     <Name>Demon Scythe</Name>
     <Type>45</Type>
-    <width>43</width>
-    <height>43</height>
+    <Width>43</Width>
+    <Height>43</Height>
     <scale>0.9</scale>
     <alpha>100</alpha>
     <aiStyle>18</aiStyle>
@@ -543,8 +543,8 @@
   <Projectile>
     <Name>Dark Lance</Name>
     <Type>46</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <scale>1.1</scale>
     <aiStyle>19</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -556,8 +556,8 @@
   <Projectile>
     <Name>Trident</Name>
     <Type>47</Type>
-    <width>19</width>
-    <height>19</height>
+    <Width>19</Width>
+    <Height>19</Height>
     <scale>1.1</scale>
     <aiStyle>19</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -569,8 +569,8 @@
   <Projectile>
     <Name>Throwing Knife</Name>
     <Type>48</Type>
-    <width>12</width>
-    <height>12</height>
+    <Width>12</Width>
+    <Height>12</Height>
     <aiStyle>2</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -580,8 +580,8 @@
   <Projectile>
     <Name>Spear</Name>
     <Type>49</Type>
-    <width>21</width>
-    <height>21</height>
+    <Width>21</Width>
+    <Height>21</Height>
     <scale>1.2</scale>
     <aiStyle>19</aiStyle>
     <timeLeft>3600</timeLeft>
@@ -593,8 +593,8 @@
   <Projectile>
     <Name>Glowstick</Name>
     <Type>50</Type>
-    <width>6</width>
-    <height>6</height>
+    <Width>6</Width>
+    <Height>6</Height>
     <alpha>75</alpha>
     <aiStyle>14</aiStyle>
     <timeLeft>18000</timeLeft>
@@ -605,8 +605,8 @@
   <Projectile>
     <Name>Seed</Name>
     <Type>51</Type>
-    <width>8</width>
-    <height>8</height>
+    <Width>8</Width>
+    <Height>8</Height>
     <aiStyle>1</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -615,8 +615,8 @@
   <Projectile>
     <Name>Wooden Boomerang</Name>
     <Type>52</Type>
-    <width>22</width>
-    <height>22</height>
+    <Width>22</Width>
+    <Height>22</Height>
     <aiStyle>3</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
@@ -626,8 +626,8 @@
   <Projectile>
     <Name>Sticky Glowstick</Name>
     <Type>53</Type>
-    <width>6</width>
-    <height>6</height>
+    <Width>6</Width>
+    <Height>6</Height>
     <alpha>75</alpha>
     <aiStyle>14</aiStyle>
     <timeLeft>18000</timeLeft>
@@ -637,8 +637,8 @@
   <Projectile>
     <Name>Poisoned Knife</Name>
     <Type>54</Type>
-    <width>12</width>
-    <height>12</height>
+    <Width>12</Width>
+    <Height>12</Height>
     <aiStyle>2</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>

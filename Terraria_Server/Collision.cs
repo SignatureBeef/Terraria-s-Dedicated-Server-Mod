@@ -58,36 +58,43 @@ namespace Terraria_Server
             }
             return true;
         }
-        public static bool EmptyTile(int i, int j, bool ignoreTiles = false)
+
+
+        public static bool EmptyTile(int x, int y, bool ignoreTiles = false)
         {
-            Rectangle rectangle = new Rectangle(i * 16, j * 16, 16, 16);
-            if (Main.tile.At(i, j).Active && !ignoreTiles)
+            Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
+            if (Main.tile.At(x, y).Active && !ignoreTiles)
             {
                 return false;
             }
+
             foreach(Player player in Main.players)
             {
-                if (player.Active && rectangle.Intersects(new Rectangle((int)player.Position.X, (int)player.Position.Y, player.width, player.height)))
+                if (player.Active && player.Intersects(rectangle))
                 {
                     return false;
                 }
             }
-            for (int l = 0; l < 200; l++)
+
+            for (int i = 0; i < 200; i++)
             {
-                if (Main.item[l].Active && rectangle.Intersects(new Rectangle((int)Main.item[l].Position.X, (int)Main.item[l].Position.Y, Main.item[l].Width, Main.item[l].Height)))
+                if (Main.item[i].Active && Main.item[i].Intersects(rectangle))
                 {
                     return false;
                 }
             }
-            for (int m = 0; m < NPC.MAX_NPCS; m++)
+
+            for (int i = 0; i < NPC.MAX_NPCS; i++)
             {
-                if (Main.npcs[m].Active && rectangle.Intersects(new Rectangle((int)Main.npcs[m].Position.X, (int)Main.npcs[m].Position.Y, Main.npcs[m].width, Main.npcs[m].height)))
+                if (Main.npcs[i].Active && Main.npcs[i].Intersects(rectangle))
                 {
                     return false;
                 }
             }
             return true;
         }
+
+
         public static bool DrownCollision(Vector2 Position, int Width, int Height, float gravDir = -1f)
         {
             Vector2 vector = new Vector2(Position.X + (float)(Width / 2), Position.Y + (float)(Height / 2));
@@ -149,6 +156,8 @@ namespace Terraria_Server
             }
             return false;
         }
+
+
         public static bool WetCollision(Vector2 Position, int Width, int Height)
         {
             Vector2 vector = new Vector2(Position.X + (float)(Width / 2), Position.Y + (float)(Height / 2));
@@ -206,6 +215,8 @@ namespace Terraria_Server
             }
             return false;
         }
+
+
         public static bool LavaCollision(Vector2 Position, int Width, int Height)
         {
             int num = Height - 2;
@@ -252,6 +263,8 @@ namespace Terraria_Server
             }
             return false;
         }
+
+
         public static Vector2 TileCollision(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fallThrough = false, bool fall2 = false)
         {
             Collision.up = false;
@@ -360,6 +373,8 @@ namespace Terraria_Server
             }
             return result;
         }
+
+
         public static Vector2 WaterCollision(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fallThrough = false, bool fall2 = false)
         {
             Vector2 result = Velocity;
@@ -404,6 +419,8 @@ namespace Terraria_Server
             }
             return result;
         }
+
+
         public static Vector2 AnyCollision(Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
             Vector2 result = Velocity;
@@ -505,6 +522,8 @@ namespace Terraria_Server
             }
             return result;
         }
+
+
         public static void HitTiles(Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
             Vector2 vector = Position + Velocity;
@@ -545,6 +564,8 @@ namespace Terraria_Server
                 }
             }
         }
+
+
         public static Vector2 HurtTiles(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fireImmune = false)
         {
             Vector2 vector = Position;
@@ -637,6 +658,8 @@ namespace Terraria_Server
             }
             return default(Vector2);
         }
+
+
         public static bool StickyTiles(Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
             Vector2 vector = Position;
@@ -679,6 +702,8 @@ namespace Terraria_Server
             }
             return result;
         }
+
+
         public static bool SolidTiles(int startX, int endX, int startY, int endY)
         {
             if (startX < 0)

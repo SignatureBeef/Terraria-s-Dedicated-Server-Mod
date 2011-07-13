@@ -14,9 +14,9 @@
     <aiStyle>1</aiStyle>
     <damage>7</damage>
     <defense>2</defense>
-    <height>18</height>
+    <Height>18</Height>
     <lifeMax>25</lifeMax>
-    <width>24</width>
+    <Width>24</Width>
   </NPC>
   <NPC>
     <Name>Demon Eye</Name>
@@ -28,9 +28,9 @@
     <aiStyle>2</aiStyle>
     <damage>18</damage>
     <defense>2</defense>
-    <height>32</height>
+    <Height>32</Height>
     <lifeMax>60</lifeMax>
-    <width>30</width>
+    <Width>30</Width>
   </NPC>
   <NPC>
     <Name>Zombie</Name>
@@ -42,9 +42,9 @@
     <aiStyle>3</aiStyle>
     <damage>14</damage>
     <defense>6</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>45</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Eye of Cthulhu</Name>
@@ -60,9 +60,9 @@
     <aiStyle>4</aiStyle>
     <damage>18</damage>
     <defense>12</defense>
-    <height>110</height>
+    <Height>110</Height>
     <lifeMax>3000</lifeMax>
-    <width>100</width>
+    <Width>100</Width>
   </NPC>
   <NPC>
     <Name>Servant of Cthulhu</Name>
@@ -73,9 +73,9 @@
     <soundKilled>1</soundKilled>
     <aiStyle>5</aiStyle>
     <damage>23</damage>
-    <height>20</height>
+    <Height>20</Height>
     <lifeMax>8</lifeMax>
-    <width>20</width>
+    <Width>20</Width>
   </NPC>
   <NPC>
     <Name>Eater of Souls</Name>
@@ -89,9 +89,9 @@
     <aiStyle>5</aiStyle>
     <damage>23</damage>
     <defense>8</defense>
-    <height>30</height>
+    <Height>30</Height>
     <lifeMax>40</lifeMax>
-    <width>30</width>
+    <Width>30</Width>
   </NPC>
   <NPC>
     <Name>Devourer Head</Name>
@@ -107,9 +107,9 @@
     <aiStyle>6</aiStyle>
     <damage>32</damage>
     <defense>2</defense>
-    <height>22</height>
+    <Height>22</Height>
     <lifeMax>30</lifeMax>
-    <width>22</width>
+    <Width>22</Width>
   </NPC>
   <NPC>
     <Name>Devourer Body</Name>
@@ -124,9 +124,9 @@
     <aiStyle>6</aiStyle>
     <damage>16</damage>
     <defense>6</defense>
-    <height>22</height>
+    <Height>22</Height>
     <lifeMax>45</lifeMax>
-    <width>22</width>
+    <Width>22</Width>
   </NPC>
   <NPC>
     <Name>Devourer Tail</Name>
@@ -141,9 +141,9 @@
     <aiStyle>6</aiStyle>
     <damage>13</damage>
     <defense>10</defense>
-    <height>22</height>
+    <Height>22</Height>
     <lifeMax>70</lifeMax>
-    <width>22</width>
+    <Width>22</Width>
   </NPC>
   <NPC>
     <Name>Giant Worm Head</Name>
@@ -157,9 +157,9 @@
     <value>40</value>
     <aiStyle>6</aiStyle>
     <damage>8</damage>
-    <height>14</height>
+    <Height>14</Height>
     <lifeMax>10</lifeMax>
-    <width>14</width>
+    <Width>14</Width>
   </NPC>
   <NPC>
     <Name>Giant Worm Body</Name>
@@ -174,9 +174,9 @@
     <aiStyle>6</aiStyle>
     <damage>4</damage>
     <defense>4</defense>
-    <height>14</height>
+    <Height>14</Height>
     <lifeMax>15</lifeMax>
-    <width>14</width>
+    <Width>14</Width>
   </NPC>
   <NPC>
     <Name>Giant Worm Tail</Name>
@@ -191,9 +191,9 @@
     <aiStyle>6</aiStyle>
     <damage>4</damage>
     <defense>6</defense>
-    <height>14</height>
+    <Height>14</Height>
     <lifeMax>20</lifeMax>
-    <width>14</width>
+    <Width>14</Width>
   </NPC>
   <NPC>
     <Name>Eater of Worlds Head</Name>
@@ -209,9 +209,9 @@
     <value>300</value>
     <aiStyle>6</aiStyle>
     <damage>43</damage>
-    <height>38</height>
+    <Height>38</Height>
     <lifeMax>80</lifeMax>
-    <width>38</width>
+    <Width>38</Width>
   </NPC>
   <NPC>
     <Name>Eater of Worlds Body</Name>
@@ -227,9 +227,9 @@
     <aiStyle>6</aiStyle>
     <damage>18</damage>
     <defense>6</defense>
-    <height>38</height>
+    <Height>38</Height>
     <lifeMax>210</lifeMax>
-    <width>38</width>
+    <Width>38</Width>
   </NPC>
   <NPC>
     <Name>Eater of Worlds Tail</Name>
@@ -245,9 +245,9 @@
     <aiStyle>6</aiStyle>
     <damage>11</damage>
     <defense>7</defense>
-    <height>38</height>
+    <Height>38</Height>
     <lifeMax>300</lifeMax>
-    <width>38</width>
+    <Width>38</Width>
   </NPC>
   <NPC>
     <Name>Mother Slime</Name>
@@ -265,9 +265,9 @@
     <aiStyle>1</aiStyle>
     <damage>20</damage>
     <defense>7</defense>
-    <height>24</height>
+    <Height>24</Height>
     <lifeMax>90</lifeMax>
-    <width>36</width>
+    <Width>36</Width>
   </NPC>
   <NPC>
     <Name>Merchant</Name>
@@ -280,9 +280,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Nurse</Name>
@@ -295,9 +295,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Arms Dealer</Name>
@@ -310,9 +310,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Dryad</Name>
@@ -325,9 +325,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Skeleton</Name>
@@ -339,9 +339,9 @@
     <aiStyle>3</aiStyle>
     <damage>20</damage>
     <defense>8</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>60</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Guide</Name>
@@ -354,9 +354,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Meteor Head</Name>
@@ -370,9 +370,9 @@
     <aiStyle>5</aiStyle>
     <damage>40</damage>
     <defense>6</defense>
-    <height>22</height>
+    <Height>22</Height>
     <lifeMax>26</lifeMax>
-    <width>22</width>
+    <Width>22</Width>
   </NPC>
   <NPC>
     <Name>Fire Imp</Name>
@@ -386,9 +386,9 @@
     <aiStyle>8</aiStyle>
     <damage>30</damage>
     <defense>20</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>80</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Burning Sphere</Name>
@@ -401,9 +401,9 @@
     <soundKilled>3</soundKilled>
     <aiStyle>9</aiStyle>
     <damage>25</damage>
-    <height>16</height>
+    <Height>16</Height>
     <lifeMax>1</lifeMax>
-    <width>16</width>
+    <Width>16</Width>
   </NPC>
   <NPC>
     <Name>Goblin Peon</Name>
@@ -415,9 +415,9 @@
     <aiStyle>3</aiStyle>
     <damage>12</damage>
     <defense>4</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>60</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Goblin Thief</Name>
@@ -429,9 +429,9 @@
     <aiStyle>3</aiStyle>
     <damage>20</damage>
     <defense>6</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>80</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Goblin Warrior</Name>
@@ -443,9 +443,9 @@
     <aiStyle>3</aiStyle>
     <damage>25</damage>
     <defense>8</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>110</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Goblin Sorcerer</Name>
@@ -457,9 +457,9 @@
     <aiStyle>8</aiStyle>
     <damage>20</damage>
     <defense>2</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>40</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Chaos Ball</Name>
@@ -472,9 +472,9 @@
     <soundKilled>3</soundKilled>
     <aiStyle>9</aiStyle>
     <damage>20</damage>
-    <height>16</height>
+    <Height>16</Height>
     <lifeMax>1</lifeMax>
-    <width>16</width>
+    <Width>16</Width>
   </NPC>
   <NPC>
     <Name>Angry Bones</Name>
@@ -486,9 +486,9 @@
     <aiStyle>3</aiStyle>
     <damage>30</damage>
     <defense>10</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>100</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Dark Caster</Name>
@@ -501,9 +501,9 @@
     <aiStyle>8</aiStyle>
     <damage>20</damage>
     <defense>4</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>50</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Water Sphere</Name>
@@ -516,9 +516,9 @@
     <soundKilled>3</soundKilled>
     <aiStyle>9</aiStyle>
     <damage>20</damage>
-    <height>16</height>
+    <Height>16</Height>
     <lifeMax>1</lifeMax>
-    <width>16</width>
+    <Width>16</Width>
   </NPC>
   <NPC>
     <Name>Cursed Skull</Name>
@@ -533,9 +533,9 @@
     <aiStyle>10</aiStyle>
     <damage>35</damage>
     <defense>6</defense>
-    <height>28</height>
+    <Height>28</Height>
     <lifeMax>80</lifeMax>
-    <width>26</width>
+    <Width>26</Width>
   </NPC>
   <NPC>
     <Name>Skeletron Head</Name>
@@ -551,9 +551,9 @@
     <aiStyle>11</aiStyle>
     <damage>30</damage>
     <defense>10</defense>
-    <height>102</height>
+    <Height>102</Height>
     <lifeMax>5000</lifeMax>
-    <width>80</width>
+    <Width>80</Width>
   </NPC>
   <NPC>
     <Name>Skeletron Hand</Name>
@@ -566,9 +566,9 @@
     <aiStyle>12</aiStyle>
     <damage>25</damage>
     <defense>18</defense>
-    <height>52</height>
+    <Height>52</Height>
     <lifeMax>800</lifeMax>
-    <width>52</width>
+    <Width>52</Width>
   </NPC>
   <NPC>
     <Name>Old Man</Name>
@@ -581,9 +581,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Demolitionist</Name>
@@ -596,9 +596,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Bone Serpent Head</Name>
@@ -614,9 +614,9 @@
     <aiStyle>6</aiStyle>
     <damage>40</damage>
     <defense>10</defense>
-    <height>22</height>
+    <Height>22</Height>
     <lifeMax>120</lifeMax>
-    <width>22</width>
+    <Width>22</Width>
   </NPC>
   <NPC>
     <Name>Bone Serpent Body</Name>
@@ -631,9 +631,9 @@
     <aiStyle>6</aiStyle>
     <damage>30</damage>
     <defense>12</defense>
-    <height>22</height>
+    <Height>22</Height>
     <lifeMax>150</lifeMax>
-    <width>22</width>
+    <Width>22</Width>
   </NPC>
   <NPC>
     <Name>Bone Serpent Tail</Name>
@@ -648,9 +648,9 @@
     <aiStyle>6</aiStyle>
     <damage>20</damage>
     <defense>18</defense>
-    <height>22</height>
+    <Height>22</Height>
     <lifeMax>200</lifeMax>
-    <width>22</width>
+    <Width>22</Width>
   </NPC>
   <NPC>
     <Name>Hornet</Name>
@@ -663,9 +663,9 @@
     <aiStyle>5</aiStyle>
     <damage>40</damage>
     <defense>12</defense>
-    <height>32</height>
+    <Height>32</Height>
     <lifeMax>100</lifeMax>
-    <width>34</width>
+    <Width>34</Width>
   </NPC>
   <NPC>
     <Name>Man Eater</Name>
@@ -680,9 +680,9 @@
     <aiStyle>13</aiStyle>
     <damage>60</damage>
     <defense>14</defense>
-    <height>30</height>
+    <Height>30</Height>
     <lifeMax>200</lifeMax>
-    <width>30</width>
+    <Width>30</Width>
   </NPC>
   <NPC>
     <Name>Undead Miner</Name>
@@ -694,9 +694,9 @@
     <aiStyle>3</aiStyle>
     <damage>22</damage>
     <defense>9</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>70</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Tim</Name>
@@ -708,9 +708,9 @@
     <aiStyle>8</aiStyle>
     <damage>20</damage>
     <defense>4</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>200</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Bunny</Name>
@@ -719,9 +719,9 @@
     <soundHit>1</soundHit>
     <soundKilled>1</soundKilled>
     <aiStyle>7</aiStyle>
-    <height>20</height>
+    <Height>20</Height>
     <lifeMax>5</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Corrupt Bunny</Name>
@@ -732,9 +732,9 @@
     <aiStyle>3</aiStyle>
     <damage>20</damage>
     <defense>4</defense>
-    <height>20</height>
+    <Height>20</Height>
     <lifeMax>70</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Harpy</Name>
@@ -746,9 +746,9 @@
     <aiStyle>14</aiStyle>
     <damage>25</damage>
     <defense>8</defense>
-    <height>34</height>
+    <Height>34</Height>
     <lifeMax>100</lifeMax>
-    <width>24</width>
+    <Width>24</Width>
   </NPC>
   <NPC>
     <Name>Cave Bat</Name>
@@ -761,9 +761,9 @@
     <aiStyle>14</aiStyle>
     <damage>15</damage>
     <defense>2</defense>
-    <height>12</height>
+    <Height>12</Height>
     <lifeMax>25</lifeMax>
-    <width>12</width>
+    <Width>12</Width>
   </NPC>
   <NPC>
     <Name>King Slime</Name>
@@ -778,9 +778,9 @@
     <aiStyle>15</aiStyle>
     <damage>40</damage>
     <defense>10</defense>
-    <height>92</height>
+    <Height>92</Height>
     <lifeMax>2000</lifeMax>
-    <width>98</width>
+    <Width>98</Width>
   </NPC>
   <NPC>
     <Name>Jungle Bat</Name>
@@ -793,9 +793,9 @@
     <aiStyle>14</aiStyle>
     <damage>20</damage>
     <defense>4</defense>
-    <height>12</height>
+    <Height>12</Height>
     <lifeMax>60</lifeMax>
-    <width>12</width>
+    <Width>12</Width>
   </NPC>
   <NPC>
     <Name>Doctor Bones</Name>
@@ -807,9 +807,9 @@
     <aiStyle>3</aiStyle>
     <damage>20</damage>
     <defense>10</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>500</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>The Groom</Name>
@@ -821,9 +821,9 @@
     <aiStyle>3</aiStyle>
     <damage>14</damage>
     <defense>8</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>200</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Clothier</Name>
@@ -836,9 +836,9 @@
     <aiStyle>7</aiStyle>
     <damage>10</damage>
     <defense>15</defense>
-    <height>40</height>
+    <Height>40</Height>
     <lifeMax>250</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Goldfish</Name>
@@ -849,9 +849,9 @@
     <soundHit>1</soundHit>
     <soundKilled>1</soundKilled>
     <aiStyle>16</aiStyle>
-    <height>18</height>
+    <Height>18</Height>
     <lifeMax>5</lifeMax>
-    <width>20</width>
+    <Width>20</Width>
   </NPC>
   <NPC>
     <Name>Snatcher</Name>
@@ -866,9 +866,9 @@
     <aiStyle>13</aiStyle>
     <damage>25</damage>
     <defense>10</defense>
-    <height>30</height>
+    <Height>30</Height>
     <lifeMax>100</lifeMax>
-    <width>30</width>
+    <Width>30</Width>
   </NPC>
   <NPC>
     <Name>Corrupt Goldfish</Name>
@@ -880,9 +880,9 @@
     <aiStyle>16</aiStyle>
     <damage>30</damage>
     <defense>6</defense>
-    <height>20</height>
+    <Height>20</Height>
     <lifeMax>100</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Piranha</Name>
@@ -895,9 +895,9 @@
     <aiStyle>16</aiStyle>
     <damage>25</damage>
     <defense>2</defense>
-    <height>20</height>
+    <Height>20</Height>
     <lifeMax>30</lifeMax>
-    <width>18</width>
+    <Width>18</Width>
   </NPC>
   <NPC>
     <Name>Lava Slime</Name>
@@ -910,9 +910,9 @@
     <aiStyle>1</aiStyle>
     <damage>15</damage>
     <defense>10</defense>
-    <height>18</height>
+    <Height>18</Height>
     <lifeMax>50</lifeMax>
-    <width>24</width>
+    <Width>24</Width>
   </NPC>
   <NPC>
     <Name>Hellbat</Name>
@@ -927,9 +927,9 @@
     <aiStyle>14</aiStyle>
     <damage>30</damage>
     <defense>8</defense>
-    <height>12</height>
+    <Height>12</Height>
     <lifeMax>55</lifeMax>
-    <width>12</width>
+    <Width>12</Width>
   </NPC>
   <NPC>
     <Name>Vulture</Name>
@@ -941,9 +941,9 @@
     <aiStyle>17</aiStyle>
     <damage>15</damage>
     <defense>4</defense>
-    <height>36</height>
+    <Height>36</Height>
     <lifeMax>40</lifeMax>
-    <width>36</width>
+    <Width>36</Width>
   </NPC>
   <NPC>
     <Name>Demon</Name>
@@ -957,9 +957,9 @@
     <aiStyle>14</aiStyle>
     <damage>50</damage>
     <defense>8</defense>
-    <height>48</height>
+    <Height>48</Height>
     <lifeMax>120</lifeMax>
-    <width>28</width>
+    <Width>28</Width>
   </NPC>
   <NPC>
     <Name>Blue Jellyfish</Name>
@@ -972,9 +972,9 @@
     <aiStyle>18</aiStyle>
     <damage>20</damage>
     <defense>2</defense>
-    <height>26</height>
+    <Height>26</Height>
     <lifeMax>30</lifeMax>
-    <width>26</width>
+    <Width>26</Width>
   </NPC>
   <NPC>
     <Name>Pink Jellyfish</Name>
@@ -987,9 +987,9 @@
     <aiStyle>18</aiStyle>
     <damage>30</damage>
     <defense>6</defense>
-    <height>26</height>
+    <Height>26</Height>
     <lifeMax>70</lifeMax>
-    <width>26</width>
+    <Width>26</Width>
   </NPC>
   <NPC>
     <Name>Shark</Name>
@@ -1002,9 +1002,9 @@
     <aiStyle>16</aiStyle>
     <damage>40</damage>
     <defense>2</defense>
-    <height>24</height>
+    <Height>24</Height>
     <lifeMax>300</lifeMax>
-    <width>100</width>
+    <Width>100</Width>
   </NPC>
   <NPC>
     <Name>Voodoo Demon</Name>
@@ -1018,9 +1018,9 @@
     <aiStyle>14</aiStyle>
     <damage>50</damage>
     <defense>8</defense>
-    <height>48</height>
+    <Height>48</Height>
     <lifeMax>120</lifeMax>
-    <width>28</width>
+    <Width>28</Width>
   </NPC>
   <NPC>
     <Name>Crab</Name>
@@ -1031,9 +1031,9 @@
     <aiStyle>3</aiStyle>
     <damage>20</damage>
     <defense>10</defense>
-    <height>20</height>
+    <Height>20</Height>
     <lifeMax>40</lifeMax>
-    <width>28</width>
+    <Width>28</Width>
   </NPC>
   <NPC>
     <Name>Dungeon Guardian</Name>
@@ -1046,9 +1046,9 @@
     <aiStyle>11</aiStyle>
     <damage>9000</damage>
     <defense>9000</defense>
-    <height>102</height>
+    <Height>102</Height>
     <lifeMax>9999</lifeMax>
-    <width>80</width>
+    <Width>80</Width>
   </NPC>
   <NPC>
     <Name>Antlion</Name>
@@ -1061,8 +1061,8 @@
     <aiStyle>19</aiStyle>
     <damage>10</damage>
     <defense>6</defense>
-    <height>24</height>
+    <Height>24</Height>
     <lifeMax>45</lifeMax>
-    <width>24</width>
+    <Width>24</Width>
   </NPC>
 </ArrayOfNPC>

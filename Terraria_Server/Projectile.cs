@@ -180,8 +180,8 @@ namespace Terraria_Server
             timeLeft = 3600;
             Name = "";
             miscText = "";
-            width = (int)((float)this.width * this.scale);
-            height = (int)((float)this.height * this.scale);
+            Width = (int)((float)this.Width * this.scale);
+            Height = (int)((float)this.Height * this.scale);
         }
 
         /// <summary>
@@ -221,15 +221,15 @@ namespace Terraria_Server
                 return num;
             }
             Main.projectile[num] = Registries.Projectile.Create((int)Type);
-            Main.projectile[num].Position.X = X - (float)Main.projectile[num].width * 0.5f;
-            Main.projectile[num].Position.Y = Y - (float)Main.projectile[num].height * 0.5f;
+            Main.projectile[num].Position.X = X - (float)Main.projectile[num].Width * 0.5f;
+            Main.projectile[num].Position.Y = Y - (float)Main.projectile[num].Height * 0.5f;
             Main.projectile[num].Owner = Owner;
             Main.projectile[num].Velocity.X = SpeedX;
             Main.projectile[num].Velocity.Y = SpeedY;
             Main.projectile[num].damage = Damage;
             Main.projectile[num].knockBack = KnockBack;
             Main.projectile[num].identity = num;
-            Main.projectile[num].wet = Collision.WetCollision(Main.projectile[num].Position, Main.projectile[num].width, Main.projectile[num].height);
+            Main.projectile[num].wet = Collision.WetCollision(Main.projectile[num].Position, Main.projectile[num].Width, Main.projectile[num].Height);
             if (Owner == Main.myPlayer)
             {
                 NetMessage.SendData(27, -1, -1, "", num);
@@ -264,18 +264,18 @@ namespace Terraria_Server
             int playerIndex = Main.myPlayer;
             Player player = Main.players[playerIndex];
 
-            Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
+            Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             if (this.friendly && this.type != ProjectileType.ORB_OF_LIGHT)
             {
                 if (this.Owner == playerIndex)
                 {
                     if ((this.aiStyle == 16 || this.type == ProjectileType.ARROW_HELLFIRE) && this.timeLeft <= 1)
                     {
-                        if (player.Active && !player.dead && !player.immune && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, player.Position, player.width, player.height)))
+                        if (player.Active && !player.dead && !player.immune && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].Width, Main.players[this.Owner].Height, player.Position, player.Width, player.Height)))
                         {
                             if (player.Intersects(rectangle))
                             {
-                                if (player.Position.X + (float)(player.width / 2) < this.Position.X + (float)(this.width / 2))
+                                if (player.Position.X + (float)(player.Width / 2) < this.Position.X + (float)(this.Width / 2))
                                 {
                                     this.direction = -1;
                                 }
@@ -290,9 +290,9 @@ namespace Terraria_Server
                         }
                     }
                     int num = (int)(this.Position.X / 16f);
-                    int num2 = (int)((this.Position.X + (float)this.width) / 16f) + 1;
+                    int num2 = (int)((this.Position.X + (float)this.Width) / 16f) + 1;
                     int num3 = (int)(this.Position.Y / 16f);
-                    int num4 = (int)((this.Position.Y + (float)this.height) / 16f) + 1;
+                    int num4 = (int)((this.Position.Y + (float)this.Height) / 16f) + 1;
                     if (num < 0)
                     {
                         num = 0;
@@ -340,7 +340,7 @@ namespace Terraria_Server
                                         flag = true;
                                     }
                                 }
-                                if (!flag && (npc.noTileCollide || !this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, npc.Position, npc.width, npc.height)))
+                                if (!flag && (npc.noTileCollide || !this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].Width, Main.players[this.Owner].Height, npc.Position, npc.Width, npc.Height)))
                                 {
                                     if(npc.Intersects(rectangle))
                                     {
@@ -362,7 +362,7 @@ namespace Terraria_Server
                                                 {
                                                     this.timeLeft = 3;
                                                 }
-                                                if (npc.Position.X + (float)(npc.width / 2) < this.Position.X + (float)(this.width / 2))
+                                                if (npc.Position.X + (float)(npc.Width / 2) < this.Position.X + (float)(this.Width / 2))
                                                 {
                                                     this.direction = -1;
                                                 }
@@ -417,7 +417,7 @@ namespace Terraria_Server
                         for (int i = 0; i < Main.MAX_PLAYERS; i++)
                         {
                             playerIt = Main.players[i];
-                            if (i != this.Owner && playerIt.Active && !playerIt.dead && !playerIt.immune && playerIt.hostile && this.playerImmune[i] <= 0 && (player.team == 0 || player.team != playerIt.team) && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].width, Main.players[this.Owner].height, playerIt.Position, playerIt.width, playerIt.height)))
+                            if (i != this.Owner && playerIt.Active && !playerIt.dead && !playerIt.immune && playerIt.hostile && this.playerImmune[i] <= 0 && (player.team == 0 || player.team != playerIt.team) && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].Width, Main.players[this.Owner].Height, playerIt.Position, playerIt.Width, playerIt.Height)))
                             {
                                 if (playerIt.Intersects(rectangle))
                                 {
@@ -439,7 +439,7 @@ namespace Terraria_Server
                                             {
                                                 this.timeLeft = 3;
                                             }
-                                            if (playerIt.Position.X + (float)(playerIt.width / 2) < this.Position.X + (float)(this.width / 2))
+                                            if (playerIt.Position.X + (float)(playerIt.Width / 2) < this.Position.X + (float)(this.Width / 2))
                                             {
                                                 this.direction = -1;
                                             }
@@ -521,7 +521,7 @@ namespace Terraria_Server
                     if (player.Intersects(rectangle))
                     {
                         int hitDirection = this.direction;
-                        if (player.Position.X + (float)(player.width / 2) < this.Position.X + (float)(this.width / 2))
+                        if (player.Position.X + (float)(player.Width / 2) < this.Position.X + (float)(this.Width / 2))
                         {
                             hitDirection = -1;
                         }
@@ -546,7 +546,7 @@ namespace Terraria_Server
             if (this.Active)
             {
                 Vector2 value = this.Velocity;
-                if (this.Position.X <= Main.leftWorld || this.Position.X + (float)this.width >= Main.rightWorld || this.Position.Y <= Main.topWorld || this.Position.Y + (float)this.height >= Main.bottomWorld)
+                if (this.Position.X <= Main.leftWorld || this.Position.X + (float)this.Width >= Main.rightWorld || this.Position.Y <= Main.topWorld || this.Position.Y + (float)this.Height >= Main.bottomWorld)
                 {
                     this.Active = false;
                     return;
@@ -575,8 +575,8 @@ namespace Terraria_Server
                     bool flag2;
                     try
                     {
-                        flag = Collision.LavaCollision(this.Position, this.width, this.height);
-                        flag2 = Collision.WetCollision(this.Position, this.width, this.height);
+                        flag = Collision.LavaCollision(this.Position, this.Width, this.Height);
+                        flag2 = Collision.WetCollision(this.Position, this.Width, this.Height);
                         if (flag)
                         {
                             this.lavaWet = true;
@@ -627,20 +627,20 @@ namespace Terraria_Server
                     {
                         if (this.type == ProjectileType.BALL_SAND_GUN || (this.type == ProjectileType.BALL_SAND_DROP && this.ai[0] == 2f))
                         {
-                            this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.width, this.height, flag3, flag3);
+                            this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, flag3, flag3);
                         }
                         else
                         {
-                            this.Velocity = Collision.AnyCollision(this.Position, this.Velocity, this.width, this.height);
+                            this.Velocity = Collision.AnyCollision(this.Position, this.Velocity, this.Width, this.Height);
                         }
                     }
                     else
                     {
                         if (this.aiStyle == 18)
                         {
-                            int num5 = this.width - 36;
-                            int num6 = this.height - 36;
-                            Vector2 vector = new Vector2(this.Position.X + (float)(this.width / 2) - (float)(num5 / 2), this.Position.Y + (float)(this.height / 2) - (float)(num6 / 2));
+                            int num5 = this.Width - 36;
+                            int num6 = this.Height - 36;
+                            Vector2 vector = new Vector2(this.Position.X + (float)(this.Width / 2) - (float)(num5 / 2), this.Position.Y + (float)(this.Height / 2) - (float)(num6 / 2));
                             this.Velocity = Collision.TileCollision(vector, this.Velocity, num5, num6, flag3, flag3);
                         }
                         else
@@ -648,7 +648,7 @@ namespace Terraria_Server
                             if (this.wet)
                             {
                                 Vector2 vector2 = this.Velocity;
-                                this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.width, this.height, flag3, flag3);
+                                this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, flag3, flag3);
                                 value = this.Velocity * 0.5f;
                                 if (this.Velocity.X != vector2.X)
                                 {
@@ -661,7 +661,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.width, this.height, flag3, flag3);
+                                this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, flag3, flag3);
                             }
                         }
                     }
@@ -671,7 +671,7 @@ namespace Terraria_Server
                         {
                             if (this.penetrate > 1)
                             {
-                                Collision.HitTiles(this.Position, this.Velocity, this.width, this.height);
+                                Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
                                 this.penetrate--;
                                 if (this.Velocity.X != value2.X)
                                 {
@@ -704,7 +704,7 @@ namespace Terraria_Server
                             {
                                 if (this.aiStyle == 3 || this.aiStyle == 13 || this.aiStyle == 15)
                                 {
-                                    Collision.HitTiles(this.Position, this.Velocity, this.width, this.height);
+                                    Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
                                     if (this.type == ProjectileType.CHAKRUM_THORN)
                                     {
                                         if (this.Velocity.X != value2.X)
@@ -962,9 +962,9 @@ namespace Terraria_Server
                                     num5 = 0.8f;
                                 }
                             }
-                            Vector2 vector = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                            float num6 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2) - vector.X;
-                            float num7 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].height / 2) - vector.Y;
+                            Vector2 vector = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                            float num6 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector.X;
+                            float num7 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector.Y;
                             float num8 = (float)Math.Sqrt((double)(num6 * num6 + num7 * num7));
                             num8 = num4 / num8;
                             num6 *= num8;
@@ -1009,7 +1009,7 @@ namespace Terraria_Server
                             }
                             if (Main.myPlayer == this.Owner)
                             {
-                                Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.width, this.height);
+                                Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
                                 if(Main.players[Owner].Intersects(rectangle))
                                 {
                                     this.Kill();
@@ -1041,7 +1041,7 @@ namespace Terraria_Server
                                     {
                                         num9++;
                                     }
-                                    int num10 = Projectile.NewProjectile(this.Position.X + this.Velocity.X + (float)(this.width / 2), this.Position.Y + this.Velocity.Y + (float)(this.height / 2), this.Velocity.X, this.Velocity.Y, (ProjectileType)Enum.ToObject(typeof(ProjectileType),num9), this.damage, this.knockBack, this.Owner);
+                                    int num10 = Projectile.NewProjectile(this.Position.X + this.Velocity.X + (float)(this.Width / 2), this.Position.Y + this.Velocity.Y + (float)(this.Height / 2), this.Velocity.X, this.Velocity.Y, (ProjectileType)Enum.ToObject(typeof(ProjectileType),num9), this.damage, this.knockBack, this.Owner);
                                     Main.projectile[num10].damage = this.damage;
                                     Main.projectile[num10].ai[1] = this.ai[1] + 1f;
                                     NetMessage.SendData(27, -1, -1, "", num10);
@@ -1101,9 +1101,9 @@ namespace Terraria_Server
                                 if (this.type == ProjectileType.POWDER_PURIFICATION)
                                 {
                                     int num11 = (int)(this.Position.X / 16f) - 1;
-                                    int num12 = (int)((this.Position.X + (float)this.width) / 16f) + 2;
+                                    int num12 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
                                     int num13 = (int)(this.Position.Y / 16f) - 1;
-                                    int num14 = (int)((this.Position.Y + (float)this.height) / 16f) + 2;
+                                    int num14 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
                                     if (num11 < 0)
                                     {
                                         num11 = 0;
@@ -1127,7 +1127,7 @@ namespace Terraria_Server
                                             Vector2 vector2;
                                             vector2.X = (float)(l * 16);
                                             vector2.Y = (float)(m * 16);
-                                            if (this.Position.X + (float)this.width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.height > vector2.Y && this.Position.Y < vector2.Y + 16f && Main.myPlayer == this.Owner && Main.tile.At(l, m).Active)
+                                            if (this.Position.X + (float)this.Width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.Height > vector2.Y && this.Position.Y < vector2.Y + 16f && Main.myPlayer == this.Owner && Main.tile.At(l, m).Active)
                                             {
                                                 if (Main.tile.At(l, m).Type == 23)
                                                 {
@@ -1154,9 +1154,9 @@ namespace Terraria_Server
                                         this.Kill();
                                         return;
                                     }
-                                    Vector2 vector3 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                                    float num15 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2) - vector3.X;
-                                    float num16 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].height / 2) - vector3.Y;
+                                    Vector2 vector3 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                                    float num15 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector3.X;
+                                    float num16 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector3.Y;
                                     float num17 = (float)Math.Sqrt((double)(num15 * num15 + num16 * num16));
                                     this.rotation = (float)Math.Atan2((double)num16, (double)num15) - 1.57f;
                                     if (this.ai[0] == 0f)
@@ -1166,9 +1166,9 @@ namespace Terraria_Server
                                             this.ai[0] = 1f;
                                         }
                                         int num18 = (int)(this.Position.X / 16f) - 1;
-                                        int num19 = (int)((this.Position.X + (float)this.width) / 16f) + 2;
+                                        int num19 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
                                         int num20 = (int)(this.Position.Y / 16f) - 1;
-                                        int num21 = (int)((this.Position.Y + (float)this.height) / 16f) + 2;
+                                        int num21 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
                                         if (num18 < 0)
                                         {
                                             num18 = 0;
@@ -1193,7 +1193,7 @@ namespace Terraria_Server
                                                 Vector2 vector4;
                                                 vector4.X = (float)(n * 16);
                                                 vector4.Y = (float)(num22 * 16);
-                                                if (this.Position.X + (float)this.width > vector4.X && this.Position.X < vector4.X + 16f && this.Position.Y + (float)this.height > vector4.Y && this.Position.Y < vector4.Y + 16f && Main.tile.At(n, num22).Active && Main.tileSolid[(int)Main.tile.At(n, num22).Type])
+                                                if (this.Position.X + (float)this.Width > vector4.X && this.Position.X < vector4.X + 16f && this.Position.Y + (float)this.Height > vector4.Y && this.Position.Y < vector4.Y + 16f && Main.tile.At(n, num22).Active && Main.tileSolid[(int)Main.tile.At(n, num22).Type])
                                                 {
                                                     if (Main.players[this.Owner].grapCount < 10)
                                                     {
@@ -1226,8 +1226,8 @@ namespace Terraria_Server
                                                     this.Velocity.X = 0f;
                                                     this.Velocity.Y = 0f;
                                                     this.ai[0] = 2f;
-                                                    this.Position.X = (float)(n * 16 + 8 - this.width / 2);
-                                                    this.Position.Y = (float)(num22 * 16 + 8 - this.height / 2);
+                                                    this.Position.X = (float)(n * 16 + 8 - this.Width / 2);
+                                                    this.Position.Y = (float)(num22 * 16 + 8 - this.Height / 2);
                                                     this.damage = 0;
                                                     this.netUpdate = true;
                                                     if (Main.myPlayer == this.Owner)
@@ -1270,9 +1270,9 @@ namespace Terraria_Server
                                     if (this.ai[0] == 2f)
                                     {
                                         int num28 = (int)(this.Position.X / 16f) - 1;
-                                        int num29 = (int)((this.Position.X + (float)this.width) / 16f) + 2;
+                                        int num29 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
                                         int num30 = (int)(this.Position.Y / 16f) - 1;
-                                        int num31 = (int)((this.Position.Y + (float)this.height) / 16f) + 2;
+                                        int num31 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
                                         if (num28 < 0)
                                         {
                                             num28 = 0;
@@ -1297,7 +1297,7 @@ namespace Terraria_Server
                                                 Vector2 vector5;
                                                 vector5.X = (float)(num32 * 16);
                                                 vector5.Y = (float)(num33 * 16);
-                                                if (this.Position.X + (float)(this.width / 2) > vector5.X && this.Position.X + (float)(this.width / 2) < vector5.X + 16f && this.Position.Y + (float)(this.height / 2) > vector5.Y && this.Position.Y + (float)(this.height / 2) < vector5.Y + 16f && Main.tile.At(num32, num33).Active && Main.tileSolid[(int)Main.tile.At(num32, num33).Type])
+                                                if (this.Position.X + (float)(this.Width / 2) > vector5.X && this.Position.X + (float)(this.Width / 2) < vector5.X + 16f && this.Position.Y + (float)(this.Height / 2) > vector5.Y && this.Position.Y + (float)(this.Height / 2) < vector5.Y + 16f && Main.tile.At(num32, num33).Active && Main.tileSolid[(int)Main.tile.At(num32, num33).Type])
                                                 {
                                                     flag = false;
                                                 }
@@ -1433,15 +1433,15 @@ namespace Terraria_Server
                                                             return;
                                                         }
                                                         float num51 = 4f;
-                                                        Vector2 vector8 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                                                        float num52 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2) - vector8.X;
-                                                        float num53 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].height / 2) - vector8.Y;
+                                                        Vector2 vector8 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                                                        float num52 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector8.X;
+                                                        float num53 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector8.Y;
                                                         float num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
                                                         num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
                                                         if (num54 > (float)Main.screenWidth)
                                                         {
-                                                            this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2) - (float)(this.width / 2);
-                                                            this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].height / 2) - (float)(this.height / 2);
+                                                            this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
+                                                            this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
                                                             return;
                                                         }
                                                         if (num54 > 64f)
@@ -1496,7 +1496,7 @@ namespace Terraria_Server
                                                         }
                                                         Main.players[this.Owner].itemAnimation = 5;
                                                         Main.players[this.Owner].itemTime = 5;
-                                                        if (this.Position.X + (float)(this.width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2))
+                                                        if (this.Position.X + (float)(this.Width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2))
                                                         {
                                                             Main.players[this.Owner].direction = 1;
                                                         }
@@ -1504,9 +1504,9 @@ namespace Terraria_Server
                                                         {
                                                             Main.players[this.Owner].direction = -1;
                                                         }
-                                                        Vector2 vector9 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                                                        float num56 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2) - vector9.X;
-                                                        float num57 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].height / 2) - vector9.Y;
+                                                        Vector2 vector9 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                                                        float num56 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector9.X;
+                                                        float num57 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector9.Y;
                                                         float num58 = (float)Math.Sqrt((double)(num56 * num56 + num57 * num57));
                                                         if (this.ai[0] == 0f)
                                                         {
@@ -1555,12 +1555,12 @@ namespace Terraria_Server
                                                             {
                                                                 try
                                                                 {
-                                                                    Vector2 vector10 = Collision.TileCollision(this.Position, this.Velocity, this.width, this.height, false, false);
+                                                                    Vector2 vector10 = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
                                                                     bool flag1 = this.Velocity != vector10;
                                                                     int num66 = ((int)(this.Position.X / 16f)) - 1;
-                                                                    int num67 = ((int)((this.Position.X + this.width) / 16f)) + 2;
+                                                                    int num67 = ((int)((this.Position.X + this.Width) / 16f)) + 2;
                                                                     int num68 = ((int)(this.Position.Y / 16f)) - 1;
-                                                                    int num69 = ((int)((this.Position.Y + this.height) / 16f)) + 2;
+                                                                    int num69 = ((int)((this.Position.Y + this.Height) / 16f)) + 2;
                                                                     if (num66 < 0)
                                                                     {
                                                                         num66 = 0;
@@ -1586,7 +1586,7 @@ namespace Terraria_Server
                                                                                 Vector2 vector11;
                                                                                 vector11.X = num70 * 0x10;
                                                                                 vector11.Y = num71 * 0x10;
-                                                                                if ((((this.Position.X + this.width) > vector11.X) && (this.Position.X < (vector11.X + 16f))) && (((this.Position.Y + this.height) > vector11.Y) && (this.Position.Y < (vector11.Y + 16f))))
+                                                                                if ((((this.Position.X + this.Width) > vector11.X) && (this.Position.X < (vector11.X + 16f))) && (((this.Position.Y + this.Height) > vector11.Y) && (this.Position.Y < (vector11.Y + 16f))))
                                                                                 {
                                                                                     this.Velocity.X = 0f;
                                                                                     this.Velocity.Y = -0.2f;
@@ -1627,7 +1627,7 @@ namespace Terraria_Server
                                                             }
                                                             Main.players[this.Owner].itemAnimation = 5;
                                                             Main.players[this.Owner].itemTime = 5;
-                                                            if (this.Position.X + (float)(this.width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2))
+                                                            if (this.Position.X + (float)(this.Width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2))
                                                             {
                                                                 Main.players[this.Owner].direction = 1;
                                                             }
@@ -1635,9 +1635,9 @@ namespace Terraria_Server
                                                             {
                                                                 Main.players[this.Owner].direction = -1;
                                                             }
-                                                            Vector2 vector11 = new Vector2(this.Position.X + (float)this.width * 0.5f, this.Position.Y + (float)this.height * 0.5f);
-                                                            float num68 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2) - vector11.X;
-                                                            float num69 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].height / 2) - vector11.Y;
+                                                            Vector2 vector11 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
+                                                            float num68 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector11.X;
+                                                            float num69 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector11.Y;
                                                             float num70 = (float)Math.Sqrt((double)(num68 * num68 + num69 * num69));
                                                             if (this.ai[0] == 0f)
                                                             {
@@ -1690,9 +1690,9 @@ namespace Terraria_Server
                                                                     try
                                                                     {
                                                                         int num72 = (int)(this.Position.X / 16f) - 1;
-                                                                        int num73 = (int)((this.Position.X + (float)this.width) / 16f) + 2;
+                                                                        int num73 = (int)((this.Position.X + (float)this.Width) / 16f) + 2;
                                                                         int num74 = (int)(this.Position.Y / 16f) - 1;
-                                                                        int num75 = (int)((this.Position.Y + (float)this.height) / 16f) + 2;
+                                                                        int num75 = (int)((this.Position.Y + (float)this.Height) / 16f) + 2;
                                                                         if (num72 < 0)
                                                                         {
                                                                             num72 = 0;
@@ -1718,7 +1718,7 @@ namespace Terraria_Server
                                                                                     Vector2 vector12;
                                                                                     vector12.X = (float)(num76 * 16);
                                                                                     vector12.Y = (float)(num77 * 16);
-                                                                                    if (this.Position.X + (float)this.width - 4f > vector12.X && this.Position.X + 4f < vector12.X + 16f && this.Position.Y + (float)this.height - 4f > vector12.Y && this.Position.Y + 4f < vector12.Y + 16f)
+                                                                                    if (this.Position.X + (float)this.Width - 4f > vector12.X && this.Position.X + 4f < vector12.X + 16f && this.Position.Y + (float)this.Height - 4f > vector12.Y && this.Position.Y + 4f < vector12.Y + 16f)
                                                                                     {
                                                                                         this.Velocity.X = 0f;
                                                                                         this.Velocity.Y = -0.2f;
@@ -1737,12 +1737,12 @@ namespace Terraria_Server
                                                                     this.alpha = 255;
                                                                     if (this.type == ProjectileType.BOMB || this.type == ProjectileType.BOMB_STICKY)
                                                                     {
-                                                                        this.Position.X = this.Position.X + (float)(this.width / 2);
-                                                                        this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                                                                        this.width = 128;
-                                                                        this.height = 128;
-                                                                        this.Position.X = this.Position.X - (float)(this.width / 2);
-                                                                        this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                                                                        this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                                                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                                                        this.Width = 128;
+                                                                        this.Height = 128;
+                                                                        this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                                                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                                                                         this.damage = 100;
                                                                         this.knockBack = 8f;
                                                                     }
@@ -1750,12 +1750,12 @@ namespace Terraria_Server
                                                                     {
                                                                         if (this.type == ProjectileType.DYNAMITE)
                                                                         {
-                                                                            this.Position.X = this.Position.X + (float)(this.width / 2);
-                                                                            this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                                                                            this.width = 250;
-                                                                            this.height = 250;
-                                                                            this.Position.X = this.Position.X - (float)(this.width / 2);
-                                                                            this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                                                                            this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                                                            this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                                                            this.Width = 250;
+                                                                            this.Height = 250;
+                                                                            this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                                                            this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                                                                             this.damage = 250;
                                                                             this.knockBack = 10f;
                                                                         }
@@ -1763,12 +1763,12 @@ namespace Terraria_Server
                                                                         {
                                                                             if (this.type == ProjectileType.GRENADE)
                                                                             {
-                                                                                this.Position.X = this.Position.X + (float)(this.width / 2);
-                                                                                this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                                                                                this.width = 128;
-                                                                                this.height = 128;
-                                                                                this.Position.X = this.Position.X - (float)(this.width / 2);
-                                                                                this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                                                                                this.Position.X = this.Position.X + (float)(this.Width / 2);
+                                                                                this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                                                                                this.Width = 128;
+                                                                                this.Height = 128;
+                                                                                this.Position.X = this.Position.X - (float)(this.Width / 2);
+                                                                                this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                                                                                 this.knockBack = 8f;
                                                                             }
                                                                         }
@@ -1816,8 +1816,8 @@ namespace Terraria_Server
                                                                 this.Velocity.Y = this.Velocity.Y + 0.2f;
                                                                 if (this.Owner == Main.myPlayer)
                                                                 {
-                                                                    int num78 = (int)((this.Position.X + (float)this.width) / 16f);
-                                                                    int num79 = (int)((this.Position.Y + (float)this.height) / 16f);
+                                                                    int num78 = (int)((this.Position.X + (float)this.Width) / 16f);
+                                                                    int num79 = (int)((this.Position.Y + (float)this.Height) / 16f);
                                                                     if (Main.tile.At(num78, num79).Exists && !Main.tile.At(num78, num79).Active)
                                                                     {
                                                                         WorldGen.PlaceTile(num78, num79, 85, false, false, -1, 0);
@@ -1876,8 +1876,8 @@ namespace Terraria_Server
                                                                 {
                                                                     this.direction = Main.players[this.Owner].direction;
                                                                     Main.players[this.Owner].heldProj = this.whoAmI;
-                                                                    this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].width / 2) - (float)(this.width / 2);
-                                                                    this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].height / 2) - (float)(this.height / 2);
+                                                                    this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
+                                                                    this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
                                                                     if (this.type == ProjectileType.LANCE_DARK)
                                                                     {
                                                                         if (this.ai[0] == 0f)
@@ -1979,7 +1979,7 @@ namespace Terraria_Server
                 case ProjectileType.LASER_GREEN:
                 case ProjectileType.SHOT_METEOR:
                     {
-                        Collision.HitTiles(this.Position, this.Velocity, this.width, this.height);
+                        Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
                     }
                     break;
                 case ProjectileType.BALL_OF_FIRE:
@@ -1993,29 +1993,29 @@ namespace Terraria_Server
                 case ProjectileType.GRENADE:
                 case ProjectileType.BOMB_STICKY:
                     {
-                        this.Position.X = this.Position.X + (float)(this.width / 2);
-                        this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                        this.width = 22;
-                        this.height = 22;
-                        this.Position.X = this.Position.X - (float)(this.width / 2);
-                        this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                        this.Position.X = this.Position.X + (float)(this.Width / 2);
+                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                        this.Width = 22;
+                        this.Height = 22;
+                        this.Position.X = this.Position.X - (float)(this.Width / 2);
+                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                     }
                     break;
                 case ProjectileType.DYNAMITE:
                     {
-                        this.Position.X = this.Position.X + (float)(this.width / 2);
-                        this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                        this.width = 200;
-                        this.height = 200;
-                        this.Position.X = this.Position.X - (float)(this.width / 2);
-                        this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                        this.Position.X = this.Position.X + (float)(this.Width / 2);
+                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                        this.Width = 200;
+                        this.Height = 200;
+                        this.Position.X = this.Position.X - (float)(this.Width / 2);
+                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                         
-                        this.Position.X = this.Position.X + (float)(this.width / 2);
-                        this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                        this.width = 10;
-                        this.height = 10;
-                        this.Position.X = this.Position.X - (float)(this.width / 2);
-                        this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                        this.Position.X = this.Position.X + (float)(this.Width / 2);
+                        this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                        this.Width = 10;
+                        this.Height = 10;
+                        this.Position.X = this.Position.X - (float)(this.Width / 2);
+                        this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                     }
                     break;
                 case ProjectileType.BALL_SAND_DROP:
@@ -2028,12 +2028,12 @@ namespace Terraria_Server
                         if (this.Owner == Main.myPlayer)
                         {
                             this.penetrate = -1;
-                            this.Position.X = this.Position.X + (float)(this.width / 2);
-                            this.Position.Y = this.Position.Y + (float)(this.height / 2);
-                            this.width = 64;
-                            this.height = 64;
-                            this.Position.X = this.Position.X - (float)(this.width / 2);
-                            this.Position.Y = this.Position.Y - (float)(this.height / 2);
+                            this.Position.X = this.Position.X + (float)(this.Width / 2);
+                            this.Position.Y = this.Position.Y + (float)(this.Height / 2);
+                            this.Width = 64;
+                            this.Height = 64;
+                            this.Position.X = this.Position.X - (float)(this.Width / 2);
+                            this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                             this.Damage();
                         }
                     }
@@ -2138,8 +2138,8 @@ namespace Terraria_Server
                 int num53 = -1;
                 if (this.aiStyle == 10)
                 {
-                    int num54 = (int)(this.Position.X + (float)(this.width / 2)) / 16;
-                    int num55 = (int)(this.Position.Y + (float)(this.width / 2)) / 16;
+                    int num54 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
+                    int num55 = (int)(this.Position.Y + (float)(this.Width / 2)) / 16;
                     int num56 = 0;
                     int num57 = 2;
                     if (this.type == ProjectileType.BALL_SAND_DROP)
@@ -2179,7 +2179,7 @@ namespace Terraria_Server
                         {
                             if (num57 > 0)
                             {
-                                num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, num57, 1, false);
+                                num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, num57, 1, false);
                             }
                         }
                     }
@@ -2187,56 +2187,56 @@ namespace Terraria_Server
                     {
                         if (num57 > 0)
                         {
-                            num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, num57, 1, false);
+                            num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, num57, 1, false);
                         }
                     }
                 }
                 if (this.type == ProjectileType.ARROW_WOODEN && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 40, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
                 }
                 if (this.type == ProjectileType.ARROW_FIRE && Main.rand.Next(2) == 0)
                 {
                     if (Main.rand.Next(3) == 0)
                     {
-                        num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 41, 1, false);
+                        num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 41, 1, false);
                     }
                     else
                     {
-                        num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 40, 1, false);
+                        num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 40, 1, false);
                     }
                 }
                 if (this.type == ProjectileType.GLOWSTICK && Main.rand.Next(3) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 282, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, 1, false);
                 }
                 if (this.type == ProjectileType.GLOWSTICK_STICKY && Main.rand.Next(3) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 286, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 286, 1, false);
                 }
                 if (this.type == ProjectileType.KNIFE_THROWING && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 279, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 279, 1, false);
                 }
                 if (this.type == ProjectileType.KNIFE_POISONED && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 287, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 287, 1, false);
                 }
                 if (this.type == ProjectileType.SHURIKEN && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 42, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 42, 1, false);
                 }
                 if (this.type == ProjectileType.ARROW_UNHOLY && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 47, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, 1, false);
                 }
                 if (this.type == ProjectileType.FALLEN_STAR && this.damage > 100)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 75, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 75, 1, false);
                 }
                 if (this.type == ProjectileType.BONE && Main.rand.Next(2) == 0)
                 {
-                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.width, this.height, 154, 1, false);
+                    num53 = Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, 1, false);
                 }
             }
             this.Active = false;

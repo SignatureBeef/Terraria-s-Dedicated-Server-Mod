@@ -8,7 +8,7 @@ using Terraria_Server.Definitions;
 
 namespace Terraria_Server.Events
 {
-    public class DoorStateChangeEvent : Event
+    public class DoorStateChangeEvent : CancellableEvent
     {
         public int X { get; set; }
 

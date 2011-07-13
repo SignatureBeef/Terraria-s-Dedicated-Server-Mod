@@ -120,7 +120,10 @@
     <Compile Include="Collections\IRegisterableEntity.cs" />
     <Compile Include="Collections\ItemRegistry.cs" />
     <Compile Include="Collections\Registries.cs" />
+    <Compile Include="Events\CancellableEvent.cs" />
     <Compile Include="Events\MessageEvent.cs" />
+    <Compile Include="Events\NPCBossDeathEvent.cs" />
+    <Compile Include="Events\NPCBossSummonEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Events\NPCSpawnEvent.cs" />
     <Compile Include="Events\PlayerKeyPressEvent.cs" />

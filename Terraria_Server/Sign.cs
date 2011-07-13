@@ -6,7 +6,7 @@ namespace Terraria_Server
 {
     public class Sign
     {
-        public const int maxSigns = 1000;
+        public const int MAX_SIGNS = 1000;
         public int x;
         public int y;
         public String text;

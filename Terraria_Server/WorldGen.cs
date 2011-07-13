@@ -158,7 +158,7 @@ namespace Terraria_Server
                         {
                             if (Main.players[j].Active)
                             {
-                                Rectangle rectangle = new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].width, Main.players[j].height);
+                                Rectangle rectangle = new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height);
                                 if (rectangle.Intersects(value))
                                 {
                                     flag = false;
@@ -207,7 +207,7 @@ namespace Terraria_Server
                                                 {
                                                     if (Main.players[m].Active)
                                                     {
-                                                        Rectangle rectangle2 = new Rectangle((int)Main.players[m].Position.X, (int)Main.players[m].Position.Y, Main.players[m].width, Main.players[m].height);
+                                                        Rectangle rectangle2 = new Rectangle((int)Main.players[m].Position.X, (int)Main.players[m].Position.Y, Main.players[m].Width, Main.players[m].Height);
                                                         if (rectangle2.Intersects(value2))
                                                         {
                                                             flag = false;
@@ -10707,7 +10707,7 @@ namespace Terraria_Server
             {
                 if (Main.players[i].Active)
                 {
-                    Rectangle value = new Rectangle((int)((double)Main.players[i].Position.X + (double)Main.players[i].width * 0.5 - (double)NPC.sWidth * 0.6), (int)((double)Main.players[i].Position.Y + (double)Main.players[i].height * 0.5 - (double)NPC.sHeight * 0.6), (int)((double)NPC.sWidth * 1.2), (int)((double)NPC.sHeight * 1.2));
+                    Rectangle value = new Rectangle((int)((double)Main.players[i].Position.X + (double)Main.players[i].Width * 0.5 - (double)NPC.sWidth * 0.6), (int)((double)Main.players[i].Position.Y + (double)Main.players[i].Height * 0.5 - (double)NPC.sHeight * 0.6), (int)((double)NPC.sWidth * 1.2), (int)((double)NPC.sHeight * 1.2));
                     if (rectangle.Intersects(value))
                     {
                         return true;
