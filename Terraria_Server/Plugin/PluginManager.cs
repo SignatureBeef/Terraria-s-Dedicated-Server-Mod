@@ -318,6 +318,16 @@ namespace Terraria_Server.Plugin
                                     plugin.onPlayerPvPChange((PlayerPvPChangeEvent)hookEvent);
                                     break;
                                 }
+                            case Hooks.NPC_BOSSDEATH:
+                                {
+                                    plugin.onNPCBossDeath((NPCBossDeathEvent)hookEvent);
+                                    break;
+                                }
+                            case Hooks.NPC_BOSSSUMMON:
+                                {
+                                    plugin.onNPCBossSummon((NPCBossSummonEvent)hookEvent);
+                                    break;
+                                }
                         }
                     }
                 }

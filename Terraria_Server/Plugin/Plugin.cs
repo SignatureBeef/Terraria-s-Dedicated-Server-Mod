@@ -178,11 +178,24 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="Event">PlayerTeleportEvent info</param>
         public virtual void onPlayerTeleport(PlayerTeleportEvent Event) { }
+
         /// <summary>
         /// Hook method for any player-initiated tile changes (place, break, etc)
         /// </summary>
         /// <param name="Event">PlayerTileChangeEvent info</param>
         public virtual void onPlayerTileChange(PlayerTileChangeEvent Event) { }
+
+        /// <summary>
+        /// Hook method for Boss Summons
+        /// </summary>
+        /// <param name="Event">NPCBossSummonEvent info</param>
+        public virtual void onNPCBossSummon(NPCBossSummonEvent Event) { }
+
+        /// <summary>
+        /// Hook method for boss Deaths
+        /// </summary>
+        /// <param name="Event">NPCBossDeathEvent info</param>
+        public virtual void onNPCBossDeath(NPCBossDeathEvent Event) { }
 
         /// <summary>
         /// Hash list of all hooks currently registered by the plugin
