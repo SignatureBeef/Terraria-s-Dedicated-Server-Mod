@@ -45,7 +45,7 @@ namespace Terraria_Server.Commands
                 String[] temp3 = new String[temp.Length + 1];
                 temp.CopyTo(temp3, 0);
 
-                temp3[temp3.Length - 1] = Line.Substring(Line.IndexOf("\""), Line.LastIndexOf("\"") - Line.IndexOf("\"")).Replace("\"", "");
+                temp3[temp3.Length - 1] = Line.Substring(Line.IndexOf("\""), Line.LastIndexOf("\"") - Line.IndexOf("\"")).Remove(0,1);
 
                 temp3.CopyTo(commands, 0);
                 temp2.CopyTo(commands, temp3.Length);
