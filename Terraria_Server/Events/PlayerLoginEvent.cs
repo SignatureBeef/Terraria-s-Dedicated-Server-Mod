@@ -12,5 +12,7 @@ namespace Terraria_Server.Events
         public ServerSlot Slot { get; set; }
         
         public PlayerLoginAction Action { get; set; }
+        
+        public string Password { get; set; }
     }
 }
