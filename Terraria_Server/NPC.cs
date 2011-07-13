@@ -4944,18 +4944,25 @@ namespace Terraria_Server
                         {
                             num5 = 0;
                         }
-                        if (num6 > Main.maxTilesX)
+                        if (num6 >= Main.maxTilesX)
                         {
-                            num6 = Main.maxTilesX;
+                            num6 = Main.maxTilesX - 1;
                         }
                         if (num7 < 0)
                         {
                             num7 = 0;
                         }
-                        if (num8 > Main.maxTilesY)
+                        if (num8 >= Main.maxTilesY)
                         {
-                            num8 = Main.maxTilesY;
+                            num8 = Main.maxTilesY - 1;
                         }
+                        
+                        if (num5 > num6)
+                            num6 = Math.Min (num5 + NPC.spawnRangeX, Main.maxTilesX - 1);
+                            
+                        if (num7 > num8)
+                            num8 = Math.Min (num7 + NPC.spawnRangeY, Main.maxTilesY - 1);
+                         
                         int k = 0;
                         while (k < 50)
                         {
