@@ -117,7 +117,7 @@ namespace Terraria_Server.Misc
             setValue(key, value.ToString());
         }
 
-        private void setValue(String key, bool value)
+        protected void setValue(String key, bool value)
         {
             setValue(key, value.ToString());
         }
