@@ -515,7 +515,7 @@ namespace Terraria_Server
 
                         }
                     }
-                    else if (commandMessage.Equals("-numfloatingislands"))
+                    else if (commandMessage.Equals("-numislands"))
                     {
                         try
                         {
@@ -531,6 +531,28 @@ namespace Terraria_Server
                         try
                         {
                             properties.UseWhiteList = Convert.ToBoolean(args[i + 1]);
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-pidfile"))
+                    {
+                        try
+                        {
+                            properties.PIDFile = args[i + 1];
+                        }
+                        catch
+                        {
+
+                        }
+                    }
+                    else if (commandMessage.Equals("-simpleloop"))
+                    {
+                        try
+                        {
+                            properties.SimpleLoop = Convert.ToBoolean(args[i + 1]);
                         }
                         catch
                         {

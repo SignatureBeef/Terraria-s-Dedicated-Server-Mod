@@ -355,6 +355,10 @@ namespace Terraria_Server
             {
                 return getValue(PID_FILE, DEFAULT_PID_FILE);
             }
+            set
+            {
+                setValue(PID_FILE, value);
+            }
         }
 
         public bool SimpleLoop
