@@ -16,7 +16,7 @@ namespace Terraria_Server.Messages
             int playerIndex = whoAmI;
 
             Player player = (Player)Main.players[playerIndex].Clone();
-            player.hostile = (readBuffer[num] == 1);
+            player.hostile = (readBuffer[num + 1] == 1);
 
             PlayerPvPChangeEvent playerEvent = new PlayerPvPChangeEvent();
             playerEvent.Sender = player;

@@ -15,18 +15,14 @@ namespace Terraria_Server.Messages
         {
             int playerIndex = whoAmI;
 
-            int teamIndex = (int)readBuffer[num++];
+            int teamIndex = (int)readBuffer[num + 1];
             Player player = Main.players[playerIndex];
             int currentTeam = player.team;
-
-            NetMessage.SendData(45, -1, whoAmI, "", playerIndex);
+            
             Party party = Party.NONE;
             String joinMessage = "";
             switch (teamIndex)
             {
-                case 0:
-                    joinMessage = " is no longer on a party.";
-                    break;
                 case 1:
                     joinMessage = " has joined the red party.";
                     party = Party.RED;
@@ -43,6 +39,9 @@ namespace Terraria_Server.Messages
                     joinMessage = " has joined the yellow party.";
                     party = Party.YELLOW;
                     break;
+                default:
+                    joinMessage = " is no longer in a party.";
+                    break;
             }
 
             PartyChangeEvent changeEvent = new PartyChangeEvent();
@@ -55,6 +54,9 @@ namespace Terraria_Server.Messages
             }
 
             player.team = teamIndex;
+            
+            NetMessage.SendData(45, -1, whoAmI, "", playerIndex);
+            
             for (int i = 0; i < 255; i++)
             {
                 if (i == whoAmI
