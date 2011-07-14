@@ -55,7 +55,8 @@ namespace Terraria_Server.Misc
             {
                 foreach (KeyValuePair<String, String> pair in propertiesMap)
                 {
-                    writer.WriteLine(pair.Key + EQUALS + pair.Value);
+                    if (pair.Value != null)
+                        writer.WriteLine(pair.Key + EQUALS + pair.Value);
                 }
             }
             finally
