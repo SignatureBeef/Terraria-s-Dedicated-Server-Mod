@@ -580,20 +580,23 @@ namespace Terraria_Server
 
             if (properties.SimpleLoop)
             {
-                long updateTime = 166667;
-                long nextUpdate = Stopwatch.GetTimestamp() + updateTime;
+                Stopwatch s = new Stopwatch();
+                s.Start();
+
+                double updateTime = 16.66666666666667;
+                double nextUpdate = s.ElapsedMilliseconds + updateTime;
 
                 while (!Netplay.disconnect)
                 {
-                    long now = Stopwatch.GetTimestamp();
-                    long left = nextUpdate - now;
-                    
-                    if (left > 0)
+                    double now = s.ElapsedMilliseconds;
+                    double left = nextUpdate - now;
+
+                    if (left >= 0)
                     {
-                        while (left > 10000)
+                        while (left > 1)
                         {
-                            Thread.Sleep (TimeSpan.FromTicks(left));
-                            left = nextUpdate - Stopwatch.GetTimestamp();
+                            Thread.Sleep((int)left);
+                            left = nextUpdate - s.ElapsedMilliseconds;
                         }
                         nextUpdate += updateTime;
                     }
