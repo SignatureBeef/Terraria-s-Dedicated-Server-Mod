@@ -49,7 +49,8 @@ namespace Terraria_Server.Misc
 
         public void Save()
         {
-            StreamWriter writer = new StreamWriter(propertiesPath);
+            var tmpName = propertiesPath + ".tmp" + (uint) (DateTime.UtcNow.Ticks % uint.MaxValue);
+            var writer = new StreamWriter (tmpName);
             try
             {
                 foreach (KeyValuePair<String, String> pair in propertiesMap)
@@ -61,6 +62,21 @@ namespace Terraria_Server.Misc
             {
                 writer.Close();
             }
+            
+            try
+            {
+                File.Replace (tmpName, propertiesPath, null, true);
+                Program.tConsole.WriteLine ("Saved file \"{0}\".", propertiesPath);
+            }
+            catch (IOException e)
+            {
+                Program.tConsole.WriteLine ("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
+            }
+            catch (SystemException e)
+            {
+                Program.tConsole.WriteLine ("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
+            }
+            
         }
 
         public String getValue(String key)
