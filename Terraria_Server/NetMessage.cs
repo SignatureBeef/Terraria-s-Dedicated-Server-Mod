@@ -460,7 +460,6 @@ namespace Terraria_Server
 		
 		public static void SyncPlayers() /* FIXME: always sends all updates to all players */
 		{
-			bool flag = false;
 			for (int i = 0; i < 255; i++)
 			{
 				int num = 0;
@@ -470,24 +469,7 @@ namespace Terraria_Server
 				}
 				if (Netplay.slots[i].state == SlotState.PLAYING)
 				{
-					if (Main.autoShutdown && !flag)
-					{
-						String text = Netplay.slots[i].remoteAddress;
-						String a = text;
-						for (int j = 0; j < text.Length; j++)
-						{
-							if (text.Substring(j, 1) == ":")
-							{
-								a = text.Substring(0, j);
-							}
-						}
-						if (a == "127.0.0.1")
-						{
-							flag = true;
-						}
-					}
-
-					var msg = NetMessage.PrepareThreadInstance();
+                    var msg = NetMessage.PrepareThreadInstance();
 					
 					msg.SynchBegin (i, num);
 					msg.PlayerStateUpdate (i);
@@ -557,11 +539,6 @@ namespace Terraria_Server
 						}
 					}
 				}
-			}
-			if (Main.autoShutdown && !flag)
-			{
-				Commands.Commands.SaveAll(null);
-				Netplay.disconnect = true;
 			}
 		}
 		

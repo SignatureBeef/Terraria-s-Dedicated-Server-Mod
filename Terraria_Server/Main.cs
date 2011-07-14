@@ -12,70 +12,22 @@ namespace Terraria_Server
 {
 	public class Main
 	{
-        public static int alwaysSpawn = 0;
-        public static bool autoGen = false;
-		private const int MF_BYPOSITION = 1024;
-		public const int sectionWidth = 200;
-		public const int sectionHeight = 150;
-        public static int numDust = 1000;
-        public const int maxTileSets = 86;
-        public const int maxWallTypes = 14;
-        public const int maxBackgrounds = 7;
-        public const int maxDust = 1000;
-        public const int maxCombatText = 100;
+        //public static bool npcChatRelease = false;
+        //public static bool npcChatFocus1 = false;
+        //public static bool npcChatFocus2 = false;
         public const int maxItemText = 100;
         public const int MAX_PLAYERS = 255;
         public const int maxChests = 1000;
         public const int maxItemTypes = 327;
-        public const int maxItems = 200;
-        public const int maxBuffs = 19;
         public const int maxProjectileTypes = 55;
         public const int maxProjectiles = 1000;
         public const int maxNPCTypes = 70;
-        public const int maxGoreTypes = 99;
-        public const int maxGore = 200;
         public const int maxInventory = 44;
-        public const int maxItemSounds = 16;
-        public const int maxNPCHitSounds = 3;
-        public const int maxNPCKilledSounds = 4;
-        public const int maxLiquidTypes = 2;
-        public const int maxMusic = 8;
-        public const int numArmorHead = 29;
-        public const int numArmorBody = 17;
-        public const int numArmorLegs = 16;
         public const double dayLength = 54000.0;
-        public const double nightLength = 32400.0;
-        public const int maxStars = 130;
-        public const int maxStarTypes = 5;
-        public const int maxClouds = 100;
-        public const int maxCloudTypes = 4;
-        public const int maxHair = 17;
-
-		public static bool grabSun = false;
-		//public static bool debugMode = false;
         public static bool stopSpawns = false;
-		public static bool dumbAI = false;
-		public static bool skipMenu = false;
-		public static bool lightTiles = false;
-		public static bool verboseNetplay = false;
-		public static bool stopTimeOuts = false;
-		public static bool showSpam = false;
-		public static bool showItemOwner = false;
 		public static bool ignoreErrors = false;
 		public static bool webProtect = false;
-		public static bool showSplash = true;
-        public static String defaultIP = "";
 		private static bool webAuth = false;
-		public static int updateTime = 0;
-		public static int drawTime = 0;
-		public static int frameRate = 0;
-		public static bool frameRelease = false;
-		public static bool showFrameRate = false;
-		public static int magmaBGFrame = 0;
-		public static int magmaBGFrameCounter = 0;
-		public static int saveTimer = 0;
-		public static bool autoJoin = false;
-		public static bool serverStarting = false;
 		public static float leftWorld = 0f;
 		public static float rightWorld = 134400f;
 		public static float topWorld = 0f;
@@ -85,42 +37,24 @@ namespace Terraria_Server
 		public static int maxSectionsX = Main.maxTilesX / 200;
 		public static int maxSectionsY = Main.maxTilesY / 150;
 		public static int maxNetplayers = 255;
-		public static float caveParrallax = 1f;
 		public static int dungeonX;
 		public static int dungeonY;
 		public static Liquid[] liquid = new Liquid[Liquid.resLiquid];
 		public static LiquidBuffer[] liquidBuffer = new LiquidBuffer[10000];
 		public static bool dedServ = true;
-		public int curMusic;
-		public int newMusic;
 		public static String statusText = "";
 		public static String worldName = "";
 		public static int worldID;
-		public static int background = 0;
-		public static Color tileColor;
 		public static double worldSurface;
 		public static double rockLayer;
 		public static Color[] teamColor = new Color[5];
 		public static bool dayTime = true;
 		public static double time = 13500.0;
 		public static int moonPhase = 0;
-		public static short sunModY = 0;
-		public static short moonModY = 0;
-		public static bool grabSky = false;
 		public static bool bloodMoon = false;
 		public static int checkForSpawns = 0;
 		public static int helpText = 0;
-		public static int numStars;
-		public static int cloudLimit = 100;
-		public static int numClouds = Main.cloudLimit;
-		public static float windSpeed = 0f;
-		public static float windSpeedSpeed = 0f;
-		public static bool resetClouds = true;
 		public static int evilTiles;
-		public static int meteorTiles;
-		public static int jungleTiles;
-		public static int dungeonTiles;
-		public static int fadeCounter = 0;
 
 
         public static bool[] tileCut = new bool[86];
@@ -140,13 +74,7 @@ namespace Terraria_Server
 
 		[ThreadStatic]
 		public static Random rand;
-		public static float[] musicFade = new float[7];
-		public static float musicVolume = 0.75f;
-		public static float soundVolume = 1f;
 		public static bool[] wallHouse = new bool[14];
-		public static int[] backgroundWidth = new int[7];
-		public static int[] backgroundHeight = new int[7];
-        public static bool tilesLoaded = false;
         public static TileCollection tile;
 		public static Item[] item = new Item[201];
 		public static NPC[] npcs = new NPC[NPC.MAX_NPCS + 1];
@@ -157,64 +85,15 @@ namespace Terraria_Server
 		public static Vector2 screenLastPosition;
 		public static int screenWidth = 800;
 		public static int screenHeight = 600;
-		public static int chatLength = 600;
-		public static bool chatMode = false;
-		public static bool chatRelease = false;
-		public static int numChatLines = 7;
-		public static String chatText = "";
-		public static bool inputTextEnter = false;
-		public static float[] hotbarScale = new float[]
-		{
-			1f, 
-			0.75f, 
-			0.75f, 
-			0.75f, 
-			0.75f, 
-			0.75f, 
-			0.75f, 
-			0.75f, 
-			0.75f, 
-			0.75f
-		};
-		public static byte mouseTextColor = 0;
-		public static int mouseTextColorChange = 1;
-		public static bool mouseLeftRelease = false;
-		public static bool mouseRightRelease = false;
 		public static bool playerInventory = false;
-		public static int stackSplit;
-		public static int stackCounter = 0;
-		public static int stackDelay = 7;
-		public static Item mouseItem = new Item();
-		public static bool hasFocus = true;
-		//public static Recipe[] recipe = new Recipe[Recipe.maxRecipes];
-		//public static int[] availableRecipe = new int[Recipe.maxRecipes];
-		//public static float[] availableRecipeY = new float[Recipe.maxRecipes];
-		public static int numAvailableRecipes;
-		public static int focusRecipe;
 		public static int myPlayer = 0;
 		public static Player[] players = new Player[MAX_PLAYERS+1];
 		public static int spawnTileX;
 		public static int spawnTileY;
-		public static bool npcChatRelease = false;
 		public static bool editSign = false;
 		public static String signText = "";
 		public static String npcChatText = "";
-		public static bool npcChatFocus1 = false;
-		public static bool npcChatFocus2 = false;
-		public static int npcShop = 0;
 		public Chest[] shops = new Chest[6];
-		private static Item toolTip = new Item();
-		public static String motd = "";
-		public bool toggleFullscreen;
-		private int[] displayWidth = new int[99];
-		private int[] displayHeight = new int[99];
-		public static bool gameMenu = true;
-		public static Player[] loadPlayer = new Player[5];
-		public static String[] loadPlayerPath = new String[5];
-		public static String playerPathName;
-		public static String[] loadWorld = new String[999];
-		public static String[] loadWorldPath = new String[999];
-		public static String worldPathName;
 		public static int invasionType = 0;
 		public static double invasionX = 0.0;
 		public static int invasionSize = 0;
@@ -293,42 +172,11 @@ namespace Terraria_Server
 			1, 
 			5
 		};
-		public static Player clientPlayer = new Player();
-		public static String getIP = Main.defaultIP;
-		public static String getPort = Convert.ToString(Netplay.serverPort);
-		public static bool menuMultiplayer = false;
-		public static bool menuServer = false;
 		public static int timeOut = 120;
 		public static int NetplayCounter;
-		public static int lastNPCUpdate;
 		public static int lastItemUpdate;
 		public static int maxNPCUpdates = 15;
 		public static int maxItemUpdates = 10;
-		public static String cUp = "W";
-		public static String cLeft = "A";
-		public static String cDown = "S";
-		public static String cRight = "D";
-		public static String cJump = "Space";
-		public static String cThrowItem = "Q";
-		public static String cInv = "Escape";
-		public static Color mouseColor = new Color(255, 50, 95);
-        public static Color cursorColor = new Color(255, 255, 255);
-		public static int cursorColorDirection = 1;
-		public static float cursorAlpha = 0f;
-		public static float cursorScale = 0f;
-		public static bool signBubble = false;
-		public static int signX = 0;
-		public static int signY = 0;
-		public static bool hideUI = false;
-		public static bool releaseUI = false;
-		public static bool fixedTiming = false;
-		public static String oldStatusText = "";
-		public static bool autoShutdown = false;
-		private static int maxMenuItems = 11;
-		private float[] menuItemScale = new float[Main.maxMenuItems];
-		public static int menuMode = 0;
-		public static String newWorldName = "";
-		private Color selColor = new Color(255, 255, 255);
 		public static bool autoPass = false;
 		
         public void SetNetplayers(int mPlayers)
@@ -452,10 +300,10 @@ namespace Terraria_Server
                 Main.tileDungeon[i] = true;
             }
 
-            for (int j = 0; j < Main.maxMenuItems; j++)
-            {
-                this.menuItemScale[j] = 0.8f;
-            }
+            //for (int j = 0; j < Main.maxMenuItems; j++)
+            //{
+            //    this.menuItemScale[j] = 0.8f;
+            //}
             for (int l = 0; l < 201; l++)
             {
                 Main.item[l] = new Item();
@@ -677,7 +525,7 @@ namespace Terraria_Server
                 if (Netplay.slots[i].state >= SlotState.CONNECTED)
                 {
                     Netplay.slots[i].timeOut++;
-                    if (!Main.stopTimeOuts && Netplay.slots[i].timeOut > 60 * Main.timeOut)
+                    if (/*!Main.stopTimeOuts && */Netplay.slots[i].timeOut > 60 * Main.timeOut)
                     {
                         Netplay.slots[i].Kick ("Timed out.");
                     }

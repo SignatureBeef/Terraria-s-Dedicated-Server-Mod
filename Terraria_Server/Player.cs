@@ -337,25 +337,8 @@ namespace Terraria_Server
                                 this.zoneEvil = true;
                             }
                             this.zoneMeteor = false;
-                            if (Main.meteorTiles >= 50)
-                            {
-                                this.zoneMeteor = true;
-                            }
                             this.zoneDungeon = false;
-                            if (Main.dungeonTiles >= 250 && (double)this.Position.Y > Main.worldSurface * 16.0 + (double)Main.screenHeight)
-                            {
-                                int num7 = (int)this.Position.X / 16;
-                                int num8 = (int)this.Position.Y / 16;
-                                if (Main.tile.At(num7, num8).Wall > 0 && !Main.wallHouse[(int)Main.tile.At(num7, num8).Wall])
-                                {
-                                    this.zoneDungeon = true;
-                                }
-                            }
                             this.zoneJungle = false;
-                            if (Main.jungleTiles >= 200)
-                            {
-                                this.zoneJungle = true;
-                            }
                             this.controlUp = false;
                             this.controlLeft = false;
                             this.controlDown = false;
@@ -1026,9 +1009,6 @@ namespace Terraria_Server
                                 }
                                 int num32 = Player.tileTargetX - num30;
                                 int num33 = Player.tileTargetY - num31;
-                                Main.signBubble = true;
-                                Main.signX = num32 * 16 + 16;
-                                Main.signY = num33 * 16;
                             }
                             if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 10 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 11)
                             {

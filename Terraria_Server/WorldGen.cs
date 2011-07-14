@@ -887,209 +887,206 @@ namespace Terraria_Server
                 WorldGen.saveLock = true;
                 lock (WorldGen.padlock)
                 {
-                    if (!Main.skipMenu)
+                    bool value = Main.dayTime;
+                    WorldGen.tempTime = Main.time;
+                    WorldGen.tempMoonPhase = Main.moonPhase;
+                    WorldGen.tempBloodMoon = Main.bloodMoon;
+
+                    if (resetTime)
                     {
-                        bool value = Main.dayTime;
-                        WorldGen.tempTime = Main.time;
-                        WorldGen.tempMoonPhase = Main.moonPhase;
-                        WorldGen.tempBloodMoon = Main.bloodMoon;
-
-                        if (resetTime)
-                        {
-                            value = true;
-                            WorldGen.tempTime = 13500.0;
-                            WorldGen.tempMoonPhase = 0;
-                            WorldGen.tempBloodMoon = false;
-                        }
+                        value = true;
+                        WorldGen.tempTime = 13500.0;
+                        WorldGen.tempMoonPhase = 0;
+                        WorldGen.tempBloodMoon = false;
+                    }
                         
-                            Stopwatch stopwatch = new Stopwatch();
-                            stopwatch.Start();
-                            String tempPath = savePath + ".sav";
-                            using (FileStream fileStream = new FileStream(tempPath, FileMode.Create))
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    String tempPath = savePath + ".sav";
+                    using (FileStream fileStream = new FileStream(tempPath, FileMode.Create))
+                    {
+                        using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
+                        {
+                            binaryWriter.Write(Statics.CURRENT_TERRARIA_RELEASE);
+                            binaryWriter.Write(Main.worldName);
+                            binaryWriter.Write(Main.worldID);
+                            binaryWriter.Write((int)Main.leftWorld);
+                            binaryWriter.Write((int)Main.rightWorld);
+                            binaryWriter.Write((int)Main.topWorld);
+                            binaryWriter.Write((int)Main.bottomWorld);
+                            binaryWriter.Write(Main.maxTilesY);
+                            binaryWriter.Write(Main.maxTilesX);
+                            binaryWriter.Write(Main.spawnTileX);
+                            binaryWriter.Write(Main.spawnTileY);
+                            binaryWriter.Write(Main.worldSurface);
+                            binaryWriter.Write(Main.rockLayer);
+                            binaryWriter.Write(WorldGen.tempTime);
+                            binaryWriter.Write(value);
+                            binaryWriter.Write(WorldGen.tempMoonPhase);
+                            binaryWriter.Write(WorldGen.tempBloodMoon);
+                            binaryWriter.Write(Main.dungeonX);
+                            binaryWriter.Write(Main.dungeonY);
+                            binaryWriter.Write(NPC.downedBoss1);
+                            binaryWriter.Write(NPC.downedBoss2);
+                            binaryWriter.Write(NPC.downedBoss3);
+                            binaryWriter.Write(WorldGen.shadowOrbSmashed);
+                            binaryWriter.Write(WorldGen.spawnMeteor);
+                            binaryWriter.Write((byte)WorldGen.shadowOrbCount);
+                            binaryWriter.Write(Main.invasionDelay);
+                            binaryWriter.Write(Main.invasionSize);
+                            binaryWriter.Write(Main.invasionType);
+                            binaryWriter.Write(Main.invasionX);
+
+                            for (int x = 0; x < Main.maxTilesX; x++)
                             {
-                                using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
+                                float num = (float)x / (float)Main.maxTilesX;
+                                Program.printData("Saving world data: " + (int)(num * 100f + 1f) + "%", true);
+                                for (int y = 0; y < Main.maxTilesY; y++)
                                 {
-                                    binaryWriter.Write(Statics.CURRENT_TERRARIA_RELEASE);
-                                    binaryWriter.Write(Main.worldName);
-                                    binaryWriter.Write(Main.worldID);
-                                    binaryWriter.Write((int)Main.leftWorld);
-                                    binaryWriter.Write((int)Main.rightWorld);
-                                    binaryWriter.Write((int)Main.topWorld);
-                                    binaryWriter.Write((int)Main.bottomWorld);
-                                    binaryWriter.Write(Main.maxTilesY);
-                                    binaryWriter.Write(Main.maxTilesX);
-                                    binaryWriter.Write(Main.spawnTileX);
-                                    binaryWriter.Write(Main.spawnTileY);
-                                    binaryWriter.Write(Main.worldSurface);
-                                    binaryWriter.Write(Main.rockLayer);
-                                    binaryWriter.Write(WorldGen.tempTime);
-                                    binaryWriter.Write(value);
-                                    binaryWriter.Write(WorldGen.tempMoonPhase);
-                                    binaryWriter.Write(WorldGen.tempBloodMoon);
-                                    binaryWriter.Write(Main.dungeonX);
-                                    binaryWriter.Write(Main.dungeonY);
-                                    binaryWriter.Write(NPC.downedBoss1);
-                                    binaryWriter.Write(NPC.downedBoss2);
-                                    binaryWriter.Write(NPC.downedBoss3);
-                                    binaryWriter.Write(WorldGen.shadowOrbSmashed);
-                                    binaryWriter.Write(WorldGen.spawnMeteor);
-                                    binaryWriter.Write((byte)WorldGen.shadowOrbCount);
-                                    binaryWriter.Write(Main.invasionDelay);
-                                    binaryWriter.Write(Main.invasionSize);
-                                    binaryWriter.Write(Main.invasionType);
-                                    binaryWriter.Write(Main.invasionX);
-
-                                    for (int x = 0; x < Main.maxTilesX; x++)
+                                    TileRef tile = Main.tile.At(x, y);
+                                    binaryWriter.Write(tile.Active);
+                                    if (tile.Active)
                                     {
-                                        float num = (float)x / (float)Main.maxTilesX;
-                                        Program.printData("Saving world data: " + (int)(num * 100f + 1f) + "%", true);
-                                        for (int y = 0; y < Main.maxTilesY; y++)
+                                        binaryWriter.Write(tile.Type);
+                                        if (Main.tileFrameImportant[(int)tile.Type])
                                         {
-                                            TileRef tile = Main.tile.At(x, y);
-                                            binaryWriter.Write(tile.Active);
-                                            if (tile.Active)
-                                            {
-                                                binaryWriter.Write(tile.Type);
-                                                if (Main.tileFrameImportant[(int)tile.Type])
-                                                {
-                                                    binaryWriter.Write(tile.FrameX);
-                                                    binaryWriter.Write(tile.FrameY);
-                                                }
-                                            }
-
-                                            binaryWriter.Write(tile.Lighted);
-                                            if (Main.tile.At(x, y).Wall > 0)
-                                            {
-                                                binaryWriter.Write(true);
-                                                binaryWriter.Write(tile.Wall);
-                                            }
-                                            else
-                                            {
-                                                binaryWriter.Write(false);
-                                            }
-
-                                            if (tile.Liquid > 0)
-                                            {
-                                                binaryWriter.Write(true);
-                                                binaryWriter.Write(tile.Liquid);
-                                                binaryWriter.Write(tile.Lava);
-                                            }
-                                            else
-                                            {
-                                                binaryWriter.Write(false);
-                                            }
+                                            binaryWriter.Write(tile.FrameX);
+                                            binaryWriter.Write(tile.FrameY);
                                         }
                                     }
 
-                                    Chest chest;
-                                    for (int i = 0; i < 1000; i++)
+                                    binaryWriter.Write(tile.Lighted);
+                                    if (Main.tile.At(x, y).Wall > 0)
                                     {
-                                        chest = Main.chest[i];
-                                        if (chest == null)
-                                        {
-                                            binaryWriter.Write(false);
-                                        }
-                                        else
-                                        {
-                                            binaryWriter.Write(true);
-                                            binaryWriter.Write(chest.x);
-                                            binaryWriter.Write(chest.y);
-                                            for (int l = 0; l < Chest.MAX_ITEMS; l++)
-                                            {
-                                                binaryWriter.Write((byte)chest.contents[l].Stack);
-                                                if (chest.contents[l].Stack > 0)
-                                                {
-                                                    binaryWriter.Write(chest.contents[l].Name);
-                                                }
-                                            }
-                                        }
+                                        binaryWriter.Write(true);
+                                        binaryWriter.Write(tile.Wall);
+                                    }
+                                    else
+                                    {
+                                        binaryWriter.Write(false);
                                     }
 
-                                    Sign sign;
-                                    for (int i = 0; i < 1000; i++)
+                                    if (tile.Liquid > 0)
                                     {
-                                        sign = Main.sign[i];
-                                        if (sign == null || sign.text == null)
-                                        {
-                                            binaryWriter.Write(false);
-                                        }
-                                        else
-                                        {
-                                            binaryWriter.Write(true);
-                                            binaryWriter.Write(sign.text);
-                                            binaryWriter.Write(sign.x);
-                                            binaryWriter.Write(sign.y);
-                                        }
+                                        binaryWriter.Write(true);
+                                        binaryWriter.Write(tile.Liquid);
+                                        binaryWriter.Write(tile.Lava);
                                     }
-
-                                    NPC npc;
-                                    for (int i = 0; i < 1000; i++)
+                                    else
                                     {
-                                        npc = Main.npcs[i];
-                                        if (npc.Active && npc.townNPC)
-                                        {
-                                            binaryWriter.Write(true);
-                                            binaryWriter.Write(npc.Name);
-                                            binaryWriter.Write(npc.Position.X);
-                                            binaryWriter.Write(npc.Position.Y);
-                                            binaryWriter.Write(npc.homeless);
-                                            binaryWriter.Write(npc.homeTileX);
-                                            binaryWriter.Write(npc.homeTileY);
-                                        }
+                                        binaryWriter.Write(false);
                                     }
-
-                                    binaryWriter.Write(false);
-                                    binaryWriter.Write(true);
-                                    binaryWriter.Write(Main.worldName);
-                                    binaryWriter.Write(Main.worldID);
-                                    binaryWriter.Close();
-                                    fileStream.Close();
-                                    Program.tConsole.WriteLine();
-                                    if (File.Exists(savePath))
-                                    {
-                                        Program.tConsole.WriteLine("Backing up world file...");
-                                        String destFileName = savePath + ".bak";
-                                        File.Copy(savePath, destFileName, true);
-                                        try
-                                        {
-                                            File.Delete(destFileName);
-                                        }
-                                        catch (Exception e)
-                                        {
-                                            Program.tConsole.WriteLine("Exception removing " + destFileName);
-                                            Program.tConsole.WriteLine(e.Message);
-                                            Program.tConsole.WriteLine(e.StackTrace);
-                                        }
-                                        File.Move(savePath, destFileName);
-                                    }
-                                }
-
-                                try
-                                {
-                                    File.Move(tempPath, savePath);
-                                }
-                                catch (Exception e)
-                                {
-                                    Program.tConsole.WriteLine("Exception moving " + tempPath);
-                                    Program.tConsole.WriteLine(e.Message);
-                                    Program.tConsole.WriteLine(e.StackTrace);
-                                }
-
-                                try
-                                {
-                                    File.Delete(tempPath);
-                                }
-                                catch (Exception e)
-                                {
-                                    Program.tConsole.WriteLine("Exception removing " + tempPath);
-                                    Program.tConsole.WriteLine(e.Message);
-                                    Program.tConsole.WriteLine(e.StackTrace);
                                 }
                             }
-                            stopwatch.Stop();
-                            Program.tConsole.WriteLine("Save duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
-                            WorldGen.saveLock = false;
+
+                            Chest chest;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                chest = Main.chest[i];
+                                if (chest == null)
+                                {
+                                    binaryWriter.Write(false);
+                                }
+                                else
+                                {
+                                    binaryWriter.Write(true);
+                                    binaryWriter.Write(chest.x);
+                                    binaryWriter.Write(chest.y);
+                                    for (int l = 0; l < Chest.MAX_ITEMS; l++)
+                                    {
+                                        binaryWriter.Write((byte)chest.contents[l].Stack);
+                                        if (chest.contents[l].Stack > 0)
+                                        {
+                                            binaryWriter.Write(chest.contents[l].Name);
+                                        }
+                                    }
+                                }
+                            }
+
+                            Sign sign;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                sign = Main.sign[i];
+                                if (sign == null || sign.text == null)
+                                {
+                                    binaryWriter.Write(false);
+                                }
+                                else
+                                {
+                                    binaryWriter.Write(true);
+                                    binaryWriter.Write(sign.text);
+                                    binaryWriter.Write(sign.x);
+                                    binaryWriter.Write(sign.y);
+                                }
+                            }
+
+                            NPC npc;
+                            for (int i = 0; i < 1000; i++)
+                            {
+                                npc = Main.npcs[i];
+                                if (npc.Active && npc.townNPC)
+                                {
+                                    binaryWriter.Write(true);
+                                    binaryWriter.Write(npc.Name);
+                                    binaryWriter.Write(npc.Position.X);
+                                    binaryWriter.Write(npc.Position.Y);
+                                    binaryWriter.Write(npc.homeless);
+                                    binaryWriter.Write(npc.homeTileX);
+                                    binaryWriter.Write(npc.homeTileY);
+                                }
+                            }
+
+                            binaryWriter.Write(false);
+                            binaryWriter.Write(true);
+                            binaryWriter.Write(Main.worldName);
+                            binaryWriter.Write(Main.worldID);
+                            binaryWriter.Close();
+                            fileStream.Close();
+                            Program.tConsole.WriteLine();
+                            if (File.Exists(savePath))
+                            {
+                                Program.tConsole.WriteLine("Backing up world file...");
+                                String destFileName = savePath + ".bak";
+                                File.Copy(savePath, destFileName, true);
+                                try
+                                {
+                                    File.Delete(destFileName);
+                                }
+                                catch (Exception e)
+                                {
+                                    Program.tConsole.WriteLine("Exception removing " + destFileName);
+                                    Program.tConsole.WriteLine(e.Message);
+                                    Program.tConsole.WriteLine(e.StackTrace);
+                                }
+                                File.Move(savePath, destFileName);
+                            }
+                        }
+
+                        try
+                        {
+                            File.Move(tempPath, savePath);
+                        }
+                        catch (Exception e)
+                        {
+                            Program.tConsole.WriteLine("Exception moving " + tempPath);
+                            Program.tConsole.WriteLine(e.Message);
+                            Program.tConsole.WriteLine(e.StackTrace);
+                        }
+
+                        try
+                        {
+                            File.Delete(tempPath);
+                        }
+                        catch (Exception e)
+                        {
+                            Program.tConsole.WriteLine("Exception removing " + tempPath);
+                            Program.tConsole.WriteLine(e.Message);
+                            Program.tConsole.WriteLine(e.StackTrace);
+                        }
                     }
+                    stopwatch.Stop();
+                    Program.tConsole.WriteLine("Save duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
+                    WorldGen.saveLock = false;
                 }
             }
             catch (Exception e)
@@ -1102,21 +1099,6 @@ namespace Terraria_Server
         
         public static void loadWorld()
         {
-            if (!File.Exists(Program.server.World.SavePath) && Main.autoGen)
-            {
-                for (int i = Program.server.World.SavePath.Length - 1; i >= 0; i--)
-                {
-                    if (Program.server.World.SavePath.Substring(i, 1) == "\\")
-                    {
-                        String path = Program.server.World.SavePath.Substring(0, i);
-                        Directory.CreateDirectory(path);
-                        break;
-                    }
-                }
-                WorldGen.clearWorld();
-                WorldGen.generateWorld(-1);
-                WorldGen.saveWorld(Program.server.World.SavePath, false);
-            }
             if (WorldGen.genRand == null)
             {
                 WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
