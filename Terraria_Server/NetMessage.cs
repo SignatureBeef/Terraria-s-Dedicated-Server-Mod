@@ -409,6 +409,7 @@ namespace Terraria_Server
 		public static void GreetPlayer (int plr)
 		{
 			String[] motd = Program.properties.Greeting.Split('@');
+			
 			for (int i = 0; i < motd.Length; i++)
 			{
 				if (motd != null && motd.Length > 0)
@@ -436,6 +437,14 @@ namespace Terraria_Server
 				}
 			}
 			NetMessage.SendData(25, plr, -1, "Current players: " + text + ".", 255, 255f, 240f, 20f);
+			
+			PlayerLoginEvent loginEvent = new PlayerLoginEvent();
+			loginEvent.Slot = Netplay.slots[plr];
+			loginEvent.Sender = Main.players[plr];
+			Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, loginEvent);
+			
+			if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (loginEvent.Slot.state & SlotState.DISCONNECTING) == 0)
+				Netplay.slots[plr].Kick ("Disconnected by server.");
 		}
 		
 		public static void SendWater(int x, int y)
@@ -499,14 +508,6 @@ namespace Terraria_Server
 						if (Main.dedServ)
 						{
 							Program.tConsole.WriteLine(Main.players[i].Name + " has joined.");
-
-							PlayerLoginEvent loginEvent = new PlayerLoginEvent();
-							loginEvent.Slot = Netplay.slots[i];
-							loginEvent.Sender = Main.players[i];
-							Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, loginEvent);
-							
-							if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (loginEvent.Slot.state & SlotState.DISCONNECTING) == 0)
-								Netplay.slots[i].Kick ("Disconnected by server.");
 						}
 					}
 					

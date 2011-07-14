@@ -113,7 +113,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
 
         /// <summary>
-        /// Hook method for player joining the server, as they're announced
+        /// Hook method for player joining the server, as they're greeted
         /// </summary>
         /// <param name="Event">PlayerLoginEvent info</param>
         public virtual void onPlayerJoin(PlayerLoginEvent Event) { }
