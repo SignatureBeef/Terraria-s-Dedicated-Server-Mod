@@ -243,7 +243,7 @@ namespace Terraria_Server
                 {
                     try
                     {
-                        String line = Console.ReadLine().Trim().ToLower();
+                        String line = Console.ReadLine().Trim();
                         if (line.Length > 0)
                         {
                             commandParser.parseConsoleCommand(line, server);
