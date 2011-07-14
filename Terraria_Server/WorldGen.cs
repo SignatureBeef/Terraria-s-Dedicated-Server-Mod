@@ -18056,8 +18056,7 @@ namespace Terraria_Server
                                     if (num9 == 59)
                                     {
                                         type2 = ProjectileType.BALL_MUD;
-                                    }
-                                    if (num9 == 57)
+                                    } else if (num9 == 57)
                                     {
                                         type2 = ProjectileType.BALL_ASH;
                                     }
