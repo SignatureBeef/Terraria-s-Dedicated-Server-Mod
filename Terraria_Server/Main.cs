@@ -204,22 +204,22 @@ namespace Terraria_Server
 			}
 			int num = Main.rand.Next(5);
 
-            Main.tileShine[22] = 1150;
             Main.tileShine[6] = 1150;
             Main.tileShine[7] = 1100;
             Main.tileShine[8] = 1000;
             Main.tileShine[9] = 1050;
             Main.tileShine[12] = 1000;
             Main.tileShine[21] = 1000;
+            Main.tileShine[22] = 1150;
+            Main.tileShine[45] = 1900;
+            Main.tileShine[46] = 2000;
+            Main.tileShine[47] = 2100;
             Main.tileShine[63] = 900;
             Main.tileShine[64] = 900;
             Main.tileShine[65] = 900;
             Main.tileShine[66] = 900;
             Main.tileShine[67] = 900;
             Main.tileShine[68] = 900;
-            Main.tileShine[45] = 1900;
-            Main.tileShine[46] = 2000;
-            Main.tileShine[47] = 2100;
 
             foreach (int i in new int[] { 3, 24, 28, 32, 51, 52, 61, 62, 69, 71, 73, 74, 82, 83, 84 })
             {
@@ -299,11 +299,6 @@ namespace Terraria_Server
             {
                 Main.tileDungeon[i] = true;
             }
-
-            //for (int j = 0; j < Main.maxMenuItems; j++)
-            //{
-            //    this.menuItemScale[j] = 0.8f;
-            //}
             for (int l = 0; l < 201; l++)
             {
                 Main.item[l] = new Item();
@@ -321,12 +316,6 @@ namespace Terraria_Server
             {
                 Main.projectile[num2] = new Projectile();
             }
-            //for (int num8 = 0; num8 < Recipe.maxRecipes; num8++)
-            //{
-            //    Main.recipe[num8] = new Recipe();
-            //    Main.availableRecipeY[num8] = (float)(65 * num8);
-            //}
-            //Recipe.SetupRecipes();
             for (int num10 = 0; num10 < Liquid.resLiquid; num10++)
             {
                 Main.liquid[num10] = new Liquid();
