@@ -81,7 +81,7 @@ namespace Terraria_Server.Messages
 
 			var loginEvent = new PlayerLoginEvent();
 			loginEvent.Slot = slot;
-			loginEvent.Sender = Main.players[whoAmI];
+			loginEvent.Sender = player;
 			Program.server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_QUERY, loginEvent);
 			
 			if (loginEvent.Action == PlayerLoginAction.REJECT)

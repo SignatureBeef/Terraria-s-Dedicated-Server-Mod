@@ -12,7 +12,12 @@ namespace Terraria_Server.Misc
         private Dictionary<String, String> propertiesMap;
         
         private String propertiesPath = String.Empty;
-
+		
+		public int Count
+		{
+			get { return propertiesMap.Count; }
+		}
+		
         public PropertiesFile(String propertiesPath)
         {
             propertiesMap = new Dictionary<String, String>();
