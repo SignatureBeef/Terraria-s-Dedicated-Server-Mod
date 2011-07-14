@@ -132,7 +132,15 @@ namespace Terraria_Server.Plugin
             foreach (Plugin plugin in plugins.Values)
             {
                 plugin.Enabled = false;
-                plugin.Disable();
+                try
+                {
+                    plugin.Disable();
+                }
+                catch (Exception exception)
+                {
+                    Program.tConsole.WriteLine("Plugin Disable Exception '" + pluginPath + "' : "
+                    + exception.ToString());
+                }
             }
 
             plugins.Clear();
