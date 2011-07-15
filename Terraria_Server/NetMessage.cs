@@ -175,7 +175,7 @@ namespace Terraria_Server
 						break;
 	
 					case (int)Packet.KILL_PROJECTILE:
-						msg.KillProjectile (Main.projectile[number]);
+						msg.KillProjectile (number, (int)number2);
 						break;
 						
 					case (int)Packet.PLAYER_PVP_CHANGE:

@@ -459,12 +459,12 @@ namespace Terraria_Server
 			Byte (direction + 1);
 		}
 		
-		public void KillProjectile (Projectile proj)
+		public void KillProjectile (int identity, int owner)
 		{
 			Header (Packet.KILL_PROJECTILE, 3);
 			
-			Short (proj.identity);
-			Byte (proj.Owner);
+			Short (identity);
+			Byte (owner);
 		}
 		
 		public void PlayerPVPChange (int playerId)
