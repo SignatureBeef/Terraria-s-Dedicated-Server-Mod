@@ -1215,7 +1215,7 @@ namespace Terraria_Server.Commands
 					var name = "";
 					if (player != null)
 						name = ", " + player.Name;
-					Program.tConsole.WriteLine ("slot {0}: {1}, {2}{3}", i, slot.state, slot.remoteAddress, name);
+					sender.sendMessage (string.Format ("slot {0}: {1}, {2}{3}, {4} {5}", i, slot.state, slot.remoteAddress, name, NetMessage.buffer[i].totalData, NetMessage.buffer[i].sideBufferBytes));
 				}
 			}
 		}
