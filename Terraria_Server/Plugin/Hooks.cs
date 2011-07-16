@@ -31,5 +31,6 @@ namespace Terraria_Server.Plugin
         PLAYER_AUTH_REPLY,
         NPC_BOSSDEATH,
         NPC_BOSSSUMMON,
+        PLAYER_FLOWLIQUID,
     }
 }

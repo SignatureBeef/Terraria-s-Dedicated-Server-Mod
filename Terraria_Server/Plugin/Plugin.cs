@@ -107,6 +107,12 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerEditSign(PlayerEditSignEvent Event) { }
 
         /// <summary>
+        /// Hook method for any player-initiated liquid changes
+        /// </summary>
+        /// <param name="Event">PlayerFlowLiquidEvent info</param>
+        public virtual void onPlayerFlowLiquid(PlayerFlowLiquidEvent Event) { }
+
+        /// <summary>
         /// Hook method for player damage
         /// </summary>
         /// <param name="Event">PlayerHurtEvent info</param>

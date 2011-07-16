@@ -345,6 +345,9 @@ namespace Terraria_Server.Plugin
                                     plugin.onNPCBossSummon((NPCBossSummonEvent)hookEvent);
                                     break;
                                 }
+                            case Hooks.PLAYER_FLOWLIQUID:
+                                plugin.onPlayerFlowLiquid ((PlayerFlowLiquidEvent)hookEvent);
+                                break;
                         }
                     }
                 }

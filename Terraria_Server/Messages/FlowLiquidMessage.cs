@@ -1,4 +1,7 @@
 using System;
+using Terraria_Server.Events;
+using Terraria_Server.Misc;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Messages
 {
@@ -35,6 +38,21 @@ namespace Terraria_Server.Messages
                     return;
                 }
             }
+            
+            var ev = new PlayerFlowLiquidEvent ();
+            ev.Sender = Main.players[whoAmI];
+            ev.Position = new Vector2(x, y);
+            ev.Liquid = liquid;
+            ev.Lava = lavaFlag == 1;
+            Program.server.PluginManager.processHook(Hooks.PLAYER_FLOWLIQUID, ev);
+            if (ev.Cancelled)
+            {
+                var msg = NetMessage.PrepareThreadInstance ();
+                msg.FlowLiquid (x, y);
+                msg.Send (whoAmI);
+                return;
+            }
+            
             TileRef tile = Main.tile.At(x, y);
             {
                 tile.SetLiquid (liquid);
