@@ -183,6 +183,10 @@ namespace Terraria_Server
 		// Plugins can keep per-player state in here, using their object or name as a key
 		// The collection is synchronized
 		public readonly System.Collections.Hashtable PluginData;
+		
+		// null if no authentication plugin is running or the user is a guest,
+		// otherwise filled with the account or character name
+		public string AuthenticatedAs { get; set; }
 
         public bool Op { get; set; }
 
