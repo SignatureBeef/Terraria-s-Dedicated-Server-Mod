@@ -224,6 +224,11 @@ namespace Terraria_Server
                 server.ServerIP = properties.ServerIP;
                 server.Initialize();
                 
+                Server.maxTilesX = worldXtiles;
+                Server.maxTilesY = worldYtiles;
+                Server.maxSectionsX = worldXtiles / 200;
+                Server.maxSectionsY = worldYtiles / 150;
+                
                 Server.tile = new TileCollection(worldXtiles, worldYtiles);
                 WorldGen.loadWorld();
 

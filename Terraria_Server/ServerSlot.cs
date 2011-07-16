@@ -140,13 +140,16 @@ namespace Terraria_Server
 		{
 			this.writeQueue = new Queue<byte[]> ();
 			this.remoteAddress = "<unknown>";
-
-			for (int i = 0; i < Main.maxSectionsX; i++)
+			
+			if (tileSection.GetLength(0) >= Main.maxSectionsX && tileSection.GetLength(1) >= Main.maxSectionsY)
 			{
-				for (int j = 0; j < Main.maxSectionsY; j++)
-				{
-					this.tileSection[i, j] = false;
-				}
+				for (int i = 0; i < Main.maxSectionsX; i++)
+					for (int j = 0; j < Main.maxSectionsY; j++)
+						tileSection[i, j] = false;
+			}
+			else
+			{
+				tileSection = new bool [Main.maxSectionsX, Main.maxSectionsY];
 			}
 			
 			var oldPlayer = Main.players[this.whoAmI];
