@@ -179,6 +179,10 @@ namespace Terraria_Server
 		public int talkNPC = -1;
 		public int fallStart;
 		public int slowCount;
+		
+		// Plugins can keep per-player state in here, using their object or name as a key
+		// The collection is synchronized
+		public readonly System.Collections.Hashtable PluginData;
 
         public bool Op { get; set; }
 
@@ -3923,7 +3927,9 @@ namespace Terraria_Server
 		{
             Width = 20;
 		    Height = 42;
-
+			
+			PluginData = System.Collections.Hashtable.Synchronized (new System.Collections.Hashtable());
+			
 			for (int i = 0; i < MAX_INVENTORY; i++)
 			{
 				if (i < 8)
