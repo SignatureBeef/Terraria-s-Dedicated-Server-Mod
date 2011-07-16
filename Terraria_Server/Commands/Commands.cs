@@ -1215,7 +1215,16 @@ namespace Terraria_Server.Commands
 				{
 					var name = "";
 					if (player != null)
-						name = ", " + player.Name;
+					{
+						name = ", " + (player.Name ?? "<null>");
+						if (player.AuthenticatedAs != null)
+						{
+							if (player.Name == player.AuthenticatedAs)
+								name = name + " (auth'd)";
+							else
+								name = name + " (auth'd as " + player.AuthenticatedAs + ")";
+						}
+					}
 					sender.sendMessage (string.Format ("slot {0}: {1}, {2}{3}, {4} {5}", i, slot.state, slot.remoteAddress, name, NetMessage.buffer[i].totalData, NetMessage.buffer[i].sideBufferBytes));
 				}
 			}
