@@ -1,5 +1,7 @@
-﻿using Terraria_Server.Plugin;
-using System;
+﻿using System;
+using System.Text;
+using System.Collections.Generic;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Commands
 {
@@ -37,37 +39,18 @@ namespace Terraria_Server.Commands
                 return;
             }
 
-            if (Line.Contains("\""))
+            try
             {
-                String[] commands = new String[Line.Substring(0, Line.IndexOf("\"")).Split(' ').Length + Line.Substring(Line.LastIndexOf("\"")).Split(' ').Length - 1];
-                String[] temp = Line.Substring(0, Line.IndexOf("\"")).Trim().Split(' ');
-                String[] temp2 = Line.Substring(Line.LastIndexOf("\"") + 1).Trim().Split(' ');
-                String[] temp3 = new String[temp.Length + 1];
-                temp.CopyTo(temp3, 0);
+                var tokens = Tokenize (Line.Trim());
 
-                temp3[temp3.Length - 1] = Line.Substring(Line.IndexOf("\""), Line.LastIndexOf("\"") - Line.IndexOf("\"")).Remove(0,1);
-
-                temp3.CopyTo(commands, 0);
-                temp2.CopyTo(commands, temp3.Length);
-
-                if (commands == null || commands.Length <= 0)
+                if (tokens.Count > 0)
                 {
-                    Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
-                    return;
+                    switchCommands (tokens, cSender.ConsoleCommand.Sender);
                 }
-                switchCommands(commands, cSender.ConsoleCommand.Sender);
-
             }
-            else
+            catch (TokenizerException e)
             {
-                String[] commands = Line.Trim().ToLower().Split(' ');
-
-                if (commands == null || commands.Length <= 0)
-                {
-                    Program.tConsole.WriteLine("Issue parsing Console Command for " + Hooks.CONSOLE_COMMAND.ToString());
-                    return;
-                }
-                switchCommands(commands, cSender.ConsoleCommand.Sender);
+                sender.sendMessage (e.Message);
             }
         }
 
@@ -81,49 +64,31 @@ namespace Terraria_Server.Commands
             if (Line.StartsWith("/"))
             {
                 Line = Line.Remove(0, 1);
-            }
-            if (Line.Contains("\""))
-            {
-                String[] commands = new String[Line.Substring(0, Line.IndexOf("\"")).Split(' ').Length + Line.Substring(Line.LastIndexOf("\"")).Split(' ').Length - 1];
-                String[] temp = Line.Substring(0, Line.IndexOf("\"")).Trim().Split(' ');
-                String[] temp2 = Line.Substring(Line.LastIndexOf("\"") + 1).Trim().Split(' ');
-                String[] temp3 = new String[temp.Length + 1];
-                temp.CopyTo(temp3, 0);
-
-                temp3[temp3.Length - 1] = Line.Substring(Line.IndexOf("\""), Line.LastIndexOf("\"") - Line.IndexOf("\"")).Replace("\"", "");
-
-                temp3.CopyTo(commands, 0);
-                temp2.CopyTo(commands, temp3.Length);
-
-                if (commands == null || commands.Length <= 0)
+                
+                try
                 {
-                    Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.Name);
-                    return;
+                    var tokens = Tokenize (Line.Trim());
+
+                    if (tokens.Count > 0)
+                    {
+                        switchCommands (tokens, player);
+                    }
                 }
-                switchCommands(commands, player);
-
-            }
-            else
-            {
-                String[] commands = Line.Trim().ToLower().Split(' ');
-
-                if (commands == null || commands.Length <= 0)
+                catch (TokenizerException e)
                 {
-                    Program.tConsole.WriteLine("Issue parsing Player Command for " + Hooks.PLAYER_COMMAND.ToString() + " from " + player.Name);
-                    return;
+                    player.sendMessage (e.Message);
                 }
-                switchCommands(commands, player);
             }
         }
 
         /// <summary>
         /// Executes command methods derived from parsing
         /// </summary>
-        /// <param name="commands">Command arguments to pass to methods</param>
+        /// <param name="tokens">Command arguments to pass to methods</param>
         /// <param name="sender">Sending player</param>
-        public void switchCommands(String[] commands, ISender sender)
+        public void switchCommands (IList<string> tokens, ISender sender)
         {
-            switch (Commands.getCommandValue(commands[0]))
+            switch (Commands.getCommandValue(tokens[0]))
             {
                 case (int)Commands.Command.NO_SUCH_COMMAND:
                     {
@@ -159,7 +124,7 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.PLAYER_ME:
                     {
-                        String Message = Commands.MergeStringArray(commands);
+                        String Message = string.Join (" ", tokens);
                         if (Message.Length <= 3) { return; }
 
                         if (sender is Player)
@@ -183,9 +148,9 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.COMMAND_HELP:
                     {
-                        if (commands.Length > 1)
+                        if (tokens.Count > 1)
                         {
-                            Commands.ShowHelp(sender, commands);
+                            Commands.ShowHelp(sender, tokens);
                         }
                         else
                         {
@@ -195,42 +160,42 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.COMMAND_WHITELIST:
                     {
-                        Commands.WhiteList(sender, commands);
+                        Commands.WhiteList(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_BAN:
                     {
-                        Commands.BanList(sender, commands);
+                        Commands.BanList(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_UNBAN:
                     {
-                        Commands.BanList(sender, commands);
+                        Commands.BanList(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_TIME:
                     {
-                        Commands.Time(sender, commands);
+                        Commands.Time(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_GIVE:
                     {
-                        Commands.Give(sender, commands);
+                        Commands.Give(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.PLAYER_SPAWNNPC:
                     {
-                        Commands.SpawnNPC(sender, commands);
+                        Commands.SpawnNPC(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_TELEPORT:
                     {
-                        Commands.Teleport(sender, commands);
+                        Commands.Teleport(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.PLAYER_TPHERE:
                     {
-                        Commands.TeleportHere(sender, commands);
+                        Commands.TeleportHere(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_SETTLEWATER:
@@ -240,22 +205,22 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.COMMAND_OP:
                     {
-                        Commands.OP(sender, commands);
+                        Commands.OP(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_DEOP:
                     {
-                        Commands.OP(sender, commands, true);
+                        Commands.OP(sender, tokens, true);
                         break;
                     }
                 case (int)Commands.Command.PLAYER_OPLOGIN:
                     {
-                        Commands.OPLoginOut(sender, commands);
+                        Commands.OPLoginOut(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.PLAYER_OPLOGOUT:
                     {
-                        Commands.OPLoginOut(sender, commands, true);
+                        Commands.OPLoginOut(sender, tokens, true);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_NPCSPAWN:
@@ -265,7 +230,7 @@ namespace Terraria_Server.Commands
                     }
                 case (int)Commands.Command.COMMAND_KICK:
                     {
-                        Commands.Kick(sender, commands);
+                        Commands.Kick(sender, tokens);
                         break;
                     }
                 case (int)Commands.Command.COMMAND_RESTART:
@@ -289,6 +254,70 @@ namespace Terraria_Server.Commands
                     }
             }
         }
+		
+		class TokenizerException : Exception
+		{
+			public TokenizerException (string message) : base (message) {}
+		}
+		
+		/// <summary>
+		/// Splits a command on spaces, with support for "parameters in quotes" and non-breaking\ spaces.
+		/// Literal quotes need to be escaped like this: \"
+		/// Literal backslashes need to escaped like this: \\
+		/// </summary>
+		/// <param name="commands">Whole command line without trailing newline </param>
+		public static List<string> Tokenize (string command)
+		{
+			char l = '\0';
+			var result = new List<string> ();
+			var b = new StringBuilder ();
+			int s = 0;
+			
+			foreach (char cc in command.Trim())
+			{
+				char c = cc;
+				switch (s)
+				{
+					case 0: // base state
+					{
+						if (c == '"' && l != '\\')
+							s = 1;
+						else if (c == ' ' && l != '\\' && b.Length > 0)
+						{
+							result.Add (b.ToString());
+							b.Length = 0;
+						}
+						else if (c != '\\' || l == '\\')
+						{
+							b.Append (c);
+							c = '\0';
+						}
+					}
+					break;
+					
+					case 1: // inside quotes
+					{
+						if (c == '"' && l != '\\')
+							s = 0;
+						else if (c != '\\' || l == '\\')
+						{
+							b.Append (c);
+							c = '\0';
+						}
+					}
+					break;
+				}
+				l = c;
+			}
+			
+			if (s == 1)
+				throw new TokenizerException ("Unmatched quote in command.");
+			
+			if (b.Length > 0)
+				result.Add (b.ToString());
+			
+			return result;
+		}
 
     }
 }

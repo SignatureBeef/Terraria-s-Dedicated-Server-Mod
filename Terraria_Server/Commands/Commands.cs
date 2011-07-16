@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Collections.Generic;
 
 using Terraria_Server;
 using System.Threading;
@@ -277,7 +278,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Requesting player</param>
         /// <param name="commands">Specific commands to send help on, if player provided any</param>
-        public static void ShowHelp(ISender sender, String[] commands = null)
+        public static void ShowHelp (ISender sender, IList<string> commands = null)
         {
             if (sender is Player)
             {
@@ -301,7 +302,7 @@ namespace Terraria_Server.Commands
                 else
                 {
                     int maxPages = (CommandDefinition.Length / 5) + 1;
-                    if (maxPages > 0 && commands.Length > 1 && commands[1] != null)
+                    if (maxPages > 0 && commands.Count > 1 && commands[1] != null)
                     {
                         try
                         {
@@ -369,7 +370,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Player that sent command</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void WhiteList(ISender sender, String[] commands)
+        public static void WhiteList(ISender sender, IList<string> commands)
         {
             // /whitelist <add:remove> <player>
             // arg  0         1           2
@@ -383,7 +384,7 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (commands != null && commands.Length > 2)
+            if (commands != null && commands.Count > 2)
             {
                 if (commands[1] != null && commands[2] != null && commands[1].Length > 0 && commands[2].Length > 0)
                 {
@@ -427,7 +428,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Player that sent command</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void BanList(ISender sender, String[] commands)
+        public static void BanList(ISender sender, IList<string> commands)
         {
             // /ban  <player>
             // /unban <player>
@@ -442,7 +443,7 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (commands != null && commands.Length > 1)
+            if (commands != null && commands.Count > 1)
             {
                 if (commands[0] != null && commands[0].Length > 0)
                 {
@@ -517,7 +518,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Time(ISender sender, String[] commands)
+        public static void Time(ISender sender, IList<string> commands)
         {
             if (sender is Player)
             {
@@ -529,7 +530,7 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (commands != null && commands.Length > 1)
+            if (commands != null && commands.Count > 1)
             {
                 if (commands[1] != null && commands[1].Length > 0)
                 {
@@ -539,7 +540,7 @@ namespace Terraria_Server.Commands
                     {
                         case "set":
                             {
-                                if (commands.Length > 2 && commands[2] != null && commands[2].Length > 0)
+                                if (commands.Count > 2 && commands[2] != null && commands[2].Length > 0)
                                 {
                                     try
                                     {
@@ -640,7 +641,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Give(ISender sender, String[] commands)
+        public static void Give(ISender sender, IList<string> commands)
         {
             if (sender is Player)
             {
@@ -652,11 +653,11 @@ namespace Terraria_Server.Commands
                 }
             }
             // /give <player> <stack> <name> 
-            if (commands.Length > 3 && commands[1] != null && commands[2] != null && commands[3] != null &&
+            if (commands.Count > 3 && commands[1] != null && commands[2] != null && commands[3] != null &&
                 commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0 && commands[3].Trim().Length > 0)
             {
                 String playerName = commands[1].Trim();
-                String itemName = MergeStringArray(commands);
+                String itemName = string.Join (" ", commands);
                 itemName = itemName.Remove(0, itemName.IndexOf(" " + commands[3]));
 
                 Player player = Program.server.GetPlayerByName(playerName);
@@ -765,7 +766,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void SpawnNPC(ISender sender, String[] commands)
+        public static void SpawnNPC(ISender sender, IList<string> commands)
         {
             if (sender is Player)
             {
@@ -777,10 +778,10 @@ namespace Terraria_Server.Commands
                 }
 
                 // /spawnnpc <amount> <name:id>
-                if (commands.Length > 2 && commands[1] != null && commands[2] != null
+                if (commands.Count > 2 && commands[1] != null && commands[2] != null
                     && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
                 {
-                    String npcName = MergeStringArray(commands);
+                    String npcName = string.Join (" ", commands);
                     npcName = npcName.Remove(0, npcName.IndexOf(" " + commands[2])).Replace(" ", "").ToLower();
 
                     NPC[] npcs = new NPC[Main.maxItemTypes];
@@ -883,7 +884,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Teleport(ISender sender, String[] commands)
+        public static void Teleport(ISender sender, IList<string> commands)
         {
             if (sender is Player)
             {
@@ -896,7 +897,7 @@ namespace Terraria_Server.Commands
             }
 
             // /tp <player> <toplayer>
-            if (commands.Length > 2 && commands[1] != null && commands[2] != null && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
+            if (commands.Count > 2 && commands[1] != null && commands[2] != null && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
             {
                 Player player = Program.server.GetPlayerByName(commands[1].Trim());
                 Player toplayer = Program.server.GetPlayerByName(commands[2].Trim());
@@ -928,7 +929,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void TeleportHere(ISender sender, String[] commands)
+        public static void TeleportHere(ISender sender, IList<string> commands)
         {
             if (sender is Player)
             {
@@ -940,7 +941,7 @@ namespace Terraria_Server.Commands
                 }
 
                 // /tp <player> <toplayer>
-                if (commands.Length > 1 && commands[1] != null && commands[1].Trim().Length > 0)
+                if (commands.Count > 1 && commands[1] != null && commands[1].Trim().Length > 0)
                 {
                     Player toplayer = Program.server.GetPlayerByName(commands[1].Trim());
 
@@ -1001,7 +1002,7 @@ namespace Terraria_Server.Commands
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
         /// <param name="deop">Boolean value representing command's op type: True = deop command, false = op</param>
-        public static void OP(ISender sender, String[] commands, bool deop = false)
+        public static void OP(ISender sender, IList<string> commands, bool deop = false)
         {
             if (sender is Player)
             {
@@ -1013,7 +1014,7 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (((deop && commands.Length > 1) || (!deop && commands.Length > 2)) 
+            if (((deop && commands.Count > 1) || (!deop && commands.Count > 2)) 
                 && commands[1] != null 
                 && (deop || commands[2] != null) 
                 && commands[1].Trim().Length > 0 
@@ -1058,7 +1059,7 @@ namespace Terraria_Server.Commands
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
         /// <param name="logout">Boolean: True means command was oplogout, false means oplogin</param>
-        public static void OPLoginOut(ISender sender, String[] commands, bool logout = false)
+        public static void OPLoginOut(ISender sender, IList<string> commands, bool logout = false)
         {
             if (sender is Player)
             {
@@ -1072,7 +1073,7 @@ namespace Terraria_Server.Commands
                     return;
                 }
 
-                if (commands.Length > 1 && commands[1] != null && commands[1].Trim().Length > 0)
+                if (commands.Count > 1 && commands[1] != null && commands[1].Trim().Length > 0)
                 {
                     String player_Password = commands[1].Trim().ToLower();
 
@@ -1138,7 +1139,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Kick(ISender sender, String[] commands)
+        public static void Kick(ISender sender, IList<string> commands)
         {
             if (sender is Player)
             {
@@ -1150,7 +1151,7 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (commands != null && commands.Length > 1)
+            if (commands != null && commands.Count > 1)
             {
                 if (commands[0] != null && commands[0].Length > 0)
                 {
