@@ -63,6 +63,15 @@ namespace Terraria_Server.Messages
             Program.server.PluginManager.processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
             if (playerEvent.Cancelled)
             {
+                // erase the projectile client-side
+                projectile.Position.X = -1000;
+                projectile.Position.Y = -1000;
+                projectile.type = ProjectileType.UNKNOWN;
+                
+                var msg = NetMessage.PrepareThreadInstance ();
+                msg.Projectile (projectile);
+                msg.Send (whoAmI);
+
                 return;
             }
 
