@@ -4234,6 +4234,7 @@ namespace Terraria_Server
         }
 
         public void teleportTo(float tileX, float tileY)
+        /* FIXME: this looks like it's sending way too much traffic for no reason */
         {
 
             PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();

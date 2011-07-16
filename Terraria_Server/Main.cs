@@ -465,7 +465,7 @@ namespace Terraria_Server
             if (Main.NetplayCounter > 3600)
             {
                 NetMessage.SendData(7);
-                NetMessage.SyncPlayers();
+                //NetMessage.SyncPlayers();
                 Main.NetplayCounter = 0;
             }
             for (int i = 0; i < Main.maxNetplayers; i++)

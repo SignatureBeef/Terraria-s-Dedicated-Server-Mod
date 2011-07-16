@@ -148,10 +148,19 @@ namespace Terraria_Server
 					this.tileSection[i, j] = false;
 				}
 			}
+			
+			var oldPlayer = Main.players[this.whoAmI];
+			if (oldPlayer != null && state != SlotState.VACANT)
+			{
+				NetMessage.OnPlayerLeft (oldPlayer, announced);
+			}
+			announced = false;
+			
 			if (this.whoAmI < 255)
 			{
 				Main.players[this.whoAmI] = new Player();
 			}
+			
 			this.timeOut = 0;
 			this.statusCount = 0;
 			this.statusMax = 0;

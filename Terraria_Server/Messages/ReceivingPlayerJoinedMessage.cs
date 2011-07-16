@@ -28,12 +28,10 @@ namespace Terraria_Server.Messages
                 if (Netplay.slots[whoAmI].state == SlotState.SENDING_TILES)
                 {
                     Netplay.slots[whoAmI].state = SlotState.PLAYING;
-                    NetMessage.GreetPlayer(whoAmI);
-                    NetMessage.SyncPlayers();
-                    NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
-                    return;
+                    NetMessage.OnPlayerJoined (whoAmI); // this also forwards the message
                 }
-                NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
+                else
+                    NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
             }
         }
     }

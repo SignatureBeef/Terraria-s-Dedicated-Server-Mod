@@ -11,7 +11,8 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            NetMessage.SyncPlayers();
+            var msg = NetMessage.PrepareThreadInstance();
+            msg.SendSyncOthersForPlayer (whoAmI);
         }
     }
 }

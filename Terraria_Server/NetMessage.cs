@@ -35,6 +35,14 @@ namespace Terraria_Server
 			}
 		}
 		
+		public int Written
+		{
+			get
+			{
+				return (int)sink.Position;
+			}
+		}
+		
 		public NetMessage (int bufSize = 65535)
 		{
 			buf = new byte [bufSize];
@@ -393,7 +401,7 @@ namespace Terraria_Server
 						//NetMessage.SendData(10, whoAmi, -1, "", 200, (float)num, (float)i, 0f);
 						msg.Clear ();
 						msg.SendTileRow (200, num, i);
-						Netplay.slots[whoAmi].Send (msg.Output);
+						Netplay.slots[whoAmi].Send (msg.Output); // tried sending as one big message, but it didn't work
 					}
 					
 					//Console.WriteLine ("SendSection: {0} bytes", ts.stream.Position);
@@ -406,54 +414,135 @@ namespace Terraria_Server
 			}
 		}
 		
-		public static void GreetPlayer (int plr)
+		public static void Broadcast (byte[] bytes)
 		{
-			String[] motd = Program.properties.Greeting.Split('@');
-			
+			for (int k = 0; k < 255; k++)
+			{
+				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
+				{
+					NetMessage.buffer[k].spamCount++;
+					Netplay.slots[k].Send (bytes);
+				}
+			}
+		}
+		
+		public static void BroadcastExcept (byte[] bytes, int i)
+		{
+			for (int k = 0; k < 255; k++)
+			{
+				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected && k != i)
+				{
+					NetMessage.buffer[k].spamCount++;
+					Netplay.slots[k].Send (bytes);
+				}
+			}
+		}
+		
+		public void Broadcast ()
+		{
+			Broadcast (Output);
+		}
+		
+		public void BroadcastExcept (int i)
+		{
+			BroadcastExcept (Output, i);
+		}
+		
+		public void Send (int i)
+		{
+			Netplay.slots[i].Send (Output);
+		}
+		
+		public static void OnPlayerJoined (int plr)
+		{
+			var msg = NetMessage.PrepareThreadInstance ();
+
+			var motd = Program.properties.Greeting.Split('@');
 			for (int i = 0; i < motd.Length; i++)
 			{
-				if (motd != null && motd.Length > 0)
+				if (motd[i] != null && motd[i].Trim().Length > 0)
 				{
-					if (motd[i] != null && motd[i].Trim().Length > 0)
-					{
-						NetMessage.SendData(((int)Packet.PLAYER_CHAT), plr, -1, motd[i], 255, 0f, 0f, 255f);
-					}
+					msg.PlayerChat (255, motd[i], 0, 0, 255);
 				}
 			}
 
-			String text = "";
+			string list = "";
 			for (int i = 0; i < 255; i++)
 			{
 				if (Main.players[i].Active)
 				{
-					if (text == "")
-					{
-						text += Main.players[i].Name;
-					}
+					if (list == "")
+						list += Main.players[i].Name;
 					else
-					{
-						text = text + ", " + Main.players[i].Name;
-					}
+						list = list + ", " + Main.players[i].Name;
 				}
 			}
-			NetMessage.SendData(25, plr, -1, "Current players: " + text + ".", 255, 255f, 240f, 20f);
+			
+			msg.PlayerChat (255, "Current players: " + list + ".", 255, 240, 20);
+			msg.Send (plr); // send these before the login event, so messages from plugins come after
+			
+			var slot = Netplay.slots[plr];
+			var player = Main.players[plr];
 			
 			PlayerLoginEvent loginEvent = new PlayerLoginEvent();
-			loginEvent.Slot = Netplay.slots[plr];
-			loginEvent.Sender = Main.players[plr];
+			loginEvent.Slot = slot;
+			loginEvent.Sender = player;
 			Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, loginEvent);
 			
-			if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (loginEvent.Slot.state & SlotState.DISCONNECTING) == 0)
-				Netplay.slots[plr].Kick ("Disconnected by server.");
+			if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (slot.state & SlotState.DISCONNECTING) == 0)
+			{
+				slot.Kick ("Disconnected by server.");
+			}
+			else
+			{
+				slot.announced = true;
+				
+				// to player
+				msg.Clear();
+				msg.SendSyncOthersForPlayer (plr);
+				
+				var ann = player.Name + " has joined.";
+				Program.tConsole.WriteLine (ann);
+				
+				// to other players
+				msg.Clear();
+				msg.PlayerChat (255, ann, 255, 240, 20);
+				msg.ReceivingPlayerJoined (plr);
+				msg.SendSyncPlayerForOthers (plr); // broadcasts the preceding message too
+			}
 		}
 		
+		public static void OnPlayerLeft (Player player, bool announced)
+		{
+			player.Active = false;
+			
+			if (announced)
+			{
+				var ann = player.Name + " has left.";
+				
+				Program.tConsole.WriteLine (ann);
+				
+				var msg = NetMessage.PrepareThreadInstance();
+				
+				msg.SynchBegin (player.whoAmi, 0 /*inactive*/);
+				msg.PlayerChat (255, ann, 255, 240, 20);
+				
+				msg.BroadcastExcept (player.whoAmi);
+			}
+			
+			PlayerLogoutEvent Event = new PlayerLogoutEvent();
+			Event.Slot = null;
+			Event.Sender = player;
+			Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
+		}
+
 		public static void SendWater(int x, int y)
 		{
 			var msg = NetMessage.PrepareThreadInstance();
 			msg.FlowLiquid (x, y);
 			var bytes = msg.Output;
 			
-			for (int i = 0; i < 256; i++)
+			for (int i = 0; i < 255; i++)
 			{
 				if (Netplay.slots[i].state >= SlotState.PLAYING && Netplay.slots[i].Connected)
 				{
@@ -467,80 +556,77 @@ namespace Terraria_Server
 			}
 		}
 		
-		public static void SyncPlayers() /* FIXME: always sends all updates to all players */
+		public void BuildPlayerUpdate (int i)
 		{
+			var player = Main.players[i];
+			
+			SynchBegin (i, 1); //active players only
+			PlayerStateUpdate (i);
+			PlayerHealthUpdate (i);
+			PlayerPVPChange (i);
+			PlayerJoinParty (i);
+			PlayerManaUpdate (i);
+			PlayerBuffs (i);
+			PlayerData (i);
+			
+			for (int k = 0; k < 44 /*bar only*/; k++)
+			{
+				InventoryData (i, k, player.inventory[k].Name);
+			}
+			
+			for (int k = 0; k < 11; k++)
+			{
+				InventoryData (i, k+44, player.armor[k].Name);
+			}
+		}
+		
+		public static void SyncPlayers() /* always sends all updates to all players */
+		{
+			var msg = NetMessage.PrepareThreadInstance();
+			
 			for (int i = 0; i < 255; i++)
 			{
-				int num = 0;
-				if (Main.players[i].Active)
-				{
-					num = 1;
-				}
 				if (Netplay.slots[i].state == SlotState.PLAYING)
 				{
-                    var msg = NetMessage.PrepareThreadInstance();
-					
-					msg.SynchBegin (i, num);
-					msg.PlayerStateUpdate (i);
-					msg.PlayerHealthUpdate (i);
-					msg.PlayerPVPChange (i);
-					msg.PlayerJoinParty (i);
-					msg.PlayerManaUpdate (i);
-					msg.PlayerBuffs (i);
-					msg.PlayerData (i);
-					
-					for (int k = 0; k < 44; k++)
-					{
-						msg.InventoryData (i, k, Main.players[i].inventory[k].Name);
-					}
-					
-					for (int k = 0; k < 11; k++)
-					{
-						msg.InventoryData (i, k+44, Main.players[i].armor[k].Name);
-					}
-					
-					if (!Netplay.slots[i].announced)
-					{
-						msg.PlayerChat (255, Main.players[i].Name + " has joined.", 255, 240, 20);
-						
-						Netplay.slots[i].announced = true;
-						
-						if (Main.dedServ)
-						{
-							Program.tConsole.WriteLine(Main.players[i].Name + " has joined.");
-						}
-					}
-					
-					var bytes = msg.Output;
-					for (int k = 0; k < 256; k++)
-					{
-						if (k != i && Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
-						{
-							NetMessage.buffer[k].spamCount++;
-							Netplay.slots[k].Send (bytes);
-						}
-					}
-
-				}
-				else
-				{
-					NetMessage.SendData(14, -1, i, "", i, (float)num, 0f, 0f);
-					if (Netplay.slots[i].announced)
-					{
-						Netplay.slots[i].announced = false;
-						NetMessage.SendData(25, -1, i, Netplay.slots[i].oldName + " has left.", 255, 255f, 240f, 20f);
-						if (Main.dedServ)
-						{
-							Program.tConsole.WriteLine(Netplay.slots[i].oldName + " has left.");
-
-							PlayerLogoutEvent Event = new PlayerLogoutEvent();
-							Event.Slot = Netplay.slots[i];
-							Event.Sender = Main.players[i];
-							Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
-						}
-					}
+					msg.Clear();
+					msg.BuildPlayerUpdate (i);
+					msg.BroadcastExcept (i);
 				}
 			}
+			
+			msg.Clear();
+			
+			for (int i = 0; i < 255; i++)
+				if (Netplay.slots[i].state != SlotState.PLAYING)
+					msg.SynchBegin (i, 0);
+			
+			msg.Broadcast ();
+		}
+		
+		public void SendSyncOthersForPlayer (int i)
+		{
+			for (int k = 0; k < 255; k++)
+			{
+				if (Netplay.slots[k].state == SlotState.PLAYING && i != k)
+					BuildPlayerUpdate (k);
+				else if (i != k)
+					SynchBegin (k, 0);
+
+				if (Written >= 4096)
+				{
+					Send (i);
+					Clear ();
+				}
+			}
+			
+			if (Written > 0) Send (i);
+		}
+		
+		public void SendSyncPlayerForOthers (int i)
+		{
+			// send info about this player to others
+			BuildPlayerUpdate (i);
+			BroadcastExcept (i);
 		}
 		
 		//
