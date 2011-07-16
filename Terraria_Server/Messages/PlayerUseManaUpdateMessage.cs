@@ -15,6 +15,7 @@ namespace Terraria_Server.Messages
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int playerIndex = whoAmI;
+            num++;
 
             int manaAmount = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
