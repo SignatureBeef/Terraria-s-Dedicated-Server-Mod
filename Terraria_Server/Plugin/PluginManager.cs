@@ -22,8 +22,6 @@ namespace Terraria_Server.Plugin
         private String pluginPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
         private Server server;
-        private AppDomain pluginDomain;
-
         /// <summary>
         /// PluginManager class constructor
         /// </summary>
@@ -33,7 +31,6 @@ namespace Terraria_Server.Plugin
         {
             this.pluginPath = pluginPath;
             this.server = server;
-            this.pluginDomain = AppDomain.CreateDomain("TDSM_PluginDomain");
 
             plugins = new Dictionary<String, Plugin>();
         }
