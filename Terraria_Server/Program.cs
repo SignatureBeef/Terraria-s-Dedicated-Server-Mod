@@ -574,6 +574,18 @@ namespace Terraria_Server
                     else if (commandMessage.Equals("-windowsoutput"))
                     {
                         Platform.Type = Platform.PlatformType.WINDOWS;
+                        try
+                        {
+                            bool windows = Convert.ToBoolean(args[i + 1]);
+                            if (!windows)
+                            {
+                                Platform.Type = Platform.PlatformType.LINUX;
+                            }
+                        }
+                        catch
+                        {
+
+                        }
                     }
                 }
 
