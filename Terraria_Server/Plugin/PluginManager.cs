@@ -208,15 +208,7 @@ namespace Terraria_Server.Plugin
                 return plugins;
             }
         }
-
-        public void UnloadPlugin()
-        {
-            for (int i = 0; i < Process.GetCurrentProcess().Threads.Count; i++)
-            {
-            }
-            //Process.GetCurrentProcess().Threads
-        }
-
+        
         /// <summary>
         /// Determines whether a plugins has registered a hook, then fires the appropriate method if so
         /// </summary>

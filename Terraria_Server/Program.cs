@@ -260,10 +260,6 @@ namespace Terraria_Server
                         {
                             commandParser.parseConsoleCommand(line, server);
                         }
-                        else
-                        {
-                            server.PluginManager.UnloadPlugin();
-                        }
                     }
                     catch (Exception e)
                     {
