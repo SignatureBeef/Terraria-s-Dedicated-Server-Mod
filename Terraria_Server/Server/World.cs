@@ -178,5 +178,29 @@ namespace Terraria_Server
             return tileLocation;
         }
 
+        public int SpawnX
+        {
+            get
+            {
+                return Main.spawnTileX;
+            }
+            set
+            {
+                Main.spawnTileX = value;
+            }
+        }
+
+        public int SpawnY
+        {
+            get
+            {
+                return Main.spawnTileY;
+            }
+            set
+            {
+                Main.spawnTileY = value;
+            }
+        }
+
     }
 }

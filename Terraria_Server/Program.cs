@@ -27,7 +27,14 @@ namespace Terraria_Server
             {
                 String MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_TERRARIA_RELEASE + "}) #"
                     + Statics.BUILD;
-                Console.Title = MODInfo;
+                try
+                {
+                    Console.Title = MODInfo;
+                }
+                catch
+                {
+
+                }
 
                 Console.WriteLine("Initializing " + MODInfo);
 
@@ -563,6 +570,10 @@ namespace Terraria_Server
                         {
 
                         }
+                    }
+                    else if (commandMessage.Equals("-windowsoutput"))
+                    {
+                        Platform.Type = Platform.PlatformType.WINDOWS;
                     }
                 }
 

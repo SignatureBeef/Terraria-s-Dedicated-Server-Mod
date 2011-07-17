@@ -1035,7 +1035,7 @@ namespace Terraria_Server.Commands
                 {
                     String player_Password = commands[2].Trim().ToLower();
                     Program.server.notifyOps("Opping " + player_OP + " {" + sender.Name + "}", true);
-                    Program.server.OpList.addException(player_OP + ":" + player_Password);
+                    Program.server.OpList.addException(player_OP + ":" + player_Password, true, player_OP.Length);
                 }
 
                 if (!Program.server.OpList.Save())

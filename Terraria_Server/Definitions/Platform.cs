@@ -24,8 +24,14 @@ namespace Terraria_Server.Definitions
             switch (Environment.OSVersion.Platform)
             {
                 case PlatformID.Win32NT:
+                    Type = PlatformType.WINDOWS;
+                    break;
                 case PlatformID.Win32S:
+                    Type = PlatformType.WINDOWS;
+                    break;
                 case PlatformID.Win32Windows:
+                    Type = PlatformType.WINDOWS;
+                    break;
                 case PlatformID.WinCE:
                     Type = PlatformType.WINDOWS;
                     break;
