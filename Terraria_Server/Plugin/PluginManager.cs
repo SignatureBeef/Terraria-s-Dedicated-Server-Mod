@@ -100,7 +100,7 @@ namespace Terraria_Server.Plugin
             foreach (String file in Directory.GetFiles(pluginPath))
             {
                 FileInfo fileInfo = new FileInfo(file);
-                if (fileInfo.Extension.Equals(".dll"))
+                if (fileInfo.Extension.ToLower().Equals(".dll"))
                 {
                     Plugin plugin = loadPlugin(file);
                     if (plugin != null)
@@ -201,9 +201,12 @@ namespace Terraria_Server.Plugin
         /// Gets the PluginManagers Loaded Plugins.
         /// </summary>
         /// <returns>Returns the current Dictionary of Plugins</returns>
-        public Dictionary<String, Plugin> getPluginList()
+        public Dictionary<String, Plugin> PluginList
         {
-            return plugins;
+            get 
+            {
+                return plugins;
+            }
         }
 
         /// <summary>
