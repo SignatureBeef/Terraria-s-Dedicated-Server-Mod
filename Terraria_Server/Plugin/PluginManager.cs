@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Collections.Generic;
 using Terraria_Server.Events;
+using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace Terraria_Server.Plugin
 {
@@ -20,6 +22,7 @@ namespace Terraria_Server.Plugin
         private String pluginPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
         private Server server;
+        private AppDomain pluginDomain;
 
         /// <summary>
         /// PluginManager class constructor
@@ -30,6 +33,7 @@ namespace Terraria_Server.Plugin
         {
             this.pluginPath = pluginPath;
             this.server = server;
+            this.pluginDomain = AppDomain.CreateDomain("TDSM_PluginDomain");
 
             plugins = new Dictionary<String, Plugin>();
         }
@@ -49,7 +53,7 @@ namespace Terraria_Server.Plugin
                 }
             }
         }
-
+                
         /// <summary>
         /// Load the plugin located at the specified path.
         /// This only loads one plugin.
@@ -61,10 +65,9 @@ namespace Terraria_Server.Plugin
             try
             {
             	Type type = typeof(Plugin);
-	            foreach(Type messageType in Assembly.LoadFrom(pluginPath).GetTypes()
+                foreach (Type messageType in Assembly.LoadFrom(pluginPath).GetTypes()
 	                .Where(x => type.IsAssignableFrom(x) && x != type))
 	            {
-                    //type.DeclaringMethod.Attributes != MethodAttributes.Abstract
                     if (!messageType.IsAbstract)
                     {
                         Plugin plugin = (Plugin)Activator.CreateInstance(messageType);
@@ -207,6 +210,14 @@ namespace Terraria_Server.Plugin
             {
                 return plugins;
             }
+        }
+
+        public void UnloadPlugin()
+        {
+            for (int i = 0; i < Process.GetCurrentProcess().Threads.Count; i++)
+            {
+            }
+            //Process.GetCurrentProcess().Threads
         }
 
         /// <summary>

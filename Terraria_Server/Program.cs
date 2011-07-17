@@ -107,7 +107,7 @@ namespace Terraria_Server
 
                 ParseArgs(args);
 
-#if (DEBUG == false) //I'll comment this for each release, Updates are annoying when testing :3
+//#if (DEBUG == false) //I'll comment this for each release, Updates are annoying when testing :3
                 try
                 {
                     if (UpdateManager.performProcess())
@@ -121,7 +121,7 @@ namespace Terraria_Server
                     Program.tConsole.WriteLine("Error updating!");
                     Program.tConsole.WriteLine(e.Message);
                 }
-#endif
+//#endif
 
                 Program.tConsole.WriteLine("Preparing Server Data...");
 
@@ -250,7 +250,7 @@ namespace Terraria_Server
 
                 commandParser = new CommandParser(server);
                 Program.tConsole.WriteLine("You can now insert Commands.");
-
+                
                 while (Statics.IsActive)
                 {
                     try
@@ -259,6 +259,10 @@ namespace Terraria_Server
                         if (line.Length > 0)
                         {
                             commandParser.parseConsoleCommand(line, server);
+                        }
+                        else
+                        {
+                            server.PluginManager.UnloadPlugin();
                         }
                     }
                     catch (Exception e)
