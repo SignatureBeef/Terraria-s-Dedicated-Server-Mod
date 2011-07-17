@@ -55,9 +55,9 @@ namespace Terraria_Server
 			
 			for (int i = 0; i < 256; i++)
 			{
-				Netplay.slots[i] = new ServerSlot();
+                Netplay.slots[i] = new ServerSlot();
+                Netplay.slots[i].whoAmI = i;
 				Netplay.slots[i].Reset();
-				Netplay.slots[i].whoAmI = i;
 			}
 			
 			Netplay.tcpListener = new TcpListener(Netplay.serverListenIP, Netplay.serverPort);
