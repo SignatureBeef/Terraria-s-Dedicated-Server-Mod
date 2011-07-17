@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -125,6 +125,7 @@
     <Compile Include="Events\NPCBossSummonEvent.cs" />
     <Compile Include="Events\NPCDeathEvent.cs" />
     <Compile Include="Events\NPCSpawnEvent.cs" />
+    <Compile Include="Events\PlayerChestBreakEvent.cs" />
     <Compile Include="Events\PlayerKeyPressEvent.cs" />
     <Compile Include="Events\PlayerMoveEvent.cs" />
     <Compile Include="Events\PlayerPvPChangeEvent.cs" />
@@ -259,7 +260,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Definitions\NPCs.xml" />
+    <EmbeddedResource Include="Definitions\NPCs.xml">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Definitions\Items.xml" />
