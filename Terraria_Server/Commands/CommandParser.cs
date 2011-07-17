@@ -265,7 +265,7 @@ namespace Terraria_Server.Commands
 		/// Literal quotes need to be escaped like this: \"
 		/// Literal backslashes need to escaped like this: \\
 		/// </summary>
-		/// <param name="commands">Whole command line without trailing newline </param>
+        /// <param name="command">Whole command line without trailing newline </param>
 		public static List<string> Tokenize (string command)
 		{
 			char l = '\0';

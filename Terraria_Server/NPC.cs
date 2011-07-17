@@ -4966,6 +4966,10 @@ namespace Terraria_Server
                         int k = 0;
                         while (k < 50)
                         {
+                            if (!(num5 < num6 && num7 < num8))
+                            {
+                                return; //
+                            }
                             int num13 = Main.rand.Next(num5, num6);
                             int num14 = Main.rand.Next(num7, num8);
                             if (Main.tile.At(num13, num14).Active && Main.tileSolid[(int)Main.tile.At(num13, num14).Type])
