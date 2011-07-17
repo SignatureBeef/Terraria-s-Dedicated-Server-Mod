@@ -190,7 +190,10 @@ namespace Terraria_Server
         /// <returns>Copy of the projectile instance</returns>
         public override object Clone()
         {
-            return base.MemberwiseClone();
+            var cloned = (Projectile) base.MemberwiseClone();
+            cloned.ai = new float [Projectile.MAX_AI];
+            Array.Copy (ai, cloned.ai, Projectile.MAX_AI);
+            return cloned;
         }
 
         /// <summary>
