@@ -819,6 +819,8 @@ namespace Terraria_Server
             }
             WorldGen.lastMaxTilesX = Main.maxTilesX;
             WorldGen.lastMaxTilesY = Main.maxTilesY;
+
+            Server.tile = new TileCollection(Main.maxTilesX, Main.maxTilesY);
             
             for (int k = 0; k < Main.maxTilesX; k++)
             {
@@ -829,14 +831,6 @@ namespace Terraria_Server
                     Main.tile.CreateTileAt (k, l);
                 }
             }
-            //for (int m = 0; m < 1000; m++)
-            //{
-            //    Main.dust[m] = new Dust();
-            //}
-            //for (int n = 0; n < 200; n++)
-            //{
-            //    Main.gore[n] = new Gore();
-            //}
             for (int num3 = 0; num3 < 200; num3++)
             {
                 Main.item[num3] = new Item();
@@ -1111,8 +1105,8 @@ namespace Terraria_Server
                     {
                         WorldGen.loadFailed = false;
                         WorldGen.loadSuccess = false;
-                        int num = binaryReader.ReadInt32();
-                        if (num > Statics.CURRENT_TERRARIA_RELEASE)
+                        int Terraria_Release = binaryReader.ReadInt32();
+                        if (Terraria_Release > Statics.CURRENT_TERRARIA_RELEASE)
                         {
                             WorldGen.loadFailed = true;
                             WorldGen.loadSuccess = false;
@@ -1202,7 +1196,7 @@ namespace Terraria_Server
                                         int stack = binaryReader.ReadByte();
                                         if (stack > 0)
                                         {
-                                            String defaults = Item.VersionName(binaryReader.ReadString(), num);
+                                            String defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
                                             Main.chest[l].contents[m] = Registries.Item.Create(defaults, stack);
                                         }
                                     }
@@ -1238,7 +1232,7 @@ namespace Terraria_Server
                                 flag = binaryReader.ReadBoolean();
                                 num5++;
                             }
-                            if (num >= 7)
+                            if (Terraria_Release >= 7)
                             {
                                 bool flag2 = binaryReader.ReadBoolean();
                                 String a = binaryReader.ReadString();

@@ -177,8 +177,6 @@ namespace Terraria_Server
                     Server.maxTilesX = worldX;
                     Server.maxTilesY = worldY;
 
-                    Server.tile = new TileCollection(Server.maxTilesX, Server.maxTilesY);
-
                     WorldGen.clearWorld();
                     (new Server()).Initialize();
                     if (properties.UseCustomGenOpts)
@@ -236,7 +234,6 @@ namespace Terraria_Server
                 Server.maxSectionsX = worldXtiles / 200;
                 Server.maxSectionsY = worldYtiles / 150;
                 
-                Server.tile = new TileCollection(worldXtiles, worldYtiles);
                 WorldGen.loadWorld();
 
                 tConsole.WriteLine("Starting the Server");
