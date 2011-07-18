@@ -139,7 +139,7 @@ namespace Terraria_Server
                 int num = -1;
                 for (int i = 0; i < 1000; i++)
                 {
-                    if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].Type == WorldGen.spawnNPC)
+                    if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].type == WorldGen.spawnNPC)
                     {
                         num = i;
                         break;
@@ -309,7 +309,7 @@ namespace Terraria_Server
                 }
                 if (WorldGen.canSpawn)
                 {
-                    WorldGen.RoomNeeds(Main.npcs[npc].Type);
+                    WorldGen.RoomNeeds(Main.npcs[npc].type);
                     if (WorldGen.canSpawn)
                     {
                         WorldGen.ScoreRoom(npc);
@@ -10744,7 +10744,7 @@ namespace Terraria_Server
                     {
                         if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].townNPC)
                         {
-                            WorldGen.spawnNPC = Main.npcs[i].Type;
+                            WorldGen.spawnNPC = Main.npcs[i].type;
                             break;
                         }
                     }

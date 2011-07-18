@@ -202,7 +202,7 @@ namespace Terraria_Server
                         {
                             for (int l = 0; l < NPC.MAX_NPCS; l++)
                             {
-                                if (Main.npcs[l].Active && Main.npcs[l].Type == 22)
+                                if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
                                 {
                                     NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
                                     Main.npcs[l].StrikeNPC(9999, 10f, -Main.npcs[l].direction);

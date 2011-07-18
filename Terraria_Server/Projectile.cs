@@ -329,16 +329,16 @@ namespace Terraria_Server
                         for (int i = 0; i < NPC.MAX_NPCS; i++)
                         {
                             npc = Main.npcs[i];
-                            if (npc.Active && (!npc.friendly || (npc.Type == 22 && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || npc.immune[this.Owner] == 0))
+                            if (npc.Active && (!npc.friendly || (npc.type == NPCType.N22_GUIDE && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || npc.immune[this.Owner] == 0))
                             {
                                 bool flag = false;
-                                if (this.type == ProjectileType.POWDER_VILE && (npc.Type == 47 || npc.Type == 57))
+                                if (this.type == ProjectileType.POWDER_VILE && (npc.type == NPCType.N47_CORRUPT_BUNNY || npc.type == NPCType.N57_CORRUPT_GOLDFISH))
                                 {
                                     flag = true;
                                 }
                                 else
                                 {
-                                    if (this.type == ProjectileType.BALL_SAND_DROP && npc.Type == 69)
+                                    if (this.type == ProjectileType.BALL_SAND_DROP && npc.type == NPCType.N69_ANTLION)
                                     {
                                         flag = true;
                                     }
@@ -496,7 +496,7 @@ namespace Terraria_Server
                         npc = Main.npcs[i];
                         if (npc.Active)
                         {
-                            if (npc.Type == 46)
+                            if (npc.type == NPCType.N46_BUNNY)
                             {
                                 if (npc.Intersects(rectangle))
                                 {
@@ -505,7 +505,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if (npc.Type == 55)
+                                if (npc.type == NPCType.N55_GOLDFISH)
                                 {
                                     if (npc.Intersects(rectangle))
                                     {

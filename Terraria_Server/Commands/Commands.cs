@@ -800,7 +800,7 @@ namespace Terraria_Server.Commands
                                 String npc = npcs[i].Name.Trim().Replace(" ", "").ToLower();
                                 if (npc == npcName)
                                 {
-                                    npcType = npcs[i].Type;
+                                    npcType = npcs[i].type;
                                 }
                             }
                         }
@@ -822,9 +822,9 @@ namespace Terraria_Server.Commands
                         bool assumed = false;
                         for (int i = 0; i < Main.maxNPCTypes; i++)
                         {
-                            if (npcs[i].Type == assumedItem)
+                            if (npcs[i].type == assumedItem)
                             {
-                                npcType = npcs[i].Type;
+                                npcType = npcs[i].type;
                                 assumed = true;
                                 break;
                             }

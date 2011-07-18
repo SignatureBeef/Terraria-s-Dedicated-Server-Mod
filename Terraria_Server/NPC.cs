@@ -37,6 +37,19 @@ namespace Terraria_Server
         public static int spawnRate = NPC.defaultSpawnRate;
         public static int maxSpawns = NPC.defaultMaxSpawns;
 
+        public NPCType type { get; set; }
+
+        public override int Type
+        {
+            get
+            {
+                return (int)type;
+            }
+            set
+            {
+                type = (NPCType)value;
+            }
+        }
         public int alpha;
         public bool behindTiles;
         public bool boss;
@@ -126,7 +139,7 @@ namespace Terraria_Server
                 {
                     if (npc.wet)
                     {
-                        if (npc.Type == 59)
+                        if (npc.type == NPCType.N59_LAVA_SLIME)
                         {
                             if (npc.Velocity.Y > 2f)
                             {
@@ -183,7 +196,7 @@ namespace Terraria_Server
                             npc.ai[0] += 1f;
                         }
                         npc.ai[0] += 1f;
-                        if (npc.Type == 59)
+                        if (npc.type == NPCType.N59_LAVA_SLIME)
                         {
                             npc.ai[0] += 2f;
                         }
@@ -197,12 +210,12 @@ namespace Terraria_Server
                             if (npc.ai[1] == 2f)
                             {
                                 npc.Velocity.Y = -8f;
-                                if (npc.Type == 59)
+                                if (npc.type == NPCType.N59_LAVA_SLIME)
                                 {
                                     npc.Velocity.Y = npc.Velocity.Y - 2f;
                                 }
                                 npc.Velocity.X = npc.Velocity.X + (float)(3 * npc.direction);
-                                if (npc.Type == 59)
+                                if (npc.type == NPCType.N59_LAVA_SLIME)
                                 {
                                     npc.Velocity.X = npc.Velocity.X + 0.5f * (float)npc.direction;
                                 }
@@ -213,7 +226,7 @@ namespace Terraria_Server
                             }
                             npc.Velocity.Y = -6f;
                             npc.Velocity.X = npc.Velocity.X + (float)(2 * npc.direction);
-                            if (npc.Type == 59)
+                            if (npc.type == NPCType.N59_LAVA_SLIME)
                             {
                                 npc.Velocity.X = npc.Velocity.X + (float)(2 * npc.direction);
                             }
@@ -267,7 +280,7 @@ namespace Terraria_Server
                                 npc.Velocity.Y = -1f;
                             }
                         }
-                        if (Main.dayTime && (double)npc.Position.Y <= Main.worldSurface * 16.0 && npc.Type == 2)
+                        if (Main.dayTime && (double)npc.Position.Y <= Main.worldSurface * 16.0 && npc.type == NPCType.N02_DEMON_EYE)
                         {
                             if (npc.timeLeft > 10)
                             {
@@ -414,7 +427,7 @@ namespace Terraria_Server
                             {
                                 npc.netUpdate = true;
                             }
-                            if ((!Main.dayTime || (double)npc.Position.Y > Main.worldSurface * 16.0 || npc.Type == 26 || npc.Type == 27 || npc.Type == 28 || npc.Type == 31 || npc.Type == 47 || npc.Type == 67) && npc.ai[3] < (float)num3)
+                            if ((!Main.dayTime || (double)npc.Position.Y > Main.worldSurface * 16.0 || npc.type == NPCType.N26_GOBLIN_PEON || npc.type == NPCType.N27_GOBLIN_THIEF || npc.type == NPCType.N28_GOBLIN_WARRIOR || npc.type == NPCType.N31_ANGRY_BONES || npc.type == NPCType.N47_CORRUPT_BUNNY || npc.type == NPCType.N67_CRAB) && npc.ai[3] < (float)num3)
                             {
                                 npc.TargetClosest(true);
                             }
@@ -446,7 +459,7 @@ namespace Terraria_Server
                                     npc.direction = 1;
                                 }
                             }
-                            if (npc.Type == 27)
+                            if (npc.type == NPCType.N27_GOBLIN_THIEF)
                             {
                                 if (npc.Velocity.X < -2f || npc.Velocity.X > 2f)
                                 {
@@ -480,7 +493,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if (npc.Type == 21 || npc.Type == 26 || npc.Type == 31 || npc.Type == 47)
+                                if (npc.type == NPCType.N21_SKELETON || npc.type == NPCType.N26_GOBLIN_PEON || npc.type == NPCType.N31_ANGRY_BONES || npc.type == NPCType.N47_CORRUPT_BUNNY)
                                 {
                                     if (npc.Velocity.X < -1.5f || npc.Velocity.X > 1.5f)
                                     {
@@ -514,7 +527,7 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    if (npc.Type == 67)
+                                    if (npc.type == NPCType.N67_CRAB)
                                     {
                                         if (npc.Velocity.X < -0.5f || npc.Velocity.X > 0.5f)
                                         {
@@ -589,7 +602,7 @@ namespace Terraria_Server
                             int num4 = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
                             int num5 = (int)((npc.Position.Y + (float)npc.Height - 15f) / 16f);
                             bool flag2 = true;
-                            if (npc.Type == 47 || npc.Type == 67)
+                            if (npc.type == NPCType.N47_CORRUPT_BUNNY || npc.type == NPCType.N67_CRAB)
                             {
                                 flag2 = false;
                             }
@@ -599,17 +612,17 @@ namespace Terraria_Server
                                 npc.ai[3] = 0f;
                                 if (npc.ai[2] >= 60f)
                                 {
-                                    if (!Main.bloodMoon && npc.Type == 3)
+                                    if (!Main.bloodMoon && npc.type == NPCType.N03_ZOMBIE)
                                     {
                                         npc.ai[1] = 0f;
                                     }
                                     npc.Velocity.X = 0.5f * (float)(-(float)npc.direction);
                                     npc.ai[1] += 1f;
-                                    if (npc.Type == 27)
+                                    if (npc.type == NPCType.N27_GOBLIN_THIEF)
                                     {
                                         npc.ai[1] += 1f;
                                     }
-                                    if (npc.Type == 31)
+                                    if (npc.type ==  NPCType.N31_ANGRY_BONES)
                                     {
                                         npc.ai[1] += 6f;
                                     }
@@ -623,7 +636,7 @@ namespace Terraria_Server
                                     WorldGen.KillTile(num4, num5 - 1, true, false, false);
                                     if (flag3)
                                     {
-                                        if (npc.Type == 26)
+                                        if (npc.type == NPCType.N26_GOBLIN_PEON)
                                         {
                                             WorldGen.KillTile(num4, num5 - 1, false, false, false);
                                             
@@ -680,7 +693,7 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if (npc.directionY < 0 && npc.Type != 67 && (!Main.tile.At(num4, num5 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num4, num5 + 1).Type]) && (!Main.tile.At(num4 + npc.direction, num5 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num4 + npc.direction, num5 + 1).Type]))
+                                                if (npc.directionY < 0 && npc.type != NPCType.N67_CRAB && (!Main.tile.At(num4, num5 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num4, num5 + 1).Type]) && (!Main.tile.At(num4 + npc.direction, num5 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num4 + npc.direction, num5 + 1).Type]))
                                                 {
                                                     npc.Velocity.Y = -8f;
                                                     npc.Velocity.X = npc.Velocity.X * 1.5f;
@@ -695,7 +708,7 @@ namespace Terraria_Server
                                         }
                                     }
                                 }
-                                if ((npc.Type == 31 || npc.Type == 47) && npc.Velocity.Y == 0f && Math.Abs(npc.Position.X + (float)(npc.Width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))) < 100f && Math.Abs(npc.Position.Y + (float)(npc.Height / 2) - (Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2))) < 50f && ((npc.direction > 0 && npc.Velocity.X >= 1f) || (npc.direction < 0 && npc.Velocity.X <= -1f)))
+                                if ((npc.type == NPCType.N31_ANGRY_BONES || npc.type == NPCType.N47_CORRUPT_BUNNY) && npc.Velocity.Y == 0f && Math.Abs(npc.Position.X + (float)(npc.Width / 2) - (Main.players[npc.target].Position.X + (float)(Main.players[npc.target].Width / 2))) < 100f && Math.Abs(npc.Position.Y + (float)(npc.Height / 2) - (Main.players[npc.target].Position.Y + (float)(Main.players[npc.target].Height / 2))) < 50f && ((npc.direction > 0 && npc.Velocity.X >= 1f) || (npc.direction < 0 && npc.Velocity.X <= -1f)))
                                 {
                                     npc.Velocity.X = npc.Velocity.X * 2f;
                                     if (npc.Velocity.X > 3f)
@@ -1144,14 +1157,14 @@ namespace Terraria_Server
                                     }
                                     float num35 = 6f;
                                     float num36 = 0.05f;
-                                    if (npc.Type == 6 || npc.Type == 42)
+                                    if (npc.type == NPCType.N06_EATER_OF_SOULS || npc.type == NPCType.N42_HORNET)
                                     {
                                         num35 = 4f;
                                         num36 = 0.02f;
                                     }
                                     else
                                     {
-                                        if (npc.Type == 23)
+                                        if (npc.type == NPCType.N23_METEOR_HEAD)
                                         {
                                             num35 = 2f;
                                             num36 = 0.03f;
@@ -1165,7 +1178,7 @@ namespace Terraria_Server
                                     num39 = num35 / num39;
                                     num37 *= num39;
                                     num38 *= num39;
-                                    if (npc.Type == 6 || npc.Type == 42)
+                                    if (npc.type == NPCType.N06_EATER_OF_SOULS || npc.type == NPCType.N42_HORNET)
                                     {
                                         if (num40 > 100f)
                                         {
@@ -1205,7 +1218,7 @@ namespace Terraria_Server
                                     if (npc.Velocity.X < num37)
                                     {
                                         npc.Velocity.X = npc.Velocity.X + num36;
-                                        if (npc.Type != 6 && npc.Velocity.X < 0f && num37 > 0f)
+                                        if (npc.type != NPCType.N06_EATER_OF_SOULS && npc.Velocity.X < 0f && num37 > 0f)
                                         {
                                             npc.Velocity.X = npc.Velocity.X + num36;
                                         }
@@ -1215,7 +1228,7 @@ namespace Terraria_Server
                                         if (npc.Velocity.X > num37)
                                         {
                                             npc.Velocity.X = npc.Velocity.X - num36;
-                                            if (npc.Type != 6 && npc.Velocity.X > 0f && num37 < 0f)
+                                            if (npc.type != NPCType.N06_EATER_OF_SOULS && npc.Velocity.X > 0f && num37 < 0f)
                                             {
                                                 npc.Velocity.X = npc.Velocity.X - num36;
                                             }
@@ -1224,7 +1237,7 @@ namespace Terraria_Server
                                     if (npc.Velocity.Y < num38)
                                     {
                                         npc.Velocity.Y = npc.Velocity.Y + num36;
-                                        if (npc.Type != 6 && npc.Velocity.Y < 0f && num38 > 0f)
+                                        if (npc.type != NPCType.N06_EATER_OF_SOULS && npc.Velocity.Y < 0f && num38 > 0f)
                                         {
                                             npc.Velocity.Y = npc.Velocity.Y + num36;
                                         }
@@ -1234,13 +1247,13 @@ namespace Terraria_Server
                                         if (npc.Velocity.Y > num38)
                                         {
                                             npc.Velocity.Y = npc.Velocity.Y - num36;
-                                            if (npc.Type != 6 && npc.Velocity.Y > 0f && num38 < 0f)
+                                            if (npc.type != NPCType.N06_EATER_OF_SOULS && npc.Velocity.Y > 0f && num38 < 0f)
                                             {
                                                 npc.Velocity.Y = npc.Velocity.Y - num36;
                                             }
                                         }
                                     }
-                                    if (npc.Type == 23)
+                                    if (npc.type == NPCType.N23_METEOR_HEAD)
                                     {
                                         if (num37 > 0f)
                                         {
@@ -1258,13 +1271,13 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (npc.Type == 6)
+                                        if (npc.type == NPCType.N06_EATER_OF_SOULS)
                                         {
                                             npc.rotation = (float)Math.Atan2((double)num38, (double)num37) - 1.57f;
                                         }
                                         else
                                         {
-                                            if (npc.Type == 42)
+                                            if (npc.type == NPCType.N42_HORNET)
                                             {
                                                 if (npc.Velocity.X > 0f)
                                                 {
@@ -1282,10 +1295,10 @@ namespace Terraria_Server
                                             }
                                         }
                                     }
-                                    if (npc.Type == 6 || npc.Type == 23 || npc.Type == 42)
+                                    if (npc.type == NPCType.N06_EATER_OF_SOULS || npc.type == NPCType.N23_METEOR_HEAD || npc.type == NPCType.N42_HORNET)
                                     {
                                         float num41 = 0.7f;
-                                        if (npc.Type == 6)
+                                        if (npc.type == NPCType.N06_EATER_OF_SOULS)
                                         {
                                             num41 = 0.4f;
                                         }
@@ -1317,7 +1330,7 @@ namespace Terraria_Server
                                             }
                                         }
                                     }
-                                    if ((Main.dayTime && npc.Type != 6 && npc.Type != 23 && npc.Type != 42) || Main.players[npc.target].dead)
+                                    if ((Main.dayTime && npc.type != NPCType.N06_EATER_OF_SOULS && npc.type != NPCType.N23_METEOR_HEAD && npc.type != NPCType.N42_HORNET) || Main.players[npc.target].dead)
                                     {
                                         npc.Velocity.Y = npc.Velocity.Y - num36 * 2f;
                                         if (npc.timeLeft > 10)
@@ -1339,20 +1352,20 @@ namespace Terraria_Server
                                         {
                                             npc.timeLeft = 10;
                                         }
-                                        if ((npc.Type == 7 || npc.Type == 8 || npc.Type == 10 || npc.Type == 11 || npc.Type == 13 || npc.Type == 14 || npc.Type == 39 || npc.Type == 40) && npc.ai[0] == 0f)
+                                        if ((npc.type == NPCType.N07_DEVOURER_HEAD || npc.type == NPCType.N08_DEVOURER_BODY || npc.type == NPCType.N10_GIANT_WORM_HEAD || npc.type == NPCType.N11_GIANT_WORM_BODY || npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD || npc.type == NPCType.N14_EATER_OF_WORLDS_BODY || npc.type == NPCType.N39_BONE_SERPENT_HEAD || npc.type == NPCType.N40_BONE_SERPENT_BODY) && npc.ai[0] == 0f)
                                         {
-                                            if (npc.Type == 7 || npc.Type == 10 || npc.Type == 13 || npc.Type == 39)
+                                            if (npc.type == NPCType.N07_DEVOURER_HEAD || npc.type == NPCType.N10_GIANT_WORM_HEAD || npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD || npc.type == NPCType.N39_BONE_SERPENT_HEAD)
                                             {
                                                 npc.ai[2] = 10f;
-                                                if (npc.Type == 10)
+                                                if (npc.type == NPCType.N10_GIANT_WORM_HEAD)
                                                 {
                                                     npc.ai[2] = 5f;
                                                 }
-                                                if (npc.Type == 13)
+                                                if (npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD)
                                                 {
                                                     npc.ai[2] = 50f;
                                                 }
-                                                if (npc.Type == 39)
+                                                if (npc.type == NPCType.N39_BONE_SERPENT_HEAD)
                                                 {
                                                     npc.ai[2] = 15f;
                                                 }
@@ -1360,7 +1373,7 @@ namespace Terraria_Server
                                             }
                                             else
                                             {
-                                                if ((npc.Type == 8 || npc.Type == 11 || npc.Type == 14 || npc.Type == 40) && npc.ai[2] > 0f)
+                                                if ((npc.type == NPCType.N08_DEVOURER_BODY || npc.type == NPCType.N11_GIANT_WORM_BODY || npc.type == NPCType.N14_EATER_OF_WORLDS_BODY || npc.type == NPCType.N40_BONE_SERPENT_BODY) && npc.ai[2] > 0f)
                                                 {
                                                     npc.ai[0] = (float)NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)(npc.Position.Y + (float)npc.Height), npc.Type, npc.whoAmI);
                                                 }
@@ -1373,19 +1386,19 @@ namespace Terraria_Server
                                             Main.npcs[(int)npc.ai[0]].ai[2] = npc.ai[2] - 1f;
                                             npc.netUpdate = true;
                                         }
-                                        if ((npc.Type == 8 || npc.Type == 9 || npc.Type == 11 || npc.Type == 12 || npc.Type == 40 || npc.Type == 41) && (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != npc.aiStyle))
+                                        if ((npc.type == NPCType.N08_DEVOURER_BODY || npc.type == NPCType.N09_DEVOURER_TAIL || npc.type == NPCType.N11_GIANT_WORM_BODY || npc.type == NPCType.N12_GIANT_WORM_TAIL || npc.type == NPCType.N40_BONE_SERPENT_BODY || npc.type == NPCType.N41_BONE_SERPENT_TAIL) && (!Main.npcs[(int)npc.ai[1]].Active || Main.npcs[(int)npc.ai[1]].aiStyle != npc.aiStyle))
                                         {
                                             npc.life = 0;
                                             npc.HitEffect(0, 10.0);
                                             npc.Active = false;
                                         }
-                                        if ((npc.Type == 7 || npc.Type == 8 || npc.Type == 10 || npc.Type == 11 || npc.Type == 39 || npc.Type == 40) && !Main.npcs[(int)npc.ai[0]].Active)
+                                        if ((npc.type == NPCType.N07_DEVOURER_HEAD || npc.type == NPCType.N08_DEVOURER_BODY || npc.type == NPCType.N10_GIANT_WORM_HEAD || npc.type == NPCType.N11_GIANT_WORM_BODY || npc.type == NPCType.N39_BONE_SERPENT_HEAD || npc.type == NPCType.N40_BONE_SERPENT_BODY) && !Main.npcs[(int)npc.ai[0]].Active)
                                         {
                                             npc.life = 0;
                                             npc.HitEffect(0, 10.0);
                                             npc.Active = false;
                                         }
-                                        if (npc.Type == 13 || npc.Type == 14 || npc.Type == 15)
+                                        if (npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD || npc.type == NPCType.N14_EATER_OF_WORLDS_BODY || npc.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
                                         {
                                             if (!Main.npcs[(int)npc.ai[1]].Active && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
@@ -1393,19 +1406,19 @@ namespace Terraria_Server
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 13 && !Main.npcs[(int)npc.ai[0]].Active)
+                                            if (npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
                                                 npc.life = 0;
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 15 && !Main.npcs[(int)npc.ai[1]].Active)
+                                            if (npc.type == NPCType.N15_EATER_OF_WORLDS_TAIL && !Main.npcs[(int)npc.ai[1]].Active)
                                             {
                                                 npc.life = 0;
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 14 && !Main.npcs[(int)npc.ai[1]].Active)
+                                            if (npc.type == NPCType.N14_EATER_OF_WORLDS_BODY && !Main.npcs[(int)npc.ai[1]].Active)
                                             {
                                                 int num45 = npc.whoAmI;
                                                 int num46 = npc.life;
@@ -1423,7 +1436,7 @@ namespace Terraria_Server
                                                 npc.netUpdate = true;
                                                 npc.whoAmI = num45;
                                             }
-                                            if (npc.Type == 14 && !Main.npcs[(int)npc.ai[0]].Active)
+                                            if (npc.type == NPCType.N14_EATER_OF_WORLDS_BODY && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
                                                 int num48 = npc.life;
                                                 int num49 = npc.whoAmI;
@@ -1445,7 +1458,7 @@ namespace Terraria_Server
                                                 bool flag5 = true;
                                                 for (int l = 0; l < MAX_NPCS; l++)
                                                 {
-                                                    if (Main.npcs[l].Active && (Main.npcs[l].Type == 13 || Main.npcs[l].Type == 14 || Main.npcs[l].Type == 15))
+                                                    if (Main.npcs[l].Active && (Main.npcs[l].type == NPCType.N13_EATER_OF_WORLDS_HEAD || Main.npcs[l].type == NPCType.N14_EATER_OF_WORLDS_BODY || Main.npcs[l].type == NPCType.N15_EATER_OF_WORLDS_TAIL))
                                                     {
                                                         flag5 = false;
                                                         break;
@@ -1509,12 +1522,12 @@ namespace Terraria_Server
                                         }
                                         float num55 = 8f;
                                         float num56 = 0.07f;
-                                        if (npc.Type == 10)
+                                        if (npc.type == NPCType.N10_GIANT_WORM_HEAD)
                                         {
                                             num55 = 6f;
                                             num56 = 0.05f;
                                         }
-                                        if (npc.Type == 13)
+                                        if (npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD)
                                         {
                                             num55 = 11f;
                                             num56 = 0.08f;
@@ -1609,7 +1622,7 @@ namespace Terraria_Server
                                             num59 = num55 / num59;
                                             num57 *= num59;
                                             num58 *= num59;
-                                            if ((npc.Type == 13 || npc.Type == 7) && !Main.players[npc.target].zoneEvil)
+                                            if ((npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD || npc.type == NPCType.N07_DEVOURER_HEAD) && !Main.players[npc.target].zoneEvil)
                                             {
                                                 if ((double)(npc.Position.Y / 16f) > Main.rockLayer && npc.timeLeft > 2)
                                                 {
@@ -1711,7 +1724,7 @@ namespace Terraria_Server
                                                 npc.homeTileX = num63;
                                                 npc.homeTileY = num64;
                                             }
-                                            if (npc.Type == 46 && npc.target == 255)
+                                            if (npc.type == NPCType.N46_BUNNY && npc.target == 255)
                                             {
                                                 npc.TargetClosest(true);
                                             }
@@ -1749,7 +1762,7 @@ namespace Terraria_Server
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 37)
+                                            if (npc.type == NPCType.N37_OLD_MAN)
                                             {
                                                 npc.homeless = false;
                                                 npc.homeTileX = Main.dungeonX;
@@ -1789,7 +1802,7 @@ namespace Terraria_Server
                                                 }
                                                 if (flag8)
                                                 {
-                                                    if (npc.Type == 37 || !Collision.SolidTiles(npc.homeTileX - 1, npc.homeTileX + 1, npc.homeTileY - 3, npc.homeTileY - 1))
+                                                    if (npc.type == NPCType.N37_OLD_MAN || !Collision.SolidTiles(npc.homeTileX - 1, npc.homeTileX + 1, npc.homeTileY - 3, npc.homeTileY - 1))
                                                     {
                                                         npc.Velocity.X = 0f;
                                                         npc.Velocity.Y = 0f;
@@ -1878,7 +1891,7 @@ namespace Terraria_Server
                                                     {
                                                         npc.ai[0] = 1f;
                                                         npc.ai[1] = (float)(200 + Main.rand.Next(200));
-                                                        if (npc.Type == 46)
+                                                        if (npc.type == NPCType.N46_BUNNY)
                                                         {
                                                             npc.ai[1] += (float)Main.rand.Next(200, 400);
                                                         }
@@ -1953,7 +1966,7 @@ namespace Terraria_Server
                                                     {
                                                         npc.ai[0] = 0f;
                                                         npc.ai[1] = (float)(300 + Main.rand.Next(300));
-                                                        if (npc.Type == 46)
+                                                        if (npc.type == NPCType.N46_BUNNY)
                                                         {
                                                             npc.ai[1] -= (float)Main.rand.Next(100);
                                                         }
@@ -2105,7 +2118,7 @@ namespace Terraria_Server
                                                                 }
                                                                 try
                                                                 {
-                                                                        if (num63 >= npc.homeTileX - 35 && num63 <= npc.homeTileX + 35 && (!Main.tile.At(num68, num69 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 1).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 1).Type]) && (!Main.tile.At(num68, num69 + 2).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 2).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 2).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 2).Type]) && (!Main.tile.At(num68, num69 + 3).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 3).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 3).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 3).Type]) && (!Main.tile.At(num68, num69 + 4).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 4).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 4).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 4).Type]) && npc.Type != 46)
+                                                                    if (num63 >= npc.homeTileX - 35 && num63 <= npc.homeTileX + 35 && (!Main.tile.At(num68, num69 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 1).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 1).Type]) && (!Main.tile.At(num68, num69 + 2).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 2).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 2).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 2).Type]) && (!Main.tile.At(num68, num69 + 3).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 3).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 3).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 3).Type]) && (!Main.tile.At(num68, num69 + 4).Active || !Main.tileSolid[(int)Main.tile.At(num68, num69 + 4).Type]) && (!Main.tile.At(num68 - npc.direction, num69 + 4).Active || !Main.tileSolid[(int)Main.tile.At(num68 - npc.direction, num69 + 4).Type]) && npc.type != NPCType.N46_BUNNY)
                                                                         {
                                                                             npc.direction *= -1;
                                                                             npc.Velocity.X = npc.Velocity.X * -1f;
@@ -2124,7 +2137,7 @@ namespace Terraria_Server
                                                             {
                                                                 npc.Velocity.Y = npc.Velocity.Y * 1.2f;
                                                             }
-                                                            if (npc.Velocity.Y < 0f && npc.Type == 46)
+                                                            if (npc.Velocity.Y < 0f && npc.type == NPCType.N46_BUNNY)
                                                             {
                                                                 npc.Velocity.Y = npc.Velocity.Y * 1.2f;
                                                                 return;
@@ -2190,7 +2203,7 @@ namespace Terraria_Server
                                                                 if ((num86 < num79 - 4 || num86 > num79 + 4 || num84 < num78 - 4 || num84 > num78 + 4) && (num86 < num81 - 1 || num86 > num81 + 1 || num84 < num80 - 1 || num84 > num80 + 1) && Main.tile.At(num84, num86).Active)
                                                                 {
                                                                     bool flag12 = true;
-                                                                    if (npc.Type == 32 && Main.tile.At(num84, num86 - 1).Wall == 0)
+                                                                    if (npc.type == NPCType.N32_DARK_CASTER && Main.tile.At(num84, num86 - 1).Wall == 0)
                                                                     {
                                                                         flag12 = false;
                                                                     }
@@ -2220,13 +2233,13 @@ namespace Terraria_Server
                                                     npc.ai[1] -= 1f;
                                                     if (npc.ai[1] == 25f)
                                                     {
-                                                        if (npc.Type == 29 || npc.Type == 45)
+                                                        if (npc.type == NPCType.N29_GOBLIN_SORCERER || npc.type == NPCType.N45_TIM)
                                                         {
                                                             NPC.NewNPC((int)npc.Position.X + npc.Width / 2, (int)npc.Position.Y - 8, 30, 0);
                                                         }
                                                         else
                                                         {
-                                                            if (npc.Type == 32)
+                                                            if (npc.type == NPCType.N32_DARK_CASTER)
                                                             {
                                                                 NPC.NewNPC((int)npc.Position.X + npc.Width / 2, (int)npc.Position.Y - 8, 33, 0);
                                                             }
@@ -2237,7 +2250,7 @@ namespace Terraria_Server
                                                         }
                                                     }
                                                 }
-                                                if (npc.Type == 29 || npc.Type == 45)
+                                                if (npc.type == NPCType.N29_GOBLIN_SORCERER || npc.type == NPCType.N45_TIM)
                                                 {
                                                     if (Main.rand.Next(5) == 0)
                                                     {
@@ -2246,7 +2259,7 @@ namespace Terraria_Server
                                                 }
                                                 else
                                                 {
-                                                    if (npc.Type == 32)
+                                                    if (npc.type == NPCType.N32_DARK_CASTER)
                                                     {
                                                         if (Main.rand.Next(2) == 0)
                                                         {
@@ -2270,7 +2283,7 @@ namespace Terraria_Server
                                                     {
                                                         npc.TargetClosest(true);
                                                         float num90 = 6f;
-                                                        if (npc.Type == 30)
+                                                        if (npc.type == NPCType.N30_CHAOS_BALL)
                                                         {
                                                             NPC.maxSpawns = 8;
                                                         }
@@ -2404,7 +2417,7 @@ namespace Terraria_Server
                                                         {
                                                             npc.TargetClosest(true);
                                                             npc.ai[0] = 1f;
-                                                            if (npc.Type != 68)
+                                                            if (npc.type != NPCType.N68_DUNGEON_GUARDIAN)
                                                             {
                                                                 int npcIndex = NPC.NewNPC((int)(npc.Position.X + (float)(npc.Width / 2)), (int)npc.Position.Y + npc.Height / 2, 36, npc.whoAmI);
                                                                 Main.npcs[npcIndex].ai[0] = -1f;
@@ -2419,7 +2432,7 @@ namespace Terraria_Server
                                                                 Main.npcs[npcIndex].netUpdate = true;
                                                             }
                                                         }
-                                                        if (npc.Type == 68 && npc.ai[1] != 3f && npc.ai[1] != 2f)
+                                                        if (npc.type == NPCType.N68_DUNGEON_GUARDIAN && npc.ai[1] != 3f && npc.ai[1] != 2f)
                                                         {
                                                             npc.ai[1] = 2f;
                                                         }
@@ -2550,7 +2563,7 @@ namespace Terraria_Server
                                                                 }
                                                             }
                                                         }
-                                                        if (npc.ai[1] != 2f && npc.ai[1] != 3f && npc.Type != 68)
+                                                        if (npc.ai[1] != 2f && npc.ai[1] != 3f && npc.type != NPCType.N68_DUNGEON_GUARDIAN)
                                                         {
                                                             return;
                                                         }
@@ -2795,7 +2808,7 @@ namespace Terraria_Server
                                                                 npc.TargetClosest(true);
                                                                 float num121 = 0.05f;
                                                                 float num122 = 150f;
-                                                                if (npc.Type == 43)
+                                                                if (npc.type == NPCType.N43_MAN_EATER)
                                                                 {
                                                                     num122 = 200f;
                                                                 }
@@ -2847,7 +2860,7 @@ namespace Terraria_Server
                                                                         }
                                                                     }
                                                                 }
-                                                                if (npc.Type == 43)
+                                                                if (npc.type == NPCType.N43_MAN_EATER)
                                                                 {
                                                                     if (npc.Velocity.X > 3f)
                                                                     {
@@ -3035,7 +3048,7 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (npc.Type == 49 || npc.Type == 51 || npc.Type == 60)
+                                                                    if (npc.type == NPCType.N49_CAVE_BAT || npc.type == NPCType.N51_JUNGLE_BAT || npc.type == NPCType.N60_HELLBAT)
                                                                     {
                                                                         if (npc.wet)
                                                                         {
@@ -3133,7 +3146,7 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (npc.Type == 48)
+                                                                    if (npc.type == NPCType.N48_HARPY)
                                                                     {
                                                                         npc.ai[0] += 1f;
                                                                         if (npc.ai[0] == 30f || npc.ai[0] == 60f || npc.ai[0] == 90f)
@@ -3159,7 +3172,7 @@ namespace Terraria_Server
                                                                             }
                                                                         }
                                                                     }
-                                                                    if (npc.Type == 62 || npc.Type == 66)
+                                                                    if (npc.type == NPCType.N62_DEMON || npc.type == NPCType.N66_VOODOO_DEMON)
                                                                     {
                                                                         npc.ai[0] += 1f;
                                                                         if (npc.ai[0] == 20f || npc.ai[0] == 40f || npc.ai[0] == 60f || npc.ai[0] == 80f)
@@ -3361,7 +3374,7 @@ namespace Terraria_Server
                                                                                 if (flag13)
                                                                                 {
                                                                                     npc.TargetClosest(true);
-                                                                                    if (npc.Type == 65)
+                                                                                    if (npc.type == NPCType.N65_SHARK)
                                                                                     {
                                                                                         npc.Velocity.X = npc.Velocity.X + (float)npc.direction * 0.15f;
                                                                                         npc.Velocity.Y = npc.Velocity.Y + (float)npc.directionY * 0.15f;
@@ -3453,7 +3466,7 @@ namespace Terraria_Server
                                                                             {
                                                                                 if (npc.Velocity.Y == 0f)
                                                                                 {
-                                                                                    if (npc.Type == 65)
+                                                                                    if (npc.type == NPCType.N65_SHARK)
                                                                                     {
                                                                                         npc.Velocity.X = npc.Velocity.X * 0.94f;
                                                                                         if ((double)npc.Velocity.X > -0.2 && (double)npc.Velocity.X < 0.2)
@@ -3897,7 +3910,7 @@ namespace Terraria_Server
                     num2 = 4;
                 }
             }
-            if (this.Type == 1 || this.Type == 16 || this.Type == 59)
+            if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME || this.type == NPCType.N59_LAVA_SLIME)
             {
                 this.frameCounter += 1.0;
                 if (num2 > 0)
@@ -3918,7 +3931,7 @@ namespace Terraria_Server
                     this.frame.Y = 0;
                 }
             }
-            if (this.Type == 50)
+            if (this.type == NPCType.N50_KING_SLIME)
             {
                 if (this.Velocity.Y != 0f)
                 {
@@ -3946,7 +3959,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 61)
+            if (this.type == NPCType.N61_VULTURE)
             {
                 this.spriteDirection = this.direction;
                 this.rotation = this.Velocity.X * 0.1f;
@@ -3972,7 +3985,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 62 || this.Type == 66)
+            if (this.type == NPCType.N62_DEMON || this.type == NPCType.N66_VOODOO_DEMON)
             {
                 this.spriteDirection = this.direction;
                 this.rotation = this.Velocity.X * 0.1f;
@@ -3990,7 +4003,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 63 || this.Type == 64)
+            if (this.type == NPCType.N63_BLUE_JELLYFISH || this.type == NPCType.N64_PINK_JELLYFISH)
             {
                 this.frameCounter += 1.0;
                 if (this.frameCounter < 6.0)
@@ -4020,9 +4033,9 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 2 || this.Type == 23)
+            if (this.type == NPCType.N02_DEMON_EYE || this.type == NPCType.N23_METEOR_HEAD)
             {
-                if (this.Type == 2)
+                if (this.type == NPCType.N02_DEMON_EYE)
                 {
                     if (this.Velocity.X > 0f)
                     {
@@ -4046,7 +4059,7 @@ namespace Terraria_Server
                     this.frame.Y = 0;
                 }
             }
-            if (this.Type == 55 || this.Type == 57 || this.Type == 58)
+            if (this.type == NPCType.N55_GOLDFISH || this.type == NPCType.N57_CORRUPT_GOLDFISH || this.type == NPCType.N58_PIRANHA)
             {
                 this.spriteDirection = this.direction;
                 this.frameCounter += 1.0;
@@ -4101,7 +4114,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 69)
+            if (this.type == NPCType.N69_ANTLION)
             {
                 if (this.ai[0] < 190f)
                 {
@@ -4122,7 +4135,7 @@ namespace Terraria_Server
                     this.frame.Y = num * (Main.npcFrameCount[this.Type] - 1);
                 }
             }
-            if (this.Type == 67)
+            if (this.type == NPCType.N67_CRAB)
             {
                 if (this.Velocity.Y == 0f)
                 {
@@ -4139,7 +4152,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 65)
+            if (this.type == NPCType.N65_SHARK)
             {
                 this.spriteDirection = this.direction;
                 this.frameCounter += 1.0;
@@ -4176,7 +4189,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 48 || this.Type == 49 || this.Type == 51 || this.Type == 60)
+            if (this.type == NPCType.N48_HARPY || this.type == NPCType.N49_CAVE_BAT || this.type == NPCType.N51_JUNGLE_BAT || this.type == NPCType.N60_HELLBAT)
             {
                 if (this.Velocity.X > 0f)
                 {
@@ -4198,7 +4211,7 @@ namespace Terraria_Server
                     this.frame.Y = 0;
                 }
             }
-            if (this.Type == 42)
+            if (this.type == NPCType.N42_HORNET)
             {
                 this.frameCounter += 1.0;
                 if (this.frameCounter < 2.0)
@@ -4231,7 +4244,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 43 || this.Type == 56)
+            if (this.type == NPCType.N43_MAN_EATER || this.type == NPCType.N56_SNATCHER)
             {
                 this.frameCounter += 1.0;
                 if (this.frameCounter < 6.0)
@@ -4264,7 +4277,7 @@ namespace Terraria_Server
                     this.frameCounter = 0.0;
                 }
             }
-            if (this.Type == 17 || this.Type == 18 || this.Type == 19 || this.Type == 20 || this.Type == 22 || this.Type == 38 || this.Type == 26 || this.Type == 27 || this.Type == 28 || this.Type == 31 || this.Type == 21 || this.Type == 44 || this.Type == 54 || this.Type == 37)
+            if (this.type == NPCType.N17_MERCHANT || this.type == NPCType.N18_NURSE || this.type == NPCType.N19_ARMS_DEALER || this.type == NPCType.N20_DRYAD || this.type == NPCType.N22_GUIDE || this.type == NPCType.N38_DEMOLITIONIST || this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER || this.type == NPCType.N54_CLOTHIER || this.type == NPCType.N37_OLD_MAN)
             {
                 if (this.Velocity.Y == 0f)
                 {
@@ -4300,7 +4313,7 @@ namespace Terraria_Server
                 {
                     this.frameCounter = 0.0;
                     this.frame.Y = num;
-                    if (this.Type == 21 || this.Type == 31 || this.Type == 44)
+                    if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N44_UNDEAD_MINER)
                     {
                         this.frame.Y = 0;
                     }
@@ -4308,7 +4321,7 @@ namespace Terraria_Server
             }
             else
             {
-                if (this.Type == 3 || this.Type == 52 || this.Type == 53)
+                if (this.type == NPCType.N03_ZOMBIE || this.type == NPCType.N52_DOCTOR_BONES || this.type == NPCType.N53_THE_GROOM)
                 {
                     if (this.Velocity.Y == 0f)
                     {
@@ -4370,7 +4383,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (this.Type == 46 || this.Type == 47)
+                    if (this.type == NPCType.N46_BUNNY || this.type == NPCType.N47_CORRUPT_BUNNY)
                     {
                         if (this.Velocity.Y == 0f)
                         {
@@ -4421,7 +4434,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (this.Type == 4)
+                        if (this.type == NPCType.N04_EYE_OF_CTHULU)
                         {
                             this.frameCounter += 1.0;
                             if (this.frameCounter < 7.0)
@@ -4454,7 +4467,7 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            if (this.Type == 5)
+                            if (this.type == NPCType.N05_SERVANT_OF_CTHULU)
                             {
                                 this.frameCounter += 1.0;
                                 if (this.frameCounter >= 8.0)
@@ -4469,7 +4482,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if (this.Type == 6)
+                                if (this.type == NPCType.N06_EATER_OF_SOULS)
                                 {
                                     this.frameCounter += 1.0;
                                     if (this.frameCounter >= 8.0)
@@ -4484,7 +4497,7 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    if (this.Type == 24)
+                                    if (this.type == NPCType.N24_FIRE_IMP)
                                     {
                                         if (this.Velocity.Y == 0f)
                                         {
@@ -4575,7 +4588,7 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (this.Type == 29 || this.Type == 32 || this.Type == 45)
+                                        if (this.type == NPCType.N29_GOBLIN_SORCERER || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N45_TIM)
                                         {
                                             if (this.Velocity.Y == 0f)
                                             {
@@ -4608,7 +4621,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 34)
+            if (this.type == NPCType.N34_CURSED_SKULL)
             {
                 this.frameCounter += 1.0;
                 if (this.frameCounter >= 4.0)
@@ -4662,7 +4675,7 @@ namespace Terraria_Server
         {
             if (this.Active)
             {
-                if (this.Type == 8 || this.Type == 9 || this.Type == 11 || this.Type == 12 || this.Type == 14 || this.Type == 15 || this.Type == 40 || this.Type == 41)
+                if (this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL || this.type == NPCType.N40_BONE_SERPENT_BODY || this.type == NPCType.N41_BONE_SERPENT_TAIL)
                 {
                     return;
                 }
@@ -4691,7 +4704,7 @@ namespace Terraria_Server
                         if (rectangle2.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height)))
                         {
                             flag = true;
-                            if (this.Type != 25 && this.Type != 30 && this.Type != 33)
+                            if (this.type != NPCType.N25_BURNING_SPHERE && this.type != NPCType.N30_CHAOS_BALL && this.type != NPCType.N33_WATER_SPHERE)
                             {
                                 Main.players[j].activeNPCs += (int)NPC.npcSlots;
                             }
@@ -4700,11 +4713,11 @@ namespace Terraria_Server
                         {
                             this.timeLeft = NPC.ACTIVE_TIME;
                         }
-                        if (this.Type == 7 || this.Type == 10 || this.Type == 13 || this.Type == 39)
+                        if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N39_BONE_SERPENT_HEAD)
                         {
                             flag = true;
                         }
-                        if (this.boss || this.Type == 35 || this.Type == 36)
+                        if (this.boss || this.type == NPCType.N35_SKELETRON_HEAD || this.type == NPCType.N36_SKELETRON_HAND)
                         {
                             flag = true;
                         }
@@ -4968,7 +4981,7 @@ namespace Terraria_Server
                         {
                             if (!(num5 < num6 && num7 < num8))
                             {
-                                return; //
+                                return; 
                             }
                             int num13 = Main.rand.Next(num5, num6);
                             int num14 = Main.rand.Next(num7, num8);
@@ -5520,7 +5533,7 @@ namespace Terraria_Server
                                 }
                             }
                         }
-                        if (Main.npcs[npcIndex].Type == 1 && Main.rand.Next(250) == 0)
+                        if (Main.npcs[npcIndex].type == NPCType.N01_BLUE_SLIME && Main.rand.Next(250) == 0)
                         {
                             Main.npcs[npcIndex] = Registries.NPC.Create("Pinky");
                         }
@@ -5683,11 +5696,11 @@ namespace Terraria_Server
                 int npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
                 Main.npcs[npcIndex].target = playerIndex;
                 String str = Main.npcs[npcIndex].Name;
-                if (Main.npcs[npcIndex].Type == 13)
+                if (Main.npcs[npcIndex].type == NPCType.N13_EATER_OF_WORLDS_HEAD)
                 {
                     str = "Eater of Worlds";
                 }
-                if (Main.npcs[npcIndex].Type == 35)
+                if (Main.npcs[npcIndex].type == NPCType.N35_SKELETRON_HEAD)
                 {
                     str = "Skeletron";
                 }
@@ -5803,7 +5816,7 @@ namespace Terraria_Server
                 if (this.life <= 0)
                 {
                     NPC.noSpawnCycle = true;
-                    if (this.townNPC && this.Type != 37)
+                    if (this.townNPC && this.type != NPCType.N37_OLD_MAN)
                     {
                         NetMessage.SendData(25, -1, -1, this.Name + " was slain...", 255, 255f, 25f, 25f);
                     }
@@ -5825,7 +5838,7 @@ namespace Terraria_Server
 
                     this.NPCLoot();
                     this.Active = false;
-                    if (this.Type == 26 || this.Type == 27 || this.Type == 28 || this.Type == 29)
+                    if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N29_GOBLIN_SORCERER)
                     {
                         Main.invasionSize--;
                     }
@@ -5837,11 +5850,11 @@ namespace Terraria_Server
         
         public void NPCLoot()
         {
-            if (this.Type == 1 || this.Type == 16)
+            if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(1, 3), false);
             }
-            if (this.Type == 2)
+            if (this.type == NPCType.N02_DEMON_EYE)
             {
                 if (Main.rand.Next(3) == 0)
                 {
@@ -5855,7 +5868,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 58)
+            if (this.type == NPCType.N58_PIRANHA)
             {
                 if (Main.rand.Next(500) == 0)
                 {
@@ -5869,39 +5882,39 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 3 && Main.rand.Next(50) == 0)
+            if (this.type == NPCType.N03_ZOMBIE && Main.rand.Next(50) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 216, 1, false);
             }
-            if (this.Type == 66)
+            if (this.type == NPCType.N66_VOODOO_DEMON)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 267, 1, false);
             }
-            if (this.Type == 62 && Main.rand.Next(50) == 0)
+            if (this.type == NPCType.N62_DEMON && Main.rand.Next(50) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 272, 1, false);
             }
-            if (this.Type == 52)
+            if (this.type == NPCType.N52_DOCTOR_BONES)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 251, 1, false);
             }
-            if (this.Type == 53)
+            if (this.type == NPCType.N53_THE_GROOM)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 239, 1, false);
             }
-            if (this.Type == 54)
+            if (this.type == NPCType.N54_CLOTHIER)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 260, 1, false);
             }
-            if (this.Type == 55)
+            if (this.type == NPCType.N55_GOLDFISH)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 261, 1, false);
             }
-            if (this.Type == 69 && Main.rand.Next(10) == 0)
+            if (this.type == NPCType.N69_ANTLION && Main.rand.Next(10) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 323, 1, false);
             }
-            if (this.Type == 4)
+            if (this.type == NPCType.N04_EYE_OF_CTHULU)
             {
                 int stack = Main.rand.Next(30) + 20;
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, stack, false);
@@ -5914,11 +5927,11 @@ namespace Terraria_Server
                 stack = Main.rand.Next(3) + 1;
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 59, stack, false);
             }
-            if (this.Type == 6 && Main.rand.Next(3) == 0)
+            if (this.type == NPCType.N06_EATER_OF_SOULS && Main.rand.Next(3) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, 1, false);
             }
-            if (this.Type == 7 || this.Type == 8 || this.Type == 9)
+            if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL)
             {
                 if (Main.rand.Next(3) == 0)
                 {
@@ -5926,15 +5939,15 @@ namespace Terraria_Server
                 }
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 69, Main.rand.Next(3, 9), false);
             }
-            if ((this.Type == 10 || this.Type == 11 || this.Type == 12) && Main.rand.Next(500) == 0)
+            if ((this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL) && Main.rand.Next(500) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 215, 1, false);
             }
-            if (this.Type == 47 && Main.rand.Next(75) == 0)
+            if (this.type == NPCType.N47_CORRUPT_BUNNY && Main.rand.Next(75) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 243, 1, false);
             }
-            if (this.Type == 39 || this.Type == 40 || this.Type == 41)
+            if (this.type == NPCType.N39_BONE_SERPENT_HEAD || this.type == NPCType.N40_BONE_SERPENT_BODY || this.type == NPCType.N41_BONE_SERPENT_TAIL)
             {
                 if (Main.rand.Next(100) == 0)
                 {
@@ -5948,7 +5961,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 13 || this.Type == 14 || this.Type == 15)
+            if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
             {
                 int stack2 = Main.rand.Next(1, 4);
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 86, stack2, false);
@@ -5965,11 +5978,11 @@ namespace Terraria_Server
                     Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
                 }
             }
-            if (this.Type == 63 || this.Type == 64)
+            if (this.type == NPCType.N63_BLUE_JELLYFISH || this.type == NPCType.N64_PINK_JELLYFISH)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, Main.rand.Next(1, 5), false);
             }
-            if (this.Type == 21 || this.Type == 44)
+            if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER)
             {
                 if (Main.rand.Next(25) == 0)
                 {
@@ -5977,25 +5990,25 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (this.Type == 44)
+                    if (this.type == NPCType.N44_UNDEAD_MINER)
                     {
                         Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 166, Main.rand.Next(1, 4), false);
                     }
                 }
             }
-            if (this.Type == 45)
+            if (this.type == NPCType.N45_TIM)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 238, 1, false);
             }
-            if (this.Type == 50)
+            if (this.type == NPCType.N50_KING_SLIME)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(256, 259), 1, false);
             }
-            if (this.Type == 23 && Main.rand.Next(50) == 0)
+            if (this.type == NPCType.N23_METEOR_HEAD && Main.rand.Next(50) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 116, 1, false);
             }
-            if (this.Type == 24)
+            if (this.type == NPCType.N24_FIRE_IMP)
             {
                 if (Main.rand.Next(50) == 0)
                 {
@@ -6009,11 +6022,11 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 31 || this.Type == 32)
+            if (this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N32_DARK_CASTER)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, 1, false);
             }
-            if (this.Type == 26 || this.Type == 27 || this.Type == 28 || this.Type == 29)
+            if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N29_GOBLIN_SORCERER)
             {
                 if (Main.rand.Next(400) == 0)
                 {
@@ -6035,15 +6048,15 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.Type == 42)
+            if (this.type == NPCType.N42_HORNET)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 209, 1, false);
             }
-            if (this.Type == 43 && Main.rand.Next(5) == 0)
+            if (this.type == NPCType.N43_MAN_EATER && Main.rand.Next(5) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 210, 1, false);
             }
-            if (this.Type == 65)
+            if (this.type == NPCType.N65_SHARK)
             {
                 if (Main.rand.Next(50) == 0)
                 {
@@ -6054,7 +6067,7 @@ namespace Terraria_Server
                     Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 319, 1, false);
                 }
             }
-            if (this.Type == 48 && Main.rand.Next(5) == 0)
+            if (this.type == NPCType.N48_HARPY && Main.rand.Next(5) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 320, 1, false);
             }
@@ -6062,18 +6075,18 @@ namespace Terraria_Server
             {
                 //boss kill
                 int BossType = 0;
-                if (this.Type == 4)
+                if (this.type == NPCType.N04_EYE_OF_CTHULU)
                 {
                     NPC.downedBoss1 = true;
                     BossType = 1;
                 }
-                if (this.Type == 13 || this.Type == 14 || this.Type == 15)
+                if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
                 {
                     NPC.downedBoss2 = true;
                     this.Name = "Eater of Worlds";
                     BossType = 2;
                 }
-                if (this.Type == 35)
+                if (this.type == NPCType.N35_SKELETRON_HEAD)
                 {
                     NPC.downedBoss3 = true;
                     this.Name = "Skeletron";
@@ -6201,7 +6214,7 @@ namespace Terraria_Server
 
         public void HitEffect(int hitDirection = 0, double dmg = 10.0)
         {
-            if (this.Type == 1 || this.Type == 16)
+            if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
             {
                 if (this.life > 0)
                 {
@@ -6213,7 +6226,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (this.Type == 16)
+                    if (this.type == NPCType.N16_MOTHER_SLIME)
                     {
                         int spawnedSlimes = Main.rand.Next(2) + 2;
                         for (int slimeNum = 0; slimeNum < spawnedSlimes; slimeNum++)
@@ -6234,13 +6247,13 @@ namespace Terraria_Server
                     }
                 }
             }
-            else if (this.Type == 59 || this.Type == 60)
+            else if (this.type == NPCType.N59_LAVA_SLIME || this.type == NPCType.N60_HELLBAT)
             {
                 if (this.life > 0)
                 {
                     return;
                 }
-                if (this.Type == 59)
+                if (this.type == NPCType.N59_LAVA_SLIME)
                 {
                     int num5 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
                     int num6 = (int)(this.Position.Y + (float)(this.Height / 2)) / 16;
@@ -6253,7 +6266,7 @@ namespace Terraria_Server
                     return;
                 }
             }
-            else if (this.Type == 50)
+            else if (this.type == NPCType.N50_KING_SLIME)
             {
                 if (this.life > 0)
                 {
@@ -6276,74 +6289,74 @@ namespace Terraria_Server
                 }
                 return;
             }
-            else if (this.Type == 49 || this.Type == 51)
+            else if (this.type == NPCType.N49_CAVE_BAT || this.type == NPCType.N51_JUNGLE_BAT)
             {
                 return;
             }
-            else if (this.Type == 46 || this.Type == 55 || this.Type == 67)
+            else if (this.type == NPCType.N46_BUNNY || this.type == NPCType.N55_GOLDFISH || this.type == NPCType.N67_CRAB)
             {
                 if (this.life > 0)
                 {
                     return;
                 }
-                if (this.Type == 46)
+                if (this.type == NPCType.N46_BUNNY)
                 {
                     return;
                 }
-                if (this.Type == 67)
+                if (this.type == NPCType.N67_CRAB)
                 {
                     return;
                 }
             }
-            else if (this.Type == 47 || this.Type == 57 || this.Type == 58)
+            else if (this.type == NPCType.N47_CORRUPT_BUNNY || this.type == NPCType.N57_CORRUPT_GOLDFISH || this.type == NPCType.N58_PIRANHA)
             {
                 return;
             }
-            else if (this.Type == 2)
+            else if (this.type == NPCType.N02_DEMON_EYE)
             {
                 return;
             }
-            else if (this.Type == 69)
+            else if (this.type == NPCType.N69_ANTLION)
             {
                 return;
             }
-            else if (this.Type == 61)
+            else if (this.type == NPCType.N61_VULTURE)
             {
                 return;
             }
-            else if (this.Type == 65)
+            else if (this.type == NPCType.N65_SHARK)
             {
                 return;
             }
-            else if (this.Type == 3 || this.Type == 52 || this.Type == 53)
+            else if (this.type == NPCType.N03_ZOMBIE || this.type == NPCType.N52_DOCTOR_BONES || this.type == NPCType.N53_THE_GROOM)
             {
                 return;
             }
-            else if (this.Type == 4)
+            else if (this.type == NPCType.N04_EYE_OF_CTHULU)
             {
                 return;
             }
-            else if (this.Type == 5)
+            else if (this.type == NPCType.N05_SERVANT_OF_CTHULU)
             {
                 return;
             }
-            else if (this.Type == 6)
+            else if (this.type == NPCType.N06_EATER_OF_SOULS)
             {
                 return;
             }
-            else if (this.Type == 7 || this.Type == 8 || this.Type == 9)
+            else if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL)
             {
                 return;
             }
-            else if (this.Type == 10 || this.Type == 11 || this.Type == 12)
+            else if (this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL)
             {
                 return;
             }
-            else if (this.Type == 13 || this.Type == 14 || this.Type == 15)
+            else if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
             {
                 return;
             }
-            else if (this.Type == 17)
+            else if (this.type == NPCType.N17_MERCHANT)
             {
                 if (this.life > 0)
                 {
@@ -6351,84 +6364,84 @@ namespace Terraria_Server
                 }
                 return;
             }
-            else if (this.Type == 22)
+            else if (this.type == NPCType.N22_GUIDE)
             {
                 return;
             }
-            else if (this.Type == 37 || this.Type == 54)
+            else if (this.type == NPCType.N37_OLD_MAN || this.type == NPCType.N54_CLOTHIER)
             {
                 return;
             }
-            else if (this.Type == 18)
+            else if (this.type == NPCType.N18_NURSE)
             {
                 return;
             }
-            else if (this.Type == 19)
+            else if (this.type == NPCType.N19_ARMS_DEALER)
             {
                 return;
             }
-            else if (this.Type == 38)
+            else if (this.type == NPCType.N38_DEMOLITIONIST)
             {
                 return;
             }
-            else if (this.Type == 20)
+            else if (this.type == NPCType.N20_DRYAD)
             {
                 return;
             }
-            else if (this.Type == 21 || this.Type == 31 || this.Type == 32 || this.Type == 44 || this.Type == 45)
+            else if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N44_UNDEAD_MINER || this.type == NPCType.N45_TIM)
             {
                 return;
             }
-            else if (this.Type == 39 || this.Type == 40 || this.Type == 41)
+            else if (this.type == NPCType.N39_BONE_SERPENT_HEAD || this.type == NPCType.N40_BONE_SERPENT_BODY || this.type == NPCType.N41_BONE_SERPENT_TAIL)
             {
                 return;
             }
-            else if (this.Type == 34)
+            else if (this.type == NPCType.N34_CURSED_SKULL)
             {
                 return;
             }
-            else if (this.Type == 35 || this.Type == 36)
+            else if (this.type == NPCType.N35_SKELETRON_HEAD || this.type == NPCType.N36_SKELETRON_HAND)
             {
                 return;
             }
-            else if (this.Type == 23)
+            else if (this.type == NPCType.N23_METEOR_HEAD)
             {
                 return;
             }
-            else if (this.Type == 24)
+            else if (this.type == NPCType.N24_FIRE_IMP)
             {
                 return;
             }
-            else if (this.Type == 25)
+            else if (this.type == NPCType.N25_BURNING_SPHERE)
             {
                 
                 return;
             }
-            else if (this.Type == 33)
+            else if (this.type == NPCType.N33_WATER_SPHERE)
             {
                 return;
             }
-            else if (this.Type == 26 || this.Type == 27 || this.Type == 28 || this.Type == 29)
+            else if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N29_GOBLIN_SORCERER)
             {
                 return;
             }
-            else if (this.Type == 30)
+            else if (this.type == NPCType.N30_CHAOS_BALL)
             {
                 return;
             }
-            else if (this.Type == 42)
+            else if (this.type == NPCType.N42_HORNET)
             {
                 return;
             }
-            else if (this.Type == 43 || this.Type == 56)
+            else if (this.type == NPCType.N43_MAN_EATER || this.type == NPCType.N56_SNATCHER)
             {
                 return;
             }
-            else if (this.Type == 48)
+            else if (this.type == NPCType.N48_HARPY)
             {
                 return;
             }
-            else if (this.Type == 62 || this.Type == 66)
+            else if (this.type == NPCType.N62_DEMON || this.type == NPCType.N66_VOODOO_DEMON)
             {
                 if (this.life > 0)
                 {
@@ -6437,7 +6450,7 @@ namespace Terraria_Server
             }
 
             Color newColor2 = new Color(50, 120, 255, 100);
-            if (this.Type == 64)
+            if (this.type == NPCType.N64_PINK_JELLYFISH)
             {
                 newColor2 = new Color(225, 70, 140, 100);
             }
@@ -6468,7 +6481,7 @@ namespace Terraria_Server
             int num2 = 0;
             for (int i = 0; i < MAX_NPCS; i++)
             {
-                if (Main.npcs[i].Active && Main.npcs[i].Type == 35)
+                if (Main.npcs[i].Active && Main.npcs[i].type == NPCType.N35_SKELETRON_HEAD)
                 {
                     flag = false;
                     break;
@@ -6476,7 +6489,7 @@ namespace Terraria_Server
             }
             for (int j = 0; j < MAX_NPCS; j++)
             {
-                if (Main.npcs[j].Active && Main.npcs[j].Type == 37)
+                if (Main.npcs[j].Active && Main.npcs[j].type == NPCType.N37_OLD_MAN)
                 {
                     flag2 = true;
                     Main.npcs[j].ai[3] = 1f;
@@ -6503,12 +6516,12 @@ namespace Terraria_Server
             {
                 if (Main.bloodMoon)
                 {
-                    if (npc.Type == 46)
+                    if (npc.type == NPCType.N46_BUNNY)
                     {
                         Transform(i, 47);
                         npc = Main.npcs[i];
                     }
-                    else if (npc.Type == 55)
+                    else if (npc.type == NPCType.N55_GOLDFISH)
                     {
                         Transform(i, 57);
                         npc = Main.npcs[i];
@@ -6553,7 +6566,7 @@ namespace Terraria_Server
                 {
                     npc.Velocity.X = 0f;
                 }
-                if (npc.friendly && npc.Type != 37)
+                if (npc.friendly && npc.type != NPCType.N37_OLD_MAN)
                 {
                     if (npc.life < npc.lifeMax)
                     {
@@ -6712,7 +6725,7 @@ namespace Terraria_Server
             int g = (int)newColor.G - this.alpha;
             int b = (int)newColor.B - this.alpha;
             int num = (int)newColor.A - this.alpha;
-            if (this.Type == 25 || this.Type == 30 || this.Type == 33)
+            if (this.type == NPCType.N25_BURNING_SPHERE || this.type == NPCType.N30_CHAOS_BALL || this.type == NPCType.N33_WATER_SPHERE)
             {
                 r = (int)newColor.R;
                 g = (int)newColor.G;
@@ -6780,37 +6793,37 @@ namespace Terraria_Server
             bool flag6 = false;
             for (int i = 0; i < MAX_NPCS; i++)
             {
-                if (Main.npcs[i].Type == 17)
+                if (Main.npcs[i].type == NPCType.N17_MERCHANT)
                 {
                     flag = true;
                 }
                 else
                 {
-                    if (Main.npcs[i].Type == 18)
+                    if (Main.npcs[i].type == NPCType.N18_NURSE)
                     {
                         flag2 = true;
                     }
                     else
                     {
-                        if (Main.npcs[i].Type == 19)
+                        if (Main.npcs[i].type == NPCType.N19_ARMS_DEALER)
                         {
                             flag3 = true;
                         }
                         else
                         {
-                            if (Main.npcs[i].Type == 20)
+                            if (Main.npcs[i].type == NPCType.N20_DRYAD)
                             {
                                 flag4 = true;
                             }
                             else
                             {
-                                if (Main.npcs[i].Type == 37)
+                                if (Main.npcs[i].type == NPCType.N37_OLD_MAN)
                                 {
                                     flag5 = true;
                                 }
                                 else
                                 {
-                                    if (Main.npcs[i].Type == 38)
+                                    if (Main.npcs[i].type == NPCType.N38_DEMOLITIONIST)
                                     {
                                         flag6 = true;
                                     }
@@ -6821,7 +6834,7 @@ namespace Terraria_Server
                 }
             }
             String result = "";
-            if (this.Type == 17)
+            if (this.type == NPCType.N17_MERCHANT)
             {
                 if (Main.dayTime)
                 {
@@ -6928,7 +6941,7 @@ namespace Terraria_Server
             }
             else
             {
-                if (this.Type == 18)
+                if (this.type == NPCType.N18_NURSE)
                 {
                     if (flag6 && Main.rand.Next(4) == 0)
                     {
@@ -7021,7 +7034,7 @@ namespace Terraria_Server
                 }
                 else
                 {
-                    if (this.Type == 19)
+                    if (this.type == NPCType.N19_ARMS_DEALER)
                     {
                         if (flag2 && Main.rand.Next(4) == 0)
                         {
@@ -7066,7 +7079,7 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        if (this.Type == 20)
+                        if (this.type == NPCType.N20_DRYAD)
                         {
                             if (flag3 && Main.rand.Next(4) == 0)
                             {
@@ -7136,7 +7149,7 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            if (this.Type == 22)
+                            if (this.type == NPCType.N22_GUIDE)
                             {
                                 if (Main.bloodMoon)
                                 {
@@ -7174,7 +7187,7 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if (this.Type == 37)
+                                if (this.type == NPCType.N37_OLD_MAN)
                                 {
                                     if (Main.dayTime)
                                     {
@@ -7227,7 +7240,7 @@ namespace Terraria_Server
                                 }
                                 else
                                 {
-                                    if (this.Type == 38)
+                                    if (this.type == NPCType.N38_DEMOLITIONIST)
                                     {
                                         if (Main.bloodMoon)
                                         {
@@ -7290,7 +7303,7 @@ namespace Terraria_Server
                                     }
                                     else
                                     {
-                                        if (this.Type == 54)
+                                        if (this.type == NPCType.N54_CLOTHIER)
                                         {
                                             if (Main.bloodMoon)
                                             {
