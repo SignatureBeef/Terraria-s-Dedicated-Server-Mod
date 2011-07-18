@@ -1129,6 +1129,8 @@ namespace Terraria_Server
                             Main.bottomWorld = (float)binaryReader.ReadInt32();
                             Main.maxTilesY = binaryReader.ReadInt32();
                             Main.maxTilesX = binaryReader.ReadInt32();
+                            Main.maxSectionsX = Main.maxTilesX / 200;
+                            Main.maxSectionsY = Main.maxTilesY / 150;
                             WorldGen.clearWorld();
                             Main.spawnTileX = binaryReader.ReadInt32();
                             Main.spawnTileY = binaryReader.ReadInt32();
