@@ -1205,8 +1205,9 @@ namespace Terraria_Server.Commands
             Program.tConsole.WriteLine("Starting the Server");
             server.Initialize();
             WorldGen.loadWorld();
-            server.StartServer();
             Program.updateThread = new Thread(Program.UpdateLoop);
+            Program.updateThread.Name = "UpdateLoop";
+            server.StartServer();
             Statics.keepRunning = false;
         }
 		
