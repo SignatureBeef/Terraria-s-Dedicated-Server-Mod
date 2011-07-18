@@ -791,6 +791,7 @@ namespace Terraria_Server.Commands
                     }
 
                     int npcType = -1;
+                    String NpcName = "";
                     for (int i = 0; i < Main.maxNPCTypes; i++)
                     {
                         if (npcs[i] != null)
@@ -801,6 +802,7 @@ namespace Terraria_Server.Commands
                                 if (npc == npcName)
                                 {
                                     npcType = npcs[i].Type;
+                                    NpcName = npcs[i].Name;
                                 }
                             }
                         }
@@ -825,6 +827,7 @@ namespace Terraria_Server.Commands
                             if (npcs[i].Type == assumedItem)
                             {
                                 npcType = npcs[i].Type;
+                                NpcName = npcs[i].Name;
                                 assumed = true;
                                 break;
                             }
@@ -859,7 +862,8 @@ namespace Terraria_Server.Commands
                         for (int i = 0; i < amount; i++)
                         {
                             Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-                            NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), npcType);
+                            int index = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), npcType);
+                            //Main.npcs[index] = Registries.NPC.Create(NpcName);
                             NPC.SpawnNPC();
                         }
 

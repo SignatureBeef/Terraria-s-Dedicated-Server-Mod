@@ -10,5 +10,6 @@ namespace Terraria_Server.Collections
         int Type { get; set; }
         String Name { get; set; }
         bool Active { get; set; }
+        int Inherits { get; set; }
     }
 }

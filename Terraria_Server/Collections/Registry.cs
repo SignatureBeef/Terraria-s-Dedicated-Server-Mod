@@ -79,6 +79,10 @@ namespace Terraria_Server.Collections
         private static T CloneAndInit(T t)
         {
             T cloned = (T) t.Clone();
+            if (t.Inherits != 0)
+            {
+                cloned.Type = t.Inherits;
+            }
             if (cloned.Type != 0)
             {
                 cloned.Active = true;

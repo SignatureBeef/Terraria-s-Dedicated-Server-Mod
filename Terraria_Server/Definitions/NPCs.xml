@@ -19,6 +19,25 @@
     <Width>24</Width>
   </NPC>
   <NPC>
+    <Name>Green Slime</Name>
+    <Inherits>1</Inherits>
+    <alpha>175</alpha>
+    <color>
+      <G>80</G>
+      <B>255</B>
+      <A>100</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>25</value>
+    <aiStyle>1</aiStyle>
+    <damage>7</damage>
+    <defense>2</defense>
+    <Height>18</Height>
+    <lifeMax>25</lifeMax>
+    <Width>24</Width>
+  </NPC>
+  <NPC>
     <Name>Demon Eye</Name>
     <Type>2</Type>
     <knockBackResist>0.8</knockBackResist>
