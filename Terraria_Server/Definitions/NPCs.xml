@@ -23,19 +23,22 @@
     <Inherits>1</Inherits>
     <alpha>175</alpha>
     <color>
-      <G>80</G>
-      <B>255</B>
-      <A>100</A>
+      <B>100</B>
+      <G>40</G>
+      <R>220</R>
+      <A>0</A>
     </color>
     <soundHit>1</soundHit>
     <soundKilled>1</soundKilled>
-    <value>25</value>
+    <value>3</value>
     <aiStyle>1</aiStyle>
-    <damage>7</damage>
-    <defense>2</defense>
+    <damage>6</damage>
+    <defense>0</defense>
     <Height>18</Height>
-    <lifeMax>25</lifeMax>
+    <lifeMax>14</lifeMax>
+    <life>14</life>
     <Width>24</Width>
+    <scale>0.9</scale>
   </NPC>
   <NPC>
     <Name>Demon Eye</Name>

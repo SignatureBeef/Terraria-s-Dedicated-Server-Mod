@@ -5352,7 +5352,7 @@ namespace Terraria_Server
                                                                                                             {
                                                                                                                 if (Main.rand.Next(3) == 0 || num22 < 200)
                                                                                                                 {
-                                                                                                                     Main.npcs[npcIndex] = Registries.NPC.Create("Green Slime");
+                                                                                                                    Main.npcs[npcIndex] = Registries.NPC.Create("Green Slime", Main.npcs[npcIndex]);
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {

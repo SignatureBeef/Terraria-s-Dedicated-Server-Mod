@@ -71,6 +71,12 @@ namespace Terraria_Server.Collections
             T t;
             if (nameLookup.TryGetValue(name, out t))
             {
+                if(t is NPC) {
+                    if (t.Inherits != 0)
+                    {
+                        t.Type = t.Inherits;
+                    }
+                }
                 return CloneAndInit(t);
             }
             return CloneAndInit(defaultValue);
@@ -79,10 +85,6 @@ namespace Terraria_Server.Collections
         private static T CloneAndInit(T t)
         {
             T cloned = (T) t.Clone();
-            if (t.Inherits != 0)
-            {
-                cloned.Type = t.Inherits;
-            }
             if (cloned.Type != 0)
             {
                 cloned.Active = true;

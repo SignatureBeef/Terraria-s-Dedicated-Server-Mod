@@ -864,7 +864,12 @@ namespace Terraria_Server.Commands
                             Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
                             int index = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), npcType);
                             //Main.npcs[index] = Registries.NPC.Create(NpcName);
-                            NPC.SpawnNPC();
+                            //Extend Registries.NPC to include:
+                            //Main.npcs[index].Name = "Green Slime";
+                            //Main.npcs[index].Active = true;
+                            //Main.npcs[index].Type = 1;
+                            //NPC.SpawnNPC();
+                            Main.npcs[index] = Registries.NPC.Create(NpcName, Main.npcs[index]);
                         }
 
                         Program.server.notifyOps("Spawned " + amount.ToString() + " of " +
