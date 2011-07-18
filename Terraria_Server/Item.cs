@@ -285,6 +285,11 @@ namespace Terraria_Server
                 }
             }
 
+            if (Main.rand == null)
+            {
+                Main.rand = new Random();
+            }
+
             Main.item[itemIndex] = Registries.Item.Create(type, stack);
             Main.item[itemIndex].Position.X = (float)(X + Width / 2 - Main.item[itemIndex].Width / 2);
             Main.item[itemIndex].Position.Y = (float)(Y + Height / 2 - Main.item[itemIndex].Height / 2);
