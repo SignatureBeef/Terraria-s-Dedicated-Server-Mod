@@ -3412,7 +3412,7 @@ namespace Terraria_Server
                 }
                 for (int j = 0; j < 1000; j++)
                 {
-                    if (Main.npcs[j].Active && Main.npcs[j].type == num25)
+                    if (Main.npcs[j].Active && Main.npcs[j].Type == num25)
                     {
                         flag6 = true;
                         break;
