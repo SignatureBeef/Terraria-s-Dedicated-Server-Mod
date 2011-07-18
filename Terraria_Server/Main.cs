@@ -708,7 +708,7 @@ namespace Terraria_Server
                     {
                         if (Main.npcs[i].Active && Main.npcs[i].townNPC)
                         {
-                            if (Main.npcs[i].Type != 37 && !Main.npcs[i].homeless)
+                            if (Main.npcs[i].type != NPCType.N37_OLD_MAN && !Main.npcs[i].homeless)
                             {
                                 WorldGen.QuickFindHome(i);
                             }
@@ -716,27 +716,27 @@ namespace Terraria_Server
                             {
                                 num8++;
                             }
-                            switch (Main.npcs[i].Type)
+                            switch (Main.npcs[i].type)
                             {
-                                case 17:
+                                case NPCType.N17_MERCHANT:
                                     num3++;
                                     break;
-                                case 18:
+                                case NPCType.N18_NURSE:
                                     num4++;
                                     break;
-                                case 19:
+                                case NPCType.N19_ARMS_DEALER:
                                     num6++;
                                     break;
-                                case 20:
+                                case NPCType.N20_DRYAD:
                                     num5++;
                                     break;
-                                case 22:
+                                case NPCType.N22_GUIDE:
                                     num7++;
                                     break;
-                                case 38:
+                                case NPCType.N38_DEMOLITIONIST:
                                     num9++;
                                     break;
-                                case 54:
+                                case NPCType.N54_CLOTHIER:
                                     num10++;
                                     break;
                             }
