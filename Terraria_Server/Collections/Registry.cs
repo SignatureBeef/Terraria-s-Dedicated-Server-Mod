@@ -89,7 +89,7 @@ namespace Terraria_Server.Collections
             List<T> values;
             if (typeLookup.TryGetValue(coneable.Type, out values))
             {
-                for (int i = 0; i < values.Count; i++)
+                for (int i = 0; i < values.Count - 1; i++)
                 {
                     if (values[i].Name == name)
                     {
@@ -118,6 +118,27 @@ namespace Terraria_Server.Collections
                 return CloneAndInit(t);
             }
             return CloneAndInit(defaultValue);
+        }
+
+
+        public T FindClass(String name)
+        {
+            List<T> values;
+            for (int i = 0; i < typeLookup.Count - 1; i++)
+            {
+                if (typeLookup.TryGetValue(i, out values))
+                {
+                    for (int x = 0; x < values.Count - 1; x++)
+                    {
+                        if (values[x].Name.ToLower().Replace(" ", "").Trim() == name.ToLower().Replace(" ", "").Trim()) //Exact :3
+                        {
+                            //CloneAndInit(values[i]);
+                            return values[x];
+                        }
+                    }
+                }
+            }
+            return defaultValue;
         }
 
         private static T CloneAndInit(T t)

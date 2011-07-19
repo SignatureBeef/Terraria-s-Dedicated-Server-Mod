@@ -17,6 +17,7 @@ namespace Terraria_Server
         private const int MAX_INVENTORY = 44;
 
         private String ipAddress = null;
+        private bool bedDestruction = false;
 
         public bool enemySpawns;
         public int heldProj = -1;
@@ -4212,35 +4213,52 @@ namespace Terraria_Server
             Netplay.slots[whoAmi].Kick (message);
         }
 
-        public String getIPAddress()
+        public String IPAddress
         {
-            return ipAddress;
+            get
+            {
+                return ipAddress;
+            }
+            set
+            {
+                ipAddress = value;
+            }
         }
 
-        public void setIPAddress(String IPaddress)
+        public Vector2 TileLocation
         {
-            ipAddress = IPaddress;
+            get
+            {
+                return new Vector2(Position.X * 16, Position.Y * 16);
+            }
+            set
+            {
+                Position.X = value.X / 16;
+                Position.Y = value.Y / 16;
+            }
         }
 
-        public Vector2 getTileLocation()
+        public Vector2 Location
         {
-            return new Vector2(Position.X * 16, Position.Y * 16);
+            get
+            {
+                return Position;
+            }
+            set {
+                Position = value;
+            }
         }
 
-        public void setTileLocation(Vector2 Location)
+        public bool AllowBedDestroy
         {
-            Position.X = Location.X / 16;
-            Position.Y = Location.Y / 16;
-        }
-
-        public Vector2 getLocation()
-        {
-            return Position;
-        }
-
-        public void setLocation(Vector2 Location)
-        {
-            Position = Location;
+            get
+            {
+                return bedDestruction;
+            }
+            set
+            {
+                bedDestruction = value;
+            }
         }
 
         public void teleportTo(float tileX, float tileY)
@@ -4256,59 +4274,44 @@ namespace Terraria_Server
                 return;
             }
 
+            //Preserve our Spawn point.
             int spawnTileX = Main.spawnTileX;
             int spawnTileY = Main.spawnTileY;
+
+            //Set our new target position
             Main.spawnTileX = (int)tileX;
             Main.spawnTileY = (int)tileY;
-            NetMessage.SendData(0x7, this.whoAmi);
+
             if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0)
             {
-                //Invalidate player spawn point
-                Main.tile.At((int)tileX, (int)tileY - 1).SetActive(false);
-                NetMessage.SendTileSquare(this.whoAmi, (int)tileX, (int)tileY - 1, 200);
-                NetMessage.SendData(0xc, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
-                Main.tile.At((int)tileX, (int)tileY - 1).SetActive(true);
-                sendMessage("Your bed was Destroyed.");
+                if (bedDestruction) //Do they want their bed destroyed?
+                {
+                    NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
+                    Main.tile.At((int)tileX, (int)tileY - 1).SetActive(false);
+                    NetMessage.SendTileSquare(this.whoAmi, (int)tileX, (int)tileY - 1, 200);
+                    NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
+                    Main.tile.At((int)tileX, (int)tileY - 1).SetActive(true);
+                    sendMessage("Your bed was Destroyed.");
+                }
+                else
+                {
+                    sendMessage("You have a valid bed which could be destroyed, Please allow the Server to do so.");
+
+                    //Return to defaults
+                    Main.spawnTileX = spawnTileX;
+                    Main.spawnTileY = spawnTileY;
+                    return;
+                }
             }
             else
             {
-                NetMessage.SendData(0xc, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
+                NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
+                NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
             }
+            //Return to defaults
             Main.spawnTileX = spawnTileX;
             Main.spawnTileY = spawnTileY;
-            NetMessage.SendData(0x7, this.whoAmi);
-
-            //Preserve out Spawn point.
-            //int xPreserve = Main.spawnTileX;
-            //int yPreserve = Main.spawnTileY;
-
-            ////The spawn the client wants is the from player Pos /16.
-            ////This is because the Client reads frames, Not Tile Records.
-            //Main.spawnTileX = ((int)tileX / 16);
-            //Main.spawnTileY = ((int)tileY / 16);
-
-            //NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
-            //NetMessage.SendData((int)Packet.WORLD_DATA); //Trigger Client Data Update (Updates Spawn Position)
-            //NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", this.whoAmi); //Trigger the player to spawn
-
-            //this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
-
-            //this.Position.X = tileX;
-            //this.Position.Y = tileY;
-
-            ////Return our preserved Spawn Point.
-            //Main.spawnTileX = xPreserve;
-            //Main.spawnTileY = yPreserve;
-
-            //this.SpawnX = Main.spawnTileX;
-            //this.SpawnY = Main.spawnTileY;
-
-            //this.Spawn(); //Tell the Client to Spawn (Sets Defaults)
-            //this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
-
-            //NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
-
-            //NetMessage.SyncPlayers(); //Sync the Players Position.
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);            
         }
 
         public void teleportTo(Player player)

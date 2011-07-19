@@ -781,102 +781,63 @@ namespace Terraria_Server.Commands
                 if (commands.Count > 2 && commands[1] != null && commands[2] != null
                     && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
                 {
-                    String npcName = string.Join (" ", commands);
+                    String npcName = string.Join(" ", commands);
                     npcName = npcName.Remove(0, npcName.IndexOf(" " + commands[2])).Replace(" ", "").ToLower();
 
-                    NPC[] npcs = new NPC[Main.maxItemTypes];
-                    for (int i = 0; i < Main.maxItemTypes; i++)
-                    {
-                        npcs[i] = Registries.NPC.Create(i);
-                    }
+                    bool isNumber = false;
+                    Int32 realNPCId = 0;
+                    String realNPCName = "";
 
-                    int npcType = -1;
-                    String NpcName = "";
-                    for (int i = 0; i < Main.maxNPCTypes; i++)
-                    {
-                        if (npcs[i] != null)
-                        {
-                            if (npcs[i].Name != null && npcs[i].Name.Trim().Length > 0)
-                            {
-                                String npc = npcs[i].Name.Trim().Replace(" ", "").ToLower();
-                                if (npc == npcName)
-                                {
-                                    npcType = npcs[i].Type;
-                                    NpcName = npcs[i].Name;
-                                }
-                            }
-                        }
-                    }
-
-                    if (npcType == -1)
-                    {
-                        int assumedItem;
-                        try
-                        {
-                            assumedItem = Int32.Parse(npcName);
-                        }
-                        catch (Exception)
-                        {
-                            sender.sendMessage("NPC Type '" + npcName + "' not found!");
-                            return;
-                        }
-
-                        bool assumed = false;
-                        for (int i = 0; i < Main.maxNPCTypes; i++)
-                        {
-                            if (npcs[i].Type == assumedItem)
-                            {
-                                npcType = npcs[i].Type;
-                                NpcName = npcs[i].Name;
-                                assumed = true;
-                                break;
-                            }
-                        }
-
-                        if (!assumed)
-                        {
-                            sender.sendMessage("Invalid NPC Type '" + npcName + "'!");
-                            return;
-                        }
-                    }
-
-                    int amount = 1;
                     try
                     {
-                        amount = Int32.Parse(commands[1]);
+                        realNPCId = Int32.Parse(npcName);
+                        isNumber = true;
+                    }
+                    catch
+                    {
+
+                    }
+
+                    int NPCAmount = 1;
+                    try
+                    {
+                        NPCAmount = Int32.Parse(commands[1]);
                     }
                     catch (Exception)
                     {
-                        sender.sendMessage("Invalid NPC Type '" + npcName + "'!");
-                        return;
+                        goto ERROR;
                     }
 
-                    for (int i = 0; i < Main.maxNPCTypes; i++)
-                    {
-                        npcs[i] = null;
-                    }
-                    npcs = null;
+                    int npcIndex = -1;
 
-                    if (amount >= 0)
+                    for (int i = 0; i < NPCAmount; i++)
                     {
-                        for (int i = 0; i < amount; i++)
+                        Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+
+                        if (isNumber)
                         {
-                            Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-                            int index = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), npcType);
-                            //Main.npcs[index] = Registries.NPC.Create(NpcName);
-                            //Extend Registries.NPC to include:
-                            //Main.npcs[index].Name = "Green Slime";
-                            //Main.npcs[index].Active = true;
-                            //Main.npcs[index].Type = 1;
-                            //NPC.SpawnNPC();
-                            Main.npcs[index] = Registries.NPC.Create(NpcName);
+                            npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), realNPCId);
+                            realNPCName = Main.npcs[npcIndex].Name;
                         }
-
-                        Program.server.notifyOps("Spawned " + amount.ToString() + " of " +
-                            npcType.ToString() + " {" + player.Name + "}", true);
-                        return;
+                        else
+                        {
+                            NPC fclass = Registries.NPC.FindClass(npcName);
+                            if (fclass != Registries.NPC.Default)
+                            {
+                                realNPCId = fclass.Type;
+                                npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), realNPCId);
+                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], fclass.Name);
+                                realNPCName = fclass.Name;
+                            }
+                            else
+                            {
+                                goto ERROR;
+                            }
+                        }
                     }
-
+                    Program.server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
+                            realNPCName  + " {" + player.Name + "}", true);
+                    return;
                 }
                 else
                 {
