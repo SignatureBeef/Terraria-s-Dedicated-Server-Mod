@@ -3885,31 +3885,22 @@ namespace Terraria_Server
                 {
                     num2 = 2;
                 }
+                else if (this.Velocity.Y > 0f)
+                {
+                    num2 = 3;
+                }
+                else if (this.Velocity.X != 0f)
+                {
+                    num2 = 1;
+                }
                 else
                 {
-                    if (this.Velocity.Y > 0f)
-                    {
-                        num2 = 3;
-                    }
-                    else
-                    {
-                        if (this.Velocity.X != 0f)
-                        {
-                            num2 = 1;
-                        }
-                        else
-                        {
-                            num2 = 0;
-                        }
-                    }
+                    num2 = 0;
                 }
             }
-            else
+            else if (this.aiAction == 1)
             {
-                if (this.aiAction == 1)
-                {
-                    num2 = 4;
-                }
+                num2 = 4;
             }
             if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME || this.type == NPCType.N59_LAVA_SLIME)
             {
@@ -4011,26 +4002,20 @@ namespace Terraria_Server
                 {
                     this.frame.Y = 0;
                 }
+                else if (this.frameCounter < 12.0)
+                {
+                    this.frame.Y = num;
+                }
+                else if (this.frameCounter < 18.0)
+                {
+                    this.frame.Y = num * 2;
+                }
                 else
                 {
-                    if (this.frameCounter < 12.0)
+                    this.frame.Y = num * 3;
+                    if (this.frameCounter >= 23.0)
                     {
-                        this.frame.Y = num;
-                    }
-                    else
-                    {
-                        if (this.frameCounter < 18.0)
-                        {
-                            this.frame.Y = num * 2;
-                        }
-                        else
-                        {
-                            this.frame.Y = num * 3;
-                            if (this.frameCounter >= 23.0)
-                            {
-                                this.frameCounter = 0.0;
-                            }
-                        }
+                        this.frameCounter = 0.0;
                     }
                 }
             }
@@ -4070,30 +4055,21 @@ namespace Terraria_Server
                     {
                         this.frame.Y = 0;
                     }
+                    else if (this.frameCounter < 12.0)
+                    {
+                        this.frame.Y = num;
+                    }
+                    else if (this.frameCounter < 18.0)
+                    {
+                        this.frame.Y = num * 2;
+                    }
+                    else if (this.frameCounter < 24.0)
+                    {
+                        this.frame.Y = num * 3;
+                    }
                     else
                     {
-                        if (this.frameCounter < 12.0)
-                        {
-                            this.frame.Y = num;
-                        }
-                        else
-                        {
-                            if (this.frameCounter < 18.0)
-                            {
-                                this.frame.Y = num * 2;
-                            }
-                            else
-                            {
-                                if (this.frameCounter < 24.0)
-                                {
-                                    this.frame.Y = num * 3;
-                                }
-                                else
-                                {
-                                    this.frameCounter = 0.0;
-                                }
-                            }
-                        }
+                        this.frameCounter = 0.0;
                     }
                 }
                 else
@@ -4102,16 +4078,13 @@ namespace Terraria_Server
                     {
                         this.frame.Y = num * 4;
                     }
+                    else if (this.frameCounter < 12.0)
+                    {
+                        this.frame.Y = num * 5;
+                    }
                     else
                     {
-                        if (this.frameCounter < 12.0)
-                        {
-                            this.frame.Y = num * 5;
-                        }
-                        else
-                        {
-                            this.frameCounter = 0.0;
-                        }
+                        this.frameCounter = 0.0;
                     }
                 }
             }
@@ -4163,30 +4136,21 @@ namespace Terraria_Server
                     {
                         this.frame.Y = 0;
                     }
+                    else if (this.frameCounter < 12.0)
+                    {
+                        this.frame.Y = num;
+                    }
+                    else if (this.frameCounter < 18.0)
+                    {
+                        this.frame.Y = num * 2;
+                    }
+                    else if (this.frameCounter < 24.0)
+                    {
+                        this.frame.Y = num * 3;
+                    }
                     else
                     {
-                        if (this.frameCounter < 12.0)
-                        {
-                            this.frame.Y = num;
-                        }
-                        else
-                        {
-                            if (this.frameCounter < 18.0)
-                            {
-                                this.frame.Y = num * 2;
-                            }
-                            else
-                            {
-                                if (this.frameCounter < 24.0)
-                                {
-                                    this.frame.Y = num * 3;
-                                }
-                                else
-                                {
-                                    this.frameCounter = 0.0;
-                                }
-                            }
-                        }
+                        this.frameCounter = 0.0;
                     }
                 }
             }
@@ -4219,30 +4183,21 @@ namespace Terraria_Server
                 {
                     this.frame.Y = 0;
                 }
+                else if (this.frameCounter < 4.0)
+                {
+                    this.frame.Y = num;
+                }
+                else if (this.frameCounter < 6.0)
+                {
+                    this.frame.Y = num * 2;
+                }
+                else if (this.frameCounter < 8.0)
+                {
+                    this.frame.Y = num;
+                }
                 else
                 {
-                    if (this.frameCounter < 4.0)
-                    {
-                        this.frame.Y = num;
-                    }
-                    else
-                    {
-                        if (this.frameCounter < 6.0)
-                        {
-                            this.frame.Y = num * 2;
-                        }
-                        else
-                        {
-                            if (this.frameCounter < 8.0)
-                            {
-                                this.frame.Y = num;
-                            }
-                            else
-                            {
-                                this.frameCounter = 0.0;
-                            }
-                        }
-                    }
+                    this.frameCounter = 0.0;
                 }
             }
             if (this.type == NPCType.N43_MAN_EATER || this.type == NPCType.N56_SNATCHER)
@@ -4252,26 +4207,17 @@ namespace Terraria_Server
                 {
                     this.frame.Y = 0;
                 }
-                else
+                else if (this.frameCounter < 12.0)
                 {
-                    if (this.frameCounter < 12.0)
-                    {
-                        this.frame.Y = num;
-                    }
-                    else
-                    {
-                        if (this.frameCounter < 18.0)
-                        {
-                            this.frame.Y = num * 2;
-                        }
-                        else
-                        {
-                            if (this.frameCounter < 24.0)
-                            {
-                                this.frame.Y = num;
-                            }
-                        }
-                    }
+                    this.frame.Y = num;
+                }
+                else if (this.frameCounter < 18.0)
+                {
+                    this.frame.Y = num * 2;
+                }
+                else if (this.frameCounter < 24.0)
+                {
+                    this.frame.Y = num;
                 }
                 if (this.frameCounter == 23.0)
                 {
@@ -4320,9 +4266,228 @@ namespace Terraria_Server
                     }
                 }
             }
+            else if (this.type == NPCType.N03_ZOMBIE || this.type == NPCType.N52_DOCTOR_BONES || this.type == NPCType.N53_THE_GROOM)
+            {
+                if (this.Velocity.Y == 0f)
+                {
+                    if (this.direction == 1)
+                    {
+                        this.spriteDirection = 1;
+                    }
+                    if (this.direction == -1)
+                    {
+                        this.spriteDirection = -1;
+                    }
+                }
+                if (this.Velocity.Y != 0f || (this.direction == -1 && this.Velocity.X > 0f) || (this.direction == 1 && this.Velocity.X < 0f))
+                {
+                    this.frameCounter = 0.0;
+                    this.frame.Y = num * 2;
+                }
+                else if (this.Velocity.X == 0f)
+                {
+                    this.frameCounter = 0.0;
+                    this.frame.Y = 0;
+                }
+                else
+                {
+                    this.frameCounter += (double)Math.Abs(this.Velocity.X);
+                    if (this.frameCounter < 8.0)
+                    {
+                        this.frame.Y = 0;
+                    }
+                    else if (this.frameCounter < 16.0)
+                    {
+                        this.frame.Y = num;
+                    }
+                    else if (this.frameCounter < 24.0)
+                    {
+                        this.frame.Y = num * 2;
+                    }
+                    else if (this.frameCounter < 32.0)
+                    {
+                        this.frame.Y = num;
+                    }
+                    else
+                    {
+                        this.frameCounter = 0.0;
+                    }
+                }
+            }
+            else if (this.type == NPCType.N46_BUNNY || this.type == NPCType.N47_CORRUPT_BUNNY)
+            {
+                if (this.Velocity.Y == 0f)
+                {
+                    if (this.direction == 1)
+                    {
+                        this.spriteDirection = 1;
+                    }
+                    if (this.direction == -1)
+                    {
+                        this.spriteDirection = -1;
+                    }
+                    if (this.Velocity.X == 0f)
+                    {
+                        this.frame.Y = 0;
+                        this.frameCounter = 0.0;
+                    }
+                    else
+                    {
+                        this.frameCounter += (double)(Math.Abs(this.Velocity.X) * 1f);
+                        this.frameCounter += 1.0;
+                        if (this.frameCounter > 6.0)
+                        {
+                            this.frame.Y = this.frame.Y + num;
+                            this.frameCounter = 0.0;
+                        }
+                        if (this.frame.Y / num >= Main.npcFrameCount[this.Type])
+                        {
+                            this.frame.Y = 0;
+                        }
+                    }
+                }
+                else if (this.Velocity.Y < 0f)
+                {
+                    this.frameCounter = 0.0;
+                    this.frame.Y = num * 4;
+                }
+                else if (this.Velocity.Y > 0f)
+                {
+                    this.frameCounter = 0.0;
+                    this.frame.Y = num * 6;
+                }
+            }
+            else if (this.type == NPCType.N04_EYE_OF_CTHULU)
+            {
+                this.frameCounter += 1.0;
+                if (this.frameCounter < 7.0)
+                {
+                    this.frame.Y = 0;
+                }
+                else
+                {
+                    if (this.frameCounter < 14.0)
+                    {
+                        this.frame.Y = num;
+                    }
+                    else
+                    {
+                        if (this.frameCounter < 21.0)
+                        {
+                            this.frame.Y = num * 2;
+                        }
+                        else
+                        {
+                            this.frameCounter = 0.0;
+                            this.frame.Y = 0;
+                        }
+                    }
+                }
+                if (this.ai[0] > 1f)
+                {
+                    this.frame.Y = this.frame.Y + num * 3;
+                }
+            }
+            else if (this.type == NPCType.N05_SERVANT_OF_CTHULU)
+            {
+                this.frameCounter += 1.0;
+                if (this.frameCounter >= 8.0)
+                {
+                    this.frame.Y = this.frame.Y + num;
+                    this.frameCounter = 0.0;
+                }
+                if (this.frame.Y >= num * Main.npcFrameCount[this.Type])
+                {
+                    this.frame.Y = 0;
+                }
+            }
+            else if (this.type == NPCType.N06_EATER_OF_SOULS)
+            {
+                this.frameCounter += 1.0;
+                if (this.frameCounter >= 8.0)
+                {
+                    this.frame.Y = this.frame.Y + num;
+                    this.frameCounter = 0.0;
+                }
+                if (this.frame.Y >= num * Main.npcFrameCount[this.Type])
+                {
+                    this.frame.Y = 0;
+                }
+            }
+            else if (this.type == NPCType.N24_FIRE_IMP)
+            {
+                if (this.Velocity.Y == 0f)
+                {
+                    if (this.direction == 1)
+                    {
+                        this.spriteDirection = 1;
+                    }
+                    if (this.direction == -1)
+                    {
+                        this.spriteDirection = -1;
+                    }
+                }
+                if (this.ai[1] > 0f)
+                {
+                    if (this.frame.Y < 4)
+                    {
+                        this.frameCounter = 0.0;
+                    }
+                    this.frameCounter += 1.0;
+                    if (this.frameCounter <= 4.0)
+                    {
+                        this.frame.Y = num * 4;
+                    }
+                    else if (this.frameCounter <= 8.0)
+                    {
+                        this.frame.Y = num * 5;
+                    }
+                    else if (this.frameCounter <= 12.0)
+                    {
+                        this.frame.Y = num * 6;
+                    }
+                    else if (this.frameCounter <= 16.0)
+                    {
+                        this.frame.Y = num * 7;
+                    }
+                    else if (this.frameCounter <= 20.0)
+                    {
+                        this.frame.Y = num * 8;
+                    }
+                    else
+                    {
+                        this.frame.Y = num * 9;
+                        this.frameCounter = 100.0;
+                    }
+                }
+                else
+                {
+                    this.frameCounter += 1.0;
+                    if (this.frameCounter <= 4.0)
+                    {
+                        this.frame.Y = 0;
+                    }
+                    else if (this.frameCounter <= 8.0)
+                    {
+                        this.frame.Y = num;
+                    }
+                    else if (this.frameCounter <= 12.0)
+                    {
+                        this.frame.Y = num * 2;
+                    }
+                    else
+                    {
+                        this.frame.Y = num * 3;
+                        if (this.frameCounter >= 16.0)
+                        {
+                            this.frameCounter = 0.0;
+                        }
+                    }
+                }
+            }
             else
             {
-                if (this.type == NPCType.N03_ZOMBIE || this.type == NPCType.N52_DOCTOR_BONES || this.type == NPCType.N53_THE_GROOM)
+                if (this.type == NPCType.N29_GOBLIN_SORCERER || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N45_TIM)
                 {
                     if (this.Velocity.Y == 0f)
                     {
@@ -4335,290 +4500,14 @@ namespace Terraria_Server
                             this.spriteDirection = -1;
                         }
                     }
-                    if (this.Velocity.Y != 0f || (this.direction == -1 && this.Velocity.X > 0f) || (this.direction == 1 && this.Velocity.X < 0f))
+                    this.frame.Y = 0;
+                    if (this.Velocity.Y != 0f)
                     {
-                        this.frameCounter = 0.0;
-                        this.frame.Y = num * 2;
+                        this.frame.Y = this.frame.Y + num;
                     }
-                    else
+                    else if (this.ai[1] > 0f)
                     {
-                        if (this.Velocity.X == 0f)
-                        {
-                            this.frameCounter = 0.0;
-                            this.frame.Y = 0;
-                        }
-                        else
-                        {
-                            this.frameCounter += (double)Math.Abs(this.Velocity.X);
-                            if (this.frameCounter < 8.0)
-                            {
-                                this.frame.Y = 0;
-                            }
-                            else
-                            {
-                                if (this.frameCounter < 16.0)
-                                {
-                                    this.frame.Y = num;
-                                }
-                                else
-                                {
-                                    if (this.frameCounter < 24.0)
-                                    {
-                                        this.frame.Y = num * 2;
-                                    }
-                                    else
-                                    {
-                                        if (this.frameCounter < 32.0)
-                                        {
-                                            this.frame.Y = num;
-                                        }
-                                        else
-                                        {
-                                            this.frameCounter = 0.0;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (this.type == NPCType.N46_BUNNY || this.type == NPCType.N47_CORRUPT_BUNNY)
-                    {
-                        if (this.Velocity.Y == 0f)
-                        {
-                            if (this.direction == 1)
-                            {
-                                this.spriteDirection = 1;
-                            }
-                            if (this.direction == -1)
-                            {
-                                this.spriteDirection = -1;
-                            }
-                            if (this.Velocity.X == 0f)
-                            {
-                                this.frame.Y = 0;
-                                this.frameCounter = 0.0;
-                            }
-                            else
-                            {
-                                this.frameCounter += (double)(Math.Abs(this.Velocity.X) * 1f);
-                                this.frameCounter += 1.0;
-                                if (this.frameCounter > 6.0)
-                                {
-                                    this.frame.Y = this.frame.Y + num;
-                                    this.frameCounter = 0.0;
-                                }
-                                if (this.frame.Y / num >= Main.npcFrameCount[this.Type])
-                                {
-                                    this.frame.Y = 0;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (this.Velocity.Y < 0f)
-                            {
-                                this.frameCounter = 0.0;
-                                this.frame.Y = num * 4;
-                            }
-                            else
-                            {
-                                if (this.Velocity.Y > 0f)
-                                {
-                                    this.frameCounter = 0.0;
-                                    this.frame.Y = num * 6;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (this.type == NPCType.N04_EYE_OF_CTHULU)
-                        {
-                            this.frameCounter += 1.0;
-                            if (this.frameCounter < 7.0)
-                            {
-                                this.frame.Y = 0;
-                            }
-                            else
-                            {
-                                if (this.frameCounter < 14.0)
-                                {
-                                    this.frame.Y = num;
-                                }
-                                else
-                                {
-                                    if (this.frameCounter < 21.0)
-                                    {
-                                        this.frame.Y = num * 2;
-                                    }
-                                    else
-                                    {
-                                        this.frameCounter = 0.0;
-                                        this.frame.Y = 0;
-                                    }
-                                }
-                            }
-                            if (this.ai[0] > 1f)
-                            {
-                                this.frame.Y = this.frame.Y + num * 3;
-                            }
-                        }
-                        else
-                        {
-                            if (this.type == NPCType.N05_SERVANT_OF_CTHULU)
-                            {
-                                this.frameCounter += 1.0;
-                                if (this.frameCounter >= 8.0)
-                                {
-                                    this.frame.Y = this.frame.Y + num;
-                                    this.frameCounter = 0.0;
-                                }
-                                if (this.frame.Y >= num * Main.npcFrameCount[this.Type])
-                                {
-                                    this.frame.Y = 0;
-                                }
-                            }
-                            else
-                            {
-                                if (this.type == NPCType.N06_EATER_OF_SOULS)
-                                {
-                                    this.frameCounter += 1.0;
-                                    if (this.frameCounter >= 8.0)
-                                    {
-                                        this.frame.Y = this.frame.Y + num;
-                                        this.frameCounter = 0.0;
-                                    }
-                                    if (this.frame.Y >= num * Main.npcFrameCount[this.Type])
-                                    {
-                                        this.frame.Y = 0;
-                                    }
-                                }
-                                else
-                                {
-                                    if (this.type == NPCType.N24_FIRE_IMP)
-                                    {
-                                        if (this.Velocity.Y == 0f)
-                                        {
-                                            if (this.direction == 1)
-                                            {
-                                                this.spriteDirection = 1;
-                                            }
-                                            if (this.direction == -1)
-                                            {
-                                                this.spriteDirection = -1;
-                                            }
-                                        }
-                                        if (this.ai[1] > 0f)
-                                        {
-                                            if (this.frame.Y < 4)
-                                            {
-                                                this.frameCounter = 0.0;
-                                            }
-                                            this.frameCounter += 1.0;
-                                            if (this.frameCounter <= 4.0)
-                                            {
-                                                this.frame.Y = num * 4;
-                                            }
-                                            else
-                                            {
-                                                if (this.frameCounter <= 8.0)
-                                                {
-                                                    this.frame.Y = num * 5;
-                                                }
-                                                else
-                                                {
-                                                    if (this.frameCounter <= 12.0)
-                                                    {
-                                                        this.frame.Y = num * 6;
-                                                    }
-                                                    else
-                                                    {
-                                                        if (this.frameCounter <= 16.0)
-                                                        {
-                                                            this.frame.Y = num * 7;
-                                                        }
-                                                        else
-                                                        {
-                                                            if (this.frameCounter <= 20.0)
-                                                            {
-                                                                this.frame.Y = num * 8;
-                                                            }
-                                                            else
-                                                            {
-                                                                this.frame.Y = num * 9;
-                                                                this.frameCounter = 100.0;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            this.frameCounter += 1.0;
-                                            if (this.frameCounter <= 4.0)
-                                            {
-                                                this.frame.Y = 0;
-                                            }
-                                            else
-                                            {
-                                                if (this.frameCounter <= 8.0)
-                                                {
-                                                    this.frame.Y = num;
-                                                }
-                                                else
-                                                {
-                                                    if (this.frameCounter <= 12.0)
-                                                    {
-                                                        this.frame.Y = num * 2;
-                                                    }
-                                                    else
-                                                    {
-                                                        this.frame.Y = num * 3;
-                                                        if (this.frameCounter >= 16.0)
-                                                        {
-                                                            this.frameCounter = 0.0;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (this.type == NPCType.N29_GOBLIN_SORCERER || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N45_TIM)
-                                        {
-                                            if (this.Velocity.Y == 0f)
-                                            {
-                                                if (this.direction == 1)
-                                                {
-                                                    this.spriteDirection = 1;
-                                                }
-                                                if (this.direction == -1)
-                                                {
-                                                    this.spriteDirection = -1;
-                                                }
-                                            }
-                                            this.frame.Y = 0;
-                                            if (this.Velocity.Y != 0f)
-                                            {
-                                                this.frame.Y = this.frame.Y + num;
-                                            }
-                                            else
-                                            {
-                                                if (this.ai[1] > 0f)
-                                                {
-                                                    this.frame.Y = this.frame.Y + num * 2;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        this.frame.Y = this.frame.Y + num * 2;
                     }
                 }
             }
