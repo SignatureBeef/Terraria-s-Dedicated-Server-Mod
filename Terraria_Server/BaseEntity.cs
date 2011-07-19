@@ -18,6 +18,7 @@ namespace Terraria_Server
         public virtual int life { get; set; }
         public virtual float scale { get; set; }
         public virtual float knockBackResist { get; set; }
+        public virtual bool Calculated { get; set; }
         public int Width { get; set; }
 
         public abstract object Clone();

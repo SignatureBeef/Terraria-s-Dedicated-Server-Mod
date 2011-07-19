@@ -5165,11 +5165,11 @@ namespace Terraria_Server
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Create("Big Boned");
+                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Big Boned");
                                 }
                                 else if (Main.rand.Next(5) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Create("Short Bones");
+                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Short Bones");
                                 }
                             }
                         }
@@ -5199,11 +5199,11 @@ namespace Terraria_Server
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Create("Little Stinger");
+                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Little Stinger");
                                 }
                                 else if (Main.rand.Next(4) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Create("Big Stinger");
+                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Big Stinger");
                                 }
                             }
                         }
@@ -5223,11 +5223,11 @@ namespace Terraria_Server
                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
                             if (Main.rand.Next(3) == 0)
                             {
-                                Main.npcs[npcIndex] = Registries.NPC.Create("Little Eater");
+                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Little Eater");
                             }
                             else if (Main.rand.Next(3) == 0)
                             {
-                                Main.npcs[npcIndex] = Registries.NPC.Create("Big Eater");
+                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Big Eater");
                             }
                         }
                         else if ((double)num2 <= Main.worldSurface)

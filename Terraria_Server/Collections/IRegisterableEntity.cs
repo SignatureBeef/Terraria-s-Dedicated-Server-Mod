@@ -16,6 +16,7 @@ namespace Terraria_Server.Collections
         int lifeMax { get; set; }
         int life { get; set; }
         float scale { get; set; }
+        bool Calculated { get; set; }
         float knockBackResist { get; set; }
     }
 }
