@@ -36,7 +36,7 @@ namespace Terraria_Server.Collections
             }
         }
 
-        public Item Create(int type, int stack = 1)
+        public override Item Create(int type, int stack = 1)
         {
             Item item = CloneAndInit(base.Create(type), stack);
             return item;

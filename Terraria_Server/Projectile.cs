@@ -39,10 +39,10 @@ namespace Terraria_Server
         /// </summary>
         public Vector2 Velocity;
 
-        /// <summary>
-        /// Scaled size of projectile
-        /// </summary>
-        public float scale;
+        // summary>
+        // Scaled size of projectile
+        // /summary>
+        //public float scale;
         /// <summary>
         /// Degrees of rotation for projectile sprite
         /// </summary>
@@ -76,10 +76,10 @@ namespace Terraria_Server
         /// 
         /// </summary>
         public float[] ai = new float[Projectile.MAX_AI];
-        /// <summary>
-        /// Value of artificial intelligence style to use for motion
-        /// </summary>
-        public int aiStyle;
+        // summary>
+        // Value of artificial intelligence style to use for motion
+        // /summary>
+        //public int aiStyle;
         /// <summary>
         /// Amount of time left in the projectile's life cycle?
         /// </summary>
@@ -88,10 +88,10 @@ namespace Terraria_Server
         /// Amount of time to delay sound.  Unit unknown (likely milliseconds)
         /// </summary>
         public int soundDelay;
-        /// <summary>
-        /// Amount of damage the projectile can cause on a target entity
-        /// </summary>
-        public int damage;
+        // summary>
+        // Amount of damage the projectile can cause on a target entity
+        // /summary>
+        //public int damage;
         /// <summary>
         /// Integer representing x direction of travel.  Values unknown
         /// </summary>

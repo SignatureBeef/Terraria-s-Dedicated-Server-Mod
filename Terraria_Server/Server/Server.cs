@@ -136,7 +136,10 @@ namespace Terraria_Server
                     }
                 }
             }
-            Program.tConsole.WriteLine(message);
+            if (writeToConsole)
+            {
+                Program.tConsole.WriteLine(message);
+            }
         }
 
         // Summary:

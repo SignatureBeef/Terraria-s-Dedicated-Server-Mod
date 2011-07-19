@@ -17,6 +17,7 @@ namespace Terraria_Server
         private const int MAX_INVENTORY = 44;
 
         private String ipAddress = null;
+        private bool bedDestruction = false;
 
         public bool enemySpawns;
         public int heldProj = -1;
@@ -4212,39 +4213,55 @@ namespace Terraria_Server
             Netplay.slots[whoAmi].Kick (message);
         }
 
-        public String getIPAddress()
+        public String IPAddress
         {
-            return ipAddress;
+            get
+            {
+                return ipAddress;
+            }
+            set
+            {
+                ipAddress = value;
+            }
         }
 
-        public void setIPAddress(String IPaddress)
+        public Vector2 TileLocation
         {
-            ipAddress = IPaddress;
+            get
+            {
+                return new Vector2(Position.X * 16, Position.Y * 16);
+            }
+            set
+            {
+                Position.X = value.X / 16;
+                Position.Y = value.Y / 16;
+            }
         }
 
-        public Vector2 getTileLocation()
+        public Vector2 Location
         {
-            return new Vector2(Position.X * 16, Position.Y * 16);
+            get
+            {
+                return Position;
+            }
+            set {
+                Position = value;
+            }
         }
 
-        public void setTileLocation(Vector2 Location)
+        public bool AllowBedDestroy
         {
-            Position.X = Location.X / 16;
-            Position.Y = Location.Y / 16;
+            get
+            {
+                return bedDestruction;
+            }
+            set
+            {
+                bedDestruction = value;
+            }
         }
 
-        public Vector2 getLocation()
-        {
-            return Position;
-        }
-
-        public void setLocation(Vector2 Location)
-        {
-            Position = Location;
-        }
-
-        public void teleportTo(float tileX, float tileY)
-        /* FIXME: this looks like it's sending way too much traffic for no reason */
+        public bool teleportTo(float tileX, float tileY)
         {
 
             PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
@@ -4254,40 +4271,40 @@ namespace Terraria_Server
             Program.server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
             if (playerEvent.Cancelled)
             {
-                return;
+                return false;
             }
 
-            //Preserve out Spawn point.
-            int xPreserve = Main.spawnTileX;
-            int yPreserve = Main.spawnTileY;
+            //Preserve our Spawn point.
+            int spawnTileX = Main.spawnTileX;
+            int spawnTileY = Main.spawnTileY;
 
-            //The spawn the client wants is the from player Pos /16.
-            //This is because the Client reads frames, Not Tile Records.
-            Main.spawnTileX = ((int)tileX / 16);
-            Main.spawnTileY = ((int)tileY / 16);
+            //Set our new target position
+            Main.spawnTileX = (int)tileX;
+            Main.spawnTileY = (int)tileY;
 
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
-            NetMessage.SendData((int)Packet.WORLD_DATA); //Trigger Client Data Update (Updates Spawn Position)
-            NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", this.whoAmi); //Trigger the player to spawn
-
-            this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
-
-            this.Position.X = tileX;
-            this.Position.Y = tileY;
-
-            //Return our preserved Spawn Point.
-            Main.spawnTileX = xPreserve;
-            Main.spawnTileY = yPreserve;
-
-            this.SpawnX = Main.spawnTileX;
-            this.SpawnY = Main.spawnTileY;
-
-            this.Spawn(); //Tell the Client to Spawn (Sets Defaults)
-            this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
-
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
-
-            NetMessage.SyncPlayers(); //Sync the Players Position.
+            bool destroyed = false;
+            if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0) //Do they have a bed?
+            {
+                if (bedDestruction) //Do they want their bed destroyed?
+                {
+                    NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
+                    Main.tile.At((int)tileX, (int)tileY - 1).SetActive(false);
+                    NetMessage.SendTileSquare(this.whoAmi, (int)tileX, (int)tileY - 1, 200);
+                    NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
+                    Main.tile.At((int)tileX, (int)tileY - 1).SetActive(true);
+                    destroyed = true;
+                }
+            }
+            else
+            {
+                NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
+                NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
+            }
+            //Return to defaults
+            Main.spawnTileX = spawnTileX;
+            Main.spawnTileY = spawnTileY;
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
+            return destroyed;
         }
 
         public void teleportTo(Player player)
@@ -4295,7 +4312,7 @@ namespace Terraria_Server
             this.teleportTo(player.Position.X, player.Position.Y);
         }
 
-        public static String getPassword(String server, Server Server)
+        public static String GetPlayerPassword(String PlayerName, Server Server)
         {
             foreach (String listee in Server.OpList.WhiteList)
             {
@@ -4304,7 +4321,7 @@ namespace Terraria_Server
                     String userPass = listee.Trim().ToLower();
                     if (userPass.Contains(":"))
                     {
-                        if (userPass.Split(':')[0] == server.Trim().ToLower())
+                        if (userPass.Split(':')[0] == PlayerName.Trim().ToLower())
                         {
                             return userPass.Split(':')[1];
                         }
@@ -4314,9 +4331,12 @@ namespace Terraria_Server
             return null;
         }
 
-        public String getPassword()
+        public String Password
         {
-            return Player.getPassword(this.Name, Program.server);
+            get
+            {
+                return Player.GetPlayerPassword(this.Name, Program.server);
+            }
         }
 
         public static bool isInOpList(String Name, Server Server)
@@ -4345,7 +4365,7 @@ namespace Terraria_Server
 
         public String getOpListKey()
         {
-            return this.Name.Trim().ToLower() + getPassword();
+            return this.Name.Trim().ToLower() + Password;
         }
     }
 }

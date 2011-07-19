@@ -8,7 +8,7 @@ namespace Terraria_Server.Collections
 {
     public class Registry<T> where T : IRegisterableEntity
     {
-        protected Dictionary<int, T> typeLookup = new Dictionary<int, T>();
+        protected Dictionary<int, List<T>> typeLookup = new Dictionary<int, List<T>>();
         protected Dictionary<string, T> nameLookup = new Dictionary<string, T>();
 
         protected String DEFINITIONS = "Terraria_Server.Definitions.";
@@ -30,7 +30,22 @@ namespace Terraria_Server.Collections
                     foreach (T t in deserialized)
                     {
                         errored = t;
-                        typeLookup.Add(t.Type, t);
+                        //typeLookup.Add(t.Type, t);
+                        if (typeLookup.ContainsKey(t.Type))
+                        {
+                            List<T> values;
+                            if (typeLookup.TryGetValue(t.Type, out values))
+                            {
+                                values.Add(t);
+                            }
+                        }
+                        else
+                        {
+                            List<T> values = new List<T>();
+                            values.Add(t);
+                            typeLookup.Add(t.Type, values);
+                        }
+
                         if (!nameLookup.ContainsKey(t.Name))
                         {
                             nameLookup.Add(t.Name, t);
@@ -56,12 +71,43 @@ namespace Terraria_Server.Collections
             }
         }
 
-        public T Create(int type)
+        public virtual T Create(int type, int index = 0)
         {
-            T t;
-            if (typeLookup.TryGetValue(type, out t))
+            List<T> values;
+            if (typeLookup.TryGetValue(type, out values))
             {
-                return CloneAndInit(t);
+                if (values.Count > 0)
+                {
+                    return CloneAndInit(values[index]);
+                }
+            }
+            return CloneAndInit(defaultValue);
+        }
+
+        public T Alter(T coneable, String name)
+        {
+            List<T> values;
+            if (typeLookup.TryGetValue(coneable.Type, out values))
+            {
+                foreach (T value in values)
+                {
+                    if (value.Name == name)
+                    {
+                        //T newClone = (T)coneable.Clone();
+                        T cloned = CloneAndInit(value);
+                        coneable.Name = cloned.Name;
+                        coneable.aiStyle = cloned.aiStyle;
+                        coneable.damage = cloned.damage;
+                        coneable.defense = cloned.defense;
+                        coneable.life = cloned.life;
+                        coneable.lifeMax = cloned.lifeMax;
+                        coneable.scale = cloned.scale;
+                        coneable.knockBackResist = cloned.knockBackResist;
+                        NPC.npcSlots = cloned.slots;
+
+                        return coneable;
+                    }
+                }
             }
             return CloneAndInit(defaultValue);
         }
@@ -71,15 +117,30 @@ namespace Terraria_Server.Collections
             T t;
             if (nameLookup.TryGetValue(name, out t))
             {
-                if(t is NPC) {
-                    if (t.Inherits != 0)
-                    {
-                        t.Type = t.Inherits;
-                    }
-                }
                 return CloneAndInit(t);
             }
             return CloneAndInit(defaultValue);
+        }
+
+
+        public T FindClass(String name)
+        {
+            List<T> values;
+            foreach (int type in typeLookup.Keys)
+            {
+                if (typeLookup.TryGetValue(type, out values))
+                {
+                    foreach (T value in values)
+                    {
+                        if (value.Name.ToLower().Replace(" ", "").Trim() == name.ToLower().Replace(" ", "").Trim()) //Exact :3
+                        {
+                            //CloneAndInit(values[i]);
+                            return value;
+                        }
+                    }
+                }
+            }
+            return Default;
         }
 
         private static T CloneAndInit(T t)

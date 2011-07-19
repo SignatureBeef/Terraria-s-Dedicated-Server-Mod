@@ -275,7 +275,7 @@ namespace Terraria_Server
 		{
 			var slot = slots[id];
 			slot.remoteAddress = remoteAddress;
-			Main.players[id].setIPAddress(remoteAddress);
+			Main.players[id].IPAddress = remoteAddress;
 			slot.state = SlotState.CONNECTED;
 			slot.socket = client;
 			if (slot.readBuffer == null) slot.readBuffer = new byte[1024];
