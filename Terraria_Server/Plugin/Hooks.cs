@@ -32,5 +32,6 @@ namespace Terraria_Server.Plugin
         NPC_BOSSDEATH,
         NPC_BOSSSUMMON,
         PLAYER_FLOWLIQUID,
+        PLAYER_CHESTBREAK,
     }
 }

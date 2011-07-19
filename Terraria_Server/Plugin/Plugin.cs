@@ -89,6 +89,12 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerChat(MessageEvent Event) { }
 
         /// <summary>
+        /// Hook method for chest destruction
+        /// </summary>
+        /// <param name="Event">PlayerChestBreakEvent info</param>
+        public virtual void onPlayerChestBreak(PlayerChestBreakEvent Event) { }
+
+        /// <summary>
         /// Hook method for player command
         /// </summary>
         /// <param name="Event">PlayerCommandEvent info</param>
