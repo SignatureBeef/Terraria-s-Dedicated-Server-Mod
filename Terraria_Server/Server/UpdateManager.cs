@@ -2,6 +2,7 @@
 using System;
 using System.Diagnostics;
 using System.IO;
+using Terraria_Server.Definitions;
 namespace Terraria_Server
 {
     public class UpdateManager
@@ -99,16 +100,29 @@ namespace Terraria_Server
                     return false;
                 }
 
-                try
+                Platform.PlatformType oldPlatform = Platform.Type; //Preserve old data if command args were used
+                Platform.InitPlatform(); //Reset Data of Platform for determinine exit/enter method.
+
+                if (Platform.Type == Platform.PlatformType.WINDOWS)
                 {
-                    Process.Start(myFile);
+                    try
+                    {
+                        Process.Start(myFile); //Windows only?
+                    }
+                    catch (Exception e)
+                    {
+                        Platform.Type = oldPlatform;
+                        Program.tConsole.WriteLine("Could not boot into the new Update!");
+                        Program.tConsole.WriteLine(e.Message);
+                        return false;
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Program.tConsole.WriteLine("Could not boot into the new Update!");
-                    Program.tConsole.WriteLine(e.Message);
-                    return false;
-                }
+                    Platform.Type = oldPlatform;
+                    Program.tConsole.WriteLine("Exiting, Please the Program to use your new Installation.");
+                    Environment.Exit(0);
+                }                
 
                 return true;
             }
