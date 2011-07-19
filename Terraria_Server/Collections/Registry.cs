@@ -89,12 +89,12 @@ namespace Terraria_Server.Collections
             List<T> values;
             if (typeLookup.TryGetValue(coneable.Type, out values))
             {
-                for (int i = 0; i < values.Count - 1; i++)
+                foreach (T value in values)
                 {
-                    if (values[i].Name == name)
+                    if (value.Name == name)
                     {
                         //T newClone = (T)coneable.Clone();
-                        T cloned = CloneAndInit(values[i]);
+                        T cloned = CloneAndInit(value);
                         coneable.Name = cloned.Name;
                         coneable.aiStyle = cloned.aiStyle;
                         coneable.damage = cloned.damage;
@@ -126,21 +126,21 @@ namespace Terraria_Server.Collections
         public T FindClass(String name)
         {
             List<T> values;
-            for (int i = 0; i < typeLookup.Count - 1; i++)
+            foreach (int type in typeLookup.Keys)
             {
-                if (typeLookup.TryGetValue(i, out values))
+                if (typeLookup.TryGetValue(type, out values))
                 {
-                    for (int x = 0; x < values.Count - 1; x++)
+                    foreach (T value in values)
                     {
-                        if (values[x].Name.ToLower().Replace(" ", "").Trim() == name.ToLower().Replace(" ", "").Trim()) //Exact :3
+                        if (value.Name.ToLower().Replace(" ", "").Trim() == name.ToLower().Replace(" ", "").Trim()) //Exact :3
                         {
                             //CloneAndInit(values[i]);
-                            return values[x];
+                            return value;
                         }
                     }
                 }
             }
-            return defaultValue;
+            return Default;
         }
 
         private static T CloneAndInit(T t)
