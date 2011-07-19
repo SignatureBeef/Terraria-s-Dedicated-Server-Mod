@@ -72,7 +72,7 @@ namespace Terraria_Server
         public int oldTarget;
         public float rotation;
         //public float scale;
-        public float slots;
+        //public float slots;
         public int soundHit;
         public int soundKilled;
         public int spriteDirection;

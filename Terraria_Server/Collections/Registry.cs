@@ -103,11 +103,7 @@ namespace Terraria_Server.Collections
                         coneable.lifeMax = cloned.lifeMax;
                         coneable.scale = cloned.scale;
                         coneable.knockBackResist = cloned.knockBackResist;
-
-                        if (cloned.Calculated)
-                        {
-                            NPC.npcSlots *= cloned.scale;
-                        }
+                        NPC.npcSlots = cloned.slots;
 
                         return coneable;
                     }
