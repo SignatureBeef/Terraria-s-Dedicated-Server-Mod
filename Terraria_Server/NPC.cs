@@ -63,7 +63,6 @@ namespace Terraria_Server
         public bool homeless;
         public int homeTileX;
         public int homeTileY;
-        //public float knockBackResist;
         public bool lavaImmune;
         public bool lavaWet;
         public bool netUpdate;
@@ -72,8 +71,6 @@ namespace Terraria_Server
         public int oldDirection;
         public int oldTarget;
         public float rotation;
-        //public float scale;
-        //public float slots;
         public int soundHit;
         public int soundKilled;
         public int spriteDirection;
@@ -88,18 +85,13 @@ namespace Terraria_Server
         public Vector2 Velocity;
         public float[] ai = new float[NPC.MAX_AI];
         public int aiAction;
-        //public int aiStyle;
         public bool closeDoor;
-        //public int damage;
-        //public int defense;
         public int directionY = 1;
         public int doorX;
         public int doorY;
         public Rectangle frame;
         public int friendlyRegen;
         public int[] immune = new int[256];
-        //public int life;
-        //public int lifeMax;
         public int oldDirectionY;
         public Vector2 oldPosition;
         public Vector2 oldVelocity;
