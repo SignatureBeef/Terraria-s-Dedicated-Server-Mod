@@ -1483,17 +1483,17 @@ namespace Terraria_Server
                                         {
                                             num51 = 0;
                                         }
-                                        if (num52 > Main.maxTilesX)
+                                        if (num52 >= Main.maxTilesX)
                                         {
-                                            num52 = Main.maxTilesX;
+                                            num52 = Main.maxTilesX - 1;
                                         }
                                         if (num53 < 0)
                                         {
                                             num53 = 0;
                                         }
-                                        if (num54 > Main.maxTilesY)
+                                        if (num54 >= Main.maxTilesY)
                                         {
-                                            num54 = Main.maxTilesY;
+                                            num54 = Main.maxTilesY - 1;
                                         }
                                         bool flag6 = false;
                                         for (int m = num51; m < num52; m++)
@@ -5034,7 +5034,7 @@ namespace Terraria_Server
                                 {
                                     flag = false;
                                 }
-                                if (num16 > Main.maxTilesX)
+                                if (num16 >= Main.maxTilesX)
                                 {
                                     flag = false;
                                 }
@@ -5042,7 +5042,7 @@ namespace Terraria_Server
                                 {
                                     flag = false;
                                 }
-                                if (num18 > Main.maxTilesY)
+                                if (num18 >= Main.maxTilesY)
                                 {
                                     flag = false;
                                 }
@@ -5565,17 +5565,17 @@ namespace Terraria_Server
             {
                 num3 = 0;
             }
-            if (num4 > Main.maxTilesX)
+            if (num4 >= Main.maxTilesX)
             {
-                num4 = Main.maxTilesX;
+                num4 = Main.maxTilesX - 1;
             }
             if (num5 < 0)
             {
                 num5 = 0;
             }
-            if (num6 > Main.maxTilesY)
+            if (num6 >= Main.maxTilesY)
             {
-                num6 = Main.maxTilesY;
+                num6 = Main.maxTilesY - 1;
             }
             for (int i = 0; i < 1000; i++)
             {
@@ -5622,7 +5622,7 @@ namespace Terraria_Server
                         {
                             flag = false;
                         }
-                        if (num14 > Main.maxTilesX)
+                        if (num14 >= Main.maxTilesX)
                         {
                             flag = false;
                         }
@@ -5630,7 +5630,7 @@ namespace Terraria_Server
                         {
                             flag = false;
                         }
-                        if (num16 > Main.maxTilesY)
+                        if (num16 >= Main.maxTilesY)
                         {
                             flag = false;
                         }
