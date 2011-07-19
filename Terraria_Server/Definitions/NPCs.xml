@@ -279,7 +279,6 @@
     <knockBackResist>0.575</knockBackResist>
     <noGravity>true</noGravity>
     <slots>0.6375</slots>
-    <Calculated>true</Calculated>
     <soundHit>1</soundHit>
     <soundKilled>1</soundKilled>
     <value>76.5</value>
@@ -298,7 +297,6 @@
     <knockBackResist>0.425</knockBackResist>
     <noGravity>true</noGravity>
     <slots>0.8625</slots>
-    <Calculated>true</Calculated>
     <soundHit>1</soundHit>
     <soundKilled>1</soundKilled>
     <value>103.5</value>
@@ -934,10 +932,9 @@
     <Width>34</Width>
     <scale>0.85</scale>
     <slots>0.85</slots>
-    <Calculated>true</Calculated>
   </NPC>
   <NPC>
-    <Name>BigStinger</Name>
+    <Name>Big Stinger</Name>
     <Type>42</Type>
     <knockBackResist>0.68</knockBackResist>
     <noGravity>true</noGravity>
@@ -953,7 +950,6 @@
     <Width>34</Width>
     <scale>1.15</scale>
     <slots>1.15</slots>
-    <Calculated>true</Calculated>
   </NPC>
   <NPC>
     <Name>Man Eater</Name>

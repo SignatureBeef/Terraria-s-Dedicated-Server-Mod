@@ -105,6 +105,18 @@ namespace Terraria_Server
         public int soundDelay;
         public int whoAmI;
 
+        public int MaxLife
+        {
+            get
+            {
+                return base.lifeMax;
+            }
+            set
+            {
+                base.lifeMax = value;
+            }
+        }
+
         public NPC()
         {
             color = default(Color);
