@@ -7,9 +7,12 @@ namespace Terraria_Server
 {
     public class UpdateManager
     {
-        public static String UpdateList = "http://update.tdsm.org/updatelist.txt";
-        public static String UpdateLink = "http://update.tdsm.org/Terraria_Server.exe"; //Still hosted by Olympus, <3 Olympus Gaming! Check em out some time ;)
-        public static String UpdateInfo = "http://update.tdsm.org/buildinfo.txt";
+        public static String UpdateList     = "http://update.tdsm.org/updatelist.txt";
+        public static String UpdateLink     = "http://update.tdsm.org/Terraria_Server.exe"; //Still hosted by Olympus, <3 Olympus Gaming! Check em out some time ;)
+        public static String UpdateInfo     = "http://update.tdsm.org/buildinfo.txt";
+        public static String UpdateMDBLink  = "http://update.tdsm.org/Terraria_Server.exe.mdb";
+
+        public static int MAX_UPDATES = 2;
 
         public static void printUpdateInfo()
         {
@@ -52,6 +55,43 @@ namespace Terraria_Server
             return false;
         }
 
+        public static bool performUpdate(String DownloadLink, String savePath, String backupPath, String myFile, int Update)
+        {
+            if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
+            {
+                try
+                {
+                    File.Delete(savePath);
+                }
+                catch (Exception e)
+                {
+                    Program.tConsole.WriteLine("Error deleting old file!");
+                    Program.tConsole.WriteLine(e.Message);
+                    return false;
+                }
+            }
+
+            if (!MoveFile(myFile, backupPath))
+            {
+                Program.tConsole.WriteLine("Error moving current file!");
+                return false;
+            }
+
+            Program.tConsole.Write("Downloading Update " + Update.ToString() + "/" + MAX_UPDATES.ToString() + " from Servers...");
+            new System.Net.WebClient().DownloadFile(DownloadLink, savePath);
+            Program.tConsole.WriteLine("Ok");
+
+            //Program.tConsole.Write("Finishing Update...");
+
+            if (!MoveFile(savePath, myFile))
+            {
+                Program.tConsole.WriteLine("Error moving updated file!");
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool performProcess()
         {
             if (!Program.properties.AutomaticUpdates)
@@ -65,40 +105,10 @@ namespace Terraria_Server
 
                 printUpdateInfo();
 
-                String savePath = "Terraria_Server.upd";
-                String backupPath = "Terraria_Server.bak";
                 String myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
-                if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
-                {
-                    try
-                    {
-                        File.Delete(savePath);
-                    }
-                    catch (Exception e)
-                    {
-                        Program.tConsole.WriteLine("Error deleting old download!");
-                        Program.tConsole.WriteLine(e.Message);
-                        return false;
-                    }
-                }
-
-                if(!MoveFile(myFile, backupPath)) {
-                    Program.tConsole.WriteLine("Error moving current executable!");
-                    return false;
-                }
-
-                Program.tConsole.Write("Downloading Update from Servers...");
-                new System.Net.WebClient().DownloadFile(UpdateLink, savePath);
-                Program.tConsole.Write("Ok");
-
-                Program.tConsole.Write("Finishing Update...");
-
-                if (!MoveFile(savePath, myFile))
-                {
-                    Program.tConsole.WriteLine("Error moving updated executable!");
-                    return false;
-                }
+                performUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1);
+                performUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2);
 
                 Platform.PlatformType oldPlatform = Platform.Type; //Preserve old data if command args were used
                 Platform.InitPlatform(); //Reset Data of Platform for determinine exit/enter method.
@@ -122,7 +132,7 @@ namespace Terraria_Server
                     Platform.Type = oldPlatform;
                     Program.tConsole.WriteLine("Exiting, Please the Program to use your new Installation.");
                     Environment.Exit(0);
-                }                
+                }
 
                 return true;
             }

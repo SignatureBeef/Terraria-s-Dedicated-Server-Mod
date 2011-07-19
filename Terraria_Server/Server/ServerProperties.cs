@@ -6,7 +6,7 @@ namespace Terraria_Server
 {
     public class ServerProperties : PropertiesFile
     {
-        private const bool DEFAULT_AUTOMATIC_UPDATES = true;
+        private const bool DEFAULT_AUTOMATIC_UPDATES = false;
         private const String DEFAULT_GREETING = "Welcome to a TDSM Server!";
         private const String DEFAULT_MAP_SIZE = "small";
         private const int DEFAULT_MAX_PLAYERS = 8;
