@@ -4780,33 +4780,24 @@ namespace Terraria_Server
                         NPC.spawnRate = (int)((float)NPC.spawnRate * 0.4f);
                         NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2.1f);
                     }
-                    else
+                    else if ((double)Main.players[j].Position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
                     {
-                        if ((double)Main.players[j].Position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
+                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.9f);
+                    }
+                    else if ((double)Main.players[j].Position.Y > Main.worldSurface * 16.0 + (double)NPC.sHeight)
+                    {
+                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.5);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.7f);
+                    }
+                    else if (!Main.dayTime)
+                    {
+                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.6);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.3f);
+                        if (Main.bloodMoon)
                         {
-                            NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
-                            NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.9f);
-                        }
-                        else
-                        {
-                            if ((double)Main.players[j].Position.Y > Main.worldSurface * 16.0 + (double)NPC.sHeight)
-                            {
-                                NPC.spawnRate = (int)((double)NPC.spawnRate * 0.5);
-                                NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.7f);
-                            }
-                            else
-                            {
-                                if (!Main.dayTime)
-                                {
-                                    NPC.spawnRate = (int)((double)NPC.spawnRate * 0.6);
-                                    NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.3f);
-                                    if (Main.bloodMoon)
-                                    {
-                                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.3);
-                                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.8f);
-                                    }
-                                }
-                            }
+                            NPC.spawnRate = (int)((double)NPC.spawnRate * 0.3);
+                            NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.8f);
                         }
                     }
                     if (Main.players[j].zoneDungeon)
@@ -4814,54 +4805,36 @@ namespace Terraria_Server
                         NPC.spawnRate = (int)((double)NPC.defaultSpawnRate * 0.22);
                         NPC.maxSpawns = NPC.defaultMaxSpawns * 2;
                     }
-                    else
+                    else if (Main.players[j].zoneJungle)
                     {
-                        if (Main.players[j].zoneJungle)
-                        {
-                            NPC.spawnRate = (int)((double)NPC.spawnRate * 0.3);
-                            NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
-                        }
-                        else
-                        {
-                            if (Main.players[j].zoneEvil)
-                            {
-                                NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
-                                NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
-                            }
-                            else
-                            {
-                                if (Main.players[j].zoneMeteor)
-                                {
-                                    NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
-                                    NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.1f);
-                                }
-                            }
-                        }
+                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.3);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
+                    }
+                    else if (Main.players[j].zoneEvil)
+                    {
+                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
+                    }
+                    else if (Main.players[j].zoneMeteor)
+                    {
+                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.1f);
                     }
                     if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.2)
                     {
                         NPC.spawnRate = (int)((float)NPC.spawnRate * 0.6f);
                     }
-                    else
+                    else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
                     {
-                        if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
-                        {
-                            NPC.spawnRate = (int)((float)NPC.spawnRate * 0.7f);
-                        }
-                        else
-                        {
-                            if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.6)
-                            {
-                                NPC.spawnRate = (int)((float)NPC.spawnRate * 0.8f);
-                            }
-                            else
-                            {
-                                if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.8)
-                                {
-                                    NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
-                                }
-                            }
-                        }
+                        NPC.spawnRate = (int)((float)NPC.spawnRate * 0.7f);
+                    }
+                    else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.6)
+                    {
+                        NPC.spawnRate = (int)((float)NPC.spawnRate * 0.8f);
+                    }
+                    else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.8)
+                    {
+                        NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
                     }
                     if ((double)(Main.players[j].Position.Y * 16f) > (Main.worldSurface + Main.rockLayer) / 2.0 || Main.players[j].zoneEvil)
                     {
@@ -4869,12 +4842,9 @@ namespace Terraria_Server
                         {
                             NPC.spawnRate = (int)((float)NPC.spawnRate * 0.7f);
                         }
-                        else
+                        else if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
                         {
-                            if ((double)Main.players[j].activeNPCs < (double)NPC.maxSpawns * 0.4)
-                            {
-                                NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
-                            }
+                            NPC.spawnRate = (int)((float)NPC.spawnRate * 0.9f);
                         }
                     }
                     if (Main.players[j].inventory[Main.players[j].selectedItemIndex].Type == 148)
@@ -4919,28 +4889,22 @@ namespace Terraria_Server
                                 NPC.spawnRate = (int)((float)NPC.spawnRate * 2f);
                             }
                         }
-                        else
+                        else if (Main.players[j].townNPCs == 2f)
                         {
-                            if (Main.players[j].townNPCs == 2f)
+                            if (Main.rand.Next(3) == 0)
                             {
-                                if (Main.rand.Next(3) == 0)
-                                {
-                                    flag5 = true;
-                                    NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
-                                }
-                                else
-                                {
-                                    NPC.spawnRate = (int)((float)NPC.spawnRate * 3f);
-                                }
+                                flag5 = true;
+                                NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
                             }
                             else
                             {
-                                if (Main.players[j].townNPCs >= 3f)
-                                {
-                                    flag5 = true;
-                                    NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
-                                }
+                                NPC.spawnRate = (int)((float)NPC.spawnRate * 3f);
                             }
+                        }
+                        else if (Main.players[j].townNPCs >= 3f)
+                        {
+                            flag5 = true;
+                            NPC.maxSpawns = (int)((double)((float)NPC.maxSpawns) * 0.6);
                         }
                     }
                     if (Main.players[j].Active && !Main.players[j].dead && Main.players[j].activeNPCs < (float)NPC.maxSpawns && Main.rand.Next(NPC.spawnRate) == 0)
@@ -5114,424 +5078,304 @@ namespace Terraria_Server
                         {
                             NPC.NewNPC(num * 16 + 8, num2 * 16, 48, 0);
                         }
-                        else
+                        else if (flag3)
                         {
-                            if (flag3)
+                            if (Main.rand.Next(9) == 0)
                             {
-                                if (Main.rand.Next(9) == 0)
-                                {
-                                    NPC.NewNPC(num * 16 + 8, num2 * 16, 29, 0);
-                                }
-                                else
-                                {
-                                    if (Main.rand.Next(5) == 0)
-                                    {
-                                        NPC.NewNPC(num * 16 + 8, num2 * 16, 26, 0);
-                                    }
-                                    else
-                                    {
-                                        if (Main.rand.Next(3) == 0)
-                                        {
-                                            NPC.NewNPC(num * 16 + 8, num2 * 16, 27, 0);
-                                        }
-                                        else
-                                        {
-                                            NPC.NewNPC(num * 16 + 8, num2 * 16, 28, 0);
-                                        }
-                                    }
-                                }
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 29, 0);
+                            }
+                            else if (Main.rand.Next(5) == 0)
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 26, 0);
+                            }
+                            else if (Main.rand.Next(3) == 0)
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 27, 0);
                             }
                             else
                             {
-                                if (flag4 && (num < 250 || num > Main.maxTilesX - 250) && num20 == 53 && (double)num2 < Main.rockLayer)
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 28, 0);
+                            }
+                        }
+                        else if (flag4 && (num < 250 || num > Main.maxTilesX - 250) && num20 == 53 && (double)num2 < Main.rockLayer)
+                        {
+                            if (Main.rand.Next(8) == 0)
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 65, 0);
+                            }
+                            if (Main.rand.Next(3) == 0)
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 67, 0);
+                            }
+                            else
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 64, 0);
+                            }
+                        }
+                        else if (flag4 && (((double)num2 > Main.rockLayer && Main.rand.Next(2) == 0) || num20 == 60))
+                        {
+                            NPC.NewNPC(num * 16 + 8, num2 * 16, 58, 0);
+                        }
+                        else if (flag4 && (double)num2 > Main.worldSurface && Main.rand.Next(3) == 0)
+                        {
+                            NPC.NewNPC(num * 16 + 8, num2 * 16, 63, 0);
+                        }
+                        else if (flag4 && Main.rand.Next(4) == 0)
+                        {
+                            if (Main.players[j].zoneEvil)
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 57, 0);
+                            }
+                            else
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 55, 0);
+                            }
+                        }
+                        else if (flag5)
+                        {
+                            if (flag4)
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 55, 0);
+                            }
+                            else
+                            {
+                                if (num20 != 2)
                                 {
-                                    if (Main.rand.Next(8) == 0)
-                                    {
-                                        NPC.NewNPC(num * 16 + 8, num2 * 16, 65, 0);
-                                    }
-                                    if (Main.rand.Next(3) == 0)
-                                    {
-                                        NPC.NewNPC(num * 16 + 8, num2 * 16, 67, 0);
-                                    }
-                                    else
-                                    {
-                                        NPC.NewNPC(num * 16 + 8, num2 * 16, 64, 0);
-                                    }
+                                    return;
+                                }
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 46, 0);
+                            }
+                        }
+                        else if (Main.players[j].zoneDungeon)
+                        {
+                            if (!NPC.downedBoss3)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 68, 0);
+                            }
+                            else if (Main.rand.Next(3) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 34, 0);
+                            }
+                            else if (Main.rand.Next(6) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 32, 0);
+                            }
+                            else
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
+                                if (Main.rand.Next(4) == 0)
+                                {
+                                    Main.npcs[npcIndex] = Registries.NPC.Create("Big Boned");
+                                }
+                                else if (Main.rand.Next(5) == 0)
+                                {
+                                    Main.npcs[npcIndex] = Registries.NPC.Create("Short Bones");
+                                }
+                            }
+                        }
+                        else if (Main.players[j].zoneMeteor)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 23, 0);
+                        }
+                        else if (Main.players[j].zoneEvil && Main.rand.Next(50) == 0)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 7, 1);
+                        }
+                        else if (num20 == 60 && Main.rand.Next(500) == 0 && !Main.dayTime)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 52, 0);
+                        }
+                        else if (num20 == 60 && (double)num2 > (Main.worldSurface + Main.rockLayer) / 2.0)
+                        {
+                            if (Main.rand.Next(3) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 43, 0);
+                                Main.npcs[npcIndex].ai[0] = (float)num;
+                                Main.npcs[npcIndex].ai[1] = (float)num2;
+                                Main.npcs[npcIndex].netUpdate = true;
+                            }
+                            else
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
+                                if (Main.rand.Next(4) == 0)
+                                {
+                                    Main.npcs[npcIndex] = Registries.NPC.Create("Little Stinger");
+                                }
+                                else if (Main.rand.Next(4) == 0)
+                                {
+                                    Main.npcs[npcIndex] = Registries.NPC.Create("Big Stinger");
+                                }
+                            }
+                        }
+                        else if (num20 == 60 && Main.rand.Next(4) == 0)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
+                        }
+                        else if (num20 == 60 && Main.rand.Next(8) == 0)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 56, 0);
+                            Main.npcs[npcIndex].ai[0] = (float)num;
+                            Main.npcs[npcIndex].ai[1] = (float)num2;
+                            Main.npcs[npcIndex].netUpdate = true;
+                        }
+                        else if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
+                            if (Main.rand.Next(3) == 0)
+                            {
+                                Main.npcs[npcIndex] = Registries.NPC.Create("Little Eater");
+                            }
+                            else if (Main.rand.Next(3) == 0)
+                            {
+                                Main.npcs[npcIndex] = Registries.NPC.Create("Big Eater");
+                            }
+                        }
+                        else if ((double)num2 <= Main.worldSurface)
+                        {
+                            if (Main.dayTime)
+                            {
+                                int num22 = Math.Abs(num - Main.spawnTileX);
+                                if (num22 < Main.maxTilesX / 3 && Main.rand.Next(10) == 0 && num20 == 2)
+                                {
+                                    NPC.NewNPC(num * 16 + 8, num2 * 16, 46, 0);
+                                }
+                                else if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.AnyNPCs(50))
+                                {
+                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 50, 0);
+                                }
+                                else if (num20 == 53 && Main.rand.Next(5) == 0 && !flag4)
+                                {
+                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 69, 0);
+                                }
+                                else if (num20 == 53 && !flag4)
+                                {
+                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 61, 0);
                                 }
                                 else
                                 {
-                                    if (flag4 && (((double)num2 > Main.rockLayer && Main.rand.Next(2) == 0) || num20 == 60))
+                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                                    if (num20 == 60)
                                     {
-                                        NPC.NewNPC(num * 16 + 8, num2 * 16, 58, 0);
+                                        Main.npcs[npcIndex] = Registries.NPC.Create("Jungle Slime");
                                     }
-                                    else
+                                    else if (Main.rand.Next(3) == 0 || num22 < 200)
                                     {
-                                        if (flag4 && (double)num2 > Main.worldSurface && Main.rand.Next(3) == 0)
-                                        {
-                                            NPC.NewNPC(num * 16 + 8, num2 * 16, 63, 0);
-                                        }
-                                        else
-                                        {
-                                            if (flag4 && Main.rand.Next(4) == 0)
-                                            {
-                                                if (Main.players[j].zoneEvil)
-                                                {
-                                                    NPC.NewNPC(num * 16 + 8, num2 * 16, 57, 0);
-                                                }
-                                                else
-                                                {
-                                                    NPC.NewNPC(num * 16 + 8, num2 * 16, 55, 0);
-                                                }
-                                            }
-                                            else
-                                            {
-                                                if (flag5)
-                                                {
-                                                    if (flag4)
-                                                    {
-                                                        NPC.NewNPC(num * 16 + 8, num2 * 16, 55, 0);
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num20 != 2)
-                                                        {
-                                                            return;
-                                                        }
-                                                        NPC.NewNPC(num * 16 + 8, num2 * 16, 46, 0);
-                                                    }
-                                                }
-                                                else
-                                                {
-                                                    if (Main.players[j].zoneDungeon)
-                                                    {
-                                                        if (!NPC.downedBoss3)
-                                                        {
-                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 68, 0);
-                                                        }
-                                                        else
-                                                        {
-                                                            if (Main.rand.Next(3) == 0)
-                                                            {
-                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 34, 0);
-                                                            }
-                                                            else
-                                                            {
-                                                                if (Main.rand.Next(6) == 0)
-                                                                {
-                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 32, 0);
-                                                                }
-                                                                else
-                                                                {
-                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
-                                                                    if (Main.rand.Next(4) == 0)
-                                                                    {
-                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Big Boned");
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (Main.rand.Next(5) == 0)
-                                                                        {
-                                                                            Main.npcs[npcIndex] = Registries.NPC.Create("Short Bones");
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    else
-                                                    {
-                                                        if (Main.players[j].zoneMeteor)
-                                                        {
-                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 23, 0);
-                                                        }
-                                                        else
-                                                        {
-                                                            if (Main.players[j].zoneEvil && Main.rand.Next(50) == 0)
-                                                            {
-                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 7, 1);
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num20 == 60 && Main.rand.Next(500) == 0 && !Main.dayTime)
-                                                                {
-                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 52, 0);
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (num20 == 60 && (double)num2 > (Main.worldSurface + Main.rockLayer) / 2.0)
-                                                                    {
-                                                                        if (Main.rand.Next(3) == 0)
-                                                                        {
-                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 43, 0);
-                                                                            Main.npcs[npcIndex].ai[0] = (float)num;
-                                                                            Main.npcs[npcIndex].ai[1] = (float)num2;
-                                                                            Main.npcs[npcIndex].netUpdate = true;
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
-                                                                            if (Main.rand.Next(4) == 0)
-                                                                            {
-                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Little Stinger");
-                                                                            }
-                                                                            else if (Main.rand.Next(4) == 0)
-                                                                            {
-                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Big Stinger");
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        if (num20 == 60 && Main.rand.Next(4) == 0)
-                                                                        {
-                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
-                                                                        }
-                                                                        else
-                                                                        {
-                                                                            if (num20 == 60 && Main.rand.Next(8) == 0)
-                                                                            {
-                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 56, 0);
-                                                                                Main.npcs[npcIndex].ai[0] = (float)num;
-                                                                                Main.npcs[npcIndex].ai[1] = (float)num2;
-                                                                                Main.npcs[npcIndex].netUpdate = true;
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25)
-                                                                                {
-                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
-                                                                                    if (Main.rand.Next(3) == 0)
-                                                                                    {
-                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Little Eater");
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if (Main.rand.Next(3) == 0)
-                                                                                        {
-                                                                                            Main.npcs[npcIndex] = Registries.NPC.Create("Big Eater");
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                                else
-                                                                                {
-                                                                                    if ((double)num2 <= Main.worldSurface)
-                                                                                    {
-                                                                                        if (Main.dayTime)
-                                                                                        {
-                                                                                            int num22 = Math.Abs(num - Main.spawnTileX);
-                                                                                            if (num22 < Main.maxTilesX / 3 && Main.rand.Next(10) == 0 && num20 == 2)
-                                                                                            {
-                                                                                                NPC.NewNPC(num * 16 + 8, num2 * 16, 46, 0);
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (num22 > Main.maxTilesX / 3 && num20 == 2 && Main.rand.Next(300) == 0 && !NPC.AnyNPCs(50))
-                                                                                                {
-                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 50, 0);
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (num20 == 53 && Main.rand.Next(5) == 0 && !flag4)
-                                                                                                    {
-                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 69, 0);
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (num20 == 53 && !flag4)
-                                                                                                        {
-                                                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 61, 0);
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
-                                                                                                            if (num20 == 60)
-                                                                                                            {
-                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Jungle Slime");
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                if (Main.rand.Next(3) == 0 || num22 < 200)
-                                                                                                                {
-                                                                                                                    Main.npcs[npcIndex] = Registries.NPC.Create("Green Slime", Main.npcs[npcIndex]);
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    if (Main.rand.Next(10) == 0 && num22 > 400)
-                                                                                                                    {
-                                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Purple Slime");
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (Main.rand.Next(6) == 0 || (Main.moonPhase == 4 && Main.rand.Next(2) == 0))
-                                                                                            {
-                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 2, 0);
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (Main.rand.Next(250) == 0 && Main.bloodMoon)
-                                                                                                {
-                                                                                                    NPC.NewNPC(num * 16 + 8, num2 * 16, 53, 0);
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    NPC.NewNPC(num * 16 + 8, num2 * 16, 3, 0);
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                    else
-                                                                                    {
-                                                                                        if ((double)num2 <= Main.rockLayer)
-                                                                                        {
-                                                                                            if (Main.rand.Next(30) == 0)
-                                                                                            {
-                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
-                                                                                                if (Main.rand.Next(5) == 0)
-                                                                                                {
-                                                                                                    Main.npcs[npcIndex] = Registries.NPC.Create("Yellow Slime");
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (Main.rand.Next(2) == 0)
-                                                                                                    {
-                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Blue Slime");
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Red Slime");
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                        else
-                                                                                        {
-                                                                                            if (num2 > Main.maxTilesY - 190)
-                                                                                            {
-                                                                                                if (Main.rand.Next(40) == 0 && !NPC.AnyNPCs(39))
-                                                                                                {
-                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 39, 1);
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (Main.rand.Next(20) == 0)
-                                                                                                    {
-                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 24, 0);
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (Main.rand.Next(12) == 0)
-                                                                                                        {
-                                                                                                            if (Main.rand.Next(10) == 0)
-                                                                                                            {
-                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 66, 0);
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 62, 0);
-                                                                                                            }
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (Main.rand.Next(3) == 0)
-                                                                                                            {
-                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 59, 0);
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 60, 0);
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                if (Main.rand.Next(35) == 0)
-                                                                                                {
-                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
-                                                                                                }
-                                                                                                else
-                                                                                                {
-                                                                                                    if (Main.rand.Next(10) == 0)
-                                                                                                    {
-                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 16, 0);
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        if (Main.rand.Next(4) == 0)
-                                                                                                        {
-                                                                                                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
-                                                                                                            if (Main.players[j].zoneJungle)
-                                                                                                            {
-                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Jungle Slime");
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Black Slime");
-                                                                                                            }
-                                                                                                        }
-                                                                                                        else
-                                                                                                        {
-                                                                                                            if (Main.rand.Next(2) == 0)
-                                                                                                            {
-                                                                                                                if ((double)num2 > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(700) == 0)
-                                                                                                                {
-                                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 45, 0);
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    if (Main.rand.Next(15) == 0)
-                                                                                                                    {
-                                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 44, 0);
-                                                                                                                    }
-                                                                                                                    else
-                                                                                                                    {
-                                                                                                                        npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 21, 0);
-                                                                                                                    }
-                                                                                                                }
-                                                                                                            }
-                                                                                                            else
-                                                                                                            {
-                                                                                                                if (Main.players[j].zoneJungle)
-                                                                                                                {
-                                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
-                                                                                                                }
-                                                                                                                else
-                                                                                                                {
-                                                                                                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 49, 0);
-                                                                                                                }
-                                                                                                            }
-                                                                                                        }
-                                                                                                    }
-                                                                                                }
-                                                                                            }
-                                                                                        }
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
+                                        Main.npcs[npcIndex] = Registries.NPC.Create("Green Slime", Main.npcs[npcIndex]);
+                                    }
+                                    else if (Main.rand.Next(10) == 0 && num22 > 400)
+                                    {
+                                        Main.npcs[npcIndex] = Registries.NPC.Create("Purple Slime");
                                     }
                                 }
                             }
+                            else if (Main.rand.Next(6) == 0 || (Main.moonPhase == 4 && Main.rand.Next(2) == 0))
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 2, 0);
+                            }
+                            else if (Main.rand.Next(250) == 0 && Main.bloodMoon)
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 53, 0);
+                            }
+                            else
+                            {
+                                NPC.NewNPC(num * 16 + 8, num2 * 16, 3, 0);
+                            }
+                        }
+                        else if ((double)num2 <= Main.rockLayer)
+                        {
+                            if (Main.rand.Next(30) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
+                            }
+                            else
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                                if (Main.rand.Next(5) == 0)
+                                {
+                                    Main.npcs[npcIndex] = Registries.NPC.Create("Yellow Slime");
+                                }
+                                else if (Main.rand.Next(2) == 0)
+                                {
+                                    Main.npcs[npcIndex] = Registries.NPC.Create("Blue Slime");
+                                }
+                                else
+                                {
+                                    Main.npcs[npcIndex] = Registries.NPC.Create("Red Slime");
+                                }
+                            }
+                        }
+                        else if (num2 > Main.maxTilesY - 190)
+                        {
+                            if (Main.rand.Next(40) == 0 && !NPC.AnyNPCs(39))
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 39, 1);
+                            }
+                            else if (Main.rand.Next(20) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 24, 0);
+                            }
+                            else if (Main.rand.Next(12) == 0)
+                            {
+                                if (Main.rand.Next(10) == 0)
+                                {
+                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 66, 0);
+                                }
+                                else
+                                {
+                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 62, 0);
+                                }
+                            }
+                            else if (Main.rand.Next(3) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 59, 0);
+                            }
+                            else
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 60, 0);
+                            }
+                        }
+                        else if (Main.rand.Next(35) == 0)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
+                        }
+                        else if (Main.rand.Next(10) == 0)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 16, 0);
+                        }
+                        else if (Main.rand.Next(4) == 0)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                            if (Main.players[j].zoneJungle)
+                            {
+                                Main.npcs[npcIndex] = Registries.NPC.Create("Jungle Slime");
+                            }
+                            else
+                            {
+                                Main.npcs[npcIndex] = Registries.NPC.Create("Black Slime");
+                            }
+                        }
+                        else if (Main.rand.Next(2) == 0)
+                        {
+                            if ((double)num2 > (Main.rockLayer + (double)Main.maxTilesY) / 2.0 && Main.rand.Next(700) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 45, 0);
+                            }
+                            else if (Main.rand.Next(15) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 44, 0);
+                            }
+                            else
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 21, 0);
+                            }
+                        }
+                        else if (Main.players[j].zoneJungle)
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 51, 0);
+                        }
+                        else
+                        {
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 49, 0);
                         }
                         if (Main.npcs[npcIndex].type == NPCType.N01_BLUE_SLIME && Main.rand.Next(250) == 0)
                         {
