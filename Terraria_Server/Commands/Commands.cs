@@ -170,7 +170,7 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            Program.server.notifyOps("Stopping Server...");
+            Program.server.notifyOps("Stopping Server...", true);
             server.StopServer();
         }
 
@@ -191,7 +191,7 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            Program.server.notifyOps("Reloading Plugins.");
+            Program.server.notifyOps("Reloading Plugins.", true);
             server.PluginManager.ReloadPlugins();
         }
 
@@ -258,19 +258,19 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            Program.server.notifyOps("Saving World...");
+            Program.server.notifyOps("Saving World...", true);
 
             WorldGen.saveWorld(Program.server.World.SavePath, false);
             while (WorldGen.saveLock)
             {
             }
 
-            Program.server.notifyOps("Saving Data...");
+            Program.server.notifyOps("Saving Data...", true);
 
             Program.server.BanList.Save();
             Program.server.WhiteList.Save();
 
-            Program.server.notifyOps("Saving Complete.");
+            Program.server.notifyOps("Saving Complete.", true);
         }
         
         /// <summary>
@@ -998,7 +998,7 @@ namespace Terraria_Server.Commands
 
                     if (Player.isInOpList(player_OP, Program.server))
                     {
-                        Program.server.OpList.removeException(player_OP + ":" + Player.getPassword(player_OP, Program.server));
+                        Program.server.OpList.removeException(player_OP + ":" + Player.GetPlayerPassword(player_OP, Program.server));
                     }
                 }
                 else
@@ -1049,7 +1049,7 @@ namespace Terraria_Server.Commands
 
                     if (Player.isInOpList(sender.Name, Program.server))
                     {
-                        if (((Player)sender).getPassword().Trim().ToLower() == player_Password)
+                        if (((Player)sender).Password.Trim().ToLower() == player_Password)
                         {
                             sender.Op = true;
                             sender.sendMessage("Successfully Logged in as OP.");

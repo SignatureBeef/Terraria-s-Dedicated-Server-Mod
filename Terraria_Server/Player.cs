@@ -4283,7 +4283,7 @@ namespace Terraria_Server
             Main.spawnTileY = (int)tileY;
 
             bool destroyed = false;
-            if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0)
+            if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0) //Do they have a bed?
             {
                 if (bedDestruction) //Do they want their bed destroyed?
                 {
@@ -4312,7 +4312,7 @@ namespace Terraria_Server
             this.teleportTo(player.Position.X, player.Position.Y);
         }
 
-        public static String getPassword(String server, Server Server)
+        public static String GetPlayerPassword(String PlayerName, Server Server)
         {
             foreach (String listee in Server.OpList.WhiteList)
             {
@@ -4321,7 +4321,7 @@ namespace Terraria_Server
                     String userPass = listee.Trim().ToLower();
                     if (userPass.Contains(":"))
                     {
-                        if (userPass.Split(':')[0] == server.Trim().ToLower())
+                        if (userPass.Split(':')[0] == PlayerName.Trim().ToLower())
                         {
                             return userPass.Split(':')[1];
                         }
@@ -4331,9 +4331,12 @@ namespace Terraria_Server
             return null;
         }
 
-        public String getPassword()
+        public String Password
         {
-            return Player.getPassword(this.Name, Program.server);
+            get
+            {
+                return Player.GetPlayerPassword(this.Name, Program.server);
+            }
         }
 
         public static bool isInOpList(String Name, Server Server)
@@ -4362,7 +4365,7 @@ namespace Terraria_Server
 
         public String getOpListKey()
         {
-            return this.Name.Trim().ToLower() + getPassword();
+            return this.Name.Trim().ToLower() + Password;
         }
     }
 }
