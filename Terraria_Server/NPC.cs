@@ -50,6 +50,7 @@ namespace Terraria_Server
                 type = (NPCType)value;
             }
         }
+
         public int alpha;
         public bool behindTiles;
         public bool boss;
@@ -104,19 +105,7 @@ namespace Terraria_Server
         public Vector2 oldVelocity;
         public int soundDelay;
         public int whoAmI;
-
-        public int MaxLife
-        {
-            get
-            {
-                return base.lifeMax;
-            }
-            set
-            {
-                base.lifeMax = value;
-            }
-        }
-
+        
         public NPC()
         {
             color = default(Color);
