@@ -12,7 +12,7 @@ namespace Terraria_Server.Collections
         private const String PROJECTILE_FILE = "Projectiles.xml";
 
         public static ItemRegistry Item = new ItemRegistry();
-        public static NPCRegistry NPC = new NPCRegistry(NPC_FILE);
+        public static Registry<NPC> NPC = new Registry<NPC>(NPC_FILE);
         public static Registry<Projectile> Projectile = new Registry<Projectile>(PROJECTILE_FILE);
     }
 }

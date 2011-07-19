@@ -20,7 +20,7 @@
   </NPC>
   <NPC>
     <Name>Green Slime</Name>
-    <Inherits>1</Inherits>
+    <Type>1</Type>
     <alpha>175</alpha>
     <color>
       <B>100</B>
@@ -39,6 +39,164 @@
     <life>14</life>
     <Width>24</Width>
     <scale>0.9</scale>
+    <knockBackResist>1.2</knockBackResist>
+  </NPC>
+  <NPC>
+    <Name>Pinky</Name>
+    <Type>1</Type>
+    <alpha>175</alpha>
+    <color>
+      <R>250</R>
+      <G>30</G>
+      <B>90</B>
+      <A>90</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>10000</value>
+    <aiStyle>1</aiStyle>
+    <damage>5</damage>
+    <defense>5</defense>
+    <Height>18</Height>
+    <lifeMax>150</lifeMax>
+    <life>150</life>
+    <Width>24</Width>
+    <scale>0.6</scale>
+    <knockBackResist>1.4</knockBackResist>
+  </NPC>
+  <NPC>
+    <Name>Baby Slime</Name>
+    <Type>1</Type>
+    <alpha>120</alpha>
+    <color>
+      <R>0</R>
+      <G>0</G>
+      <B>0</B>
+      <A>50</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>10</value>
+    <aiStyle>1</aiStyle>
+    <damage>13</damage>
+    <defense>4</defense>
+    <Height>18</Height>
+    <lifeMax>30</lifeMax>
+    <life>30</life>
+    <Width>24</Width>
+    <scale>0.9</scale>
+    <knockBackResist>0.95</knockBackResist>
+  </NPC>
+  <NPC>
+    <Name>Black Slime</Name>
+    <Type>1</Type>
+    <alpha>175</alpha>
+    <color>
+      <B>0</B>
+      <G>0</G>
+      <R>0</R>
+      <A>50</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <type>1</type>
+    <value>20</value>
+    <aiStyle>1</aiStyle>
+    <damage>15</damage>
+    <defense>4</defense>
+    <Height>18</Height>
+    <lifeMax>45</lifeMax>
+    <life>45</life>
+    <Width>24</Width>
+  </NPC>
+  <NPC>
+    <Name>Purple Slime</Name>
+    <Type>1</Type>
+    <alpha>175</alpha>
+    <color>
+      <R>200</R>
+      <G>0</G>
+      <B>255</B>
+      <A>150</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>10</value>
+    <aiStyle>1</aiStyle>
+    <damage>12</damage>
+    <defense>6</defense>
+    <Height>18</Height>
+    <lifeMax>40</lifeMax>
+    <life>40</life>
+    <Width>24</Width>
+    <scale>1.2</scale>
+    <knockBackResist>0.95</knockBackResist>
+  </NPC>
+  <NPC>
+    <Name>Red Slime</Name>
+    <Type>1</Type>
+    <alpha>175</alpha>
+    <color>
+      <R>255</R>
+      <G>30</G>
+      <B>0</B>
+      <A>100</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>8</value>
+    <aiStyle>1</aiStyle>
+    <damage>12</damage>
+    <defense>4</defense>
+    <Height>18</Height>
+    <lifeMax>35</lifeMax>
+    <life>35</life>
+    <Width>24</Width>
+  </NPC>
+  <NPC>
+    <Name>Yellow Slime</Name>
+    <Type>1</Type>
+    <alpha>175</alpha>
+    <color>
+      <R>255</R>
+      <G>255</G>
+      <B>0</B>
+      <A>100</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>10</value>
+    <aiStyle>1</aiStyle>
+    <damage>15</damage>
+    <defense>7</defense>
+    <Height>18</Height>
+    <lifeMax>45</lifeMax>
+    <life>45</life>
+    <Width>24</Width>
+    <scale>1.2</scale>
+  </NPC>
+  <NPC>
+    <Name>Jungle Slime</Name>
+    <Type>1</Type>
+    <alpha>175</alpha>
+    <color>
+      <R>143</R>
+      <G>215</G>
+      <B>93</B>
+      <A>100</A>
+    </color>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>500</value>
+    <aiStyle>1</aiStyle>
+    <damage>18</damage>
+    <defense>6</defense>
+    <Height>18</Height>
+    <lifeMax>60</lifeMax>
+    <life>60</life>
+    <Width>24</Width>
+    <scale>1.2</scale>
+    <knockBackResist>0.95</knockBackResist>
   </NPC>
   <NPC>
     <Name>Demon Eye</Name>

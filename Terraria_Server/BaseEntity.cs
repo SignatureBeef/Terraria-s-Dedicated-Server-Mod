@@ -11,7 +11,13 @@ namespace Terraria_Server
         public String Name { get; set; }
         public Vector2 Position;
         public virtual int Type { get; set; }
-        public virtual int Inherits { get; set; }
+        public virtual int aiStyle { get; set; }
+        public virtual int damage { get; set; }
+        public virtual int defense { get; set; }
+        public virtual int lifeMax { get; set; }
+        public virtual int life { get; set; }
+        public virtual float scale { get; set; }
+        public virtual float knockBackResist { get; set; }
         public int Width { get; set; }
 
         public abstract object Clone();

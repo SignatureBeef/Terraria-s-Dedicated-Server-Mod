@@ -869,7 +869,7 @@ namespace Terraria_Server.Commands
                             //Main.npcs[index].Active = true;
                             //Main.npcs[index].Type = 1;
                             //NPC.SpawnNPC();
-                            Main.npcs[index] = Registries.NPC.Create(NpcName, Main.npcs[index]);
+                            Main.npcs[index] = Registries.NPC.Create(NpcName);
                         }
 
                         Program.server.notifyOps("Spawned " + amount.ToString() + " of " +

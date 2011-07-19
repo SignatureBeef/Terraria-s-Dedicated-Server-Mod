@@ -62,7 +62,7 @@ namespace Terraria_Server
         public bool homeless;
         public int homeTileX;
         public int homeTileY;
-        public float knockBackResist;
+        //public float knockBackResist;
         public bool lavaImmune;
         public bool lavaWet;
         public bool netUpdate;
@@ -71,7 +71,7 @@ namespace Terraria_Server
         public int oldDirection;
         public int oldTarget;
         public float rotation;
-        public float scale;
+        //public float scale;
         public float slots;
         public int soundHit;
         public int soundKilled;
@@ -87,18 +87,18 @@ namespace Terraria_Server
         public Vector2 Velocity;
         public float[] ai = new float[NPC.MAX_AI];
         public int aiAction;
-        public int aiStyle;
+        //public int aiStyle;
         public bool closeDoor;
-        public int damage;
-        public int defense;
+        //public int damage;
+        //public int defense;
         public int directionY = 1;
         public int doorX;
         public int doorY;
         public Rectangle frame;
         public int friendlyRegen;
         public int[] immune = new int[256];
-        public int life;
-        public int lifeMax;
+        //public int life;
+        //public int lifeMax;
         public int oldDirectionY;
         public Vector2 oldPosition;
         public Vector2 oldVelocity;
@@ -5346,19 +5346,19 @@ namespace Terraria_Server
                                                                                                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                                                                                             if (num20 == 60)
                                                                                                             {
-                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Create("Jungle Slime");
+                                                                                                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Jungle Slime");
                                                                                                             }
                                                                                                             else
                                                                                                             {
                                                                                                                 if (Main.rand.Next(3) == 0 || num22 < 200)
                                                                                                                 {
-                                                                                                                    Main.npcs[npcIndex] = Registries.NPC.Create("Green Slime", Main.npcs[npcIndex]);
+                                                                                                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Green Slime");
                                                                                                                 }
                                                                                                                 else
                                                                                                                 {
                                                                                                                     if (Main.rand.Next(10) == 0 && num22 > 400)
                                                                                                                     {
-                                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Create("Purple Slime");
+                                                                                                                        Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Purple Slime");
                                                                                                                     }
                                                                                                                 }
                                                                                                             }

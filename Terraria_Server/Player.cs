@@ -4244,7 +4244,6 @@ namespace Terraria_Server
         }
 
         public void teleportTo(float tileX, float tileY)
-        /* FIXME: this looks like it's sending way too much traffic for no reason */
         {
 
             PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
@@ -4257,37 +4256,59 @@ namespace Terraria_Server
                 return;
             }
 
+            int spawnTileX = Main.spawnTileX;
+            int spawnTileY = Main.spawnTileY;
+            Main.spawnTileX = (int)tileX;
+            Main.spawnTileY = (int)tileY;
+            NetMessage.SendData(0x7, this.whoAmi);
+            if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0)
+            {
+                //Invalidate player spawn point
+                Main.tile.At((int)tileX, (int)tileY - 1).SetActive(false);
+                NetMessage.SendTileSquare(this.whoAmi, (int)tileX, (int)tileY - 1, 200);
+                NetMessage.SendData(0xc, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
+                Main.tile.At((int)tileX, (int)tileY - 1).SetActive(true);
+                sendMessage("Your bed was Destroyed.");
+            }
+            else
+            {
+                NetMessage.SendData(0xc, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
+            }
+            Main.spawnTileX = spawnTileX;
+            Main.spawnTileY = spawnTileY;
+            NetMessage.SendData(0x7, this.whoAmi);
+
             //Preserve out Spawn point.
-            int xPreserve = Main.spawnTileX;
-            int yPreserve = Main.spawnTileY;
+            //int xPreserve = Main.spawnTileX;
+            //int yPreserve = Main.spawnTileY;
 
-            //The spawn the client wants is the from player Pos /16.
-            //This is because the Client reads frames, Not Tile Records.
-            Main.spawnTileX = ((int)tileX / 16);
-            Main.spawnTileY = ((int)tileY / 16);
+            ////The spawn the client wants is the from player Pos /16.
+            ////This is because the Client reads frames, Not Tile Records.
+            //Main.spawnTileX = ((int)tileX / 16);
+            //Main.spawnTileY = ((int)tileY / 16);
 
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
-            NetMessage.SendData((int)Packet.WORLD_DATA); //Trigger Client Data Update (Updates Spawn Position)
-            NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", this.whoAmi); //Trigger the player to spawn
+            //NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
+            //NetMessage.SendData((int)Packet.WORLD_DATA); //Trigger Client Data Update (Updates Spawn Position)
+            //NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, -1, -1, "", this.whoAmi); //Trigger the player to spawn
 
-            this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
+            //this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
 
-            this.Position.X = tileX;
-            this.Position.Y = tileY;
+            //this.Position.X = tileX;
+            //this.Position.Y = tileY;
 
-            //Return our preserved Spawn Point.
-            Main.spawnTileX = xPreserve;
-            Main.spawnTileY = yPreserve;
+            ////Return our preserved Spawn Point.
+            //Main.spawnTileX = xPreserve;
+            //Main.spawnTileY = yPreserve;
 
-            this.SpawnX = Main.spawnTileX;
-            this.SpawnY = Main.spawnTileY;
+            //this.SpawnX = Main.spawnTileX;
+            //this.SpawnY = Main.spawnTileY;
 
-            this.Spawn(); //Tell the Client to Spawn (Sets Defaults)
-            this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
+            //this.Spawn(); //Tell the Client to Spawn (Sets Defaults)
+            //this.UpdatePlayer(this.whoAmi); //Update players data (I don't think needed by default, But hay)
 
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
+            //NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi); //Trigger Client Data Update (Updates Spawn Position)
 
-            NetMessage.SyncPlayers(); //Sync the Players Position.
+            //NetMessage.SyncPlayers(); //Sync the Players Position.
         }
 
         public void teleportTo(Player player)
