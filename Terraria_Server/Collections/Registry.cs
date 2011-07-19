@@ -30,7 +30,7 @@ namespace Terraria_Server.Collections
                     foreach (T t in deserialized)
                     {
                         errored = t;
-                        //typeLookup.Add(t.Type, t);
+
                         if (typeLookup.ContainsKey(t.Type))
                         {
                             List<T> values;
