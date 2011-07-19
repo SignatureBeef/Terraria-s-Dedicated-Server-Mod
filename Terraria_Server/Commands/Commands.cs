@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Collections.Generic;
+using System.Linq;
 
 using Terraria_Server;
 using System.Threading;
@@ -116,27 +117,6 @@ namespace Terraria_Server.Commands
                                                             1, /* 25 */ };
 
         /// <summary>
-        /// Utility for converting a String array into a single string
-        /// </summary>
-        /// <param name="Array">Array of strings to convert</param>
-        /// <returns>Single string representation of Array</returns>
-        public static String MergeStringArray(String[] Array)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (Array != null && Array.Length > 0)
-            {
-                for (int i = 0; i < Array.Length; i++)
-                {
-                    if (Array[i] != null)
-                    {
-                        sb.Append(Array[i] + " ");
-                    }
-                }
-            }
-            return sb.ToString().Trim();
-        }
-
-        /// <summary>
         /// Gets the enumerated value of a command by name
         /// </summary>
         /// <param name="Command">Name of command</param>
@@ -153,93 +133,49 @@ namespace Terraria_Server.Commands
             return (int)Commands.Command.NO_SUCH_COMMAND;
         }
 
-        /// <summary>
-        /// Executes the save/stop routine for the server
-        /// </summary>
-        /// <param name="server">Current instance of Server to stop</param>
-        /// <param name="sender">Player/Console instance</param>
-        public static void Exit(Server server, ISender sender)
+        public static void Exit (Server server, ISender sender, ArgumentList args)
+        {
+            args.ParseNone ();
+            
+            server.notifyOps ("Exiting on request.", true);
+            server.StopServer ();
+            
+            return;
+        }
+
+        public static void Reload (Server server, ISender sender, ArgumentList args)
+        {
+            args.ParseNone ();
+            
+            server.notifyOps ("Reloading plugins.", true);
+            server.PluginManager.ReloadPlugins ();
+            
+            return;
+        }
+
+        public static void List (Server server, ISender sender, ArgumentList args)
+        {
+            args.ParseNone ();
+            
+            var players = from p in Server.players where p.Active select p.Name;
+            sender.sendMessage ("Current players: " + string.Join (", ", players)
+                + " (" + players.Count() + "/" + Main.maxNetplayers + ")", 255, 255, 240, 20);
+        }
+
+        public static void Action (Server server, ISender sender, string message)
         {
             if (sender is Player)
-            {
-                Player player = (Player)sender;
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
-            Program.server.notifyOps("Stopping Server...", true);
-            server.StopServer();
+                NetMessage.SendData (25, -1, -1, "* " + sender.Name + " " + message, 255, 200, 100, 0);
+            else
+                NetMessage.SendData (25, -1, -1, "* " + sender.Name + " " + message, 255, 238, 130, 238);
         }
 
-        /// <summary>
-        /// Executes the plugin reload method
-        /// </summary>
-        /// <param name="server">Current instance of Server</param>
-        /// <param name="sender">Player/Console instance</param>
-        public static void Reload(Server server, ISender sender)
+        public static void Say (Server server, ISender sender, string message)
         {
             if (sender is Player)
-            {
-                Player player = (Player)sender;
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
-            Program.server.notifyOps("Reloading Plugins.", true);
-            server.PluginManager.ReloadPlugins();
-        }
-
-        /// <summary>
-        /// Sends the list of currently active players to the requesting player
-        /// </summary>
-        /// <param name="playerIndex">Index of player requesting list</param>
-        /// <param name="sendPlayer">Unknown?  Unused</param>
-        /// <returns>A copy of the current players list</returns>
-        public static String List(int playerIndex = 0, bool sendPlayer = true)
-        {
-            String playerList = "";
-            foreach(Player player in Main.players)
-            {
-                if (player.Active)
-                {
-                    playerList += ", " + player.Name;
-                }
-            }
-            if (playerList.StartsWith(","))
-            {
-                playerList = playerList.Remove(0, 2);
-            }
-            if (sendPlayer)
-            {
-                NetMessage.SendData(25, playerIndex, -1, "Current players: " + playerList.Trim() + ".", 255, 255f, 240f, 20f);
-            }
-            return "Current players: " + playerList.Trim() + ".";
-        }
-
-        /// <summary>
-        /// Sends message to the chat, /me format for a player, "Server" for the console
-        /// </summary>
-        /// <param name="Message">Message to send</param>
-        /// <param name="playerIndex">Sending player's index number</param>
-        public static void Me_Say(String Message, int playerIndex = -1)
-        {
-            if (Message != null && Message.Trim().Length > 0)
-            {
-                if (playerIndex >= 0) //-1 Means Console :3
-                {
-                    NetMessage.SendData(25, -1, -1, "*" + Main.players[playerIndex].Name + " " + Message, 255, 200f, 100f);
-                }
-                else
-                {
-                    NetMessage.SendData(25, -1, -1, "Server: " + Message, 255, 238f, 130f, 238f);
-                }
-            }
+                NetMessage.SendData (25, -1, -1, "<" + sender.Name + "> " + message, 255, 255, 255, 255);
+            else
+                NetMessage.SendData (25, -1, -1, "<" + sender.Name + "> " + message, 255, 238, 180, 238);
         }
 
         /// <summary>
@@ -1104,45 +1040,44 @@ namespace Terraria_Server.Commands
             }
         }
 
-        /// <summary>
-        /// Kicks the specified player out of the server
-        /// </summary>
-        /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Kick(ISender sender, IList<string> commands)
+        public static void Kick (Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
+            if (args.TryPop ("-s"))
             {
-                Player player = ((Player)sender);
-                if (!player.Op)
+                int s;
+                args.ParseOne (out s);
+                
+                var slot = Netplay.slots[s];
+                
+                if (slot.state != SlotState.VACANT)
                 {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
-            if (commands != null && commands.Count > 1)
-            {
-                if (commands[0] != null && commands[0].Length > 0)
-                {
-                    Player banee = Program.server.GetPlayerByName(commands[1]);
-
-                    if (banee != null)
-                    {
-                        Program.server.notifyOps (sender.Name + " has kicked " + (banee.Name ?? commands[1]), true);
-                        banee.Kick("You have been kicked from this server.");
-                    }
-                    else
-                    {
-                        sender.sendMessage("Cannot find player online!.");
-                    }
+                    slot.Kick ("You have been kicked by " + sender.Name + ".");
                     
-                    return;
+                    var player = Main.players[s];
+                    if (player != null && player.Name != null)
+                        NetMessage.SendData (25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".");
+                }
+                else
+                {
+                    sender.sendMessage ("kick: Slot is vacant.");
                 }
             }
-            sender.sendMessage("Command Error!");
+            else
+            {
+                Player player;
+                args.ParseOne<Player> (out player);
+            
+                if (player.Name == null)
+                {
+                    sender.sendMessage ("kick: Error, player has null name.");
+                    return;
+                }
+            
+                player.Kick ("You have been kicked by " + sender.Name + ".");
+                NetMessage.SendData (25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".");
+            }
         }
-        
+                
         /// <summary>
         /// Restarts the server
         /// </summary>
@@ -1172,10 +1107,10 @@ namespace Terraria_Server.Commands
             Statics.keepRunning = false;
         }
 		
-		public static void Slots (ISender sender, Server server)
+		public static void Slots (Server server, ISender sender, ArgumentList args)
 		{
-			if (sender is Player)
-				return;
+			bool dinfo = args.Contains ("-d") || args.Contains ("-dp") || args.Contains ("-pd");
+			bool pinfo = args.Contains ("-p") || args.Contains ("-dp") || args.Contains ("-pd");
 			
 			for (int i = 0; i < 255; i++)
 			{
@@ -1196,7 +1131,20 @@ namespace Terraria_Server.Commands
 								name = name + " (auth'd as " + player.AuthenticatedAs + ")";
 						}
 					}
-					sender.sendMessage (string.Format ("slot {0}: {1}, {2}{3}, {4} {5}", i, slot.state, slot.remoteAddress, name, NetMessage.buffer[i].totalData, NetMessage.buffer[i].sideBufferBytes));
+					
+					var msg = string.Format ("slot {0}: {1}, {2}{3}", i, slot.state, slot.remoteAddress, name);
+					
+					if (pinfo && player != null)
+					{
+						msg += string.Format (", {0}/{1}hp", player.statLife, player.statLifeMax);
+					}
+					
+					if (dinfo)
+					{
+						msg += string.Format (", recv:{0} side:{1}", NetMessage.buffer[i].totalData, NetMessage.buffer[i].sideBufferBytes);
+					}
+					
+					sender.sendMessage (msg);
 				}
 			}
 		}

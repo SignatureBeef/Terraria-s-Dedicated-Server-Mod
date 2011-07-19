@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
                     }
 
                     Program.tConsole.WriteLine(Main.players[playerIndex].Name + " Sent Command: " + chat);
-                    Program.commandParser.parsePlayerCommand(Main.players[playerIndex], chat);
+                    Program.commandParser.ParsePlayerCommand(Main.players[playerIndex], chat);
                     return;
                 }
                 else

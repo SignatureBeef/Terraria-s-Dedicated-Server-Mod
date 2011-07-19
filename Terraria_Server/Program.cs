@@ -255,7 +255,7 @@ namespace Terraria_Server
                         String line = Console.ReadLine().Trim();
                         if (line.Length > 0)
                         {
-                            commandParser.parseConsoleCommand(line, server);
+                            commandParser.ParseConsoleCommand(line, server);
                         }
                     }
                     catch (Exception e)
