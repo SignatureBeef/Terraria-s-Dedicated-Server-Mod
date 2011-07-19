@@ -274,6 +274,42 @@
     <Width>30</Width>
   </NPC>
   <NPC>
+    <Name>Little Eater</Name>
+    <Type>6</Type>
+    <knockBackResist>0.575</knockBackResist>
+    <noGravity>true</noGravity>
+    <slots>0.6375</slots>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>76.5</value>
+    <aiStyle>5</aiStyle>
+    <damage>19</damage>
+    <defense>6</defense>
+    <Height>30</Height>
+    <lifeMax>34</lifeMax>
+    <life>34</life>
+    <Width>30</Width>
+    <scale>0.85</scale>
+  </NPC>
+  <NPC>
+    <Name>Big Eater</Name>
+    <Type>6</Type>
+    <knockBackResist>0.425</knockBackResist>
+    <noGravity>true</noGravity>
+    <slots>0.8625</slots>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>103.5</value>
+    <aiStyle>5</aiStyle>
+    <damage>26</damage>
+    <defense>9</defense>
+    <Height>30</Height>
+    <lifeMax>46</lifeMax>
+    <life>46</life>
+    <Width>30</Width>
+    <scale>1.15</scale>
+  </NPC>
+  <NPC>
     <Name>Devourer Head</Name>
     <Type>7</Type>
     <behindTiles>true</behindTiles>
@@ -671,6 +707,38 @@
     <Width>18</Width>
   </NPC>
   <NPC>
+    <Name>Short Bones</Name>
+    <Type>31</Type>
+    <knockBackResist>0.6</knockBackResist>
+    <soundHit>2</soundHit>
+    <soundKilled>2</soundKilled>
+    <value>117</value>
+    <aiStyle>3</aiStyle>
+    <damage>27</damage>
+    <defense>9</defense>
+    <Height>40</Height>
+    <lifeMax>90</lifeMax>
+    <life>90</life>
+    <Width>18</Width>
+    <scale>0.9</scale>
+  </NPC>
+  <NPC>
+    <Name>Big Boned</Name>
+    <Type>31</Type>
+    <knockBackResist>0.51</knockBackResist>
+    <soundHit>2</soundHit>
+    <soundKilled>2</soundKilled>
+    <value>149.5</value>
+    <aiStyle>3</aiStyle>
+    <damage>37</damage>
+    <defense>12</defense>
+    <Height>40</Height>
+    <lifeMax>100</lifeMax>
+    <Width>18</Width>
+    <slots>2</slots>
+    <scale>1.15</scale>
+  </NPC>
+  <NPC>
     <Name>Dark Caster</Name>
     <Type>32</Type>
     <knockBackResist>0.6</knockBackResist>
@@ -846,6 +914,42 @@
     <Height>32</Height>
     <lifeMax>100</lifeMax>
     <Width>34</Width>
+  </NPC>
+  <NPC>
+    <Name>Little Stinger</Name>
+    <Type>42</Type>
+    <knockBackResist>0.92</knockBackResist>
+    <noGravity>true</noGravity>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>170</value>
+    <aiStyle>5</aiStyle>
+    <damage>34</damage>
+    <defense>10</defense>
+    <Height>32</Height>
+    <lifeMax>85</lifeMax>
+    <life>85</life>
+    <Width>34</Width>
+    <scale>0.85</scale>
+    <slots>0.85</slots>
+  </NPC>
+  <NPC>
+    <Name>BigStinger</Name>
+    <Type>42</Type>
+    <knockBackResist>0.68</knockBackResist>
+    <noGravity>true</noGravity>
+    <soundHit>1</soundHit>
+    <soundKilled>1</soundKilled>
+    <value>230</value>
+    <aiStyle>5</aiStyle>
+    <damage>46</damage>
+    <defense>13</defense>
+    <Height>32</Height>
+    <lifeMax>115</lifeMax>
+    <life>115</life>
+    <Width>34</Width>
+    <scale>1.15</scale>
+    <slots>1.15</slots>
   </NPC>
   <NPC>
     <Name>Man Eater</Name>
