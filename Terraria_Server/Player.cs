@@ -4261,7 +4261,7 @@ namespace Terraria_Server
             }
         }
 
-        public void teleportTo(float tileX, float tileY)
+        public bool teleportTo(float tileX, float tileY)
         {
 
             PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
@@ -4271,7 +4271,7 @@ namespace Terraria_Server
             Program.server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
             if (playerEvent.Cancelled)
             {
-                return;
+                return false;
             }
 
             //Preserve our Spawn point.
@@ -4282,6 +4282,7 @@ namespace Terraria_Server
             Main.spawnTileX = (int)tileX;
             Main.spawnTileY = (int)tileY;
 
+            bool destroyed = false;
             if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0)
             {
                 if (bedDestruction) //Do they want their bed destroyed?
@@ -4291,16 +4292,7 @@ namespace Terraria_Server
                     NetMessage.SendTileSquare(this.whoAmi, (int)tileX, (int)tileY - 1, 200);
                     NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
                     Main.tile.At((int)tileX, (int)tileY - 1).SetActive(true);
-                    sendMessage("Your bed was Destroyed.");
-                }
-                else
-                {
-                    sendMessage("You have a valid bed which could be destroyed, Please allow the Server to do so.");
-
-                    //Return to defaults
-                    Main.spawnTileX = spawnTileX;
-                    Main.spawnTileY = spawnTileY;
-                    return;
+                    destroyed = true;
                 }
             }
             else
@@ -4311,7 +4303,8 @@ namespace Terraria_Server
             //Return to defaults
             Main.spawnTileX = spawnTileX;
             Main.spawnTileY = spawnTileY;
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);            
+            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
+            return destroyed;
         }
 
         public void teleportTo(Player player)
