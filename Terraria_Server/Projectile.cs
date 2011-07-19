@@ -52,6 +52,9 @@ namespace Terraria_Server
         /// </summary>
         public ProjectileType type { get; set; }
 
+        /// <summary>
+        /// Integer representation of projectile type
+        /// </summary>
         public override int Type
         {
             get
