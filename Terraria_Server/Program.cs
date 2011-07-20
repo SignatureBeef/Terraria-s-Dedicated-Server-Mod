@@ -23,6 +23,7 @@ namespace Terraria_Server
 
         public static void Main(String[] args)
         {
+            Thread.CurrentThread.Name = "Main";
             try
             {
                 String MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_TERRARIA_RELEASE + "}) #"
@@ -291,6 +292,7 @@ namespace Terraria_Server
                 {
                 }
             }
+            Log.Close();
             if (Program.tConsole != null)
             {
                 Program.tConsole.Close();

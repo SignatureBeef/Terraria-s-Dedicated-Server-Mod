@@ -240,6 +240,7 @@
     <Compile Include="Tile.cs" />
     <Compile Include="Events\PlayerFlowLiquidEvent.cs" />
     <Compile Include="Commands\ArgumentList.cs" />
+    <Compile Include="Server\Log.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
