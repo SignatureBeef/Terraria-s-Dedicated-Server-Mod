@@ -192,9 +192,13 @@ namespace Terraria_Server
 			if (state == SlotState.VACANT) return;
 			
 			Program.tConsole.WriteLine ("{0} @ {1}: disconnecting for: {2}", remoteAddress, whoAmI, reason);
+			
 			if (state != SlotState.SHUTDOWN)
 			{
-				NetMessage.SendData (2, whoAmI, -1, reason);
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.Disconnect (reason);
+				Send (msg.Output);
+
 				state = SlotState.KICK;
 			}
 		}
