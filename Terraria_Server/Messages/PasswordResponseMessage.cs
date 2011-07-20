@@ -49,6 +49,18 @@ namespace Terraria_Server.Messages
 				}
 				else // PlayerLoginAction.ACCEPT
 				{
+					var lower = name.ToLower();
+					int count = 0;
+					foreach (var otherPlayer in Main.players)
+					{
+						var otherSlot = Netplay.slots[otherPlayer.whoAmi];
+						if (count++ != whoAmI && otherPlayer.Name != null
+							&& lower == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
+						{
+							otherSlot.Kick ("Replaced by new connection.");
+						}
+					}
+
 					slot.state = SlotState.SENDING_WORLD;
 					
 					NetMessage.SendData (4, -1, whoAmI, name, whoAmI); // broadcast player data now
