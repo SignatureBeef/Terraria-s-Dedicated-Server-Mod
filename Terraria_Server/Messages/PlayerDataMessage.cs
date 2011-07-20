@@ -48,8 +48,43 @@ namespace Terraria_Server.Messages
             num = setColor(player.shoeColor, num, readBuffer);
 
             player.hardCore = (readBuffer[num++] != 0);
+			
+			try
+			{
+				player.Name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
+			}
+			catch (ArgumentException)
+			{
+				slot.Kick ("Invalid name: contains non-ASCII characters.");
+				return;
+			}
+			
+			if (player.Name.Length > 20)
+			{
+				slot.Kick ("Invalid name: longer than 20 characters.");
+				return;
+			}
 
-            player.Name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
+			if (player.Name == "")
+			{
+				slot.Kick ("Invalid name: whitespace or empty.");
+				return;
+			}
+			
+			foreach (char c in player.Name)
+			{
+				if (c < 32 || c > 126)
+				{
+					slot.Kick ("Invalid name: contains non-printable characters.");
+					return;
+				}
+			}
+			
+			if (player.Name.Contains (" " + " "))
+			{
+				slot.Kick ("Invalid name: contains double spaces.");
+				return;
+			}
 			
 			if (slot.state < SlotState.PLAYING)
 			{
@@ -62,18 +97,6 @@ namespace Terraria_Server.Messages
 						return;
 					}
 				}
-			}
-
-			if (player.Name.Length > 20)
-			{
-				slot.Kick ("Name is too long.");
-				return;
-			}
-
-			if (player.Name == "")
-			{
-				slot.Kick ("Empty name.");
-				return;
 			}
 
 			Netplay.slots[whoAmI].oldName = player.Name;
