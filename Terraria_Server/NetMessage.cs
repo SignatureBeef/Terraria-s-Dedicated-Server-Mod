@@ -320,17 +320,21 @@ namespace Terraria_Server
 		{
 			var msgBuf = NetMessage.buffer[i];
 			var slot = Netplay.slots[i];
-			int num = 0;
-			if (msgBuf.totalData >= 4)
+			int processed = 0;
+			
+			if (totalData >= 4)
 			{
 				if (msgLen == 0)
 				{
 					msgLen = BitConverter.ToInt32 (readBuffer, 0) + 4;
+					
+					if (msgLen == 0 || msgLen > 4096)
+						slot.Kick ("Client sent invalid network message (" + msgLen + ")");
 				}
-				while (totalData >= msgLen + num && msgLen > 0)
+				while (totalData >= msgLen + processed && msgLen > 0)
 				{
 					if (slot.state == SlotState.PLAYER_AUTH && msgLen > 4
-						&& (Packet) readBuffer[num + 4] != Packet.PASSWORD_RESPONSE)
+						&& (Packet) readBuffer[processed + 4] != Packet.PASSWORD_RESPONSE)
 					{
 						// put player packets aside until password response
 						
@@ -345,33 +349,36 @@ namespace Terraria_Server
 						
 						if (msgBuf.sideBuffer == null) msgBuf.sideBuffer = new byte [4096];
 						
-						Buffer.BlockCopy (readBuffer, num, msgBuf.sideBuffer, msgBuf.sideBufferBytes, msgLen);
+						Buffer.BlockCopy (readBuffer, processed, msgBuf.sideBuffer, msgBuf.sideBufferBytes, msgLen);
 						
 						msgBuf.sideBufferBytes += msgLen;
 					}
 					else
-						msgBuf.GetData (readBuffer, num + 4, msgLen - 4);
+						msgBuf.GetData (readBuffer, processed + 4, msgLen - 4);
 
-					num += msgLen;
-					if (totalData - num >= 4)
+					processed += msgLen;
+					if (totalData - processed >= 4)
 					{
-						msgLen = BitConverter.ToInt32 (readBuffer, num) + 4;
+						msgLen = BitConverter.ToInt32 (readBuffer, processed) + 4;
+						
+						if (msgLen == 0 || msgLen > 4096)
+							slot.Kick ("Client sent invalid network message (" + msgLen + ")");
 					}
 					else
 					{
 						msgLen = 0;
 					}
 				}
-				if (num == totalData)
+				if (processed == totalData)
 				{
 					totalData = 0;
 				}
 				else
 				{
-					if (num > 0)
+					if (processed > 0)
 					{
-						Buffer.BlockCopy (readBuffer, num, readBuffer, 0, totalData - num);
-						totalData -= num;
+						Buffer.BlockCopy (readBuffer, processed, readBuffer, 0, totalData - processed);
+						totalData -= processed;
 					}
 				}
 			}
