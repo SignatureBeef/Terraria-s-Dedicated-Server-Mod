@@ -225,110 +225,84 @@ namespace Terraria_Server.Plugin
                         switch (hook)
                         {
                             case Hooks.CONSOLE_COMMAND:
-                                {
-                                    plugin.onConsoleCommand((ConsoleCommandEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onConsoleCommand((ConsoleCommandEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_COMMAND:
-                                {
-                                    plugin.onPlayerCommand((PlayerCommandEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerCommand((PlayerCommandEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_CHAT:
-                                {
-                                    plugin.onPlayerChat((MessageEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerChat((MessageEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_PRELOGIN:
-                                {
-                                    plugin.onPlayerPreLogin((PlayerLoginEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerPreLogin((PlayerLoginEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_LOGIN:
-                                {
-                                    plugin.onPlayerJoin((PlayerLoginEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerJoin((PlayerLoginEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_LOGOUT:
-                                {
-                                    plugin.onPlayerLogout((PlayerLogoutEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerLogout((PlayerLogoutEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_PARTYCHANGE:
-                                {
-                                    plugin.onPlayerPartyChange((PartyChangeEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerPartyChange((PartyChangeEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_TILECHANGE:
-                                {
-                                    plugin.onPlayerTileChange((PlayerTileChangeEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerTileChange((PlayerTileChangeEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_HURT:
-                                {
-                                    plugin.onPlayerHurt((PlayerHurtEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerHurt((PlayerHurtEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_CHEST:
-                                {
-                                    plugin.onPlayerOpenChest((PlayerChestOpenEvent)hookEvent);
-                                    break;
-                                }
-                            /*case Hooks.PLAYER_STATEUPDATE:
-                                {
-                                    plugin.onPlayerStateUpdate((PlayerStateUpdateEvent)hookEvent);
-                                    break;
-                                }*/
+                                plugin.onPlayerOpenChest((PlayerChestOpenEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_DEATH:
-                                {
-                                    plugin.onPlayerDeath((PlayerDeathEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerDeath((PlayerDeathEvent)hookEvent);
+                                break;
+
                             case Hooks.DOOR_STATECHANGE:
-                                {
-                                    plugin.onDoorStateChange((DoorStateChangeEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onDoorStateChange((DoorStateChangeEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_EDITSIGN:
-                                {
-                                    plugin.onPlayerEditSign((PlayerEditSignEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerEditSign((PlayerEditSignEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_PROJECTILE:
-                                {
-                                    plugin.onPlayerProjectileUse((PlayerProjectileEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerProjectileUse((PlayerProjectileEvent)hookEvent);
+                                break;
+
                             case Hooks.NPC_DEATH:
-                                {
-                                    plugin.onNPCDeath((NPCDeathEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onNPCDeath((NPCDeathEvent)hookEvent);
+                                break;
+
                             case Hooks.NPC_SPAWN:
-                                {
-                                    plugin.onNPCSpawn((NPCSpawnEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onNPCSpawn((NPCSpawnEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_TELEPORT:
-                                {
-                                    plugin.onPlayerTeleport((PlayerTeleportEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerTeleport((PlayerTeleportEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_MOVE:
-                                {
-                                    plugin.onPlayerMove((PlayerMoveEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerMove((PlayerMoveEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_KEYPRESS:
-                                {
-                                    plugin.onPlayerKeyPress((PlayerKeyPressEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerKeyPress((PlayerKeyPressEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_PVPCHANGE:
-                                {
-                                    plugin.onPlayerPvPChange((PlayerPvPChangeEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onPlayerPvPChange((PlayerPvPChangeEvent)hookEvent);
+                                break;
 
                             case Hooks.PLAYER_AUTH_QUERY:
                                 plugin.onPlayerAuthQuery ((PlayerLoginEvent) hookEvent);
@@ -339,15 +313,13 @@ namespace Terraria_Server.Plugin
                                 break;
 
                             case Hooks.NPC_BOSSDEATH:
-                                {
-                                    plugin.onNPCBossDeath((NPCBossDeathEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onNPCBossDeath((NPCBossDeathEvent)hookEvent);
+                                break;
+
                             case Hooks.NPC_BOSSSUMMON:
-                                {
-                                    plugin.onNPCBossSummon((NPCBossSummonEvent)hookEvent);
-                                    break;
-                                }
+                                plugin.onNPCBossSummon((NPCBossSummonEvent)hookEvent);
+                                break;
+
                             case Hooks.PLAYER_FLOWLIQUID:
                                 plugin.onPlayerFlowLiquid ((PlayerFlowLiquidEvent)hookEvent);
                                 break;

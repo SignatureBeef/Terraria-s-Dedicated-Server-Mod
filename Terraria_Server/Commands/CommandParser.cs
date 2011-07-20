@@ -36,11 +36,15 @@ namespace Terraria_Server.Commands
                 
             AddCommand ("who")
                 .WithRestriction (false)
-                .Calls (Commands.List);
-            
-            AddCommand ("players")
-                .WithRestriction (false)
-                .Calls (Commands.List);
+                .Calls(Commands.List);
+
+            AddCommand("players")
+                .WithRestriction(false)
+                .Calls(Commands.List);
+
+            AddCommand("online")
+                .WithRestriction(false)
+                .Calls(Commands.List);
                 
             AddCommand ("me")
                 .WithRestriction (false)
