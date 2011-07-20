@@ -15,16 +15,28 @@ namespace Terraria_Server
             this.platformType = platformType;
         }
 
-        public void WriteLine(String Line)
+        public void WriteLine(String Line) //FIXME: replace with proper async logging
         {
+            var now = DateTime.Now;
+            Console.Write (now);
+            Console.Write ("> ");
             Console.WriteLine(Line);
+            
+            streamWriter.Write (now);
+            streamWriter.Write ("> ");
             streamWriter.WriteLine(Line);
             streamWriter.Flush();
         }
 		
 		public void WriteLine (string fmt, params object[] args)
 		{
+            var now = DateTime.Now;
+            Console.Write (now);
+            Console.Write ("> ");
             Console.WriteLine (fmt, args);
+            
+            streamWriter.Write (now);
+            streamWriter.Write ("> ");
             streamWriter.WriteLine (fmt, args);
             streamWriter.Flush();
 		}
