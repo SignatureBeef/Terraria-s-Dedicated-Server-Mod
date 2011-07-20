@@ -31,16 +31,20 @@ namespace Terraria_Server.Commands
                 
             AddCommand ("list")
                 .WithRestriction (false)
-                .WithDescription ("List active players (also: who, players).")
+                .WithDescription ("List active players (also: who, players, online).")
                 .Calls (Commands.List);
                 
             AddCommand ("who")
                 .WithRestriction (false)
-                .Calls (Commands.List);
-            
-            AddCommand ("players")
-                .WithRestriction (false)
-                .Calls (Commands.List);
+                .Calls(Commands.List);
+
+            AddCommand("players")
+                .WithRestriction(false)
+                .Calls(Commands.List);
+
+            AddCommand("online")
+                .WithRestriction(false)
+                .Calls(Commands.List);
                 
             AddCommand ("me")
                 .WithRestriction (false)
@@ -228,6 +232,7 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Executes command methods derived from parsing
         /// </summary>
+        /// <param name="command">Command base to run</param>
         /// <param name="tokens">Command arguments to pass to methods</param>
         /// <param name="sender">Sending player</param>
         public void switchCommands (string command, IList<string> tokens, ISender sender)

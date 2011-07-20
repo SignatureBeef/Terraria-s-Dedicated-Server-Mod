@@ -4279,8 +4279,8 @@ namespace Terraria_Server
             int spawnTileY = Main.spawnTileY;
 
             //Set our new target position
-            Main.spawnTileX = (int)tileX;
-            Main.spawnTileY = (int)tileY;
+            Main.spawnTileX = ((int)tileX) / 16;
+            Main.spawnTileY = ((int)tileY) / 16;
 
             bool destroyed = false;
             if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0) //Do they have a bed?
