@@ -6,66 +6,40 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
-    public class TConsole
-    {
-        private StreamWriter streamWriter = null;
-        private Platform.PlatformType platformType;
+	public class TConsole
+	// left for compatibility
+	{
+//		private StreamWriter streamWriter = null;
+//		private Platform.PlatformType platformType;
 
-        public TConsole(String serverLog, Platform.PlatformType platformType)
-        {
-            streamWriter = new StreamWriter(serverLog);
-            this.platformType = platformType;
-        }
+		public TConsole(String serverLog, Platform.PlatformType platformType)
+		{
+//			streamWriter = new StreamWriter(serverLog);
+//			this.platformType = platformType;
+		}
 
-        public void WriteLine(String Line) //FIXME: replace with proper async logging
-        {
-            ProgramLog.Log (Line);
-//            var now = DateTime.Now;
-//            Console.Write (now);
-//            Console.Write ("> ");
-//            Console.WriteLine(Line);
-//            
-//            streamWriter.Write (now);
-//            streamWriter.Write ("> ");
-//            streamWriter.WriteLine(Line);
-//            streamWriter.Flush();
-        }
+		public void WriteLine(String Line)
+		{
+			ProgramLog.Log (Line);
+		}
 		
 		public void WriteLine (string fmt, params object[] args)
 		{
 			ProgramLog.Log (fmt, args);
-//            var now = DateTime.Now;
-//            Console.Write (now);
-//            Console.Write ("> ");
-//            Console.WriteLine (fmt, args);
-//            
-//            streamWriter.Write (now);
-//            streamWriter.Write ("> ");
-//            streamWriter.WriteLine (fmt, args);
-//            streamWriter.Flush();
 		}
 		
-        public void WriteLine()
-        {
-            //if (platformType == Platform.PlatformType.WINDOWS)
-            //{
-                Console.WriteLine();
-            //    streamWriter.WriteLine();
-            //    streamWriter.Flush();
-            //}
-        }
+		public void WriteLine()
+		{
+			//if (platformType == Platform.PlatformType.WINDOWS)
+			//{
+			//	streamWriter.WriteLine();
+			//	streamWriter.Flush();
+			//}
+		}
 
-        public void Write(String Message)
-        {
-            Console.Write(Message);
-            streamWriter.Write(Message);
-            streamWriter.Flush();
-        }
+		public void Close()
+		{
+		}
 
-        public void Close()
-        {
-            streamWriter.Close();
-        }
-
-    }
+	}
 }

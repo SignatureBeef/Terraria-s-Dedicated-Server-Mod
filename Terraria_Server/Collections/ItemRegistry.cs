@@ -4,6 +4,7 @@ using Terraria_Server.Misc;
 using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Collections
 {
@@ -32,7 +33,7 @@ namespace Terraria_Server.Collections
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.ToString());
+                ProgramLog.Log (e);
             }
         }
 

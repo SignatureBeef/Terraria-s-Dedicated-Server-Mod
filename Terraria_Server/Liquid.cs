@@ -1,4 +1,5 @@
 using System;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -701,7 +702,7 @@ namespace Terraria_Server
                 Liquid.panicY = Main.maxTilesY - 3;
                 if (Main.dedServ)
                 {
-                    Console.WriteLine("Forcing water to settle.");
+                    ProgramLog.Log ("Forcing water to settle.");
                 }
             }
         }
@@ -739,7 +740,7 @@ namespace Terraria_Server
                         Liquid.panicY--;
                         if (Liquid.panicY < 3)
                         {
-                            Console.WriteLine("Water has been settled.");
+                            ProgramLog.Log ("Water has been settled.");
                             Liquid.panicCounter = 0;
                             Liquid.panicMode = false;
                             WorldGen.WaterCheck();

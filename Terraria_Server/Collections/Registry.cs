@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Collections
 {
@@ -52,14 +53,14 @@ namespace Terraria_Server.Collections
                         }
                     }
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
-                    Console.WriteLine("Error adding element: " + errored.ToString());
+                    ProgramLog.Log (e, "Error adding element: " + errored.ToString());
                 }
             }
-            catch(Exception)
+            catch (Exception e)
             {
-                Console.WriteLine("Error deserializing: " + filePath);
+                ProgramLog.Log (e, "Error deserializing: " + filePath);
             }
         }
 

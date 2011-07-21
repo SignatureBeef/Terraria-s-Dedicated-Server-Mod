@@ -1,4 +1,7 @@
 using System;
+using System.Runtime.InteropServices;
+
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -8,7 +11,7 @@ namespace Terraria_Server
      
 		public TileCollection (int X, int Y)
 		{
-			Console.WriteLine ("Creating tile array of {0}x{1}", X, Y);
+			ProgramLog.Log ("Creating tile array of {0}x{1}, {2}MB", X, Y, Marshal.SizeOf (typeof(TileData)) * X * Y / 1024 / 1024);
 			data = new TileData [X, Y];
 		}
      

@@ -7,6 +7,7 @@ using Terraria_Server;
 using System.Threading;
 using Terraria_Server.Collections;
 using Terraria_Server.Misc;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Commands
 {
@@ -296,7 +297,7 @@ namespace Terraria_Server.Commands
             {
                 for (int i = 0; i < CommandDefinition.Length; i++)
                 {
-                    Program.tConsole.WriteLine("\t" + CommandDefinition[i] + " - " + CommandInformation[i].Replace("/", ""));
+                    sender.sendMessage ("\t" + CommandDefinition[i] + " - " + CommandInformation[i].Replace("/", ""));
                 }
             }
         }
@@ -1098,7 +1099,7 @@ namespace Terraria_Server.Commands
             Statics.keepRunning = true;
             server.StopServer();
             while (Statics.serverStarted) { Thread.Sleep (10); }
-            Program.tConsole.WriteLine("Starting the Server");
+            ProgramLog.Log ("Starting the Server");
             server.Initialize();
             WorldGen.loadWorld();
             Program.updateThread = new Thread(Program.UpdateLoop);

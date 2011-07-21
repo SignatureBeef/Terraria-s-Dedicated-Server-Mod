@@ -1,4 +1,6 @@
 ﻿using System;
+using Terraria_Server.Logging;
+
 namespace Terraria_Server.Commands
 {
     /// <summary>
@@ -33,7 +35,7 @@ namespace Terraria_Server.Commands
         /// <param name="B">Blue text color value</param>
         public virtual void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
-            Program.tConsole.WriteLine(Message);
+            ProgramLog.Console.Print (Message);
         }
 
     }
