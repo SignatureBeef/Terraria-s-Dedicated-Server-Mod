@@ -1052,10 +1052,7 @@ namespace Terraria_Server
 								}
 								catch (Exception e)
 								{
-									Program.tConsole.WriteLine("Exception removing " + destFileName);
-									Program.tConsole.WriteLine(e.Message);
-									Program.tConsole.WriteLine(e.Message);
-									Program.tConsole.WriteLine(e.StackTrace);
+									ProgramLog.Log (e, "Exception removing " + destFileName);
 								}
 								File.Move(savePath, destFileName);
 							}
@@ -1067,9 +1064,7 @@ namespace Terraria_Server
 						}
 						catch (Exception e)
 						{
-							Program.tConsole.WriteLine("Exception moving " + tempPath);
-							Program.tConsole.WriteLine(e.Message);
-							Program.tConsole.WriteLine(e.StackTrace);
+							ProgramLog.Log (e, "Exception moving " + tempPath);
 						}
 
 						try
@@ -1078,9 +1073,7 @@ namespace Terraria_Server
 						}
 						catch (Exception e)
 						{
-							Program.tConsole.WriteLine("Exception removing " + tempPath);
-							Program.tConsole.WriteLine(e.Message);
-							Program.tConsole.WriteLine(e.StackTrace);
+							ProgramLog.Log (e, "Exception removing " + tempPath);
 						}
 					}
 					stopwatch.Stop();
@@ -1090,9 +1083,7 @@ namespace Terraria_Server
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine("Exception Saving the World ");
-				Program.tConsole.WriteLine(e.Message);
-				Program.tConsole.WriteLine(e.StackTrace);
+				ProgramLog.Log (e, "Exception saving the world");
 			}
 		}
 		
@@ -4439,9 +4430,7 @@ namespace Terraria_Server
 		{
 			if (sender == null)
 			{
-				ConsoleSender cSender = new ConsoleSender(Program.server);
-				cSender.ConsoleCommand.Sender = new Sender();
-				sender = cSender;
+				sender = new ConsoleSender ();
 			}
 
 			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
@@ -7339,9 +7328,7 @@ namespace Terraria_Server
 		{
 			if (sender == null)
 			{
-				ConsoleSender cSender = new ConsoleSender(Program.server);
-				cSender.ConsoleCommand.Sender = new Sender();
-				sender = cSender;
+				sender = new ConsoleSender();
 			}
 
 			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();

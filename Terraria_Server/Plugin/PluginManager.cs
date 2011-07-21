@@ -7,6 +7,8 @@ using Terraria_Server.Events;
 using System.Diagnostics;
 using System.Reflection.Emit;
 
+using Terraria_Server.Logging;
+
 namespace Terraria_Server.Plugin
 {
     /*
@@ -332,8 +334,7 @@ namespace Terraria_Server.Plugin
                 }
                 catch (Exception exception)
                 {
-                    Program.tConsole.WriteLine("Error Passing Event " + hook.ToString() + " to " + plugin.Name);
-                    Program.tConsole.WriteLine(exception.ToString());
+                    ProgramLog.Log (exception, "Error passing event " + hook.ToString() + " to " + plugin.Name);
                 }
             }
         }

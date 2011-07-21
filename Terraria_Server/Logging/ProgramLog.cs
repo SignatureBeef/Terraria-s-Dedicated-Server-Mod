@@ -13,6 +13,7 @@ namespace Terraria_Server.Logging
 		static Thread dispatchThread = new Thread (LogDispatchThread);
 		static ProducerConsumerSignal logSignal = new ProducerConsumerSignal (false);
 		static LogTarget console = new StandardOutputTarget ();
+		static LogTarget logFile = null;
 		
 		static volatile bool exit = false;
 		
@@ -22,7 +23,8 @@ namespace Terraria_Server.Logging
 			dispatchThread.Name = "LogD";
 			dispatchThread.Start ();
 			
-			logTargets.Add (console);
+			lock (logTargets)
+				logTargets.Add (console);
 		}
 		
 		struct LogEntry
@@ -44,6 +46,23 @@ namespace Terraria_Server.Logging
 		}
 		
 		static List<LogTarget> logTargets = new List<LogTarget> ();
+		
+		public static void OpenLogFile (string path)
+		{
+			logFile = new FileOutputTarget (path);
+			lock (logTargets)
+				logTargets.Add (logFile);
+		}
+		
+		public static void AddTarget (LogTarget target)
+		{
+			lock (logTargets) logTargets.Add (target);
+		}
+		
+		public static void RemoveTarget (LogTarget target)
+		{
+			lock (logTargets) logTargets.Remove (target);
+		}
 		
 		public static void Close ()
 		{
@@ -186,10 +205,11 @@ namespace Terraria_Server.Logging
 		{
 			if (target == null)
 			{
-				foreach (var tar in logTargets)
-				{
-					tar.Send (output);
-				}
+				lock (logTargets)
+					foreach (var tar in logTargets)
+					{
+						tar.Send (output);
+					}
 			}
 			else
 				target.Send (output);
@@ -203,6 +223,8 @@ namespace Terraria_Server.Logging
 			{
 				var list = new LogEntry [LOG_THREAD_BATCH_SIZE];
 				var progs = new List<ProgressLogger> ();
+				var last = default(OutputEntry);
+				var run = 0;
 				
 				while (exit == false || EntryCount() > 0)
 				{
@@ -258,11 +280,31 @@ namespace Terraria_Server.Logging
 								{
 									var upd = new OutputEntry { prefix = output.prefix, message = prog, arg = prog.Value };
 									Send (entry.target, upd);
+									last = upd;
+									run = 0;
 								}
 							}
 						}
 						
-						Send (entry.target, output);
+						if (output.message.Equals (last.message) && output.prefix == last.prefix && output.arg == last.arg)
+						{
+							run += 1;
+							//System.Console.WriteLine (run);
+						}
+						else if (run > 0)
+						{
+							//System.Console.WriteLine ("sending");
+							last.message = string.Format ("Log message repeated {0} times", run);
+							Send (entry.target, last);
+							last = output;
+							run = 0;
+							Send (entry.target, output);
+						}
+						else
+						{
+							last = output;
+							Send (entry.target, output);
+						}
 					}
 				}
 			}
@@ -271,10 +313,11 @@ namespace Terraria_Server.Logging
 				System.Console.WriteLine (e.ToString());
 			}
 			
-			foreach (var tar in logTargets)
-			{
-				tar.Close ();
-			}
+			lock (logTargets)
+				foreach (var tar in logTargets)
+				{
+					tar.Close ();
+				}
 			
 			Statics.IsActive = false;
 			Netplay.disconnect = true;

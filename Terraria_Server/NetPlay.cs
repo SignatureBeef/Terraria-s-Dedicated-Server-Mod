@@ -3,8 +3,11 @@ using System.Net.Sockets;
 using System.Net;
 using System;
 using System.Threading;
-using Terraria_Server.Messages;
 using System.Diagnostics;
+
+using Terraria_Server.Messages;
+using Terraria_Server.Logging;
+
 namespace Terraria_Server
 {
 	public static class Netplay
@@ -31,6 +34,18 @@ namespace Terraria_Server
 			try
 			{
 				socket.Close ();
+			}
+			catch (SocketException) {}
+			catch (ObjectDisposedException) {}
+		}
+
+		public static void SafeShutdown (this Socket socket)
+		{
+			if (socket == null) return;
+			
+			try
+			{
+				socket.Shutdown (SocketShutdown.Both);
 			}
 			catch (SocketException) {}
 			catch (ObjectDisposedException) {}
@@ -172,8 +187,7 @@ namespace Terraria_Server
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine ("ServerLoop terminated with exception:");
-				Program.tConsole.WriteLine (e.ToString());
+				ProgramLog.Log (e, "ServerLoop terminated with exception");
 			}
 			
 			Netplay.anyClients = false;

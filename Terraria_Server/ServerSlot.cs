@@ -2,6 +2,9 @@ using System.Net.Sockets;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+
+using Terraria_Server.Logging;
+
 namespace Terraria_Server
 {
 	[Flags]
@@ -32,7 +35,7 @@ namespace Terraria_Server
 		public String statusText2;
 		public int statusCount;
 		public int statusMax;
-		public string remoteAddress;
+		public volatile string remoteAddress;
 		public bool[,] tileSection = new bool[Main.maxTilesX / 200, Main.maxTilesY / 150];
 		public String statusText = "";
 		public int timeOut;
@@ -256,19 +259,26 @@ namespace Terraria_Server
 		const int WRITE_THREAD_BATCH_SIZE = 32;
 		internal void WriteThread ()
 		{
+			Thread.CurrentThread.Name = string.Format ("W{0:000}", whoAmI);
+			
 			byte[][] list = new byte[WRITE_THREAD_BATCH_SIZE][];
 			while (true)
 			{
+				bool kill = false;
+				var queue = writeQueue;
+				var socket = this.socket;
+				var remoteAddress = this.remoteAddress;
+				int items = 0;
+				
 				try
 				{
-					int items = 0;
 					bool kick = false;
-
-					lock (writeQueue)
+					
+					lock (queue)
 					{
-						while (writeQueue.Count > 0)
+						while (queue.Count > 0)
 						{
-							list[items++] = writeQueue.Dequeue();
+							list[items++] = queue.Dequeue();
 							if (items == WRITE_THREAD_BATCH_SIZE) break;
 						}
 						
@@ -277,15 +287,17 @@ namespace Terraria_Server
 					
 					if (state == SlotState.SHUTDOWN)
 					{
-						writeQueue = new Queue<byte[]> ();
-						socket.Close();
+						kill = true;
+						writeSignal.WaitOne (250);
 					}
 					else if (items == 0)
 					{
-						writeSignal.WaitOne();
+						writeSignal.WaitOne (1000);
 						continue;
 					}
-
+					
+					SocketError error = SocketError.Success;
+					
 					try
 					{
 						for (int i = 0; i < items; i++)
@@ -293,9 +305,10 @@ namespace Terraria_Server
 							int count = 0;
 							int size = list[i].Length;
 							while (size - count > 0)
-								count += socket.Send (list[i], count, size - count, 0);
-								
-							list[i] = null;
+								count += socket.Send (list[i], count, size - count, 0, out error);
+							
+							if (error != SocketError.Success) break;
+							
 							NetMessage.buffer[this.whoAmI].spamCount--;
 							if (this.statusMax > 0)
 							{
@@ -305,29 +318,49 @@ namespace Terraria_Server
 					}
 					finally
 					{
-						if (kick)
-							try
-							{
-								Thread.Sleep (250);
-								socket.Shutdown (SocketShutdown.Both);
-								socket.Close ();
-							}
-							catch {}
+						for (int i = 0; i < items; i++)
+							list[i] = null;
+						
+						if (error != SocketError.Success)
+						{
+							ProgramLog.Log ("{0}: error while sending ({1})", remoteAddress, error);
+							kill = true;
+						}
+						else if (kick)
+						{
+							Thread.Sleep (250);
+							kill = true;
+						}
 					}
-					
 				}
 				catch (SocketException e)
 				{
-					Program.tConsole.WriteLine("{0}: exception while sending ({1})", remoteAddress, e.Message);
+					ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
+					kill = true;
 				}
 				catch (ObjectDisposedException e)
 				{
-					Program.tConsole.WriteLine("{0}: exception while sending ({1})", remoteAddress, e.Message);
+					ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
+					kill = true;
 				}
 				catch (Exception e)
 				{
-					Program.tConsole.WriteLine("Exception within WriteThread:");
-					Program.tConsole.WriteLine(e.Message);
+					ProgramLog.Log (e, "Exception within WriteThread of slot " + whoAmI);
+				}
+				
+				if (kill)
+				{
+					lock (queue)
+					{
+						if (queue.Count > 0)
+							queue.Clear ();
+					}
+
+					for (int i = 0; i < items; i++)
+						list[i] = null;
+					
+					socket.SafeShutdown ();
+					socket.SafeClose();
 				}
 			}
 		}

@@ -2,6 +2,7 @@
 using System.Text;
 using System.Collections.Generic;
 using Terraria_Server.Plugin;
+using Terraria_Server.Events;
 
 namespace Terraria_Server.Commands
 {
@@ -127,29 +128,33 @@ namespace Terraria_Server.Commands
             
             return cmd;
         }
-
+        
+        static ConsoleSender consoleSender = new ConsoleSender ();
         /// <summary>
         /// Parses new console command
         /// </summary>
         /// <param name="line">Command to parse</param>
         /// <param name="server">Current Server instance</param>
-        public void ParseConsoleCommand (string line, Server server)
-        {
-            line = line.Trim();
-            
-            ConsoleSender cSender = new ConsoleSender(server);
-            cSender.ConsoleCommand.Message = line;
-            Sender sender = new Sender();
-            sender.Op = true;
-            cSender.ConsoleCommand.Sender = sender;
-            server.PluginManager.processHook(Hooks.CONSOLE_COMMAND, cSender.ConsoleCommand);
-            if (cSender.ConsoleCommand.Cancelled)
-            {
-                return;
-            }
-            
-            ParseAndProcess (sender, line);
-        }
+		public void ParseConsoleCommand (string line, Server server, ConsoleSender sender = null)
+		{
+			line = line.Trim();
+		
+			if (sender == null)
+			{
+				sender = consoleSender;
+			}
+			
+			var ev = new ConsoleCommandEvent ();
+			ev.Sender = sender;
+			ev.Message = line;
+			server.PluginManager.processHook (Hooks.CONSOLE_COMMAND, ev);
+			if (ev.Cancelled)
+			{
+				return;
+			}
+			
+			ParseAndProcess (sender, line);
+		}
 
         /// <summary>
         /// Parses player commands

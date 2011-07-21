@@ -244,6 +244,10 @@
     <Compile Include="Logging\LogTarget.cs" />
     <Compile Include="Logging\ProgressLogger.cs" />
     <Compile Include="Logging\ProgramLog.cs" />
+    <Compile Include="Logging\LogTraceListener.cs" />
+    <Compile Include="RemoteConsole\RConServer.cs" />
+    <Compile Include="RemoteConsole\RConClient.cs" />
+    <Compile Include="RemoteConsole\RConSender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -293,5 +297,6 @@
   <ItemGroup>
     <Folder Include="Logging\" />
     <Folder Include="Server\" />
+    <Folder Include="RemoteConsole\" />
   </ItemGroup>
 </Project>

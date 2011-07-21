@@ -6,6 +6,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -303,9 +304,7 @@ namespace Terraria_Server
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine("Issue sending Data - NetMessage Error!");
-				Program.tConsole.WriteLine(e.Message);
-				Program.tConsole.WriteLine(e.StackTrace);
+				ProgramLog.Log (e, "SendData error");
 			}
 			return 0;
 		}

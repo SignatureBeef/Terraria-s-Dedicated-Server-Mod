@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
+using Terraria_Server.Logging;
+
 namespace Terraria_Server.Messages
 {
     public class MessageBuffer
@@ -114,9 +116,8 @@ namespace Terraria_Server.Messages
 				if (NetMessage.buffer[whoAmI].readBuffer.Length > start)
 					pkt = string.Format ("packet {0}", (Packet)NetMessage.buffer[whoAmI].readBuffer[start]);
 
-				Program.tConsole.WriteLine ("Exception handling {0} of length {1} from {2}@{3}",
-					pkt, length, Main.players[whoAmI].Name ?? "", Netplay.slots[whoAmI].remoteAddress);
-				Program.tConsole.WriteLine (e.ToString());
+				ProgramLog.Log (e, string.Format ("Exception handling {0} of length {1} from {2}@{3}",
+					pkt, length, Main.players[whoAmI].Name ?? "", Netplay.slots[whoAmI].remoteAddress));
 					
 				Netplay.slots[whoAmI].Kick ("Server malfunction, please reconnect.");
 			}

@@ -39,6 +39,12 @@ namespace Terraria_Server
 
 				}
 
+				var lis = new Logging.LogTraceListener ();
+				System.Diagnostics.Trace.Listeners.Clear ();
+				System.Diagnostics.Trace.Listeners.Add (lis);
+				System.Diagnostics.Debug.Listeners.Clear ();
+				System.Diagnostics.Debug.Listeners.Add (lis);
+				
 				ProgramLog.Log ("Initializing " + MODInfo);
 
 				ProgramLog.Log ("Setting up Paths.");
@@ -46,9 +52,12 @@ namespace Terraria_Server
 				{
 					return;
 				}
+				
+				var logFile = Statics.DataPath + Path.DirectorySeparatorChar + "server.log";
+				ProgramLog.OpenLogFile (logFile);
 
 				Platform.InitPlatform();
-				tConsole = new TConsole(Statics.DataPath + Path.DirectorySeparatorChar + "server.log", Platform.Type);
+				tConsole = new TConsole (null, Platform.Type); //dummy
 
 				ProgramLog.Log ("Setting up Properties.");
 				bool propertiesExist = File.Exists("server.properties");
@@ -128,7 +137,10 @@ namespace Terraria_Server
 					ProgramLog.Log (e, "Error updating");
 				}
 //#endif
-
+				
+				ProgramLog.Log ("Starting remote console server");
+				RemoteConsole.RConServer.Start ();
+				
 				ProgramLog.Log ("Preparing Server Data...");
 
 				String worldFile = properties.WorldPath;
@@ -244,7 +256,7 @@ namespace Terraria_Server
 
 				ProgramLog.Log ("Starting the Server");
 				server.StartServer();
-
+				
 				Statics.IsActive = true;
 				while (!Statics.serverStarted) { }
 
@@ -299,6 +311,8 @@ namespace Terraria_Server
 			}
 			ProgramLog.Log ("Log end.");
 			ProgramLog.Close();
+			
+			RemoteConsole.RConServer.Stop ();
 		}
 
 		private static bool SetupPaths()

@@ -10,15 +10,10 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// ConsoleSender constructor
         /// </summary>
-        /// <param name="server">Current Server instance</param>
-        public ConsoleSender(Server server)
+        public ConsoleSender ()
         {
-            ConsoleCommand = new ConsoleCommandEvent();
+            Op = true;
+            // I don't know what the hell was the deal with this
         }
-
-        /// <summary>
-        /// ConsoleCommandEvent set/retrieve
-        /// </summary>
-        public ConsoleCommandEvent ConsoleCommand { get; private set; }
     }
 }

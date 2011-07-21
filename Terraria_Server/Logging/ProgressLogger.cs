@@ -3,6 +3,7 @@ using System.Threading;
 
 namespace Terraria_Server.Logging
 {
+	// TODO: refactor and add a throbber too
 	public class ProgressLogger : IDisposable
 	{
 		public int Max { get; private set; }
