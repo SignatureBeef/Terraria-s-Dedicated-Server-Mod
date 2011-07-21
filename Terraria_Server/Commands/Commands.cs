@@ -1102,7 +1102,7 @@ namespace Terraria_Server.Commands
             server.Initialize();
             WorldGen.loadWorld();
             Program.updateThread = new Thread(Program.UpdateLoop);
-            Program.updateThread.Name = "UpdateLoop";
+            Program.updateThread.Name = "Updt";
             server.StartServer();
             Statics.keepRunning = false;
         }

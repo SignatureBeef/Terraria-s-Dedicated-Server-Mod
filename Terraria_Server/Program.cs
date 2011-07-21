@@ -1,11 +1,13 @@
 using System.Threading;
-using Terraria_Server.Commands;
 using System;
 using System.IO;
 using System.Diagnostics;
 using System.Reflection;
-using Terraria_Server.Definitions;
 using System.Xml;
+
+using Terraria_Server.Commands;
+using Terraria_Server.Definitions;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -37,9 +39,9 @@ namespace Terraria_Server
 
                 }
 
-                Console.WriteLine("Initializing " + MODInfo);
+                ProgramLog.Log ("Initializing " + MODInfo);
 
-                Console.WriteLine("Setting up Paths.");
+                ProgramLog.Log ("Setting up Paths.");
                 if (!SetupPaths())
                 {
                     return;
@@ -48,16 +50,16 @@ namespace Terraria_Server
                 Platform.InitPlatform();
                 tConsole = new TConsole(Statics.DataPath + Path.DirectorySeparatorChar + "server.log", Platform.Type);
 
-                Program.tConsole.WriteLine("Setting up Properties.");
+                ProgramLog.Log ("Setting up Properties.");
                 bool propertiesExist = File.Exists("server.properties");
                 SetupProperties();
 
                 if (!propertiesExist)
                 {
-                    Console.Write("New properties file created. Would you like to exit for editing? [Y/n]: ");
+                    ProgramLog.Console.Print ("New properties file created. Would you like to exit for editing? [Y/n]: ");
                     if (Console.ReadLine().ToLower() == "y")
                     {
-                        Console.WriteLine("Complete, Press any Key to Exit...");
+                        ProgramLog.Console.Print ("Complete, Press any Key to Exit...");
                         Console.ReadKey(true);
                         return;
                     }
@@ -76,10 +78,10 @@ namespace Terraria_Server
                         }
                         catch (Exception)
                         {
-                            Console.Write("Issue deleting PID file, Continue? [Y/n]: ");
+                            ProgramLog.Console.Print ("Issue deleting PID file, Continue? [Y/n]: ");
                             if (Console.ReadLine().ToLower() == "n")
                             {
-                                Console.WriteLine("Press any Key to Exit...");
+                                ProgramLog.Console.Print ("Press any Key to Exit...");
                                 Console.ReadKey(true);
                                 return;
                             }
@@ -94,15 +96,15 @@ namespace Terraria_Server
                         }
                         catch (Exception)
                         {
-                            Console.Write("Issue creating PID file, Continue? [Y/n]: ");
+                            ProgramLog.Console.Print ("Issue creating PID file, Continue? [Y/n]: ");
                             if (Console.ReadLine().ToLower() == "n")
                             {
-                                Console.WriteLine("Press any Key to Exit...");
+                                ProgramLog.Console.Print ("Press any Key to Exit...");
                                 Console.ReadKey(true);
                                 return;
                             }
                         }
-                        Console.WriteLine("PID File Created, Process ID: " + ProcessUID);
+                        ProgramLog.Log ("PID File Created, Process ID: " + ProcessUID);
                     }
                 }
 
@@ -113,18 +115,21 @@ namespace Terraria_Server
                 {
                     if (UpdateManager.performProcess())
                     {
-                        Program.tConsole.WriteLine("Restarting into new update!");
+                        ProgramLog.Log ("Restarting into new update!");
                         return;
                     }
                 }
+                catch (UpdateCompleted e)
+                {
+                    throw;
+                }
                 catch (Exception e)
                 {
-                    Program.tConsole.WriteLine("Error updating!");
-                    Program.tConsole.WriteLine(e.Message);
+                    ProgramLog.Log (e, "Error updating");
                 }
 //#endif
 
-                Program.tConsole.WriteLine("Preparing Server Data...");
+                ProgramLog.Log ("Preparing Server Data...");
 
                 String worldFile = properties.WorldPath;
                 FileInfo file = new FileInfo(worldFile);
@@ -137,19 +142,18 @@ namespace Terraria_Server
                     }
                     catch (Exception exception)
                     {
-                        Program.tConsole.WriteLine(exception.ToString());
-                        Program.tConsole.WriteLine("Press any key to continue...");
+                        ProgramLog.Log (exception);
+                        ProgramLog.Console.Print ("Press any key to continue...");
                         Console.ReadKey(true);
                         return;
                     }
-                    Program.tConsole.WriteLine("Generating World '" + worldFile + "'");
+                    ProgramLog.Log ("Generating World '{0}'", worldFile);
 
                     int seed = properties.Seed;
                     if (seed == -1)
                     {
-                        Console.Write("Generating Seed...");
                         seed = new Random().Next(100);
-                        Console.Write(seed.ToString() + "\n");
+                        ProgramLog.Log ("Generated seed: {0}", seed);
                     }
 
                     int worldX = properties.getMapSizes()[0];
@@ -166,13 +170,12 @@ namespace Terraria_Server
 
                         if (worldX < (int)World.MAP_SIZE.SMALL_X || worldY < (int)World.MAP_SIZE.SMALL_Y)
                         {
-                            Program.tConsole.WriteLine("World dimensions need to be equal to or larger than " + (int)World.MAP_SIZE.SMALL_X + " by " + (int)World.MAP_SIZE.SMALL_Y + "; using built-in 'small'");
+                            ProgramLog.Log ("World dimensions need to be equal to or larger than {0} by {1}; using built-in 'small'", (int)World.MAP_SIZE.SMALL_X, (int)World.MAP_SIZE.SMALL_Y);
                             worldX = (int)((int)World.MAP_SIZE.SMALL_Y * 3.5);
                             worldY = (int)World.MAP_SIZE.SMALL_Y;
                         }
 
-                        Program.tConsole.WriteLine("Generating World with Custom Map Size { " + worldX.ToString() +
-                            ", " + worldY.ToString() + " }");
+                        ProgramLog.Log ("Generating world with custom map size: {0}x{1}", worldX, worldY);
                     }
 
                     Server.maxTilesX = worldX;
@@ -209,13 +212,12 @@ namespace Terraria_Server
 
                     if (worldXtiles < (int)World.MAP_SIZE.SMALL_X || worldYtiles < (int)World.MAP_SIZE.SMALL_Y)
                     {
-                        Program.tConsole.WriteLine("World dimensions need to be equal to or larger than " + (int)World.MAP_SIZE.SMALL_X + " by " + (int)World.MAP_SIZE.SMALL_Y + "; using built-in 'small'");
+                        ProgramLog.Log ("World dimensions need to be equal to or larger than {0} by {1}; using built-in 'small'", (int)World.MAP_SIZE.SMALL_X, (int)World.MAP_SIZE.SMALL_Y);
                         worldXtiles = (int)((int)World.MAP_SIZE.SMALL_Y * 3.5);
                         worldYtiles = (int)World.MAP_SIZE.SMALL_Y;
                     }
 
-                    Program.tConsole.WriteLine("Using World with Custom Map Size { " + worldXtiles.ToString() +
-                        ", " + worldYtiles.ToString() + " }");
+                    ProgramLog.Log ("Using world with custom map size: {0}x{1}", worldXtiles, worldYtiles);
                 }
 
                 World world = new World(worldXtiles, worldYtiles);
@@ -238,16 +240,16 @@ namespace Terraria_Server
                 WorldGen.loadWorld();
 
                 updateThread = new Thread(Program.UpdateLoop);
-                updateThread.Name = "UpdateLoop";
+                //updateThread.Name = "Updt";
 
-                tConsole.WriteLine("Starting the Server");
+                ProgramLog.Log ("Starting the Server");
                 server.StartServer();
 
                 Statics.IsActive = true;
                 while (!Statics.serverStarted) { }
 
                 commandParser = new CommandParser(server);
-                Program.tConsole.WriteLine("You can now insert Commands.");
+                ProgramLog.Console.Print ("You can now insert Commands.");
                 
                 while (Statics.IsActive)
                 {
@@ -261,13 +263,15 @@ namespace Terraria_Server
                     }
                     catch (Exception e)
                     {
-                        Program.tConsole.WriteLine("Issue parsing Console Command");
-                        Program.tConsole.WriteLine(e.ToString());
+                        ProgramLog.Log (e, "Issue parsing console command");
                     }
                 }
                 while (Statics.serverStarted) { Thread.Sleep(10); }
-                Program.tConsole.WriteLine("Exiting...");
+                ProgramLog.Log ("Exiting...");
                 Program.tConsole.Close();
+            }
+            catch (UpdateCompleted e)
+            {
             }
             catch (Exception e)
             {
@@ -281,22 +285,20 @@ namespace Terraria_Server
                         streamWriter.WriteLine(e);
                         streamWriter.WriteLine("");
                     }
-                    Program.tConsole.WriteLine("Server crash: " + DateTime.Now);
-                    Program.tConsole.WriteLine(e.Message);
-                    Program.tConsole.WriteLine(e.StackTrace);
-                    Program.tConsole.WriteLine(e.InnerException.Message);
-                    Program.tConsole.WriteLine("");
-                    Program.tConsole.WriteLine("Please send crashlog.txt to http://tdsm.org/");
+                    ProgramLog.Log (e, "Program crash");
+                    ProgramLog.Log ("Please send crashlog.txt to http://tdsm.org/");
                 }
                 catch
                 {
                 }
             }
-            Log.Close();
+            
             if (Program.tConsole != null)
             {
                 Program.tConsole.Close();
             }
+            ProgramLog.Log ("Log end.");
+            ProgramLog.Close();
         }
 
         private static bool SetupPaths()
@@ -594,6 +596,8 @@ namespace Terraria_Server
 
         public static void UpdateLoop()
         {
+            Thread.CurrentThread.Name = "Updt";
+            
             if (server == null)
             {
                 Program.tConsole.WriteLine("Issue in UpdateLoop thread!");

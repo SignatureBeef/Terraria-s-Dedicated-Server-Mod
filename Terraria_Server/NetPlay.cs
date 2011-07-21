@@ -389,7 +389,7 @@ namespace Terraria_Server
 			if (serverThread == null)
 			{
 				serverThread = new Thread (Netplay.ServerLoopLoop);
-				serverThread.Name = "ServerLoop";
+				serverThread.Name = "Serv";
 				serverThread.IsBackground = true;
 				serverThread.Start();
 			}

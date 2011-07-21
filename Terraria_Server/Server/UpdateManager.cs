@@ -1,10 +1,15 @@
-﻿
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
 using Terraria_Server.Definitions;
+using Terraria_Server.Logging;
+
 namespace Terraria_Server
 {
+    public class UpdateCompleted : ApplicationException
+    {
+    }
+    
     public class UpdateManager
     {
         public static String UpdateList     = "http://update.tdsm.org/updatelist.txt";
@@ -18,7 +23,7 @@ namespace Terraria_Server
         {
             try
             {
-                Program.tConsole.WriteLine("Attempting to retreive Build Info...");
+                ProgramLog.Log ("Attempting to retreive Build Info...");
                 String buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim();
                 String toString = "comments: ";
                 if (buildInfo.ToLower().Contains(toString))
@@ -26,7 +31,7 @@ namespace Terraria_Server
                     buildInfo = buildInfo.Remove(0, buildInfo.ToLower().IndexOf(toString.ToLower()) + toString.Length).Trim().Replace("<br/>", "\n"); //This is also used for the forums, so easy use here ;D
                     if (buildInfo.Length > 0)
                     {
-                        Program.tConsole.WriteLine("Build Comments: " + buildInfo);
+                        ProgramLog.Log ("Build Comments: " + buildInfo);
                     }
                 }
             }
@@ -65,27 +70,50 @@ namespace Terraria_Server
                 }
                 catch (Exception e)
                 {
-                    Program.tConsole.WriteLine("Error deleting old file!");
-                    Program.tConsole.WriteLine(e.Message);
+                    ProgramLog.Log (e, "Error deleting old file");
                     return false;
                 }
             }
 
             if (!MoveFile(myFile, backupPath))
             {
-                Program.tConsole.WriteLine("Error moving current file!");
+                ProgramLog.Log ("Error moving current file!");
                 return false;
             }
 
-            Program.tConsole.Write("Downloading Update " + Update.ToString() + "/" + MAX_UPDATES.ToString() + " from Servers...");
-            new System.Net.WebClient().DownloadFile(DownloadLink, savePath);
-            Program.tConsole.WriteLine("Ok");
+            var download = new System.Net.WebClient();
+            Exception error = null;
+            using (var prog = new ProgressLogger (100, "Downloading update " + Update.ToString() + "/" + MAX_UPDATES.ToString() + " from server"))
+            {
+                var signal = new System.Threading.AutoResetEvent (false);
+                
+                download.DownloadProgressChanged += (sender, args) =>
+                {
+                    prog.Value = args.ProgressPercentage;
+                };
+                
+                download.DownloadFileCompleted += (sender, args) =>
+                {
+                    error = args.Error;
+                    signal.Set ();
+                };
+                
+                download.DownloadFileAsync(new Uri (DownloadLink), savePath);
+                
+                signal.WaitOne ();
+            }
+            
+            if (error != null)
+            {
+                ProgramLog.Log (error, "Error downloading update");
+                return false;
+            }
 
             //Program.tConsole.Write("Finishing Update...");
 
             if (!MoveFile(savePath, myFile))
             {
-                Program.tConsole.WriteLine("Error moving updated file!");
+                ProgramLog.Log ("Error moving updated file!");
                 return false;
             }
 
@@ -98,10 +126,10 @@ namespace Terraria_Server
             {
                 return false;
             }
-            Program.tConsole.Write("Checking for Updates...");
+            ProgramLog.Log ("Checking for updates...");
             if (!isUptoDate())
             {
-                Program.tConsole.WriteLine("Update found, Performing b" + Statics.BUILD.ToString() + " -> " + uList);
+                ProgramLog.Log ("Update found, performing b{0} -> {1}", Statics.BUILD, uList);
 
                 printUpdateInfo();
 
@@ -122,23 +150,22 @@ namespace Terraria_Server
                     catch (Exception e)
                     {
                         Platform.Type = oldPlatform;
-                        Program.tConsole.WriteLine("Could not boot into the new Update!");
-                        Program.tConsole.WriteLine(e.Message);
+                        ProgramLog.Log (e, "Could not boot into the new Update!");
                         return false;
                     }
                 }
                 else
                 {
                     Platform.Type = oldPlatform;
-                    Program.tConsole.WriteLine("Exiting, Please the Program to use your new Installation.");
-                    Environment.Exit(0);
+                    ProgramLog.Log ("Exiting, please re-run the program to use your new installation.");
+                    throw new UpdateCompleted ();
                 }
 
                 return true;
             }
             else
             {
-                Program.tConsole.WriteLine("TDSM Upto Date.");
+                ProgramLog.Log ("TDSM Upto Date.");
             }
             return false;
         }

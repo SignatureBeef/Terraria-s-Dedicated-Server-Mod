@@ -240,7 +240,10 @@
     <Compile Include="Tile.cs" />
     <Compile Include="Events\PlayerFlowLiquidEvent.cs" />
     <Compile Include="Commands\ArgumentList.cs" />
-    <Compile Include="Server\Log.cs" />
+    <Compile Include="Misc\ProducerConsumerSignal.cs" />
+    <Compile Include="Logging\LogTarget.cs" />
+    <Compile Include="Logging\ProgressLogger.cs" />
+    <Compile Include="Logging\ProgramLog.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -287,4 +290,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <Folder Include="Logging\" />
+    <Folder Include="Server\" />
+  </ItemGroup>
 </Project>

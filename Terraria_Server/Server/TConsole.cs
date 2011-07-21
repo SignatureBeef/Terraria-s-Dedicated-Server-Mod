@@ -1,7 +1,9 @@
-
 using System.IO;
 using System;
+
 using Terraria_Server.Definitions;
+using Terraria_Server.Logging;
+
 namespace Terraria_Server
 {
     public class TConsole
@@ -17,28 +19,30 @@ namespace Terraria_Server
 
         public void WriteLine(String Line) //FIXME: replace with proper async logging
         {
-            var now = DateTime.Now;
-            Console.Write (now);
-            Console.Write ("> ");
-            Console.WriteLine(Line);
-            
-            streamWriter.Write (now);
-            streamWriter.Write ("> ");
-            streamWriter.WriteLine(Line);
-            streamWriter.Flush();
+            ProgramLog.Log (Line);
+//            var now = DateTime.Now;
+//            Console.Write (now);
+//            Console.Write ("> ");
+//            Console.WriteLine(Line);
+//            
+//            streamWriter.Write (now);
+//            streamWriter.Write ("> ");
+//            streamWriter.WriteLine(Line);
+//            streamWriter.Flush();
         }
 		
 		public void WriteLine (string fmt, params object[] args)
 		{
-            var now = DateTime.Now;
-            Console.Write (now);
-            Console.Write ("> ");
-            Console.WriteLine (fmt, args);
-            
-            streamWriter.Write (now);
-            streamWriter.Write ("> ");
-            streamWriter.WriteLine (fmt, args);
-            streamWriter.Flush();
+			ProgramLog.Log (fmt, args);
+//            var now = DateTime.Now;
+//            Console.Write (now);
+//            Console.Write ("> ");
+//            Console.WriteLine (fmt, args);
+//            
+//            streamWriter.Write (now);
+//            streamWriter.Write ("> ");
+//            streamWriter.WriteLine (fmt, args);
+//            streamWriter.Flush();
 		}
 		
         public void WriteLine()
