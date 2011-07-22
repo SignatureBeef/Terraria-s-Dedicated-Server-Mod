@@ -17,6 +17,7 @@ namespace Terraria_Server.RemoteConsole
 		static volatile bool exit = false;
 		static Thread thread;
 		static List<RConClient> clients = new List<RConClient> ();
+		internal static Queue<RConClient> deadClients = new Queue<RConClient> ();
 		
 		public static PropertiesFile LoginDatabase { get; private set; }
 		
@@ -83,7 +84,7 @@ namespace Terraria_Server.RemoteConsole
 			var clientList = new List<Socket> ();
 			var serverSock = listener.Server;
 			
-			try
+			try //TODO: need to get this socket closing code in order
 			{
 				while (! exit)
 				{
@@ -92,10 +93,18 @@ namespace Terraria_Server.RemoteConsole
 					readList.AddRange (clientList);
 					errorList.Clear ();
 					errorList.AddRange (clientList);
-
+					
 					Socket.Select (readList, null, errorList, 500000);
 					
-					if (exit) break;
+					lock (deadClients)
+						while (deadClients.Count > 0)
+						{
+							var rcon = deadClients.Dequeue ();
+							errorList.Remove (rcon.socket);
+							clientList.Remove (rcon.socket);
+							readList.Remove (rcon.socket);
+							DisposeClient (rcon);
+						}
 
 					foreach (var sock in errorList)
 					{
@@ -107,7 +116,9 @@ namespace Terraria_Server.RemoteConsole
 						clientList.Remove (sock);
 						readList.Remove (sock);
 					}
-
+					
+					if (exit) break;
+					
 					foreach (var sock in readList)
 					{
 						if (sock == serverSock)
@@ -146,7 +157,6 @@ namespace Terraria_Server.RemoteConsole
 								
 								if (rcon != null)
 								{
-									ProgramLog.Admin.Log ("{0}: remote console closed.", rcon.Id);
 									DisposeClient (rcon);
 								}
 								
@@ -190,13 +200,12 @@ namespace Terraria_Server.RemoteConsole
 				
 				var rcon = new RConClient (client, addr);
 				clients.Add (rcon);
-				rcon.Greet ();
 				
 				return rcon;
 			}
 			catch (Exception e)
 			{
-				ProgramLog.Error.Log ("Accepted socket exception ({1})", HandleSocketException (e));
+				ProgramLog.Error.Log ("Accepted socket exception ({0})", HandleSocketException (e));
 				return null;
 			}
 		}
@@ -218,6 +227,7 @@ namespace Terraria_Server.RemoteConsole
 			catch (Exception e)
 			{
 				ProgramLog.Debug.Log ("{0}: socket exception ({1})", rcon.Id, HandleSocketException (e));
+				return false;
 			}
 			
 			if (recv > 0)
@@ -229,7 +239,11 @@ namespace Terraria_Server.RemoteConsole
 				}
 				catch (Exception e)
 				{
-					ProgramLog.Log (e, "Error processing remote console data stream");
+					var msg = HandleSocketException (e, false);
+					if (msg == null)
+						ProgramLog.Log (e, "Error processing remote console data stream");
+					else
+						ProgramLog.Debug.Log ("{0}: socket exception ({1})", rcon.Id, msg);
 				}
 			}
 			
@@ -270,18 +284,23 @@ namespace Terraria_Server.RemoteConsole
 		
 		static void DisposeClient (RConClient rcon)
 		{
+			ProgramLog.Admin.Log ("{0}: remote console connection closed.", rcon.Id);
 			clients.Remove (rcon);
 			rcon.Close ();
 		}
 		
-		static string HandleSocketException (Exception e)
+		static string HandleSocketException (Exception e, bool thrownew = true)
 		{
 			if (e is SocketException)
-				return e.Message + " @ " + e.StackTrace;
+				return e.Message;
+			if (e is System.IO.IOException)
+				return e.Message;
 			else if (e is ObjectDisposedException)
-				return "Socket already disposed @ " + e.StackTrace;
-			else
+				return "Socket already disposed";
+			else if (thrownew)
 				throw new Exception ("Unexpected exception in socket handling code", e);
+			else
+				return null;
 		}
 		
 		internal static void RConCommand (Server dummy, ISender sender, ArgumentList args)

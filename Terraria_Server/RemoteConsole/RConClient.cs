@@ -65,22 +65,23 @@ namespace Terraria_Server.RemoteConsole
 		{
 			thread.IsBackground = true;
 			
-			int timeout = 20;
-			while (state != State.ONLINE)
-			{
-				Thread.Sleep (1000);
-				timeout -= 1;
-				if (timeout == 0)
-				{
-					writer.WriteLine ("");
-					writer.WriteLine ("\x1b[1;37mTimed out.");
-					socket.SafeShutdown ();
-					Close ();
-				}
-			}
-			
 			try
 			{
+				int timeout = 20;
+				while (state != State.ONLINE)
+				{
+					Thread.Sleep (1000);
+					timeout -= 1;
+					if (timeout == 0)
+					{
+						writer.WriteLine ("");
+						writer.WriteLine ("\x1b[1;37mTimed out.");
+						//socket.SafeShutdown ();
+						Thread.Sleep (250);
+						Close ();
+					}
+				}
+
 				base.OutputThread();
 			}
 			catch (IOException e)
@@ -100,9 +101,11 @@ namespace Terraria_Server.RemoteConsole
 				ProgramLog.Log (e, "Exception within WriteThread of remote console " + Id);
 			}
 			
+			RConServer.deadClients.Enqueue (this);
+			
 			ProgramLog.RemoveTarget (this);
 			
-			socket.SafeShutdown ();
+			//socket.SafeShutdown ();
 			socket.SafeClose();
 		}
 		
@@ -110,13 +113,10 @@ namespace Terraria_Server.RemoteConsole
 		{
 			int start = 0;
 			
-			//Console.Write ("(start={0}, bytesChecked={1}) ", start, bytesChecked);
-			
 			int i;
 			for (i = bytesChecked; i < bytesRead; i++)
 			{
-				//Console.Write ("{0},", readBuffer[i]);
-				switch (readBuffer[i])
+				switch (readBuffer[i]) // TODO: proper telnet protocol parsing
 				{
 					case 10:
 					{
@@ -125,10 +125,10 @@ namespace Terraria_Server.RemoteConsole
 						if (i > 0 && readBuffer[i - 1] == 13)
 						{
 							if (i - start > 1)
-								ProcessLine (Encoding.UTF8.GetString (readBuffer, start, i - start - 1));
+								ProcessLine (readBuffer, start, i - start - 1);
 						}
 						else if (i - start > 0)
-							ProcessLine (Encoding.UTF8.GetString (readBuffer, start, i - start));
+							ProcessLine (readBuffer, start, i - start);
 						
 						start = i + 1;
 						
@@ -165,8 +165,6 @@ namespace Terraria_Server.RemoteConsole
 			bytesChecked = bytesRead;
 			
 			return true;
-			
-			//Console.WriteLine ("(processed={0}, bytesChecked={1}) ", start, bytesChecked);
 		}
 		
 		internal void Greet ()
@@ -201,11 +199,8 @@ namespace Terraria_Server.RemoteConsole
 			writer.Flush ();
 		}
 		
-		internal void ProcessLine (string line)
+		internal void ProcessLine (byte[] buffer, int at, int count)
 		{
-			if (line == null || line.Trim() == "")
-				return;
-			
 			switch (state)
 			{
 				case State.GREETING:
@@ -218,20 +213,49 @@ namespace Terraria_Server.RemoteConsole
 					
 				case State.LOGIN_PROMPT:
 				{
-					Name = line.Trim();
+					if (count > 20)
+					{
+						Close ();
+						return;
+					}
+					
+					while (buffer[at + count - 1] == 32) count -= 1;
+					while (buffer[at] == 32) at += 1;
+					
+					if (count <= 0)
+					{
+						PromptLogin ();
+						return;
+					}
+
+					for (int i = at; i < at + count; i++)
+					{
+						if (buffer[i] < 32 || buffer[i] > 126)
+						{
+							Close ();
+							return;
+						}
+					}
+						
+					Name = Encoding.UTF8.GetString (buffer, at, count);
 					state = State.PASSWORD_PROMPT;
 					PromptPassword ();
+					
 					break;
 				}
 				
 				case State.PASSWORD_PROMPT:
 				{
-					var pass = line.Trim();
-					if (pass.Length == 0)
+					while (buffer[at + count - 1] == 32) count -= 1;
+					while (buffer[at] == 32) at += 1;
+					
+					if (count <= 0)
 					{
 						PromptPassword ();
-						break;
+						return;
 					}
+					
+					var pass = Encoding.UTF8.GetString (buffer, at, count);
 					
 					if (RConServer.LoginDatabase.getValue (Name) != RConServer.Hash (Name, pass))
 					{
@@ -261,18 +285,23 @@ namespace Terraria_Server.RemoteConsole
 				
 				case State.ONLINE:
 				{
-					ProgramLog.Admin.Log ("Remote command from {0} ({1}): \"{2}\"", Name, remoteAddress, line);
-					
-					try
-					{
-						Program.commandParser.ParseConsoleCommand (line, Program.server, this.sender);
-					}
-					catch (Exception e)
-					{
-						ProgramLog.Log (e, "Issue parsing remote command from " + Id);
-					}
+					ProcessLine (Encoding.UTF8.GetString (buffer, at, count));
 					break;
 				}
+			}
+		}
+		
+		internal void ProcessLine (string line)
+		{
+			ProgramLog.Admin.Log ("Remote command from {0} ({1}): \"{2}\"", Name, remoteAddress, line);
+			
+			try
+			{
+				Program.commandParser.ParseConsoleCommand (line, Program.server, this.sender);
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, "Issue parsing remote command from " + Id);
 			}
 		}
 		

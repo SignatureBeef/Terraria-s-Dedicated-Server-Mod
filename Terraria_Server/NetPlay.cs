@@ -251,7 +251,7 @@ namespace Terraria_Server
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine ("Accepted socket exception ({1})", HandleSocketException (e));
+				Program.tConsole.WriteLine ("Accepted socket exception ({0})", HandleSocketException (e));
 				return -1;
 			}
 			
@@ -389,9 +389,11 @@ namespace Terraria_Server
 		static string HandleSocketException (Exception e)
 		{
 			if (e is SocketException)
-				return e.Message + " @ " + e.StackTrace;
+				return e.Message;
+			if (e is System.IO.IOException)
+				return e.Message;
 			else if (e is ObjectDisposedException)
-				return "Socket already disposed @ " + e.StackTrace;
+				return "Socket already disposed";
 			else
 				throw new Exception ("Unexpected exception in socket handling code", e);
 		}
