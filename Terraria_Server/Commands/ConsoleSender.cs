@@ -13,6 +13,7 @@ namespace Terraria_Server.Commands
         public ConsoleSender ()
         {
             Op = true;
+            Name = "CONSOLE";
             // I don't know what the hell was the deal with this
         }
     }

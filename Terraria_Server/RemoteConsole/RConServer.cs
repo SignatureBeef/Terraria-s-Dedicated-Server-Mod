@@ -3,8 +3,12 @@ using System.Net;
 using System.Net.Sockets;
 using System.Collections.Generic;
 using System.Threading;
+using System.Security.Cryptography;
+using System.Text;
 
+using Terraria_Server.Misc;
 using Terraria_Server.Logging;
+using Terraria_Server.Commands;
 
 namespace Terraria_Server.RemoteConsole
 {
@@ -12,9 +16,30 @@ namespace Terraria_Server.RemoteConsole
 	{
 		static volatile bool exit = false;
 		static Thread thread;
+		static List<RConClient> clients = new List<RConClient> ();
 		
-		public static void Start ()
+		public static PropertiesFile LoginDatabase { get; private set; }
+		
+		public static void Start (string dbPath)
 		{
+			LoginDatabase = new PropertiesFile (dbPath);
+			LoginDatabase.Load ();
+			
+			if (LoginDatabase.Count == 0)
+			{
+				var bytes = new byte [8];
+				(new Random ((int) DateTime.Now.Ticks)).NextBytes (bytes);
+				
+				string password = string.Format ("{0:x2}{1:x2}-{2:x2}{3:x2}-{4:x2}{5:x2}-{6:x2}{7:x2}",
+					bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]);
+				string login = "Owner";
+				ProgramLog.Admin.Log ("The rcon login database was empty, a new user \"{1}\" has been created with password: {0}", password, login);
+				
+				LoginDatabase.setValue (login, Hash (login, password));
+			}
+			
+			LoginDatabase.Save ();
+			
 			thread = new Thread (RConLoop);
 			thread.Start ();
 		}
@@ -22,6 +47,16 @@ namespace Terraria_Server.RemoteConsole
 		public static void Stop ()
 		{
 			exit = true;
+		}
+		
+		internal static string Hash (string username, string password)
+		{
+			var hash = SHA256.Create ();
+			var sb = new StringBuilder (64);
+			var bytes = hash.ComputeHash (Encoding.ASCII.GetBytes (username + ":rcon:" + password));
+			foreach (var b in bytes)
+				sb.Append (b.ToString ("x2"));
+			return sb.ToString ();
 		}
 		
 		public static void RConLoop ()
@@ -111,6 +146,7 @@ namespace Terraria_Server.RemoteConsole
 								
 								if (rcon != null)
 								{
+									ProgramLog.Admin.Log ("{0}: remote console closed.", rcon.Id);
 									DisposeClient (rcon);
 								}
 								
@@ -149,15 +185,20 @@ namespace Terraria_Server.RemoteConsole
 					ProgramLog.Admin.Log ("Accepted socket disconnected");
 					return null;
 				}
+				
+				ProgramLog.Admin.Log ("New remote console connection from: {0}", addr);
+				
+				var rcon = new RConClient (client, addr);
+				clients.Add (rcon);
+				rcon.Greet ();
+				
+				return rcon;
 			}
 			catch (Exception e)
 			{
 				ProgramLog.Error.Log ("Accepted socket exception ({1})", HandleSocketException (e));
 				return null;
 			}
-			
-			ProgramLog.Admin.Log ("New remote console connection from: {0}", addr);
-			return new RConClient (client, addr);
 		}
 		
 		static bool ReadFromClient (RConClient rcon, Socket socket)
@@ -176,7 +217,7 @@ namespace Terraria_Server.RemoteConsole
 			}
 			catch (Exception e)
 			{
-				ProgramLog.Debug.Log ("{0}: socket exception ({1})", rcon.remoteAddress, HandleSocketException (e));
+				ProgramLog.Debug.Log ("{0}: socket exception ({1})", rcon.Id, HandleSocketException (e));
 			}
 			
 			if (recv > 0)
@@ -184,17 +225,12 @@ namespace Terraria_Server.RemoteConsole
 				try
 				{
 					rcon.bytesRead += recv;
-					rcon.ProcessRead ();
-					return true; // don't close connection even if kicking, let the sending thread finish
+					return rcon.ProcessRead ();
 				}
 				catch (Exception e)
 				{
 					ProgramLog.Log (e, "Error processing remote console data stream");
 				}
-			}
-			else
-			{
-				ProgramLog.Admin.Log ("{0}: remote console closed.", rcon.remoteAddress);
 			}
 			
 			return false;
@@ -221,12 +257,12 @@ namespace Terraria_Server.RemoteConsole
 			try
 			{
 				socket.Receive (errorBuf);
-				ProgramLog.Admin.Log ("{0}: remote console connection closed", addr);
+				ProgramLog.Admin.Log ("{0}: remote console connection closed", rcon.Id);
 			}
 			catch (Exception e)
 			{
 				HandleSocketException (e);
-				ProgramLog.Admin.Log ("{0}: remote console connection closed", addr);
+				ProgramLog.Admin.Log ("{0}: remote console connection closed", rcon.Id);
 			}
 			
 			socket.SafeClose ();
@@ -234,7 +270,8 @@ namespace Terraria_Server.RemoteConsole
 		
 		static void DisposeClient (RConClient rcon)
 		{
-			rcon.socket.SafeClose ();
+			clients.Remove (rcon);
+			rcon.Close ();
 		}
 		
 		static string HandleSocketException (Exception e)
@@ -246,7 +283,69 @@ namespace Terraria_Server.RemoteConsole
 			else
 				throw new Exception ("Unexpected exception in socket handling code", e);
 		}
+		
+		internal static void RConCommand (Server dummy, ISender sender, ArgumentList args)
+		{
+			string name;
+			if (args.TryParseOne ("cut", out name))
+			{
+				if (sender is Player || sender is RConSender)
+				{
+					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					return;
+				}
 
+				var lower = name.ToLower();
+				foreach (var rcon in clients)
+				{
+					if (rcon.Name.ToLower() == lower)
+						rcon.Close ();
+				}
+				
+				ProgramLog.Admin.Log ("Cut all remote console connections from {0}.", name);
+			}
+			else if (args.TryParseOne ("ban", out name))
+			{
+				if (sender is Player || sender is RConSender)
+				{
+					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					return;
+				}
+
+				LoginDatabase.setValue (name, null);
+				
+				var lower = name.ToLower();
+				foreach (var rcon in clients)
+				{
+					if (rcon.Name.ToLower() == lower)
+						rcon.Close ();
+				}
+				
+				ProgramLog.Admin.Log ("Cut all remote console connections from {0} and revoked credentials.", name);
+			}
+			else if (args.Count == 1 && args.GetString(0) == "list")
+			{
+				foreach (var rcon in clients)
+				{
+					sender.sendMessage (string.Format ("{0} {1}", rcon.Id, rcon.state));
+				}
+			}
+			else if (args.Count == 1 && args.GetString(0) == "load")
+			{
+				if (sender is Player || sender is RConSender)
+				{
+					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					return;
+				}
+
+				LoginDatabase.Load ();
+				ProgramLog.Admin.Log ("Reloaded remote console login database.");
+			}
+			else
+			{
+				throw new CommandError ("");
+			}
+		}
 	}
 }
 

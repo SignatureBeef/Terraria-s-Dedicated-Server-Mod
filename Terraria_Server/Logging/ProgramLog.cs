@@ -187,7 +187,7 @@ namespace Terraria_Server.Logging
 					var e = (Exception) entry.message;
 					
 					if (entry.args is string)
-						output.message = string.Format ("{0}: {1}", entry.args, e.ToString());
+						output.message = string.Format ("{0}:{1}{2}", entry.args, Environment.NewLine, e.ToString());
 					else
 						output.message = e.ToString();
 				}
@@ -215,7 +215,8 @@ namespace Terraria_Server.Logging
 			{
 				try
 				{
-					System.Console.WriteLine ("Error writing log entry:\n" + error.ToString());
+					System.Console.WriteLine ("Error writing log entry:");
+					System.Console.WriteLine (error.ToString());
 				}
 				catch (Exception) {}
 			}

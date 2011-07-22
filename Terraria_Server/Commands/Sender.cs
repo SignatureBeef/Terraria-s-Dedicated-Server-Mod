@@ -17,13 +17,7 @@ namespace Terraria_Server.Commands
         /// Gets the name of the sending entity; defaults to Console
         /// </summary>
         /// <returns>Sending entity name</returns>
-        public virtual String Name
-        {
-            get
-            {
-                return "CONSOLE";
-            }
-        }
+        public virtual string Name { get; protected set; }
 
         /// <summary>
         /// Writes a message to the server console

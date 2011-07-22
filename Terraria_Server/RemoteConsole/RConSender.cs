@@ -14,14 +14,14 @@ namespace Terraria_Server.RemoteConsole
 			Client = rcon;
 		}
 		
-		public override string Name
-		{
-			get { return "REMOTE CONSOLE"; }
-		}
-		
 		public override void sendMessage (string message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
 		{
 			Client.WriteLine (message);
+		}
+		
+		public override string Name
+		{
+			get { return string.Format ("{0}@CONSOLE", Client.Name); }
 		}
 	}
 }

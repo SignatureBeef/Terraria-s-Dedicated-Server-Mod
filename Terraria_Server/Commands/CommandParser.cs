@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using Terraria_Server.Plugin;
 using Terraria_Server.Events;
+using Terraria_Server.RemoteConsole;
 
 namespace Terraria_Server.Commands
 {
@@ -70,6 +71,14 @@ namespace Terraria_Server.Commands
                 .WithHelpText ("Usage:   kick name")
                 .WithHelpText ("         kick -s number")
                 .Calls (Commands.Kick);
+            
+            AddCommand ("rcon")
+                .WithDescription ("Manage remote console access.")
+                .WithHelpText ("Usage:   rcon load       - reload login database")
+                .WithHelpText ("         rcon list       - list rcon connections")
+                .WithHelpText ("         rcon cut <name> - cut off rcon connections")
+                .WithHelpText ("         rcon ban <name> - cut off rcon connections and revoke access")
+                .Calls (RConServer.RConCommand);
         }
         
         public class CommandInfo

@@ -40,7 +40,7 @@ namespace Terraria_Server.Logging
 			signal.Signal ();
 		}
 		
-		public void Close ()
+		public virtual void Close ()
 		{
 			exit = true;
 			signal.Signal ();
@@ -164,17 +164,11 @@ namespace Terraria_Server.Logging
 							else if (entry.arg == -2) // finished one
 							{
 								progs.Remove (prog);
-								str = string.Format ("{0}: done.", prog.Message);
+								str = prog.Format (true);
 							}
 							else // update
 							{
-								if (prog.Max != 100)
-								{
-									double percent = entry.arg * 100.0 / prog.Max;
-									str = string.Format ("{0}: {3:0.0}% ({1}/{2})", prog.Message, entry.arg, prog.Max, percent);
-								}
-								else
-									str = string.Format ("{0}: {1:0.0}%", prog.Message, entry.arg);
+								str = prog.Format (prog.Max != 100, entry.arg);
 							}
 							
 							backspace -= str.Length;
@@ -194,8 +188,7 @@ namespace Terraria_Server.Logging
 					backspace = 0;
 					foreach (var prog in progs)
 					{
-						double percent = prog.Value * 100.0 / prog.Max;
-						var str = string.Format ("[ {0}: {1:0.0}% ] ", prog.Message, percent);
+						var str = string.Format ("[ {0} ] ", prog.Format());
 						backspace += str.Length;
 						writer.Write (str);
 					}
@@ -285,17 +278,11 @@ namespace Terraria_Server.Logging
 							}
 							else if (entry.arg == -2) // finished one
 							{
-								str = string.Format ("{0}: done.", prog.Message);
+								str = prog.Format (true);
 							}
 							else // update
 							{
-								if (prog.Max != 100)
-								{
-									double percent = entry.arg * 100.0 / prog.Max;
-									str = string.Format ("{0}: {3:0.0}% ({1}/{2})", prog.Message, entry.arg, prog.Max, percent);
-								}
-								else
-									str = string.Format ("{0}: {1:0.0}%", prog.Message, entry.arg);
+								str = prog.Format (prog.Max != 100, entry.arg);
 							}
 							
 							file.WriteLine (str);
