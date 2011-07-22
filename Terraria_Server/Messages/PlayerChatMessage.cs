@@ -45,7 +45,7 @@ namespace Terraria_Server.Messages
                 }
 
                 NetMessage.SendData(25, -1, -1, chat, playerIndex, (float)255, (float)255, (float)255);
-                ProgramLog.Users.Log ("<" + Main.players[playerIndex].Name + "> " + chat);
+                ProgramLog.Chat.Log ("<" + Main.players[playerIndex].Name + "> " + chat);
             }
         }
 

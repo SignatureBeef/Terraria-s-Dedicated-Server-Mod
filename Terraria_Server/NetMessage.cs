@@ -507,31 +507,28 @@ namespace Terraria_Server
 				msg.Clear();
 				msg.SendSyncOthersForPlayer (plr);
 				
-				var ann = player.Name + " has joined.";
-				Program.tConsole.WriteLine (ann);
+				ProgramLog.Users.Log ("{0} @ {1}: ENTER {2}", slot.remoteAddress, plr, player.Name);
 				
 				// to other players
 				msg.Clear();
-				msg.PlayerChat (255, ann, 255, 240, 20);
+				msg.PlayerChat (255, player.Name + " has joined.", 255, 240, 20);
 				msg.ReceivingPlayerJoined (plr);
 				msg.SendSyncPlayerForOthers (plr); // broadcasts the preceding message too
 			}
 		}
 		
-		public static void OnPlayerLeft (Player player, bool announced)
+		public static void OnPlayerLeft (Player player, ServerSlot slot, bool announced)
 		{
 			player.Active = false;
 			
 			if (announced)
 			{
-				var ann = player.Name + " has left.";
-				
-				Program.tConsole.WriteLine (ann);
+				ProgramLog.Users.Log ("{0} @ {1}: LEAVE {2}", slot.remoteAddress, slot.whoAmI, player.Name);
 				
 				var msg = NetMessage.PrepareThreadInstance();
 				
 				msg.SynchBegin (player.whoAmi, 0 /*inactive*/);
-				msg.PlayerChat (255, ann, 255, 240, 20);
+				msg.PlayerChat (255, player.Name + " has left.", 255, 240, 20);
 				
 				msg.BroadcastExcept (player.whoAmi);
 			}

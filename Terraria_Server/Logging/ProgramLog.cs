@@ -28,6 +28,7 @@ namespace Terraria_Server.Logging
 		}
 		
 		public static readonly LogChannel Users = new LogChannel ("USR", ConsoleColor.Magenta);
+		public static readonly LogChannel Chat  = new LogChannel ("USR", ConsoleColor.DarkMagenta);
 		public static readonly LogChannel Admin = new LogChannel ("ADM", ConsoleColor.Yellow);
 		public static readonly LogChannel Error = new LogChannel ("ERR", ConsoleColor.Red);
 		public static readonly LogChannel Debug = new LogChannel ("DBG", ConsoleColor.DarkGray);
