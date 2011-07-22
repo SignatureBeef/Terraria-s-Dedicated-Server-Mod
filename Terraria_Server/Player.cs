@@ -13,8 +13,10 @@ using Terraria_Server.Definitions;
 namespace Terraria_Server
 {
 	public class Player : BaseEntity, ISender
-	{
+    {
         private const int MAX_INVENTORY = 44;
+        private const int MAX_HEALTH = 400;
+        private const int MAX_MANA = 200;
 
         private String ipAddress = null;
         private bool bedDestruction = false;
@@ -4366,6 +4368,19 @@ namespace Terraria_Server
         public String getOpListKey()
         {
             return this.Name.Trim().ToLower() + Password;
+        }
+
+        public bool HasHackedData()
+        {
+            if (!Program.properties.HackedData)
+            {
+                if (statMana > MAX_MANA || statManaMax > MAX_MANA ||
+                    statLife > MAX_HEALTH || statLifeMax > MAX_HEALTH)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

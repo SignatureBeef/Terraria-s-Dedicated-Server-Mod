@@ -21,6 +21,11 @@ namespace Terraria_Server.Messages
 
             Main.players[playerIndex].statMana = statMana;
             Main.players[playerIndex].statManaMax = statManaMax;
+
+            if (Main.players[playerIndex].HasHackedData())
+            {
+                Main.players[playerIndex].Kick("No Hacked Mana is allowed.");
+            }
             
             NetMessage.SendData(42, -1, whoAmI, "", playerIndex);
         }
