@@ -20,6 +20,7 @@ namespace Terraria_Server
         private const String DEFAULT_WORLD = "world1.wld";
         private const String DEFAULT_PID_FILE = "";
         private const bool DEFAULT_SIMPLE_LOOP = false;
+        private const bool DEFAULT_HACKED_DATA = false;
 
         private const String AUTOMATIC_UPDATES = "allowupdates";
         private const String DUNGEON_AMOUNT = "opt-numdungeons";
@@ -40,6 +41,7 @@ namespace Terraria_Server
         private const String WORLD_PATH = "worldpath";
         private const String PID_FILE = "pid-file";
         private const String SIMPLE_LOOP = "simple-loop";
+        private const String HACKED_DATA = "hackeddata";
 
         public ServerProperties(String propertiesPath) : base(propertiesPath) { }
 
@@ -63,6 +65,7 @@ namespace Terraria_Server
             temp = FloatingIslandAmount;
             temp = PIDFile;
             temp = SimpleLoop;
+            temp = HackedData;
         }
 
         public int MaxPlayers
@@ -370,6 +373,18 @@ namespace Terraria_Server
             set
             {
                 setValue(SIMPLE_LOOP, value);
+            }
+        }
+
+        public bool HackedData
+        {
+            get
+            {
+                return getValue(HACKED_DATA, DEFAULT_HACKED_DATA);
+            }
+            set
+            {
+                setValue(HACKED_DATA, value);
             }
         }
     }
