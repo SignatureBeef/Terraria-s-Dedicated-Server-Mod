@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
-using System.Collections.Generic;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -124,7 +126,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Send a message to all online OPs
-        public void notifyOps(String message, bool writeToConsole = false)
+        public void notifyOps(String message, bool writeToConsole = true)
         {
             if (Statics.cmdMessages)
             {
@@ -138,7 +140,7 @@ namespace Terraria_Server
             }
             if (writeToConsole)
             {
-                Program.tConsole.WriteLine(message);
+                ProgramLog.Admin.Log (message);
             }
         }
 

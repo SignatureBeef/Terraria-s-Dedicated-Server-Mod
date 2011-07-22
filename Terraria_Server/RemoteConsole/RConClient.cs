@@ -10,166 +10,6 @@ using Terraria_Server.Misc;
 
 namespace Terraria_Server.RemoteConsole
 {
-//	public class RemoteConsole
-//	{
-//		internal byte[] readBuffer;
-//		internal int    bytesRead;
-//		internal string remoteAddress;
-//		internal Socket socket;
-//		
-//		internal Queue<object> writeQueue;
-//		internal Thread writeThread;
-//		internal ProducerConsumerSignal writeSignal;
-//		
-//		NetworkStream stream;
-//		StreamWriter  writer;
-//		
-//		public RemoteConsole (Socket socket, string addr)
-//		{
-//			remoteAddress = addr;
-//			this.socket = socket;
-//			stream = new NetworkStream (socket);
-//			writer = new StreamWriter (stream);
-//			writeQueue = new Queue<object> ();
-//			writeSignal = new ProducerConsumerSignal (false);
-//			writeThread = new Thread (WriteLoop);
-//			writeThread.Start ();
-//		}
-//		
-//		public void Send (byte[] data)
-//		{
-//			if (data == null)
-//			{
-//				throw new ArgumentException ("Data to send cannot be null");
-//			}
-//			
-//			lock (writeQueue)
-//			{
-//				writeQueue.Enqueue (data);
-//			}
-//			writeSignal.Signal ();
-//		}
-//		
-//		public void WriteLine (string data)
-//		{
-//			if (data == null)
-//			{
-//				throw new ArgumentException ("Data to send cannot be null");
-//			}
-//			
-//			lock (writeQueue)
-//			{
-//				writeQueue.Enqueue (data);
-//			}
-//			writeSignal.Signal ();
-//		}
-//		
-//		const int WRITE_THREAD_BATCH_SIZE = 32;
-//		internal void WriteLoop ()
-//		{
-//			Thread.CurrentThread.Name = "RCWT";
-//			Thread.CurrentThread.IsBackground = true;
-//
-//			object[] list = new object [WRITE_THREAD_BATCH_SIZE][];
-//			while (true)
-//			{
-//				var queue = writeQueue;
-//				var socket = this.socket;
-//				var remoteAddress = this.remoteAddress;
-//				int items = 0;
-//				bool kill = false;
-//				
-//				try
-//				{
-//					lock (queue)
-//					{
-//						while (queue.Count > 0)
-//						{
-//							list[items++] = queue.Dequeue();
-//							if (items == WRITE_THREAD_BATCH_SIZE) break;
-//						}
-//					}
-//					
-//					if (items == 0)
-//					{
-//						writeSignal.WaitForIt ();
-//						continue;
-//					}
-//					
-//					SocketError error = SocketError.Success;
-//					
-//					try
-//					{
-//						for (int i = 0; i < items; i++)
-//						{
-//							if (list[i] is byte[])
-//							{
-//								var bytes = (byte[]) list[i];
-//								int count = 0;
-//								int size = bytes.Length;
-//								while (size - count > 0)
-//									count += socket.Send (bytes, count, size - count, 0, out error);
-//							}
-//							else if (list[i] is string)
-//							{
-//								writer.WriteLine ((string) list[i]);
-//							}
-//							
-//							if (error != SocketError.Success) break;
-//						}
-//					}
-//					finally
-//					{
-//						for (int i = 0; i < items; i++)
-//							list[i] = null;
-//						
-//						if (error != SocketError.Success)
-//						{
-//							ProgramLog.Log ("{0}: error while sending ({1})", remoteAddress, error);
-//							kill = true;
-//						}
-//					}
-//				}
-//				catch (SocketException e)
-//				{
-//					ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
-//					kill = true;
-//				}
-//				catch (ObjectDisposedException e)
-//				{
-//					ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
-//					kill = true;
-//				}
-//				catch (Exception e)
-//				{
-//					ProgramLog.Log (e, "Exception within WriteThread of a remote console");
-//					kill = true;
-//				}
-//				
-//				if (kill)
-//				{
-//					lock (queue)
-//					{
-//						if (queue.Count > 0)
-//							queue.Clear ();
-//					}
-//
-//					for (int i = 0; i < items; i++)
-//						list[i] = null;
-//					
-//					socket.SafeShutdown ();
-//					socket.SafeClose();
-//					
-//					return;
-//				}
-//			}
-//		}
-//		
-//		internal void ProcessRead ()
-//		{
-//		}
-//	}
-
 	public class RConClient : InteractiveLogTarget
 	{
 		internal byte[] readBuffer;
@@ -185,7 +25,7 @@ namespace Terraria_Server.RemoteConsole
 			this.socket = socket;
 			passExceptions = true;
 			((StreamWriter) writer).AutoFlush = true;
-			
+			((StreamWriter) writer).NewLine = "\r\n";
 			readBuffer = new byte [1024];
 			this.sender = new RConSender (this);
 			
@@ -212,15 +52,15 @@ namespace Terraria_Server.RemoteConsole
 			}
 			catch (IOException e)
 			{
-				ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
+				ProgramLog.Debug.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
 			}
 			catch (SocketException e)
 			{
-				ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
+				ProgramLog.Debug.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
 			}
 			catch (ObjectDisposedException e)
 			{
-				ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
+				ProgramLog.Debug.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
 			}
 			catch (Exception e)
 			{
@@ -237,15 +77,23 @@ namespace Terraria_Server.RemoteConsole
 		{
 			int start = 0;
 			
-			if (bytesRead > 0 && readBuffer[0] == 13)
-				start = 1;
+			//Console.Write ("(start={0}, bytesChecked={1}) ", start, bytesChecked);
 			
 			int i;
 			for (i = bytesChecked; i < bytesRead; i++)
 			{
+				//Console.Write ("{0},", readBuffer[i]);
 				if (readBuffer[i] == 10)
 				{
-					ProcessLine (Encoding.UTF8.GetString (readBuffer, start, i - start));
+					if (readBuffer[start] == 13) start += 1;
+					
+					if (i > 0 && readBuffer[i - 1] == 13)
+					{
+						if (i - start > 1)
+							ProcessLine (Encoding.UTF8.GetString (readBuffer, start, i - start - 1));
+					}
+					else if (i - start > 0)
+						ProcessLine (Encoding.UTF8.GetString (readBuffer, start, i - start));
 					
 					start = i + 1;
 					
@@ -256,16 +104,25 @@ namespace Terraria_Server.RemoteConsole
 				}
 			}
 			
-			if (i < bytesRead)
-				Buffer.BlockCopy (readBuffer, i, readBuffer, 0, bytesRead - i);
+			if (start > 0)
+			{
+				if (start < bytesRead)
+					Buffer.BlockCopy (readBuffer, i, readBuffer, 0, bytesRead - start);
+				
+				bytesRead -= start;
+			}
 			
-			bytesRead -= i;
 			bytesChecked = bytesRead;
+			
+			//Console.WriteLine ("(processed={0}, bytesChecked={1}) ", start, bytesChecked);
 		}
 		
 		internal void ProcessLine (string line)
 		{
-			ProgramLog.Log ("Remote command from {0}: \"{1}\"", remoteAddress, line);
+			if (line == null || line.Trim() == "")
+				return;
+			
+			ProgramLog.Admin.Log ("Remote command from {0}: \"{1}\"", remoteAddress, line);
 			
 			try
 			{
@@ -275,6 +132,37 @@ namespace Terraria_Server.RemoteConsole
 			{
 				ProgramLog.Log (e, "Issue parsing remote command");
 			}
+		}
+		
+		static string[] colors =
+		{
+			"\x1b[0;30m",
+			"\x1b[0;34m",
+			"\x1b[0;32m",
+			"\x1b[0;36m",
+			"\x1b[0;31m",
+			"\x1b[0;35m",
+			"\x1b[0;33m",
+			"\x1b[0;37m",
+			
+			"\x1b[1;30m",
+			"\x1b[1;34m",
+			"\x1b[1;32m",
+			"\x1b[1;36m",
+			"\x1b[1;31m",
+			"\x1b[1;35m",
+			"\x1b[1;33m",
+			"\x1b[1;37m",
+		};
+		
+		protected override void SetColor (ConsoleColor color)
+		{
+			writer.Write (colors [(int)color]);
+		}
+		
+		protected override void ResetColor ()
+		{
+			writer.Write ("\x1b[0m");
 		}
 	}
 

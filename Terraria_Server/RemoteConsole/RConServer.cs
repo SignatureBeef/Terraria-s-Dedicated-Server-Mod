@@ -40,7 +40,7 @@ namespace Terraria_Server.RemoteConsole
 				return;
 			}
 			
-			ProgramLog.Log ("Remote console server started on 127.0.0.1:7776.");
+			ProgramLog.Admin.Log ("Remote console server started on 127.0.0.1:7776.");
 			
 			var socketToObject = new Dictionary<Socket, RConClient> ();
 			var readList = new List<Socket> ();
@@ -131,7 +131,7 @@ namespace Terraria_Server.RemoteConsole
 			}
 			catch (SocketException) {}
 			
-			ProgramLog.Log ("Remote console server stopped.");
+			ProgramLog.Admin.Log ("Remote console server stopped.");
 		}
 		
 		static RConClient AcceptClient (Socket client)
@@ -146,17 +146,17 @@ namespace Terraria_Server.RemoteConsole
 					addr = rep.ToString();
 				else
 				{
-					Program.tConsole.WriteLine ("Accepted socket disconnected");
+					ProgramLog.Admin.Log ("Accepted socket disconnected");
 					return null;
 				}
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine ("Accepted socket exception ({1})", HandleSocketException (e));
+				ProgramLog.Error.Log ("Accepted socket exception ({1})", HandleSocketException (e));
 				return null;
 			}
 			
-			ProgramLog.Log ("New remote console connection from: {0}", addr);
+			ProgramLog.Admin.Log ("New remote console connection from: {0}", addr);
 			return new RConClient (client, addr);
 		}
 		
@@ -176,18 +176,25 @@ namespace Terraria_Server.RemoteConsole
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine ("{0}: socket exception ({1})", rcon.remoteAddress, HandleSocketException (e));
+				ProgramLog.Debug.Log ("{0}: socket exception ({1})", rcon.remoteAddress, HandleSocketException (e));
 			}
 			
 			if (recv > 0)
 			{
-				rcon.bytesRead += recv;
-				rcon.ProcessRead ();
-				return true; // don't close connection even if kicking, let the sending thread finish
+				try
+				{
+					rcon.bytesRead += recv;
+					rcon.ProcessRead ();
+					return true; // don't close connection even if kicking, let the sending thread finish
+				}
+				catch (Exception e)
+				{
+					ProgramLog.Log (e, "Error processing remote console data stream");
+				}
 			}
 			else
 			{
-				Program.tConsole.WriteLine ("{0}: remote console closed.", rcon.remoteAddress);
+				ProgramLog.Admin.Log ("{0}: remote console closed.", rcon.remoteAddress);
 			}
 			
 			return false;
@@ -214,12 +221,12 @@ namespace Terraria_Server.RemoteConsole
 			try
 			{
 				socket.Receive (errorBuf);
-				Program.tConsole.WriteLine ("{0}: remote console connection closed", addr);
+				ProgramLog.Admin.Log ("{0}: remote console connection closed", addr);
 			}
 			catch (Exception e)
 			{
 				HandleSocketException (e);
-				Program.tConsole.WriteLine ("{0}: remote console connection closed", addr);
+				ProgramLog.Admin.Log ("{0}: remote console connection closed", addr);
 			}
 			
 			socket.SafeClose ();

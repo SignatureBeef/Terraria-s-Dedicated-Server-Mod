@@ -27,13 +27,19 @@ namespace Terraria_Server.Logging
 				logTargets.Add (console);
 		}
 		
+		public static readonly LogChannel Users = new LogChannel ("USR", ConsoleColor.Magenta);
+		public static readonly LogChannel Admin = new LogChannel ("ADM", ConsoleColor.Yellow);
+		public static readonly LogChannel Error = new LogChannel ("ERR", ConsoleColor.Red);
+		public static readonly LogChannel Debug = new LogChannel ("DBG", ConsoleColor.DarkGray);
+		
 		struct LogEntry
 		{
-			public Thread    thread;
-			public DateTime  time;
-			public object    message;
-			public object    args;
-			public LogTarget target;
+			public Thread     thread;
+			public DateTime   time;
+			public object     message;
+			public object     args;
+			public LogTarget  target;
+			public LogChannel channel;
 			
 			public LogEntry (object message, object args)
 			{
@@ -42,6 +48,7 @@ namespace Terraria_Server.Logging
 				this.time = DateTime.Now;
 				this.message = message;
 				this.args = args;
+				this.channel = null;
 			}
 		}
 		
@@ -99,14 +106,24 @@ namespace Terraria_Server.Logging
 			Write (new LogEntry (format, args));
 		}
 		
+		public static void Log (LogChannel channel, string text)
+		{
+			Write (new LogEntry (text, null) { channel = channel });
+		}
+		
+		public static void Log (LogChannel channel, string format, params object[] args)
+		{
+			Write (new LogEntry (format, args) { channel = channel });
+		}
+		
 		public static void Log (Exception e)
 		{
-			Write (new LogEntry (e, null));
+			Write (new LogEntry (e, null) { channel = Error });
 		}
 		
 		public static void Log (Exception e, string text)
 		{
-			Write (new LogEntry (e, text));
+			Write (new LogEntry (e, text) { channel = Error });
 		}
 		
 		public static void AddProgressLogger (ProgressLogger prog)
@@ -139,6 +156,9 @@ namespace Terraria_Server.Logging
 		{
 			Exception error = null;
 			output = default (OutputEntry);
+			
+			if (entry.channel != null)
+				output.color = entry.channel.Color;
 			
 			try
 			{

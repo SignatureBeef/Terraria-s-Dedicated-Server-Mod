@@ -248,6 +248,7 @@
     <Compile Include="RemoteConsole\RConServer.cs" />
     <Compile Include="RemoteConsole\RConClient.cs" />
     <Compile Include="RemoteConsole\RConSender.cs" />
+    <Compile Include="Logging\LogChannel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

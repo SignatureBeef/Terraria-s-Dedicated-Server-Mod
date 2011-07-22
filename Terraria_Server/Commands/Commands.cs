@@ -8,6 +8,7 @@ using System.Threading;
 using Terraria_Server.Collections;
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
+using Terraria_Server.RemoteConsole;
 
 namespace Terraria_Server.Commands
 {
@@ -136,6 +137,12 @@ namespace Terraria_Server.Commands
 
         public static void Exit (Server server, ISender sender, ArgumentList args)
         {
+            if (sender is Player || sender is RConSender)
+            {
+                sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+                return;
+            }
+            
             args.ParseNone ();
             
             server.notifyOps ("Exiting on request.", true);
@@ -165,6 +172,7 @@ namespace Terraria_Server.Commands
 
         public static void Action (Server server, ISender sender, string message)
         {
+            ProgramLog.Users.Log ("* " + sender.Name + " " + message);
             if (sender is Player)
                 NetMessage.SendData (25, -1, -1, "* " + sender.Name + " " + message, 255, 200, 100, 0);
             else
@@ -173,6 +181,7 @@ namespace Terraria_Server.Commands
 
         public static void Say (Server server, ISender sender, string message)
         {
+            ProgramLog.Users.Log ("<" + sender.Name + "> " + message);
             if (sender is Player)
                 NetMessage.SendData (25, -1, -1, "<" + sender.Name + "> " + message, 255, 255, 255, 255);
             else

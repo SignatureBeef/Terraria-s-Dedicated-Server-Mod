@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
@@ -22,12 +23,16 @@ namespace Terraria_Server.Messages
             {
                 if (chat.Substring(0, 1).Equals("/"))
                 {
+                    if (Main.players[playerIndex].Op)
+                        ProgramLog.Admin.Log (Main.players[playerIndex].Name + " sent command: " + chat);
+                    else
+                        ProgramLog.Users.Log (Main.players[playerIndex].Name + " sent command: " + chat);
+                    
                     if (!ProcessMessage(new PlayerCommandEvent(), chat, Hooks.PLAYER_COMMAND, whoAmI))
                     {
                         return;
                     }
-
-                    Program.tConsole.WriteLine(Main.players[playerIndex].Name + " Sent Command: " + chat);
+                    
                     Program.commandParser.ParsePlayerCommand(Main.players[playerIndex], chat);
                     return;
                 }
@@ -40,7 +45,7 @@ namespace Terraria_Server.Messages
                 }
 
                 NetMessage.SendData(25, -1, -1, chat, playerIndex, (float)255, (float)255, (float)255);
-                Program.tConsole.WriteLine("<" + Main.players[playerIndex].Name + "> " + chat);
+                ProgramLog.Users.Log ("<" + Main.players[playerIndex].Name + "> " + chat);
             }
         }
 

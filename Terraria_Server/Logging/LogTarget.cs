@@ -11,6 +11,7 @@ namespace Terraria_Server.Logging
 	{
 		public string prefix;
 		public object message;
+		public ConsoleColor? color;
 		public int    arg;
 		
 		public static bool operator == (OutputEntry left, OutputEntry right)
@@ -52,12 +53,30 @@ namespace Terraria_Server.Logging
 				return entries.Count;
 			}
 		}
+		
+		protected virtual void SetColor (ConsoleColor color)
+		{
+		}
+		
+		protected virtual void ResetColor ()
+		{
+		}
 	}
 	
 	public class StandardOutputTarget : InteractiveLogTarget
 	{
 		public StandardOutputTarget () : base ("Log1", Console.Out)
 		{
+		}
+		
+		protected override void SetColor (ConsoleColor color)
+		{
+			System.Console.ForegroundColor = color;
+		}
+		
+		protected override void ResetColor ()
+		{
+			System.Console.ResetColor ();
 		}
 	}
 	
@@ -116,9 +135,15 @@ namespace Terraria_Server.Logging
 						
 						if (entry.prefix != null)
 						{
+							SetColor (ConsoleColor.DarkGray);
 							writer.Write (entry.prefix);
 							backspace -= entry.prefix.Length;
 						}
+						
+						if (entry.color != null)
+							SetColor ((ConsoleColor) entry.color);
+						else
+							SetColor (ConsoleColor.Gray);
 							
 						if (entry.message is string)
 						{
@@ -162,6 +187,8 @@ namespace Terraria_Server.Logging
 									writer.Write (" ");
 							}
 						}
+						
+						ResetColor ();
 					}
 					
 					backspace = 0;
