@@ -142,7 +142,6 @@ namespace Terraria_Server
 		public void Reset()
 		{
 			this.writeQueue = new Queue<byte[]> ();
-			this.remoteAddress = "<unknown>";
 			
 			if (tileSection.GetLength(0) >= Main.maxSectionsX && tileSection.GetLength(1) >= Main.maxSectionsY)
 			{
@@ -158,9 +157,10 @@ namespace Terraria_Server
 			var oldPlayer = Main.players[this.whoAmI];
 			if (oldPlayer != null && state != SlotState.VACANT)
 			{
-				NetMessage.OnPlayerLeft (oldPlayer, announced);
+				NetMessage.OnPlayerLeft (oldPlayer, this, announced);
 			}
 			announced = false;
+			this.remoteAddress = "<unknown>";
 			
 			if (this.whoAmI < 255)
 			{
@@ -194,7 +194,7 @@ namespace Terraria_Server
 		{
 			if (state == SlotState.VACANT) return;
 			
-			Program.tConsole.WriteLine ("{0} @ {1}: disconnecting for: {2}", remoteAddress, whoAmI, reason);
+			ProgramLog.Admin.Log ("{0} @ {1}: disconnecting for: {2}", remoteAddress, whoAmI, reason);
 			
 			if (state != SlotState.SHUTDOWN)
 			{
@@ -323,7 +323,7 @@ namespace Terraria_Server
 						
 						if (error != SocketError.Success)
 						{
-							ProgramLog.Log ("{0}: error while sending ({1})", remoteAddress, error);
+							ProgramLog.Debug.Log ("{0}: error while sending ({1})", remoteAddress, error);
 							kill = true;
 						}
 						else if (kick)
@@ -335,12 +335,12 @@ namespace Terraria_Server
 				}
 				catch (SocketException e)
 				{
-					ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
+					ProgramLog.Debug.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
 					kill = true;
 				}
 				catch (ObjectDisposedException e)
 				{
-					ProgramLog.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
+					ProgramLog.Debug.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
 					kill = true;
 				}
 				catch (Exception e)

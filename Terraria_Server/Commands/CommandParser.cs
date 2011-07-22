@@ -42,7 +42,7 @@ namespace Terraria_Server.Commands
 
             AddCommand("players")
                 .WithRestriction(false)
-                .Calls(Commands.List);
+                .Calls(Commands.OldList);
 
             AddCommand("online")
                 .WithRestriction(false)
@@ -79,6 +79,11 @@ namespace Terraria_Server.Commands
                 .WithHelpText ("         rcon cut <name> - cut off rcon connections")
                 .WithHelpText ("         rcon ban <name> - cut off rcon connections and revoke access")
                 .Calls (RConServer.RConCommand);
+            
+            AddCommand ("status")
+                .WithDescription ("Check the server's status")
+                .WithHelpText ("Usage:   status")
+                .Calls (Commands.Status);
         }
         
         public class CommandInfo

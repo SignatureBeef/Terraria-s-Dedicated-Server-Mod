@@ -245,13 +245,13 @@ namespace Terraria_Server
 					addr = rep.ToString();
 				else
 				{
-					Program.tConsole.WriteLine ("Accepted socket disconnected");
+					ProgramLog.Debug.Log ("Accepted socket disconnected");
 					return -1;
 				}
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine ("Accepted socket exception ({0})", HandleSocketException (e));
+				ProgramLog.Debug.Log ("Accepted socket exception ({0})", HandleSocketException (e));
 				return -1;
 			}
 			
@@ -261,7 +261,7 @@ namespace Terraria_Server
 				if (slots[k].state == SlotState.VACANT)
 				{
 					lastId = k;
-					Program.tConsole.WriteLine ("{0} is connecting on slot {1}...", addr, k);
+					ProgramLog.Users.Log ("{0} is connecting on slot {1}...", addr, k);
 					try
 					{
 						AcceptSlot (k, client, addr);
@@ -270,7 +270,7 @@ namespace Terraria_Server
 					{
 						client.SafeClose ();
 			
-						Program.tConsole.WriteLine ("{0} disconnected.", addr);
+						ProgramLog.Users.Log ("{0} disconnected.", addr);
 						
 						return -1;
 					}
@@ -280,7 +280,7 @@ namespace Terraria_Server
 			
 			client.SafeClose ();
 
-			Program.tConsole.WriteLine ("{0} dropped, no slots left.", addr);
+			ProgramLog.Users.Log ("{0} dropped, no slots left.", addr);
 			
 			return -1;
 		}
@@ -294,7 +294,7 @@ namespace Terraria_Server
 			slot.socket = client;
 			if (slot.readBuffer == null) slot.readBuffer = new byte[1024];
 			if (NetMessage.buffer[id].readBuffer == null) NetMessage.buffer[id].readBuffer = new byte [MessageBuffer.BUFFER_MAX];
-			Program.tConsole.WriteLine ("Slot {1} assigned to {0}.", remoteAddress, id);
+			ProgramLog.Debug.Log ("Slot {1} assigned to {0}.", remoteAddress, id);
 		}
 		
 		static bool ReadFromClient (int id, Socket socket)
@@ -314,7 +314,7 @@ namespace Terraria_Server
 			}
 			catch (Exception e)
 			{
-				Program.tConsole.WriteLine ("{0} @ {2}: socket exception ({1})", slot.remoteAddress, HandleSocketException (e), id);
+				ProgramLog.Debug.Log ("{0} @ {2}: socket exception ({1})", slot.remoteAddress, HandleSocketException (e), id);
 			}
 			
 			if (recv > 0)
@@ -328,7 +328,7 @@ namespace Terraria_Server
 			}
 			else
 			{
-				Program.tConsole.WriteLine ("{0} @ {1}: connection closed.", slot.remoteAddress, id);
+				ProgramLog.Users.Log ("{0} @ {1}: connection closed.", slot.remoteAddress, id);
 			}
 			
 			return false;
@@ -356,17 +356,17 @@ namespace Terraria_Server
 			{
 				socket.Receive (errorBuf);
 				if (id >= 0)
-					Program.tConsole.WriteLine ("{0} @ {1}: connection closed", addr, id);
+					ProgramLog.Users.Log ("{0} @ {1}: connection closed", addr, id);
 				else
-					Program.tConsole.WriteLine ("{0}: connection closed", addr);
+					ProgramLog.Users.Log ("{0}: connection closed", addr);
 			}
 			catch (Exception e)
 			{
 				HandleSocketException (e);
 				if (id >= 0)
-					Program.tConsole.WriteLine ("{0} @ {1}: connection closed", addr, id);
+					ProgramLog.Users.Log ("{0} @ {1}: connection closed", addr, id);
 				else
-					Program.tConsole.WriteLine ("{0}: connection closed", addr);
+					ProgramLog.Users.Log ("{0}: connection closed", addr);
 			}
 			
 			socket.SafeClose ();
@@ -374,7 +374,7 @@ namespace Terraria_Server
 		
 		static void DisposeClient (int id)
 		{
-			Program.tConsole.WriteLine ("Freeing slot {0}", id);
+			ProgramLog.Debug.Log ("Freeing slot {0}", id);
 			
 			try
 			{

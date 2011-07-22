@@ -150,6 +150,23 @@ namespace Terraria_Server.Commands
             
             return;
         }
+        
+        public static void Status (Server server, ISender sender, ArgumentList args)
+        {
+            args.ParseNone ();
+            
+            var process = System.Diagnostics.Process.GetCurrentProcess();
+            sender.sendMessage (string.Format ("Virtual memory:  {0:0.0}/{1:0.0}MB",
+                process.VirtualMemorySize64 / 1024.0 / 1024.0,
+                process.PeakVirtualMemorySize64 / 1024.0 / 1024.0));
+            sender.sendMessage (string.Format ("Physical memory: {0:0.0}/{1:0.0}MB",
+                process.WorkingSet64 / 1024.0 / 1024.0,
+                process.PeakWorkingSet64 / 1024.0 / 1024.0));
+            var time = process.TotalProcessorTime;
+            sender.sendMessage (string.Format ("Total cpu usage: {0:0.00}% ({1})",
+                100.0 * time.TotalMilliseconds / (DateTime.Now - process.StartTime).TotalMilliseconds, time));
+
+        }
 
         public static void Reload (Server server, ISender sender, ArgumentList args)
         {
@@ -161,18 +178,46 @@ namespace Terraria_Server.Commands
             return;
         }
 
-        public static void List (Server server, ISender sender, ArgumentList args)
+
+        public static void OldList (Server server, ISender sender, ArgumentList args)
         {
             args.ParseNone ();
             
             var players = from p in Server.players where p.Active select p.Name;
-            sender.sendMessage ("Current players: " + string.Join (", ", players)
-                + " (" + players.Count() + "/" + Main.maxNetplayers + ")", 255, 255, 240, 20);
+            sender.sendMessage (string.Concat ("Current players: ", string.Join (", ", players), "."), 255, 255, 240, 20);
+        }
+        
+        public static void List (Server server, ISender sender, ArgumentList args)
+        {
+            args.ParseNone ();
+            
+            var players = from p in Server.players where p.Active && !p.Op select p.Name;
+            var ops = from p in Server.players where p.Active && p.Op select p.Name;
+            
+            var pn = players.Count();
+            var on = ops.Count();
+            
+            if (on + pn == 0)
+            {
+                sender.sendMessage ("No players online.");
+                return;
+            }
+            
+            string ps = "";
+            string os = "";
+            
+            if (pn > 0)
+                ps = (on > 0 ? " | Players: " : "Players: ") + string.Join (", ", players);
+            
+            if (on > 0)
+                os = "Ops: " + string.Join (", ", ops);
+            
+            sender.sendMessage (string.Concat (os, ps, " (", on + pn, "/", Main.maxNetplayers, ")"), 255, 255, 240, 20);
         }
 
         public static void Action (Server server, ISender sender, string message)
         {
-            ProgramLog.Users.Log ("* " + sender.Name + " " + message);
+            ProgramLog.Chat.Log ("* " + sender.Name + " " + message);
             if (sender is Player)
                 NetMessage.SendData (25, -1, -1, "* " + sender.Name + " " + message, 255, 200, 100, 0);
             else
@@ -181,7 +226,7 @@ namespace Terraria_Server.Commands
 
         public static void Say (Server server, ISender sender, string message)
         {
-            ProgramLog.Users.Log ("<" + sender.Name + "> " + message);
+            ProgramLog.Chat.Log ("<" + sender.Name + "> " + message);
             if (sender is Player)
                 NetMessage.SendData (25, -1, -1, "<" + sender.Name + "> " + message, 255, 255, 255, 255);
             else
@@ -1122,6 +1167,7 @@ namespace Terraria_Server.Commands
 			bool dinfo = args.Contains ("-d") || args.Contains ("-dp") || args.Contains ("-pd");
 			bool pinfo = args.Contains ("-p") || args.Contains ("-dp") || args.Contains ("-pd");
 			
+			int k = 0;
 			for (int i = 0; i < 255; i++)
 			{
 				var slot = Netplay.slots[i];
@@ -1129,10 +1175,12 @@ namespace Terraria_Server.Commands
 				
 				if (slot.state != SlotState.VACANT)
 				{
+					k += 1;
+					
 					var name = "";
 					if (player != null)
 					{
-						name = ", " + (player.Name ?? "<null>");
+						name = string.Concat (", ", player.Op ? "Op. " : "", "\"", (player.Name ?? "<null>"), "\"");
 						if (player.AuthenticatedAs != null)
 						{
 							if (player.Name == player.AuthenticatedAs)
@@ -1142,7 +1190,11 @@ namespace Terraria_Server.Commands
 						}
 					}
 					
-					var msg = string.Format ("slot {0}: {1}, {2}{3}", i, slot.state, slot.remoteAddress, name);
+					var addr = "<secret>";
+					if (! (sender is Player && player.Op))
+						addr = slot.remoteAddress;
+					
+					var msg = string.Format ("slot {0}: {1}, {2}{3}", i, slot.state, addr, name);
 					
 					if (pinfo && player != null)
 					{
@@ -1157,6 +1209,7 @@ namespace Terraria_Server.Commands
 					sender.sendMessage (msg);
 				}
 			}
+			sender.sendMessage (string.Format ("{0}/{1} slots occupied.", k, Main.maxNetplayers));
 		}
     }
 }
