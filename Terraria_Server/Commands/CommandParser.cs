@@ -99,7 +99,8 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel (AccessLevel.PLAYER)
                 .Calls(Commands.OldList);
 
-            AddCommand("playing") // this is what the server crawler expects
+            // this is what the server crawler expects
+            AddCommand("playing")
                 .WithAccessLevel (AccessLevel.PLAYER)
                 .Calls(Commands.OldList);
 
