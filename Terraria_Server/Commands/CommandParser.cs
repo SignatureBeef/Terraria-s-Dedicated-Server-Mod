@@ -219,28 +219,31 @@ namespace Terraria_Server.Commands
                 
                 var args = new ArgumentList (server);
                 var command = Tokenize (line, args);
-                
-                if (command != null && serverCommands.TryGetValue (command, out info) && info.tokenCallback != null)
+
+                if (command != null)
                 {
-                    if (info.restricted && ! sender.Op)
+                    if (serverCommands.TryGetValue(command, out info) && info.tokenCallback != null)
                     {
-                        sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+                        if (info.restricted && !sender.Op)
+                        {
+                            sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                            return;
+                        }
+
+                        try
+                        {
+                            info.tokenCallback(server, sender, args);
+                        }
+                        catch (CommandError e)
+                        {
+                            sender.sendMessage(command + ": " + e.Message);
+                            info.ShowHelp(sender);
+                        }
                         return;
                     }
 
-                    try
-                    {
-                        info.tokenCallback (server, sender, args);
-                    }
-                    catch (CommandError e)
-                    {
-                        sender.sendMessage (command + ": " + e.Message);
-                        info.ShowHelp (sender);
-                    }
-                    return;
+                    switchCommands(command, args, sender);
                 }
-                
-                switchCommands (command, args, sender);
             }
             catch (TokenizerException e)
             {
