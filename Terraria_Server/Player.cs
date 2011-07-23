@@ -4021,12 +4021,12 @@ namespace Terraria_Server
         {
             get
             {
-                return new Vector2(Position.X * 16, Position.Y * 16);
+                return new Vector2(Position.X / 16, Position.Y / 16);
             }
             set
             {
-                Position.X = value.X / 16;
-                Position.Y = value.Y / 16;
+                Position.X = value.X * 16;
+                Position.Y = value.Y * 16;
             }
         }
 

@@ -12,7 +12,7 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.WorldMod
 {
-	internal class WorldModify
+	public class WorldModify
 	{
 		private const int RECTANGLE_OFFSET = 25;
 		private const int TILE_OFFSET = 15;

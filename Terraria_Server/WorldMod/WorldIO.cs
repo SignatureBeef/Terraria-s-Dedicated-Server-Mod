@@ -13,7 +13,7 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.WorldMod
 {
-	class WorldIO
+	public class WorldIO
 	{
 		private static object padlock = new object();
 		public static bool worldCleared = false;

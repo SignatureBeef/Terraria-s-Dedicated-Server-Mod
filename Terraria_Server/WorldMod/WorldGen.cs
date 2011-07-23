@@ -13,7 +13,7 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.WorldMod
 {
-	class WorldGen
+	public class WorldGen
 	{
 		private static int maxDRooms = 100;
 		private const int RECTANGLE_OFFSET = 25;
