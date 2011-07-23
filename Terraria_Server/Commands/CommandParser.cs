@@ -99,6 +99,10 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel (AccessLevel.PLAYER)
                 .Calls(Commands.OldList);
 
+            AddCommand("playing") // this is what the server crawler expects
+                .WithAccessLevel (AccessLevel.PLAYER)
+                .Calls(Commands.OldList);
+
             AddCommand("online")
                 .WithAccessLevel (AccessLevel.PLAYER)
                 .Calls(Commands.List);
