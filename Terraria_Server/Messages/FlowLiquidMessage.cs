@@ -58,7 +58,7 @@ namespace Terraria_Server.Messages
                 tile.SetLiquid (liquid);
                 tile.SetLava (lavaFlag == 1);
 
-                WorldGen.SquareTileFrame(x, y, true);
+                WorldMod.SquareTileFrame(x, y, true);
             }
         }
     }

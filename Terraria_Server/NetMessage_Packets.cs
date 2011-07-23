@@ -119,7 +119,7 @@ namespace Terraria_Server
 			
 			byte flags = 0;
 			
-			if (WorldGen.shadowOrbSmashed) flags += 1;
+			if (WorldMod.shadowOrbSmashed) flags += 1;
 			if (NPC.downedBoss1)           flags += 2;
 			if (NPC.downedBoss2)           flags += 4;
 			if (NPC.downedBoss3)           flags += 8;

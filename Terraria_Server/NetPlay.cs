@@ -57,9 +57,9 @@ namespace Terraria_Server
 			{
 				Main.rand = new Random((int)DateTime.Now.Ticks);
 			}
-			if (WorldGen.genRand == null)
+			if (WorldMod.genRand == null)
 			{
-				WorldGen.genRand = new Random((int)DateTime.Now.Ticks);
+				WorldMod.genRand = new Random((int)DateTime.Now.Ticks);
 			}
 		
 			Main.myPlayer = 255;
@@ -227,7 +227,7 @@ namespace Terraria_Server
 				catch {}
 			}
 
-            WorldGen.saveWorld(Program.server.World.SavePath, true);
+            WorldMod.saveWorld(Program.server.World.SavePath, true);
 			
 			Statics.serverStarted = false;
 		}

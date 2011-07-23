@@ -78,19 +78,19 @@ namespace Terraria_Server.Messages
             switch (tileAction)
             {
                 case 0:
-                    WorldGen.KillTile(x, y, failFlag, false, false);
+                    WorldMod.KillTile(x, y, failFlag, false, false);
                     break;
                 case 1:
-                    WorldGen.PlaceTile(x, y, (int)tileType, false, true, -1, style);
+                    WorldMod.PlaceTile(x, y, (int)tileType, false, true, -1, style);
                     break;
                 case 2:
-                    WorldGen.KillWall(x, y, failFlag);
+                    WorldMod.KillWall(x, y, failFlag);
                     break;
                 case 3:
-                    WorldGen.PlaceWall(x, y, (int)tileType, false);
+                    WorldMod.PlaceWall(x, y, (int)tileType, false);
                     break;
                 case 4:
-                    WorldGen.KillTile(x, y, failFlag, false, true);
+                    WorldMod.KillTile(x, y, failFlag, false, true);
                     break;
             }
 

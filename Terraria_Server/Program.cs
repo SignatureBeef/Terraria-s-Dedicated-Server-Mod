@@ -8,6 +8,7 @@ using System.Xml;
 using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
+using Terraria_Server.Generation;
 
 namespace Terraria_Server
 {
@@ -193,20 +194,20 @@ namespace Terraria_Server
 					Server.maxTilesX = worldX;
 					Server.maxTilesY = worldY;
 
-					WorldGen.clearWorld();
+					WorldMod.clearWorld();
 					(new Server()).Initialize();
 					if (properties.UseCustomGenOpts)
 					{
 						WorldGen.numDungeons = properties.DungeonAmount;
-						WorldGen.ficount = properties.FloatingIslandAmount;
+						WorldMod.ficount = properties.FloatingIslandAmount;
 					}
 					else
 					{
 						WorldGen.numDungeons = 1;
-						WorldGen.ficount = (int)((double)Server.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
+						WorldMod.ficount = (int)((double)Server.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
 					}
 					WorldGen.generateWorld(seed);
-					WorldGen.saveWorld(worldFile, true);
+					WorldMod.saveWorld(worldFile, true);
 				}
 				
 				// TODO: read map size from world file instead of config
@@ -250,7 +251,7 @@ namespace Terraria_Server
 				Server.maxSectionsX = worldXtiles / 200;
 				Server.maxSectionsY = worldYtiles / 150;
 				
-				WorldGen.loadWorld();
+				WorldMod.loadWorld();
 
 				updateThread = new Thread(Program.UpdateLoop);
 				//updateThread.Name = "Updt";

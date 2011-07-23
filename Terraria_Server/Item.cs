@@ -257,7 +257,7 @@ namespace Terraria_Server
 
         public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false)
         {
-            if (WorldGen.gen)
+            if (WorldMod.gen)
             {
                 return 0;
             }

@@ -321,7 +321,7 @@ namespace Terraria_Server
                         {
                             if (Main.tile.At(i, j + 1).Exists && Main.tileCut[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j + 1).Type != 78)
                             {
-                                WorldGen.KillTile(i, j, false, false, false);
+                                WorldMod.KillTile(i, j, false, false, false);
                                 NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
                             }
                         }
@@ -1138,12 +1138,12 @@ namespace Terraria_Server
                                                 if (Main.tile.At(l, m).Type == 23)
                                                 {
                                                     Main.tile.At(l, m).SetType (2);
-                                                    WorldGen.SquareTileFrame(l, m, true);
+                                                    WorldMod.SquareTileFrame(l, m, true);
                                                 }
                                                 if (Main.tile.At(l, m).Type == 25)
                                                 {
                                                     Main.tile.At(l, m).SetType (1);
-                                                    WorldGen.SquareTileFrame(l, m, true);
+                                                    WorldMod.SquareTileFrame(l, m, true);
                                                 }
                                             }
                                         }
@@ -1228,7 +1228,7 @@ namespace Terraria_Server
                                                             Main.projectile[num24].Kill();
                                                         }
                                                     }
-                                                    WorldGen.KillTile(n, num22, true, true, false);
+                                                    WorldMod.KillTile(n, num22, true, true, false);
                                                     this.Velocity.X = 0f;
                                                     this.Velocity.Y = 0f;
                                                     this.ai[0] = 2f;
@@ -1826,7 +1826,7 @@ namespace Terraria_Server
                                                                     int num79 = (int)((this.Position.Y + (float)this.Height) / 16f);
                                                                     if (Main.tile.At(num78, num79).Exists && !Main.tile.At(num78, num79).Active)
                                                                     {
-                                                                        WorldGen.PlaceTile(num78, num79, 85, false, false, -1, 0);
+                                                                        WorldMod.PlaceTile(num78, num79, 85, false, false, -1, 0);
                                                                         if (Main.tile.At(num78, num79).Active)
                                                                         {
                                                                             
@@ -2127,12 +2127,12 @@ namespace Terraria_Server
                                     }
                                     if (flag2)
                                     {
-                                        WorldGen.KillTile(num48, num49, false, false, false);
+                                        WorldMod.KillTile(num48, num49, false, false, false);
                                     }
                                 }
                                 if (flag2 && Main.tile.At(num48, num49).Exists && Main.tile.At(num48, num49).Wall > 0 && flag)
                                 {
-                                    WorldGen.KillWall(num48, num49, false);
+                                    WorldMod.KillWall(num48, num49, false);
                                 }
                             }
                         }
@@ -2176,7 +2176,7 @@ namespace Terraria_Server
                     }
                     if (!Main.tile.At(num54, num55).Active)
                     {
-                        WorldGen.PlaceTile(num54, num55, num56, false, true, -1, 0);
+                        WorldMod.PlaceTile(num54, num55, num56, false, true, -1, 0);
                         if (Main.tile.At(num54, num55).Active && (int)Main.tile.At(num54, num55).Type == num56)
                         {
                             NetMessage.SendData(17, -1, -1, "", 1, (float)num54, (float)num55, (float)num56);

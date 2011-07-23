@@ -30,11 +30,11 @@ namespace Terraria_Server.Messages
 
             if (state)
             {
-                WorldGen.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.players[whoAmI]);
+                WorldMod.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.players[whoAmI]);
             }
             else if (doorAction == 1)
             {
-                WorldGen.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.players[whoAmI]);
+                WorldMod.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.players[whoAmI]);
             }
                         
             NetMessage.SendData(19, -1, whoAmI, "", (int)doorAction, (float)x, (float)y, (float)doorDirection);

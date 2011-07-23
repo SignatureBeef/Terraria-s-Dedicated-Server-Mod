@@ -29,7 +29,7 @@ namespace Terraria_Server.Messages
                     return;
                 }
 
-                WorldGen.KillTile(x, y);
+                WorldMod.KillTile(x, y);
                 if (!Main.tile.At(x, y).Active)
                 {
                     NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
