@@ -94,7 +94,7 @@ namespace Terraria_Server.Commands
                                                                     "Un-Ban a Player.", 
                                                                     "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
-                                                                    "Spawn a NPC (/spawnnpc <amount> <name:id>)",
+                                                                    "Spawn a NPC (/spawnnpc <amount> <name:id> <player>)",
                                                                     "Teleport Player to Player.",
                                                                     "Teleport a Player to You.",
                                                                     "Settle Water.",
@@ -769,6 +769,16 @@ namespace Terraria_Server.Commands
 			try
 			{
 				Player player = ((Player)sender);
+				if (commands.Count >= 4)
+				{
+					player = Program.server.GetPlayerByName(commands[3]);
+					if (null == player)
+					{
+						sender.sendMessage("Player not found.", 255, 238f, 130f, 238f);
+						return;
+					}
+				}
+
 				String npcName = commands[2].Replace(" ", "").ToLower();
 
 				// Get the class id of the npc
