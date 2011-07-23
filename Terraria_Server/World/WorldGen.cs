@@ -11,7 +11,7 @@ using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 
-namespace Terraria_Server.Generation
+namespace Terraria_Server.World
 {
 	class WorldGen
 	{

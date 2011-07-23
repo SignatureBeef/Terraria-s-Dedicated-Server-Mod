@@ -10,7 +10,7 @@ using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
-using Terraria_Server.Generation;
+using Terraria_Server.World;
 
 namespace Terraria_Server
 {

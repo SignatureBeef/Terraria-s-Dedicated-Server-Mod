@@ -8,7 +8,7 @@ using System.Xml;
 using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
-using Terraria_Server.Generation;
+using Terraria_Server.World;
 
 namespace Terraria_Server
 {
