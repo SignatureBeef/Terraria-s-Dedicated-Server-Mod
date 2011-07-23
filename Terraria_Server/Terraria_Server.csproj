@@ -231,8 +231,8 @@
     <Compile Include="Misc\Vector2.cs" />
     <Compile Include="Misc\DataRegister.cs" />
     <Compile Include="Server\World.cs" />
-    <Compile Include="World\WorldGen.cs" />
-    <Compile Include="World\WorldModify.cs" />
+    <Compile Include="WorldMod\WorldGen.cs" />
+    <Compile Include="WorldMod\WorldModify.cs" />
     <Compile Include="Messages\messageBuffer.cs" />
     <Compile Include="NetPlay.cs" />
     <Compile Include="ServerSlot.cs" />
