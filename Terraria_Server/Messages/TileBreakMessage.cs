@@ -6,6 +6,7 @@ using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
 using Terraria_Server.Definitions.Tile;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
@@ -78,19 +79,19 @@ namespace Terraria_Server.Messages
             switch (tileAction)
             {
                 case 0:
-                    WorldMod.KillTile(x, y, failFlag, false, false);
+                    WorldModify.KillTile(x, y, failFlag, false, false);
                     break;
                 case 1:
-                    WorldMod.PlaceTile(x, y, (int)tileType, false, true, -1, style);
+                    WorldModify.PlaceTile(x, y, (int)tileType, false, true, -1, style);
                     break;
                 case 2:
-                    WorldMod.KillWall(x, y, failFlag);
+                    WorldModify.KillWall(x, y, failFlag);
                     break;
                 case 3:
-                    WorldMod.PlaceWall(x, y, (int)tileType, false);
+                    WorldModify.PlaceWall(x, y, (int)tileType, false);
                     break;
                 case 4:
-                    WorldMod.KillTile(x, y, failFlag, false, true);
+                    WorldModify.KillTile(x, y, failFlag, false, true);
                     break;
             }
 

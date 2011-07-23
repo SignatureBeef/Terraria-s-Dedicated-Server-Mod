@@ -8,7 +8,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
-using Terraria_Server.World;
+using Terraria_Server.WorldMod;
 namespace Terraria_Server
 {
 	public class Main
@@ -199,9 +199,9 @@ namespace Terraria_Server
 			{
 				Main.rand = new Random((int)DateTime.Now.Ticks);
 			}
-			if (WorldMod.genRand == null)
+			if (WorldModify.genRand == null)
 			{
-				WorldMod.genRand = new Random((int)DateTime.Now.Ticks);
+				WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
 			}
 			int num = Main.rand.Next(5);
 
@@ -429,7 +429,7 @@ namespace Terraria_Server
 		
         private static void StartInvasion()
 		{
-			if (!WorldMod.shadowOrbSmashed)
+			if (!WorldModify.shadowOrbSmashed)
 			{
 				return;
 			}
@@ -571,7 +571,7 @@ namespace Terraria_Server
             Main.time += 1.0;
             if (!Main.dayTime)
             {
-                if (WorldMod.spawnEye)
+                if (WorldModify.spawnEye)
                 {
                     if (Main.time > 4860.0)
                     {
@@ -581,7 +581,7 @@ namespace Terraria_Server
                             if (player.Active && !player.dead && (double)player.Position.Y < Main.worldSurface * 16.0)
                             {
                                 NPC.SpawnOnPlayer(player, count, 4);
-                                WorldMod.spawnEye = false;
+                                WorldModify.spawnEye = false;
                                 break;
                             }
                             count++;
@@ -595,7 +595,7 @@ namespace Terraria_Server
                     {
                         Main.invasionDelay--;
                     }
-                    WorldMod.spawnNPC = 0;
+                    WorldModify.spawnNPC = 0;
                     Main.checkForSpawns = 0;
                     Main.time = 0.0;
                     Main.bloodMoon = false;
@@ -607,7 +607,7 @@ namespace Terraria_Server
                     }
                     
                     NetMessage.SendData(7);
-                    WorldMod.saveAndPlay();
+                    WorldModify.saveAndPlay();
 
                     
                     if (Main.rand.Next(15) == 0)
@@ -615,21 +615,21 @@ namespace Terraria_Server
                         Main.StartInvasion();
                     }
                 }
-                if (Main.time > 16200.0 && WorldMod.spawnMeteor)
+                if (Main.time > 16200.0 && WorldModify.spawnMeteor)
                 {
-                    WorldMod.spawnMeteor = false;
-                    WorldMod.dropMeteor();
+                    WorldModify.spawnMeteor = false;
+                    WorldModify.dropMeteor();
                 }
             }
             else
             {
                 if (Main.time > 54000.0)
                 {
-                    WorldMod.spawnNPC = 0;
+                    WorldModify.spawnNPC = 0;
                     Main.checkForSpawns = 0;
-                    if (Main.rand.Next(50) == 0 && WorldMod.shadowOrbSmashed)
+                    if (Main.rand.Next(50) == 0 && WorldModify.shadowOrbSmashed)
                     {
-                        WorldMod.spawnMeteor = true;
+                        WorldModify.spawnMeteor = true;
                     }
                     if (!NPC.downedBoss1)
                     {
@@ -657,13 +657,13 @@ namespace Terraria_Server
                             }
                             if (num >= 4)
                             {
-                                WorldMod.spawnEye = true;
+                                WorldModify.spawnEye = true;
                                 
                                 NetMessage.SendData(25, -1, -1, "You feel an evil presence watching you...", 255, 50f, 255f, 130f);
                             }
                         }
                     }
-                    if (!WorldMod.spawnEye && Main.moonPhase != 4 && Main.rand.Next(7) == 0)
+                    if (!WorldModify.spawnEye && Main.moonPhase != 4 && Main.rand.Next(7) == 0)
                     {
                         for (int i = 0; i < 255; i++)
                         {
@@ -695,7 +695,7 @@ namespace Terraria_Server
                         }
                     }
                     Main.checkForSpawns = 0;
-                    WorldMod.spawnNPC = 0;
+                    WorldModify.spawnNPC = 0;
                     int num3 = 0;
                     int num4 = 0;
                     int num5 = 0;
@@ -711,7 +711,7 @@ namespace Terraria_Server
                         {
                             if (Main.npcs[i].type != NPCType.N37_OLD_MAN && !Main.npcs[i].homeless)
                             {
-                                WorldMod.QuickFindHome(i);
+                                WorldModify.QuickFindHome(i);
                             }
                             else
                             {
@@ -744,7 +744,7 @@ namespace Terraria_Server
                             num11++;
                         }
                     }
-                    if (WorldMod.spawnNPC == 0)
+                    if (WorldModify.spawnNPC == 0)
                     {
                         int num12 = 0;
                         bool flag2 = false;
@@ -795,43 +795,43 @@ namespace Terraria_Server
                         }
                         if (num7 < 1)
                         {
-                            WorldMod.spawnNPC = 22;
+                            WorldModify.spawnNPC = 22;
                         }
                         if ((double)num12 > 5000.0 && num3 < 1)
                         {
-                            WorldMod.spawnNPC = 17;
+                            WorldModify.spawnNPC = 17;
                         }
                         if (flag2 && num4 < 1)
                         {
-                            WorldMod.spawnNPC = 18;
+                            WorldModify.spawnNPC = 18;
                         }
                         if (flag3 && num6 < 1)
                         {
-                            WorldMod.spawnNPC = 19;
+                            WorldModify.spawnNPC = 19;
                         }
                         if ((NPC.downedBoss1 || NPC.downedBoss2 || NPC.downedBoss3) && num5 < 1)
                         {
-                            WorldMod.spawnNPC = 20;
+                            WorldModify.spawnNPC = 20;
                         }
                         if (flag4 && num3 > 0 && num9 < 1)
                         {
-                            WorldMod.spawnNPC = 38;
+                            WorldModify.spawnNPC = 38;
                         }
                         if (NPC.downedBoss3 && num10 < 1)
                         {
-                            WorldMod.spawnNPC = 54;
+                            WorldModify.spawnNPC = 54;
                         }
                         if (num12 > 100000 && num3 < 2 && num2 > 2)
                         {
-                            WorldMod.spawnNPC = 17;
+                            WorldModify.spawnNPC = 17;
                         }
                         if (num13 >= 20 && num4 < 2 && num2 > 2)
                         {
-                            WorldMod.spawnNPC = 18;
+                            WorldModify.spawnNPC = 18;
                         }
                         if (num12 > 5000000 && num3 < 3 && num2 > 4)
                         {
-                            WorldMod.spawnNPC = 17;
+                            WorldModify.spawnNPC = 17;
                         }
                         if (!NPC.downedBoss3 && num8 == 0)
                         {
@@ -1064,7 +1064,7 @@ namespace Terraria_Server
             {
                 try
                 {
-                    WorldMod.UpdateWorld();
+                    WorldModify.UpdateWorld();
                     Main.UpdateInvasion();
                 }
                 catch
@@ -1074,7 +1074,7 @@ namespace Terraria_Server
             }
             else
             {
-                WorldMod.UpdateWorld();
+                WorldModify.UpdateWorld();
                 Main.UpdateInvasion();
             }
 

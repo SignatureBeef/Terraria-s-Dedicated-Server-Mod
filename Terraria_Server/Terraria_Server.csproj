@@ -232,7 +232,7 @@
     <Compile Include="Misc\DataRegister.cs" />
     <Compile Include="Server\World.cs" />
     <Compile Include="World\WorldGen.cs" />
-    <Compile Include="WorldMod.cs" />
+    <Compile Include="World\WorldModify.cs" />
     <Compile Include="Messages\messageBuffer.cs" />
     <Compile Include="NetPlay.cs" />
     <Compile Include="ServerSlot.cs" />

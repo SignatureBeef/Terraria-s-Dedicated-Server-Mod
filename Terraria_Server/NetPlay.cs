@@ -7,6 +7,7 @@ using System.Diagnostics;
 
 using Terraria_Server.Messages;
 using Terraria_Server.Logging;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -57,9 +58,9 @@ namespace Terraria_Server
 			{
 				Main.rand = new Random((int)DateTime.Now.Ticks);
 			}
-			if (WorldMod.genRand == null)
+			if (WorldModify.genRand == null)
 			{
-				WorldMod.genRand = new Random((int)DateTime.Now.Ticks);
+				WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
 			}
 		
 			Main.myPlayer = 255;
@@ -227,7 +228,7 @@ namespace Terraria_Server
 				catch {}
 			}
 
-            WorldMod.saveWorld(Program.server.World.SavePath, true);
+            WorldModify.saveWorld(Program.server.World.SavePath, true);
 			
 			Statics.serverStarted = false;
 		}

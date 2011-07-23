@@ -1,5 +1,6 @@
 using System;
 using Terraria_Server.Logging;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -88,7 +89,7 @@ namespace Terraria_Server
                                     num11 = 0;
                                     flag3 = true;
                                     num10++;
-                                    if (num10 > WorldMod.waterLine)
+                                    if (num10 > WorldModify.waterLine)
                                     {
                                         flag2 = true;
                                     }
@@ -694,7 +695,7 @@ namespace Terraria_Server
         {
             if (!Liquid.panicMode)
             {
-                WorldMod.waterLine = Main.maxTilesY;
+                WorldModify.waterLine = Main.maxTilesY;
                 Liquid.numLiquid = 0;
                 LiquidBuffer.numLiquidBuffer = 0;
                 Liquid.panicCounter = 0;
@@ -712,7 +713,7 @@ namespace Terraria_Server
             Liquid.cycles = 25;
             Liquid.maxLiquid = 5000;
 
-            if (!WorldMod.gen)
+            if (!WorldModify.gen)
             {
                 if (!Liquid.panicMode)
                 {
@@ -743,7 +744,7 @@ namespace Terraria_Server
                             ProgramLog.Log ("Water has been settled.");
                             Liquid.panicCounter = 0;
                             Liquid.panicMode = false;
-                            WorldMod.WaterCheck();
+                            WorldModify.WaterCheck();
                             for (int i = 0; i < 255; i++)
                             {
                                 for (int j = 0; j < Main.maxSectionsX; j++)
@@ -896,12 +897,12 @@ namespace Terraria_Server
 
             if (Main.tile.At(x, y).Active && (Main.tileWaterDeath[(int)Main.tile.At(x, y).Type] || (Main.tile.At(x, y).Lava && Main.tileLavaDeath[(int)Main.tile.At(x, y).Type])))
             {
-                if (WorldMod.gen)
+                if (WorldModify.gen)
                 {
                     Main.tile.At(x, y).SetActive (false);
                     return;
                 }
-                WorldMod.KillTile(x, y, false, false, false);
+                WorldModify.KillTile(x, y, false, false, false);
                 NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
             }
         }
@@ -933,8 +934,8 @@ namespace Terraria_Server
                 if (num >= 128 && !Main.tile.At(x, y).Active)
                 {
                     ClearLava(x, y);
-                    WorldMod.PlaceTile(x, y, 56, true, true, -1, 0);
-                    WorldMod.SquareTileFrame(x, y, true);
+                    WorldModify.PlaceTile(x, y, 56, true, true, -1, 0);
+                    WorldModify.SquareTileFrame(x, y, true);
 
                     NetMessage.SendTileSquare(-1, x - 1, y - 1, 3);
                     return;
@@ -943,8 +944,8 @@ namespace Terraria_Server
             else if (Main.tile.At(x, y + 1).Liquid > 0 && !Main.tile.At(x, y + 1).Lava && !Main.tile.At(x, y + 1).Active)
             {
                 ClearLava(x, y);
-                WorldMod.PlaceTile(x, y + 1, 56, true, true, -1, 0);
-                WorldMod.SquareTileFrame(x, y + 1, true);
+                WorldModify.PlaceTile(x, y + 1, 56, true, true, -1, 0);
+                WorldModify.SquareTileFrame(x, y + 1, true);
                 
                 NetMessage.SendTileSquare(-1, x - 1, y, 3);
             }
@@ -994,14 +995,14 @@ namespace Terraria_Server
                             if (Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 23)
                             {
                                 Main.tile.At(i, j).SetType (0);
-                                WorldMod.SquareTileFrame(i, j, true);
+                                WorldModify.SquareTileFrame(i, j, true);
                                 
                                 NetMessage.SendTileSquare(-1, x, y, 3);
                             }
                             else if (Main.tile.At(i, j).Type == 60 || Main.tile.At(i, j).Type == 70)
                             {
                                 Main.tile.At(i, j).SetType (59);
-                                WorldMod.SquareTileFrame(i, j, true);
+                                WorldModify.SquareTileFrame(i, j, true);
                                 
                                 NetMessage.SendTileSquare(-1, x, y, 3);
                             }
@@ -1020,7 +1021,7 @@ namespace Terraria_Server
             Main.liquid[liquidIndex].kill = Main.liquid[Liquid.numLiquid].kill;
             if (Main.tileAlch[(int)Main.tile.At(x, y).Type])
             {
-                WorldMod.CheckAlch(x, y);
+                WorldModify.CheckAlch(x, y);
             }
         }
     }

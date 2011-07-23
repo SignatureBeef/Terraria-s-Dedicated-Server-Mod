@@ -3,6 +3,7 @@ using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions.Tile;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
@@ -102,7 +103,7 @@ namespace Terraria_Server.Messages
                 }
             }
 
-            WorldMod.RangeFrame(left, top, left + (int)size, top + (int)size);
+            WorldModify.RangeFrame(left, top, left + (int)size, top + (int)size);
             NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)size, (float)left, (float)top);
         }
     }

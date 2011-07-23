@@ -1,6 +1,7 @@
 ﻿using System;
 using Terraria_Server.Plugin;
 using Terraria_Server.Definitions;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
@@ -30,11 +31,11 @@ namespace Terraria_Server.Messages
 
             if (state)
             {
-                WorldMod.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.players[whoAmI]);
+                WorldModify.OpenDoor(x, y, direction, state, DoorOpener.PLAYER, Main.players[whoAmI]);
             }
             else if (doorAction == 1)
             {
-                WorldMod.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.players[whoAmI]);
+                WorldModify.CloseDoor(x, y, true, DoorOpener.PLAYER, Main.players[whoAmI]);
             }
                         
             NetMessage.SendData(19, -1, whoAmI, "", (int)doorAction, (float)x, (float)y, (float)doorDirection);

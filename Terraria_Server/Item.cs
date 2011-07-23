@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Terraria_Server.Misc;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -257,7 +258,7 @@ namespace Terraria_Server
 
         public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false)
         {
-            if (WorldMod.gen)
+            if (WorldModify.gen)
             {
                 return 0;
             }

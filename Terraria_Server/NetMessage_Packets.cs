@@ -6,6 +6,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -119,7 +120,7 @@ namespace Terraria_Server
 			
 			byte flags = 0;
 			
-			if (WorldMod.shadowOrbSmashed) flags += 1;
+			if (WorldModify.shadowOrbSmashed) flags += 1;
 			if (NPC.downedBoss1)           flags += 2;
 			if (NPC.downedBoss2)           flags += 4;
 			if (NPC.downedBoss3)           flags += 8;

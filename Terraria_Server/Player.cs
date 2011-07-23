@@ -9,6 +9,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -1032,7 +1033,7 @@ namespace Terraria_Server
                                 {
                                     if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 4 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 13 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 33 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 49 || (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 50 && Main.tile.At(Player.tileTargetX, Player.tileTargetY).FrameX == 90))
                                     {
-                                        WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                        WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                     }
                                     else
                                     {
@@ -1093,14 +1094,14 @@ namespace Terraria_Server
                                             {
                                                 if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 10)
                                                 {
-                                                    WorldMod.OpenDoor(Player.tileTargetX, Player.tileTargetY, this.direction);
+                                                    WorldModify.OpenDoor(Player.tileTargetX, Player.tileTargetY, this.direction);
                                                     NetMessage.SendData(19, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
                                                 }
                                                 else
                                                 {
                                                     if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 11)
                                                     {
-                                                        if (WorldMod.CloseDoor(Player.tileTargetX, Player.tileTargetY, false))
+                                                        if (WorldModify.CloseDoor(Player.tileTargetX, Player.tileTargetY, false))
                                                         {
                                                             NetMessage.SendData(19, -1, -1, "", 1, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
                                                         }
@@ -2223,9 +2224,9 @@ namespace Terraria_Server
 							{
 								Main.tile.At(i, j).SetLava (false);
 								Main.tile.At(i, j).SetLiquid (0);
-								WorldMod.SquareTileFrame(i, j, true);
+								WorldModify.SquareTileFrame(i, j, true);
 							}
-							WorldMod.KillTile(i, j, false, false, false);
+							WorldModify.KillTile(i, j, false, false, false);
 						}
 					}
 				}
@@ -2386,7 +2387,7 @@ namespace Terraria_Server
             {
                 try
                 {
-                    WorldMod.saveToonWhilePlaying();
+                    WorldModify.saveToonWhilePlaying();
                 }
                 catch
                 {
@@ -2795,7 +2796,7 @@ namespace Terraria_Server
                                     int num11 = (int)Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid;
                                     Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (0);
                                     Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (false);
-                                    WorldMod.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
+                                    WorldModify.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
 
                                     Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
 
@@ -2822,7 +2823,7 @@ namespace Terraria_Server
                                                     Main.tile.At(x, y).SetLava (false);
                                                 }
 
-                                                WorldMod.SquareTileFrame(x, y, false);
+                                                WorldModify.SquareTileFrame(x, y, false);
 
                                                 Liquid.AddWater(x, y);
                                             }
@@ -2840,7 +2841,7 @@ namespace Terraria_Server
                                         {
                                             Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (true);
                                             Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
-                                            WorldMod.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
+                                            WorldModify.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                             selectedItem = Registries.Item.Create(205);
                                             inventory[selectedItemIndex] = selectedItem;
                                             this.itemTime = selectedItem.UseTime;
@@ -2850,7 +2851,7 @@ namespace Terraria_Server
                                     {
                                         Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (false);
                                         Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
-                                        WorldMod.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
+                                        WorldModify.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                         selectedItem = Registries.Item.Create(205);
                                         inventory[selectedItemIndex] = selectedItem;
                                         this.itemTime = selectedItem.UseTime;
@@ -2908,16 +2909,16 @@ namespace Terraria_Server
                                             if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 26)
                                             {
                                                 Hurt(this.statLife / 2, -direction, false, false);
-                                                WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                             }
                                             else if (hitTile >= 100)
                                             {
                                                 hitTile = 0;
-                                                WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                                WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                             }
                                             else
                                             {
-                                                WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                             }
 
                                             itemTime = inventory[this.selectedItemIndex].UseTime;
@@ -2942,11 +2943,11 @@ namespace Terraria_Server
                                                 if (hitTile >= 100)
                                                 {
                                                     hitTile = 0;
-                                                    WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                                 }
                                                 else
                                                 {
-                                                    WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                                 }
                                                 this.itemTime = selectedItem.UseTime;
                                             }
@@ -3005,11 +3006,11 @@ namespace Terraria_Server
                                                 if (hitTile >= 100)
                                                 {
                                                     hitTile = 0;
-                                                    WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                                 }
                                                 else
                                                 {
-                                                    WorldMod.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                                 }
                                                 this.itemTime = selectedItem.UseTime;
                                             }
@@ -3052,11 +3053,11 @@ namespace Terraria_Server
                                         if (hitTile >= 100)
                                         {
                                             hitTile = 0;
-                                            WorldMod.KillWall(Player.tileTargetX, Player.tileTargetY, false);
+                                            WorldModify.KillWall(Player.tileTargetX, Player.tileTargetY, false);
                                         }
                                         else
                                         {
-                                            WorldMod.KillWall(Player.tileTargetX, Player.tileTargetY, true);
+                                            WorldModify.KillWall(Player.tileTargetX, Player.tileTargetY, true);
                                         }
                                         this.itemTime = selectedItem.UseTime;
                                     }
@@ -3216,7 +3217,7 @@ namespace Terraria_Server
                                 }
                                 if (flag4)
                                 {
-                                    if (WorldMod.PlaceTile(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateTile, false, false, this.whoAmi))
+                                    if (WorldModify.PlaceTile(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateTile, false, false, this.whoAmi))
                                     {
                                         this.itemTime = selectedItem.UseTime;
                                         if (selectedItem.CreateTile == 15)
@@ -3246,7 +3247,7 @@ namespace Terraria_Server
                             {
                                 if ((int)Main.tile.At(Player.tileTargetX, Player.tileTargetY).Wall != selectedItem.CreateWall)
                                 {
-                                    WorldMod.PlaceWall(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateWall, false);
+                                    WorldModify.PlaceWall(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateWall, false);
                                     if ((int)Main.tile.At(Player.tileTargetX, Player.tileTargetY).Wall == selectedItem.CreateWall)
                                     {
                                         this.itemTime = selectedItem.UseTime;
@@ -3330,7 +3331,7 @@ namespace Terraria_Server
                                 {
                                     if (Main.tile.At(k, l).Type == 3 || Main.tile.At(k, l).Type == 24 || Main.tile.At(k, l).Type == 28 || Main.tile.At(k, l).Type == 32 || Main.tile.At(k, l).Type == 51 || Main.tile.At(k, l).Type == 52 || Main.tile.At(k, l).Type == 61 || Main.tile.At(k, l).Type == 62 || Main.tile.At(k, l).Type == 69 || Main.tile.At(k, l).Type == 71 || Main.tile.At(k, l).Type == 73 || Main.tile.At(k, l).Type == 74)
                                     {
-                                        WorldMod.KillTile(k, l, false, false, false);
+                                        WorldModify.KillTile(k, l, false, false, false);
                                     }
                                 }
                             }
@@ -3657,7 +3658,7 @@ namespace Terraria_Server
 					}
 				}
 			}
-			return WorldMod.StartRoomCheck(x, y - 1);
+			return WorldModify.StartRoomCheck(x, y - 1);
 		}
 		
         public void FindSpawn()

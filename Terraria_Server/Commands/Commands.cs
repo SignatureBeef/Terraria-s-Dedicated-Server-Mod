@@ -9,6 +9,7 @@ using Terraria_Server.Collections;
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
 using Terraria_Server.RemoteConsole;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Commands
 {
@@ -251,8 +252,8 @@ namespace Terraria_Server.Commands
 
             Program.server.notifyOps("Saving World...", true);
 
-            WorldMod.saveWorld(Program.server.World.SavePath, false);
-            while (WorldMod.saveLock)
+            WorldModify.saveWorld(Program.server.World.SavePath, false);
+            while (WorldModify.saveLock)
             {
             }
 
@@ -1155,7 +1156,7 @@ namespace Terraria_Server.Commands
             while (Statics.serverStarted) { Thread.Sleep (10); }
             ProgramLog.Log ("Starting the Server");
             server.Initialize();
-            WorldMod.loadWorld();
+            WorldModify.loadWorld();
             Program.updateThread = new Thread(Program.UpdateLoop);
             Program.updateThread.Name = "Updt";
             server.StartServer();
