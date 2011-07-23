@@ -141,7 +141,8 @@ namespace Terraria_Server
 		
 		public void Reset()
 		{
-			this.writeQueue = new Queue<byte[]> ();
+            this.writeQueue = new Queue<byte[]>();
+            tileSection = new bool[Main.maxTilesX / 200, Main.maxTilesY / 150];
 			
 			if (tileSection.GetLength(0) >= Main.maxSectionsX && tileSection.GetLength(1) >= Main.maxSectionsY)
 			{

@@ -3282,10 +3282,13 @@ namespace Terraria_Server.WorldMod
 					{
 						if (!Main.tile.At(dRoomR[j] + 1, n).Active)
 						{
-							DDoorX[numDDoors] = dRoomR[j] + 1;
-							DDoorY[numDDoors] = n;
-							DDoorPos[numDDoors] = 1;
-							numDDoors++;
+                            if (numDDoors <= DDoorX.Length)
+                            {
+                                DDoorX[numDDoors] = dRoomR[j] + 1;
+                                DDoorY[numDDoors] = n;
+                                DDoorPos[numDDoors] = 1;
+                                numDDoors++;
+                            }
 							break;
 						}
 					}

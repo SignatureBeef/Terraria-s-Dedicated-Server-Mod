@@ -40,16 +40,6 @@ namespace Terraria_Server.WorldMod
 			ThreadPool.QueueUserWorkItem(new WaitCallback(saveAndPlayCallBack), 1);
 		}
 
-		public static void saveToonWhilePlayingCallBack(object threadContext)
-		{
-			Player.SavePlayer(Main.players[Main.myPlayer]);
-		}
-
-		public static void saveToonWhilePlaying()
-		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(saveToonWhilePlayingCallBack), 1);
-		}
-
 		public static void clearWorld()
 		{
 			WorldModify.spawnEye = false;

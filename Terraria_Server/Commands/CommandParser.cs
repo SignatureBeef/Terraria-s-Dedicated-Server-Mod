@@ -149,6 +149,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="line">Command to parse</param>
         /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sender of the Command</param>
 		public void ParseConsoleCommand (string line, Server server, ConsoleSender sender = null)
 		{
 			line = line.Trim();
