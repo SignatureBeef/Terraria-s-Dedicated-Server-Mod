@@ -53,7 +53,7 @@ namespace Terraria_Server.RemoteConsole
 				return;
 			}
 			
-			listener = new TcpListener (IPAddress.Parse ("127.0.0.1"), 7776);
+			listener = new TcpListener (addr, port);
 			
 			try
 			{
@@ -79,7 +79,7 @@ namespace Terraria_Server.RemoteConsole
 		{
 			var hash = SHA256.Create ();
 			var sb = new StringBuilder (64);
-			var bytes = hash.ComputeHash (Encoding.ASCII.GetBytes (username + ":rcon:" + password));
+			var bytes = hash.ComputeHash (Encoding.ASCII.GetBytes (string.Concat (username, ":", Program.properties.RConHashNonce, ":", password)));
 			foreach (var b in bytes)
 				sb.Append (b.ToString ("x2"));
 			return sb.ToString ();
@@ -212,6 +212,9 @@ namespace Terraria_Server.RemoteConsole
 				ProgramLog.Admin.Log ("New remote console connection from: {0}", addr);
 				
 				var rcon = new RConClient (client, addr);
+				
+				rcon.Greet ();
+				
 				clients.Add (rcon);
 				
 				return rcon;

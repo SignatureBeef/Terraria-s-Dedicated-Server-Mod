@@ -67,6 +67,7 @@ namespace Terraria_Server
             temp = SimpleLoop;
             temp = HackedData;
             temp = RConBindAddress;
+            temp = RConHashNonce;
         }
 
         public int MaxPlayers
@@ -394,5 +395,22 @@ namespace Terraria_Server
 			get { return Program.properties.getValue ("rcon-bind-address", "127.0.0.1:7023"); }
 			set { Program.properties.setValue ("rcon-bind-address", value); }
 		}
+		
+		public string RConHashNonce
+		{
+			get {
+				var val = Program.properties.getValue ("rcon-hash-nonce");
+				if (val != null)
+					return val;
+				
+				var bytes = new byte [4];
+				(new Random ((int) DateTime.Now.Ticks)).NextBytes (bytes);
+				val = string.Format ("rcon_{0:x2}{1:x2}{2:x2}{3:x2}", bytes[0], bytes[1], bytes[2], bytes[3]);
+				
+				Program.properties.setValue ("rcon-hash-nonce", val);
+				return val;
+			}
+		}
+
     }
 }
