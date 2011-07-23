@@ -95,7 +95,7 @@ namespace Terraria_Server.Commands
                                                                     "Un-Ban a Player.", 
                                                                     "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
-                                                                    "Spawn a NPC (/spawnnpc <amount> <name:id>)",
+                                                                    "Spawn a NPC (/spawnnpc <amount> <name:id> <player>)",
                                                                     "Teleport Player to Player.",
                                                                     "Teleport a Player to You.",
                                                                     "Settle Water.",
@@ -760,85 +760,56 @@ namespace Terraria_Server.Commands
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
         public static void SpawnNPC(ISender sender, IList<string> commands)
         {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
+			if (!sender.Op)
+			{
+				sender.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
+				return;
+			}
 
-                // /spawnnpc <amount> <name:id>
-                if (commands.Count > 2 && commands[1] != null && commands[2] != null
-                    && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
-                {
-                    String npcName = string.Join(" ", commands);
-                    npcName = npcName.Remove(0, npcName.IndexOf(" " + commands[2])).Replace(" ", "").ToLower();
+			// /spawnnpc <amount> <name:id>
+			try
+			{
+				Player player = ((Player)sender);
+				if (commands.Count >= 4)
+				{
+					player = Program.server.GetPlayerByName(commands[3]);
+					if (null == player)
+					{
+						sender.sendMessage("Player not found.", 255, 238f, 130f, 238f);
+						return;
+					}
+				}
 
-                    bool isNumber = false;
-                    Int32 realNPCId = 0;
-                    String realNPCName = "";
+				String npcName = commands[2].Replace(" ", "").ToLower();
 
-                    try
-                    {
-                        realNPCId = Int32.Parse(npcName);
-                        isNumber = true;
-                    }
-                    catch
-                    {
+				// Get the class id of the npc
+				Int32 realNPCId = 0;
+				NPC fclass = Registries.NPC.FindClass(npcName);
+				if (fclass.type != Registries.NPC.Default.type)
+				{
+					realNPCId = fclass.Type;
+				}
+				else
+				{
+					realNPCId = Int32.Parse(npcName);
+				}
 
-                    }
+				int NPCAmount = Int32.Parse(commands[1]);
 
-                    int NPCAmount = 1;
-                    try
-                    {
-                        NPCAmount = Int32.Parse(commands[1]);
-                    }
-                    catch (Exception)
-                    {
-                        goto ERROR;
-                    }
-
-                    int npcIndex = -1;
-
-                    for (int i = 0; i < NPCAmount; i++)
-                    {
-                        Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-
-                        if (isNumber)
-                        {
-                            npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), realNPCId);
-                            realNPCName = Main.npcs[npcIndex].Name;
-                        }
-                        else
-                        {
-                            NPC fclass = Registries.NPC.FindClass(npcName);
-                            if (fclass != Registries.NPC.Default)
-                            {
-                                realNPCId = fclass.Type;
-                                npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), realNPCId);
-                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], fclass.Name);
-                                realNPCName = fclass.Name;
-                            }
-                            else
-                            {
-                                goto ERROR;
-                            }
-                        }
-                    }
-                    Program.server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
-                            realNPCName  + " {" + player.Name + "}", true);
-                    return;
-                }
-                else
-                {
-                    goto ERROR;
-                }
-
-            ERROR:
-                sender.sendMessage("Command Error!");
-            }
+				String realNPCName = "";
+				for (int i = 0; i < NPCAmount; i++)
+				{
+					Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+					int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), realNPCId);
+					realNPCName = Main.npcs[npcIndex].Name;
+				}
+				Program.server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
+						realNPCName + " {" + player.Name + "}", true);
+			}
+			catch
+			{
+				sender.sendMessage("Command Error!");
+			}
         }
 
         /// <summary>
