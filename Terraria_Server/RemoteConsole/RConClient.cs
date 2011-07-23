@@ -112,6 +112,7 @@ namespace Terraria_Server.RemoteConsole
 		internal bool ProcessRead ()
 		{
 			int start = 0;
+			bool iac = false;
 			
 			int i;
 			for (i = bytesChecked; i < bytesRead; i++)
@@ -142,9 +143,18 @@ namespace Terraria_Server.RemoteConsole
 					case 252:
 					case 253:
 					case 254:
+					{
+						if (iac)
+						{
+							start = i + 2;
+							iac = false;
+						}
+						break;
+					}
 					case 255:
 					{
 						start = i + 1;
+						iac = true;
 						break;
 					}
 				}
