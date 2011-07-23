@@ -10,7 +10,7 @@ namespace Terraria_Server
         public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 
         private const String WORLDS = "Worlds";
-        private const String PLAYERS = "Players";
+        //private const String PLAYERS = "Players";
         private const String PLUGINS = "Plugins";
         private const String DATA = "Data";
 
@@ -27,14 +27,6 @@ namespace Terraria_Server
             get
             {
                 return SavePath + Path.DirectorySeparatorChar + WORLDS;
-            }
-        }
-
-        public static String PlayerPath
-        {
-            get
-            {
-                return SavePath + Path.DirectorySeparatorChar + PLAYERS;
             }
         }
 

@@ -9,6 +9,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -1032,7 +1033,7 @@ namespace Terraria_Server
                                 {
                                     if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 4 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 13 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 33 || Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 49 || (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 50 && Main.tile.At(Player.tileTargetX, Player.tileTargetY).FrameX == 90))
                                     {
-                                        WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                        WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                     }
                                     else
                                     {
@@ -1093,14 +1094,14 @@ namespace Terraria_Server
                                             {
                                                 if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 10)
                                                 {
-                                                    WorldGen.OpenDoor(Player.tileTargetX, Player.tileTargetY, this.direction);
+                                                    WorldModify.OpenDoor(Player.tileTargetX, Player.tileTargetY, this.direction);
                                                     NetMessage.SendData(19, -1, -1, "", 0, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
                                                 }
                                                 else
                                                 {
                                                     if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 11)
                                                     {
-                                                        if (WorldGen.CloseDoor(Player.tileTargetX, Player.tileTargetY, false))
+                                                        if (WorldModify.CloseDoor(Player.tileTargetX, Player.tileTargetY, false))
                                                         {
                                                             NetMessage.SendData(19, -1, -1, "", 1, (float)Player.tileTargetX, (float)Player.tileTargetY, (float)this.direction);
                                                         }
@@ -2223,9 +2224,9 @@ namespace Terraria_Server
 							{
 								Main.tile.At(i, j).SetLava (false);
 								Main.tile.At(i, j).SetLiquid (0);
-								WorldGen.SquareTileFrame(i, j, true);
+								WorldModify.SquareTileFrame(i, j, true);
 							}
-							WorldGen.KillTile(i, j, false, false, false);
+							WorldModify.KillTile(i, j, false, false, false);
 						}
 					}
 				}
@@ -2381,16 +2382,6 @@ namespace Terraria_Server
             if (!pvp && this.whoAmi == Main.myPlayer && !this.hardCore)
             {
                 this.DropCoins();
-            }
-            if (this.whoAmi == Main.myPlayer)
-            {
-                try
-                {
-                    WorldGen.saveToonWhilePlaying();
-                }
-                catch
-                {
-                }
             }
         }
 
@@ -2795,7 +2786,7 @@ namespace Terraria_Server
                                     int num11 = (int)Main.tile.At(Player.tileTargetX, Player.tileTargetY).Liquid;
                                     Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (0);
                                     Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (false);
-                                    WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
+                                    WorldModify.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, false);
 
                                     Liquid.AddWater(Player.tileTargetX, Player.tileTargetY);
 
@@ -2822,7 +2813,7 @@ namespace Terraria_Server
                                                     Main.tile.At(x, y).SetLava (false);
                                                 }
 
-                                                WorldGen.SquareTileFrame(x, y, false);
+                                                WorldModify.SquareTileFrame(x, y, false);
 
                                                 Liquid.AddWater(x, y);
                                             }
@@ -2840,7 +2831,7 @@ namespace Terraria_Server
                                         {
                                             Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (true);
                                             Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
-                                            WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
+                                            WorldModify.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                             selectedItem = Registries.Item.Create(205);
                                             inventory[selectedItemIndex] = selectedItem;
                                             this.itemTime = selectedItem.UseTime;
@@ -2850,7 +2841,7 @@ namespace Terraria_Server
                                     {
                                         Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLava (false);
                                         Main.tile.At(Player.tileTargetX, Player.tileTargetY).SetLiquid (255);
-                                        WorldGen.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
+                                        WorldModify.SquareTileFrame(Player.tileTargetX, Player.tileTargetY, true);
                                         selectedItem = Registries.Item.Create(205);
                                         inventory[selectedItemIndex] = selectedItem;
                                         this.itemTime = selectedItem.UseTime;
@@ -2908,16 +2899,16 @@ namespace Terraria_Server
                                             if (Main.tile.At(Player.tileTargetX, Player.tileTargetY).Type == 26)
                                             {
                                                 Hurt(this.statLife / 2, -direction, false, false);
-                                                WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                             }
                                             else if (hitTile >= 100)
                                             {
                                                 hitTile = 0;
-                                                WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                                WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                             }
                                             else
                                             {
-                                                WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                             }
 
                                             itemTime = inventory[this.selectedItemIndex].UseTime;
@@ -2942,11 +2933,11 @@ namespace Terraria_Server
                                                 if (hitTile >= 100)
                                                 {
                                                     hitTile = 0;
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                                 }
                                                 else
                                                 {
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                                 }
                                                 this.itemTime = selectedItem.UseTime;
                                             }
@@ -3005,11 +2996,11 @@ namespace Terraria_Server
                                                 if (hitTile >= 100)
                                                 {
                                                     hitTile = 0;
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, false, false, false);
                                                 }
                                                 else
                                                 {
-                                                    WorldGen.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
+                                                    WorldModify.KillTile(Player.tileTargetX, Player.tileTargetY, true, false, false);
                                                 }
                                                 this.itemTime = selectedItem.UseTime;
                                             }
@@ -3052,11 +3043,11 @@ namespace Terraria_Server
                                         if (hitTile >= 100)
                                         {
                                             hitTile = 0;
-                                            WorldGen.KillWall(Player.tileTargetX, Player.tileTargetY, false);
+                                            WorldModify.KillWall(Player.tileTargetX, Player.tileTargetY, false);
                                         }
                                         else
                                         {
-                                            WorldGen.KillWall(Player.tileTargetX, Player.tileTargetY, true);
+                                            WorldModify.KillWall(Player.tileTargetX, Player.tileTargetY, true);
                                         }
                                         this.itemTime = selectedItem.UseTime;
                                     }
@@ -3216,7 +3207,7 @@ namespace Terraria_Server
                                 }
                                 if (flag4)
                                 {
-                                    if (WorldGen.PlaceTile(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateTile, false, false, this.whoAmi))
+                                    if (WorldModify.PlaceTile(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateTile, false, false, this.whoAmi))
                                     {
                                         this.itemTime = selectedItem.UseTime;
                                         if (selectedItem.CreateTile == 15)
@@ -3246,7 +3237,7 @@ namespace Terraria_Server
                             {
                                 if ((int)Main.tile.At(Player.tileTargetX, Player.tileTargetY).Wall != selectedItem.CreateWall)
                                 {
-                                    WorldGen.PlaceWall(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateWall, false);
+                                    WorldModify.PlaceWall(Player.tileTargetX, Player.tileTargetY, selectedItem.CreateWall, false);
                                     if ((int)Main.tile.At(Player.tileTargetX, Player.tileTargetY).Wall == selectedItem.CreateWall)
                                     {
                                         this.itemTime = selectedItem.UseTime;
@@ -3330,7 +3321,7 @@ namespace Terraria_Server
                                 {
                                     if (Main.tile.At(k, l).Type == 3 || Main.tile.At(k, l).Type == 24 || Main.tile.At(k, l).Type == 28 || Main.tile.At(k, l).Type == 32 || Main.tile.At(k, l).Type == 51 || Main.tile.At(k, l).Type == 52 || Main.tile.At(k, l).Type == 61 || Main.tile.At(k, l).Type == 62 || Main.tile.At(k, l).Type == 69 || Main.tile.At(k, l).Type == 71 || Main.tile.At(k, l).Type == 73 || Main.tile.At(k, l).Type == 74)
                                     {
-                                        WorldGen.KillTile(k, l, false, false, false);
+                                        WorldModify.KillTile(k, l, false, false, false);
                                     }
                                 }
                             }
@@ -3657,7 +3648,7 @@ namespace Terraria_Server
 					}
 				}
 			}
-			return WorldGen.StartRoomCheck(x, y - 1);
+			return WorldModify.StartRoomCheck(x, y - 1);
 		}
 		
         public void FindSpawn()
@@ -3728,207 +3719,6 @@ namespace Terraria_Server
             }
             return false;
         }
-		
-        public static void SavePlayer(Player newPlayer)
-		{
-            String playerPath = Statics.PlayerPath + "\\" + newPlayer.Name;
-            try
-            {
-                Directory.CreateDirectory(Statics.PlayerPath);
-            }
-            catch
-            {
-            }
-            if (playerPath == null)
-            {
-                return;
-            }
-			String destFileName = playerPath + ".bak";
-			if (File.Exists(playerPath))
-			{
-				File.Copy(playerPath, destFileName, true);
-			}
-			String text = playerPath + ".dat";
-			using (FileStream fileStream = new FileStream(text, FileMode.Create))
-			{
-				using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
-				{
-					binaryWriter.Write(Statics.CURRENT_TERRARIA_RELEASE);
-					binaryWriter.Write(newPlayer.Name);
-					binaryWriter.Write(newPlayer.hair);
-					binaryWriter.Write(newPlayer.statLife);
-					binaryWriter.Write(newPlayer.statLifeMax);
-					binaryWriter.Write(newPlayer.statMana);
-					binaryWriter.Write(newPlayer.statManaMax);
-					binaryWriter.Write(newPlayer.hairColor.R);
-					binaryWriter.Write(newPlayer.hairColor.G);
-					binaryWriter.Write(newPlayer.hairColor.B);
-					binaryWriter.Write(newPlayer.skinColor.R);
-					binaryWriter.Write(newPlayer.skinColor.G);
-					binaryWriter.Write(newPlayer.skinColor.B);
-					binaryWriter.Write(newPlayer.eyeColor.R);
-					binaryWriter.Write(newPlayer.eyeColor.G);
-					binaryWriter.Write(newPlayer.eyeColor.B);
-					binaryWriter.Write(newPlayer.shirtColor.R);
-					binaryWriter.Write(newPlayer.shirtColor.G);
-					binaryWriter.Write(newPlayer.shirtColor.B);
-					binaryWriter.Write(newPlayer.underShirtColor.R);
-					binaryWriter.Write(newPlayer.underShirtColor.G);
-					binaryWriter.Write(newPlayer.underShirtColor.B);
-					binaryWriter.Write(newPlayer.pantsColor.R);
-					binaryWriter.Write(newPlayer.pantsColor.G);
-					binaryWriter.Write(newPlayer.pantsColor.B);
-					binaryWriter.Write(newPlayer.shoeColor.R);
-					binaryWriter.Write(newPlayer.shoeColor.G);
-					binaryWriter.Write(newPlayer.shoeColor.B);
-					for (int i = 0; i < 8; i++)
-					{
-						if (newPlayer.armor[i].Name == null)
-						{
-							newPlayer.armor[i].Name = "";
-						}
-						binaryWriter.Write(newPlayer.armor[i].Name);
-					}
-					for (int j = 0; j < MAX_INVENTORY; j++)
-					{
-						if (newPlayer.inventory[j].Name == null)
-						{
-							newPlayer.inventory[j].Name = "";
-						}
-						binaryWriter.Write(newPlayer.inventory[j].Name);
-						binaryWriter.Write(newPlayer.inventory[j].Stack);
-					}
-					for (int k = 0; k < Chest.MAX_ITEMS; k++)
-					{
-						if (newPlayer.bank[k].Name == null)
-						{
-							newPlayer.bank[k].Name = "";
-						}
-						binaryWriter.Write(newPlayer.bank[k].Name);
-						binaryWriter.Write(newPlayer.bank[k].Stack);
-					}
-					for (int l = 0; l < 200; l++)
-					{
-						if (newPlayer.spN[l] == null)
-						{
-							binaryWriter.Write(-1);
-							break;
-						}
-						binaryWriter.Write(newPlayer.spX[l]);
-						binaryWriter.Write(newPlayer.spY[l]);
-						binaryWriter.Write(newPlayer.spI[l]);
-						binaryWriter.Write(newPlayer.spN[l]);
-					}
-					binaryWriter.Close();
-				}
-			}
-			Player.EncryptFile(text, playerPath);
-			File.Delete(text);
-		}
-		
-        public static Player LoadPlayer(String playerPath)
-		{
-			bool flag = false;
-			if (Main.rand == null)
-			{
-				Main.rand = new Random((int)DateTime.Now.Ticks);
-			}
-			Player player = new Player();
-			try
-			{
-				String text = playerPath + ".dat";
-				flag = Player.DecryptFile(playerPath, text);
-				if (!flag)
-				{
-					using (FileStream fileStream = new FileStream(text, FileMode.Open))
-					{
-						using (BinaryReader binaryReader = new BinaryReader(fileStream))
-						{
-							int release = binaryReader.ReadInt32();
-							player.Name = binaryReader.ReadString();
-							player.hair = binaryReader.ReadInt32();
-							player.statLife = binaryReader.ReadInt32();
-							player.statLifeMax = binaryReader.ReadInt32();
-							if (player.statLife > player.statLifeMax)
-							{
-								player.statLife = player.statLifeMax;
-							}
-							player.statMana = binaryReader.ReadInt32();
-							player.statManaMax = binaryReader.ReadInt32();
-							if (player.statMana > player.statManaMax)
-							{
-								player.statMana = player.statManaMax;
-							}
-							player.hairColor.R = binaryReader.ReadByte();
-							player.hairColor.G = binaryReader.ReadByte();
-							player.hairColor.B = binaryReader.ReadByte();
-							player.skinColor.R = binaryReader.ReadByte();
-							player.skinColor.G = binaryReader.ReadByte();
-							player.skinColor.B = binaryReader.ReadByte();
-							player.eyeColor.R = binaryReader.ReadByte();
-							player.eyeColor.G = binaryReader.ReadByte();
-							player.eyeColor.B = binaryReader.ReadByte();
-							player.shirtColor.R = binaryReader.ReadByte();
-							player.shirtColor.G = binaryReader.ReadByte();
-							player.shirtColor.B = binaryReader.ReadByte();
-							player.underShirtColor.R = binaryReader.ReadByte();
-							player.underShirtColor.G = binaryReader.ReadByte();
-							player.underShirtColor.B = binaryReader.ReadByte();
-							player.pantsColor.R = binaryReader.ReadByte();
-							player.pantsColor.G = binaryReader.ReadByte();
-							player.pantsColor.B = binaryReader.ReadByte();
-							player.shoeColor.R = binaryReader.ReadByte();
-							player.shoeColor.G = binaryReader.ReadByte();
-							player.shoeColor.B = binaryReader.ReadByte();
-							for (int i = 0; i < 8; i++)
-							{
-                                player.armor[i] = Registries.Item.Create(Item.VersionName(binaryReader.ReadString(), release));
-							}
-							for (int j = 0; j < MAX_INVENTORY; j++)
-							{
-                                player.inventory[j] = Registries.Item.Create(Item.VersionName(binaryReader.ReadString(), release), binaryReader.ReadInt32());
-							}
-							for (int k = 0; k < Chest.MAX_ITEMS; k++)
-							{
-                                player.bank[k] = Registries.Item.Create(Item.VersionName(binaryReader.ReadString(), release), binaryReader.ReadInt32());
-							}
-							for (int l = 0; l < 200; l++)
-							{
-								int num = binaryReader.ReadInt32();
-								if (num == -1)
-								{
-									break;
-								}
-								player.spX[l] = num;
-								player.spY[l] = binaryReader.ReadInt32();
-								player.spI[l] = binaryReader.ReadInt32();
-								player.spN[l] = binaryReader.ReadString();
-							}
-							binaryReader.Close();
-						}
-					}
-					player.PlayerFrame();
-					File.Delete(text);
-                    return player;
-				}
-			}
-			catch
-			{
-				flag = true;
-			}
-			if (!flag)
-			{
-				return new Player();
-			}
-			String text2 = playerPath + ".bak";
-			if (File.Exists(text2))
-			{
-				File.Delete(playerPath);
-				File.Move(text2, playerPath);
-				return Player.LoadPlayer(playerPath);
-			}
-			return new Player();
-		}
 		
         public Player()
 		{
@@ -4231,12 +4021,12 @@ namespace Terraria_Server
         {
             get
             {
-                return new Vector2(Position.X * 16, Position.Y * 16);
+                return new Vector2(Position.X / 16, Position.Y / 16);
             }
             set
             {
-                Position.X = value.X / 16;
-                Position.Y = value.Y / 16;
+                Position.X = value.X * 16;
+                Position.Y = value.Y * 16;
             }
         }
 

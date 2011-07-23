@@ -2,6 +2,7 @@ using System;
 using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
@@ -58,7 +59,7 @@ namespace Terraria_Server.Messages
                 tile.SetLiquid (liquid);
                 tile.SetLava (lavaFlag == 1);
 
-                WorldGen.SquareTileFrame(x, y, true);
+                WorldModify.SquareTileFrame(x, y, true);
             }
         }
     }

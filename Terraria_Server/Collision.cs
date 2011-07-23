@@ -1,5 +1,6 @@
 using System;
 using Terraria_Server.Misc;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -558,7 +559,7 @@ namespace Terraria_Server
                         vector2.Y = (float)(j * 16);
                         if (vector.X + (float)Width >= vector2.X && vector.X <= vector2.X + 16f && vector.Y + (float)Height >= vector2.Y && vector.Y <= vector2.Y + 16f)
                         {
-                            WorldGen.KillTile(i, j, true, true, false);
+                            WorldModify.KillTile(i, j, true, true, false);
                         }
                     }
                 }

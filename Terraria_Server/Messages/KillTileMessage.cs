@@ -2,6 +2,7 @@ using System;
 using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugin;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
@@ -29,7 +30,7 @@ namespace Terraria_Server.Messages
                     return;
                 }
 
-                WorldGen.KillTile(x, y);
+                WorldModify.KillTile(x, y);
                 if (!Main.tile.At(x, y).Active)
                 {
                     NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);

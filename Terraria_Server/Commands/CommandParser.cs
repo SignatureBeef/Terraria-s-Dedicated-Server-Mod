@@ -161,6 +161,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="line">Command to parse</param>
         /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sender of the Command</param>
 		public void ParseConsoleCommand (string line, Server server, ConsoleSender sender = null)
 		{
 			line = line.Trim();
@@ -271,29 +272,31 @@ namespace Terraria_Server.Commands
                 
                 var args = new ArgumentList (server);
                 var command = Tokenize (line, args);
-                
-                if (command != null && FindTokenCommand (command, out info))
+
+                if (command != null)
                 {
-                    if (! CheckAccessLevel (info, sender))
+                    if (serverCommands.TryGetValue(command, out info) && info.tokenCallback != null)
                     {
-                        sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+                        if (! CheckAccessLevel (info, sender))
+                        {
+                            sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                            return;
+                        }
+
+                        try
+                        {
+                            info.tokenCallback(server, sender, args);
+                        }
+                        catch (CommandError e)
+                        {
+                            sender.sendMessage(command + ": " + e.Message);
+                            info.ShowHelp(sender);
+                        }
                         return;
                     }
 
-                    try
-                    {
-                        info.tokenCallback (server, sender, args);
-                    }
-                    catch (CommandError e)
-                    {
-                        sender.sendMessage (command + ": " + e.Message);
-                        info.ShowHelp (sender);
-                    }
-                    return;
+                    switchCommands(command, args, sender);
                 }
-                
-                if (command != null)
-                    switchCommands (command, args, sender);
             }
             catch (TokenizerException e)
             {

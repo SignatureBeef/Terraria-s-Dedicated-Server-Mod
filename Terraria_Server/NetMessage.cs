@@ -549,12 +549,20 @@ namespace Terraria_Server
 			{
 				if (Netplay.slots[i].state >= SlotState.PLAYING && Netplay.slots[i].Connected)
 				{
-					int num = x / 200;
-					int num2 = y / 150;
-					if (Netplay.slots[i].tileSection[num, num2])
-					{
-						Netplay.slots[i].Send (bytes);
-					}
+					int X = x / 200;
+					int Y = y / 150;
+                    if (X < (Main.maxTilesX / 200) && Y < (Main.maxTilesY / 150))
+                    {
+                        if (Netplay.slots[i].tileSection[X, Y])
+                        {
+                            Netplay.slots[i].Send(bytes);
+                        }
+                    }
+                    else
+                    {
+                        ProgramLog.Error.Log("Water Index out of Bounds:");
+                        ProgramLog.Error.Log(string.Format("X: {0} Y: {1}, Axis: {2}, {3}", X, Y, Main.maxTilesX, Main.maxTilesY));
+                    }
 				}
 			}
 		}

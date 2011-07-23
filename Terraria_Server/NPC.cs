@@ -5,6 +5,7 @@ using Terraria_Server.Events;
 using Terraria_Server.Commands;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
+using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
@@ -626,19 +627,19 @@ namespace Terraria_Server
                                         flag3 = true;
                                         npc.ai[1] = 10f;
                                     }
-                                    WorldGen.KillTile(num4, num5 - 1, true, false, false);
+                                    WorldModify.KillTile(num4, num5 - 1, true, false, false);
                                     if (flag3)
                                     {
                                         if (npc.type == NPCType.N26_GOBLIN_PEON)
                                         {
-                                            WorldGen.KillTile(num4, num5 - 1, false, false, false);
+                                            WorldModify.KillTile(num4, num5 - 1, false, false, false);
 
                                             NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)(num5 - 1), 0f, 0);
                                             return;
                                         }
                                         else
                                         {
-                                            bool flag4 = WorldGen.OpenDoor(num4, num5, npc.direction, npc.closeDoor, DoorOpener.NPC);
+                                            bool flag4 = WorldModify.OpenDoor(num4, num5, npc.direction, npc.closeDoor, DoorOpener.NPC);
                                             if (!flag4)
                                             {
                                                 npc.ai[3] = (float)num3;
@@ -1503,7 +1504,7 @@ namespace Terraria_Server
                                                         flag6 = true;
                                                         if (Main.rand.Next(40) == 0 && Main.tile.At(m, n).Active)
                                                         {
-                                                            WorldGen.KillTile(m, n, true, true, false);
+                                                            WorldModify.KillTile(m, n, true, true, false);
                                                         }
                                                         if (Main.tile.At(m, n).Type == 2)
                                                         {
@@ -1806,7 +1807,7 @@ namespace Terraria_Server
                                                     else
                                                     {
                                                         npc.homeless = true;
-                                                        WorldGen.QuickFindHome(npc.whoAmI);
+                                                        WorldModify.QuickFindHome(npc.whoAmI);
                                                     }
                                                 }
                                             }
@@ -1968,7 +1969,7 @@ namespace Terraria_Server
                                                     }
                                                     if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
                                                     {
-                                                        bool flag9 = WorldGen.CloseDoor(npc.doorX, npc.doorY, false, DoorOpener.NPC);
+                                                        bool flag9 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false, DoorOpener.NPC);
                                                         if (flag9)
                                                         {
                                                             npc.closeDoor = false;
@@ -2019,7 +2020,7 @@ namespace Terraria_Server
                                                         int num69 = (int)((npc.Position.Y + (float)npc.Height - 16f) / 16f);
                                                         if (npc.townNPC && Main.tile.At(num68, num69 - 2).Active && Main.tile.At(num68, num69 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
-                                                            bool flag10 = WorldGen.OpenDoor(num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
+                                                            bool flag10 = WorldModify.OpenDoor(num68, num69 - 2, npc.direction, npc.closeDoor, DoorOpener.NPC);
                                                             if (flag10)
                                                             {
                                                                 npc.closeDoor = true;
@@ -2030,7 +2031,7 @@ namespace Terraria_Server
                                                                 npc.ai[1] += 80f;
                                                                 return;
                                                             }
-                                                            if (WorldGen.OpenDoor(num68, num69 - 2, -npc.direction, npc.closeDoor, DoorOpener.NPC))
+                                                            if (WorldModify.OpenDoor(num68, num69 - 2, -npc.direction, npc.closeDoor, DoorOpener.NPC))
                                                             {
                                                                 npc.closeDoor = true;
                                                                 npc.doorX = num68;
@@ -5461,7 +5462,7 @@ namespace Terraria_Server
                 npc.timeLeft = (int)((double)NPC.ACTIVE_TIME * 1.25);
                 npc.wet = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
 
-                if (!WorldGen.gen)
+                if (!WorldModify.gen)
                 {
                     NPCSpawnEvent npcEvent = new NPCSpawnEvent();
                     npcEvent.NPC = npc;
@@ -5546,9 +5547,9 @@ namespace Terraria_Server
                     {
                         NetMessage.SendData(25, -1, -1, this.Name + " was slain...", 255, 255f, 25f, 25f);
                     }
-                    if (this.townNPC && this.homeless && WorldGen.spawnNPC == this.Type)
+                    if (this.townNPC && this.homeless && WorldModify.spawnNPC == this.Type)
                     {
-                        WorldGen.spawnNPC = 0;
+                        WorldModify.spawnNPC = 0;
                     }
 
                     NPCDeathEvent Event = new NPCDeathEvent();
@@ -5988,7 +5989,7 @@ namespace Terraria_Server
                     {
                         Main.tile.At(num5, num6).SetLiquid(200);
                     }
-                    WorldGen.TileFrame(num5, num6, false, false);
+                    WorldModify.TileFrame(num5, num6, false, false);
                     return;
                 }
             }
