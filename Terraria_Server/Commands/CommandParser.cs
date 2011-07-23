@@ -7,6 +7,59 @@ using Terraria_Server.RemoteConsole;
 
 namespace Terraria_Server.Commands
 {
+    public enum AccessLevel
+    {
+        PLAYER,
+        OP,
+        REMOTE_CONSOLE,
+        CONSOLE,
+    }
+
+    public class CommandInfo
+    {
+        internal string description;
+        internal List<string> helpText = new List<string> ();
+        internal AccessLevel accessLevel = AccessLevel.OP;
+        internal Action<Server, ISender, ArgumentList> tokenCallback;
+        internal Action<Server, ISender, string> stringCallback;
+        
+        public CommandInfo WithDescription (string desc)
+        {
+            description = desc;
+            return this;
+        }
+        
+        public CommandInfo WithHelpText (string help)
+        {
+            helpText.Add (help);
+            return this;
+        }
+        
+        public CommandInfo WithAccessLevel (AccessLevel accessLevel)
+        {
+            this.accessLevel = accessLevel;
+            return this;
+        }
+        
+        public CommandInfo Calls (Action<Server, ISender, ArgumentList> callback)
+        {
+            tokenCallback = callback;
+            return this;
+        }
+
+        public CommandInfo Calls (Action<Server, ISender, string> callback)
+        {
+            stringCallback = callback;
+            return this;
+        }
+        
+        public void ShowHelp (ISender sender)
+        {
+            foreach (var line in helpText)
+                sender.sendMessage (line);
+        }
+    }
+
     public class CommandParser
     {
         /// <summary>
@@ -25,36 +78,38 @@ namespace Terraria_Server.Commands
             
             AddCommand ("exit")
                 .WithDescription ("Stop the server, save the world then exit program.")
+                .WithAccessLevel (AccessLevel.CONSOLE)
                 .Calls (Commands.Exit);
             
             AddCommand ("reload")
                 .WithDescription ("Reload plugins.")
+                .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
                 .Calls (Commands.Reload);
                 
             AddCommand ("list")
-                .WithRestriction (false)
+                .WithAccessLevel (AccessLevel.PLAYER)
                 .WithDescription ("List active players (also: who, players, online).")
                 .Calls (Commands.List);
                 
             AddCommand ("who")
-                .WithRestriction (false)
+                .WithAccessLevel (AccessLevel.PLAYER)
                 .Calls(Commands.List);
 
             AddCommand("players")
-                .WithRestriction(false)
+                .WithAccessLevel (AccessLevel.PLAYER)
                 .Calls(Commands.OldList);
 
             AddCommand("online")
-                .WithRestriction(false)
+                .WithAccessLevel (AccessLevel.PLAYER)
                 .Calls(Commands.List);
                 
             AddCommand ("me")
-                .WithRestriction (false)
+                .WithAccessLevel (AccessLevel.PLAYER)
                 .WithDescription ("Broadcast a message in third person.")
                 .Calls (Commands.Action);
                 
             AddCommand ("say")
-                .WithRestriction (false)
+                .WithAccessLevel (AccessLevel.PLAYER)
                 .WithDescription ("Broadcast a message in first person.")
                 .Calls (Commands.Say);
                 
@@ -74,6 +129,7 @@ namespace Terraria_Server.Commands
             
             AddCommand ("rcon")
                 .WithDescription ("Manage remote console access.")
+                .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
                 .WithHelpText ("Usage:   rcon load       - reload login database")
                 .WithHelpText ("         rcon list       - list rcon connections")
                 .WithHelpText ("         rcon cut <name> - cut off rcon connections")
@@ -85,52 +141,7 @@ namespace Terraria_Server.Commands
                 .WithHelpText ("Usage:   status")
                 .Calls (Commands.Status);
         }
-        
-        public class CommandInfo
-        {
-            internal string description;
-            internal List<string> helpText = new List<string> ();
-            internal bool restricted = true;
-            internal Action<Server, ISender, ArgumentList> tokenCallback;
-            internal Action<Server, ISender, string> stringCallback;
-            
-            public CommandInfo WithDescription (string desc)
-            {
-                description = desc;
-                return this;
-            }
-            
-            public CommandInfo WithHelpText (string help)
-            {
-                helpText.Add (help);
-                return this;
-            }
-            
-            public CommandInfo WithRestriction (bool restricted)
-            {
-                this.restricted = restricted;
-                return this;
-            }
-            
-            public CommandInfo Calls (Action<Server, ISender, ArgumentList> callback)
-            {
-                tokenCallback = callback;
-                return this;
-            }
-
-            public CommandInfo Calls (Action<Server, ISender, string> callback)
-            {
-                stringCallback = callback;
-                return this;
-            }
-            
-            public void ShowHelp (ISender sender)
-            {
-                foreach (var line in helpText)
-                    sender.sendMessage (line);
-            }
-        }
-        
+       
         readonly Dictionary<string, CommandInfo> serverCommands;
         
         public CommandInfo AddCommand (string prefix)
@@ -139,6 +150,7 @@ namespace Terraria_Server.Commands
             
             var cmd = new CommandInfo ();
             serverCommands[prefix] = cmd;
+            serverCommands["." + prefix] = cmd;
             
             return cmd;
         }
@@ -184,6 +196,46 @@ namespace Terraria_Server.Commands
                 ParseAndProcess (player, line);
             }
         }
+        
+        static bool CheckAccessLevel (CommandInfo cmd, ISender sender)
+        {
+            if (sender is Player) return cmd.accessLevel == AccessLevel.PLAYER || (cmd.accessLevel == AccessLevel.OP && sender.Op);
+            if (sender is RConSender) return cmd.accessLevel <= AccessLevel.REMOTE_CONSOLE;
+            if (sender is ConsoleSender) return true;
+            throw new NotImplementedException ("Unexpected ISender implementation");
+        }
+        
+        bool FindStringCommand (string prefix, out CommandInfo info)
+        {
+            info = null;
+            
+            foreach (var plugin in server.PluginManager.Plugins.Values)
+            {
+                if (plugin.commands.TryGetValue (prefix, out info) && info.stringCallback != null)
+                    return true;
+            }
+            
+            if (serverCommands.TryGetValue (prefix, out info) && info.stringCallback != null)
+                return true;
+            
+            return false;
+        }
+        
+        bool FindTokenCommand (string prefix, out CommandInfo info)
+        {
+            info = null;
+            
+            foreach (var plugin in server.PluginManager.Plugins.Values)
+            {
+                if (plugin.commands.TryGetValue (prefix, out info) && info.tokenCallback != null)
+                    return true;
+            }
+            
+            if (serverCommands.TryGetValue (prefix, out info) && info.tokenCallback != null)
+                return true;
+            
+            return false;
+        }
 
         public void ParseAndProcess (ISender sender, string line)
         {
@@ -192,36 +244,37 @@ namespace Terraria_Server.Commands
                 CommandInfo info;
                 
                 var firstSpace = line.IndexOf (' ');
-                if (firstSpace > 0)
+                
+                if (firstSpace < 0) firstSpace = line.Length;
+                
+                var prefix = line.Substring (0, firstSpace);
+                if (FindStringCommand (prefix, out info))
                 {
-                    var prefix = line.Substring (0, firstSpace);
-                    if (serverCommands.TryGetValue (prefix, out info) && info.stringCallback != null)
+                    if (! CheckAccessLevel (info, sender))
                     {
-                        if (info.restricted && ! sender.Op)
-                        {
-                            sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
-                            return;
-                        }
-                        
-                        try
-                        {
-                            info.stringCallback (server, sender, line.Substring (firstSpace + 1, line.Length - firstSpace - 1).Trim());
-                        }
-                        catch (CommandError e)
-                        {
-                            sender.sendMessage (prefix + ": " + e.Message);
-                            info.ShowHelp (sender);
-                        }
+                        sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
                         return;
                     }
+                    
+                    try
+                    {
+                        var rest = firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : ""; 
+                        info.stringCallback (server, sender, rest.Trim());
+                    }
+                    catch (CommandError e)
+                    {
+                        sender.sendMessage (prefix + ": " + e.Message);
+                        info.ShowHelp (sender);
+                    }
+                    return;
                 }
                 
                 var args = new ArgumentList (server);
                 var command = Tokenize (line, args);
                 
-                if (command != null && serverCommands.TryGetValue (command, out info) && info.tokenCallback != null)
+                if (command != null && FindTokenCommand (command, out info))
                 {
-                    if (info.restricted && ! sender.Op)
+                    if (! CheckAccessLevel (info, sender))
                     {
                         sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
                         return;
@@ -239,7 +292,8 @@ namespace Terraria_Server.Commands
                     return;
                 }
                 
-                switchCommands (command, args, sender);
+                if (command != null)
+                    switchCommands (command, args, sender);
             }
             catch (TokenizerException e)
             {

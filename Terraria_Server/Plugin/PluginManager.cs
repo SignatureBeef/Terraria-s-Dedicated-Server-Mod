@@ -24,6 +24,12 @@ namespace Terraria_Server.Plugin
         private String pluginPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
         private Server server;
+        
+        public Dictionary<String, Plugin> Plugins
+        {
+            get { return plugins; }
+        }
+        
         /// <summary>
         /// PluginManager class constructor
         /// </summary>

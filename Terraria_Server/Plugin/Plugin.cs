@@ -250,6 +250,18 @@ namespace Terraria_Server.Plugin
             }
             return false;
         }
-
+        
+        internal Dictionary<string, CommandInfo> commands = new Dictionary<string, CommandInfo> ();
+        
+        protected CommandInfo AddCommand (string prefix)
+        {
+            if (commands.ContainsKey (prefix)) throw new ApplicationException ("AddCommand: duplicate command: " + prefix);
+            
+            var cmd = new CommandInfo ();
+            commands[prefix] = cmd;
+            commands[string.Concat (Name.ToLower(), ".", prefix)] = cmd;
+            
+            return cmd;
+        }
     }
 }
