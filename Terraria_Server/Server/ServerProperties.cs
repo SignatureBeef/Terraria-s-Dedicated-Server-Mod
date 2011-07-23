@@ -66,6 +66,7 @@ namespace Terraria_Server
             temp = PIDFile;
             temp = SimpleLoop;
             temp = HackedData;
+            temp = RConBindAddress;
         }
 
         public int MaxPlayers
@@ -387,5 +388,11 @@ namespace Terraria_Server
                 setValue(HACKED_DATA, value);
             }
         }
+        
+		public string RConBindAddress
+		{
+			get { return Program.properties.getValue ("rcon-bind-address", "127.0.0.1:7023"); }
+			set { Program.properties.setValue ("rcon-bind-address", value); }
+		}
     }
 }

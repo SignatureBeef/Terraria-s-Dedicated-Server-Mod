@@ -208,7 +208,8 @@ namespace Terraria_Server
 					WorldGen.generateWorld(seed);
 					WorldGen.saveWorld(worldFile, true);
 				}
-
+				
+				// TODO: read map size from world file instead of config
 				int worldXtiles = properties.getMapSizes()[0];
 				int worldYtiles = properties.getMapSizes()[1];
 

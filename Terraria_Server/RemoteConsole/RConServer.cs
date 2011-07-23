@@ -18,6 +18,7 @@ namespace Terraria_Server.RemoteConsole
 		static Thread thread;
 		static List<RConClient> clients = new List<RConClient> ();
 		internal static Queue<RConClient> deadClients = new Queue<RConClient> ();
+		static TcpListener listener;
 		
 		public static PropertiesFile LoginDatabase { get; private set; }
 		
@@ -40,6 +41,30 @@ namespace Terraria_Server.RemoteConsole
 			}
 			
 			LoginDatabase.Save ();
+			
+			var bind = Program.properties.RConBindAddress;
+			var split = bind.Split(':');
+			IPAddress addr;
+			ushort port;
+			
+			if (split.Length != 2 || !IPAddress.TryParse (split[0], out addr) || !ushort.TryParse (split[1], out port) || port < 1)
+			{
+				ProgramLog.Error.Log ("{0} is not a valid bind address, remote console disabled.", bind);
+				return;
+			}
+			
+			listener = new TcpListener (IPAddress.Parse ("127.0.0.1"), 7776);
+			
+			try
+			{
+				listener.Start();
+			}
+            catch (Exception)
+			{
+				ProgramLog.Error.Log ("Failed to bind to address {0}, remote console disabled.", bind);
+				//ProgramLog.Log (exception, "Failed to bind to address 127.0.0.1:" + 7776);
+				return;
+			}
 			
 			thread = new Thread (RConLoop);
 			thread.Start ();
@@ -64,19 +89,7 @@ namespace Terraria_Server.RemoteConsole
 		{
 			Thread.CurrentThread.Name = "RCon";
 			
-			var listener = new TcpListener (IPAddress.Parse ("127.0.0.1"), 7776);
-			
-			try
-			{
-				listener.Start();
-			}
-            catch (Exception exception)
-			{
-				ProgramLog.Log (exception, "Failed to bind to address 127.0.0.1:" + 7776);
-				return;
-			}
-			
-			ProgramLog.Admin.Log ("Remote console server started on 127.0.0.1:7776.");
+			ProgramLog.Admin.Log ("Remote console server started on {0}.", Program.properties.RConBindAddress);
 			
 			var socketToObject = new Dictionary<Socket, RConClient> ();
 			var readList = new List<Socket> ();
