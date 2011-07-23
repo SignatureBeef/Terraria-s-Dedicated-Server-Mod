@@ -228,7 +228,7 @@ namespace Terraria_Server
 				catch {}
 			}
 
-            WorldModify.saveWorld(Program.server.World.SavePath, true);
+            WorldIO.saveWorld(Program.server.World.SavePath, true);
 			
 			Statics.serverStarted = false;
 		}

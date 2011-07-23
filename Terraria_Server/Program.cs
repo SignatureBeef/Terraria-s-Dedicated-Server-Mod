@@ -194,7 +194,7 @@ namespace Terraria_Server
 					Server.maxTilesX = worldX;
 					Server.maxTilesY = worldY;
 
-					WorldModify.clearWorld();
+					WorldIO.clearWorld();
 					(new Server()).Initialize();
 					if (properties.UseCustomGenOpts)
 					{
@@ -207,7 +207,7 @@ namespace Terraria_Server
 						WorldModify.ficount = (int)((double)Server.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
 					}
 					WorldGen.generateWorld(seed);
-					WorldModify.saveWorld(worldFile, true);
+					WorldIO.saveWorld(worldFile, true);
 				}
 				
 				// TODO: read map size from world file instead of config
@@ -251,7 +251,7 @@ namespace Terraria_Server
 				Server.maxSectionsX = worldXtiles / 200;
 				Server.maxSectionsY = worldYtiles / 150;
 				
-				WorldModify.loadWorld();
+				WorldIO.loadWorld();
 
 				updateThread = new Thread(Program.UpdateLoop);
 				//updateThread.Name = "Updt";

@@ -2387,7 +2387,7 @@ namespace Terraria_Server
             {
                 try
                 {
-                    WorldModify.saveToonWhilePlaying();
+                    WorldIO.saveToonWhilePlaying();
                 }
                 catch
                 {

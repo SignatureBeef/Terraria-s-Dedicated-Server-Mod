@@ -607,7 +607,7 @@ namespace Terraria_Server
                     }
                     
                     NetMessage.SendData(7);
-                    WorldModify.saveAndPlay();
+                    WorldIO.saveAndPlay();
 
                     
                     if (Main.rand.Next(15) == 0)
