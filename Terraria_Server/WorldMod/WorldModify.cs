@@ -4439,12 +4439,13 @@ namespace Terraria_Server.WorldMod
 
 			while ((float)num3 < (float)(Main.maxTilesX * Main.maxTilesY) * num)
 			{
-				int num4 = WorldModify.genRand.Next(10, Main.maxTilesX - 10);
-				int num5 = WorldModify.genRand.Next(10, (int)Main.worldSurface - 1);
-				int num6 = num4 - 1;
-				int num7 = num4 + 2;
-				int num8 = num5 - 1;
-				int num9 = num5 + 2;
+				int TileX = WorldModify.genRand.Next(10, Main.maxTilesX - 10);
+				int TileY = WorldModify.genRand.Next(10, (int)Main.worldSurface - 1);
+                TileRef Tile = Main.tile.At(TileX, TileY);
+                int num6 = TileX - 1;
+                int num7 = TileX + 2;
+                int num8 = TileY - 1;
+                int num9 = TileY + 2;
 				if (num6 < 10)
 				{
 					num6 = 10;
@@ -4463,76 +4464,76 @@ namespace Terraria_Server.WorldMod
 				}
 				if (true)
 				{
-					if (Main.tileAlch[(int)Main.tile.At(num4, num5).Type])
+					if (Main.tileAlch[(int)Tile.Type])
 					{
-						WorldModify.GrowAlch(num4, num5);
+                        WorldModify.GrowAlch(TileX, TileY);
 					}
-					if (Main.tile.At(num4, num5).Liquid > 32)
+					if (Tile.Liquid > 32)
 					{
-						if (Main.tile.At(num4, num5).Active && (Main.tile.At(num4, num5).Type == 3 || Main.tile.At(num4, num5).Type == 20 || Main.tile.At(num4, num5).Type == 24 || Main.tile.At(num4, num5).Type == 27 || Main.tile.At(num4, num5).Type == 73))
+						if (Tile.Active && (Tile.Type == 3 || Tile.Type == 20 || Tile.Type == 24 || Tile.Type == 27 || Tile.Type == 73))
 						{
-							WorldModify.KillTile(num4, num5, false, false, false);
-							NetMessage.SendData(17, -1, -1, "", 0, (float)num4, (float)num5);
+                            WorldModify.KillTile(TileX, TileY, false, false, false);
+                            NetMessage.SendData(17, -1, -1, "", 0, (float)TileX, (float)TileY);
 						}
 					}
-					else if (Main.tile.At(num4, num5).Active)
+					else if (Tile.Active)
 					{
-						if (Main.tile.At(num4, num5).Type == 80)
+						if (Tile.Type == 80)
 						{
 							if (WorldModify.genRand.Next(15) == 0)
 							{
-								WorldModify.GrowCactus(num4, num5);
+                                WorldModify.GrowCactus(TileX, TileY);
 							}
 						}
-						else if (Main.tile.At(num4, num5).Type == 53)
+						else if (Tile.Type == 53)
 						{
-							if (!Main.tile.At(num4, num8).Active)
+                            if (!Main.tile.At(TileX, num8).Active)
 							{
-								if (num4 < 250 || num4 > Main.maxTilesX - 250)
+                                if (TileX < 250 || TileX > Main.maxTilesX - 250)
 								{
-									if (WorldModify.genRand.Next(500) == 0 && Main.tile.At(num4, num8).Liquid == 255 && Main.tile.At(num4, num8 - 1).Liquid == 255 && Main.tile.At(num4, num8 - 2).Liquid == 255 && Main.tile.At(num4, num8 - 3).Liquid == 255 && Main.tile.At(num4, num8 - 4).Liquid == 255)
+									if (WorldModify.genRand.Next(500) == 0 && Main.tile.At(TileX, num8).Liquid == 255 && Main.tile.At(TileX, num8 - 1).Liquid == 255 && Main.tile.At(TileX, num8 - 2).Liquid == 255 && Main.tile.At(TileX, num8 - 3).Liquid == 255 && Main.tile.At(TileX, num8 - 4).Liquid == 255)
 									{
-										WorldModify.PlaceTile(num4, num8, 81, true, false, -1, 0);
-										if (Main.tile.At(num4, num8).Active)
+										WorldModify.PlaceTile(TileX, num8, 81, true, false, -1, 0);
+										if (Main.tile.At(TileX, num8).Active)
 										{
-											NetMessage.SendTileSquare(-1, num4, num8, 1);
+											NetMessage.SendTileSquare(-1, TileX, num8, 1);
 										}
 									}
 								}
-								else if (num4 > 400 && num4 < Main.maxTilesX - 400 && WorldModify.genRand.Next(300) == 0)
+								else if (TileX > 400 && TileX < Main.maxTilesX - 400 && WorldModify.genRand.Next(300) == 0)
 								{
-									WorldModify.GrowCactus(num4, num5);
+									WorldModify.GrowCactus(TileX, TileY);
 								}
 							}
 						}
-						else if (Main.tile.At(num4, num5).Type == 78)
+						else if (Tile.Type == 78)
 						{
-							if (!Main.tile.At(num4, num8).Active)
+							if (!Main.tile.At(TileX, num8).Active)
 							{
-								WorldModify.PlaceTile(num4, num8, 3, true, false, -1, 0);
-								if (Main.tile.At(num4, num8).Active)
+								WorldModify.PlaceTile(TileX, num8, 3, true, false, -1, 0);
+								if (Main.tile.At(TileX, num8).Active)
 								{
-									NetMessage.SendTileSquare(-1, num4, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, num8, 1);
 								}
 							}
 						}
-						else if (Main.tile.At(num4, num5).Type == 2 || Main.tile.At(num4, num5).Type == 23 || Main.tile.At(num4, num5).Type == 32)
+						else if (Tile.Type == 2 || Tile.Type == 23 || Tile.Type == 32)
 						{
-							int num10 = (int)Main.tile.At(num4, num5).Type;
-							if (!Main.tile.At(num4, num8).Active && WorldModify.genRand.Next(12) == 0 && num10 == 2)
+							int num10 = (int)Tile.Type;
+							if (!Main.tile.At(TileX, num8).Active && WorldModify.genRand.Next(12) == 0 && num10 == 2)
 							{
-								WorldModify.PlaceTile(num4, num8, 3, true, false, -1, 0);
-								if (Main.tile.At(num4, num8).Active)
+								WorldModify.PlaceTile(TileX, num8, 3, true, false, -1, 0);
+								if (Main.tile.At(TileX, num8).Active)
 								{
-									NetMessage.SendTileSquare(-1, num4, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, num8, 1);
 								}
 							}
-							if (!Main.tile.At(num4, num8).Active && WorldModify.genRand.Next(10) == 0 && num10 == 23)
+							if (!Main.tile.At(TileX, num8).Active && WorldModify.genRand.Next(10) == 0 && num10 == 23)
 							{
-								WorldModify.PlaceTile(num4, num8, 24, true, false, -1, 0);
-								if (Main.tile.At(num4, num8).Active)
+								WorldModify.PlaceTile(TileX, num8, 24, true, false, -1, 0);
+								if (Main.tile.At(TileX, num8).Active)
 								{
-									NetMessage.SendTileSquare(-1, num4, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, num8, 1);
 								}
 							}
 							bool flag2 = false;
@@ -4540,7 +4541,7 @@ namespace Terraria_Server.WorldMod
 							{
 								for (int k = num8; k < num9; k++)
 								{
-									if ((num4 != j || num5 != k) && Main.tile.At(j, k).Active)
+									if ((TileX != j || TileY != k) && Main.tile.At(j, k).Active)
 									{
 										if (num10 == 32)
 										{
@@ -4564,22 +4565,22 @@ namespace Terraria_Server.WorldMod
 							}
 							if (flag2)
 							{
-								NetMessage.SendTileSquare(-1, num4, num5, 3);
+								NetMessage.SendTileSquare(-1, TileX, TileY, 3);
 							}
 						}
-						else if (Main.tile.At(num4, num5).Type == 20 && WorldModify.genRand.Next(20) == 0 && !WorldModify.PlayerLOS(num4, num5))
+						else if (Tile.Type == 20 && WorldModify.genRand.Next(20) == 0 && !WorldModify.PlayerLOS(TileX, TileY))
 						{
-							WorldModify.GrowTree(num4, num5);
+							WorldModify.GrowTree(TileX, TileY);
 						}
-						if (Main.tile.At(num4, num5).Type == 3 && WorldModify.genRand.Next(20) == 0 && Main.tile.At(num4, num5).FrameX < 144)
+						if (Tile.Type == 3 && WorldModify.genRand.Next(20) == 0 && Tile.FrameX < 144)
 						{
-							Main.tile.At(num4, num5).SetType (73);
-							NetMessage.SendTileSquare(-1, num4, num5, 3);
+							Tile.SetType (73);
+							NetMessage.SendTileSquare(-1, TileX, TileY, 3);
 						}
-						if (Main.tile.At(num4, num5).Type == 32 && WorldModify.genRand.Next(3) == 0)
+						if (Tile.Type == 32 && WorldModify.genRand.Next(3) == 0)
 						{
-							int num11 = num4;
-							int num12 = num5;
+							int num11 = TileX;
+							int num12 = TileY;
 							int num13 = 0;
 							if (Main.tile.At(num11 + 1, num12).Active && Main.tile.At(num11 + 1, num12).Type == 32)
 							{
@@ -4597,7 +4598,7 @@ namespace Terraria_Server.WorldMod
 							{
 								num13++;
 							}
-							if (num13 < 3 || Main.tile.At(num4, num5).Type == 23)
+							if (num13 < 3 || Tile.Type == 23)
 							{
 								int num14 = WorldModify.genRand.Next(4);
 								if (num14 == 0)
@@ -4669,16 +4670,16 @@ namespace Terraria_Server.WorldMod
 					}
 					else if (flag && WorldModify.spawnNPC > 0)
 					{
-						WorldModify.SpawnNPC(num4, num5);
+						WorldModify.SpawnNPC(TileX, TileY);
 					}
-					if (Main.tile.At(num4, num5).Active)
+					if (Tile.Active)
 					{
-						if ((Main.tile.At(num4, num5).Type == 2 || Main.tile.At(num4, num5).Type == 52) && WorldModify.genRand.Next(40) == 0 && !Main.tile.At(num4, num5 + 1).Active && !Main.tile.At(num4, num5 + 1).Lava)
+						if ((Tile.Type == 2 || Tile.Type == 52) && WorldModify.genRand.Next(40) == 0 && !Main.tile.At(TileX, TileY + 1).Active && !Main.tile.At(TileX, TileY + 1).Lava)
 						{
 							bool flag4 = false;
-							for (int n = num5; n > num5 - 10; n--)
+							for (int n = TileY; n > TileY - 10; n--)
 							{
-								if (Main.tile.At(num4, n).Active && Main.tile.At(num4, n).Type == 2)
+								if (Main.tile.At(TileX, n).Active && Main.tile.At(TileX, n).Type == 2)
 								{
 									flag4 = true;
 									break;
@@ -4686,35 +4687,35 @@ namespace Terraria_Server.WorldMod
 							}
 							if (flag4)
 							{
-								int num20 = num4;
-								int num21 = num5 + 1;
+								int num20 = TileX;
+								int num21 = TileY + 1;
 								Main.tile.At(num20, num21).SetType (52);
 								Main.tile.At(num20, num21).SetActive (true);
 								WorldModify.SquareTileFrame(num20, num21, true);
 								NetMessage.SendTileSquare(-1, num20, num21, 3);
 							}
 						}
-						if (Main.tile.At(num4, num5).Type == 60)
+						if (Tile.Type == 60)
 						{
-							int type = (int)Main.tile.At(num4, num5).Type;
-							if (!Main.tile.At(num4, num8).Active && WorldModify.genRand.Next(7) == 0)
+							int type = (int)Tile.Type;
+							if (!Main.tile.At(TileX, num8).Active && WorldModify.genRand.Next(7) == 0)
 							{
-								WorldModify.PlaceTile(num4, num8, 61, true, false, -1, 0);
-								if (Main.tile.At(num4, num8).Active)
+								WorldModify.PlaceTile(TileX, num8, 61, true, false, -1, 0);
+								if (Main.tile.At(TileX, num8).Active)
 								{
-									NetMessage.SendTileSquare(-1, num4, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, num8, 1);
 								}
 							}
-							else if (WorldModify.genRand.Next(500) == 0 && (!Main.tile.At(num4, num8).Active || Main.tile.At(num4, num8).Type == 61 || Main.tile.At(num4, num8).Type == 74 || Main.tile.At(num4, num8).Type == 69) && !WorldModify.PlayerLOS(num4, num5))
+							else if (WorldModify.genRand.Next(500) == 0 && (!Main.tile.At(TileX, num8).Active || Main.tile.At(TileX, num8).Type == 61 || Main.tile.At(TileX, num8).Type == 74 || Main.tile.At(TileX, num8).Type == 69) && !WorldModify.PlayerLOS(TileX, TileY))
 							{
-								WorldModify.GrowTree(num4, num5);
+								WorldModify.GrowTree(TileX, TileY);
 							}
 							bool flag5 = false;
 							for (int num22 = num6; num22 < num7; num22++)
 							{
 								for (int num23 = num8; num23 < num9; num23++)
 								{
-									if ((num4 != num22 || num5 != num23) && Main.tile.At(num22, num23).Active && Main.tile.At(num22, num23).Type == 59)
+									if ((TileX != num22 || TileY != num23) && Main.tile.At(num22, num23).Active && Main.tile.At(num22, num23).Type == 59)
 									{
 										WorldModify.SpreadGrass(num22, num23, 59, type, false);
 										if ((int)Main.tile.At(num22, num23).Type == type)
@@ -4727,20 +4728,20 @@ namespace Terraria_Server.WorldMod
 							}
 							if (flag5)
 							{
-								NetMessage.SendTileSquare(-1, num4, num5, 3);
+								NetMessage.SendTileSquare(-1, TileX, TileY, 3);
 							}
 						}
-						if (Main.tile.At(num4, num5).Type == 61 && WorldModify.genRand.Next(3) == 0 && Main.tile.At(num4, num5).FrameX < 144)
+						if (Tile.Type == 61 && WorldModify.genRand.Next(3) == 0 && Tile.FrameX < 144)
 						{
-							Main.tile.At(num4, num5).SetType (74);
-							NetMessage.SendTileSquare(-1, num4, num5, 3);
+							Tile.SetType (74);
+							NetMessage.SendTileSquare(-1, TileX, TileY, 3);
 						}
-						if ((Main.tile.At(num4, num5).Type == 60 || Main.tile.At(num4, num5).Type == 62) && WorldModify.genRand.Next(15) == 0 && !Main.tile.At(num4, num5 + 1).Active && !Main.tile.At(num4, num5 + 1).Lava)
+						if ((Tile.Type == 60 || Tile.Type == 62) && WorldModify.genRand.Next(15) == 0 && !Main.tile.At(TileX, TileY + 1).Active && !Main.tile.At(TileX, TileY + 1).Lava)
 						{
 							bool flag6 = false;
-							for (int num24 = num5; num24 > num5 - 10; num24--)
+							for (int num24 = TileY; num24 > TileY - 10; num24--)
 							{
-								if (Main.tile.At(num4, num24).Active && Main.tile.At(num4, num24).Type == 60)
+								if (Main.tile.At(TileX, num24).Active && Main.tile.At(TileX, num24).Type == 60)
 								{
 									flag6 = true;
 									break;
@@ -4748,8 +4749,8 @@ namespace Terraria_Server.WorldMod
 							}
 							if (flag6)
 							{
-								int num25 = num4;
-								int num26 = num5 + 1;
+								int num25 = TileX;
+								int num26 = TileY + 1;
 								Main.tile.At(num25, num26).SetType (62);
 								Main.tile.At(num25, num26).SetActive (true);
 								WorldModify.SquareTileFrame(num25, num26, true);
