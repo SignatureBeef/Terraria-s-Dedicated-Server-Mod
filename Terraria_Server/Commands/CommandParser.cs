@@ -275,7 +275,7 @@ namespace Terraria_Server.Commands
 
                 if (command != null)
                 {
-                    if (serverCommands.TryGetValue(command, out info) && info.tokenCallback != null)
+                    if (FindTokenCommand (command, out info))
                     {
                         if (! CheckAccessLevel (info, sender))
                         {
