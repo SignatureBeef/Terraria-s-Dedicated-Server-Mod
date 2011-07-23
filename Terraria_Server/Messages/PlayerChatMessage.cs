@@ -18,6 +18,14 @@ namespace Terraria_Server.Messages
             int playerIndex = whoAmI;
 
             String chat = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5).Trim();
+            
+            var slot = Netplay.slots [whoAmI];
+            if (slot.state < SlotState.PLAYING && chat != "/playing")
+            {
+                ProgramLog.Debug.Log ("{0}: sent message PLAYER_CHAT in state {1}.", slot.remoteAddress, slot.state);
+                slot.Kick ("Invalid operation at this state.");
+                return;
+            }
 
             if (chat.Length > 0)
             {
