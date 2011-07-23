@@ -5489,17 +5489,22 @@ namespace Terraria_Server
         }
 
         public static void Transform(int npcIndex, int newType)
-        {
-            NPC npc = Main.npcs[npcIndex];
-            Vector2 vector = npc.Velocity;
-            int num = npc.spriteDirection;
-            npc = Registries.NPC.Create(newType);
-            Main.npcs[npcIndex] = npc;
-            npc.spriteDirection = num;
-            npc.TargetClosest(true);
-            npc.Velocity = vector;
-            npc.netUpdate = true;
-            NetMessage.SendData(23, -1, -1, "", npc.whoAmI);
+		{
+			NPC npc = Registries.NPC.Create(newType);
+			Main.npcs[npcIndex].netUpdate = true;
+			Main.npcs[npcIndex].Type = newType;
+			Main.npcs[npcIndex].Name = npc.Name;
+			Main.npcs[npcIndex].life = npc.life;
+			Main.npcs[npcIndex].lifeMax = npc.lifeMax;
+			Main.npcs[npcIndex].knockBackResist = npc.knockBackResist;
+			Main.npcs[npcIndex].friendly = npc.friendly;
+			Main.npcs[npcIndex].damage = npc.damage;
+			Main.npcs[npcIndex].defense = npc.defense;
+			Main.npcs[npcIndex].ai = npc.ai;
+			Main.npcs[npcIndex].aiAction = npc.aiAction;
+			Main.npcs[npcIndex].aiStyle = npc.aiStyle;
+			Main.npcs[npcIndex].TargetClosest(true);
+			NetMessage.SendData(23, -1, -1, "", Main.npcs[npcIndex].whoAmI);
         }
 
         public double StrikeNPC(int Damage, float knockBack, int hitDirection)
