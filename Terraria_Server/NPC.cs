@@ -1417,35 +1417,36 @@ namespace Terraria_Server
                                                 int num45 = npc.whoAmI;
                                                 int num46 = npc.life;
                                                 float num47 = npc.ai[0];
-                                                npc = Registries.NPC.Create(13);
-                                                Main.npcs[index] = npc;
+												NPC.Transform(index, 13);// npc = Registries.NPC.Create(13);
+                                                //Main.npcs[index] = npc;
 
-                                                npc.life = num46;
-                                                if (npc.life > npc.lifeMax)
+												Main.npcs[index].life = num46;
+												if (Main.npcs[index].life > Main.npcs[index].lifeMax)
                                                 {
                                                     npc.life = npc.lifeMax;
                                                 }
-                                                npc.ai[0] = num47;
-                                                npc.TargetClosest(true);
-                                                npc.netUpdate = true;
-                                                npc.whoAmI = num45;
+												Main.npcs[index].ai[0] = num47;
+												//Main.npcs[index].TargetClosest(true);
+												//Main.npcs[index].netUpdate = true;
+												//Main.npcs[index].whoAmI = num45;
                                             }
                                             if (npc.type == NPCType.N14_EATER_OF_WORLDS_BODY && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
                                                 int num48 = npc.life;
                                                 int num49 = npc.whoAmI;
                                                 float num50 = npc.ai[1];
-                                                npc = Registries.NPC.Create(npc.Type);
-                                                Main.npcs[index] = npc;
-                                                npc.life = num48;
-                                                if (npc.life > npc.lifeMax)
+												NPC.Transform(index, npc.Type);
+                                                //npc = Registries.NPC.Create(npc.Type);
+                                                //Main.npcs[index] = npc;
+												Main.npcs[index].life = num48;
+												if (Main.npcs[index].life > Main.npcs[index].lifeMax)
                                                 {
-                                                    npc.life = npc.lifeMax;
+													Main.npcs[index].life = Main.npcs[index].lifeMax;
                                                 }
-                                                npc.ai[1] = num50;
-                                                npc.TargetClosest(true);
-                                                npc.netUpdate = true;
-                                                npc.whoAmI = num49;
+												Main.npcs[index].ai[1] = num50;
+                                                //npc.TargetClosest(true);
+                                                //npc.netUpdate = true;
+                                                //npc.whoAmI = num49;
                                             }
                                             if (npc.life == 0)
                                             {
