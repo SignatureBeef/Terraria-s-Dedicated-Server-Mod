@@ -253,9 +253,6 @@ namespace Terraria_Server
 
                 WorldIO.loadWorld();
 
-                //Before plugins load, Because using the AddCommand method, this needs to be set.
-                commandParser = new CommandParser(server);
-
 				updateThread = new Thread(Program.UpdateLoop);
 				//updateThread.Name = "Updt";
 
@@ -265,6 +262,7 @@ namespace Terraria_Server
 				Statics.IsActive = true;
 				while (!Statics.serverStarted) { }
 
+                commandParser = new CommandParser(server);
 				ProgramLog.Console.Print ("You can now insert Commands.");
 				
 				while (Statics.IsActive)

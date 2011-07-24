@@ -63,7 +63,7 @@ namespace TDSMExamplePlugin
             this.registerHook(Hooks.PLAYER_PROJECTILE);
 
             //Add Commands
-            Program.commandParser.AddCommand("tdsmpluginexample")
+            AddCommand("tdsmpluginexample")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("A Command Example for TDSM")
                 .WithHelpText("Usage:   /tdsmpluginexample")
