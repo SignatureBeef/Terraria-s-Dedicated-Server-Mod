@@ -258,14 +258,12 @@ namespace Terraria_Server
 			
 			for (int i = 0; i < 255; i++)
 			{
-				int k = (lastId + i) % 255;
-				if (slots[k].state == SlotState.VACANT)
+				if (slots[i].state == SlotState.VACANT)
 				{
-					lastId = k;
-					ProgramLog.Users.Log ("{0} is connecting on slot {1}...", addr, k);
+					ProgramLog.Users.Log ("{0} is connecting on slot {1}...", addr, i);
 					try
 					{
-						AcceptSlot (k, client, addr);
+						AcceptSlot (i, client, addr);
 					}
 					catch (SocketException)
 					{
@@ -275,7 +273,7 @@ namespace Terraria_Server
 						
 						return -1;
 					}
-					return k;
+					return i;
 				}
 			}
 			

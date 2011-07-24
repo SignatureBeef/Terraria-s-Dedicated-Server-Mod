@@ -20,6 +20,7 @@ namespace Terraria_Server.Messages
             int left = BitConverter.ToInt32(readBuffer, start + 3);
             int top = BitConverter.ToInt32(readBuffer, start + 7);
             num = start + 11;
+            var slot = Netplay.slots[whoAmI];
             
             for (int x = left; x < left + (int)size; x++)
             {
@@ -60,6 +61,13 @@ namespace Terraria_Server.Messages
                     {
                         int wasType = (int)tile.Type;
                         tile.Type = readBuffer[num++];
+                        
+                        if (tile.Type > 85)
+                        {
+                            slot.Kick ("Invalid tile received from client.");
+                            return;
+                        }
+                        
                         if (Main.tileFrameImportant[(int)tile.Type])
                         {
                             tile.FrameX = BitConverter.ToInt16(readBuffer, num);
@@ -77,10 +85,17 @@ namespace Terraria_Server.Messages
                     if (tile.Wall > 0)
                     {
                         tile.Wall = readBuffer[num++];
+                        
+                        if (tile.Wall > 13)
+                        {
+                            slot.Kick ("Invalid tile received from client.");
+                            return;
+                        }
                     }
 
                     if (tile.Liquid > 0)
                     {
+                        // TODO: emit a liquid event
                         tile.Liquid = readBuffer[num++];
                         byte b10 = readBuffer[num++];
                         tile.Lava = (b10 == 1);
