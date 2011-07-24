@@ -52,10 +52,22 @@ namespace Terraria_Server
             String updateList = getUpdateList();
             //b-r
             if (updateList.Contains("b"))
-            {
-                String myBuild = "b" + Statics.BUILD.ToString();
-                uList = updateList;
-                return updateList.Equals(myBuild);
+			{
+				try
+				{
+					String updateBuild = "";
+					for (int i = 1; i < updateList.Length; i++)
+					{
+						updateBuild += updateList[i];
+					}
+					int updateBuildNum = Int32.Parse(updateBuild);
+					String myBuild = "b" + Statics.BUILD.ToString();
+					uList = updateList;
+					return Statics.BUILD >= updateBuildNum;
+				}
+				catch
+				{
+				}
             }
             return false;
         }
