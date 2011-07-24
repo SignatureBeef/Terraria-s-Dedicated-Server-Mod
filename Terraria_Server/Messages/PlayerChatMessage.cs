@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using System.Linq;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Logging;
@@ -20,10 +21,21 @@ namespace Terraria_Server.Messages
             String chat = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5).Trim();
             
             var slot = Netplay.slots [whoAmI];
-            if (slot.state < SlotState.PLAYING && chat != "/playing")
+            if (slot.state < SlotState.PLAYING)
             {
-                ProgramLog.Debug.Log ("{0}: sent message PLAYER_CHAT in state {1}.", slot.remoteAddress, slot.state);
-                slot.Kick ("Invalid operation at this state.");
+                if (chat != "/playing")
+                {
+                    ProgramLog.Debug.Log ("{0}: sent message PLAYER_CHAT in state {1}.", slot.remoteAddress, slot.state);
+                    slot.Kick ("Invalid operation at this state.");
+                }
+                else
+                {
+                    ProgramLog.Debug.Log ("Replying to early online player query.");
+                    NetMessage.SendData (25, whoAmI, -1,
+                        string.Concat ("Current players: ",
+                            string.Join (", ", from p in Server.players where p.Active select p.Name), "."),
+                        255, 255, 240, 20);
+                }
                 return;
             }
 
