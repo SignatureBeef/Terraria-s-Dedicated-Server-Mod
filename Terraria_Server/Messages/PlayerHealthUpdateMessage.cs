@@ -35,10 +35,10 @@ namespace Terraria_Server.Messages
                 player.dead = true;
             }
 
-            if (Main.players[playerIndex].HasHackedData())
-            {
-                Main.players[playerIndex].Kick("No Hacked Health is allowed.");
-            }
+            //if (Main.players[playerIndex].HasHackedData())
+            //{
+            //    Main.players[playerIndex].Kick("No Hacked Health is allowed.");
+            //}
 
             NetMessage.SendData(16, -1, whoAmI, "", playerIndex);
         }

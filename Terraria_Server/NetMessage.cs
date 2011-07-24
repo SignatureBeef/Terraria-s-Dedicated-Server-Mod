@@ -514,6 +514,11 @@ namespace Terraria_Server
 				msg.SendSyncOthersForPlayer (plr);
 				
 				ProgramLog.Users.Log ("{0} @ {1}: ENTER {2}", slot.remoteAddress, plr, player.Name);
+
+                if (player.HasHackedData())
+                {
+                    player.Kick("No Hacked Health or Mana is allowed.");
+                }
 				
 				// to other players
 				msg.Clear();
