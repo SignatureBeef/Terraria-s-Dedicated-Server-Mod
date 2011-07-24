@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria_Server.Misc;
 
-namespace TDSMPlugin
+namespace TDSMExamplePlugin
 {
     public class Properties : PropertiesFile
     {

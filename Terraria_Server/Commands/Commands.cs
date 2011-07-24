@@ -95,7 +95,7 @@ namespace Terraria_Server.Commands
                                                                     "Un-Ban a Player.", 
                                                                     "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
                                                                     "Give Player an item (/give <player> <amount> <item name:id>)",
-                                                                    "Spawn a NPC (/spawnnpc <amount> <name:id> <player>)",
+                                                                    "Spawn a NPC (/spawnnpc <amount> \"<name:id>\" \"<player>\")",
                                                                     "Teleport Player to Player.",
                                                                     "Teleport a Player to You.",
                                                                     "Settle Water.",
@@ -770,15 +770,15 @@ namespace Terraria_Server.Commands
 			try
 			{
 				Player player = ((Player)sender);
-				if (commands.Count >= 4)
-				{
-					player = Program.server.GetPlayerByName(commands[3]);
-					if (null == player)
-					{
-						sender.sendMessage("Player not found.", 255, 238f, 130f, 238f);
-						return;
-					}
-				}
+                if (commands.Count >= 4)
+                {
+                    player = Program.server.GetPlayerByName(commands[2]);
+                    if (null == player)
+                    {
+                        sender.sendMessage("Player not found.", 255, 238f, 130f, 238f);
+                        return;
+                    }
+                }
 
 				String npcName = commands[2].Replace(" ", "").ToLower();
 
@@ -800,7 +800,8 @@ namespace Terraria_Server.Commands
 				for (int i = 0; i < NPCAmount; i++)
 				{
 					Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-					int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), realNPCId);
+                    int npcIndex = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), realNPCId);
+                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], fclass.Name);
 					realNPCName = Main.npcs[npcIndex].Name;
 				}
 				Program.server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
