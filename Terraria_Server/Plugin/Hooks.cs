@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace Terraria_Server.Plugin
 {
     /// <summary>
@@ -6,8 +7,11 @@ namespace Terraria_Server.Plugin
     /// </summary>
     public enum Hooks
     {
+        [Obsolete("Use Plugin.AddCommand instead.")]
         CONSOLE_COMMAND,
+        [Obsolete("Use Plugin.AddCommand instead.")]
         PLAYER_COMMAND,
+
         PLAYER_PRELOGIN,
         PLAYER_LOGIN,
         PLAYER_LOGOUT,

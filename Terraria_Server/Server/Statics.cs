@@ -5,7 +5,7 @@ namespace Terraria_Server
 {
     public static class Statics
     {
-        public const int BUILD = 29;
+        public const int BUILD = 28;
         public const int CURRENT_TERRARIA_RELEASE = 12;
         public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 

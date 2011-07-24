@@ -1128,7 +1128,7 @@ namespace Terraria_Server.WorldMod
 
 		public static Boolean IsValidTreeRootTile(TileRef tile)
 		{
-			return tile.Active && (tile.Type == 2 || tile.Type == 23 || tile.Type == 60);
+			return (tile.Active && (tile.Type == 2 || tile.Type == 23 || tile.Type == 60));
 		}
 		
 		public static void GrowShroom(int i, int y)

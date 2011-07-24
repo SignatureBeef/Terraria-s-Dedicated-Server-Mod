@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-
-using TDSMPlugin;
-using Terraria_Server.Plugin;
-using Terraria_Server;
-using Terraria_Server.Events;
 using System.IO;
+using Terraria_Server;
+using Terraria_Server.Plugin;
+using Terraria_Server.Commands;
+using Terraria_Server.Events;
+using Terraria_Server.Logging;
 
 namespace TDSMExamplePlugin
 {
@@ -23,13 +23,11 @@ namespace TDSMExamplePlugin
          * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
          */
 
-        // tConsole is used for when logging Output to the console & a log file.
-
         public Properties properties;
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
-        public bool isEnabled = false;
+        public static TDSMPlugin plugin;
 
         public override void Load()
         {
@@ -37,7 +35,9 @@ namespace TDSMExamplePlugin
             Description = "Plugin Example for TDSM.";
             Author = "DeathCradle";
             Version = "1";
-            TDSMBuild = 20; //Current Release - Working
+            TDSMBuild = 29; //Current Release - Working
+
+            plugin = this;
 
             string pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSM";
             //Create folder if it doesn't exist
@@ -53,69 +53,50 @@ namespace TDSMExamplePlugin
             spawningAllowed = properties.SpawningCancelled;
             tileBreakageAllowed = properties.TileBreakage;
             explosivesAllowed = properties.ExplosivesAllowed;
-
-            isEnabled = true;
         }
 
         public override void Enable()
         {
             Program.tConsole.WriteLine(base.Name + " enabled.");
             //Register Hooks
-            this.registerHook(Hooks.TILE_CHANGE);
-            this.registerHook(Hooks.PLAYER_COMMAND);
+            this.registerHook(Hooks.PLAYER_TILECHANGE);
             this.registerHook(Hooks.PLAYER_PROJECTILE);
 
-            Main.stopSpawns = isEnabled;
-            if (isEnabled)
+            //Add Commands
+            AddCommand("tdsmpluginexample")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("A Command Example for TDSM")
+                .WithHelpText("Usage:   /tdsmpluginexample")
+                .Calls(TDSMExamplePlugin.Commands.Commands.ExampleCommand);
+
+            Main.stopSpawns = !spawningAllowed;
+            if (Main.stopSpawns)
             {
-                Program.tConsole.WriteLine("Disabled NPC Spawning");
+                ProgramLog.Log("Disabled NPC Spawning");
             }
         }
 
         public override void Disable()
         {
             Program.tConsole.WriteLine(base.Name + " disabled.");
-            isEnabled = false;
         }
 
-        public override void onPlayerCommand(PlayerCommandEvent Event)
+        public override void onPlayerTileChange(PlayerTileChangeEvent Event)
         {
-            if (isEnabled == false) { return; }
-            string[] commands = Event.Message.ToLower().Split(' '); //Split into sections (to lower case to work with it better)
-            if (commands.Length > 0)
-            {
-                if (commands[0] != null && commands[0].Trim().Length > 0) //If it is nothing, and the string is actually something
-                {
-                    if (commands[0].Equals("/tdsmpluginexample"))
-                    {
-                        Program.tConsole.WriteLine("[TSDM Plugin] Player used Plugin Command: " + Event.Player.Name);
-
-                        Player sendingPlayer = Event.Player;
-                        sendingPlayer.sendMessage("TDSM Plugin Example, For Build: #" + this.TDSMBuild, 255, 255f, 255f, 255f);
-
-                        Event.Cancelled = true;
-                    }
-                }
-            }
-        }
-
-        public override void onTileChange(PlayerTileChangeEvent Event)
-        {
-            if (isEnabled == false || tileBreakageAllowed == false) { return; }
+            if (!Enabled || tileBreakageAllowed == false) { return; }
+            ProgramLog.Log("[TSDM Plugin] Cancelled Tile change of Player: " + ((Player)Event.Sender).Name);
             Event.Cancelled = true;
-            Program.tConsole.WriteLine("[TSDM Plugin] Cancelled Tile change of Player: " + ((Player)Event.Sender).Name);
         }
 
         public override void onPlayerProjectileUse(PlayerProjectileEvent Event)
         {
-            if (isEnabled == false) { return; }
-            if(!explosivesAllowed) {
+            if (Enabled && !explosivesAllowed) {
 
-                int type = Event.Projectile.type;
+                int type = Event.Projectile.Type;
                 if (type == 28 || type ==  29 || type == 37)
                 {
                     Event.Cancelled = true;
-                    Program.tConsole.WriteLine("[TSDM Plugin] Cancelled Explosive usage of Player: " + ((Player)Event.Sender).Name);
+                    ProgramLog.Log("[TSDM Plugin] Cancelled Explosive usage of Player: " + ((Player)Event.Sender).Name);
                 }
             }
         }

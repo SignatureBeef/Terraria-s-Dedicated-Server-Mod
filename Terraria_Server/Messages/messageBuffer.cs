@@ -76,11 +76,13 @@ namespace Terraria_Server.Messages
 		
 		public void GetData (byte[] readBuffer, int start, int length)
 		{
+			var slot = Netplay.slots[whoAmI];
+			
 			try
 			{
 				if (whoAmI < 256)
 				{
-					Netplay.slots[whoAmI].timeOut = 0;
+					slot.timeOut = 0;
 				}
 	
 				int num = start + 1;
@@ -88,15 +90,17 @@ namespace Terraria_Server.Messages
 	
 				if (bufferData != 38)
 				{
-					if (Netplay.slots[whoAmI].state == SlotState.SERVER_AUTH)
+					if (slot.state == SlotState.SERVER_AUTH)
 					{
-						Netplay.slots[whoAmI].Kick ("Incorrect password.");
+						slot.Kick ("Incorrect password.");
 						return;
 					}
 	
-					if (Netplay.slots[whoAmI].state < SlotState.PLAYING && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50)
+					if (slot.state < SlotState.PLAYING && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50 && bufferData != 25)
 					{
-						NetMessage.BootPlayer(whoAmI, "Invalid operation at this state.");
+						ProgramLog.Debug.Log ("{0}: sent message {1} in state {2}.", slot.remoteAddress, (bufferData > 0 && bufferData <= 51) ? (object)(Packet)bufferData : bufferData, slot.state);
+						slot.Kick ("Invalid operation at this state.");
+						return;
 					}
 				}
 	
@@ -117,9 +121,9 @@ namespace Terraria_Server.Messages
 					pkt = string.Format ("packet {0}", (Packet)NetMessage.buffer[whoAmI].readBuffer[start]);
 
 				ProgramLog.Log (e, string.Format ("Exception handling {0} of length {1} from {2}@{3}",
-					pkt, length, Main.players[whoAmI].Name ?? "", Netplay.slots[whoAmI].remoteAddress));
+					pkt, length, Main.players[whoAmI].Name ?? "", slot.remoteAddress));
 					
-				Netplay.slots[whoAmI].Kick ("Server malfunction, please reconnect.");
+				slot.Kick ("Server malfunction, please reconnect.");
 			}
 		}
 	}

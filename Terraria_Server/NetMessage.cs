@@ -327,8 +327,11 @@ namespace Terraria_Server
 				{
 					msgLen = BitConverter.ToInt32 (readBuffer, 0) + 4;
 					
-					if (msgLen == 0 || msgLen > 4096)
+					if (msgLen <= 4 || msgLen > 4096)
+					{
 						slot.Kick ("Client sent invalid network message (" + msgLen + ")");
+						msgLen = 0;
+					}
 				}
 				while (totalData >= msgLen + processed && msgLen > 0)
 				{
@@ -360,8 +363,11 @@ namespace Terraria_Server
 					{
 						msgLen = BitConverter.ToInt32 (readBuffer, processed) + 4;
 						
-						if (msgLen == 0 || msgLen > 4096)
+						if (msgLen <= 4 || msgLen > 4096)
+						{
 							slot.Kick ("Client sent invalid network message (" + msgLen + ")");
+							msgLen = 0;
+						}
 					}
 					else
 					{
@@ -727,6 +733,7 @@ namespace Terraria_Server
 		}
 
 #if UNSAFE
+#warning Compiling with unsafe NetMessage.Float
 		private unsafe void Float (float data)
 		{
 			var bytes = (byte*) &data;

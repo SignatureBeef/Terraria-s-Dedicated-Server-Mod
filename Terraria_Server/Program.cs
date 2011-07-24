@@ -250,11 +250,10 @@ namespace Terraria_Server
 				Server.maxTilesY = worldYtiles;
 				Server.maxSectionsX = worldXtiles / 200;
 				Server.maxSectionsY = worldYtiles / 150;
-				
-				WorldIO.loadWorld();
+
+                WorldIO.loadWorld();
 
 				updateThread = new Thread(Program.UpdateLoop);
-				//updateThread.Name = "Updt";
 
 				ProgramLog.Log ("Starting the Server");
 				server.StartServer();
@@ -262,7 +261,7 @@ namespace Terraria_Server
 				Statics.IsActive = true;
 				while (!Statics.serverStarted) { }
 
-				commandParser = new CommandParser(server);
+                commandParser = new CommandParser(server);
 				ProgramLog.Console.Print ("You can now insert Commands.");
 				
 				while (Statics.IsActive)
