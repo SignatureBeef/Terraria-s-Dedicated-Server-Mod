@@ -199,6 +199,16 @@ namespace Terraria_Server
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, A, R, G, B);
         }
 
+        public void sendMessage(String Message, Color Colour)
+        {
+            NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, Colour.A, Colour.R, Colour.G, Colour.B);
+        }
+
+        public void sendMessage(String Message, System.Drawing.Color Colour)
+        {
+            sendMessage(Message, new Color(Colour));
+        }
+
         public void HealEffect(int healAmount, bool overrider = false, int remoteClient = -1)
 		{
             if (overrider || (this.whoAmi == Main.myPlayer))

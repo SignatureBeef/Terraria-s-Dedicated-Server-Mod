@@ -24,5 +24,13 @@ namespace Terraria_Server.Misc
             this.B = b;
             this.A = a;
         }
+
+        public Color(System.Drawing.Color Colour)
+        {
+            this.R = Colour.R;
+            this.G = Colour.G;
+            this.B = Colour.B;
+            this.A = Colour.A;
+        }
     }
 }
