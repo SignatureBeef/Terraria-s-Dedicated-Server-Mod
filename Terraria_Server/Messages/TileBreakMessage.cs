@@ -19,6 +19,8 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
+            var slot = Netplay.slots[whoAmI];
+            
             byte tileAction = readBuffer[num++];
             int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
@@ -35,12 +37,24 @@ namespace Terraria_Server.Messages
             switch (tileAction)
             {
                 case 1:
+                    if (tileType > 85)
+                    {
+                        slot.Kick ("Invalid tile received from client.");
+                        return;
+                    }
+
                     placed = true;
                     break;
                 case 2:
                     wall = true;
                     break;
                 case 3:
+                    if (tileType > 13)
+                    {
+                        slot.Kick ("Invalid tile received from client.");
+                        return;
+                    }
+
                     wall = true;
                     placed = true;
                     break;
