@@ -254,7 +254,6 @@ namespace Terraria_Server
                 WorldIO.loadWorld();
 
 				updateThread = new Thread(Program.UpdateLoop);
-				//updateThread.Name = "Updt";
 
 				ProgramLog.Log ("Starting the Server");
 				server.StartServer();
