@@ -362,6 +362,9 @@ namespace Terraria_Server
 					
 					socket.SafeShutdown ();
 					socket.SafeClose();
+					
+					var deadClients = Netplay.deadClients;
+					lock (deadClients) deadClients.Enqueue (socket);
 				}
 			}
 		}

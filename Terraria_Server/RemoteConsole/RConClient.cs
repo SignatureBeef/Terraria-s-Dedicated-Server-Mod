@@ -101,7 +101,7 @@ namespace Terraria_Server.RemoteConsole
 				ProgramLog.Log (e, "Exception within WriteThread of remote console " + Id);
 			}
 			
-			RConServer.deadClients.Enqueue (this);
+			lock (RConServer.deadClients) RConServer.deadClients.Enqueue (this);
 			
 			ProgramLog.RemoveTarget (this);
 			

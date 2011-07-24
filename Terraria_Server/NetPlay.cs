@@ -27,6 +27,7 @@ namespace Terraria_Server
 		public static bool spamCheck = false;
 		public static bool ServerUp = false;
 		public static bool anyClients = false;
+		internal static Queue<Socket> deadClients;
 		
 		public static void SafeClose (this Socket socket)
 		{
@@ -100,13 +101,14 @@ namespace Terraria_Server
 			else
 				return;
 			
+			deadClients = new Queue<Socket> ();
 			var socketToId = new Dictionary<Socket, int> ();
 			var readList = new List<Socket> ();
 			var errorList = new List<Socket> ();
 			var clientList = new List<Socket> ();
 			var serverSock = Netplay.tcpListener.Server;
 			
-			try
+			try // TODO: clean up sometime, error handling too spread out
 			{
 				while (!Netplay.disconnect)
 				{
@@ -119,6 +121,25 @@ namespace Terraria_Server
 					errorList.AddRange (clientList);
 
 					Socket.Select (readList, null, errorList, 500000);
+					
+					// sometimes we don't detect the client socket being shut down from our end,
+					// not sure if I did something wrong or does select simply work that way;
+					// this is to make sure the ServerLoop knows about sockets closed by
+					// their respective sending threads
+					// hope it won't impact performance significantly
+					lock (deadClients)
+						while (deadClients.Count > 0)
+						{
+							var sock = deadClients.Dequeue ();
+							errorList.Remove (sock);
+							clientList.Remove (sock);
+							readList.Remove (sock);
+							
+							ProgramLog.Debug.Log ("Removing client through deadClients.");
+							
+							if (socketToId.ContainsKey (sock))
+								DisposeClient (socketToId[sock]);
+						}
 					
 					if (Netplay.disconnect) break;
 
@@ -233,7 +254,6 @@ namespace Terraria_Server
 			Statics.serverStarted = false;
 		}
 		
-		static int lastId = 0;
 		static int AcceptClient (Socket client)
 		{
 			client.NoDelay = true;
