@@ -23,6 +23,16 @@ namespace Terraria_Server.Logging
 		{
 			return (left.prefix != right.prefix) || (left.message != right.message) || (left.arg != right.arg);
 		}
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
 	}
 
 	public class LogTarget
