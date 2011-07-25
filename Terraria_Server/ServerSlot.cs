@@ -360,7 +360,7 @@ namespace Terraria_Server
 					for (int i = 0; i < items; i++)
 						list[i] = null;
 					
-					socket.SafeShutdown ();
+					//socket.SafeShutdown ();
 					socket.SafeClose();
 					
 					var deadClients = Netplay.deadClients;

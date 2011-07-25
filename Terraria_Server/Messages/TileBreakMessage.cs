@@ -33,7 +33,15 @@ namespace Terraria_Server.Messages
 
             bool placed = false;
             bool wall = false;
-
+			
+			if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
+			{
+				slot.Kick ("Invalid tile received from client.");
+				return;
+			}
+			
+			var tile = Main.tile.At(x, y).Data;
+			
             switch (tileAction)
             {
                 case 1:
@@ -42,6 +50,8 @@ namespace Terraria_Server.Messages
                         slot.Kick ("Invalid tile received from client.");
                         return;
                     }
+                    
+                    tile.Type = tileType;
 
                     placed = true;
                     break;
@@ -57,12 +67,14 @@ namespace Terraria_Server.Messages
 
                     wall = true;
                     placed = true;
+                    
+                    tile.Wall = tileType;
                     break;
             }
 
             PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
             tileEvent.Sender = Main.players[whoAmI];
-            tileEvent.Tile = Main.tile.At(x, y).Data;
+            tileEvent.Tile = tile;
             tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
             tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;
             tileEvent.Position = new Vector2(x, y);
@@ -72,7 +84,7 @@ namespace Terraria_Server.Messages
                 NetMessage.SendTileSquare(whoAmI, x, y, 1);
                 return;
             }
-            
+           
 			if (!failFlag)
 			{
 				if (tileAction == 0 || tileAction == 2 || tileAction == 4)

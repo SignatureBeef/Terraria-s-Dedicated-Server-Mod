@@ -32,6 +32,17 @@ namespace Terraria_Server.Messages
 
             byte projectileOwner = readBuffer[num++];
             byte type = readBuffer[num++];
+            
+            if (type > 54)
+            {
+                Netplay.slots[whoAmI].Kick ("Invalid projectile.");
+                return;
+            }
+            else if (type == (int)ProjectileType.FEATHER_HARPY)
+            {
+                Netplay.slots[whoAmI].Kick ("Harpy feather hack detected.");
+                return;
+            }
 
             float[] aiInfo = new float[Projectile.MAX_AI];
             for (int i = 0; i < Projectile.MAX_AI; i++)
