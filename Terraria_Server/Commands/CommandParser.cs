@@ -75,11 +75,21 @@ namespace Terraria_Server.Commands
         {
             server = Server;
             serverCommands = new Dictionary<string, CommandInfo> ();
-            
-            AddCommand ("exit")
-                .WithDescription ("Stop the server, save the world then exit program.")
-                .WithAccessLevel (AccessLevel.CONSOLE)
-                .Calls (Commands.Exit);
+
+            AddCommand("exit")
+                .WithDescription("Stop the server, save the world then exit program.")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .Calls(Commands.Exit);
+
+            AddCommand("stop")
+                .WithDescription("Stop the server, save the world then exit program.")
+                .WithAccessLevel(AccessLevel.CONSOLE)
+                .Calls(Commands.Exit);
+
+            AddCommand("save-all")
+                .WithDescription("Save all world data and backup.")
+                .WithAccessLevel(AccessLevel.OP)
+                .Calls(Commands.SaveAll);
             
             AddCommand ("reload")
                 .WithDescription ("Reload plugins.")
@@ -125,12 +135,33 @@ namespace Terraria_Server.Commands
                 .WithHelpText ("         -d    display information helpful in debugging")
                 .WithHelpText ("         -p    display additional player information")
                 .Calls (Commands.Slots);
-            
-            AddCommand ("kick")
+
+            AddCommand("kick")
+                .WithAccessLevel(AccessLevel.OP)
                 .WithDescription ("Kick a player by name or slot.")
                 .WithHelpText ("Usage:   kick name")
                 .WithHelpText ("         kick -s number")
-                .Calls (Commands.Kick);
+                .Calls(Commands.Kick);
+
+            AddCommand("ban")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Ban a player by Name or IP")
+                .WithHelpText("Usage:   ban <name>")
+                .WithHelpText("         ban <ip>")
+                .Calls(Commands.Ban);
+
+            AddCommand("unban")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("UnBan a player by Name or IP")
+                .WithHelpText("Usage:   unban <name>")
+                .Calls(Commands.UnBan);
+
+            AddCommand("whitelist")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Add or remove a player or IP to the whitelist")
+                .WithHelpText("Usage:   whitelist -add <name:ip>")
+                .WithHelpText("         whitelist -remove <name:ip>")
+                .Calls(Commands.WhiteList);
             
             AddCommand ("rcon")
                 .WithDescription ("Manage remote console access.")
@@ -316,7 +347,7 @@ namespace Terraria_Server.Commands
         /// <param name="command">Command base to run</param>
         /// <param name="tokens">Command arguments to pass to methods</param>
         /// <param name="sender">Sending player</param>
-        public void switchCommands (string command, IList<string> tokens, ISender sender)
+        public void switchCommands(string command, ArgumentList tokens, ISender sender)
         {
             tokens.Insert (0, command); // for compatibility with old code
             switch (Commands.getCommandValue (command))
@@ -325,11 +356,6 @@ namespace Terraria_Server.Commands
                     {
                         sender.sendMessage("No such command!");
                         return;
-                    }
-                case (int)Commands.Command.COMMAND_SAVE_ALL:
-                    {
-                        Commands.SaveAll(sender);
-                        break;
                     }
                 case (int)Commands.Command.COMMAND_HELP:
                     {
@@ -343,21 +369,21 @@ namespace Terraria_Server.Commands
                         }
                         break;
                     }
-                case (int)Commands.Command.COMMAND_WHITELIST:
-                    {
-                        Commands.WhiteList(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_BAN:
-                    {
-                        Commands.BanList(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_UNBAN:
-                    {
-                        Commands.BanList(sender, tokens);
-                        break;
-                    }
+                //case (int)Commands.Command.COMMAND_WHITELIST:
+                //    {
+                //        Commands.WhiteList(sender, tokens);
+                //        break;
+                //    }
+                //case (int)Commands.Command.COMMAND_BAN:
+                //    {
+                //        Commands.BanList(sender, tokens);
+                //        break;
+                //    }
+                //case (int)Commands.Command.COMMAND_UNBAN:
+                //    {
+                //        Commands.BanList(sender, tokens);
+                //        break;
+                //    }
                 case (int)Commands.Command.COMMAND_TIME:
                     {
                         Commands.Time(sender, tokens);

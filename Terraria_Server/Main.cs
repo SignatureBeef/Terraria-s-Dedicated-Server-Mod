@@ -952,25 +952,6 @@ namespace Terraria_Server
                     NPC.UpdateNPC(i);
                 }
             }
-            //for (int i = 0; i < 200; i++)
-            //{
-            //    if (Main.ignoreErrors)
-            //    {
-            //        try
-            //        {
-            //            Main.gore[i].Update();
-            //        }
-            //        catch
-            //        {
-            //            Main.gore[i] = new Gore();
-            //            Debug.WriteLine("Error: gore[" + i + "].Update()");
-            //        }
-            //    }
-            //    else
-            //    {
-            //        Main.gore[i].Update();
-            //    }
-            //}
             for (int i = 0; i < 1000; i++)
             {
                 if (Main.ignoreErrors)
@@ -1023,25 +1004,6 @@ namespace Terraria_Server
                     Main.item[i].UpdateItem(i);
                 }
             }
-            //if (Main.ignoreErrors)
-            //{
-            //    try
-            //    {
-            //        Dust.UpdateDust();
-            //    }
-            //    catch
-            //    {
-            //        for (int i = 0; i < 2000; i++)
-            //        {
-            //            Main.dust[i] = new Dust();
-            //        }
-            //        Debug.WriteLine("Error: Dust.Update()");
-            //    }
-            //}
-            //else
-            //{
-            //    Dust.UpdateDust();
-            //}
 
             if (Main.ignoreErrors)
             {

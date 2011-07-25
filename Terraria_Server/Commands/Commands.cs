@@ -238,7 +238,7 @@ namespace Terraria_Server.Commands
         /// Executes the world data save routine
         /// <param name="sender">Player/Console instance (null to just save)</param>
         /// </summary>
-        public static void SaveAll(ISender sender)
+        public static void SaveAll(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
@@ -362,7 +362,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Player that sent command</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void WhiteList(ISender sender, IList<string> commands)
+        public static void WhiteList(Server server, ISender sender, ArgumentList args)
         {
             // /whitelist <add:remove> <player>
             // arg  0         1           2
@@ -376,43 +376,30 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (commands != null && commands.Count > 2)
+
+            String Exception, Type = "removed from";
+            if (args.TryParseOne<String>("-add", out Exception))
             {
-                if (commands[1] != null && commands[2] != null && commands[1].Length > 0 && commands[2].Length > 0)
-                {
-                    String caseType = "ADD";
-
-                    switch (commands[1].Trim().ToUpper())
-                    {
-                        case "ADD":
-                            {
-                                Program.server.WhiteList.addException(commands[2]);
-                                break;
-                            }
-                        case "REMOVE":
-                            {
-                                Program.server.WhiteList.removeException(commands[2]);
-                                caseType = "REMOVE";
-                                break;
-                            }
-                        default:
-                            {
-                                goto ERROR;
-                            }
-
-                    }
-
-                    Program.server.notifyOps(sender.Name + " used WhiteList command " + caseType + " for: " + commands[2], true);
-
-                    if (!Program.server.WhiteList.Save())
-                    {
-                        Program.server.notifyOps("WhiteList Failed to Save due to " + sender.Name + "'s command", true);
-                    }
-                    return;
-                }
+                Program.server.WhiteList.addException(Exception);
+                Type = "added to";
             }
-        ERROR:
-            sender.sendMessage("Command args Error!");
+            else if (args.TryParseOne<String>("-remove", out Exception))
+            {
+
+                Program.server.WhiteList.removeException(Exception);
+            }
+            else
+            {
+                sender.sendMessage("Please review that command");
+                return;
+            }
+
+            Program.server.notifyOps(Exception + " was " + Type + " the Whitelist {" + sender.Name + "}", true);
+
+            if (!Program.server.WhiteList.Save())
+            {
+                Program.server.notifyOps("WhiteList Failed to Save due to " + sender.Name + "'s command", true);
+            }
         }
 
         /// <summary>
@@ -420,7 +407,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Player that sent command</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void BanList(ISender sender, IList<string> commands)
+        public static void Ban(Server server, ISender sender, ArgumentList args)
         {
             // /ban  <player>
             // /unban <player>
@@ -435,74 +422,80 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (commands != null && commands.Count > 1)
+            if (args != null && args.Count > 0)
             {
-                if (commands[0] != null && commands[0].Length > 0)
+                //We now should check to make sure they are off the server...
+                Player banee = Program.server.GetPlayerByName(args[0]);
+
+                if (banee == null)
                 {
-                    int caseType = -1;
-
-                    if (commands[0].Trim().ToLower().Equals("ban"))
+                    foreach (Player player in Program.server.PlayerList)
                     {
-                        caseType = 0;
+                        var ip = Netplay.slots[player.whoAmi].remoteAddress.Split(':')[0];
+                        if (ip == args[0])
+                        {
+                            banee = player;
+                        }
                     }
-                    else if (commands[0].Trim().ToLower().Equals("unban"))
-                    {
-                        caseType = 1;
-                    }
+                }
 
-                    switch (caseType)
-                    {
-                        case 0:
-                            {
-                                //We now should check to make sure they are off the server...
-                                Player banee = Program.server.GetPlayerByName(commands[1]);
+                Program.server.BanList.addException(args[0]);
 
-                                if (banee == null)
-                                {
-                                    foreach (Player player in Program.server.PlayerList)
-                                    {
-                                        var ip = Netplay.slots[player.whoAmi].remoteAddress.Split(':')[0];
-                                        if (ip == commands[1])
-                                        {
-                                            banee = player;
-                                        }
-                                    }
-                                }
+                if (banee != null)
+                {
+                    banee.Kick("You have been banned from this Server.");
+                    Program.server.BanList.addException(Netplay.slots[banee.whoAmi].
+                        remoteAddress.Split(':')[0]);
+                }
 
-                                Program.server.BanList.addException(commands[1]);
 
-                                if (banee != null)
-                                {
-                                    banee.Kick("You have been banned from this Server.");
-                                    Program.server.BanList.addException(Netplay.slots[banee.whoAmi].
-                                        remoteAddress.Split(':')[0]);
-                                }
-                                break;
-                            }
-                        case 1:
-                            {
-                                Program.server.BanList.removeException(commands[1]);
-                                break;
-                            }
-                        default:
-                            {
-                                goto ERROR;
-                            }
+                Program.server.notifyOps(args[0] + " has been banned {" + sender.Name + "}", true);
+                if (!Program.server.BanList.Save())
+                {
+                    Program.server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+                }
+            }
+            else
+            {
+                sender.sendMessage("Please review that command");
+            }
+        }
 
-                    }
+        /// <summary>
+        /// Adds or removes player to/from the ban list
+        /// </summary>
+        /// <param name="sender">Player that sent command</param>
+        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        public static void UnBan(Server server, ISender sender, ArgumentList args)
+        {
+            // /ban  <player>
+            // /unban <player>
 
-                    Program.server.notifyOps(sender.Name + " used Ban command case " + caseType + " for: " + commands[1], true);
-
-                    if (!Program.server.BanList.Save())
-                    {
-                        Program.server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
-                    }
+            if (sender is Player)
+            {
+                Player player = ((Player)sender);
+                if (!player.Op)
+                {
+                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
                     return;
                 }
             }
 
-        ERROR:
-            sender.sendMessage("Command Error!");
+            if (args != null && args.Count > 0)
+            {
+                Program.server.BanList.removeException(args[0]);
+
+                Program.server.notifyOps(args[0] + " has been unbanned {" + sender.Name + "}", true);
+
+                if (!Program.server.BanList.Save())
+                {
+                    Program.server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+                }
+            }
+            else
+            {
+                sender.sendMessage("Please review that command");
+            }
         }
 
         /// <summary>
