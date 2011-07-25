@@ -3742,7 +3742,7 @@ namespace Terraria_Server
                                                                                         }
                                                                                         int num156 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
                                                                                         int num157 = (int)(npc.Position.Y + (float)(npc.Height / 2)) / 16;
-                                                                                        if (Main.tile.At(num156, num157 - 1).Liquid > 128)
+                                                                                        if (Main.tile.At(num156, num157 - 1).Exists && Main.tile.At(num156, num157 - 1).Liquid > 128)
                                                                                         {
                                                                                             if (Main.tile.At(num156, num157 + 1).Active)
                                                                                             {

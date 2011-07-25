@@ -139,6 +139,8 @@ namespace Terraria_Server
 				}
 //#endif
 				
+				LoadMonitor.Start ();
+				
 				ProgramLog.Log ("Starting remote console server");
 				RemoteConsole.RConServer.Start ("rcon_logins.properties");
 				

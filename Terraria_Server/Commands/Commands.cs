@@ -164,9 +164,14 @@ namespace Terraria_Server.Commands
                 process.WorkingSet64 / 1024.0 / 1024.0,
                 process.PeakWorkingSet64 / 1024.0 / 1024.0));
             var time = process.TotalProcessorTime;
-            sender.sendMessage (string.Format ("Total cpu usage: {0:0.00}% ({1})",
+            sender.sendMessage (string.Format ("Total cpu usage:       {0:0.00}% ({1})",
                 100.0 * time.TotalMilliseconds / (DateTime.Now - process.StartTime).TotalMilliseconds, time));
-
+            
+            if (LoadMonitor.LoadLastSecond >= 0)
+                sender.sendMessage (string.Format ("Cpu usage last second: {0:0.00}%", LoadMonitor.LoadLastSecond));
+                
+            if (LoadMonitor.LoadLastMinute >= 0)
+                sender.sendMessage (string.Format ("Cpu usage last minute: {0:0.00}%", LoadMonitor.LoadLastMinute));
         }
 
         public static void Reload (Server server, ISender sender, ArgumentList args)
