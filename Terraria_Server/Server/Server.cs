@@ -126,7 +126,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Send a message to all online OPs
-        public void notifyOps(String message, bool writeToConsole = true)
+        public void notifyOps(String Message, bool writeToConsole = true)
         {
             if (Statics.cmdMessages)
             {
@@ -134,21 +134,25 @@ namespace Terraria_Server
                 {
                     if (player.Active && player.Op)
                     {
-                        NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, message, 255, 176f, 196, 222f);
+                        NetMessage.SendData((int)Packet.PLAYER_CHAT, player.whoAmi, -1, Message, 255, 176f, 196, 222f);
                     }
                 }
             }
             if (writeToConsole)
             {
-                ProgramLog.Admin.Log (message);
+                ProgramLog.Admin.Log(Message);
             }
         }
 
         // Summary:
         //       Sends a Message to all Connected Clients
-        public void notifyAll(String Message)
+        public void notifyAll(String Message, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
+            if (writeToConsole)
+            {
+                ProgramLog.Admin.Log(Message);
+            }
         }
 
         // Summary:

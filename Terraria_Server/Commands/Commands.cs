@@ -236,8 +236,10 @@ namespace Terraria_Server.Commands
 
         /// <summary>
         /// Executes the world data save routine
-        /// <param name="sender">Player/Console instance (null to just save)</param>
         /// </summary>
+        /// <param name="server">Instance of current server</param>
+        /// <param name="sender">Sender of the Command</param>
+        /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void SaveAll(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
@@ -270,89 +272,89 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Requesting player</param>
         /// <param name="commands">Specific commands to send help on, if player provided any</param>
-        public static void ShowHelp (ISender sender, IList<string> commands = null)
+        public static void ShowHelp(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
+            if (args == null || args.Count < 1)
             {
-                if (commands == null)
+                for (int i = 0; i < Program.commandParser.serverCommands.Values.Count; i++)
                 {
-                    for (int i = 0; i < CommandDefinition.Length; i++)
+                    String Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
+                    CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
+                    if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
                     {
-                        bool show = false;
-
-                        if (((Player)sender).Op || CommandPermission[i] == 0)
+                        String tab = "\t";
+                        if (Key.Length < 8)
                         {
-                            show = true;
+                            tab = "\t\t";
                         }
-
-                        if (show)
+                        String Message = "\t" + Key + tab + "- " + cmdInfo.description;
+                        if (sender is Player)
                         {
-                            ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
+                            Message = Message.Replace("\t", "");
                         }
-                    }
-                }
-                else
-                {
-                    int maxPages = (CommandDefinition.Length / 5) + 1;
-                    if (maxPages > 0 && commands.Count > 1 && commands[1] != null)
-                    {
-                        try
-                        {
-                            int selectingPage = Int32.Parse(commands[1].Trim());
-
-                            if (selectingPage < maxPages)
-                            {
-                                for (int i = 0; i < maxPages; i++)
-                                {
-                                    if ((selectingPage <= i))
-                                    {
-                                        selectingPage = i * ((CommandDefinition.Length / 5) + 1);
-                                        break;
-                                    }
-                                }
-                                
-                                int toPage = CommandDefinition.Length;
-                                if (selectingPage + 5 < toPage)
-                                {
-                                    toPage = selectingPage + 5;
-                                }
-
-                                for (int i = selectingPage; i < toPage; i++)
-                                {
-                                    bool show = false;
-
-                                    if (((Player)sender).Op || CommandPermission[i] == 0)
-                                    {
-                                        show = true;
-                                    }
-
-                                    if (show)
-                                    {
-                                        ((Player)sender).sendMessage(CommandDefinition[i] + " - " + CommandInformation[i]);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                sender.sendMessage("Invalid page! Use: 0 -> " + (maxPages - 1).ToString());
-                            }
-                        }
-                        catch (Exception)
-                        {
-                            ShowHelp(sender);
-                        }
-                    }
-                    else
-                    {
-                        ShowHelp(sender);
+                        sender.sendMessage(Message);
                     }
                 }
             }
             else
             {
-                for (int i = 0; i < CommandDefinition.Length; i++)
+                int maxPages = (Program.commandParser.serverCommands.Values.Count / 5) + 1;
+                if (maxPages > 0 && args.Count > 1 && args[0] != null)
                 {
-                    sender.sendMessage ("\t" + CommandDefinition[i] + " - " + CommandInformation[i].Replace("/", ""));
+                    try
+                    {
+                        int selectingPage = Int32.Parse(args[0].Trim());
+
+                        if (selectingPage < maxPages)
+                        {
+                            for (int i = 0; i < maxPages; i++)
+                            {
+                                if ((selectingPage <= i))
+                                {
+                                    selectingPage = i * ((Program.commandParser.serverCommands.Values.Count / 5) + 1);
+                                    break;
+                                }
+                            }
+
+                            int toPage = Program.commandParser.serverCommands.Values.Count;
+                            if (selectingPage + 5 < toPage)
+                            {
+                                toPage = selectingPage + 5;
+                            }
+
+                            for (int i = selectingPage; i < toPage; i++)
+                            {
+                                String Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
+                                CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
+                                if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
+                                {
+                                    String tab = "\t";
+                                    if (Key.Length < 8)
+                                    {
+                                        tab = "\t\t";
+                                    }
+                                    String Message = "\t" + Key + tab + "- " + cmdInfo.description;
+                                    if (sender is Player)
+                                    {
+                                        Message = Message.Replace("\t", "");
+                                    }
+                                    sender.sendMessage(Message);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            sender.sendMessage("Invalid page! Use: 0 -> " + (maxPages - 1).ToString());
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        ShowHelp(server, sender, null);
+                    }
+                }
+                else
+                {
+                    ShowHelp(server, sender, null);
                 }
             }
         }
@@ -360,8 +362,9 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Adds or removes specified player to/from the white list
         /// </summary>
-        /// <param name="sender">Player that sent command</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Instance of current server</param>
+        /// <param name="sender">Sender of the Command</param>
+        /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void WhiteList(Server server, ISender sender, ArgumentList args)
         {
             // /whitelist <add:remove> <player>
@@ -405,8 +408,9 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Adds or removes player to/from the ban list
         /// </summary>
-        /// <param name="sender">Player that sent command</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Instance of current server</param>
+        /// <param name="sender">Sender of the Command</param>
+        /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void Ban(Server server, ISender sender, ArgumentList args)
         {
             // /ban  <player>
@@ -464,8 +468,9 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Adds or removes player to/from the ban list
         /// </summary>
-        /// <param name="sender">Player that sent command</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Instance of current server</param>
+        /// <param name="sender">Sender of the Command</param>
+        /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void UnBan(Server server, ISender sender, ArgumentList args)
         {
             // /ban  <player>
@@ -501,9 +506,10 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Sets the time in the game
         /// </summary>
-        /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Time(ISender sender, IList<string> commands)
+        /// <param name="server">Instance of current server</param>
+        /// <param name="sender">Sender of the Command</param>
+        /// <param name="args">Array of command arguments passed from CommandParser</param>
+        public static void Time(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
@@ -515,110 +521,91 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            if (commands != null && commands.Count > 1)
+            Double Time;
+            if (args.TryParseOne<Double>("-set", out Time))
             {
-                if (commands[1] != null && commands[1].Length > 0)
+                server.World.setTime(Time, true);
+            }
+            else
+            {
+                String caseType = args[0].Trim().ToLower();
+                switch (caseType)
                 {
-                    String caseType = commands[1].Trim().ToLower();
-
-                    switch (caseType)
-                    {
-                        case "set":
+                    case "day":
+                        {
+                            server.World.setTime(13500.0);
+                            break;
+                        }
+                    case "dawn":
+                        {
+                            server.World.setTime(0);
+                            break;
+                        }
+                    case "dusk":
+                        {
+                            server.World.setTime(0, false, false);
+                            break;
+                        }
+                    case "noon":
+                        {
+                            server.World.setTime(27000.0);
+                            break;
+                        }
+                    case "night":
+                        {
+                            server.World.setTime(16200.0, false, false);
+                            break;
+                        }
+                    case "-now":
+                        {
+                            String AP = "AM";
+                            double time = Main.time;
+                            if (!Main.dayTime)
                             {
-                                if (commands.Count > 2 && commands[2] != null && commands[2].Length > 0)
-                                {
-                                    try
-                                    {
-                                    Program.server.World.setTime(Double.Parse(commands[2]), true);
-                                    } catch(Exception) {
-                                        goto ERROR;
-                                    }
-                                }
-                                else
-                                {
-                                    goto ERROR;
-                                }
-                                break;
+                                time += 54000.0;
                             }
-                        case "day":
+                            time = time / 86400.0 * 24.0;
+                            double num2 = 7.5; //stuffs me at this stage
+                            time = time - num2 - 12.0;
+                            if (time < 0.0)
                             {
-                                Program.server.World.setTime(13500.0);
-                                break;
+                                time += 24.0;
                             }
-                        case "dawn":
+                            if (time >= 12.0)
                             {
-                                Program.server.World.setTime(0);
-                                break;
+                                AP = "PM";
                             }
-                        case "dusk":
+                            int Hours = (int)time;
+                            double Minutes = time - (double)Hours;
+                            String MinuteString = (Minutes * 60.0).ToString();
+                            if (Minutes < 10.0)
                             {
-                                Program.server.World.setTime(0, false, false);
-                                break;
+                                MinuteString = "0" + MinuteString;
                             }
-                        case "noon":
+                            if (Hours > 12)
                             {
-                                Program.server.World.setTime(27000.0);
-                                break;
+                                Hours -= 12;
                             }
-                        case "night":
+                            if (Hours == 0)
                             {
-                                Program.server.World.setTime(16200.0, false, false);
-                                break;
+                                Hours = 12;
                             }
-                        case "now":
+                            if (MinuteString.Length > 2)
                             {
-                                String AP = "AM";
-                                double time = Main.time;
-                                if (!Main.dayTime)
-                                {
-                                    time += 54000.0;
-                                }
-                                time = time / 86400.0 * 24.0;
-                                double num2 = 7.5; //stuffs me at this stage
-                                time = time - num2 - 12.0;
-                                if (time < 0.0)
-                                {
-                                    time += 24.0;
-                                }
-                                if (time >= 12.0)
-                                {
-                                    AP = "PM";
-                                }
-                                int Hours = (int)time;
-                                double Minutes = time - (double)Hours;
-                                String MinuteString = (Minutes * 60.0).ToString();
-                                if (Minutes < 10.0)
-                                {
-                                    MinuteString = "0" + MinuteString;
-                                }
-                                if (Hours > 12)
-                                {
-                                    Hours -= 12;
-                                }
-                                if (Hours == 0)
-                                {
-                                    Hours = 12;
-                                }
-                                if (MinuteString.Length > 2)
-                                {
-                                    MinuteString = MinuteString.Substring(0, 2);
-                                }
-                                sender.sendMessage("Current Time: " + Hours + ":" + MinuteString + " " + AP);
-                                return;
+                                MinuteString = MinuteString.Substring(0, 2);
                             }
-                        default:
-                            {
-                                goto ERROR;
-                            }
-                    }
-                    NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-                    Program.server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.Name);
-                    return;
+                            sender.sendMessage("Current Time: " + Hours + ":" + MinuteString + " " + AP);
+                            return;
+                        }
+                    default:
+                        {
+                            sender.sendMessage("Please review that command.");
+                            return;
+                        }
                 }
             }
-
-        ERROR:
-            sender.sendMessage("Command Error!");
+            NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
+            server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.Name);
         }
 
         /// <summary>

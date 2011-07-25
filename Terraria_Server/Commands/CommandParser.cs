@@ -102,20 +102,24 @@ namespace Terraria_Server.Commands
                 .Calls (Commands.List);
                 
             AddCommand ("who")
-                .WithAccessLevel (AccessLevel.PLAYER)
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("List active players (also: who, players, online).")
                 .Calls(Commands.List);
 
             AddCommand("players")
-                .WithAccessLevel (AccessLevel.PLAYER)
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("List active players (also: who, players, online).")
                 .Calls(Commands.OldList);
 
             // this is what the server crawler expects
             AddCommand("playing")
-                .WithAccessLevel (AccessLevel.PLAYER)
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("List active players (also: who, players, online).")
                 .Calls(Commands.OldList);
 
             AddCommand("online")
-                .WithAccessLevel (AccessLevel.PLAYER)
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("List active players (also: who, players, online).")
                 .Calls(Commands.List);
                 
             AddCommand ("me")
@@ -175,10 +179,29 @@ namespace Terraria_Server.Commands
             AddCommand ("status")
                 .WithDescription ("Check the server's status")
                 .WithHelpText ("Usage:   status")
-                .Calls (Commands.Status);
+                .Calls(Commands.Status);
+
+            AddCommand("time")
+                .WithDescription("Change the time of the World.")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("Usage:   time -set <time>")
+                .WithHelpText("         time -now")
+                .WithHelpText("         time day")
+                .WithHelpText("         time dawn")
+                .WithHelpText("         time dusk")
+                .WithHelpText("         time noon")
+                .WithHelpText("         time night")
+                .Calls(Commands.Time);
+
+            AddCommand("help")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("Get a printout of active commands.")
+                .WithHelpText("Usage:   help")
+                .WithHelpText("         help <page>")
+                .Calls(Commands.ShowHelp);
         }
        
-        readonly Dictionary<string, CommandInfo> serverCommands;
+        public readonly Dictionary<string, CommandInfo> serverCommands;
         
         public CommandInfo AddCommand (string prefix)
         {
@@ -234,7 +257,7 @@ namespace Terraria_Server.Commands
             }
         }
         
-        static bool CheckAccessLevel (CommandInfo cmd, ISender sender)
+        public static bool CheckAccessLevel (CommandInfo cmd, ISender sender)
         {
             if (sender is Player) return cmd.accessLevel == AccessLevel.PLAYER || (cmd.accessLevel == AccessLevel.OP && sender.Op);
             if (sender is RConSender) return cmd.accessLevel <= AccessLevel.REMOTE_CONSOLE;
@@ -357,38 +380,18 @@ namespace Terraria_Server.Commands
                         sender.sendMessage("No such command!");
                         return;
                     }
-                case (int)Commands.Command.COMMAND_HELP:
-                    {
-                        if (tokens.Count > 1)
-                        {
-                            Commands.ShowHelp(sender, tokens);
-                        }
-                        else
-                        {
-                            Commands.ShowHelp(sender);
-                        }
-                        break;
-                    }
-                //case (int)Commands.Command.COMMAND_WHITELIST:
+                //case (int)Commands.Command.COMMAND_HELP:
                 //    {
-                //        Commands.WhiteList(sender, tokens);
+                //        if (tokens.Count > 1)
+                //        {
+                //            Commands.ShowHelp(sender, tokens);
+                //        }
+                //        else
+                //        {
+                //            Commands.ShowHelp(sender);
+                //        }
                 //        break;
                 //    }
-                //case (int)Commands.Command.COMMAND_BAN:
-                //    {
-                //        Commands.BanList(sender, tokens);
-                //        break;
-                //    }
-                //case (int)Commands.Command.COMMAND_UNBAN:
-                //    {
-                //        Commands.BanList(sender, tokens);
-                //        break;
-                //    }
-                case (int)Commands.Command.COMMAND_TIME:
-                    {
-                        Commands.Time(sender, tokens);
-                        break;
-                    }
                 case (int)Commands.Command.COMMAND_GIVE:
                     {
                         Commands.Give(sender, tokens);
@@ -446,7 +449,7 @@ namespace Terraria_Server.Commands
                     }
                 default:
                     {
-                        Program.tConsole.WriteLine("Uknown Command Issued.");
+                        Program.tConsole.WriteLine("Unknown Command Issued.");
                         break;
                     }
             }
