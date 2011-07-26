@@ -16,126 +16,11 @@ namespace Terraria_Server.Commands
     public class Commands
     {
         /// <summary>
-        /// Enumerates command IDs
+        /// Closes the Server & It's Connections.
         /// </summary>
-        //public enum Command
-        //{
-        //    /*
-        //     * @Developers
-        //     * Commands are sectioned into two parts.
-        //     * Player & Console, Since this Class is 
-        //     * for Player AND Console input there may be two types of commands.
-        //     * 
-        //     * e.g. Me (player) Say (Console)
-        //     * 
-        //     * They are devided as follows
-        //     *      - COMMANDS_ (Both, Player & Console)
-        //     *      - PLAYER_ (Player Only)
-        //     *      - CONSOLE_ (Console Only)
-        //     * 
-        //     * Console Output to In-Game OPs are sent with the Colour: 176-196-222
-        //     * Server Messages: 238-130-238
-        //     * Player Messages: 255-0-0
-        //     * 
-        //     */
-
-        //    NO_SUCH_COMMAND = -1,
-        //    CONSOLE_EXIT = 0,
-        //    COMMAND_RELOAD = 1,
-        //    COMMAND_LIST = 2,
-        //    COMMAND_PLAYERS = 3,
-        //    PLAYER_ME = 4,
-        //    CONSOLE_SAY = 5,
-        //    COMMAND_SAVE_ALL = 6,
-        //    COMMAND_HELP = 7,
-        //    COMMAND_WHITELIST = 8,
-        //    COMMAND_BAN = 9,
-        //    COMMAND_UNBAN = 10,
-        //    COMMAND_TIME = 11,
-        //    COMMAND_GIVE = 12,
-        //    PLAYER_SPAWNNPC = 13,
-        //    COMMAND_TELEPORT = 14,
-        //    PLAYER_TPHERE = 15,
-        //    COMMAND_SETTLEWATER = 16,
-        //    COMMAND_OP = 17,
-        //    COMMAND_DEOP = 18,
-        //    PLAYER_OPLOGIN = 19,
-        //    PLAYER_OPLOGOUT = 20,
-        //    COMMAND_NPCSPAWN = 21,
-        //    COMMAND_KICK = 22,
-        //    COMMAND_RESTART = 23,
-        //    COMMAND_STOP = 24,
-        //    COMMAND_SLOTS = 25,
-        //}
-        ///// <summary>
-        ///// Defines the string values for the command names
-        ///// </summary>
-        //public static String[] CommandDefinition = new String[] {   "exit",         "reload",       "list",
-        //                                                            "players",      "me",           "say",
-        //                                                            "save-all",     "help",         "whitelist",
-        //                                                            "ban",          "unban",        "time",
-        //                                                            "give",         "spawnnpc",     "tp",
-        //                                                            "tphere",       "settle",       "op",
-        //                                                            "deop",         "oplogin",      "oplogout",
-        //                                                            "npcspawns",    "kick",         "restart",
-        //                                                            "stop",         "slots"};
-        ///// <summary>
-        ///// Defines help text for each command
-        ///// </summary>
-        //public static String[] CommandInformation = new String[] {  "Stop & Close The Server.",
-        //                                                            "Reload Plugins.",
-        //                                                            "Show Online Players.",
-        //                                                            "Show Online Players.",
-        //                                                            "Talk in 3rd Person.",
-        //                                                            "Send A Console Message To Online Players.", 
-        //                                                            "Trigger a World Save.", 
-        //                                                            "Show this Help. (Also /help <page>)", 
-        //                                                            "add:remove to the whitelist.", 
-        //                                                            "Ban a Player.", 
-        //                                                            "Un-Ban a Player.", 
-        //                                                            "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
-        //                                                            "Give Player an item (/give <player> <amount> <item name:id>)",
-        //                                                            "Spawn a NPC (/spawnnpc <amount> \"<name:id>\" \"<player>\")",
-        //                                                            "Teleport Player to Player.",
-        //                                                            "Teleport a Player to You.",
-        //                                                            "Settle Water.",
-        //                                                            "Set a player to OP",
-        //                                                            "De-OP a player.",
-        //                                                            "Log in as OP: /oplogin <password>",
-        //                                                            "Log out of OP status.",
-        //                                                            "Toggle the state of NPC Spawning.",
-        //                                                            "Kicks a player from the server.", 
-        //                                                            "Restarts the server.",
-        //                                                            "Stop & Close The Server.",
-        //                                                            "Check the state of connection slots"};
-
-        ///// <summary>
-        ///// Defines permission required to use the command at the specified index.  1 = requires op, 0 = any player
-        ///// </summary> 
-        ////public static int[] CommandPermission = new int[] { 1, /* 0 */  1, /* 1 */  0, /* 2 */  0, /* 3 */  0, /* 4 */ 
-        ////                                                    1, /* 5 */  1, /* 6 */  0, /* 7 */  1, /* 8 */  1, /* 9 */ 
-        ////                                                    1, /* 10 */ 1, /* 11 */ 1, /* 12 */ 1, /* 13 */ 1, /* 14 */ 
-        ////                                                    1, /* 15 */ 1, /* 16 */ 1, /* 17 */ 1, /* 18 */ 0, /* 19 */ 
-        ////                                                    0, /* 20 */ 1, /* 21 */ 1, /* 22 */ 1, /* 23 */ 1, /* 24 */ 
-        ////                                                    1, /* 25 */ };
-
-        ///// <summary>
-        ///// Gets the enumerated value of a command by name
-        ///// </summary>
-        ///// <param name="Command">Name of command</param>
-        ///// <returns>ID of command if it exists, NO_SUCH_COMMAND if not</returns>
-        //public static int getCommandValue(String Command)
-        //{
-        //    for (int i = 0; i < CommandDefinition.Length; i++)
-        //    {
-        //        if (CommandDefinition[i] != null && CommandDefinition[i].Equals(Command.ToLower().Trim()))
-        //        {
-        //            return i;
-        //        }
-        //    }
-        //    return (int)Commands.Command.NO_SUCH_COMMAND;
-        //}
-
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Exit (Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player || sender is RConSender)
@@ -151,7 +36,13 @@ namespace Terraria_Server.Commands
             
             return;
         }
-        
+
+        /// <summary>
+        /// Outputs statistics of the servers performance.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Status (Server server, ISender sender, ArgumentList args)
         {
             args.ParseNone ();
@@ -202,6 +93,12 @@ namespace Terraria_Server.Commands
             sender.sendMessage (string.Format ("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
         }
 
+        /// <summary>
+        /// Reloads Plugins.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Reload (Server server, ISender sender, ArgumentList args)
         {
             args.ParseNone ();
@@ -211,7 +108,13 @@ namespace Terraria_Server.Commands
             
             return;
         }
-        
+
+        /// <summary>
+        /// Prints a Playerlist.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void OldList (Server server, ISender sender, ArgumentList args)
         {
             args.ParseNone ();
@@ -219,7 +122,13 @@ namespace Terraria_Server.Commands
             var players = from p in Server.players where p.Active select p.Name;
             sender.sendMessage (string.Concat ("Current players: ", string.Join (", ", players), "."), 255, 255, 240, 20);
         }
-        
+
+        /// <summary>
+        /// Prints a player list, Possibly readable by bots.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void List (Server server, ISender sender, ArgumentList args)
         {
             args.ParseNone ();
@@ -248,6 +157,12 @@ namespace Terraria_Server.Commands
             sender.sendMessage (string.Concat (os, ps, " (", on + pn, "/", Main.maxNetplayers, ")"), 255, 255, 240, 20);
         }
 
+        /// <summary>
+        /// 3rd person talking.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Action (Server server, ISender sender, string message)
         {
             ProgramLog.Chat.Log ("* " + sender.Name + " " + message);
@@ -257,6 +172,12 @@ namespace Terraria_Server.Commands
                 NetMessage.SendData (25, -1, -1, "* " + sender.Name + " " + message, 255, 238, 130, 238);
         }
 
+        /// <summary>
+        /// Sends a Server Message to all online Players.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Say (Server server, ISender sender, string message)
         {
             ProgramLog.Chat.Log ("<" + sender.Name + "> " + message);
@@ -267,11 +188,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Executes the world data save routine
+        /// Executes the world data save routine.
         /// </summary>
-        /// <param name="server">Instance of current server</param>
-        /// <param name="sender">Sender of the Command</param>
-        /// <param name="args">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void SaveAll(Server server, ISender sender, ArgumentList args)
         {
             Program.server.notifyOps("Saving World...", true);
@@ -290,10 +211,11 @@ namespace Terraria_Server.Commands
         }
         
         /// <summary>
-        /// Sends the help list to the requesting player's chat
+        /// Sends the help list to the requesting player's chat.
         /// </summary>
-        /// <param name="sender">Requesting player</param>
-        /// <param name="commands">Specific commands to send help on, if player provided any</param>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void ShowHelp(Server server, ISender sender, ArgumentList args)
         {
             if (args == null || args.Count < 1)
@@ -382,11 +304,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Adds or removes specified player to/from the white list
+        /// Adds or removes specified player to/from the white list.
         /// </summary>
-        /// <param name="server">Instance of current server</param>
-        /// <param name="sender">Sender of the Command</param>
-        /// <param name="args">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void WhiteList(Server server, ISender sender, ArgumentList args)
         {
             // /whitelist <add:remove> <player>
@@ -416,11 +338,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Adds or removes player to/from the ban list
+        /// Adds a player or ip (Exception) to the ban list.
         /// </summary>
-        /// <param name="server">Instance of current server</param>
-        /// <param name="sender">Sender of the Command</param>
-        /// <param name="args">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Ban(Server server, ISender sender, ArgumentList args)
         {
             if (args != null && args.Count > 0)
@@ -463,11 +385,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Adds or removes player to/from the ban list
+        /// Removes an exception from the ban list.
         /// </summary>
-        /// <param name="server">Instance of current server</param>
-        /// <param name="sender">Sender of the Command</param>
-        /// <param name="args">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void UnBan(Server server, ISender sender, ArgumentList args)
         {
             if (args != null && args.Count > 0)
@@ -488,11 +410,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Sets the time in the game
+        /// Sets the time in the game.
         /// </summary>
-        /// <param name="server">Instance of current server</param>
-        /// <param name="sender">Sender of the Command</param>
-        /// <param name="args">Array of command arguments passed from CommandParser</param>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Time(Server server, ISender sender, ArgumentList args)
         {
             Double Time;
@@ -583,10 +505,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Gives specified item to the specified player
+        /// Gives specified item to the specified player.
         /// </summary>
+        /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Give(Server server, ISender sender, ArgumentList args)
         {
             // /give <player> <stack> <name> 
@@ -699,10 +622,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Spawns specified NPC type
+        /// Spawns specified NPC type.
         /// </summary>
+        /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void SpawnNPC(Server server, ISender sender, ArgumentList args)
         {
 			// /spawnnpc <amount> <name:id>
@@ -753,10 +677,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Teleports sender to specified player's location
+        /// Teleports player1 to a second specified player's location.
         /// </summary>
+        /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Teleport(Server server, ISender sender, ArgumentList args)
         {
             // /tp <player> <toplayer>
@@ -788,10 +713,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Teleports specified player to sending player's location
+        /// Teleports specified player to sending player's location.
         /// </summary>
+        /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void TeleportHere(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
@@ -827,9 +753,11 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Settles water like in the startup routine
+        /// Settles water like in the startup routine.
         /// </summary>
+        /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void SettleWater(Server server, ISender sender, ArgumentList args)
         {
             if (!Liquid.panicMode)
@@ -844,6 +772,12 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Sets OP status to a given Player.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void OpPlayer(Server server, ISender sender, ArgumentList args)
         {
             if (args.Count > 1)
@@ -854,6 +788,13 @@ namespace Terraria_Server.Commands
 
                 server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
                 server.OpList.addException(player + ":" + Password, true, player.Length);
+
+
+                if (!server.OpList.Save())
+                {
+                    server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                    return;
+                } 
 
                 Player playerInstance = server.GetPlayerByName(player);
                 if (playerInstance != null)
@@ -867,6 +808,12 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// De-OPs a given Player.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void DeopPlayer(Server server, ISender sender, ArgumentList args)
         {
             if (args.Count > 0)
@@ -880,9 +827,16 @@ namespace Terraria_Server.Commands
                     Program.server.OpList.removeException(player + ":" + Player.GetPlayerPassword(player, server));
                 }
 
+                if (!server.OpList.Save())
+                {
+                    server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                    return;
+                }  
+
                 Player playerInstance = server.GetPlayerByName(player);
                 if (playerInstance != null)
                 {
+                    playerInstance.Op = false;
                     playerInstance.sendMessage("You have been De-Opped!.", ChatColour.Green);
                 }
             }
@@ -892,6 +846,12 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Allows Operators to login.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void OpLogin(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
@@ -917,6 +877,12 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Allows Operators to logout.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void OpLogout(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
@@ -936,7 +902,9 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Enables or disables NPC spawning
         /// </summary>
+        /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void NPCSpawns(Server server, ISender sender, ArgumentList args)
         {
             Main.stopSpawns = !Main.stopSpawns;
@@ -951,6 +919,12 @@ namespace Terraria_Server.Commands
             }
         }
 
+        /// <summary>
+        /// Kicks a given Player from the server
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Kick (Server server, ISender sender, ArgumentList args)
         {
             if (args.TryPop ("-s"))
@@ -992,8 +966,9 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Restarts the server
         /// </summary>
-        /// <param name="sender">Sending player</param>
         /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void Restart(Server server, ISender sender, ArgumentList args)
         {
             server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
@@ -1004,11 +979,16 @@ namespace Terraria_Server.Commands
             server.Initialize();
             WorldIO.loadWorld();
             Program.updateThread = new Thread(Program.UpdateLoop);
-            //Program.updateThread.Name = "Updt";
             server.StartServer();
             Statics.keepRunning = false;
         }
-		
+
+        /// <summary>
+        /// Checks the state of a slot.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
 		public static void Slots (Server server, ISender sender, ArgumentList args)
 		{
 			bool dinfo = args.Contains ("-d") || args.Contains ("-dp") || args.Contains ("-pd");
