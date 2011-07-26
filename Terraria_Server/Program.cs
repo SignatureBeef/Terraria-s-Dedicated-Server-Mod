@@ -54,9 +54,6 @@ namespace Terraria_Server
 					return;
 				}
 				
-				var logFile = Statics.DataPath + Path.DirectorySeparatorChar + "server.log";
-				ProgramLog.OpenLogFile (logFile);
-
 				Platform.InitPlatform();
 				tConsole = new TConsole (null, Platform.Type); //dummy
 
@@ -74,6 +71,9 @@ namespace Terraria_Server
 						return;
 					}
 				}
+				
+				var logFile = Statics.DataPath + Path.DirectorySeparatorChar + "server.log";
+				ProgramLog.OpenLogFile (logFile);
 
 				String PIDFile = properties.PIDFile.ToString();
 				if (PIDFile.Length > 0)

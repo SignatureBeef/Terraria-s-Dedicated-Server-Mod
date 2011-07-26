@@ -233,7 +233,7 @@ namespace Terraria_Server.Logging
 		
 		public FileOutputTarget (string path)
 		{
-			file = new StreamWriter (path);
+			file = new StreamWriter (path, true);
 			thread = new Thread (OutputThread);
 			thread.Start ();
 		}

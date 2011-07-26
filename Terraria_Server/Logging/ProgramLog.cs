@@ -57,9 +57,23 @@ namespace Terraria_Server.Logging
 		
 		public static void OpenLogFile (string path)
 		{
-			logFile = new FileOutputTarget (path);
+			var newpath = path;
+			
+			if (Program.properties.LogRotation)
+			{
+				var absolute = Path.GetFullPath (path);
+				var dir = Path.GetDirectoryName (absolute);
+				var name = Path.GetFileNameWithoutExtension (path);
+				var ext = Path.GetExtension (path);
+				newpath = Path.Combine (dir, string.Format ("{0}_{1:yyyyMMdd_HHmm}{2}", name, DateTime.Now, ext));
+			}
+			
+			logFile = new FileOutputTarget (newpath);
+			
 			lock (logTargets)
 				logTargets.Add (logFile);
+			
+			Log ("Logging started to file \"{0}\".", newpath);
 		}
 		
 		public static void AddTarget (LogTarget target)

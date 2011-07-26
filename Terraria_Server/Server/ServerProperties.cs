@@ -68,6 +68,7 @@ namespace Terraria_Server
             temp = HackedData;
             temp = RConBindAddress;
             temp = RConHashNonce;
+            temp = LogRotation;
         }
 
         public int MaxPlayers
@@ -411,6 +412,12 @@ namespace Terraria_Server
 				return val;
 			}
 		}
-
+		
+		public bool LogRotation
+		{
+			get { return Program.properties.getValue ("log-rotation", true); }
+			set { Program.properties.setValue ("log-rotation", value); }
+		}
+		
     }
 }
