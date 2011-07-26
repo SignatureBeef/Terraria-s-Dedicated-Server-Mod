@@ -172,6 +172,34 @@ namespace Terraria_Server.Commands
                 
             if (LoadMonitor.LoadLastMinute >= 0)
                 sender.sendMessage (string.Format ("Cpu usage last minute: {0:0.00}%", LoadMonitor.LoadLastMinute));
+            
+            var projs = 0; var uprojs = 0;
+            var npcs = 0; var unpcs = 0;
+            var items = 0;
+            
+            foreach (var npc in Main.npcs)
+            {
+                if (! npc.Active) continue;
+                npcs += 1;
+                if (! npc.netUpdate) continue;
+                unpcs += 1;
+            }
+
+            foreach (var proj in Main.projectile)
+            {
+                if (! proj.Active) continue;
+                projs += 1;
+                if (! proj.netUpdate) continue;
+                uprojs += 1;
+            }
+            
+            foreach (var item in Main.item)
+            {
+                if (! item.Active) continue;
+                items += 1;
+            }
+            
+            sender.sendMessage (string.Format ("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
         }
 
         public static void Reload (Server server, ISender sender, ArgumentList args)
@@ -1068,7 +1096,7 @@ namespace Terraria_Server.Commands
                     
                     var player = Main.players[s];
                     if (player != null && player.Name != null)
-                        NetMessage.SendData (25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".");
+                        NetMessage.SendData (25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".", 255);
                 }
                 else
                 {
@@ -1087,7 +1115,7 @@ namespace Terraria_Server.Commands
                 }
             
                 player.Kick ("You have been kicked by " + sender.Name + ".");
-                NetMessage.SendData (25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".");
+                NetMessage.SendData (25, -1, -1, player.Name + " has been kicked by " + sender.Name + ".", 255);
             }
         }
                 
