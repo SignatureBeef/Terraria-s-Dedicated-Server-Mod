@@ -1924,22 +1924,6 @@ namespace Terraria_Server
 					}
 				}
 			}
-			if (Main.playerInventory)
-			{
-				//bool flag = false;
-				for (int l = 0; l < 80; l++)
-				{
-					if (this.oldAdjTile[l] != this.adjTile[l])
-					{
-						//flag = true;
-						break;
-					}
-				}
-                //if (flag)
-                //{
-                //    Recipe.FindRecipes();
-                //}
-			}
 		}
 		
         public void PlayerFrame()
@@ -4060,7 +4044,6 @@ namespace Terraria_Server
 
         public bool teleportTo(float tileX, float tileY)
         {
-
             PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
             playerEvent.ToLocation = new Vector2(tileX, tileY);
             playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
@@ -4157,12 +4140,15 @@ namespace Terraria_Server
 
         public bool isInOpList()
         {
-            return Player.isInOpList(this.Name, Program.server);
+            return Player.isInOpList(this.Name, Program.server);            
         }
 
-        public String getOpListKey()
+        public String GetOpListKey
         {
-            return this.Name.Trim().ToLower() + Password;
+            get
+            {
+                return this.Name.Trim().ToLower() + Password;
+            }
         }
 
         public bool HasHackedData()
