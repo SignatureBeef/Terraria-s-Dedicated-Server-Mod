@@ -9,6 +9,8 @@ using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
+
 namespace Terraria_Server
 {
 	public class Main
@@ -887,176 +889,145 @@ namespace Terraria_Server
 				
 			}
 		}
-
-        public void Update()
-        {
-            int count = 0;
-            foreach(Player player in Main.players)
-            {
-                if (Main.ignoreErrors)
-                {
-                    try
-                    {
-                        player.UpdatePlayer(count);
-                    }
-                    catch
-                    {
-                        Debug.WriteLine(String.Concat(new object[]
-						{
-							"Error: player[", 
-							count, 
-							"].UpdatePlayer(", 
-							count, 
-							")"
-						}));
-                    }
-                }
-                else
-                {
-                    player.UpdatePlayer(count);
-                }
-                count++;
-            }
-            
-            NPC.SpawnNPC();
-
-            foreach (Player player in Main.players)
-            {
-                player.activeNPCs = 0;
-                player.townNPCs = 0;
-            }
-            for (int i = 0; i < NPC.MAX_NPCS; i++)
-            {
-                if (Main.ignoreErrors)
-                {
-                    try
-                    {
-                        NPC.UpdateNPC(i);
-                    }
-                    catch (Exception value)
-                    {
-                        Main.npcs[i] = Registries.NPC.Default;
-                        Debug.WriteLine(String.Concat(new object[]
-						{
-							"Error: npc[", 
-							i, 
-							"].UpdateNPC(", 
-							i, 
-							")"
-						}));
-                        Debug.WriteLine(value);
-                    }
-                }
-                else
-                {
-                    NPC.UpdateNPC(i);
-                }
-            }
-            for (int i = 0; i < 1000; i++)
-            {
-                if (Main.ignoreErrors)
-                {
-                    try
-                    {
-                        Main.projectile[i].Update(i);
-                    }
-                    catch
-                    {
-                        Main.projectile[i] = new Projectile();
-                        Debug.WriteLine(String.Concat(new object[]
-						{
-							"Error: projectile[", 
-							i, 
-							"].Update(", 
-							i, 
-							")"
-						}));
-                    }
-                }
-                else
-                {
-                    Main.projectile[i].Update(i);
-                }
-            }
-            for (int i = 0; i < 200; i++)
-            {
-                if (Main.ignoreErrors)
-                {
-                    try
-                    {
-                        Main.item[i].UpdateItem(i);
-                    }
-                    catch
-                    {
-                        Main.item[i] = new Item();
-                        Debug.WriteLine(String.Concat(new object[]
-						{
-							"Error: item[", 
-							i, 
-							"].UpdateItem(", 
-							i, 
-							")"
-						}));
-                    }
-                }
-                else
-                {
-                    Main.item[i].UpdateItem(i);
-                }
-            }
-
-            if (Main.ignoreErrors)
-            {
-                try
-                {
-                    Main.UpdateTime();
-                }
-                catch
-                {
-                    Debug.WriteLine("Error: UpdateTime()");
-                    Main.checkForSpawns = 0;
-                }
-            }
-            else
-            {
-                Main.UpdateTime();
-            }
-            
-            if (Main.ignoreErrors)
-            {
-                try
-                {
-                    WorldModify.UpdateWorld();
-                    Main.UpdateInvasion();
-                }
-                catch
-                {
-                    Debug.WriteLine("Error: WorldGen.UpdateWorld()");
-                }
-            }
-            else
-            {
-                WorldModify.UpdateWorld();
-                Main.UpdateInvasion();
-            }
-
-            if (Main.ignoreErrors)
-            {
-                try
-                {
-                    
-                    Main.UpdateServer();
-                }
-                catch
-                {
-                    Debug.WriteLine("Error: UpdateServer()");
-                }
-            }
-            else
-            {
-                Main.UpdateServer();
-            }
-        }
+		
+		// these be locks
+		public static object updatingNPCs = new object();
+		public static object updatingItems = new object();
+		public static object updatingProjectiles = new object();
+		
+		public void Update()
+		{
+			int count = 0;
+			
+			foreach(Player player in Main.players)
+			{
+				try
+				{
+					player.UpdatePlayer(count);
+				}
+				catch (Exception e)
+				{
+					if (! Main.ignoreErrors) throw;
+					
+					ProgramLog.Log (e, string.Format ("Player update error, slot={0}, address={1}, name={2}",
+						player.whoAmi, player.IPAddress, player.Name != null ? string.Concat ('"', player.Name, '"') : "<null>"));
+				}
+				count++;
+			}
+			
+			lock (updatingNPCs)
+			{
+				NPC.SpawnNPC();
+				
+				foreach (Player player in Main.players)
+				{
+					player.activeNPCs = 0;
+					player.townNPCs = 0;
+				}
+				
+				for (int i = 0; i < NPC.MAX_NPCS; i++)
+				{
+					try
+					{
+						NPC.UpdateNPC(i);
+					}
+					catch (Exception e)
+					{
+						if (! Main.ignoreErrors) throw;
+						
+						var npc = Main.npcs[i];
+						ProgramLog.Log (e, string.Format ("NPC update error, id={0}, type={1}, name={2}",
+						i, npc.Type, npc.Name));
+						Main.npcs[i] = Registries.NPC.Default;
+					}
+				}
+			}
+				
+			lock (updatingProjectiles)
+			{
+				for (int i = 0; i < 1000; i++)
+				{
+					try
+					{
+					    Main.projectile[i].Update(i);
+					}
+					catch (Exception e)
+					{
+						if (! Main.ignoreErrors) throw;
+						
+						var proj = Main.projectile[i];
+						ProgramLog.Log (e, string.Format ("Projectile update error, i={0}, id={1}, owner={2}, type={3}",
+							i, proj.identity, proj.Owner, proj.Type));
+						Main.projectile[i] = new Projectile();
+					}
+				}
+			}
+			
+			lock (updatingItems)
+			{
+				for (int i = 0; i < 200; i++)
+				{
+					try
+					{
+						Main.item[i].UpdateItem(i);
+					}
+					catch (Exception e)
+					{
+						if (! Main.ignoreErrors) throw;
+						
+						var item = Main.item[i];
+						ProgramLog.Log (e, string.Format ("Projectile update error, i={0}, type={1}, owner={2}, stack={3}",
+							i, item.Type, item.Owner, item.Stack));
+						Main.item[i] = new Item();
+					}
+				}
+			}
+			
+			try
+			{
+				Main.UpdateTime ();
+			}
+			catch (Exception e)
+			{
+				if (! Main.ignoreErrors) throw;
+				
+				ProgramLog.Log (e, "Time update error");
+				Main.checkForSpawns = 0;
+			}
+			
+			try
+			{
+				WorldModify.UpdateWorld ();
+			}
+			catch (Exception e)
+			{
+				if (! Main.ignoreErrors) throw;
+				
+				ProgramLog.Log (e, "World update error");
+			}
+			
+			try
+			{
+				Main.UpdateInvasion ();
+			}
+			catch (Exception e)
+			{
+				if (! Main.ignoreErrors) throw;
+				
+				ProgramLog.Log (e, "Invasion update error");
+			}
+			
+			try
+			{
+				Main.UpdateServer ();
+			}
+			catch (Exception e)
+			{
+				if (! Main.ignoreErrors) throw;
+				
+				ProgramLog.Log (e, "Server update error");
+			}
+		}
 
     }
 }

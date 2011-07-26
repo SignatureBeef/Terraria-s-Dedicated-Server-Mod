@@ -10,6 +10,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Logging;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Definitions;
 
 namespace Terraria_Server.Commands
 {
@@ -1057,6 +1058,87 @@ namespace Terraria_Server.Commands
 				}
 			}
 			sender.sendMessage (string.Format ("{0}/{1} slots occupied.", k, Main.maxNetplayers));
+		}
+		
+		public static void Purge (Server server, ISender sender, ArgumentList args)
+		{
+			var all = args.TryPop ("all");
+			
+			if (all || args.TryPop ("proj") || args.TryPop ("projectiles"))
+			{
+				ProgramLog.Admin.Log ("Purging all projectiles.");
+				
+				var msg = NetMessage.PrepareThreadInstance ();
+				
+				msg.PlayerChat (255, "<Server> Purging all projectiles.", 255, 180, 100);
+				
+				lock (Main.updatingProjectiles)
+				{
+					foreach (var projectile in Main.projectile)
+					{
+						projectile.Active = false;
+						projectile.type = ProjectileType.UNKNOWN;
+						
+						msg.Projectile (projectile);
+					}
+					
+					msg.Broadcast ();
+				}
+			}
+			
+			if (all || args.TryPop ("npc") || args.TryPop ("npcs"))
+			{
+				ProgramLog.Admin.Log ("Purging all NPCs.");
+				
+				var msg = NetMessage.PrepareThreadInstance ();
+				
+				msg.PlayerChat (255, "<Server> Purging all NPCs.", 255, 180, 100);
+				
+				lock (Main.updatingNPCs)
+				{
+					foreach (var npc in Main.npcs)
+					{
+						if (npc.Active)
+						{
+							npc.Active = false;
+							npc.life = 0;
+							npc.netUpdate = false;
+							npc.Name = "";
+							
+							msg.NPCInfo (npc.whoAmI);
+						}
+					}
+					
+					msg.Broadcast ();
+				}
+			}
+			
+			if (all || args.TryPop ("item") || args.TryPop ("items"))
+			{
+				ProgramLog.Admin.Log ("Purging all items.");
+				
+				var msg = NetMessage.PrepareThreadInstance ();
+				
+				msg.PlayerChat (255, "<Server> Purging all items.", 255, 180, 100);
+				
+				lock (Main.updatingItems)
+				{
+					for (int i = 0; i < 200; i++)
+					{
+						var item = Main.item[i];
+						if (item.Active)
+						{
+							Main.item[i] = new Item(); // this is what Main does when ignoreErrors is on *shrug*
+							msg.ItemInfo (i);
+							msg.ItemOwnerInfo (i);
+						}
+					}
+					
+					msg.Broadcast ();
+				}
+			}
+			
+			throw new CommandError ("");
 		}
     }
 }

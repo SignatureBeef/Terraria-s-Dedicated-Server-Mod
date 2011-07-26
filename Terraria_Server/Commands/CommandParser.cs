@@ -266,6 +266,15 @@ namespace Terraria_Server.Commands
                 .WithDescription("Restart the Server.")
                 .WithHelpText("Usage:   restart")
                 .Calls(Commands.Restart);
+            
+            AddCommand ("purge")
+                .WithAccessLevel (AccessLevel.OP)
+                .WithDescription ("Purge the map of items, NPCs or projectiles.")
+                .WithHelpText ("Usage:    purge all")
+                .WithHelpText ("          purge proj[ectiles]")
+                .WithHelpText ("          purge item[s]")
+                .WithHelpText ("          purge npc[s]")
+                .Calls(Commands.Purge);
 
         }
        
