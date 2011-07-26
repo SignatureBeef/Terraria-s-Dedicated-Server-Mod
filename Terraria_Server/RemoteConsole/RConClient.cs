@@ -346,6 +346,13 @@ namespace Terraria_Server.RemoteConsole
 			writer.Write ("\x1b[0m");
 		}
 		
+		protected override void SignalIncompleteLine ()
+		{
+			stream.WriteByte (255); // telnet go-ahead
+			stream.WriteByte (249);
+			stream.Flush ();
+		}
+		
 		public override void Close ()
 		{
 			socket.SafeClose ();

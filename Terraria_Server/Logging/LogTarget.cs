@@ -104,6 +104,10 @@ namespace Terraria_Server.Logging
 			thread.Start ();
 		}
 		
+		protected virtual void SignalIncompleteLine ()
+		{
+		}
+		
 		protected virtual void OutputThread ()
 		{
 			try
@@ -202,6 +206,9 @@ namespace Terraria_Server.Logging
 						backspace += str.Length;
 						writer.Write (str);
 					}
+					
+					if (progs.Count > 0)
+						SignalIncompleteLine ();
 					
 					if (backspace > 0 && EntryCount() == 0)
 					{
