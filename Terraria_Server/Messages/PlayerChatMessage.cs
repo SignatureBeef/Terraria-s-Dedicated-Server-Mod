@@ -4,6 +4,7 @@ using System.Linq;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Logging;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Messages
 {
@@ -64,7 +65,16 @@ namespace Terraria_Server.Messages
                     }
                 }
 
-                NetMessage.SendData(25, -1, -1, chat, playerIndex, (float)255, (float)255, (float)255);
+
+                if (Main.players[playerIndex].Op)
+                {
+                    Color chatColour = ChatColour.SteelBlue;
+                    NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, "<" + Main.players[playerIndex].Name + "> " + chat, 255, chatColour.R, chatColour.G, chatColour.B);
+                }
+                else
+                {
+                    NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, chat, playerIndex, (float)255, (float)255, (float)255);
+                }
                 ProgramLog.Chat.Log ("<" + Main.players[playerIndex].Name + "> " + chat);
             }
         }

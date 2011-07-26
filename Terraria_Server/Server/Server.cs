@@ -156,6 +156,17 @@ namespace Terraria_Server
         }
 
         // Summary:
+        //       Sends a Message to all Connected Clients
+        public void notifyAll(String Message, Color ChatColour, bool writeToConsole = true)
+        {
+            NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, ChatColour.R, ChatColour.G, ChatColour.B);
+            if (writeToConsole)
+            {
+                ProgramLog.Admin.Log(Message);
+            }
+        }
+
+        // Summary:
         //       Gets the Servers Player List
         public Player[] PlayerList
         {

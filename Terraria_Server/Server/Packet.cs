@@ -1,6 +1,6 @@
 ﻿namespace Terraria_Server
 {
-	public enum Packet
+	public enum Packet : int
 	{
 		CONNECTION_REQUEST = 1,
 		DISCONNECT = 2,

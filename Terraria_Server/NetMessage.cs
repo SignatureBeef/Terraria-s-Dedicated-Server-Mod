@@ -62,6 +62,11 @@ namespace Terraria_Server
 		{
 			Netplay.slots[plr].Kick (msg);
 		}
+
+        public static int SendData(Packet packet, int remoteClient = -1, int ignoreClient = -1, String text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
+        {
+            return SendData((int)packet, remoteClient, ignoreClient, text, number, number2, number3, number4, number5);
+        }
 		
 		public static int SendData (int packetId, int remoteClient = -1, int ignoreClient = -1, String text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
 		{
