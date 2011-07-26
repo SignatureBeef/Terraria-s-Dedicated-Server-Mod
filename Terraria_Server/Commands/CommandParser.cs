@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Terraria_Server.Plugin;
 using Terraria_Server.Events;
 using Terraria_Server.RemoteConsole;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Commands
 {
@@ -199,6 +200,73 @@ namespace Terraria_Server.Commands
                 .WithHelpText("Usage:   help")
                 .WithHelpText("         help <page>")
                 .Calls(Commands.ShowHelp);
+
+            AddCommand("give")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Give a player items.")
+                .WithHelpText("Usage:   give <player> <amount> <itemname:itemid>")
+                .Calls(Commands.Give);
+
+            AddCommand("spawnnpc")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Spawn an NPC near a player.")
+                .WithHelpText("Usage:   spawnnpc <amount> \"<name:id>\" \"<player>\"")
+                .Calls(Commands.SpawnNPC);
+
+            AddCommand("tp")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Teleport a player to another player.")
+                .WithHelpText("Usage:   tp \"<player>\" \"<toplayer>\"")
+                .Calls(Commands.Teleport);
+
+            AddCommand("tphere")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Teleport a player to yourself.")
+                .WithHelpText("Usage:   tphere <player>")
+                .Calls(Commands.TeleportHere);
+
+            AddCommand("settle")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Settle Liquids.")
+                .WithHelpText("Usage:   settle")
+                .Calls(Commands.SettleWater);
+
+            AddCommand("op")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Op a player")
+                .WithHelpText("Usage:   op <password> <player>")
+                .Calls(Commands.OpPlayer);
+
+            AddCommand("deop")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("De-Op a player")
+                .WithHelpText("Usage:   deop <player>")
+                .Calls(Commands.DeopPlayer);
+
+            AddCommand("oplogin")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("OP Login System.")
+                .WithHelpText("Usage:   oplogin <password>")
+                .Calls(Commands.OpLogin);
+
+            AddCommand("oplogout")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("OP Logout System.")
+                .WithHelpText("Usage:   oplogout")
+                .Calls(Commands.OpLogout);
+
+            AddCommand("npcspawns")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Toggle the state of NPC Spawning.")
+                .WithHelpText("Usage:   npcspawns")
+                .Calls(Commands.NPCSpawns);
+
+            AddCommand("restart")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Restart the Server.")
+                .WithHelpText("Usage:   restart")
+                .Calls(Commands.Restart);
+
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;
@@ -334,9 +402,9 @@ namespace Terraria_Server.Commands
 
                 if (command != null)
                 {
-                    if (FindTokenCommand (command, out info))
+                    if (FindTokenCommand(command, out info))
                     {
-                        if (! CheckAccessLevel (info, sender))
+                        if (!CheckAccessLevel(info, sender))
                         {
                             sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
                             return;
@@ -353,105 +421,15 @@ namespace Terraria_Server.Commands
                         }
                         return;
                     }
-
-                    switchCommands(command, args, sender);
+                    else
+                    {
+                        ProgramLog.Error.Log("Unknown Command Issued.");
+                    }
                 }
             }
             catch (TokenizerException e)
             {
                 sender.sendMessage (e.Message);
-            }
-        }
-        
-        // TODO: refactor remaining commands to be registered with AddCommand and remove this
-        /// <summary>
-        /// Executes command methods derived from parsing
-        /// </summary>
-        /// <param name="command">Command base to run</param>
-        /// <param name="tokens">Command arguments to pass to methods</param>
-        /// <param name="sender">Sending player</param>
-        public void switchCommands(string command, ArgumentList tokens, ISender sender)
-        {
-            tokens.Insert (0, command); // for compatibility with old code
-            switch (Commands.getCommandValue (command))
-            {
-                case (int)Commands.Command.NO_SUCH_COMMAND:
-                    {
-                        sender.sendMessage("No such command!");
-                        return;
-                    }
-                //case (int)Commands.Command.COMMAND_HELP:
-                //    {
-                //        if (tokens.Count > 1)
-                //        {
-                //            Commands.ShowHelp(sender, tokens);
-                //        }
-                //        else
-                //        {
-                //            Commands.ShowHelp(sender);
-                //        }
-                //        break;
-                //    }
-                case (int)Commands.Command.COMMAND_GIVE:
-                    {
-                        Commands.Give(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.PLAYER_SPAWNNPC:
-                    {
-                        Commands.SpawnNPC(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_TELEPORT:
-                    {
-                        Commands.Teleport(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.PLAYER_TPHERE:
-                    {
-                        Commands.TeleportHere(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_SETTLEWATER:
-                    {
-                        Commands.SettleWater(sender);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_OP:
-                    {
-                        Commands.OP(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_DEOP:
-                    {
-                        Commands.OP(sender, tokens, true);
-                        break;
-                    }
-                case (int)Commands.Command.PLAYER_OPLOGIN:
-                    {
-                        Commands.OPLoginOut(sender, tokens);
-                        break;
-                    }
-                case (int)Commands.Command.PLAYER_OPLOGOUT:
-                    {
-                        Commands.OPLoginOut(sender, tokens, true);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_NPCSPAWN:
-                    {
-                        Commands.NPCSpawns(sender);
-                        break;
-                    }
-                case (int)Commands.Command.COMMAND_RESTART:
-                    {
-                        Commands.Restart(sender, server);
-                        break;
-                    }
-                default:
-                    {
-                        Program.tConsole.WriteLine("Unknown Command Issued.");
-                        break;
-                    }
             }
         }
 		

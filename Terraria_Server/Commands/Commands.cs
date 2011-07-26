@@ -18,123 +18,123 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Enumerates command IDs
         /// </summary>
-        public enum Command
-        {
-            /*
-             * @Developers
-             * Commands are sectioned into two parts.
-             * Player & Console, Since this Class is 
-             * for Player AND Console input there may be two types of commands.
-             * 
-             * e.g. Me (player) Say (Console)
-             * 
-             * They are devided as follows
-             *      - COMMANDS_ (Both, Player & Console)
-             *      - PLAYER_ (Player Only)
-             *      - CONSOLE_ (Console Only)
-             * 
-             * Console Output to In-Game OPs are sent with the Colour: 176-196-222
-             * Server Messages: 238-130-238
-             * Player Messages: 255-0-0
-             * 
-             */
+        //public enum Command
+        //{
+        //    /*
+        //     * @Developers
+        //     * Commands are sectioned into two parts.
+        //     * Player & Console, Since this Class is 
+        //     * for Player AND Console input there may be two types of commands.
+        //     * 
+        //     * e.g. Me (player) Say (Console)
+        //     * 
+        //     * They are devided as follows
+        //     *      - COMMANDS_ (Both, Player & Console)
+        //     *      - PLAYER_ (Player Only)
+        //     *      - CONSOLE_ (Console Only)
+        //     * 
+        //     * Console Output to In-Game OPs are sent with the Colour: 176-196-222
+        //     * Server Messages: 238-130-238
+        //     * Player Messages: 255-0-0
+        //     * 
+        //     */
 
-            NO_SUCH_COMMAND = -1,
-            CONSOLE_EXIT = 0,
-            COMMAND_RELOAD = 1,
-            COMMAND_LIST = 2,
-            COMMAND_PLAYERS = 3,
-            PLAYER_ME = 4,
-            CONSOLE_SAY = 5,
-            COMMAND_SAVE_ALL = 6,
-            COMMAND_HELP = 7,
-            COMMAND_WHITELIST = 8,
-            COMMAND_BAN = 9,
-            COMMAND_UNBAN = 10,
-            COMMAND_TIME = 11,
-            COMMAND_GIVE = 12,
-            PLAYER_SPAWNNPC = 13,
-            COMMAND_TELEPORT = 14,
-            PLAYER_TPHERE = 15,
-            COMMAND_SETTLEWATER = 16,
-            COMMAND_OP = 17,
-            COMMAND_DEOP = 18,
-            PLAYER_OPLOGIN = 19,
-            PLAYER_OPLOGOUT = 20,
-            COMMAND_NPCSPAWN = 21,
-            COMMAND_KICK = 22,
-            COMMAND_RESTART = 23,
-            COMMAND_STOP = 24,
-            COMMAND_SLOTS = 25,
-        }
-        /// <summary>
-        /// Defines the string values for the command names
-        /// </summary>
-        public static String[] CommandDefinition = new String[] {   "exit",         "reload",       "list",
-                                                                    "players",      "me",           "say",
-                                                                    "save-all",     "help",         "whitelist",
-                                                                    "ban",          "unban",        "time",
-                                                                    "give",         "spawnnpc",     "tp",
-																	"tphere",       "settle",       "op",
-                                                                    "deop",         "oplogin",      "oplogout",
-                                                                    "npcspawns",    "kick",         "restart",
-                                                                    "stop",         "slots"};
-        /// <summary>
-        /// Defines help text for each command
-        /// </summary>
-        public static String[] CommandInformation = new String[] {  "Stop & Close The Server.",
-                                                                    "Reload Plugins.",
-                                                                    "Show Online Players.",
-                                                                    "Show Online Players.",
-                                                                    "Talk in 3rd Person.",
-                                                                    "Send A Console Message To Online Players.", 
-                                                                    "Trigger a World Save.", 
-                                                                    "Show this Help. (Also /help <page>)", 
-                                                                    "add:remove to the whitelist.", 
-                                                                    "Ban a Player.", 
-                                                                    "Un-Ban a Player.", 
-                                                                    "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
-                                                                    "Give Player an item (/give <player> <amount> <item name:id>)",
-                                                                    "Spawn a NPC (/spawnnpc <amount> \"<name:id>\" \"<player>\")",
-                                                                    "Teleport Player to Player.",
-                                                                    "Teleport a Player to You.",
-                                                                    "Settle Water.",
-                                                                    "Set a player to OP",
-                                                                    "De-OP a player.",
-                                                                    "Log in as OP: /oplogin <password>",
-                                                                    "Log out of OP status.",
-                                                                    "Toggle the state of NPC Spawning.",
-                                                                    "Kicks a player from the server.", 
-                                                                    "Restarts the server.",
-                                                                    "Stop & Close The Server.",
-                                                                    "Check the state of connection slots"};
+        //    NO_SUCH_COMMAND = -1,
+        //    CONSOLE_EXIT = 0,
+        //    COMMAND_RELOAD = 1,
+        //    COMMAND_LIST = 2,
+        //    COMMAND_PLAYERS = 3,
+        //    PLAYER_ME = 4,
+        //    CONSOLE_SAY = 5,
+        //    COMMAND_SAVE_ALL = 6,
+        //    COMMAND_HELP = 7,
+        //    COMMAND_WHITELIST = 8,
+        //    COMMAND_BAN = 9,
+        //    COMMAND_UNBAN = 10,
+        //    COMMAND_TIME = 11,
+        //    COMMAND_GIVE = 12,
+        //    PLAYER_SPAWNNPC = 13,
+        //    COMMAND_TELEPORT = 14,
+        //    PLAYER_TPHERE = 15,
+        //    COMMAND_SETTLEWATER = 16,
+        //    COMMAND_OP = 17,
+        //    COMMAND_DEOP = 18,
+        //    PLAYER_OPLOGIN = 19,
+        //    PLAYER_OPLOGOUT = 20,
+        //    COMMAND_NPCSPAWN = 21,
+        //    COMMAND_KICK = 22,
+        //    COMMAND_RESTART = 23,
+        //    COMMAND_STOP = 24,
+        //    COMMAND_SLOTS = 25,
+        //}
+        ///// <summary>
+        ///// Defines the string values for the command names
+        ///// </summary>
+        //public static String[] CommandDefinition = new String[] {   "exit",         "reload",       "list",
+        //                                                            "players",      "me",           "say",
+        //                                                            "save-all",     "help",         "whitelist",
+        //                                                            "ban",          "unban",        "time",
+        //                                                            "give",         "spawnnpc",     "tp",
+        //                                                            "tphere",       "settle",       "op",
+        //                                                            "deop",         "oplogin",      "oplogout",
+        //                                                            "npcspawns",    "kick",         "restart",
+        //                                                            "stop",         "slots"};
+        ///// <summary>
+        ///// Defines help text for each command
+        ///// </summary>
+        //public static String[] CommandInformation = new String[] {  "Stop & Close The Server.",
+        //                                                            "Reload Plugins.",
+        //                                                            "Show Online Players.",
+        //                                                            "Show Online Players.",
+        //                                                            "Talk in 3rd Person.",
+        //                                                            "Send A Console Message To Online Players.", 
+        //                                                            "Trigger a World Save.", 
+        //                                                            "Show this Help. (Also /help <page>)", 
+        //                                                            "add:remove to the whitelist.", 
+        //                                                            "Ban a Player.", 
+        //                                                            "Un-Ban a Player.", 
+        //                                                            "Set Time with: set <time>:day:dusk:dawn:noon:night:now",
+        //                                                            "Give Player an item (/give <player> <amount> <item name:id>)",
+        //                                                            "Spawn a NPC (/spawnnpc <amount> \"<name:id>\" \"<player>\")",
+        //                                                            "Teleport Player to Player.",
+        //                                                            "Teleport a Player to You.",
+        //                                                            "Settle Water.",
+        //                                                            "Set a player to OP",
+        //                                                            "De-OP a player.",
+        //                                                            "Log in as OP: /oplogin <password>",
+        //                                                            "Log out of OP status.",
+        //                                                            "Toggle the state of NPC Spawning.",
+        //                                                            "Kicks a player from the server.", 
+        //                                                            "Restarts the server.",
+        //                                                            "Stop & Close The Server.",
+        //                                                            "Check the state of connection slots"};
 
-        /// <summary>
-        /// Defines permission required to use the command at the specified index.  1 = requires op, 0 = any player
-        /// </summary>
-        public static int[] CommandPermission = new int[] { 1, /* 0 */  1, /* 1 */  0, /* 2 */  0, /* 3 */  0, /* 4 */ 
-                                                            1, /* 5 */  1, /* 6 */  0, /* 7 */  1, /* 8 */  1, /* 9 */ 
-                                                            1, /* 10 */ 1, /* 11 */ 1, /* 12 */ 1, /* 13 */ 1, /* 14 */ 
-                                                            1, /* 15 */ 1, /* 16 */ 1, /* 17 */ 1, /* 18 */ 0, /* 19 */ 
-                                                            0, /* 20 */ 1, /* 21 */ 1, /* 22 */ 1, /* 23 */ 1, /* 24 */ 
-                                                            1, /* 25 */ };
+        ///// <summary>
+        ///// Defines permission required to use the command at the specified index.  1 = requires op, 0 = any player
+        ///// </summary> 
+        ////public static int[] CommandPermission = new int[] { 1, /* 0 */  1, /* 1 */  0, /* 2 */  0, /* 3 */  0, /* 4 */ 
+        ////                                                    1, /* 5 */  1, /* 6 */  0, /* 7 */  1, /* 8 */  1, /* 9 */ 
+        ////                                                    1, /* 10 */ 1, /* 11 */ 1, /* 12 */ 1, /* 13 */ 1, /* 14 */ 
+        ////                                                    1, /* 15 */ 1, /* 16 */ 1, /* 17 */ 1, /* 18 */ 0, /* 19 */ 
+        ////                                                    0, /* 20 */ 1, /* 21 */ 1, /* 22 */ 1, /* 23 */ 1, /* 24 */ 
+        ////                                                    1, /* 25 */ };
 
-        /// <summary>
-        /// Gets the enumerated value of a command by name
-        /// </summary>
-        /// <param name="Command">Name of command</param>
-        /// <returns>ID of command if it exists, NO_SUCH_COMMAND if not</returns>
-        public static int getCommandValue(String Command)
-        {
-            for (int i = 0; i < CommandDefinition.Length; i++)
-            {
-                if (CommandDefinition[i] != null && CommandDefinition[i].Equals(Command.ToLower().Trim()))
-                {
-                    return i;
-                }
-            }
-            return (int)Commands.Command.NO_SUCH_COMMAND;
-        }
+        ///// <summary>
+        ///// Gets the enumerated value of a command by name
+        ///// </summary>
+        ///// <param name="Command">Name of command</param>
+        ///// <returns>ID of command if it exists, NO_SUCH_COMMAND if not</returns>
+        //public static int getCommandValue(String Command)
+        //{
+        //    for (int i = 0; i < CommandDefinition.Length; i++)
+        //    {
+        //        if (CommandDefinition[i] != null && CommandDefinition[i].Equals(Command.ToLower().Trim()))
+        //        {
+        //            return i;
+        //        }
+        //    }
+        //    return (int)Commands.Command.NO_SUCH_COMMAND;
+        //}
 
         public static void Exit (Server server, ISender sender, ArgumentList args)
         {
@@ -211,8 +211,7 @@ namespace Terraria_Server.Commands
             
             return;
         }
-
-
+        
         public static void OldList (Server server, ISender sender, ArgumentList args)
         {
             args.ParseNone ();
@@ -275,16 +274,6 @@ namespace Terraria_Server.Commands
         /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void SaveAll(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
-            {
-                Player player = (Player)sender;
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
             Program.server.notifyOps("Saving World...", true);
 
             WorldIO.saveWorld(Program.server.World.SavePath, false);
@@ -401,18 +390,6 @@ namespace Terraria_Server.Commands
         public static void WhiteList(Server server, ISender sender, ArgumentList args)
         {
             // /whitelist <add:remove> <player>
-            // arg  0         1           2
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
-
             String Exception, Type = "removed from";
             if (args.TryParseOne<String>("-add", out Exception))
             {
@@ -446,19 +423,6 @@ namespace Terraria_Server.Commands
         /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void Ban(Server server, ISender sender, ArgumentList args)
         {
-            // /ban  <player>
-            // /unban <player>
-
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
             if (args != null && args.Count > 0)
             {
                 //We now should check to make sure they are off the server...
@@ -506,19 +470,6 @@ namespace Terraria_Server.Commands
         /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void UnBan(Server server, ISender sender, ArgumentList args)
         {
-            // /ban  <player>
-            // /unban <player>
-
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
             if (args != null && args.Count > 0)
             {
                 Program.server.BanList.removeException(args[0]);
@@ -544,16 +495,6 @@ namespace Terraria_Server.Commands
         /// <param name="args">Array of command arguments passed from CommandParser</param>
         public static void Time(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
             Double Time;
             if (args.TryParseOne<Double>("-set", out Time))
             {
@@ -646,24 +587,15 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Give(ISender sender, IList<string> commands)
+        public static void Give(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
             // /give <player> <stack> <name> 
-            if (commands.Count > 3 && commands[1] != null && commands[2] != null && commands[3] != null &&
-                commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0 && commands[3].Trim().Length > 0)
+            if (args.Count > 2 && args[0] != null && args[1] != null && args[2] != null &&
+                args[0].Trim().Length > 0 && args[1].Trim().Length > 0 && args[2].Trim().Length > 0)
             {
-                String playerName = commands[1].Trim();
-                String itemName = string.Join (" ", commands);
-                itemName = itemName.Remove(0, itemName.IndexOf(" " + commands[3]));
+                String playerName = args[0].Trim();
+                String itemName = string.Join(" ", args);
+                itemName = itemName.Remove(0, itemName.IndexOf(" " + args[2]));
 
                 Player player = Program.server.GetPlayerByName(playerName);
                 if (player != null)
@@ -737,7 +669,7 @@ namespace Terraria_Server.Commands
                         int stackSize;
                         try
                         {
-                            stackSize = Int32.Parse(commands[2]);
+                            stackSize = Int32.Parse(args[1]);
                         }
                         catch (Exception)
                         {
@@ -771,21 +703,15 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void SpawnNPC(ISender sender, IList<string> commands)
+        public static void SpawnNPC(Server server, ISender sender, ArgumentList args)
         {
-			if (!sender.Op)
-			{
-				sender.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-				return;
-			}
-
 			// /spawnnpc <amount> <name:id>
 			try
 			{
 				Player player = ((Player)sender);
-                if (commands.Count >= 4)
+                if (args.Count >= 3)
                 {
-                    player = Program.server.GetPlayerByName(commands[2]);
+                    player = Program.server.GetPlayerByName(args[1]);
                     if (null == player)
                     {
                         sender.sendMessage("Player not found.", 255, 238f, 130f, 238f);
@@ -793,7 +719,7 @@ namespace Terraria_Server.Commands
                     }
                 }
 
-				String npcName = commands[2].Replace(" ", "").ToLower();
+                String npcName = args[1].Replace(" ", "").ToLower();
 
 				// Get the class id of the npc
 				Int32 realNPCId = 0;
@@ -807,7 +733,7 @@ namespace Terraria_Server.Commands
 					realNPCId = Int32.Parse(npcName);
 				}
 
-				int NPCAmount = Int32.Parse(commands[1]);
+                int NPCAmount = Int32.Parse(args[0]);
 
 				String realNPCName = "";
 				for (int i = 0; i < NPCAmount; i++)
@@ -831,23 +757,13 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void Teleport(ISender sender, IList<string> commands)
+        public static void Teleport(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
             // /tp <player> <toplayer>
-            if (commands.Count > 2 && commands[1] != null && commands[2] != null && commands[1].Trim().Length > 0 && commands[2].Trim().Length > 0)
+            if (args.Count > 1 && args[0] != null && args[1] != null && args[0].Trim().Length > 0 && args[1].Trim().Length > 0)
             {
-                Player player = Program.server.GetPlayerByName(commands[1].Trim());
-                Player toplayer = Program.server.GetPlayerByName(commands[2].Trim());
+                Player player = Program.server.GetPlayerByName(args[0].Trim());
+                Player toplayer = Program.server.GetPlayerByName(args[1].Trim());
 
                 if (player == null || toplayer == null)
                 {
@@ -876,21 +792,16 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        public static void TeleportHere(ISender sender, IList<string> commands)
+        public static void TeleportHere(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
+                Player player = ((Player)sender);             
 
                 // /tp <player> <toplayer>
-                if (commands.Count > 1 && commands[1] != null && commands[1].Trim().Length > 0)
+                if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
                 {
-                    Player toplayer = Program.server.GetPlayerByName(commands[1].Trim());
+                    Player toplayer = Program.server.GetPlayerByName(args[0].Trim());
 
                     if (toplayer == null)
                     {
@@ -919,18 +830,8 @@ namespace Terraria_Server.Commands
         /// Settles water like in the startup routine
         /// </summary>
         /// <param name="sender">Sending player</param>
-        public static void SettleWater(ISender sender)
+        public static void SettleWater(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
             if (!Liquid.panicMode)
             {
                 sender.sendMessage("Settling Liquids...");
@@ -943,132 +844,101 @@ namespace Terraria_Server.Commands
             }
         }
 
-        /// <summary>
-        /// Ops or deops the specified player
-        /// </summary>
-        /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        /// <param name="deop">Boolean value representing command's op type: True = deop command, false = op</param>
-        public static void OP(ISender sender, IList<string> commands, bool deop = false)
+        public static void OpPlayer(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
+            if (args.Count > 1)
             {
-                Player player = ((Player)sender);
-                if (!player.Op)
+                String Password = args[0];
+                String player = string.Join(" ", args);
+                player = player.Remove(0, player.IndexOf(Password) + Password.Length).Trim().ToLower();
+
+                server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
+                server.OpList.addException(player + ":" + Password, true, player.Length);
+
+                Player playerInstance = server.GetPlayerByName(player);
+                if (playerInstance != null)
                 {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
+                    playerInstance.sendMessage("You are now OP!", ChatColour.Green);
                 }
-            }
-
-            if (((deop && commands.Count > 1) || (!deop && commands.Count > 2)) 
-                && commands[1] != null 
-                && (deop || commands[2] != null) 
-                && commands[1].Trim().Length > 0 
-                && (deop || commands[2].Trim().Length > 0))
-            {
-                String player_OP = commands[1].Trim().ToLower();
-
-                if (deop)
-                {
-                    Program.server.notifyOps("De-Opping " + player_OP + " {" + sender.Name + "}", true);
-
-                    if (Player.isInOpList(player_OP, Program.server))
-                    {
-                        Program.server.OpList.removeException(player_OP + ":" + Player.GetPlayerPassword(player_OP, Program.server));
-                    }
-                }
-                else
-                {
-                    String player_Password = commands[2].Trim().ToLower();
-                    Program.server.notifyOps("Opping " + player_OP + " {" + sender.Name + "}", true);
-                    Program.server.OpList.addException(player_OP + ":" + player_Password, true, player_OP.Length);
-                }
-
-                if (!Program.server.OpList.Save())
-                {
-                    Program.server.notifyOps("OpList Failed to Save due to " + sender.Name + "'s command", true);
-                } 
-                return;
             }
             else
             {
-                goto ERROR;
+                sender.sendMessage("Please review that command");
             }
-
-        ERROR:
-            sender.sendMessage("Command Error!");
         }
 
-        /// <summary>
-        /// Handles all op login/logout commands
-        /// </summary>
-        /// <param name="sender">Sending player</param>
-        /// <param name="commands">Array of command arguments passed from CommandParser</param>
-        /// <param name="logout">Boolean: True means command was oplogout, false means oplogin</param>
-        public static void OPLoginOut(ISender sender, IList<string> commands, bool logout = false)
+        public static void DeopPlayer(Server server, ISender sender, ArgumentList args)
+        {
+            if (args.Count > 0)
+            {
+                String player = string.Join(" ", args).Trim();
+
+                server.notifyOps("De-Opping " + player + " {" + sender.Name + "}", true);
+
+                if (Player.isInOpList(player, server))
+                {
+                    Program.server.OpList.removeException(player + ":" + Player.GetPlayerPassword(player, server));
+                }
+
+                Player playerInstance = server.GetPlayerByName(player);
+                if (playerInstance != null)
+                {
+                    playerInstance.sendMessage("You have been De-Opped!.", ChatColour.Green);
+                }
+            }
+            else
+            {
+                sender.sendMessage("Please review that command");
+            }
+        }
+
+        public static void OpLogin(Server server, ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
-                if (logout)
+                Player player = sender as Player;
+                String Password = string.Join(" ", args).Trim();
+                if (player.isInOpList())
                 {
-                    if (sender.Op)
+                    if (player.Password.Equals(Password))
                     {
-                        sender.Op = false;
-                        sender.sendMessage("Successfully Logged Out.");
-                    }
-                    return;
-                }
-
-                if (commands.Count > 1 && commands[1] != null && commands[1].Trim().Length > 0)
-                {
-                    String player_Password = commands[1].Trim().ToLower();
-
-                    if (Player.isInOpList(sender.Name, Program.server))
-                    {
-                        if (((Player)sender).Password.Trim().ToLower() == player_Password)
-                        {
-                            sender.Op = true;
-                            sender.sendMessage("Successfully Logged in as OP.");
-                        }
-                        else
-                        {
-                            sender.sendMessage("Incorrect OP Password.");
-                            return;
-                        }
+                        player.Op = true;
+                        player.sendMessage("Successfully Logged in as OP.", ChatColour.DarkGreen);
                     }
                     else
                     {
-                        sender.sendMessage("You need to be Assiged OP Privledges.");
-                        return;
+                        player.sendMessage("Incorrect OP Password.", ChatColour.DarkRed);
                     }
-                    return;
                 }
                 else
                 {
-                    goto ERROR;
+                    player.sendMessage("You need to be Assiged OP Privledges.", ChatColour.DarkRed);
                 }
-            ERROR:
-                sender.sendMessage("Command Error!");
             }
         }
 
+        public static void OpLogout(Server server, ISender sender, ArgumentList args)
+        {
+            if (sender is Player)
+            {
+                if (sender.Op)
+                {
+                    sender.Op = false;
+                    ((Player)sender).sendMessage("Successfully Logged Out.", ChatColour.DarkRed);
+                }
+                else
+                {
+                    ((Player)sender).sendMessage("You need to be Assiged OP Privledges.", ChatColour.DarkRed);
+                }
+            }
+        }
+        
         /// <summary>
         /// Enables or disables NPC spawning
         /// </summary>
         /// <param name="sender">Sending player</param>
-        public static void NPCSpawns(ISender sender)
+        public static void NPCSpawns(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
             Main.stopSpawns = !Main.stopSpawns;
 
             if (Main.stopSpawns)
@@ -1124,18 +994,9 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="sender">Sending player</param>
         /// <param name="server">Current Server instance</param>
-        public static void Restart(ISender sender, Server server)
+        public static void Restart(Server server, ISender sender, ArgumentList args)
         {
-            if (sender is Player)
-            {
-                Player player = ((Player)sender);
-                if (!player.Op)
-                {
-                    player.sendMessage("You Cannot Perform That Action.", 255, 238f, 130f, 238f);
-                    return;
-                }
-            }
-
+            server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
             Statics.keepRunning = true;
             server.StopServer();
             while (Statics.serverStarted) { Thread.Sleep (10); }
