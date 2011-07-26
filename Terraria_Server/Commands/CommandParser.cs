@@ -423,11 +423,7 @@ namespace Terraria_Server.Commands
                     }
                     else
                     {
-                        sender.sendMessage("Unknown Command Issued.");
-                        if (!(sender is ConsoleSender))
-                        {
-                            ProgramLog.Error.Log(sender.Name + " Issued an Unknown Command.");
-                        }
+                        sender.sendMessage("No such command.");
                     }
                 }
             }
