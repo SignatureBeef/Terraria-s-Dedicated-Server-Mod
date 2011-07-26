@@ -70,12 +70,12 @@ namespace Terraria_Server
 			Netplay.serverListenIP = Netplay.serverIP;
 			Netplay.disconnect = false;
 			
-			for (int i = 0; i < 256; i++)
-			{
-                Netplay.slots[i] = new ServerSlot();
-                Netplay.slots[i].whoAmI = i;
-				Netplay.slots[i].Reset();
-			}
+//			for (int i = 0; i < 256; i++)
+//			{
+////                Netplay.slots[i] = new ServerSlot();
+//                Netplay.slots[i].whoAmI = i;
+//				Netplay.slots[i].Reset();
+//			}
 			
 			Netplay.tcpListener = new TcpListener(Netplay.serverListenIP, Netplay.serverPort);
 			
@@ -485,14 +485,19 @@ namespace Terraria_Server
 		
 		public static void Init()
 		{
-			for (int i = 0; i < 257; i++)
+			for (int i = 0; i < 256; i++)
 			{
-				if (i < 256)
-				{
-					Netplay.slots[i] = new ServerSlot();
-				}
-				NetMessage.buffer[i] = new MessageBuffer();
+				if (NetMessage.buffer[i] == null)
+					NetMessage.buffer[i] = new MessageBuffer();
+					
 				NetMessage.buffer[i].whoAmI = i;
+				//NetMessage.buffer[i].Reset (); // slot reset calls that anyway
+
+				if (Netplay.slots[i] == null)
+					Netplay.slots[i] = new ServerSlot();
+				
+				Netplay.slots[i].whoAmI = i;
+				Netplay.slots[i].Reset ();
 			}
 		}
 		
