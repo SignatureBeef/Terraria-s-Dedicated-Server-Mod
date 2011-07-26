@@ -20,12 +20,15 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            var slot = Netplay.slots[whoAmI];
-
             if (whoAmI == Main.myPlayer)
             {
                 return;
             }
+
+            var slot = Netplay.slots[whoAmI];
+            var player = Main.players[whoAmI];
+            
+            bool firstTime = player.Name == null;
 
             int hairId = (int)readBuffer[start + 2];
             if (hairId >= MAX_HAIR_ID)
@@ -33,7 +36,6 @@ namespace Terraria_Server.Messages
                 hairId = 0;
             }
 
-            Player player = Main.players[whoAmI];
             player.hair = hairId;
             player.whoAmi = whoAmI;
             num += 2;
@@ -46,17 +48,32 @@ namespace Terraria_Server.Messages
             num = setColor(player.pantsColor, num, readBuffer);
             num = setColor(player.shoeColor, num, readBuffer);
 
-            player.hardCore = (readBuffer[num++] != 0);
-			
+            if (firstTime)
+                player.hardCore = (readBuffer[num++] != 0);
+            
+            string newName;
+            
 			try
 			{
-				player.Name = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
+				newName = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
 			}
 			catch (ArgumentException)
 			{
 				slot.Kick ("Invalid name: contains non-ASCII characters.");
 				return;
 			}
+			
+			if (! firstTime)
+			{
+				if (player.Name != newName)
+				{
+					slot.Kick ("Attempt to change name during session.");
+				}
+				return;
+					
+			}
+			
+			player.Name = newName;
 			
 			if (player.Name.Length > 20)
 			{
