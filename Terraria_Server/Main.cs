@@ -895,10 +895,20 @@ namespace Terraria_Server
 		public static object updatingItems = new object();
 		public static object updatingProjectiles = new object();
 		
-		public void Update()
+		public static TimeSpan LastPlayerUpdateTime { get; private set; }
+		public static TimeSpan LastNPCUpdateTime { get; private set; }
+		public static TimeSpan LastItemUpdateTime { get; private set; }
+		public static TimeSpan LastProjectileUpdateTime { get; private set; }
+		public static TimeSpan LastTimeUpdateTime { get; private set; }
+		public static TimeSpan LastWorldUpdateTime { get; private set; }
+		public static TimeSpan LastInvasionUpdateTime { get; private set; }
+		public static TimeSpan LastServerUpdateTime { get; private set; }
+		
+		public void Update (Stopwatch s)
 		{
 			int count = 0;
 			
+			var start = s.Elapsed;
 			foreach(Player player in Main.players)
 			{
 				try
@@ -914,9 +924,12 @@ namespace Terraria_Server
 				}
 				count++;
 			}
+			LastPlayerUpdateTime = s.Elapsed - start;
 			
 			lock (updatingNPCs)
 			{
+				start = s.Elapsed;
+				
 				NPC.SpawnNPC();
 				
 				foreach (Player player in Main.players)
@@ -941,10 +954,14 @@ namespace Terraria_Server
 						Main.npcs[i] = Registries.NPC.Default;
 					}
 				}
-			}
 				
+				LastNPCUpdateTime = s.Elapsed - start;
+			}
+			
 			lock (updatingProjectiles)
 			{
+				start = s.Elapsed;
+				
 				for (int i = 0; i < 1000; i++)
 				{
 					try
@@ -961,10 +978,14 @@ namespace Terraria_Server
 						Main.projectile[i] = new Projectile();
 					}
 				}
+				
+				LastProjectileUpdateTime = s.Elapsed - start;
 			}
 			
 			lock (updatingItems)
 			{
+				start = s.Elapsed;
+				
 				for (int i = 0; i < 200; i++)
 				{
 					try
@@ -981,8 +1002,11 @@ namespace Terraria_Server
 						Main.item[i] = new Item();
 					}
 				}
+				
+				LastItemUpdateTime = s.Elapsed - start;
 			}
 			
+			start = s.Elapsed;
 			try
 			{
 				Main.UpdateTime ();
@@ -994,7 +1018,9 @@ namespace Terraria_Server
 				ProgramLog.Log (e, "Time update error");
 				Main.checkForSpawns = 0;
 			}
+			LastTimeUpdateTime = s.Elapsed - start;
 			
+			start = s.Elapsed;
 			try
 			{
 				WorldModify.UpdateWorld ();
@@ -1005,7 +1031,9 @@ namespace Terraria_Server
 				
 				ProgramLog.Log (e, "World update error");
 			}
+			LastWorldUpdateTime = s.Elapsed - start;
 			
+			start = s.Elapsed;
 			try
 			{
 				Main.UpdateInvasion ();
@@ -1016,7 +1044,9 @@ namespace Terraria_Server
 				
 				ProgramLog.Log (e, "Invasion update error");
 			}
+			LastInvasionUpdateTime = s.Elapsed - start;
 			
+			start = s.Elapsed;
 			try
 			{
 				Main.UpdateServer ();
@@ -1027,6 +1057,7 @@ namespace Terraria_Server
 				
 				ProgramLog.Log (e, "Server update error");
 			}
+			LastServerUpdateTime = s.Elapsed - start;
 		}
 
     }

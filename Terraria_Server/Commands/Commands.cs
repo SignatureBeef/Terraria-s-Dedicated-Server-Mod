@@ -56,14 +56,26 @@ namespace Terraria_Server.Commands
                 process.WorkingSet64 / 1024.0 / 1024.0,
                 process.PeakWorkingSet64 / 1024.0 / 1024.0));
             var time = process.TotalProcessorTime;
-            sender.sendMessage (string.Format ("Total cpu usage:       {0:0.00}% ({1})",
+            sender.sendMessage (string.Format ("Total cpu usage:        {0:0.00}% ({1})",
                 100.0 * time.TotalMilliseconds / (DateTime.Now - process.StartTime).TotalMilliseconds, time));
             
             if (LoadMonitor.LoadLastSecond >= 0)
-                sender.sendMessage (string.Format ("Cpu usage last second: {0:0.00}%", LoadMonitor.LoadLastSecond));
+                sender.sendMessage (string.Format ("Cpu usage last second:  {0:0.00}%", LoadMonitor.LoadLastSecond));
                 
             if (LoadMonitor.LoadLastMinute >= 0)
-                sender.sendMessage (string.Format ("Cpu usage last minute: {0:0.00}%", LoadMonitor.LoadLastMinute));
+                sender.sendMessage (string.Format ("Cpu usage last minute:  {0:0.00}%", LoadMonitor.LoadLastMinute));
+            
+            sender.sendMessage (string.Format ("Last world update took: {0:0.000}ms (plr: {1:0.0}ms, npc: {2:0.0}ms, proj: {3:0.0}ms, item: {4:0.0}ms, world: {5:0.0}ms, time: {6:0.0}ms, inva: {7:0.0}ms, serv: {8:0.0}ms)",
+                Program.LastUpdateTime.TotalMilliseconds,
+                Main.LastPlayerUpdateTime.TotalMilliseconds,
+                Main.LastNPCUpdateTime.TotalMilliseconds,
+                Main.LastProjectileUpdateTime.TotalMilliseconds,
+                Main.LastItemUpdateTime.TotalMilliseconds,
+                Main.LastWorldUpdateTime.TotalMilliseconds,
+                Main.LastTimeUpdateTime.TotalMilliseconds,
+                Main.LastInvasionUpdateTime.TotalMilliseconds,
+                Main.LastServerUpdateTime.TotalMilliseconds
+                ));
             
             var projs = 0; var uprojs = 0;
             var npcs = 0; var unpcs = 0;

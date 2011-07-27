@@ -585,7 +585,9 @@ namespace Terraria_Server
 				properties.Save();
 			}
 		}
-
+		
+		public static TimeSpan LastUpdateTime { get; private set; }
+		
 		public static void UpdateLoop()
 		{
 			Thread.CurrentThread.Name = "Updt";
@@ -630,7 +632,9 @@ namespace Terraria_Server
 	
 						if (Netplay.anyClients)
 						{
-							server.Update();
+							var start = s.Elapsed;
+							server.Update (s);
+							LastUpdateTime = s.Elapsed - start;
 						}
 					}
 	
@@ -658,7 +662,7 @@ namespace Terraria_Server
 						}
 						if (Netplay.anyClients)
 						{
-							server.Update();
+							server.Update (stopwatch);
 						}
 						double num9 = (double)stopwatch.ElapsedMilliseconds + leftOver;
 						if (num9 < serverProcessAverage)
