@@ -438,7 +438,7 @@ namespace Terraria_Server.Commands
             }
             else
             {
-                String caseType = args[0].Trim().ToLower();
+                String caseType = args.GetString (0);
                 switch (caseType)
                 {
                     case "day":
