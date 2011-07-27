@@ -134,36 +134,36 @@ namespace Terraria_Server.Commands
                 .Calls (Commands.Say);
                 
             AddCommand ("slots")
-                .WithDescription ("Display information about occupied player slots.")
+                .WithDescription ("Display information about occupied sender slots.")
                 .WithHelpText ("Usage:   slots [-d] [-p]")
                 .WithHelpText ("Options:")
                 .WithHelpText ("         -d    display information helpful in debugging")
-                .WithHelpText ("         -p    display additional player information")
+                .WithHelpText ("         -p    display additional sender information")
                 .Calls (Commands.Slots);
 
             AddCommand("kick")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription ("Kick a player by name or slot.")
+                .WithDescription ("Kick a sender by name or slot.")
                 .WithHelpText ("Usage:   kick name")
                 .WithHelpText ("         kick -s number")
                 .Calls(Commands.Kick);
 
             AddCommand("ban")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Ban a player by Name or IP")
+                .WithDescription("Ban a sender by Name or IP")
                 .WithHelpText("Usage:   ban <name>")
                 .WithHelpText("         ban <ip>")
                 .Calls(Commands.Ban);
 
             AddCommand("unban")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("UnBan a player by Name or IP")
+                .WithDescription("UnBan a sender by Name or IP")
                 .WithHelpText("Usage:   unban <name>")
                 .Calls(Commands.UnBan);
 
             AddCommand("whitelist")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Add or remove a player or IP to the whitelist")
+                .WithDescription("Add or remove a sender or IP to the whitelist")
                 .WithHelpText("Usage:   whitelist -add <name:ip>")
                 .WithHelpText("         whitelist -remove <name:ip>")
                 .Calls(Commands.WhiteList);
@@ -203,26 +203,26 @@ namespace Terraria_Server.Commands
 
             AddCommand("give")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Give a player items.")
-                .WithHelpText("Usage:   give <player> <amount> <itemname:itemid>")
+                .WithDescription("Give a sender items.")
+                .WithHelpText("Usage:   give <sender> <amount> <itemname:itemid>")
                 .Calls(Commands.Give);
 
             AddCommand("spawnnpc")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Spawn an NPC near a player.")
-                .WithHelpText("Usage:   spawnnpc <amount> \"<name:id>\" \"<player>\"")
+                .WithDescription("Spawn an NPC near a sender.")
+                .WithHelpText("Usage:   spawnnpc <amount> \"<name:id>\" \"<sender>\"")
                 .Calls(Commands.SpawnNPC);
 
             AddCommand("tp")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Teleport a player to another player.")
-                .WithHelpText("Usage:   tp \"<player>\" \"<toplayer>\"")
+                .WithDescription("Teleport a sender to another sender.")
+                .WithHelpText("Usage:   tp \"<sender>\" \"<toplayer>\"")
                 .Calls(Commands.Teleport);
 
             AddCommand("tphere")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Teleport a player to yourself.")
-                .WithHelpText("Usage:   tphere <player>")
+                .WithDescription("Teleport a sender to yourself.")
+                .WithHelpText("Usage:   tphere <sender>")
                 .Calls(Commands.TeleportHere);
 
             AddCommand("settle")
@@ -233,14 +233,14 @@ namespace Terraria_Server.Commands
 
             AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("Op a player")
-                .WithHelpText("Usage:   op <password> <player>")
+                .WithDescription("Op a sender")
+                .WithHelpText("Usage:   op <password> <sender>")
                 .Calls(Commands.OpPlayer);
 
             AddCommand("deop")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithDescription("De-Op a player")
-                .WithHelpText("Usage:   deop <player>")
+                .WithDescription("De-Op a sender")
+                .WithHelpText("Usage:   deop <sender>")
                 .Calls(Commands.DeopPlayer);
 
             AddCommand("oplogin")
@@ -276,6 +276,14 @@ namespace Terraria_Server.Commands
                 .WithHelpText ("          purge npc[s]")
                 .Calls(Commands.Purge);
 
+            AddCommand("plugins")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("List currently enabled plugins.")
+                .WithHelpText("Usage:    plugins list")
+                .WithHelpText("          plugins info")
+                .WithHelpText("          plugins enable")
+                .WithHelpText("          plugins disable")
+                .Calls(Commands.Plugins);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;
@@ -320,9 +328,9 @@ namespace Terraria_Server.Commands
 		}
 
         /// <summary>
-        /// Parses player commands
+        /// Parses sender commands
         /// </summary>
-        /// <param name="player">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="line">Command to parse</param>
         public void ParsePlayerCommand (Player player, string line)
         {

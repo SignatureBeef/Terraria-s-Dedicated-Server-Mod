@@ -11,6 +11,7 @@ using Terraria_Server.Logging;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Definitions;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Commands
 {
@@ -20,7 +21,7 @@ namespace Terraria_Server.Commands
         /// Closes the Server & It's Connections.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Exit (Server server, ISender sender, ArgumentList args)
         {
@@ -42,7 +43,7 @@ namespace Terraria_Server.Commands
         /// Outputs statistics of the servers performance.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Status (Server server, ISender sender, ArgumentList args)
         {
@@ -98,7 +99,7 @@ namespace Terraria_Server.Commands
         /// Reloads Plugins.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Reload (Server server, ISender sender, ArgumentList args)
         {
@@ -114,7 +115,7 @@ namespace Terraria_Server.Commands
         /// Prints a Playerlist.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void OldList (Server server, ISender sender, ArgumentList args)
         {
@@ -125,10 +126,10 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Prints a player list, Possibly readable by bots.
+        /// Prints a sender list, Possibly readable by bots.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void List (Server server, ISender sender, ArgumentList args)
         {
@@ -162,7 +163,7 @@ namespace Terraria_Server.Commands
         /// 3rd person talking.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Action (Server server, ISender sender, string message)
         {
@@ -177,7 +178,7 @@ namespace Terraria_Server.Commands
         /// Sends a Server Message to all online Players.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Say (Server server, ISender sender, string message)
         {
@@ -192,7 +193,7 @@ namespace Terraria_Server.Commands
         /// Executes the world data save routine.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void SaveAll(Server server, ISender sender, ArgumentList args)
         {
@@ -212,10 +213,10 @@ namespace Terraria_Server.Commands
         }
         
         /// <summary>
-        /// Sends the help list to the requesting player's chat.
+        /// Sends the help list to the requesting sender's chat.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void ShowHelp(Server server, ISender sender, ArgumentList args)
         {
@@ -305,14 +306,14 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Adds or removes specified player to/from the white list.
+        /// Adds or removes specified sender to/from the white list.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void WhiteList(Server server, ISender sender, ArgumentList args)
         {
-            // /whitelist <add:remove> <player>
+            // /whitelist <add:remove> <sender>
             String Exception, Type = "removed from";
             if (args.TryParseOne<String>("-add", out Exception))
             {
@@ -339,10 +340,10 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Adds a player or ip (Exception) to the ban list.
+        /// Adds a sender or ip (Exception) to the ban list.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Ban(Server server, ISender sender, ArgumentList args)
         {
@@ -389,7 +390,7 @@ namespace Terraria_Server.Commands
         /// Removes an exception from the ban list.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void UnBan(Server server, ISender sender, ArgumentList args)
         {
@@ -414,7 +415,7 @@ namespace Terraria_Server.Commands
         /// Sets the time in the game.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Time(Server server, ISender sender, ArgumentList args)
         {
@@ -506,14 +507,14 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Gives specified item to the specified player.
+        /// Gives specified item to the specified sender.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Give(Server server, ISender sender, ArgumentList args)
         {
-            // /give <player> <stack> <name> 
+            // /give <sender> <stack> <name> 
             if (args.Count > 2 && args[0] != null && args[1] != null && args[2] != null &&
                 args[0].Trim().Length > 0 && args[1].Trim().Length > 0 && args[2].Trim().Length > 0)
             {
@@ -626,7 +627,7 @@ namespace Terraria_Server.Commands
         /// Spawns specified NPC type.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void SpawnNPC(Server server, ISender sender, ArgumentList args)
         {
@@ -678,14 +679,14 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Teleports player1 to a second specified player's location.
+        /// Teleports player1 to a second specified sender's location.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Teleport(Server server, ISender sender, ArgumentList args)
         {
-            // /tp <player> <toplayer>
+            // /tp <sender> <toplayer>
             if (args.Count > 1 && args[0] != null && args[1] != null && args[0].Trim().Length > 0 && args[1].Trim().Length > 0)
             {
                 Player player = Program.server.GetPlayerByName(args[0].Trim());
@@ -714,10 +715,10 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Teleports specified player to sending player's location.
+        /// Teleports specified sender to sending sender's location.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void TeleportHere(Server server, ISender sender, ArgumentList args)
         {
@@ -725,7 +726,7 @@ namespace Terraria_Server.Commands
             {
                 Player player = ((Player)sender);             
 
-                // /tp <player> <toplayer>
+                // /tp <sender> <toplayer>
                 if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
                 {
                     Player toplayer = Program.server.GetPlayerByName(args[0].Trim());
@@ -757,7 +758,7 @@ namespace Terraria_Server.Commands
         /// Settles water like in the startup routine.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void SettleWater(Server server, ISender sender, ArgumentList args)
         {
@@ -777,7 +778,7 @@ namespace Terraria_Server.Commands
         /// Sets OP status to a given Player.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void OpPlayer(Server server, ISender sender, ArgumentList args)
         {
@@ -813,7 +814,7 @@ namespace Terraria_Server.Commands
         /// De-OPs a given Player.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void DeopPlayer(Server server, ISender sender, ArgumentList args)
         {
@@ -851,7 +852,7 @@ namespace Terraria_Server.Commands
         /// Allows Operators to login.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void OpLogin(Server server, ISender sender, ArgumentList args)
         {
@@ -882,7 +883,7 @@ namespace Terraria_Server.Commands
         /// Allows Operators to logout.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void OpLogout(Server server, ISender sender, ArgumentList args)
         {
@@ -904,7 +905,7 @@ namespace Terraria_Server.Commands
         /// Enables or disables NPC spawning
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void NPCSpawns(Server server, ISender sender, ArgumentList args)
         {
@@ -924,7 +925,7 @@ namespace Terraria_Server.Commands
         /// Kicks a given Player from the server
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Kick (Server server, ISender sender, ArgumentList args)
         {
@@ -955,7 +956,7 @@ namespace Terraria_Server.Commands
             
                 if (player.Name == null)
                 {
-                    sender.sendMessage ("kick: Error, player has null name.");
+                    sender.sendMessage ("kick: Error, sender has null name.");
                     return;
                 }
             
@@ -968,7 +969,7 @@ namespace Terraria_Server.Commands
         /// Restarts the server
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
         public static void Restart(Server server, ISender sender, ArgumentList args)
         {
@@ -988,7 +989,7 @@ namespace Terraria_Server.Commands
         /// Checks the state of a slot.
         /// </summary>
         /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sending player</param>
+        /// <param name="sender">Sending sender</param>
         /// <param name="args">Arguments sent with command</param>
 		public static void Slots (Server server, ISender sender, ArgumentList args)
 		{
@@ -1128,5 +1129,179 @@ namespace Terraria_Server.Commands
 			if (! something)
 				throw new CommandError ("");
 		}
+
+        public static void Plugins(Server server, ISender sender, ArgumentList args)
+        {
+            /*
+             * Commands:
+             *      list    - shows all loaded plugins
+             *      info    - shows a plugin's author & description etc
+             *      disable - disables a plugin
+             *      enable  - enables a plugin
+             */
+            if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
+            {
+                String command = args[0].Trim();
+                switch (command)
+                {
+                    case "list":
+                        {
+                            String plugins = "None."; //If no plugins
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                plugins = "";
+
+                                foreach (Plugin.Plugin plugin in Program.server.PluginManager.PluginList.Values)
+                                {
+                                    if (plugin.Name.Trim().Length > 0)
+                                    {
+                                        plugins = ", " + plugin.Name.Trim() + " " + ((!plugin.Enabled) ? "[DISABLED]" : ""); //, Plugin1, Plugin2
+                                    }
+                                }
+                                if (plugins.StartsWith(","))
+                                {
+                                    plugins = plugins.Remove(0, 1).Trim(); //Plugin1, Plugin2 {Remove the ', ' from the start and trim the ends}
+                                }
+                            }
+
+                            sender.sendMessage("Loaded Plugins: " + plugins + ".");
+                            break;
+                        }
+                    case "info":
+                        {
+                            if (!(args.Count > 0 && args[1] != null && args[0].Trim().Length > 0))
+                            {
+                                sender.sendMessage("Please review your argument count.");
+                            }
+
+                            //Get plugin Name
+                            String pluginName = string.Join(" ", args);
+                            pluginName = pluginName.Remove(0, pluginName.IndexOf(args[1])).Trim();
+
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                if (fplugin != null)
+                                {
+                                    sender.sendMessage("Plugin Name: " + fplugin.Name);
+                                    sender.sendMessage("Plugin Author: " + fplugin.Author);
+                                    sender.sendMessage("Plugin Description: " + fplugin.Description);
+                                    sender.sendMessage("Plugin Enabled: " + fplugin.Enabled.ToString());
+                                }
+                                else
+                                {
+                                    sender.sendMessage("Sorry, That Plugin was not found. (" + args[1] + ")");
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("Sorry, There are no Plugins Loaded.");
+                            }
+                            break;
+                        }
+                    case "disable":
+                        {
+                            if (!sender.Op)
+                            {
+                                sender.sendMessage("Error: you must be Op to use feature.");
+                                return;
+                            }
+                            if (!(args.Count > 0 && args[1] != null && args[1].Trim().Length > 0))
+                            {
+                                sender.sendMessage("Please review your argument count.");
+                            }
+
+                            //Get plugin Name
+                            String pluginName = string.Join(" ", args);
+                            pluginName = pluginName.Remove(0, pluginName.IndexOf(args[1])).Trim();
+
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                if (fplugin != null)
+                                {
+                                    if (fplugin.Enabled)
+                                    {
+                                        if (Program.server.PluginManager.DisablePlugin(fplugin.Name))
+                                        {
+                                            sender.sendMessage(args[1] + " was Disabled!");
+                                        }
+                                        else
+                                        {
+                                            sender.sendMessage("Sorry, here was an issue Disabling that plugin. (" + args[1] + ")");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sender.sendMessage("Sorry, That Plugin is already Disabled. (" + args[1] + ")");
+                                    }
+                                }
+                                else
+                                {
+                                    sender.sendMessage("Sorry, That Plugin was not found. (" + args[1] + ")");
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("Sorry, There are no Plugins Loaded.");
+                            }
+                            break;
+                        }
+                    case "enable":
+                        {
+                            if (!sender.Op)
+                            {
+                                sender.sendMessage("Error: you must be Op to use this feature.");
+                                return;
+                            }
+                            if (!(args.Count > 0 && args[1] != null && args[0].Trim().Length > 0))
+                            {
+                                sender.sendMessage("Please review your argument count.");
+                            }
+
+                            //Get plugin Name
+                            String pluginName = string.Join(" ", args);
+                            pluginName = pluginName.Remove(0, pluginName.IndexOf(args[1])).Trim();
+
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                if (fplugin != null)
+                                {
+                                    if (!fplugin.Enabled)
+                                    {
+                                        if (Program.server.PluginManager.EnablePlugin(fplugin.Name))
+                                        {
+                                            sender.sendMessage(args[1] + " was Enabled!");
+                                        }
+                                        else
+                                        {
+                                            sender.sendMessage("Sorry, here was an issue Enabling that plugin. (" + args[1] + ")");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sender.sendMessage("Sorry, That Plugin is already Enabled. (" + args[1] + ")");
+                                    }
+                                }
+                                else
+                                {
+                                    sender.sendMessage("Sorry, That Plugin was not found. (" + args[1] + ")");
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("Sorry, There are no Plugins Loaded.");
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            sender.sendMessage("Please review the usage of this function");
+                            break;
+                        }
+                }
+            }
+        }
     }
 }
