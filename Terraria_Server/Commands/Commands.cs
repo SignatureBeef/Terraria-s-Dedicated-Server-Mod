@@ -18,7 +18,7 @@ namespace Terraria_Server.Commands
     public class Commands
     {
         /// <summary>
-        /// Closes the Server & Its Connections.
+        /// Closes the Server all connections.
         /// </summary>
         /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
@@ -176,7 +176,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
-        /// <param name="args">Arguments sent with command</param>
+        /// <param name="message">Message to send</param>
         public static void Action (Server server, ISender sender, string message)
         {
             ProgramLog.Chat.Log ("* " + sender.Name + " " + message);
@@ -191,7 +191,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
-        /// <param name="args">Arguments sent with command</param>
+        /// <param name="message">Message to send</param>
         public static void Say (Server server, ISender sender, string message)
         {
             ProgramLog.Chat.Log ("<" + sender.Name + "> " + message);
@@ -1052,7 +1052,13 @@ namespace Terraria_Server.Commands
 			}
 			sender.sendMessage (string.Format ("{0}/{1} slots occupied.", k, Main.maxNetplayers));
 		}
-		
+
+        /// <summary>
+        /// Purge Server data
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
 		public static void Purge (Server server, ISender sender, ArgumentList args)
 		{
 			var all = args.TryPop ("all");
@@ -1150,11 +1156,11 @@ namespace Terraria_Server.Commands
         /// <param name="args">Arguments sent with command</param>
         public static void ListPlugins(Server server, ISender sender, ArgumentList args)
         {
-                if (Program.server.PluginManager.PluginList.Count > 0)
+                if (server.PluginManager.PluginList.Count > 0)
                 {
                     String plugins = "";
 
-                    foreach (Plugin.Plugin plugin in Program.server.PluginManager.PluginList.Values)
+                    foreach (Plugin.Plugin plugin in server.PluginManager.PluginList.Values)
                     {
                         if (!plugin.Enabled || plugin.Name.Trim().Length > 0)
                         {
@@ -1196,11 +1202,11 @@ namespace Terraria_Server.Commands
                 {
                     case "list":
                         {
-                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            if (server.PluginManager.PluginList.Count > 0)
                             {
                                 String plugins = "";
 
-                                foreach (Plugin.Plugin plugin in Program.server.PluginManager.PluginList.Values)
+                                foreach (Plugin.Plugin plugin in server.PluginManager.PluginList.Values)
                                 {
                                     if (plugin.Name.Trim().Length > 0)
                                     {
@@ -1228,9 +1234,9 @@ namespace Terraria_Server.Commands
 
                             String pluginName = string.Join(" ", args);
 
-                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            if (server.PluginManager.PluginList.Count > 0)
                             {
-                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                Plugin.Plugin fplugin = server.PluginManager.GetPlugin(pluginName);
                                 if (fplugin != null)
                                 {
                                     sender.sendMessage("Plugin Name: " + fplugin.Name);
@@ -1258,14 +1264,14 @@ namespace Terraria_Server.Commands
 
                             String pluginName = string.Join(" ", args);
 
-                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            if (server.PluginManager.PluginList.Count > 0)
                             {
-                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                Plugin.Plugin fplugin = server.PluginManager.GetPlugin(pluginName);
                                 if (fplugin != null)
                                 {
                                     if (fplugin.Enabled)
                                     {
-                                        if (Program.server.PluginManager.DisablePlugin(fplugin.Name))
+                                        if (server.PluginManager.DisablePlugin(fplugin.Name))
                                         {
                                             sender.sendMessage(pluginName + " was disabled!");
                                         }
@@ -1299,14 +1305,14 @@ namespace Terraria_Server.Commands
 
                             String pluginName = string.Join(" ", args);
 
-                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            if (server.PluginManager.PluginList.Count > 0)
                             {
-                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                Plugin.Plugin fplugin = server.PluginManager.GetPlugin(pluginName);
                                 if (fplugin != null)
                                 {
                                     if (!fplugin.Enabled)
                                     {
-                                        if (Program.server.PluginManager.EnablePlugin(fplugin.Name))
+                                        if (server.PluginManager.EnablePlugin(fplugin.Name))
                                         {
                                             sender.sendMessage(args[1] + " was enabled!");
                                         }

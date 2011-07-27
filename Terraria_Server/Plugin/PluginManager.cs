@@ -11,13 +11,9 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.Plugin
 {
-    /*
-     * Handles all Plugins
-     *  - I would love to be able to unload a plugin from memory :3 (Todo?...Someone? xD)
-     * 
-     */
     /// <summary>
     /// PluginManager class.  Handles all input/output, loading, enabling, disabling, and hook processing for plugins
+    /// [TODO] Reload plugin assembly, Not enable/disable.
     /// </summary>
     public class PluginManager
     {
@@ -54,7 +50,7 @@ namespace Terraria_Server.Plugin
             {
                 if (plugin.TDSMBuild != Statics.BUILD)
                 {
-                    Program.tConsole.WriteLine("[WARNING] Plugin Build Incorrect: " + plugin.Name);
+                    ProgramLog.Admin.Log("[WARNING] Plugin Build Incorrect: " + plugin.Name); //Admin's responsibility.
                 }
             }
         }
@@ -91,8 +87,9 @@ namespace Terraria_Server.Plugin
             }
             catch (Exception exception)
             {
-                Program.tConsole.WriteLine("Error Loading Plugin '" + pluginPath + "'. Is it up to Date?");
-                Program.tConsole.WriteLine("Plugin Load Exception '" + pluginPath + "' : "
+                //Plugin Errors aren't our issue really, so .Error.Log Shouldn't be needed.
+                ProgramLog.Log("Error Loading Plugin '" + pluginPath + "'. Is it up to Date?");
+                ProgramLog.Log("Plugin Load Exception '" + pluginPath + "' : "
                     + exception.ToString());
             }
 
@@ -146,7 +143,7 @@ namespace Terraria_Server.Plugin
                 }
                 catch (Exception exception)
                 {
-                    Program.tConsole.WriteLine("Plugin Disable Exception '" + pluginPath + "' : "
+                    ProgramLog.Error.Log("Plugin Disable Exception '" + pluginPath + "' : "
                     + exception.ToString());
                 }
             }
@@ -195,7 +192,7 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="name">Plugin name</param>
         /// <returns>Returns found plugin if successful, otherwise returns null</returns>
-        public Plugin getPlugin(String name)
+        public Plugin GetPlugin(String name)
         {
         	String cleanedName = name.ToLower().Trim();
         	if(plugins.ContainsKey(cleanedName))
