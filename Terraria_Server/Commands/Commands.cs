@@ -1130,11 +1130,48 @@ namespace Terraria_Server.Commands
 				throw new CommandError ("");
 		}
 
-        public static void Plugins(Server server, ISender sender, ArgumentList args)
+        /// <summary>
+        /// Lists currently enabled plugins.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending sender</param>
+        /// <param name="args">Arguments sent with command</param>
+        public static void ListPlugins(Server server, ISender sender, ArgumentList args)
+        {
+                if (Program.server.PluginManager.PluginList.Count > 0)
+                {
+                    String plugins = "";
+
+                    foreach (Plugin.Plugin plugin in Program.server.PluginManager.PluginList.Values)
+                    {
+                        if (!plugin.Enabled || plugin.Name.Trim().Length > 0)
+                        {
+                            plugins += ", " + plugin.Name.Trim();
+                        }
+                    }
+                    if (plugins.StartsWith(","))
+                    {
+                        plugins = plugins.Remove(0, 1).Trim(); //Remove the ', ' from the start and trim the ends
+                    }
+                    sender.sendMessage("Loaded Plugins: " + plugins + ".");
+                }
+                else
+                {
+                    sender.sendMessage("There are no loaded plugins.");
+                }
+        }
+
+        /// <summary>
+        /// Enable/disable and get details about specific plugins.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending sender</param>
+        /// <param name="args">Arguments sent with command</param>
+        public static void ManagePlugins(Server server, ISender sender, ArgumentList args)
         {
             /*
              * Commands:
-             *      list    - shows all loaded plugins
+             *      list    - shows all plugins
              *      info    - shows a plugin's author & description etc
              *      disable - disables a plugin
              *      enable  - enables a plugin
@@ -1142,29 +1179,32 @@ namespace Terraria_Server.Commands
             if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
             {
                 String command = args[0].Trim();
+                args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
                 switch (command)
                 {
                     case "list":
                         {
-                            String plugins = "None."; //If no plugins
                             if (Program.server.PluginManager.PluginList.Count > 0)
                             {
-                                plugins = "";
+                                String plugins = "";
 
                                 foreach (Plugin.Plugin plugin in Program.server.PluginManager.PluginList.Values)
                                 {
                                     if (plugin.Name.Trim().Length > 0)
                                     {
-                                        plugins = ", " + plugin.Name.Trim() + " " + ((!plugin.Enabled) ? "[DISABLED]" : ""); //, Plugin1, Plugin2
+                                        plugins += ", " + plugin.Name.Trim() + ((!plugin.Enabled) ? "[DISABLED] " : " ");
                                     }
                                 }
                                 if (plugins.StartsWith(","))
                                 {
-                                    plugins = plugins.Remove(0, 1).Trim(); //Plugin1, Plugin2 {Remove the ', ' from the start and trim the ends}
+                                    plugins = plugins.Remove(0, 1).Trim(); //Remove the ', ' from the start and trim the ends
                                 }
+                                sender.sendMessage("Plugins: " + plugins + ".");
                             }
-
-                            sender.sendMessage("Loaded Plugins: " + plugins + ".");
+                            else
+                            {
+                                sender.sendMessage("There are no installed plugins.");
+                            }
                             break;
                         }
                     case "info":
@@ -1174,9 +1214,7 @@ namespace Terraria_Server.Commands
                                 sender.sendMessage("Please review your argument count.");
                             }
 
-                            //Get plugin Name
                             String pluginName = string.Join(" ", args);
-                            pluginName = pluginName.Remove(0, pluginName.IndexOf(args[1])).Trim();
 
                             if (Program.server.PluginManager.PluginList.Count > 0)
                             {
@@ -1190,30 +1228,23 @@ namespace Terraria_Server.Commands
                                 }
                                 else
                                 {
-                                    sender.sendMessage("Sorry, That Plugin was not found. (" + args[1] + ")");
+                                    sender.sendMessage("The plugin \"" + args[1] + "\" was not found.");
                                 }
                             }
                             else
                             {
-                                sender.sendMessage("Sorry, There are no Plugins Loaded.");
+                                sender.sendMessage("There are no plugins loaded.");
                             }
                             break;
                         }
                     case "disable":
                         {
-                            if (!sender.Op)
-                            {
-                                sender.sendMessage("Error: you must be Op to use feature.");
-                                return;
-                            }
                             if (!(args.Count > 0 && args[1] != null && args[1].Trim().Length > 0))
                             {
                                 sender.sendMessage("Please review your argument count.");
                             }
 
-                            //Get plugin Name
                             String pluginName = string.Join(" ", args);
-                            pluginName = pluginName.Remove(0, pluginName.IndexOf(args[1])).Trim();
 
                             if (Program.server.PluginManager.PluginList.Count > 0)
                             {
@@ -1224,44 +1255,37 @@ namespace Terraria_Server.Commands
                                     {
                                         if (Program.server.PluginManager.DisablePlugin(fplugin.Name))
                                         {
-                                            sender.sendMessage(args[1] + " was Disabled!");
+                                            sender.sendMessage(pluginName + " was disabled!");
                                         }
                                         else
                                         {
-                                            sender.sendMessage("Sorry, here was an issue Disabling that plugin. (" + args[1] + ")");
+                                            sender.sendMessage("There was an issue disabling plugin \"" + pluginName + "\".");
                                         }
                                     }
                                     else
                                     {
-                                        sender.sendMessage("Sorry, That Plugin is already Disabled. (" + args[1] + ")");
+                                        sender.sendMessage("The plugin \"" + pluginName + "\" is already disabled.");
                                     }
                                 }
                                 else
                                 {
-                                    sender.sendMessage("Sorry, That Plugin was not found. (" + args[1] + ")");
+                                    sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
                                 }
                             }
                             else
                             {
-                                sender.sendMessage("Sorry, There are no Plugins Loaded.");
+                                sender.sendMessage("There are no plugins loaded.");
                             }
                             break;
                         }
                     case "enable":
                         {
-                            if (!sender.Op)
-                            {
-                                sender.sendMessage("Error: you must be Op to use this feature.");
-                                return;
-                            }
                             if (!(args.Count > 0 && args[1] != null && args[0].Trim().Length > 0))
                             {
                                 sender.sendMessage("Please review your argument count.");
                             }
 
-                            //Get plugin Name
                             String pluginName = string.Join(" ", args);
-                            pluginName = pluginName.Remove(0, pluginName.IndexOf(args[1])).Trim();
 
                             if (Program.server.PluginManager.PluginList.Count > 0)
                             {
@@ -1272,32 +1296,32 @@ namespace Terraria_Server.Commands
                                     {
                                         if (Program.server.PluginManager.EnablePlugin(fplugin.Name))
                                         {
-                                            sender.sendMessage(args[1] + " was Enabled!");
+                                            sender.sendMessage(args[1] + " was enabled!");
                                         }
                                         else
                                         {
-                                            sender.sendMessage("Sorry, here was an issue Enabling that plugin. (" + args[1] + ")");
+                                            sender.sendMessage("There was an issue enabling plugin \"" + pluginName + "\".");
                                         }
                                     }
                                     else
                                     {
-                                        sender.sendMessage("Sorry, That Plugin is already Enabled. (" + args[1] + ")");
+                                        sender.sendMessage("The plugin \"" + pluginName + "\" is already enabled.");
                                     }
                                 }
                                 else
                                 {
-                                    sender.sendMessage("Sorry, That Plugin was not found. (" + args[1] + ")");
+                                    sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
                                 }
                             }
                             else
                             {
-                                sender.sendMessage("Sorry, There are no Plugins Loaded.");
+                                sender.sendMessage("There are no plugins loaded.");
                             }
                             break;
                         }
                     default:
                         {
-                            sender.sendMessage("Please review the usage of this function");
+                            sender.sendMessage("Please review your argument count");
                             break;
                         }
                 }

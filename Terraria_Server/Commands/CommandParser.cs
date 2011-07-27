@@ -279,11 +279,17 @@ namespace Terraria_Server.Commands
             AddCommand("plugins")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("List currently enabled plugins.")
-                .WithHelpText("Usage:    plugins list")
-                .WithHelpText("          plugins info")
-                .WithHelpText("          plugins enable")
-                .WithHelpText("          plugins disable")
-                .Calls(Commands.Plugins);
+                .WithHelpText("Usage:    plugins")
+                .Calls(Commands.ListPlugins);
+
+            AddCommand("plugin")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Enable/disable and get details about specific plugins.")
+                .WithHelpText("Usage:    plugin list")
+                .WithHelpText("          plugin info <plugin>")
+                .WithHelpText("          plugin enable <plugin>")
+                .WithHelpText("          plugin disable <plugin>")
+                .Calls(Commands.ManagePlugins);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;
