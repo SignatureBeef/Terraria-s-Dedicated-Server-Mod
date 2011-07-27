@@ -6580,578 +6580,452 @@ namespace Terraria_Server
 		/// <returns>String to display in chat bubble</returns>
         public String GetChat()
         {
-            bool flag = false;
-            bool flag2 = false;
-            bool flag3 = false;
-            bool flag4 = false;
-            bool flag5 = false;
-            bool flag6 = false;
+            bool merchantActive = false;
+            bool nurseActive = false;
+            bool armsDealerActive = false;
+            bool dryadActive = false;
+            bool oldManActive = false;
+            bool demolitionistActive = false;
             for (int i = 0; i < MAX_NPCS; i++)
             {
-                if (Main.npcs[i].type == NPCType.N17_MERCHANT)
-                {
-                    flag = true;
-                }
-                else
-                {
-                    if (Main.npcs[i].type == NPCType.N18_NURSE)
-                    {
-                        flag2 = true;
-                    }
-                    else
-                    {
-                        if (Main.npcs[i].type == NPCType.N19_ARMS_DEALER)
+				switch(Main.npcs[i].type)
+				{
+					case NPCType.N17_MERCHANT:
+						{
+							merchantActive = true;
+							break;
+						}
+					case NPCType.N18_NURSE:
+						{
+							nurseActive = true;
+							break;
+						}
+                    case NPCType.N19_ARMS_DEALER:
+						{
+							armsDealerActive = true;
+							break;
+						}
+                    case NPCType.N20_DRYAD:
                         {
-                            flag3 = true;
+                            dryadActive = true;
+							break;
                         }
-                        else
+					case NPCType.N37_OLD_MAN:
                         {
-                            if (Main.npcs[i].type == NPCType.N20_DRYAD)
-                            {
-                                flag4 = true;
-                            }
-                            else
-                            {
-                                if (Main.npcs[i].type == NPCType.N37_OLD_MAN)
-                                {
-                                    flag5 = true;
-                                }
-                                else
-                                {
-                                    if (Main.npcs[i].type == NPCType.N38_DEMOLITIONIST)
-                                    {
-                                        flag6 = true;
-                                    }
-                                }
-                            }
+                            oldManActive = true;
+							break;
                         }
-                    }
+					case NPCType.N38_DEMOLITIONIST:
+                        {
+                            demolitionistActive = true;
+							break;
+                        }
+					default:
+						break;
                 }
             }
             String result = "";
-            if (this.type == NPCType.N17_MERCHANT)
-            {
-                if (Main.dayTime)
-                {
-                    if (Main.time < 16200.0)
-                    {
-                        if (Main.rand.Next(2) == 0)
-                        {
-                            result = "Sword beats paper, get one today.";
-                        }
-                        else
-                        {
-                            result = "Lovely morning, wouldn't you say? Was there something you needed?";
-                        }
-                    }
-                    else
-                    {
-                        if (Main.time > 37800.0)
-                        {
-                            if (Main.rand.Next(2) == 0)
-                            {
-                                result = "Night be upon us soon, friend. Make your choices while you can.";
-                            }
-                            else
-                            {
-                                result = "Ah, they will tell tales of " + Main.players[Main.myPlayer].Name + " some day... good ones I'm sure.";
-                            }
-                        }
-                        else
-                        {
-                            int num = Main.rand.Next(3);
-                            if (num == 0)
-                            {
-                                result = "Check out my dirt blocks, they are extra dirty.";
-                            }
-                            if (num == 1)
-                            {
-                                result = "Boy, that sun is hot! I do have some perfectly ventilated armor.";
-                            }
-                            else
-                            {
-                                result = "The sun is high, but my prices are not.";
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (Main.bloodMoon)
-                    {
-                        if (Main.rand.Next(2) == 0)
-                        {
-                            result = "Have you seen Chith...Shith.. Chat... The big eye?";
-                        }
-                        else
-                        {
-                            result = "Keep your eye on the prize, buy a lense!";
-                        }
-                    }
-                    else
-                    {
-                        if (Main.time < 9720.0)
-                        {
-                            if (Main.rand.Next(2) == 0)
-                            {
-                                result = "Kosh, kapleck Mog. Oh sorry, that's klingon for 'Buy something or die.'";
-                            }
-                            else
-                            {
-                                result = Main.players[Main.myPlayer].Name + " is it? I've heard good things, friend!";
-                            }
-                        }
-                        else
-                        {
-                            if (Main.time > 22680.0)
-                            {
-                                if (Main.rand.Next(2) == 0)
-                                {
-                                    result = "I hear there's a secret treasure... oh never mind.";
-                                }
-                                else
-                                {
-                                    result = "Angel Statue you say? I'm sorry, I'm not a junk dealer.";
-                                }
-                            }
-                            else
-                            {
-                                int num2 = Main.rand.Next(3);
-                                if (num2 == 0)
-                                {
-                                    result = "The last guy who was here left me some junk..er I mean.. treasures!";
-                                }
-                                if (num2 == 1)
-                                {
-                                    result = "I wonder if the moon is made of cheese...huh, what? Oh yes, buy something!";
-                                }
-                                else
-                                {
-                                    result = "Did you say gold?  I'll take that off of ya'.";
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            else
-            {
-                if (this.type == NPCType.N18_NURSE)
-                {
-                    if (flag6 && Main.rand.Next(4) == 0)
-                    {
-                        result = "I wish that bomb maker would be more careful.  I'm getting tired of having to sew his limbs back on every day.";
-                    }
-                    else
-                    {
-                        if ((double)Main.players[Main.myPlayer].statLife < (double)Main.players[Main.myPlayer].statLifeMax * 0.33)
-                        {
-                            int num3 = Main.rand.Next(5);
-                            if (num3 == 0)
-                            {
-                                result = "I think you look better this way.";
-                            }
-                            else
-                            {
-                                if (num3 == 1)
-                                {
-                                    result = "Eww.. What happened to your face?";
-                                }
-                                else
-                                {
-                                    if (num3 == 2)
-                                    {
-                                        result = "MY GOODNESS! I'm good but I'm not THAT good.";
-                                    }
-                                    else
-                                    {
-                                        if (num3 == 3)
-                                        {
-                                            result = "Dear friends we are gathered here today to bid farewell... oh, you'll be fine.";
-                                        }
-                                        else
-                                        {
-                                            result = "You left your arm over there. Let me get that for you..";
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if ((double)Main.players[Main.myPlayer].statLife < (double)Main.players[Main.myPlayer].statLifeMax * 0.66)
-                            {
-                                int num4 = Main.rand.Next(4);
-                                if (num4 == 0)
-                                {
-                                    result = "Quit being such a baby! I've seen worse.";
-                                }
-                                else
-                                {
-                                    if (num4 == 1)
-                                    {
-                                        result = "That's gonna need stitches!";
-                                    }
-                                    else
-                                    {
-                                        if (num4 == 2)
-                                        {
-                                            result = "Trouble with those bullies again?";
-                                        }
-                                        else
-                                        {
-                                            result = "You look half digested. Have you been chasing slimes again?";
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                int num5 = Main.rand.Next(3);
-                                if (num5 == 0)
-                                {
-                                    result = "Turn your head and cough.";
-                                }
-                                else
-                                {
-                                    if (num5 == 1)
-                                    {
-                                        result = "That's not the biggest I've ever seen... Yes, I've seen bigger wounds for sure.";
-                                    }
-                                    else
-                                    {
-                                        result = "Show me where it hurts.";
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    if (this.type == NPCType.N19_ARMS_DEALER)
-                    {
-                        if (flag2 && Main.rand.Next(4) == 0)
-                        {
-                            result = "Make it quick! I've got a date with the nurse in an hour.";
-                        }
-                        else
-                        {
-                            if (flag4 && Main.rand.Next(4) == 0)
-                            {
-                                result = "That dryad is a looker.  Too bad she's such a prude.";
-                            }
-                            else
-                            {
-                                if (flag6 && Main.rand.Next(4) == 0)
-                                {
-                                    result = "Don't bother with that firework vendor, I've got all you need right here.";
-                                }
-                                else
-                                {
-                                    if (Main.bloodMoon)
-                                    {
-                                        result = "I love nights like tonight.  There is never a shortage of things to kill!";
-                                    }
-                                    else
-                                    {
-                                        int num6 = Main.rand.Next(2);
-                                        if (num6 == 0)
-                                        {
-                                            result = "I see you're eyeballin' the Minishark.. You really don't want to know how it was made.";
-                                        }
-                                        else
-                                        {
-                                            if (num6 == 1)
-                                            {
-                                                result = "Keep your hands off my gun, buddy!";
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (this.type == NPCType.N20_DRYAD)
-                        {
-                            if (flag3 && Main.rand.Next(4) == 0)
-                            {
-                                result = "I wish that gun seller would stop talking to me. Doesn't he realize I'm 500 years old?";
-                            }
-                            else
-                            {
-                                if (flag && Main.rand.Next(4) == 0)
-                                {
-                                    result = "That merchant keeps trying to sell me an angel statue. Everyone knows that they don't do anything.";
-                                }
-                                else
-                                {
-                                    if (flag5 && Main.rand.Next(4) == 0)
-                                    {
-                                        result = "Have you seen the old man walking around the dungeon? He doesn't look well at all...";
-                                    }
-                                    else
-                                    {
-                                        if (Main.bloodMoon)
-                                        {
-                                            result = "It is an evil moon tonight. Be careful.";
-                                        }
-                                        else
-                                        {
-                                            int num7 = Main.rand.Next(6);
-                                            if (num7 == 0)
-                                            {
-                                                result = "You must cleanse the world of this corruption.";
-                                            }
-                                            else
-                                            {
-                                                if (num7 == 1)
-                                                {
-                                                    result = "Be safe; Terraria needs you!";
-                                                }
-                                                else
-                                                {
-                                                    if (num7 == 2)
-                                                    {
-                                                        result = "The sands of time are flowing. And well, you are not aging very gracefully.";
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num7 == 3)
-                                                        {
-                                                            result = "What's this about me having more 'bark' than bite?";
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num7 == 4)
-                                                            {
-                                                                result = "So two goblins walk into a bar, and one says to the other, 'Want to get a Gobblet of beer?!'";
-                                                            }
-                                                            else
-                                                            {
-                                                                result = "Be safe; Terraria needs you!";
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (this.type == NPCType.N22_GUIDE)
-                            {
-                                if (Main.bloodMoon)
-                                {
-                                    result = "You can tell a Blood Moon is out when the sky turns red. There is something about it that causes monsters to swarm.";
-                                }
-                                else
-                                {
-                                    if (!Main.dayTime)
-                                    {
-                                        result = "You should stay indoors at night. It is very dangerous to be wandering around in the dark.";
-                                    }
-                                    else
-                                    {
-                                        int num8 = Main.rand.Next(3);
-                                        if (num8 == 0)
-                                        {
-                                            result = "Greetings, " + Main.players[Main.myPlayer].Name + ". Is there something I can help you with?";
-                                        }
-                                        else
-                                        {
-                                            if (num8 == 1)
-                                            {
-                                                result = "I am here to give you advice on what to do next.  It is recommended that you talk with me anytime you get stuck.";
-                                            }
-                                            else
-                                            {
-                                                if (num8 == 2)
-                                                {
-                                                    result = "They say there is a person who will tell you how to survive in this land... oh wait. That's me.";
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (this.type == NPCType.N37_OLD_MAN)
-                                {
-                                    if (Main.dayTime)
-                                    {
-                                        int num9 = Main.rand.Next(2);
-                                        if (num9 == 0)
-                                        {
-                                            result = "I cannot let you enter until you free me of my curse.";
-                                        }
-                                        else
-                                        {
-                                            if (num9 == 1)
-                                            {
-                                                result = "Come back at night if you wish to enter.";
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (Main.players[Main.myPlayer].statLifeMax < 300 || Main.players[Main.myPlayer].statDefense < 10)
-                                        {
-                                            int num10 = Main.rand.Next(2);
-                                            if (num10 == 0)
-                                            {
-                                                result = "You are far to weak to defeat my curse.  Come back when you aren't so worthless.";
-                                            }
-                                            else
-                                            {
-                                                if (num10 == 1)
-                                                {
-                                                    result = "You pathetic fool.  You cannot hope to face my master as you are now.";
-                                                }
-                                            }
-                                        }
-                                        else
-                                        {
-                                            int num11 = Main.rand.Next(2);
-                                            if (num11 == 0)
-                                            {
-                                                result = "You just might be strong enough to free me from my curse...";
-                                            }
-                                            else
-                                            {
-                                                if (num11 == 1)
-                                                {
-                                                    result = "Stranger, do you possess the strength to defeat my master?";
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (this.type == NPCType.N38_DEMOLITIONIST)
-                                    {
-                                        if (Main.bloodMoon)
-                                        {
-                                            result = "I've got something for them zombies alright!";
-                                        }
-                                        else
-                                        {
-                                            if (flag3 && Main.rand.Next(4) == 0)
-                                            {
-                                                result = "Even the gun dealer wants what I'm selling!";
-                                            }
-                                            else
-                                            {
-                                                if (flag2 && Main.rand.Next(4) == 0)
-                                                {
-                                                    result = "I'm sure the nurse will help if you accidentally lose a limb to these.";
-                                                }
-                                                else
-                                                {
-                                                    if (flag4 && Main.rand.Next(4) == 0)
-                                                    {
-                                                        result = "Why purify the world when you can just blow it up?";
-                                                    }
-                                                    else
-                                                    {
-                                                        int num12 = Main.rand.Next(4);
-                                                        if (num12 == 0)
-                                                        {
-                                                            result = "Explosives are da' bomb these days.  Buy some now!";
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num12 == 1)
-                                                            {
-                                                                result = "It's a good day to die!";
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num12 == 2)
-                                                                {
-                                                                    result = "I wonder what happens if I... (BOOM!)... Oh, sorry, did you need that leg?";
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (num12 == 3)
-                                                                    {
-                                                                        result = "Dynamite, my own special cure-all for what ails ya.";
-                                                                    }
-                                                                    else
-                                                                    {
-                                                                        result = "Check out my goods; they have explosive prices!";
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (this.type == NPCType.N54_CLOTHIER)
-                                        {
-                                            if (Main.bloodMoon)
-                                            {
-                                                result = Main.players[Main.myPlayer].Name + "... we have a problem! Its a blood moon out there!";
-                                            }
-                                            else
-                                            {
-                                                if (flag2 && Main.rand.Next(4) == 0)
-                                                {
-                                                    result = "T'were I younger, I would ask the nurse out. I used to be quite the lady killer.";
-                                                }
-                                                else
-                                                {
-                                                    if (Main.players[Main.myPlayer].head == 24)
-                                                    {
-                                                        result = "That Red Hat of yours looks familiar...";
-                                                    }
-                                                    else
-                                                    {
-                                                        int num13 = Main.rand.Next(4);
-                                                        if (num13 == 0)
-                                                        {
-                                                            result = "Thanks again for freeing me from my curse. Felt like something jumped up and bit me";
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num13 == 1)
-                                                            {
-                                                                result = "Mama always said I would make a great tailor.";
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num13 == 2)
-                                                                {
-                                                                    result = "Life's like a box of clothes, you never know what you are gonna wear!";
-                                                                }
-                                                                else
-                                                                {
-                                                                    result = "Being cursed was lonely, so I once made a friend out of leather. I named him Wilson.";
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+			switch (this.type)
+			{
+				case NPCType.N17_MERCHANT:
+					{
+						if (Main.dayTime)
+						{
+							if (Main.time < 16200.0)
+							{
+								if (Main.rand.Next(2) == 0)
+								{
+									result = "Sword beats paper, get one today.";
+								}
+								else
+								{
+									result = "Lovely morning, wouldn't you say? Was there something you needed?";
+								}
+							}
+							else if (Main.time > 37800.0)
+							{
+								if (Main.rand.Next(2) == 0)
+								{
+									result = "Night be upon us soon, friend. Make your choices while you can.";
+								}
+								else
+								{
+									result = "Ah, they will tell tales of " + Main.players[Main.myPlayer].Name + " some day... good ones I'm sure.";
+								}
+							}
+							else
+							{
+								int num = Main.rand.Next(3);
+								if (num == 0)
+								{
+									result = "Check out my dirt blocks, they are extra dirty.";
+								}
+								else if (num == 1)
+								{
+									result = "Boy, that sun is hot! I do have some perfectly ventilated armor.";
+								}
+								else
+								{
+									result = "The sun is high, but my prices are not.";
+								}
+							}
+						}
+						else
+						{
+							if (Main.bloodMoon)
+							{
+								if (Main.rand.Next(2) == 0)
+								{
+									result = "Have you seen Chith...Shith.. Chat... The big eye?";
+								}
+								else
+								{
+									result = "Keep your eye on the prize, buy a lense!";
+								}
+							}
+							else if (Main.time < 9720.0)
+							{
+								if (Main.rand.Next(2) == 0)
+								{
+									result = "Kosh, kapleck Mog. Oh sorry, that's klingon for 'Buy something or die.'";
+								}
+								else
+								{
+									result = Main.players[Main.myPlayer].Name + " is it? I've heard good things, friend!";
+								}
+							}
+							else if (Main.time > 22680.0)
+							{
+								if (Main.rand.Next(2) == 0)
+								{
+									result = "I hear there's a secret treasure... oh never mind.";
+								}
+								else
+								{
+									result = "Angel Statue you say? I'm sorry, I'm not a junk dealer.";
+								}
+							}
+							else
+							{
+								int num2 = Main.rand.Next(3);
+								if (num2 == 0)
+								{
+									result = "The last guy who was here left me some junk..er I mean.. treasures!";
+								}
+								if (num2 == 1)
+								{
+									result = "I wonder if the moon is made of cheese...huh, what? Oh yes, buy something!";
+								}
+								else
+								{
+									result = "Did you say gold?  I'll take that off of ya'.";
+								}
+							}
+						}
+						break;
+					}
+				case NPCType.N18_NURSE:
+					{
+						if (demolitionistActive && Main.rand.Next(4) == 0)
+						{
+							result = "I wish that bomb maker would be more careful.  I'm getting tired of having to sew his limbs back on every day.";
+						}
+						else if ((double)Main.players[Main.myPlayer].statLife < (double)Main.players[Main.myPlayer].statLifeMax * 0.33)
+						{
+							int num3 = Main.rand.Next(5);
+							if (num3 == 0)
+							{
+								result = "I think you look better this way.";
+							}
+							else if (num3 == 1)
+							{
+								result = "Eww.. What happened to your face?";
+							}
+							else if (num3 == 2)
+							{
+								result = "MY GOODNESS! I'm good but I'm not THAT good.";
+							}
+							else if (num3 == 3)
+							{
+								result = "Dear friends we are gathered here today to bid farewell... oh, you'll be fine.";
+							}
+							else
+							{
+								result = "You left your arm over there. Let me get that for you..";
+							}
+						}
+						else if ((double)Main.players[Main.myPlayer].statLife < (double)Main.players[Main.myPlayer].statLifeMax * 0.66)
+						{
+							int num4 = Main.rand.Next(4);
+							if (num4 == 0)
+							{
+								result = "Quit being such a baby! I've seen worse.";
+							}
+							else if (num4 == 1)
+							{
+								result = "That's gonna need stitches!";
+							}
+							else if (num4 == 2)
+							{
+								result = "Trouble with those bullies again?";
+							}
+							else
+							{
+								result = "You look half digested. Have you been chasing slimes again?";
+							}
+						}
+						else
+						{
+							int num5 = Main.rand.Next(3);
+							if (num5 == 0)
+							{
+								result = "Turn your head and cough.";
+							}
+							else
+							{
+								if (num5 == 1)
+								{
+									result = "That's not the biggest I've ever seen... Yes, I've seen bigger wounds for sure.";
+								}
+								else
+								{
+									result = "Show me where it hurts.";
+								}
+							}
+						}
+						break;
+					}
+				case NPCType.N19_ARMS_DEALER:
+					{
+						if (nurseActive && Main.rand.Next(4) == 0)
+						{
+							result = "Make it quick! I've got a date with the nurse in an hour.";
+						}
+						else if (dryadActive && Main.rand.Next(4) == 0)
+						{
+							result = "That dryad is a looker.  Too bad she's such a prude.";
+						}
+						else if (demolitionistActive && Main.rand.Next(4) == 0)
+						{
+							result = "Don't bother with that firework vendor, I've got all you need right here.";
+						}
+						else if (Main.bloodMoon)
+						{
+							result = "I love nights like tonight.  There is never a shortage of things to kill!";
+						}
+						else
+						{
+							int num6 = Main.rand.Next(2);
+							if (num6 == 0)
+							{
+								result = "I see you're eyeballin' the Minishark.. You really don't want to know how it was made.";
+							}
+							else if (num6 == 1)
+							{
+								result = "Keep your hands off my gun, buddy!";
+							}
+						}
+						break;
+					}
+				case NPCType.N20_DRYAD:
+					{
+						if (armsDealerActive && Main.rand.Next(4) == 0)
+						{
+							result = "I wish that gun seller would stop talking to me. Doesn't he realize I'm 500 years old?";
+						}
+						else if (merchantActive && Main.rand.Next(4) == 0)
+						{
+							result = "That merchant keeps trying to sell me an angel statue. Everyone knows that they don't do anything.";
+						}
+						else if (oldManActive && Main.rand.Next(4) == 0)
+						{
+							result = "Have you seen the old man walking around the dungeon? He doesn't look well at all...";
+						}
+						else if (Main.bloodMoon)
+						{
+							result = "It is an evil moon tonight. Be careful.";
+						}
+						else
+						{
+							int num7 = Main.rand.Next(6);
+							if (num7 == 0)
+							{
+								result = "You must cleanse the world of this corruption.";
+							}
+							else if (num7 == 1)
+							{
+								result = "Be safe; Terraria needs you!";
+							}
+							else if (num7 == 2)
+							{
+								result = "The sands of time are flowing. And well, you are not aging very gracefully.";
+							}
+							else if (num7 == 3)
+							{
+								result = "What's this about me having more 'bark' than bite?";
+							}
+							else if (num7 == 4)
+							{
+								result = "So two goblins walk into a bar, and one says to the other, 'Want to get a Gobblet of beer?!'";
+							}
+							else
+							{
+								result = "Be safe; Terraria needs you!";
+							}
+						}
+						break;
+					}
+				case NPCType.N22_GUIDE:
+					{
+						if (Main.bloodMoon)
+						{
+							result = "You can tell a Blood Moon is out when the sky turns red. There is something about it that causes monsters to swarm.";
+						}
+						else if (!Main.dayTime)
+						{
+							result = "You should stay indoors at night. It is very dangerous to be wandering around in the dark.";
+						}
+						else
+						{
+							int num8 = Main.rand.Next(3);
+							if (num8 == 0)
+							{
+								result = "Greetings, " + Main.players[Main.myPlayer].Name + ". Is there something I can help you with?";
+							}
+							else if (num8 == 1)
+							{
+								result = "I am here to give you advice on what to do next.  It is recommended that you talk with me anytime you get stuck.";
+							}
+							else if (num8 == 2)
+							{
+								result = "They say there is a person who will tell you how to survive in this land... oh wait. That's me.";
+							}
+						}
+						break;
+					}
+				case NPCType.N37_OLD_MAN:
+					{
+						if (Main.dayTime)
+						{
+							int num9 = Main.rand.Next(2);
+							if (num9 == 0)
+							{
+								result = "I cannot let you enter until you free me of my curse.";
+							}
+							else if (num9 == 1)
+							{
+								result = "Come back at night if you wish to enter.";
+							}
+						}
+						else if (Main.players[Main.myPlayer].statLifeMax < 300 || Main.players[Main.myPlayer].statDefense < 10)
+						{
+							int num10 = Main.rand.Next(2);
+							if (num10 == 0)
+							{
+								result = "You are far to weak to defeat my curse.  Come back when you aren't so worthless.";
+							}
+							else if (num10 == 1)
+							{
+								result = "You pathetic fool.  You cannot hope to face my master as you are now.";
+							}
+						}
+						else
+						{
+							int num11 = Main.rand.Next(2);
+							if (num11 == 0)
+							{
+								result = "You just might be strong enough to free me from my curse...";
+							}
+							else if (num11 == 1)
+							{
+								result = "Stranger, do you possess the strength to defeat my master?";
+							}
+						}
+						break;
+					}
+				case NPCType.N38_DEMOLITIONIST:
+					{
+						if (Main.bloodMoon)
+						{
+							result = "I've got something for them zombies alright!";
+						}
+						else if (armsDealerActive && Main.rand.Next(4) == 0)
+						{
+							result = "Even the gun dealer wants what I'm selling!";
+						}
+						else if (nurseActive && Main.rand.Next(4) == 0)
+						{
+							result = "I'm sure the nurse will help if you accidentally lose a limb to these.";
+						}
+						else if (dryadActive && Main.rand.Next(4) == 0)
+						{
+							result = "Why purify the world when you can just blow it up?";
+						}
+						else
+						{
+							int num12 = Main.rand.Next(4);
+							if (num12 == 0)
+							{
+								result = "Explosives are da' bomb these days.  Buy some now!";
+							}
+							else if (num12 == 1)
+							{
+								result = "It's a good day to die!";
+							}
+							else if (num12 == 2)
+							{
+								result = "I wonder what happens if I... (BOOM!)... Oh, sorry, did you need that leg?";
+							}
+							else if (num12 == 3)
+							{
+								result = "Dynamite, my own special cure-all for what ails ya.";
+							}
+							else
+							{
+								result = "Check out my goods; they have explosive prices!";
+							}
+						}
+						break;
+					}
+				case NPCType.N54_CLOTHIER:
+					{
+						if (Main.bloodMoon)
+						{
+							result = Main.players[Main.myPlayer].Name + "... we have a problem! Its a blood moon out there!";
+						}
+						else if (nurseActive && Main.rand.Next(4) == 0)
+						{
+							result = "T'were I younger, I would ask the nurse out. I used to be quite the lady killer.";
+						}
+						else if (Main.players[Main.myPlayer].head == 24)
+						{
+							result = "That Red Hat of yours looks familiar...";
+						}
+						else
+						{
+							int num13 = Main.rand.Next(4);
+							if (num13 == 0)
+							{
+								result = "Thanks again for freeing me from my curse. Felt like something jumped up and bit me";
+							}
+							else if (num13 == 1)
+							{
+								result = "Mama always said I would make a great tailor.";
+							}
+							else if (num13 == 2)
+							{
+								result = "Life's like a box of clothes, you never know what you are gonna wear!";
+							}
+							else
+							{
+								result = "Being cursed was lonely, so I once made a friend out of leather. I named him Wilson.";
+							}
+						}
+						break;
+					}
+				default:
+					break;
+			}
             return result;
         }
 
