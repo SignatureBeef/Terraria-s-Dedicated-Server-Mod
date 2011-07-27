@@ -1227,7 +1227,7 @@ namespace Terraria_Server.Commands
                         }
                     case "info":
                         {
-                            if (!(args.Count > 0 && args[1] != null && args[0].Trim().Length > 0))
+                            if (!(args.Count > 1 && args[1] != null && args[0].Trim().Length > 0))
                             {
                                 sender.sendMessage("Please review your argument count.");
                             }
@@ -1257,7 +1257,7 @@ namespace Terraria_Server.Commands
                         }
                     case "disable":
                         {
-                            if (!(args.Count > 0 && args[1] != null && args[1].Trim().Length > 0))
+                            if (!(args.Count > 1 && args[1] != null && args[1].Trim().Length > 0))
                             {
                                 sender.sendMessage("Please review your argument count.");
                             }
@@ -1298,7 +1298,7 @@ namespace Terraria_Server.Commands
                         }
                     case "enable":
                         {
-                            if (!(args.Count > 0 && args[1] != null && args[0].Trim().Length > 0))
+                            if (!(args.Count > 1 && args[1] != null && args[0].Trim().Length > 0))
                             {
                                 sender.sendMessage("Please review your argument count.");
                             }
