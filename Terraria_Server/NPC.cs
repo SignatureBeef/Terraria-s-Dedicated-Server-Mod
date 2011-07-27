@@ -70,12 +70,10 @@ namespace Terraria_Server
             }
         }
 
-        public int alpha;
         public bool behindTiles;
         public bool boss;
         public bool collideX;
         public bool collideY;
-        public Color color;
         public int direction;
         public double frameCounter;
 		/// <summary>
@@ -117,8 +115,6 @@ namespace Terraria_Server
         public int oldDirection;
         public int oldTarget;
         public float rotation;
-        public int soundHit;
-        public int soundKilled;
         public int spriteDirection;
 		/// <summary>
 		/// ID of player target
@@ -167,7 +163,6 @@ namespace Terraria_Server
 		/// </summary>
         public NPC()
         {
-            color = default(Color);
             homeTileX = -1;
             homeTileY = -1;
             knockBackResist = 1f;
@@ -6577,75 +6572,6 @@ namespace Terraria_Server
                 npc.CheckActive();
                 npc.netUpdate = false;
             }
-        }
-
-		/// <summary>
-		/// Getting alpha value for display.  May be removed.
-		/// </summary>
-		/// <param name="newColor">color to alpha</param>
-		/// <returns>calculated alpha'd color</returns>
-        public Color GetAlpha(Color newColor)
-        {
-            int r = (int)newColor.R - this.alpha;
-            int g = (int)newColor.G - this.alpha;
-            int b = (int)newColor.B - this.alpha;
-            int num = (int)newColor.A - this.alpha;
-            if (this.type == NPCType.N25_BURNING_SPHERE || this.type == NPCType.N30_CHAOS_BALL || this.type == NPCType.N33_WATER_SPHERE)
-            {
-                r = (int)newColor.R;
-                g = (int)newColor.G;
-                b = (int)newColor.B;
-            }
-            if (num < 0)
-            {
-                num = 0;
-            }
-            if (num > 255)
-            {
-                num = 255;
-            }
-            return new Color(r, g, b, num);
-        }
-
-        public Color GetColor(Color newColor)
-        {
-            int num = (int)(this.color.R - (255 - newColor.R));
-            int num2 = (int)(this.color.G - (255 - newColor.G));
-            int num3 = (int)(this.color.B - (255 - newColor.B));
-            int num4 = (int)(this.color.A - (255 - newColor.A));
-            if (num < 0)
-            {
-                num = 0;
-            }
-            if (num > 255)
-            {
-                num = 255;
-            }
-            if (num2 < 0)
-            {
-                num2 = 0;
-            }
-            if (num2 > 255)
-            {
-                num2 = 255;
-            }
-            if (num3 < 0)
-            {
-                num3 = 0;
-            }
-            if (num3 > 255)
-            {
-                num3 = 255;
-            }
-            if (num4 < 0)
-            {
-                num4 = 0;
-            }
-            if (num4 > 255)
-            {
-                num4 = 255;
-            }
-            return new Color(num, num2, num3, num4);
         }
 
 		/// <summary>
