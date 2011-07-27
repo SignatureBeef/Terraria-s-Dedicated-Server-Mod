@@ -92,17 +92,17 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel(AccessLevel.OP)
                 .Calls(Commands.SaveAll);
             
-            AddCommand ("reload")
+            AddCommand("reload")
                 .WithDescription ("Reload plugins.")
                 .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
                 .Calls (Commands.Reload);
                 
-            AddCommand ("list")
+            AddCommand("list")
                 .WithAccessLevel (AccessLevel.PLAYER)
                 .WithDescription ("List active players (also: who, players, online).")
                 .Calls (Commands.List);
                 
-            AddCommand ("who")
+            AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("List active players (also: who, players, online).")
                 .Calls(Commands.List);
@@ -123,17 +123,17 @@ namespace Terraria_Server.Commands
                 .WithDescription("List active players (also: who, players, online).")
                 .Calls(Commands.List);
                 
-            AddCommand ("me")
+            AddCommand("me")
                 .WithAccessLevel (AccessLevel.PLAYER)
                 .WithDescription ("Broadcast a message in third person.")
                 .Calls (Commands.Action);
                 
-            AddCommand ("say")
+            AddCommand("say")
                 .WithAccessLevel (AccessLevel.PLAYER)
                 .WithDescription ("Broadcast a message in first person.")
                 .Calls (Commands.Say);
                 
-            AddCommand ("slots")
+            AddCommand("slots")
                 .WithDescription ("Display information about occupied player slots.")
                 .WithHelpText ("Usage:   slots [-d] [-p]")
                 .WithHelpText ("Options:")
@@ -168,7 +168,7 @@ namespace Terraria_Server.Commands
                 .WithHelpText("         whitelist -remove <name:ip>")
                 .Calls(Commands.WhiteList);
             
-            AddCommand ("rcon")
+            AddCommand("rcon")
                 .WithDescription ("Manage remote console access.")
                 .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
                 .WithHelpText ("Usage:   rcon load       - reload login database")
@@ -177,7 +177,7 @@ namespace Terraria_Server.Commands
                 .WithHelpText ("         rcon ban <name> - cut off rcon connections and revoke access")
                 .Calls (RConServer.RConCommand);
             
-            AddCommand ("status")
+            AddCommand("status")
                 .WithDescription ("Check the server's status")
                 .WithHelpText ("Usage:   status")
                 .Calls(Commands.Status);
@@ -267,7 +267,7 @@ namespace Terraria_Server.Commands
                 .WithHelpText("Usage:   restart")
                 .Calls(Commands.Restart);
             
-            AddCommand ("purge")
+            AddCommand("purge")
                 .WithAccessLevel (AccessLevel.OP)
                 .WithDescription ("Purge the map of items, NPCs or projectiles.")
                 .WithHelpText ("Usage:    purge all")
@@ -276,6 +276,20 @@ namespace Terraria_Server.Commands
                 .WithHelpText ("          purge npc[s]")
                 .Calls(Commands.Purge);
 
+            AddCommand("plugins")
+                .WithAccessLevel(AccessLevel.PLAYER)
+                .WithDescription("List currently enabled plugins.")
+                .WithHelpText("Usage:    plugins")
+                .Calls(Commands.ListPlugins);
+
+            AddCommand("plugin")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Enable/disable and get details about specific plugins.")
+                .WithHelpText("Usage:    plugin list")
+                .WithHelpText("          plugin info <plugin>")
+                .WithHelpText("          plugin enable <plugin>")
+                .WithHelpText("          plugin disable <plugin>")
+                .Calls(Commands.ManagePlugins);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;
