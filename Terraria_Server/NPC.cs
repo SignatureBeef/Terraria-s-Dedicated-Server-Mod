@@ -9,10 +9,19 @@ using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
+	/// <summary>
+	/// Basic NPC class
+	/// </summary>
     public class NPC : BaseEntity
     {
         private const int ACTIVE_TIME = 750;
+		/// <summary>
+		/// Total allowable active NPCs.
+		/// </summary>
         public const int MAX_NPCS = 1000;
+		/// <summary>
+		/// Maximum AI chains
+		/// </summary>
         public const int MAX_AI = 4;
 
         public static int immuneTime = 20;
@@ -28,6 +37,9 @@ namespace Terraria_Server
         private static int activeRangeY = (int)((double)NPC.sHeight * 1.7);
         private static int townRangeX = NPC.sWidth;
         private static int townRangeY = NPC.sHeight;
+		/// <summary>
+		/// Number of slots NPC takes up when active
+		/// </summary>
         public static float npcSlots = 1f;
         private static bool noSpawnCycle = false;
         public static int defaultSpawnRate = 600;
@@ -38,8 +50,14 @@ namespace Terraria_Server
         public static int spawnRate = NPC.defaultSpawnRate;
         public static int maxSpawns = NPC.defaultMaxSpawns;
 
+		/// <summary>
+		/// NPCType enum value
+		/// </summary>
         public NPCType type { get; set; }
 
+		/// <summary>
+		/// Integer representation of NPCType enum
+		/// </summary>
         public override int Type
         {
             get
@@ -60,14 +78,41 @@ namespace Terraria_Server
         public Color color;
         public int direction;
         public double frameCounter;
+		/// <summary>
+		/// Whether an NPC is friendly or not
+		/// </summary>
         public bool friendly;
+		/// <summary>
+		/// Whether a friendly NPC currently has a home or not.
+		/// </summary>
         public bool homeless;
+		/// <summary>
+		/// X coordinate of their home tile
+		/// </summary>
         public int homeTileX;
+		/// <summary>
+		/// Y coordinate of their home tile
+		/// </summary>
         public int homeTileY;
+		/// <summary>
+		/// Whether NPC is immune to lava
+		/// </summary>
         public bool lavaImmune;
+		/// <summary>
+		/// Whether NPC is currently in lava
+		/// </summary>
         public bool lavaWet;
+		/// <summary>
+		/// Whether the NPC needs to send an update to clients
+		/// </summary>
         public bool netUpdate;
+		/// <summary>
+		/// Whether NPC is affected by gravity
+		/// </summary>
         public bool noGravity;
+		/// <summary>
+		/// Whether NPC is affected by tile collisions
+		/// </summary>
         public bool noTileCollide;
         public int oldDirection;
         public int oldTarget;
@@ -75,15 +120,30 @@ namespace Terraria_Server
         public int soundHit;
         public int soundKilled;
         public int spriteDirection;
+		/// <summary>
+		/// ID of player target
+		/// </summary>
         public int target;
+		/// <summary>
+		/// Specific rectangle the NPC is targeting
+		/// </summary>
         public Rectangle targetRect;
         public int timeLeft;
+		/// <summary>
+		/// Whether NPC is a resident NPC or not (requires a home)
+		/// </summary>
         public bool townNPC;
         public float value;
+		/// <summary>
+		/// Whether NPC is currently in water
+		/// </summary>
         public bool wet;
         public byte wetCount;
 
         public Vector2 Velocity;
+		/// <summary>
+		/// AI chain array
+		/// </summary>
         public float[] ai = new float[NPC.MAX_AI];
         public int aiAction;
         public bool closeDoor;
@@ -97,8 +157,14 @@ namespace Terraria_Server
         public Vector2 oldPosition;
         public Vector2 oldVelocity;
         public int soundDelay;
+		/// <summary>
+		/// Index number for Main.npcs[]
+		/// </summary>
         public int whoAmI;
         
+		/// <summary>
+		/// NPC Constructor.  Sets many defaults
+		/// </summary>
         public NPC()
         {
             color = default(Color);
@@ -115,6 +181,10 @@ namespace Terraria_Server
             timeLeft = NPC.ACTIVE_TIME;
         }
 
+		/// <summary>
+		/// Movement checks
+		/// </summary>
+		/// <param name="index">Main.npcs[] index number</param>
         public static void AI(int index)
         {
             NPC npc = Main.npcs[index];
@@ -4520,6 +4590,10 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Chooses player for the NPC to target/follow
+		/// </summary>
+		/// <param name="faceTarget">Whether or not to face chosen target</param>
         public void TargetClosest(bool faceTarget = true)
         {
             float num = -1f;
@@ -4555,6 +4629,9 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Checks NPC's active status
+		/// </summary>
         public void CheckActive()
         {
             if (this.Active)
@@ -4623,6 +4700,9 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Spawns all NPCs that need to be
+		/// </summary>
         public static void SpawnNPC()
         {
             if (NPC.noSpawnCycle)
@@ -5276,6 +5356,12 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Spawns specified NPC type on specified player
+		/// </summary>
+		/// <param name="player">Instance of player to spawn on</param>
+		/// <param name="playerIndex">Index of player to spawn on</param>
+		/// <param name="Type">Type of NPC to spawn</param>
         public static void SpawnOnPlayer(Player player, int playerIndex, int Type)
         {
             bool flag = false;
@@ -5441,6 +5527,14 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Creates new instance of specified NPC at specified
+		/// </summary>
+		/// <param name="x">X coordinate to create at</param>
+		/// <param name="y">Y coordinate to create at</param>
+		/// <param name="type">Type of NPC to create</param>
+		/// <param name="start">Index to start from looking for free index</param>
+		/// <returns>Main.npcs[] index value</returns>
         public static int NewNPC(int x, int y, int type, int start = 0)
         {
             int npcIndex = -1;
@@ -5489,6 +5583,12 @@ namespace Terraria_Server
             return MAX_NPCS;
         }
 
+		/// <summary>
+		/// Transforms specified NPC into specified type.
+		/// Used currently for bunny/goldfish to evil bunny/goldfish and Eater of Worlds segmenting transformations
+		/// </summary>
+		/// <param name="npcIndex"></param>
+		/// <param name="newType"></param>
         public static void Transform(int npcIndex, int newType)
 		{
 			NPC npc = Registries.NPC.Create(newType);
@@ -5508,6 +5608,13 @@ namespace Terraria_Server
 			NetMessage.SendData(23, -1, -1, "", Main.npcs[npcIndex].whoAmI);
         }
 
+		/// <summary>
+		/// Damages the NPC
+		/// </summary>
+		/// <param name="Damage">Damage to calculate</param>
+		/// <param name="knockBack">Knockback amount</param>
+		/// <param name="hitDirection">Direction of strike</param>
+		/// <returns>Amount of damage actually done</returns>
         public double StrikeNPC(int Damage, float knockBack, int hitDirection)
         {
             if (!this.Active || this.life <= 0)
@@ -5581,6 +5688,9 @@ namespace Terraria_Server
             return 0.0;
         }
 
+		/// <summary>
+		/// Drops loot from dead NPC
+		/// </summary>
         public void NPCLoot()
         {
             if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
@@ -5945,6 +6055,11 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Runs effects of striking NPCs
+		/// </summary>
+		/// <param name="hitDirection">Direction of strike</param>
+		/// <param name="dmg">Raw amount of damage done</param>
         public void HitEffect(int hitDirection = 0, double dmg = 10.0)
         {
             if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
@@ -6193,6 +6308,11 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Checks if there are any active NPCs of specified type
+		/// </summary>
+		/// <param name="Type">Type of NPC to check for</param>
+		/// <returns>True if active, false if not</returns>
         public static bool AnyNPCs(int Type)
         {
             for (int i = 0; i < MAX_NPCS; i++)
@@ -6205,6 +6325,9 @@ namespace Terraria_Server
             return false;
         }
 
+		/// <summary>
+		/// Method used to spawn Skeletron
+		/// </summary>
         public static void SpawnSkeletron()
         {
             bool flag = true;
@@ -6241,6 +6364,10 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Updates specified NPC based on any changes, including environment
+		/// </summary>
+		/// <param name="i">Main.npcs[] index of NPC to update</param>
         public static void UpdateNPC(int i)
         {
             NPC npc = Main.npcs[i];
@@ -6452,6 +6579,11 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Getting alpha value for display.  May be removed.
+		/// </summary>
+		/// <param name="newColor">color to alpha</param>
+		/// <returns>calculated alpha'd color</returns>
         public Color GetAlpha(Color newColor)
         {
             int r = (int)newColor.R - this.alpha;
@@ -6516,6 +6648,10 @@ namespace Terraria_Server
             return new Color(num, num2, num3, num4);
         }
 
+		/// <summary>
+		/// Gets chat information based off of environment
+		/// </summary>
+		/// <returns>String to display in chat bubble</returns>
         public String GetChat()
         {
             bool flag = false;
@@ -7093,6 +7229,10 @@ namespace Terraria_Server
             return result;
         }
 
+		/// <summary>
+		/// Clones this NPC
+		/// </summary>
+		/// <returns>Cloned NPC object</returns>
         public override object Clone()
         {
             NPC cloned = (NPC)base.MemberwiseClone();
