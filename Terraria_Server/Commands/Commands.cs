@@ -11,13 +11,14 @@ using Terraria_Server.Logging;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Definitions;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Commands
 {
     public class Commands
     {
         /// <summary>
-        /// Closes the Server & It's Connections.
+        /// Closes the Server & Its Connections.
         /// </summary>
         /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
@@ -735,7 +736,7 @@ namespace Terraria_Server.Commands
         {
             if (sender is Player)
             {
-                Player player = ((Player)sender);             
+                Player player = ((Player)sender);
 
                 // /tp <player> <toplayer>
                 if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
@@ -967,7 +968,7 @@ namespace Terraria_Server.Commands
             
                 if (player.Name == null)
                 {
-                    sender.sendMessage ("kick: Error, player has null name.");
+                    sender.sendMessage("kick: Error, player has null name.");
                     return;
                 }
             
@@ -1140,5 +1141,203 @@ namespace Terraria_Server.Commands
 			if (! something)
 				throw new CommandError ("");
 		}
+
+        /// <summary>
+        /// Lists currently enabled plugins.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public static void ListPlugins(Server server, ISender sender, ArgumentList args)
+        {
+                if (Program.server.PluginManager.PluginList.Count > 0)
+                {
+                    String plugins = "";
+
+                    foreach (Plugin.Plugin plugin in Program.server.PluginManager.PluginList.Values)
+                    {
+                        if (!plugin.Enabled || plugin.Name.Trim().Length > 0)
+                        {
+                            plugins += ", " + plugin.Name.Trim();
+                        }
+                    }
+                    if (plugins.StartsWith(","))
+                    {
+                        plugins = plugins.Remove(0, 1).Trim(); //Remove the ', ' from the start and trim the ends
+                    }
+                    sender.sendMessage("Loaded Plugins: " + plugins + ".");
+                }
+                else
+                {
+                    sender.sendMessage("There are no loaded plugins.");
+                }
+        }
+
+        /// <summary>
+        /// Enable/disable and get details about specific plugins.
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
+        public static void ManagePlugins(Server server, ISender sender, ArgumentList args)
+        {
+            /*
+             * Commands:
+             *      list    - shows all plugins
+             *      info    - shows a plugin's author & description etc
+             *      disable - disables a plugin
+             *      enable  - enables a plugin
+             */
+            if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
+            {
+                String command = args[0].Trim();
+                args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
+                switch (command)
+                {
+                    case "list":
+                        {
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                String plugins = "";
+
+                                foreach (Plugin.Plugin plugin in Program.server.PluginManager.PluginList.Values)
+                                {
+                                    if (plugin.Name.Trim().Length > 0)
+                                    {
+                                        plugins += ", " + plugin.Name.Trim() + ((!plugin.Enabled) ? "[DISABLED] " : " ");
+                                    }
+                                }
+                                if (plugins.StartsWith(","))
+                                {
+                                    plugins = plugins.Remove(0, 1).Trim(); //Remove the ', ' from the start and trim the ends
+                                }
+                                sender.sendMessage("Plugins: " + plugins + ".");
+                            }
+                            else
+                            {
+                                sender.sendMessage("There are no installed plugins.");
+                            }
+                            break;
+                        }
+                    case "info":
+                        {
+                            if (!(args.Count > 0 && args[1] != null && args[0].Trim().Length > 0))
+                            {
+                                sender.sendMessage("Please review your argument count.");
+                            }
+
+                            String pluginName = string.Join(" ", args);
+
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                if (fplugin != null)
+                                {
+                                    sender.sendMessage("Plugin Name: " + fplugin.Name);
+                                    sender.sendMessage("Plugin Author: " + fplugin.Author);
+                                    sender.sendMessage("Plugin Description: " + fplugin.Description);
+                                    sender.sendMessage("Plugin Enabled: " + fplugin.Enabled.ToString());
+                                }
+                                else
+                                {
+                                    sender.sendMessage("The plugin \"" + args[1] + "\" was not found.");
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("There are no plugins loaded.");
+                            }
+                            break;
+                        }
+                    case "disable":
+                        {
+                            if (!(args.Count > 0 && args[1] != null && args[1].Trim().Length > 0))
+                            {
+                                sender.sendMessage("Please review your argument count.");
+                            }
+
+                            String pluginName = string.Join(" ", args);
+
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                if (fplugin != null)
+                                {
+                                    if (fplugin.Enabled)
+                                    {
+                                        if (Program.server.PluginManager.DisablePlugin(fplugin.Name))
+                                        {
+                                            sender.sendMessage(pluginName + " was disabled!");
+                                        }
+                                        else
+                                        {
+                                            sender.sendMessage("There was an issue disabling plugin \"" + pluginName + "\".");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sender.sendMessage("The plugin \"" + pluginName + "\" is already disabled.");
+                                    }
+                                }
+                                else
+                                {
+                                    sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("There are no plugins loaded.");
+                            }
+                            break;
+                        }
+                    case "enable":
+                        {
+                            if (!(args.Count > 0 && args[1] != null && args[0].Trim().Length > 0))
+                            {
+                                sender.sendMessage("Please review your argument count.");
+                            }
+
+                            String pluginName = string.Join(" ", args);
+
+                            if (Program.server.PluginManager.PluginList.Count > 0)
+                            {
+                                Plugin.Plugin fplugin = Program.server.PluginManager.getPlugin(pluginName);
+                                if (fplugin != null)
+                                {
+                                    if (!fplugin.Enabled)
+                                    {
+                                        if (Program.server.PluginManager.EnablePlugin(fplugin.Name))
+                                        {
+                                            sender.sendMessage(args[1] + " was enabled!");
+                                        }
+                                        else
+                                        {
+                                            sender.sendMessage("There was an issue enabling plugin \"" + pluginName + "\".");
+                                        }
+                                    }
+                                    else
+                                    {
+                                        sender.sendMessage("The plugin \"" + pluginName + "\" is already enabled.");
+                                    }
+                                }
+                                else
+                                {
+                                    sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
+                                }
+                            }
+                            else
+                            {
+                                sender.sendMessage("There are no plugins loaded.");
+                            }
+                            break;
+                        }
+                    default:
+                        {
+                            sender.sendMessage("Please review your argument count");
+                            break;
+                        }
+                }
+            }
+        }
     }
 }
