@@ -336,7 +336,7 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Parses player commands
         /// </summary>
-        /// <param name="sender">Sending player</param>
+        /// <param name="player">Sending player</param>
         /// <param name="line">Command to parse</param>
         public void ParsePlayerCommand (Player player, string line)
         {
