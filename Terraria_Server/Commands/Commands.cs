@@ -715,7 +715,7 @@ namespace Terraria_Server.Commands
         }
 
         /// <summary>
-        /// Teleports specified player to Sending player's location.
+        /// Teleports specified player to sending player's location.
         /// </summary>
         /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
