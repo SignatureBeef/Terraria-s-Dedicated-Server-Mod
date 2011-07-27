@@ -11,8 +11,6 @@ namespace Terraria_Server
     {
         public const int POTION_DELAY = 720;
 
-        public bool Accessory;
-        public int Alpha;
         public ProjectileType Ammo;
         public bool AutoReuse;
         public int Axe;
@@ -22,7 +20,6 @@ namespace Terraria_Server
         public int BuffType;
         public bool Buy;
         public bool Channel;
-        public Color Color;
         public bool Consumable;
         public int CreateTile;
         public int CreateWall;
@@ -40,12 +37,10 @@ namespace Terraria_Server
         public int LifeRegen;
         public int Mana;
         public int ManaRegen;
-        public bool Material;
         public int MaxStack;
         public bool Melee;
         public int NoGrabDelay;
         public bool NoMelee;
-        public bool NoUseGraphic;
         public bool NoWet;
         public int Owner = 255;
         public int OwnIgnore = -1;
@@ -64,21 +59,17 @@ namespace Terraria_Server
         public String ToolTip;
         public ProjectileType UseAmmo;
         public int UseAnimation;
-        public int UseSound;
         public int UseStyle;
         public int UseTime;
         public bool UseTurn;
         public int Value;
-        public bool Vanity;
         public Vector2 Velocity;
         public bool Wet;
         public byte WetCount;
-        public bool WornArmor;
 
         public Item()
         {
             BodySlot = -1;
-            Color = default(Color);
             CreateTile = -1;
             CreateWall = -1;
             Damage = -1;
