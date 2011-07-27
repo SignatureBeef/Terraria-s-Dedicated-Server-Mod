@@ -40,7 +40,12 @@ namespace Terraria_Server.Messages
             }
             else if (type == (int)ProjectileType.FEATHER_HARPY)
             {
-                Netplay.slots[whoAmI].Kick ("Harpy feather hack detected.");
+                Netplay.slots[whoAmI].Kick("Harpy feather hack detected.");
+                return;
+            }
+            else if (type == (int)ProjectileType.HARPOON)
+            {
+                Netplay.slots[whoAmI].Kick("Harpoon hack detected.");
                 return;
             }
 
