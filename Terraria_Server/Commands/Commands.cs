@@ -1043,9 +1043,12 @@ namespace Terraria_Server.Commands
 		public static void Purge (Server server, ISender sender, ArgumentList args)
 		{
 			var all = args.TryPop ("all");
+			var something = false;
 			
 			if (all || args.TryPop ("proj") || args.TryPop ("projectiles"))
 			{
+				something = true;
+				
 				ProgramLog.Admin.Log ("Purging all projectiles.");
 				
 				var msg = NetMessage.PrepareThreadInstance ();
@@ -1068,6 +1071,8 @@ namespace Terraria_Server.Commands
 			
 			if (all || args.TryPop ("npc") || args.TryPop ("npcs"))
 			{
+				something = true;
+				
 				ProgramLog.Admin.Log ("Purging all NPCs.");
 				
 				var msg = NetMessage.PrepareThreadInstance ();
@@ -1095,6 +1100,8 @@ namespace Terraria_Server.Commands
 			
 			if (all || args.TryPop ("item") || args.TryPop ("items"))
 			{
+				something = true;
+				
 				ProgramLog.Admin.Log ("Purging all items.");
 				
 				var msg = NetMessage.PrepareThreadInstance ();
@@ -1118,7 +1125,8 @@ namespace Terraria_Server.Commands
 				}
 			}
 			
-			throw new CommandError ("");
+			if (! something)
+				throw new CommandError ("");
 		}
     }
 }
