@@ -49,6 +49,7 @@ namespace Terraria_Server
 				var now = new Entry { realTime = timer.Elapsed, cpuTime = process.TotalProcessorTime };
 				
 				LoadLastSecond = (now.cpuTime - last.cpuTime).TotalMilliseconds * 100.0 / (now.realTime - last.realTime).TotalMilliseconds;
+				last = now;
 				
 				if (loads.Count == 60)
 				{
