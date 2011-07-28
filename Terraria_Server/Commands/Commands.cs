@@ -796,9 +796,9 @@ namespace Terraria_Server.Commands
         {
             if (args.Count > 1)
             {
-                String Password = args[0];
+                String Password = args[args.Count - 1];
                 String player = string.Join(" ", args);
-                player = player.Remove(0, player.IndexOf(Password) + Password.Length).Trim().ToLower();
+				player = player.Remove(player.IndexOf(Password), Password.Length).Trim().ToLower();
 
                 server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
                 server.OpList.addException(player + ":" + Password, true, player.Length + 1);
