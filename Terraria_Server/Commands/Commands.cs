@@ -649,7 +649,7 @@ namespace Terraria_Server.Commands
 				Player player = ((Player)sender);
                 if (args.Count >= 3)
                 {
-                    player = Program.server.GetPlayerByName(args[1]);
+                    player = Program.server.GetPlayerByName(args[2]);
                     if (null == player)
                     {
                         sender.sendMessage("Player not found.", 255, 238f, 130f, 238f);
