@@ -646,7 +646,11 @@ namespace Terraria_Server.Commands
 			// /spawnnpc <amount> <name:id>
 			try
 			{
-				Player player = ((Player)sender);
+				Player player = null;
+				if (sender is Player)
+				{
+				player = ((Player)sender);
+				}
                 if (args.Count >= 3)
                 {
                     player = Program.server.GetPlayerByName(args[2]);
