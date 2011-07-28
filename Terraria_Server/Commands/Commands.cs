@@ -801,7 +801,7 @@ namespace Terraria_Server.Commands
                 player = player.Remove(0, player.IndexOf(Password) + Password.Length).Trim().ToLower();
 
                 server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
-                server.OpList.addException(player + ":" + Password, true, player.Length);
+                server.OpList.addException(player + ":" + Password, true, player.Length + 1);
 
 
                 if (!server.OpList.Save())
