@@ -678,20 +678,20 @@ namespace Terraria_Server
 			public SealedBinaryWriter (Stream stream) : base(stream, Encoding.ASCII) {}
 		}
 
-		private void Begin ()
+		public void Begin ()
 		{
 			lenAt = (int) sink.Position;
 			sink.Position += 4;
 		}
 
-		private void Begin (Packet id)
+		public void Begin (Packet id)
 		{
 			lenAt = (int) sink.Position;
 			sink.Position += 4;
 			sink.WriteByte ((byte) id);
 		}
 		
-		private void End ()
+		public void End ()
 		{
 			var pos = sink.Position;
 			sink.Position = lenAt;
@@ -699,52 +699,52 @@ namespace Terraria_Server
 			sink.Position = pos;
 		}
 		
-		private void Header (Packet id, int length)
+		public void Header (Packet id, int length)
 		{
 			bin.Write (length + 1);
 			sink.WriteByte ((byte) id);
 		}
 		
-		private void Byte (byte data)
+		public void Byte (byte data)
 		{
 			sink.WriteByte (data);
 		}
 
-		private void Byte (int data)
+		public void Byte (int data)
 		{
 			sink.WriteByte ((byte) data);
 		}
 
-		private void Byte (bool data)
+		public void Byte (bool data)
 		{
 			sink.WriteByte ((byte) (data ? 1 : 0));
 		}
 		
-		private void Short (short data)
+		public void Short (short data)
 		{
 			//sink.Write (BitConverter.GetBytes(data), 0, 2);
 			bin.Write (data);
 		}
 
-		private void Short (int data)
+		public void Short (int data)
 		{
 			Short ((short) data);
 		}
 
-		private void Int (int data)
+		public void Int (int data)
 		{
 			//sink.Write (BitConverter.GetBytes(data), 0, 4);
 			bin.Write (data);
 		}
 		
-		private void Int (double data)
+		public void Int (double data)
 		{
 			Int ((int) data);
 		}
 
 #if UNSAFE
 #warning Compiling with unsafe NetMessage.Float
-		private unsafe void Float (float data)
+		public unsafe void Float (float data)
 		{
 			var bytes = (byte*) &data;
 			sink.WriteByte (bytes[0]);
@@ -753,13 +753,13 @@ namespace Terraria_Server
 			sink.WriteByte (bytes[3]);
 		}
 #else
-		private void Float (float data)
+		public void Float (float data)
 		{
 			sink.Write (BitConverter.GetBytes(data), 0, 4);
 		}
 #endif
 		
-		private void String (string data)
+		public void String (string data)
 		{
 			foreach (char c in data)
 			{

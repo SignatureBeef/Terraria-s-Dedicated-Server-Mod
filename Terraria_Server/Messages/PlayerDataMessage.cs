@@ -5,6 +5,7 @@ using System.Text;
 using Terraria_Server.Misc;
 using Terraria_Server;
 using Terraria_Server.Events;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
@@ -78,6 +79,15 @@ namespace Terraria_Server.Messages
 			if (player.Name.Length > 20)
 			{
 				slot.Kick ("Invalid name: longer than 20 characters.");
+				return;
+			}
+
+			string address = slot.remoteAddress.Split(':')[0];
+			
+			if (Program.server.BanList.containsException (address))
+			{
+				ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", newName);
+				slot.Kick ("You are banned from this server.");
 				return;
 			}
 

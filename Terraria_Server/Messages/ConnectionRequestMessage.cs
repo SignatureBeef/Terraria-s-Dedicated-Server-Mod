@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using Terraria_Server.Events;
-
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
@@ -26,12 +26,12 @@ namespace Terraria_Server.Messages
             }
 
             String clientName = slot.remoteAddress.Split(':')[0];
-
-            if (Program.server.BanList.containsException(clientName))
-            {
-                slot.Kick ("You are banned from this Server.");
-                return;
-            }
+//
+//            if (Program.server.BanList.containsException(clientName))
+//            {
+//                slot.Kick ("You are banned from this Server.");
+//                return;
+//            }
 
             if (Program.properties.UseWhiteList && !Program.server.WhiteList.containsException(clientName))
             {
@@ -44,7 +44,9 @@ namespace Terraria_Server.Messages
                 String version = Encoding.ASCII.GetString(readBuffer, start + 1, length - 1);
                 if (!(version == "Terraria" + Statics.CURRENT_TERRARIA_RELEASE))
                 {
-                    slot.Kick ("You are not using the same version as this Server.");
+                    if (version.Length > 30) version = version.Substring (0, 30);
+                    ProgramLog.Debug.Log ("Client version string: {0}", version);
+                    slot.Kick ("You are not using the same Terraria version as this server.");
                     return;
                 }
 

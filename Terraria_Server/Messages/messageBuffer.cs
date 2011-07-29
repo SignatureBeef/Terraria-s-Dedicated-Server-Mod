@@ -99,12 +99,13 @@ namespace Terraria_Server.Messages
 					if (slot.state < SlotState.PLAYING && bufferData > 12 && bufferData != 16 && bufferData != 42 && bufferData != 50 && bufferData != 25)
 					{
 						ProgramLog.Debug.Log ("{0}: sent message {1} in state {2}.", slot.remoteAddress, (bufferData > 0 && bufferData <= 51) ? (object)(Packet)bufferData : bufferData, slot.state);
-						slot.Kick ("Invalid operation at this state.");
+						if ((slot.state & SlotState.DISCONNECTING) == 0)
+							slot.Kick ("Invalid operation at this state.");
 						return;
 					}
 				}
 	
-				if (bufferData > 0 && bufferData < messageArray.Length)
+				if ((slot.state & SlotState.DISCONNECTING) == 0 && bufferData > 0 && bufferData < messageArray.Length)
 				{
 					IMessage message = messageArray[bufferData];
 					if (message != null)

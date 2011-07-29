@@ -3,6 +3,7 @@ using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Definitions;
 using Terraria_Server.Collections;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
@@ -40,12 +41,14 @@ namespace Terraria_Server.Messages
             }
             else if (type == (int)ProjectileType.FEATHER_HARPY)
             {
-                Netplay.slots[whoAmI].Kick("Harpy feather hack detected.");
+                Netplay.slots[whoAmI].Kick("Harpy feather cheat detected.");
                 return;
             }
             else if (type == (int)ProjectileType.HARPOON)
             {
-                Netplay.slots[whoAmI].Kick("Harpoon hack detected.");
+                if (damage == 99)
+                    ProgramLog.Debug.Log ("{0} sent a HARPOON projectile with damage 99.", Main.players[whoAmI].Name);
+                //Netplay.slots[whoAmI].Kick("Harpoon hack detected.");
                 return;
             }
 
