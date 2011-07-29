@@ -493,7 +493,7 @@ namespace Terraria_Server.Commands
 								args.Add (b.ToString());
 							b.Length = 0;
 						}
-						else if (c != '\\' || l == '\\')
+						else if ((c != '\\' && c != ' ') || l == '\\')
 						{
 							b.Append (c);
 							c = '\0';
