@@ -10,7 +10,7 @@ namespace Terraria_Server.Logging
 	public static class ProgramLog
 	{
 		static readonly Queue<LogEntry> entries = new Queue<LogEntry> (1024);
-		static Thread dispatchThread = new Thread (LogDispatchThread);
+		static ProgramThread dispatchThread = new ProgramThread ("LogD", LogDispatchThread);
 		static ProducerConsumerSignal logSignal = new ProducerConsumerSignal (false);
 		static LogTarget console = new StandardOutputTarget ();
 		static LogTarget logFile = null;
@@ -20,7 +20,6 @@ namespace Terraria_Server.Logging
 		static ProgramLog ()
 		{
 			dispatchThread.IsBackground = false;
-			dispatchThread.Name = "LogD";
 			dispatchThread.Start ();
 			
 			lock (logTargets)
@@ -212,10 +211,10 @@ namespace Terraria_Server.Logging
 				var thread = "?";
 				if (entry.thread != null)
 				{
-					if (entry.thread.Name != null)
-						thread = entry.thread.Name;
-					else if (entry.thread.IsThreadPoolThread)
+					if (entry.thread.IsThreadPoolThread)
 						thread = "Pool";
+					else if (entry.thread.Name != null)
+						thread = entry.thread.Name;
 				}
 				
 				if (entry.thread != null && entry.time != default(DateTime))

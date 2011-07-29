@@ -743,14 +743,21 @@ namespace Terraria_Server
 		}
 
 #if UNSAFE
-#warning Compiling with unsafe NetMessage.Float
-		public unsafe void Float (float data)
+		public unsafe void FloatUnsafe (float data)
 		{
 			var bytes = (byte*) &data;
 			sink.WriteByte (bytes[0]);
 			sink.WriteByte (bytes[1]);
 			sink.WriteByte (bytes[2]);
 			sink.WriteByte (bytes[3]);
+		}
+		
+		public void Float (float data)
+		{
+			if (BitConverter.IsLittleEndian)
+				FloatUnsafe (data);
+			else
+				sink.Write (BitConverter.GetBytes(data), 0, 4);
 		}
 #else
 		public void Float (float data)

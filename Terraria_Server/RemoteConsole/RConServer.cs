@@ -15,7 +15,7 @@ namespace Terraria_Server.RemoteConsole
 	public static class RConServer
 	{
 		static volatile bool exit = false;
-		static Thread thread;
+		static ProgramThread thread;
 		static List<RConClient> clients = new List<RConClient> ();
 		internal static Queue<RConClient> deadClients = new Queue<RConClient> ();
 		static TcpListener listener;
@@ -66,7 +66,7 @@ namespace Terraria_Server.RemoteConsole
 				return;
 			}
 			
-			thread = new Thread (RConLoop);
+			thread = new ProgramThread ("RCon", RConLoop);
 			thread.Start ();
 		}
 		
@@ -87,8 +87,6 @@ namespace Terraria_Server.RemoteConsole
 		
 		public static void RConLoop ()
 		{
-			Thread.CurrentThread.Name = "RCon";
-			
 			ProgramLog.Admin.Log ("Remote console server started on {0}.", Program.properties.RConBindAddress);
 			
 			var socketToObject = new Dictionary<Socket, RConClient> ();

@@ -7,15 +7,13 @@ namespace Terraria_Server
 {
 	public static class LoadMonitor
 	{
-		static Thread monitorThread;
+		static ProgramThread monitorThread;
 		
 		public static void Start ()
 		{
 			if (monitorThread != null) return;
 			
-			monitorThread = new Thread (MonitorLoop);
-			monitorThread.IsBackground = true;
-			monitorThread.Name = "LMon";
+			monitorThread = new ProgramThread ("LMon", MonitorLoop);
 			monitorThread.Start ();
 			
 			LoadLastMinute = -1;

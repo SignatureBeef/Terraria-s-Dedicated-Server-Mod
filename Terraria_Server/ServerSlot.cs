@@ -54,7 +54,7 @@ namespace Terraria_Server
 		public byte[] readBuffer;
 		
 		private volatile Queue<byte[]> writeQueue;
-		private Thread         writeThread;
+		private ProgramThread  writeThread;
 		private AutoResetEvent writeSignal;
 		
 		public bool Connected
@@ -218,8 +218,7 @@ namespace Terraria_Server
 			{
 				if (writeThread == null)
 				{
-					writeThread = new Thread (this.WriteThread);
-					writeThread.IsBackground = true;
+					writeThread = new ProgramThread (string.Format ("W{0:000}", whoAmI), this.WriteThread);
 					writeThread.Start ();
 				}
 
@@ -247,8 +246,7 @@ namespace Terraria_Server
 			{
 				if (writeThread == null)
 				{
-					writeThread = new Thread (this.WriteThread);
-					writeThread.IsBackground = true;
+					writeThread = new ProgramThread (string.Format ("W{0:000}", whoAmI), this.WriteThread);
 					writeThread.Start ();
 				}
 
@@ -260,7 +258,7 @@ namespace Terraria_Server
 		const int WRITE_THREAD_BATCH_SIZE = 32;
 		internal void WriteThread ()
 		{
-			Thread.CurrentThread.Name = string.Format ("W{0:000}", whoAmI);
+			//Thread.CurrentThread.Name = string.Format ("W{0:000}", whoAmI);
 			
 			byte[][] list = new byte[WRITE_THREAD_BATCH_SIZE][];
 			while (true)

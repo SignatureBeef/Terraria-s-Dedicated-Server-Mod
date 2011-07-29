@@ -999,7 +999,7 @@ namespace Terraria_Server.Commands
 			ProgramLog.Log("Starting the Server");
 			server.Initialize();
 			WorldIO.loadWorld();
-			Program.updateThread = new Thread(Program.UpdateLoop);
+			Program.updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 			server.StartServer();
 			Statics.keepRunning = false;
 		}

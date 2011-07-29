@@ -92,15 +92,14 @@ namespace Terraria_Server.Logging
 	
 	public class InteractiveLogTarget : LogTarget
 	{
-		protected Thread thread;
+		protected ProgramThread thread;
 		protected TextWriter writer;
 		protected bool passExceptions = false;
 		
 		public InteractiveLogTarget (string name, TextWriter writer)
 		{
 			this.writer = writer;
-			thread = new Thread (OutputThread);
-			thread.Name = name;
+			thread = new ProgramThread (name, OutputThread);
 			thread.Start ();
 		}
 		
@@ -228,21 +227,19 @@ namespace Terraria_Server.Logging
 	
 	public class FileOutputTarget : LogTarget
 	{
-		Thread thread;
+		ProgramThread thread;
 		StreamWriter file;
 		
 		public FileOutputTarget (string path)
 		{
 			file = new StreamWriter (path, true);
-			thread = new Thread (OutputThread);
+			thread = new ProgramThread ("LogF", OutputThread);
+			thread.IsBackground = false;
 			thread.Start ();
 		}
 		
 		void OutputThread ()
 		{
-			Thread.CurrentThread.Name = "LogF";
-			Thread.CurrentThread.IsBackground = false;
-			
 			try
 			{
 				var list = new OutputEntry [ProgramLog.LOG_THREAD_BATCH_SIZE];

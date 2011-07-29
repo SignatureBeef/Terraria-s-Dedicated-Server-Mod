@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNSAFE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -48,6 +48,7 @@
     <Externalconsole>true</Externalconsole>
     <DocumentationFile>bin\Debug\Terraria_Server.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -62,6 +63,7 @@
     <BaseAddress>4194304</BaseAddress>
     <DocumentationFile>bin\Release\Terraria_Server.XML</DocumentationFile>
     <NoWarn>1591</NoWarn>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>Terraria_Server.Program</StartupObject>
@@ -253,6 +255,7 @@
     <Compile Include="RemoteConsole\RConClient.cs" />
     <Compile Include="RemoteConsole\RConSender.cs" />
     <Compile Include="Logging\LogChannel.cs" />
+    <Compile Include="Server\ProgramThread.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -16,7 +16,7 @@ namespace Terraria_Server
 	{
 		public const String VERSION_NUMBER = "v1.0.5";
 
-		public static Thread updateThread = null;
+		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
 		public static TConsole tConsole = null;
@@ -255,7 +255,7 @@ namespace Terraria_Server
 
                 WorldIO.loadWorld();
 
-				updateThread = new Thread(Program.UpdateLoop);
+				updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 
 				ProgramLog.Log ("Starting the Server");
 				server.StartServer();
@@ -590,8 +590,6 @@ namespace Terraria_Server
 		
 		public static void UpdateLoop()
 		{
-			Thread.CurrentThread.Name = "Updt";
-			
 			try
 			{
 				if (server == null)

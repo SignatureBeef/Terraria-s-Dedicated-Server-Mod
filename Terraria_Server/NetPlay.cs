@@ -417,15 +417,13 @@ namespace Terraria_Server
 				throw new Exception ("Unexpected exception in socket handling code", e);
 		}
 		
-		private static Thread serverThread;
+		private static ProgramThread serverThread;
 		
 		public static void StartServer()
 		{
 			if (serverThread == null)
 			{
-				serverThread = new Thread (Netplay.ServerLoopLoop);
-				serverThread.Name = "Serv";
-				serverThread.IsBackground = true;
+				serverThread = new ProgramThread ("Serv", Netplay.ServerLoopLoop);
 				serverThread.Start();
 			}
 			disconnect = false;
