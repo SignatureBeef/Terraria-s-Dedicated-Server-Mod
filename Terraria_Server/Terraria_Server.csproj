@@ -256,6 +256,8 @@
     <Compile Include="RemoteConsole\RConSender.cs" />
     <Compile Include="Logging\LogChannel.cs" />
     <Compile Include="Server\ProgramThread.cs" />
+    <Compile Include="Networking\Connection.cs" />
+    <Compile Include="Networking\ClientConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -303,4 +305,7 @@
   </Target>
   -->
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Networking\" />
+  </ItemGroup>
 </Project>

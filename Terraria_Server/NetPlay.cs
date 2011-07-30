@@ -108,11 +108,13 @@ namespace Terraria_Server
 			var clientList = new List<Socket> ();
 			var serverSock = Netplay.tcpListener.Server;
 			
+			Netplay.anyClients = true;
+			
 			try // TODO: clean up sometime, error handling too spread out
 			{
 				while (!Netplay.disconnect)
 				{
-					Netplay.anyClients = clientList.Count > 0;
+					Netplay.anyClients = true; //clientList.Count > 0;
 					
 					readList.Clear ();
 					readList.Add (serverSock);
@@ -165,9 +167,9 @@ namespace Terraria_Server
 								var id = AcceptClient (client);
 								if (id >= 0)
 								{
-									clientList.Add (client);
+									//clientList.Add (client);
 									Netplay.anyClients = true;
-									socketToId[client] = id;
+									//socketToId[client] = id;
 									
 									if (clientList.Count > Main.maxNetplayers)
 									{
@@ -309,8 +311,10 @@ namespace Terraria_Server
 			var slot = slots[id];
 			slot.remoteAddress = remoteAddress;
 			Main.players[id].IPAddress = remoteAddress;
+			slot.conn = new Networking.ClientConnection (client);
+			slot.conn.SlotIndex = id;
 			slot.state = SlotState.CONNECTED;
-			slot.socket = client;
+			//slot.socket = client;
 			if (slot.readBuffer == null) slot.readBuffer = new byte[1024];
 			if (NetMessage.buffer[id].readBuffer == null) NetMessage.buffer[id].readBuffer = new byte [MessageBuffer.BUFFER_MAX];
 			ProgramLog.Debug.Log ("Slot {1} assigned to {0}.", remoteAddress, id);

@@ -76,7 +76,21 @@ namespace Terraria_Server
         public static bool[] tileFrameImportant = new bool[86];
 
 		[ThreadStatic]
-		public static Random rand;
+		static Random threadRand;
+		
+		public static Random rand
+		{
+			get
+			{
+				if (threadRand == null) threadRand = new Random ((int)DateTime.Now.Ticks);
+				return threadRand;
+			}
+			
+			set
+			{
+			}
+		}
+		
 		public static bool[] wallHouse = new bool[14];
         public static TileCollection tile;
 		public static Item[] item = new Item[201];

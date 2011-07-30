@@ -110,7 +110,7 @@ namespace Terraria_Server.Messages
 					IMessage message = messageArray[bufferData];
 					if (message != null)
 					{
-						//Console.WriteLine ("packet {0}, len {1}", (Packet)readBuffer[start], length);
+						//ProgramLog.Debug.Log ("packet {0}, len {1}", (Packet)readBuffer[start], length);
 						message.Process(start, length, num, whoAmI, readBuffer, bufferData);
 					}
 				}
@@ -118,8 +118,8 @@ namespace Terraria_Server.Messages
 			catch (Exception e)
 			{
 				string pkt = "invalid packet";
-				if (NetMessage.buffer[whoAmI].readBuffer.Length > start)
-					pkt = string.Format ("packet {0}", (Packet)NetMessage.buffer[whoAmI].readBuffer[start]);
+				if (readBuffer.Length > start)
+					pkt = string.Format ("packet {0}", (Packet)readBuffer[start]);
 
 				ProgramLog.Log (e, string.Format ("Exception handling {0} of length {1} from {2}@{3}",
 					pkt, length, Main.players[whoAmI].Name ?? "", slot.remoteAddress));

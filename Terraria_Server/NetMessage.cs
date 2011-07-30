@@ -287,25 +287,27 @@ namespace Terraria_Server
 						}
 				}
 					
-				var bytes = msg.Output;
+				//var bytes = msg.Output;
 				if (remoteClient == -1)
 				{
-					for (int num11 = 0; num11 < 256; num11++)
-					{
-						if (num11 != ignoreClient && Netplay.slots[num11].state >= SlotState.PLAYING && Netplay.slots[num11].Connected)
-						{
-							NetMessage.buffer[num11].spamCount++;
-							Netplay.slots[num11].Send (bytes);
-						}
-					}
+					msg.BroadcastExcept (ignoreClient);
+//					for (int num11 = 0; num11 < 256; num11++)
+//					{
+//						if (num11 != ignoreClient && Netplay.slots[num11].state >= SlotState.PLAYING && Netplay.slots[num11].Connected)
+//						{
+//							NetMessage.buffer[num11].spamCount++;
+//							Netplay.slots[num11].Send (bytes);
+//						}
+//					}
 					
 				}
 				else if (Netplay.slots[remoteClient].Connected)
 				{
-					NetMessage.buffer[remoteClient].spamCount++;
-					Netplay.slots[remoteClient].Send (bytes);
+					msg.Send (remoteClient);
+					//NetMessage.buffer[remoteClient].spamCount++;
+					//Netplay.slots[remoteClient].Send (bytes);
 				}
-				return bytes.Length;
+				return msg.Written;
 			}
 			catch (Exception e)
 			{
@@ -418,12 +420,20 @@ namespace Terraria_Server
 						//NetMessage.SendData(10, whoAmi, -1, "", 200, (float)num, (float)i, 0f);
 						msg.Clear ();
 						msg.SendTileRow (200, num, i);
+//						if (msg.Written >= 16384)
+//						{
+//							Netplay.slots[whoAmi].Send (msg.Output);
+//							msg.Clear ();
+//						}
 						Netplay.slots[whoAmi].Send (msg.Output); // tried sending as one big message, but it didn't work
 					}
 					
 					//Console.WriteLine ("SendSection: {0} bytes", ts.stream.Position);
 					//Netplay.slots[whoAmi].Send (ts.buffer, 0, (int)ts.stream.Position);
 				}
+				
+//				if (msg.Written > 0)
+//					Netplay.slots[whoAmi].Send (msg.Output); // tried sending as one big message, but it didn't work
 				
 			}
 			catch
@@ -433,6 +443,7 @@ namespace Terraria_Server
 		
 		public static void Broadcast (byte[] bytes)
 		{
+			//ProgramLog.Debug.Log ("Broadcast, {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected);
 			for (int k = 0; k < 255; k++)
 			{
 				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
@@ -445,6 +456,7 @@ namespace Terraria_Server
 		
 		public static void BroadcastExcept (byte[] bytes, int i)
 		{
+			//ProgramLog.Debug.Log ("BroadcastExcept({2}), {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected, i);
 			for (int k = 0; k < 255; k++)
 			{
 				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected && k != i)

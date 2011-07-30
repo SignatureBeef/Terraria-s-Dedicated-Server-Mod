@@ -42,8 +42,23 @@ namespace Terraria_Server.WorldMod
 		private static bool mergeRight = false;
 		public static bool stopDrops = false;
 		public static bool noLiquidCheck = false;
+		
 		[ThreadStatic]
-		public static Random genRand = new Random();
+		static Random threadRand;
+		
+		public static Random genRand
+		{
+			get
+			{
+				if (threadRand == null) threadRand = new Random ((int)DateTime.Now.Ticks);
+				return threadRand;
+			}
+			
+			set
+			{
+			}
+		}
+		
 		public static String statusText = "";
 		private static bool destroyObject = false;
 		public static int spawnDelay = 0;

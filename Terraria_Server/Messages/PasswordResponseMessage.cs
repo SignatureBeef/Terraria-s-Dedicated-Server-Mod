@@ -66,9 +66,10 @@ namespace Terraria_Server.Messages
 					NetMessage.SendData (4, -1, whoAmI, name, whoAmI); // broadcast player data now
 					
 					// replay packets from side buffer
-					var buf = NetMessage.buffer[whoAmI];
-					NetMessage.CheckBytes (whoAmI, buf.sideBuffer, ref buf.sideBufferBytes, ref buf.sideBufferMsgLen);
-					buf.ResetSideBuffer ();
+					slot.conn.ProcessSideBuffer ();
+					//var buf = NetMessage.buffer[whoAmI];
+					//NetMessage.CheckBytes (whoAmI, buf.sideBuffer, ref buf.sideBufferBytes, ref buf.sideBufferMsgLen);
+					//buf.ResetSideBuffer ();
 					
 					NetMessage.SendData (7, whoAmI); // continue with world data
 				}
