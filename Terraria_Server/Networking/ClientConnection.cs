@@ -75,6 +75,8 @@ namespace Terraria_Server.Networking
 			else
 				ProgramLog.Users.Log ("{0}: connection closed ({2}).", RemoteAddress, err);
 			
+			FreeSectionBuffer ();
+			
 			lock (All)
 			{
 				if (indexInAll == All.Count - 1)
@@ -91,6 +93,16 @@ namespace Terraria_Server.Networking
 		}
 		
 		NetMessage sectionBuffer;
+		
+		protected void FreeSectionBuffer ()
+		{
+			if (sectionBuffer != null)
+			{
+				var buf = sectionBuffer;
+				sectionBuffer = null;
+				FreeSectionBuffer (buf);
+			}
+		}
 		
 		protected override ArraySegment<byte> SerializeMessage (Message msg)
 		{
@@ -120,12 +132,7 @@ namespace Terraria_Server.Networking
 		
 		protected override void MessageSendCompleted ()
 		{
-			if (sectionBuffer != null)
-			{
-				var buf = sectionBuffer;
-				sectionBuffer = null;
-				ReleaseSectionBuffer (buf);
-			}
+			FreeSectionBuffer ();
 		}
 		
 		public void DecodeMessages (byte[] readBuffer, ref int totalData, ref int msgLen)
@@ -243,7 +250,7 @@ namespace Terraria_Server.Networking
 			return new NetMessage (272250);
 		}
 		
-		static void ReleaseSectionBuffer (NetMessage buf)
+		static void FreeSectionBuffer (NetMessage buf)
 		{
 			buf.Clear();
 			lock (sectionPool)

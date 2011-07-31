@@ -12,7 +12,12 @@ namespace Terraria_Server
 {
 	public partial class NetMessage
 	{
-		public static NetMessage PrepareThreadInstance (int size = 65535)
+		public static NetMessage PrepareThreadInstance () // binary compat
+		{
+			return PrepareThreadInstance (65535);
+		}
+		
+		public static NetMessage PrepareThreadInstance (int size)
 		{
 			if (threadInstance == null || threadInstance.buf.Length < size)
 			{
