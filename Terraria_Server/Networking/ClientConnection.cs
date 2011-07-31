@@ -40,6 +40,7 @@ namespace Terraria_Server.Networking
 		public ClientConnection (Socket socket) : base(socket)
 		{
 			//var buf = NetMessage.buffer[id];
+			//socket.SendBufferSize = 128000;
 			lock (All)
 			{
 				indexInAll = All.Count;
@@ -76,14 +77,16 @@ namespace Terraria_Server.Networking
 			
 			lock (All)
 			{
-				if (All.Count > 1)
+				if (indexInAll == All.Count - 1)
+				{
+					All.RemoveAt (All.Count - 1);
+				}
+				else
 				{
 					var other = All[All.Count - 1];
 					other.indexInAll = indexInAll;
 					All[indexInAll] = other;
 				}
-				
-				All.RemoveAt (All.Count - 1);
 			}
 		}
 		
@@ -106,7 +109,9 @@ namespace Terraria_Server.Networking
 					}
 					
 					sectionBuffer = buf;
-					ProgramLog.Debug.Log ("Sending section ({0}, {1}) of {2} bytes.", sX, sY, buf.Segment.Count);
+					ProgramLog.Debug.Log ("{0} @ {1}: Sending section ({2}, {3}) of {4} bytes.", RemoteAddress, assignedSlot, sX, sY, buf.Segment.Count);
+					//System.Threading.Thread.Sleep (100);
+					
 					return buf.Segment;
 				}
 			}
@@ -117,7 +122,9 @@ namespace Terraria_Server.Networking
 		{
 			if (sectionBuffer != null)
 			{
-				ReleaseSectionBuffer (sectionBuffer);
+				var buf = sectionBuffer;
+				sectionBuffer = null;
+				ReleaseSectionBuffer (buf);
 			}
 		}
 		

@@ -255,7 +255,7 @@ namespace Terraria_Server.Networking
 					lock (sendQueue)
 					{
 						sending = SendMore (argz);
-						if (! sending) sendPool.Put (argz);
+						if (! sending && argz.conn != null) sendPool.Put (argz);
 					}
 				}
 				//ProgramLog.Debug.Log ("} SendCompleted " + sending);
@@ -430,7 +430,7 @@ namespace Terraria_Server.Networking
 			public void Put (SocketAsyncEventArgsExt args)
 			{
 //				ProgramLog.Debug.Log ("Put");
-				if (args.conn == null) throw new InvalidOperationException ("SocketAsyncEventArgsExt freed twice.");
+				if (args.conn == null) ProgramLog.Error.Log ("SocketAsyncEventArgsExt freed twice.");
 				args.conn = null;
 				lock (this) Push ((T) args);
 			}
