@@ -12,11 +12,11 @@ namespace Terraria_Server
 {
 	public partial class NetMessage
 	{
-		public static NetMessage PrepareThreadInstance()
+		public static NetMessage PrepareThreadInstance (int size = 65535)
 		{
-			if (threadInstance == null)
+			if (threadInstance == null || threadInstance.buf.Length < size)
 			{
-				threadInstance = new NetMessage (65535);
+				threadInstance = new NetMessage (size);
 			}
 			else
 			{
@@ -33,6 +33,14 @@ namespace Terraria_Server
 				var copy = new byte [sink.Position];
 				Array.Copy (buf, copy, sink.Position);
 				return copy;
+			}
+		}
+		
+		public ArraySegment<byte> Segment
+		{
+			get
+			{
+				return new ArraySegment<byte> (buf, 0, (int)sink.Position);
 			}
 		}
 		
@@ -403,9 +411,16 @@ namespace Terraria_Server
 			float y = tileY - num;
 			NetMessage.SendData(20, whoAmi, -1, "", size, x, y, 0f);
 		}
-
+		
 		public static void SendSection(int whoAmi, int sectionX, int sectionY)
 		{
+			if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
+			{
+				Netplay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
+				Netplay.slots[whoAmi].conn.SendSection (sectionX, sectionY);
+			}
+			return;
+
 			try
 			{
 				var msg = NetMessage.PrepareThreadInstance();

@@ -1051,7 +1051,10 @@ namespace Terraria_Server.Commands
 
 					if (dinfo)
 					{
-						msg += string.Format(", recv:{0} side:{1}, k:{2}, s:{3}, r:{4}", NetMessage.buffer[i].totalData, NetMessage.buffer[i].sideBufferBytes, slot.conn.kicking, slot.conn.sending, slot.conn.receiving);
+						msg += string.Format(", {0}{1}{2}, tx:{3:0.0}K, rx:{4:0.0}K, q:{0}",
+							slot.conn.kicking ? "+" : "-", slot.conn.sending ? "+" : "-", slot.conn.receiving ? "+" : "-",
+							slot.conn.BytesSent / 1024.0, slot.conn.BytesReceived / 1024.0,
+							slot.conn.QueueLength);
 					}
 
 					sender.sendMessage(msg);

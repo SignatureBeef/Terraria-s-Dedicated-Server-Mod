@@ -1,5 +1,6 @@
 using System;
 using System.Net.Sockets;
+using System.Collections.Generic;
 
 using Terraria_Server.Logging;
 
@@ -9,6 +10,7 @@ namespace Terraria_Server.Networking
 	{
 		int assignedSlot = -1;
 		int messageLength = 0;
+		int indexInAll = -1;
 		
 		byte[] sideBuffer;
 		int    sideBytes;
@@ -28,10 +30,21 @@ namespace Terraria_Server.Networking
 			internal set { assignedSlot = value; }
 		}
 		
+		public static List<ClientConnection> All { get; private set; }
+		
+		static ClientConnection ()
+		{
+			All = new List<ClientConnection> ();
+		}
+		
 		public ClientConnection (Socket socket) : base(socket)
 		{
 			//var buf = NetMessage.buffer[id];
-			
+			lock (All)
+			{
+				indexInAll = All.Count;
+				All.Add (this);
+			}
 			StartReceiving (new byte [4192]);
 		}
 		
@@ -60,6 +73,52 @@ namespace Terraria_Server.Networking
 			}
 			else
 				ProgramLog.Users.Log ("{0}: connection closed ({2}).", RemoteAddress, err);
+			
+			lock (All)
+			{
+				if (All.Count > 1)
+				{
+					var other = All[All.Count - 1];
+					other.indexInAll = indexInAll;
+					All[indexInAll] = other;
+				}
+				
+				All.RemoveAt (All.Count - 1);
+			}
+		}
+		
+		NetMessage sectionBuffer;
+		
+		protected override ArraySegment<byte> SerializeMessage (Message msg)
+		{
+			switch (msg.kind)
+			{
+				case 3:
+				{
+					// TODO: optimize further
+					var buf = TakeSectionBuffer ();
+					var sX = (msg.param >> 16) * 200;
+					var sY = (msg.param & 0xffff) * 150;
+					
+					for (int y = sY; y < sY + 150; y++)
+					{
+						buf.SendTileRow (200, sX, y);
+					}
+					
+					sectionBuffer = buf;
+					ProgramLog.Debug.Log ("Sending section ({0}, {1}) of {2} bytes.", sX, sY, buf.Segment.Count);
+					return buf.Segment;
+				}
+			}
+			return new ArraySegment<byte> ();
+		}
+		
+		protected override void MessageSendCompleted ()
+		{
+			if (sectionBuffer != null)
+			{
+				ReleaseSectionBuffer (sectionBuffer);
+			}
 		}
 		
 		public void DecodeMessages (byte[] readBuffer, ref int totalData, ref int msgLen)
@@ -154,6 +213,34 @@ namespace Terraria_Server.Networking
 
 				state = SlotState.KICK;
 			}
+		}
+		
+		public void SendSection (int x, int y)
+		{
+			Send (new Message { kind = 3, param = (x << 16) | (y & 0xffff) });
+		}
+		
+		static Stack<NetMessage> sectionPool = new Stack<NetMessage> ();
+		static int sectionPoolCount = 0;
+		
+		static NetMessage TakeSectionBuffer ()
+		{
+			lock (sectionPool)
+			{
+				if (sectionPool.Count > 0)
+					return sectionPool.Pop ();
+				sectionPoolCount += 1;
+			}
+			
+			ProgramLog.Debug.Log ("Section pool capacity: {0}", sectionPoolCount);
+			return new NetMessage (272250);
+		}
+		
+		static void ReleaseSectionBuffer (NetMessage buf)
+		{
+			buf.Clear();
+			lock (sectionPool)
+				sectionPool.Push (buf);
 		}
 	}
 }

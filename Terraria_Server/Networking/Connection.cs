@@ -9,16 +9,14 @@ namespace Terraria_Server.Networking
 {
 	public abstract class Connection
 	{
-		enum Kind
+		protected struct Message
 		{
-			NORMAL,
-			KICK
-		}
-		
-		struct Message
-		{
-			public Kind kind;
-			public byte[] bytes;
+			public int kind;
+			public int param;
+			public object content;
+			
+			public const int BYTES = 0;
+			public const int KICK = 1;
 		}
 		
 		protected class SocketAsyncEventArgsExt : SocketAsyncEventArgs
@@ -66,7 +64,20 @@ namespace Terraria_Server.Networking
 		internal volatile bool kicking = false;
 		internal volatile bool sending = false;
 		internal volatile bool receiving = false;
+		
+		public int QueueLength
+		{
+			get { return sendQueue.Count; }
+		}
+		
+//			lock (sectionUpdatesLock)
+//				if (sectionUpdates == null || sectionUpdates.GetLength(0) <= Main.maxTilesX/200 || sectionUpdates.GetLength(1) <= Main.maxTilesY/150)
+//				{
+//					sectionUpdates = new byte [Main.maxTilesX / 200 + 1, Main.maxTilesY / 150 + 1][];
+//				}
+//			
 
+		
 		public Connection (Socket sock)
 		{
 			socket = sock;
@@ -90,15 +101,22 @@ namespace Terraria_Server.Networking
 		
 		public EndPoint RemoteEndPoint { get; protected set; }
 		public string   RemoteAddress  { get; protected set; }
+		public int BytesSent     { get; private set; }
+		public int BytesReceived { get; private set; }
 		
 		public void Send (byte[] bytes)
+		{
+			Send (new Message { content = bytes });
+		}
+		
+		protected void Send (Message message)
 		{
 			//Logging.ProgramLog.Log ("Queue {0}.", bytes.Length);
 			lock (sendQueue)
 			{
 				if (kicking) return;
 				
-				sendQueue.Enqueue (new Message { bytes = bytes });
+				sendQueue.Enqueue (message);
 				
 				if (sending == false)
 				{
@@ -119,7 +137,7 @@ namespace Terraria_Server.Networking
 				kicking = true;
 
 				sendQueue.Clear ();
-				sendQueue.Enqueue (new Message { bytes = bytes, kind = Kind.KICK });
+				sendQueue.Enqueue (new Message { content = bytes, kind = Message.KICK });
 				
 				if (sending == false)
 				{
@@ -130,44 +148,98 @@ namespace Terraria_Server.Networking
 		
 		protected bool SendMore (SocketAsyncEventArgsExt args)
 		{
-			var queued = false;
-			
-			while (sendQueue.Count > 0 && !queued)
+			try
 			{
-				var msg = sendQueue.Dequeue();
-				var data = msg.bytes;
+				var queued = false;
 				
-				switch (msg.kind)
+				while (sendQueue.Count > 0 && !queued)
 				{
-					case Kind.NORMAL:
-						//Logging.ProgramLog.Log ("Send more {0}.", data.Length);
-						args.SetBuffer (data, 0, data.Length);
-						queued = socket.SendAsync (args);
-						break;
+					var msg = sendQueue.Dequeue();
 					
-					case Kind.KICK:
-						Logging.ProgramLog.Log ("Send KICK {0}.", data.Length);
-						sendPool.Put (args);
-						
-						var kickArgs = kickPool.Take (this);
-						kickArgs.SetBuffer (data, 0, data.Length);
-						if (! socket.SendAsync (kickArgs))
+					switch (msg.kind)
+					{
+						case Message.BYTES:
 						{
-							if (! socket.DisconnectAsync (kickArgs))
-							{
-								KickCompleted (kickArgs);
-							}
+							var data = (byte[]) msg.content;
+							args.SetBuffer (data, 0, data.Length);
+							BytesSent += data.Length;
+							queued = socket.SendAsync (args);
+							break;
 						}
-						queued = false;
-						break;
+						
+						default:
+						{
+							var data = SerializeMessage (msg);
+							args.SetBuffer (data.Array, data.Offset, data.Count);
+							BytesSent += data.Count;
+							try
+							{
+								queued = socket.SendAsync (args);
+							}
+							finally
+							{
+								if (! queued) MessageSendCompleted ();
+							}
+							break;
+						}
+						
+						case Message.KICK:
+						{
+							sendPool.Put (args);
+							
+							var kickArgs = kickPool.Take (this);
+							
+							var data = (byte[]) msg.content;
+							kickArgs.SetBuffer (data, 0, data.Length);
+							if (! socket.SendAsync (kickArgs))
+							{
+								if (! socket.DisconnectAsync (kickArgs))
+								{
+									KickCompleted (kickArgs);
+								}
+							}
+							queued = false;
+							break;
+						}
+					}
 				}
+						
+				return queued;
 			}
-					
-			return queued;
+			catch (SocketException e)
+			{
+				HandleError (e.SocketErrorCode);
+			}
+			catch (ObjectDisposedException e)
+			{
+				HandleError (SocketError.OperationAborted);
+			}
+			
+			return false;
+		}
+		
+		// a place where subclasses may cleanup after sending a custom message,
+		// for instance, return memory to a pool or release locks
+		protected virtual void MessageSendCompleted ()
+		{
+		}
+		
+		protected virtual ArraySegment<byte> SerializeMessage (Message msg)
+		{
+			return new ArraySegment<byte> ();
 		}
 		
 		protected void SendCompleted (SocketAsyncEventArgsExt argz)
 		{
+			try
+			{
+				MessageSendCompleted ();
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, "Exception in connection send callback");
+			}
+
 			try
 			{
 				//ProgramLog.Debug.Log ("SendCompleted {");
@@ -232,6 +304,7 @@ namespace Terraria_Server.Networking
 					while (! receiving)
 					{
 						recvBytes += bytes;
+						BytesReceived += bytes;
 						
 						ProcessRead ();
 						
@@ -298,7 +371,7 @@ namespace Terraria_Server.Networking
 		
 		protected void HandleError (SocketError err)
 		{
-			ProgramLog.Debug.Log ("HandleError {0}", err);
+			//ProgramLog.Debug.Log ("HandleError {0}", err);
 			if (error != SocketError.Success) return;
 			
 			error = err;

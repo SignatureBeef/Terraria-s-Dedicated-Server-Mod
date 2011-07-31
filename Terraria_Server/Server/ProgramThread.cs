@@ -38,7 +38,7 @@ namespace Terraria_Server
 			thread.Start ();
 		}
 		
-		private static bool have_prctl = true;
+		private static volatile bool have_prctl = true;
 		
 		[DllImport("libc.so.6")]
 		private static extern int prctl (int op, string str, int x, int y, int z);

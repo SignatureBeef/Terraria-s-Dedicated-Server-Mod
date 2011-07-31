@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
                 || num9 < 10
                 || num9 > Main.maxTilesY - 10);
             
-            int num10 = 1350;
+            int num10 = 2250;
             if (flag3)
             {
                 num10 *= 2;
@@ -34,6 +34,8 @@ namespace Terraria_Server.Messages
             {
                 serverSock.state = SlotState.SENDING_TILES;
             }
+            else
+                serverSock.Kick ("Invalid operation at this state.");
 
             NetMessage.SendData(9, whoAmI, -1, "Receiving tile data", num10);
             serverSock.statusText2 = "is receiving tile data";

@@ -166,6 +166,9 @@ namespace Terraria_Server.Logging
 			}
 		}
 		
+		static Dictionary<Thread, string> poolNames = new Dictionary<Thread, string> ();
+		static int nextPoolIndex = 0;
+		
 		static void Build (LogEntry entry, out OutputEntry output)
 		{
 			Exception error = null;
@@ -212,7 +215,18 @@ namespace Terraria_Server.Logging
 				if (entry.thread != null)
 				{
 					if (entry.thread.IsThreadPoolThread)
-						thread = "Pool";
+					{
+						string name;
+						if (poolNames.TryGetValue (entry.thread, out name))
+						{
+							thread = name;
+						}
+						else
+						{
+							thread = string.Format ("P{0:000}", nextPoolIndex++);
+							poolNames[entry.thread] = thread;
+						}
+					}
 					else if (entry.thread.Name != null)
 						thread = entry.thread.Name;
 				}

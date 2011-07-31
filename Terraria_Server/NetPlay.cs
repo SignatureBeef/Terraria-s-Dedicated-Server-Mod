@@ -101,109 +101,32 @@ namespace Terraria_Server
 			else
 				return;
 			
-			deadClients = new Queue<Socket> ();
-			var socketToId = new Dictionary<Socket, int> ();
-			var readList = new List<Socket> ();
-			var errorList = new List<Socket> ();
-			var clientList = new List<Socket> ();
 			var serverSock = Netplay.tcpListener.Server;
-			
-			Netplay.anyClients = true;
 			
 			try // TODO: clean up sometime, error handling too spread out
 			{
 				while (!Netplay.disconnect)
 				{
-					Netplay.anyClients = true; //clientList.Count > 0;
+					Netplay.anyClients = Networking.ClientConnection.All.Count > 0; //clientList.Count > 0;
 					
-					readList.Clear ();
-					readList.Add (serverSock);
-					readList.AddRange (clientList);
-					errorList.Clear ();
-					errorList.AddRange (clientList);
-
-					Socket.Select (readList, null, errorList, 500000);
-					
-					// sometimes we don't detect the client socket being shut down from our end,
-					// not sure if I did something wrong or does select simply work that way;
-					// this is to make sure the ServerLoop knows about sockets closed by
-					// their respective sending threads
-					// hope it won't impact performance significantly
-					lock (deadClients)
-						while (deadClients.Count > 0)
-						{
-							var sock = deadClients.Dequeue ();
-							errorList.Remove (sock);
-							clientList.Remove (sock);
-							readList.Remove (sock);
-							
-							ProgramLog.Debug.Log ("Removing client through deadClients.");
-							
-							if (socketToId.ContainsKey (sock))
-								DisposeClient (socketToId[sock]);
-						}
+					serverSock.Poll (500000, SelectMode.SelectRead);
 					
 					if (Netplay.disconnect) break;
 
-					foreach (var sock in errorList)
+					// Accept new clients
+					while (Netplay.tcpListener.Pending())
 					{
-						CheckError (sock, socketToId);
-						
-						if (socketToId.ContainsKey (sock))
-							DisposeClient (socketToId[sock]);
-						
-						clientList.Remove (sock);
-						readList.Remove (sock);
-					}
-
-					foreach (var sock in readList)
-					{
-						if (sock == serverSock)
+						var client = Netplay.tcpListener.AcceptSocket ();
+						var id = AcceptClient (client);
+						if (id >= 0)
 						{
-							// Accept new clients
-							while (Netplay.tcpListener.Pending())
-							{
-								var client = Netplay.tcpListener.AcceptSocket ();
-								var id = AcceptClient (client);
-								if (id >= 0)
-								{
-									//clientList.Add (client);
-									Netplay.anyClients = true;
-									//socketToId[client] = id;
-									
-									if (clientList.Count > Main.maxNetplayers)
-									{
-										slots[id].Kick ("Server full, sorry.");
-									}
-								}
-							}
-						}
-						else
-						{
-							// Handle existing clients
-							bool rem = false;
-							int id = -1;
-							try
-							{
-								id = socketToId[sock];
-								rem = ! ReadFromClient (id, sock);
-							}
-							catch (Exception e)
-							{
-								HandleSocketException (e);
-								rem = true;
-							}
+							//clientList.Add (client);
+							Netplay.anyClients = true;
+							//socketToId[client] = id;
 							
-							if (rem)
+							if (Networking.ClientConnection.All.Count > Main.maxNetplayers)
 							{
-								sock.SafeClose ();
-								
-								if (id >= 0)
-								{
-									DisposeClient (id);
-								}
-								
-								clientList.Remove (sock);
+								slots[id].Kick ("Server full, sorry.");
 							}
 						}
 					}
@@ -221,6 +144,13 @@ namespace Terraria_Server
 				tcpListener.Stop ();
 			}
 			catch (SocketException) {}
+			
+			
+			lock (Networking.ClientConnection.All)
+			foreach (var conn in Networking.ClientConnection.All)
+			{
+				conn.Kick ("Server is shutting down.");
+			}
 			
 			for (int i = 0; i < 255; i++)
 			{
@@ -242,15 +172,6 @@ namespace Terraria_Server
 				catch {}
 			}
 			
-			foreach (var sock in clientList)
-			{
-				try
-				{
-					sock.Close ();
-				}
-				catch {}
-			}
-
             WorldIO.saveWorld(Program.server.World.SavePath, true);
 			
 			Statics.serverStarted = false;
