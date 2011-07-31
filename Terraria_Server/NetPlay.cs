@@ -249,7 +249,11 @@ namespace Terraria_Server
 				catch {}
 			}
 
-            WorldIO.saveWorld(Program.server.World.SavePath, true);
+			if (false == WorldIO.saveWorld(Program.server.World.SavePath, true))
+			{
+				WorldIO.saveWorld(Program.server.World.SavePath, true);
+				ProgramLog.Log("Saving failed.  Quitting without saving.");
+			}
 			
 			Statics.serverStarted = false;
 		}
