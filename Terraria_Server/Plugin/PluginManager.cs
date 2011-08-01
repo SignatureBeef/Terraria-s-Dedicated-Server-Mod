@@ -182,6 +182,8 @@ namespace Terraria_Server.Plugin
 	        	Plugin plugin = plugins[cleanedName];
 	            plugin.Enabled = false;
 	            plugin.Disable();
+                plugin.pluginHooks.Clear();
+                plugin.commands.Clear();
 	            return true;
         	}
             return false;

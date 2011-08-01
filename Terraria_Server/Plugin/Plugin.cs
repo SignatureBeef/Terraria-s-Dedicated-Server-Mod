@@ -224,7 +224,7 @@ namespace Terraria_Server.Plugin
         /// <summary>
         /// Hash list of all hooks currently registered by the plugin
         /// </summary>
-        private HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
+        internal HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
 
         /// <summary>
         /// Checks to see whether the plugin has a hook registered.

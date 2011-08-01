@@ -65,16 +65,15 @@ namespace Terraria_Server.Messages
                     }
                 }
 
-
+                Color chatColour = ChatColour.White;
                 if (Main.players[playerIndex].Op)
                 {
-                    Color chatColour = ChatColour.SteelBlue;
-                    NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, "<" + Main.players[playerIndex].Name + "> " + chat, 255, chatColour.R, chatColour.G, chatColour.B);
-                }
-                else
+                    chatColour = ChatColour.SteelBlue;
+                } else if (Main.players[playerIndex].hardCore)
                 {
-                    NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, chat, playerIndex, (float)255, (float)255, (float)255);
+                    chatColour = new Color(238, 160, 238);
                 }
+                NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, chat, playerIndex, chatColour.R, chatColour.G, chatColour.B);
                 ProgramLog.Chat.Log ("<" + Main.players[playerIndex].Name + "> " + chat);
             }
         }
