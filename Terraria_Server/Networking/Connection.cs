@@ -22,7 +22,7 @@ namespace Terraria_Server.Networking
 		
 		protected class SocketAsyncEventArgsExt : SocketAsyncEventArgs
 		{
-			public Connection conn;
+			public volatile Connection conn;
 			
 			protected override void OnCompleted (SocketAsyncEventArgs args)
 			{
@@ -33,7 +33,8 @@ namespace Terraria_Server.Networking
 		{
 			protected override void OnCompleted (SocketAsyncEventArgs args)
 			{
-				conn.SendCompleted (this);
+				var c = conn;
+				if (c != null) c.SendCompleted (this);
 			}
 		}
 		
@@ -41,7 +42,8 @@ namespace Terraria_Server.Networking
 		{
 			protected override void OnCompleted (SocketAsyncEventArgs args)
 			{
-				conn.ReceiveCompleted (this);
+				var c = conn;
+				if (c != null) c.ReceiveCompleted (this);
 			}
 		}
 		
@@ -49,7 +51,8 @@ namespace Terraria_Server.Networking
 		{
 			protected override void OnCompleted (SocketAsyncEventArgs args)
 			{
-				conn.KickCompleted (this);
+				var c = conn;
+				if (c != null) c.KickCompleted (this);
 			}
 		}
 		
@@ -485,8 +488,18 @@ namespace Terraria_Server.Networking
 			public void Put (SocketAsyncEventArgsExt args)
 			{
 //				ProgramLog.Debug.Log ("Put");
-				if (!(args is T)) ProgramLog.Error.Log ("ArgsPool type mismatch.");
-				if (args.conn == null) ProgramLog.Error.Log ("SocketAsyncEventArgsExt freed twice.");
+				if (!(args is T))
+				{
+					ProgramLog.Error.Log ("ArgsPool type mismatch.");
+					return;
+				}
+				
+				if (args.conn == null)
+				{
+					ProgramLog.Error.Log ("SocketAsyncEventArgsExt freed twice.");
+					return;
+				}
+				
 				args.conn = null;
 				lock (this) Push ((T) args);
 			}

@@ -67,7 +67,15 @@ namespace Terraria_Server.Networking
 		protected override void ProcessRead ()
 		{
 			//ProgramLog.Log ("Read (total={0}).", recvBytes);
-			DecodeMessages (recvBuffer, ref recvBytes, ref messageLength);
+			try
+			{
+				DecodeMessages (recvBuffer, ref recvBytes, ref messageLength);
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, string.Format ("Error processing read from client {0} @ {1}", RemoteAddress, assignedSlot));
+				Kick ("Server malfunction, please reconnect.");
+			}
 			//ProgramLog.Log ("After read (total={0}).", recvBytes);
 		}
 		
