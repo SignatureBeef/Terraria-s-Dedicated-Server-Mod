@@ -2,6 +2,7 @@
 using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
@@ -15,11 +16,13 @@ namespace Terraria_Server.Messages
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int playerIndex = readBuffer[num++];
-            if (playerIndex == Main.myPlayer)
+            
+            if (playerIndex != whoAmI)
             {
+                Netplay.slots[whoAmI].Kick ("Cheating detected (KILL_PLAYER forgery).");
                 return;
             }
-            
+
             playerIndex = whoAmI;
 
             int direction = (int)(readBuffer[num++] - 1);
@@ -31,14 +34,18 @@ namespace Terraria_Server.Messages
             String deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             bool pvp = (pvpFlag != 0);
 
+            var player = Main.players[playerIndex];
+            
             PlayerDeathEvent pDeath = new PlayerDeathEvent();
             pDeath.DeathMessage = deathText;
-            pDeath.Sender = Main.players[playerIndex];
+            pDeath.Sender = player;
             Program.server.PluginManager.processHook(Hooks.PLAYER_DEATH, pDeath);
             if (pDeath.Cancelled)
             {
                 return;
             }
+            
+            ProgramLog.Death.Log ("{0} @ {1}: [Death] {2}{3}", player.IPAddress, whoAmI, player.Name ?? "<null>", deathText);
 
             Main.players[playerIndex].KillMe((double)damage, direction, pvp, deathText);
 

@@ -37,16 +37,23 @@ namespace Terraria_Server.Networking
 			All = new List<ClientConnection> ();
 		}
 		
-		public ClientConnection (Socket socket) : base(socket)
+		public ClientConnection (Socket socket, int slot) : base(socket)
 		{
 			//var buf = NetMessage.buffer[id];
 			//socket.SendBufferSize = 128000;
+			assignedSlot = slot;
+			socket.LingerState = new LingerOption (true, 10);
 			lock (All)
 			{
 				indexInAll = All.Count;
 				All.Add (this);
 			}
 			StartReceiving (new byte [4192]);
+		}
+		
+		public override void Send (byte[] bytes)
+		{
+			base.Send (bytes);
 		}
 		
 		public void ProcessSideBuffer ()
@@ -73,7 +80,7 @@ namespace Terraria_Server.Networking
 				assignedSlot = -1;
 			}
 			else
-				ProgramLog.Users.Log ("{0}: connection closed ({2}).", RemoteAddress, err);
+				ProgramLog.Users.Log ("{0}: connection closed ({1}).", RemoteAddress, err);
 			
 			FreeSectionBuffer ();
 			
@@ -88,6 +95,7 @@ namespace Terraria_Server.Networking
 					var other = All[All.Count - 1];
 					other.indexInAll = indexInAll;
 					All[indexInAll] = other;
+					All.RemoveAt (All.Count - 1);
 				}
 			}
 		}
@@ -121,7 +129,7 @@ namespace Terraria_Server.Networking
 					}
 					
 					sectionBuffer = buf;
-					ProgramLog.Debug.Log ("{0} @ {1}: Sending section ({2}, {3}) of {4} bytes.", RemoteAddress, assignedSlot, sX, sY, buf.Segment.Count);
+					//ProgramLog.Debug.Log ("{0} @ {1}: Sending section ({2}, {3}) of {4} bytes.", RemoteAddress, assignedSlot, sX, sY, buf.Segment.Count);
 					//System.Threading.Thread.Sleep (100);
 					
 					return buf.Segment;
@@ -149,6 +157,7 @@ namespace Terraria_Server.Networking
 					{
 						Kick ("Client sent invalid network message (" + msgLen + ")");
 						msgLen = 0;
+						return;
 					}
 				}
 				while (totalData >= msgLen + processed && msgLen > 0)
@@ -187,6 +196,7 @@ namespace Terraria_Server.Networking
 						{
 							Kick ("Client sent invalid network message (" + msgLen + ")");
 							msgLen = 0;
+							return;
 						}
 					}
 					else
@@ -214,7 +224,11 @@ namespace Terraria_Server.Networking
 			if (announce)
 			{
 				if (assignedSlot >= 0)
+				{
 					ProgramLog.Admin.Log ("{0} @ {1}: disconnecting for: {2}", RemoteAddress, assignedSlot, reason);
+					var player = Main.players[assignedSlot];
+					if (player != null) player.DisconnectReason = reason;
+				}
 				else
 					ProgramLog.Admin.Log ("{0}: disconnecting for: {2}", RemoteAddress, reason);
 			}

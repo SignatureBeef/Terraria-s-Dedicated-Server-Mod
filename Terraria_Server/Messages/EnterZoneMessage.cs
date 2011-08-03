@@ -13,6 +13,13 @@ namespace Terraria_Server.Messages
         {
             int playerIndex = (int)readBuffer[num++];
             
+            if (playerIndex != whoAmI)
+            {
+                Netplay.slots[whoAmI].Kick ("Cheating detected (ENTER_ZONE forgery).");
+                return;
+            }
+
+            
             playerIndex = whoAmI;
 
             Player player = Main.players[playerIndex];

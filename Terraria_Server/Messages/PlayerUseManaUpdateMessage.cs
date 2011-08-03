@@ -14,7 +14,15 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = whoAmI;
+            int playerIndex = readBuffer[num];
+            
+            if (playerIndex != whoAmI)
+            {
+                Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_USE_MANA_UPDATE forgery).");
+                return;
+            }
+        
+            playerIndex = whoAmI;
             num++;
 
             int manaAmount = (int)BitConverter.ToInt16(readBuffer, num);

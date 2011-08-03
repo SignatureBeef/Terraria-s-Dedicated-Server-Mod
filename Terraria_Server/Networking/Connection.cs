@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 using Terraria_Server.Logging;
 
@@ -60,6 +61,8 @@ namespace Terraria_Server.Networking
 		protected byte[] recvBuffer;
 		protected int    recvBytes;
 		protected volatile SocketError error = SocketError.Success;
+		protected Timer timeout;
+		protected volatile int closed = 0;
 		
 		internal volatile bool kicking = false;
 		internal volatile bool sending = false;
@@ -102,9 +105,10 @@ namespace Terraria_Server.Networking
 		public EndPoint RemoteEndPoint { get; protected set; }
 		public string   RemoteAddress  { get; protected set; }
 		public int BytesSent     { get; private set; }
+		public int BytesQueued   { get; private set; }
 		public int BytesReceived { get; private set; }
 		
-		public void Send (byte[] bytes)
+		public virtual void Send (byte[] bytes)
 		{
 			Send (new Message { content = bytes });
 		}
@@ -131,8 +135,6 @@ namespace Terraria_Server.Networking
 			lock (sendQueue)
 			{
 				if (kicking) return;
-				
-				Logging.ProgramLog.Log ("Queue KICK {0}.", bytes.Length);
 				
 				kicking = true;
 
@@ -188,6 +190,10 @@ namespace Terraria_Server.Networking
 							sendPool.Put (args);
 							
 							var kickArgs = kickPool.Take (this);
+							
+							Close (SocketError.ConnectionAborted);
+							
+							if (timeout == null) timeout = new Timer (Timeout, null, 10000, 0);
 							
 							var data = (byte[]) msg.content;
 							kickArgs.SetBuffer (data, 0, data.Length);
@@ -283,6 +289,7 @@ namespace Terraria_Server.Networking
 			{
 				if (argz.SocketError != SocketError.Success)
 				{
+					//ProgramLog.Log ("Bytes received: {0}", argz.BytesTransferred);
 					var err = argz.SocketError;
 					receiving = false;
 					recvPool.Put (argz);
@@ -290,6 +297,7 @@ namespace Terraria_Server.Networking
 				}
 				else if (argz.BytesTransferred == 0)
 				{
+					//ProgramLog.Log ("Clean connection shutdown. {0}", socket.Connected);
 					receiving = false;
 					recvPool.Put (argz);
 					HandleError (SocketError.Disconnecting);
@@ -299,7 +307,11 @@ namespace Terraria_Server.Networking
 					var bytes = argz.BytesTransferred;
 					receiving = false;
 					
-					if (kicking) return;
+					if (kicking)
+					{
+						recvPool.Put (argz);
+						return;
+					}
 					
 					while (! receiving)
 					{
@@ -311,7 +323,7 @@ namespace Terraria_Server.Networking
 						if (kicking)
 						{
 							receiving = false;
-							return;
+							break;
 						}
 						
 						var left = recvBuffer.Length - recvBytes;
@@ -346,6 +358,7 @@ namespace Terraria_Server.Networking
 					}
 					else
 					{
+						if (timeout == null) timeout = new Timer (Timeout, null, 10000, 0);
 						if (! socket.DisconnectAsync (argz))
 						{
 							kickPool.Put (argz);
@@ -367,11 +380,27 @@ namespace Terraria_Server.Networking
 			}
 		}
 		
+		protected virtual void Timeout (object dummy)
+		{
+			HandleError (SocketError.TimedOut);
+		}
+		
 		protected abstract void ProcessRead ();
 		
 		protected void HandleError (SocketError err)
 		{
-			//ProgramLog.Debug.Log ("HandleError {0}", err);
+//			ProgramLog.Debug.Log ("HandleError {0}", err);
+			
+			if (timeout != null)
+			{
+				try
+				{
+					timeout.Dispose ();
+				} catch {}
+				
+				timeout = null;
+			}
+			
 			if (error != SocketError.Success) return;
 			
 			error = err;
@@ -405,13 +434,31 @@ namespace Terraria_Server.Networking
 //				} catch {}
 //			
 			
-			HandleClosure (error);
+			Close (error);
+		}
+		
+		void Close (SocketError error)
+		{
+			kicking = true;
+			var closed = Interlocked.Exchange (ref this.closed, 1);
+			if (closed > 0) return;
+			
+			try
+			{
+				HandleClosure (error);
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, "Exception while handling connection closure");
+			}
 		}
 		
 		protected abstract void HandleClosure (SocketError error);
 		
 		class ArgsPool<T> : Stack<T> where T : SocketAsyncEventArgsExt, new()
 		{
+			int total;
+			
 			public T Take (Connection conn)
 			{
 //				ProgramLog.Debug.Log ("Take");
@@ -421,7 +468,11 @@ namespace Terraria_Server.Networking
 					if (Count > 0)
 						args = Pop();
 					else
+					{
+						total += 1;
+						ProgramLog.Debug.Log ("ArgsPool<{0}> capacity is now: {1}.", typeof(T).Name, total);
 						args = new T();
+					}
 				}
 				args.conn = conn;
 				return args;
@@ -430,6 +481,7 @@ namespace Terraria_Server.Networking
 			public void Put (SocketAsyncEventArgsExt args)
 			{
 //				ProgramLog.Debug.Log ("Put");
+				if (!(args is T)) ProgramLog.Error.Log ("ArgsPool type mismatch.");
 				if (args.conn == null) ProgramLog.Error.Log ("SocketAsyncEventArgsExt freed twice.");
 				args.conn = null;
 				lock (this) Push ((T) args);

@@ -191,6 +191,8 @@ namespace Terraria_Server
 		// null if no authentication plugin is running or the user is a guest,
 		// otherwise filled with the account or character name
 		public string AuthenticatedAs { get; set; }
+		
+		public string DisconnectReason { get; set; }
 
         public bool Op { get; set; }
 

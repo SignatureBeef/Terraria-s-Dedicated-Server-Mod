@@ -27,7 +27,8 @@ namespace Terraria_Server.Logging
 		}
 		
 		public static readonly LogChannel Users = new LogChannel ("USR", ConsoleColor.Magenta);
-		public static readonly LogChannel Chat  = new LogChannel ("USR", ConsoleColor.DarkMagenta);
+		public static readonly LogChannel Chat  = new LogChannel ("CHT", ConsoleColor.DarkMagenta);
+		public static readonly LogChannel Death = new LogChannel ("DTH", ConsoleColor.DarkRed);
 		public static readonly LogChannel Admin = new LogChannel ("ADM", ConsoleColor.Yellow);
 		public static readonly LogChannel Error = new LogChannel ("ERR", ConsoleColor.Red);
 		public static readonly LogChannel Debug = new LogChannel ("DBG", ConsoleColor.DarkGray);
@@ -216,16 +217,17 @@ namespace Terraria_Server.Logging
 				{
 					if (entry.thread.IsThreadPoolThread)
 					{
-						string name;
-						if (poolNames.TryGetValue (entry.thread, out name))
-						{
-							thread = name;
-						}
-						else
-						{
-							thread = string.Format ("P{0:000}", nextPoolIndex++);
-							poolNames[entry.thread] = thread;
-						}
+						thread = "Pool";
+//						string name;
+//						if (poolNames.TryGetValue (entry.thread, out name))
+//						{
+//							thread = name;
+//						}
+//						else
+//						{
+//							thread = string.Format ("P{0:000}", nextPoolIndex++);
+//							poolNames[entry.thread] = thread;
+//						}
 					}
 					else if (entry.thread.Name != null)
 						thread = entry.thread.Name;

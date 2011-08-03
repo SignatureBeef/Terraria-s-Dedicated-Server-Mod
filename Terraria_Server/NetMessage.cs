@@ -422,7 +422,11 @@ namespace Terraria_Server
 			if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
 			{
 				Netplay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
-				Netplay.slots[whoAmi].conn.SendSection (sectionX, sectionY);
+				try
+				{
+					Netplay.slots[whoAmi].conn.SendSection (sectionX, sectionY);
+				}
+				catch (NullReferenceException) {}
 			}
 			return;
 
@@ -576,7 +580,11 @@ namespace Terraria_Server
 				var msg = NetMessage.PrepareThreadInstance();
 				
 				msg.SynchBegin (player.whoAmi, 0 /*inactive*/);
-				msg.PlayerChat (255, player.Name + " has left.", 255, 240, 20);
+				
+				if (player.DisconnectReason != null)
+					msg.PlayerChat (255, string.Concat (player.Name, " disconnected (", player.DisconnectReason, ")."), 255, 165, 0);
+				else
+					msg.PlayerChat (255, string.Concat (player.Name, " has left."), 255, 240, 20);
 				
 				msg.BroadcastExcept (player.whoAmi);
 			}

@@ -13,7 +13,15 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = whoAmI;
+            int playerIndex = readBuffer[num];
+            
+            if (playerIndex != whoAmI)
+            {
+                Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_JOIN_PARTY forgery).");
+                return;
+            }
+            
+            playerIndex = whoAmI;
 
             int teamIndex = (int)readBuffer[num + 1];
             Player player = Main.players[playerIndex];
