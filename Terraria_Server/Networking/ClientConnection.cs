@@ -181,9 +181,11 @@ namespace Terraria_Server.Networking
 					}
 					else
 					{
-						NetMessage.buffer[assignedSlot].GetData (readBuffer, processed + 4, msgLen - 4);
-						// GET DATA GOES HERE
-						// msgBuf.GetData (readBuffer, processed + 4, msgLen - 4);
+						var slot = assignedSlot;
+						if (slot >= 0)
+							NetMessage.buffer[slot].GetData (readBuffer, processed + 4, msgLen - 4);
+						else
+							return;
 					}
 						
 

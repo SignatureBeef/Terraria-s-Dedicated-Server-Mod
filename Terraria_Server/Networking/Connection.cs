@@ -124,7 +124,7 @@ namespace Terraria_Server.Networking
 				
 				if (sending == false)
 				{
-					sending = SendMore (sendPool.Take (this));
+					sending = SendMore (null);
 				}
 			}
 			//Logging.ProgramLog.Log ("End queue.", bytes.Length);
@@ -143,7 +143,7 @@ namespace Terraria_Server.Networking
 				
 				if (sending == false)
 				{
-					sending = SendMore (sendPool.Take (this));
+					sending = SendMore (null);
 				}
 			}
 		}
@@ -162,6 +162,8 @@ namespace Terraria_Server.Networking
 					{
 						case Message.BYTES:
 						{
+							if (args == null) args = sendPool.Take(this);
+							
 							var data = (byte[]) msg.content;
 							args.SetBuffer (data, 0, data.Length);
 							BytesSent += data.Length;
@@ -171,6 +173,8 @@ namespace Terraria_Server.Networking
 						
 						default:
 						{
+							if (args == null) args = sendPool.Take(this);
+							
 							var data = SerializeMessage (msg);
 							args.SetBuffer (data.Array, data.Offset, data.Count);
 							BytesSent += data.Count;
@@ -187,7 +191,7 @@ namespace Terraria_Server.Networking
 						
 						case Message.KICK:
 						{
-							sendPool.Put (args);
+							if (! queued && args != null && args.conn != null) sendPool.Put (args);
 							
 							var kickArgs = kickPool.Take (this);
 							

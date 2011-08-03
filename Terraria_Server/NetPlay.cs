@@ -146,10 +146,15 @@ namespace Terraria_Server
 			catch (SocketException) {}
 			
 			
+			
 			lock (Networking.ClientConnection.All)
-			foreach (var conn in Networking.ClientConnection.All)
 			{
-				conn.Kick ("Server is shutting down.");
+				var conns = Networking.ClientConnection.All.ToArray();
+
+				foreach (var conn in conns)
+				{
+					conn.Kick ("Server is shutting down.");
+				}
 			}
 			
 			for (int i = 0; i < 255; i++)

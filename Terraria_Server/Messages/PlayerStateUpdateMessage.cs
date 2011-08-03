@@ -18,77 +18,61 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
-            int playerIndex = readBuffer[num++];
-            
-            if (playerIndex != whoAmI)
+            if (readBuffer[num++] != whoAmI)
             {
                 Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_STATE_UPDATE forgery).");
                 return;
             }
             
-            playerIndex = whoAmI;
-
-            Player player = (Player)Main.players[playerIndex].Clone();
+            Player player = Main.players[whoAmI];
             
-            player.oldVelocity = player.Velocity;
+            var data = new PlayerStateUpdateData ();
+            data.Parse (readBuffer, num);
+            
+            var fallStart = (int)(player.Position.Y / 16f);
 
-            int controlMap = (int)readBuffer[num++];
-            player.selectedItemIndex = (int)readBuffer[num++];
-
-            player.Position.X = BitConverter.ToSingle(readBuffer, num);
-            num += 4;
-            player.Position.Y = BitConverter.ToSingle(readBuffer, num);
-            num += 4;
-            player.Velocity.X = BitConverter.ToSingle(readBuffer, num);
-            num += 4;
-            player.Velocity.Y = BitConverter.ToSingle(readBuffer, num);
-            num += 4;
-
-            player.fallStart = (int)(player.Position.Y / 16f);
-
-            player.controlUp = (controlMap & 1) == 1;
-            player.controlDown = (controlMap & 2) == 2;
-            player.controlLeft = (controlMap & 4) == 4;
-            player.controlRight = (controlMap & 8) == 8;
-            player.controlJump = (controlMap & 16) == 16;
-            player.controlUseItem = (controlMap & 32) == 32;
-            player.direction = (controlMap & 64) == 64 ? 1 : -1;
-                        
             PlayerMoveEvent playerEvent = new PlayerMoveEvent();
-            playerEvent.Sender = Main.players[playerIndex]; //We want to use the old player. (Possibly, to keep old Data?)
-            playerEvent.Location = player.Position;
-            playerEvent.Velocity = player.Velocity;
-            playerEvent.FallStart = player.fallStart;
+            playerEvent.Sender = player;
+            playerEvent.Location = data.position;
+            playerEvent.Velocity = data.velocity;
+            playerEvent.FallStart = fallStart;
             Program.server.PluginManager.processHook(Hooks.PLAYER_MOVE, playerEvent);
             if (playerEvent.Cancelled)
+            // does this even make sense? authoritative player location is kept client-side
             {
                 return;
             }
 
+            player.oldVelocity = player.Velocity;            
+            
+            data.ApplyParams (player);
+            player.fallStart = fallStart;
+
             PlayerKeyPressEvent playerInteractEvent = new PlayerKeyPressEvent();
-            playerInteractEvent.Sender = Main.players[playerIndex];
+            playerInteractEvent.Sender = player;
 
             Key playerKeysPressed = new Key();
-            playerKeysPressed.Up = player.controlUp;
-            playerKeysPressed.Down = player.controlDown;
-            playerKeysPressed.Left = player.controlLeft;
-            playerKeysPressed.Right = player.controlRight;
-            playerKeysPressed.Jump = player.controlJump;
+            playerKeysPressed.Up = data.ControlUp;
+            playerKeysPressed.Down = data.ControlDown;
+            playerKeysPressed.Left = data.ControlLeft;
+            playerKeysPressed.Right = data.ControlRight;
+            playerKeysPressed.Jump = data.ControlJump;
 
             playerInteractEvent.KeysPressed = playerKeysPressed;
             playerInteractEvent.MouseClicked = player.controlUseItem;
             playerInteractEvent.FacingDirection = player.direction;
             Program.server.PluginManager.processHook(Hooks.PLAYER_KEYPRESS, playerInteractEvent);
-            if (playerEvent.Cancelled)
+            if (playerEvent.Cancelled) // does this even make sense?
             {
+                NetMessage.SendData(13, -1, whoAmI, "", whoAmI);
                 return;
             }
-
-            Main.players[playerIndex] = player;
+            
+            data.ApplyKeys (player);
 
             if (Netplay.slots[whoAmI].state == SlotState.PLAYING)
             {
-                NetMessage.SendData(13, -1, whoAmI, "", playerIndex);
+                NetMessage.SendData(13, -1, whoAmI, "", whoAmI);
             }
         }
     }
