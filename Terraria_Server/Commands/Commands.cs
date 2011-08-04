@@ -916,7 +916,7 @@ namespace Terraria_Server.Commands
 				}
 				else
 				{
-					player.sendMessage("You need to be Assiged OP Privledges.", ChatColour.DarkRed);
+					player.sendMessage("You need to be Assigned OP Privledges.", ChatColour.DarkRed);
 				}
 			}
 		}
@@ -944,7 +944,7 @@ namespace Terraria_Server.Commands
 				}
 				else
 				{
-                    player.sendMessage("You need to be Assiged OP Privledges.", ChatColour.DarkRed);
+                    player.sendMessage("You need to be Assigned OP Privledges.", ChatColour.DarkRed);
 				}
 			}
 		}
