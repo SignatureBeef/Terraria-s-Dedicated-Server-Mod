@@ -222,9 +222,9 @@ namespace Terraria_Server.Plugin
         public virtual void onNPCBossDeath(NPCBossDeathEvent Event) { }
 
         /// <summary>
-        /// Hook method for boss Deaths
+        /// Hook method for Time Change
         /// </summary>
-        /// <param name="Event">NPCBossDeathEvent info</param>
+        /// <param name="Event">TimeChangedEvent info</param>
         public virtual void onTimeChange(TimeChangedEvent Event) { }
 
         /// <summary>
