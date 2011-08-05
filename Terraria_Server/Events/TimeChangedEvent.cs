@@ -14,13 +14,17 @@ namespace Terraria_Server.Events
             {
                 if (Main.dayTime == true)
                 {
-                    if (Main.time >= 13500)
+                    if (Main.time >= 27000.0)
                     {
-                        return Time.DAWN;
+                        return Time.NOON;
+                    }
+                    else if (Main.time >= 13500)
+                    {
+                        return Time.DAY;
                     }
                     else
                     {
-                        return Time.DUSK;
+                        return Time.DAWN;
                     }
                 }
                 else

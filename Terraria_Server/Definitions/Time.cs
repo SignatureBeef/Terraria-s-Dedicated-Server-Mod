@@ -10,6 +10,7 @@ namespace Terraria_Server.Definitions
         DAY = 0,
         NIGHT = 1,
         DUSK = 2,
-        DAWN = 3
+        DAWN = 3,
+        NOON = 4
     }
 }
