@@ -122,6 +122,7 @@
     <Compile Include="Collections\IRegisterableEntity.cs" />
     <Compile Include="Collections\ItemRegistry.cs" />
     <Compile Include="Collections\Registries.cs" />
+    <Compile Include="Definitions\Time.cs" />
     <Compile Include="Events\CancellableEvent.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCBossDeathEvent.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="Events\PlayerMoveEvent.cs" />
     <Compile Include="Events\PlayerPvPChangeEvent.cs" />
     <Compile Include="Events\PlayerTeleportEvent.cs" />
+    <Compile Include="Events\TimeChangedEvent.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\ClientModMessage.cs" />

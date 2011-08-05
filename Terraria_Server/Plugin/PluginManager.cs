@@ -330,9 +330,13 @@ namespace Terraria_Server.Plugin
                             case Hooks.PLAYER_FLOWLIQUID:
                                 plugin.onPlayerFlowLiquid ((PlayerFlowLiquidEvent)hookEvent);
                                 break;
-                                
+
                             case Hooks.PLAYER_CHESTBREAK:
-                                plugin.onPlayerChestBreak ((PlayerChestBreakEvent)hookEvent);
+                                plugin.onPlayerChestBreak((PlayerChestBreakEvent)hookEvent);
+                                break;
+
+                            case Hooks.TIME_CHANGED:
+                                plugin.onTimeChange((TimeChangedEvent)hookEvent);
                                 break;
                         }
                     }

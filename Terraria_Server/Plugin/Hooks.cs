@@ -37,5 +37,6 @@ namespace Terraria_Server.Plugin
         NPC_BOSSSUMMON,
         PLAYER_FLOWLIQUID,
         PLAYER_CHESTBREAK,
+        TIME_CHANGED,
     }
 }

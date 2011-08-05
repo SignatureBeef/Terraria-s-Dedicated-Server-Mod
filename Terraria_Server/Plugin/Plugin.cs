@@ -222,6 +222,12 @@ namespace Terraria_Server.Plugin
         public virtual void onNPCBossDeath(NPCBossDeathEvent Event) { }
 
         /// <summary>
+        /// Hook method for boss Deaths
+        /// </summary>
+        /// <param name="Event">NPCBossDeathEvent info</param>
+        public virtual void onTimeChange(TimeChangedEvent Event) { }
+
+        /// <summary>
         /// Hash list of all hooks currently registered by the plugin
         /// </summary>
         internal HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
