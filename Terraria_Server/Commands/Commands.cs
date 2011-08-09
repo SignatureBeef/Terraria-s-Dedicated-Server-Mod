@@ -826,6 +826,11 @@ namespace Terraria_Server.Commands
 				if (playerInstance != null)
 				{
 					playerInstance.sendMessage("You are now OP!", ChatColour.Green);
+                    playerInstance.Op = true;
+                    if (playerInstance.HasClientMod)
+                    {
+                        NetMessage.SendData(Packet.CLIENT_MOD, playerInstance.whoAmi);
+                    }
 				}
 			}
 			else
@@ -861,8 +866,21 @@ namespace Terraria_Server.Commands
 
 				Player playerInstance = server.GetPlayerByName(player);
 				if (playerInstance != null)
-				{
-					playerInstance.Op = false;
+                {
+
+                    if (playerInstance.Op && playerInstance.HasClientMod) //Deop the client too
+                    {
+                        playerInstance.Op = false;
+                        if (playerInstance.HasClientMod)
+                        {
+                            NetMessage.SendData(Packet.CLIENT_MOD, playerInstance.whoAmi);
+                        }
+                    }
+                    else
+                    {
+                        playerInstance.Op = false;
+                    }
+
 					playerInstance.sendMessage("You have been De-Opped!.", ChatColour.Green);
 				}
 			}
@@ -890,6 +908,11 @@ namespace Terraria_Server.Commands
 					{
 						player.Op = true;
 						player.sendMessage("Successfully Logged in as OP.", ChatColour.DarkGreen);
+
+                        if (player.HasClientMod)
+                        {
+                            NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+                        }
 					}
 					else
 					{
@@ -898,7 +921,7 @@ namespace Terraria_Server.Commands
 				}
 				else
 				{
-					player.sendMessage("You need to be Assiged OP Privledges.", ChatColour.DarkRed);
+					player.sendMessage("You need to be Assigned OP Privledges.", ChatColour.DarkRed);
 				}
 			}
 		}
@@ -913,14 +936,20 @@ namespace Terraria_Server.Commands
 		{
 			if (sender is Player)
 			{
+                var player = sender as Player;
 				if (sender.Op)
 				{
-					sender.Op = false;
-					((Player)sender).sendMessage("Successfully Logged Out.", ChatColour.DarkRed);
+                    player.Op = false;
+                    player.sendMessage("Successfully Logged Out.", ChatColour.DarkRed);
+
+                    if (player.HasClientMod)
+                    {
+                        NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+                    }
 				}
 				else
 				{
-					((Player)sender).sendMessage("You need to be Assiged OP Privledges.", ChatColour.DarkRed);
+                    player.sendMessage("You need to be Assigned OP Privledges.", ChatColour.DarkRed);
 				}
 			}
 		}

@@ -122,16 +122,18 @@ namespace Terraria_Server.WorldMod
 			worldCleared = true;
 		}
 
-		public static void saveWorld(String savePath, bool resetTime = false)
+		public static Boolean saveWorld(String savePath, bool resetTime = false)
 		{
+			Boolean success = true;
+
 			if (savePath == null)
 			{
-				return;
+				return false;
 			}
 
 			if (WorldModify.saveLock)
 			{
-				return;
+				return false;
 			}
 
 			try
@@ -335,13 +337,19 @@ namespace Terraria_Server.WorldMod
 					}
 					stopwatch.Stop();
 					ProgramLog.Log("Save duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
-					WorldModify.saveLock = false;
 				}
 			}
 			catch (Exception e)
 			{
 				ProgramLog.Log(e, "Exception saving the world");
+				success = false;
 			}
+			finally
+			{
+				WorldModify.saveLock = false;
+			}
+
+			return success;
 		}
 
 		public static void loadWorld()

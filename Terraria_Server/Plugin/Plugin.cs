@@ -222,9 +222,15 @@ namespace Terraria_Server.Plugin
         public virtual void onNPCBossDeath(NPCBossDeathEvent Event) { }
 
         /// <summary>
+        /// Hook method for Time Change
+        /// </summary>
+        /// <param name="Event">TimeChangedEvent info</param>
+        public virtual void onTimeChange(TimeChangedEvent Event) { }
+
+        /// <summary>
         /// Hash list of all hooks currently registered by the plugin
         /// </summary>
-        private HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
+        internal HashSet<Hooks> pluginHooks = new HashSet<Hooks>();
 
         /// <summary>
         /// Checks to see whether the plugin has a hook registered.

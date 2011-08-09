@@ -740,10 +740,19 @@ namespace Terraria_Server
 				Byte (player.buffType[i]);
 			}
 		}
-		
-		public void SummonSkeletron ()
-		{
-			throw new NotImplementedException ("NetMessage.SummonSkeletron()");
-		}
+
+        public void SummonSkeletron()
+        {
+            throw new NotImplementedException("NetMessage.SummonSkeletron()");
+        }
+
+        public void ClientMod(int PlayerID)
+        {
+            //Let them know they are op
+            var player = Main.players[PlayerID];
+            Header(Packet.CLIENT_MOD, 4);
+
+            Int((player.Op) ? 1 : 0);
+        }
 	}
 }

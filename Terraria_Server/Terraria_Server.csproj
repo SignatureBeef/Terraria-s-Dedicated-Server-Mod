@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -122,6 +122,7 @@
     <Compile Include="Collections\IRegisterableEntity.cs" />
     <Compile Include="Collections\ItemRegistry.cs" />
     <Compile Include="Collections\Registries.cs" />
+    <Compile Include="Definitions\Time.cs" />
     <Compile Include="Events\CancellableEvent.cs" />
     <Compile Include="Events\MessageEvent.cs" />
     <Compile Include="Events\NPCBossDeathEvent.cs" />
@@ -133,8 +134,10 @@
     <Compile Include="Events\PlayerMoveEvent.cs" />
     <Compile Include="Events\PlayerPvPChangeEvent.cs" />
     <Compile Include="Events\PlayerTeleportEvent.cs" />
+    <Compile Include="Events\TimeChangedEvent.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
+    <Compile Include="Messages\ClientModMessage.cs" />
     <Compile Include="Messages\DamageNPCMessage.cs" />
     <Compile Include="Messages\DoorUpdateMessage.cs" />
     <Compile Include="Messages\EnterZoneMessage.cs" />

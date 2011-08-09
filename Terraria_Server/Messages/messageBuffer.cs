@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
             foreach (Packet packet in Enum.GetValues(typeof(Packet)))
             {
                 int packetValue = (int)packet;
-                if (packetValue > highestPacket)
+                if (packetValue >= highestPacket)
                 {
                     highestPacket = packetValue + 1;
                 }

@@ -10,6 +10,8 @@ using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
+using Terraria_Server.Events;
+using Terraria_Server.Plugin;
 
 namespace Terraria_Server
 {
@@ -585,6 +587,9 @@ namespace Terraria_Server
         private static void UpdateTime()
         {
             Main.time += 1.0;
+            TimeChangedEvent timeEvent = new TimeChangedEvent();
+            Program.server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
+
             if (!Main.dayTime)
             {
                 if (WorldModify.spawnEye)

@@ -20,6 +20,8 @@ namespace Terraria_Server
         private const int MAX_HEALTH = 400;
         private const int MAX_MANA = 200;
 
+        public bool HasClientMod = false;
+
         private String ipAddress = null;
         private bool bedDestruction = false;
 
