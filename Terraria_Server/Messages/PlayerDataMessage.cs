@@ -37,9 +37,11 @@ namespace Terraria_Server.Messages
                 hairId = 0;
             }
 
-            player.hair = hairId;
             player.whoAmi = whoAmI;
-            num += 2;
+            player.hair = hairId;
+            player.Male = readBuffer[start + 3] == 1;
+            
+            num += 3;
 
             num = setColor(player.hairColor, num, readBuffer);
             num = setColor(player.skinColor, num, readBuffer);
@@ -50,7 +52,7 @@ namespace Terraria_Server.Messages
             num = setColor(player.shoeColor, num, readBuffer);
 
             if (firstTime)
-                player.hardCore = (readBuffer[num++] != 0);
+                player.Difficulty = readBuffer[num++];
             
             string newName;
             

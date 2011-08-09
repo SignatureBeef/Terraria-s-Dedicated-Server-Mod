@@ -18,11 +18,13 @@ namespace Terraria_Server.Messages
             float knockback = BitConverter.ToSingle(readBuffer, num);
             num += 4;
             int direction = (int)(readBuffer[num] - 1);
+            num += 1;
+            byte crit = readBuffer[num];
 
             NPC npc = Main.npcs[(int)npcIndex];
             if (damage >= 0)
             {
-                npc.StrikeNPC((int)damage, knockback, direction);
+                npc.StrikeNPC((int)damage, knockback, direction/*FIXME, crit == 1*/);
             }
             else
             {
@@ -31,7 +33,7 @@ namespace Terraria_Server.Messages
                 npc.Active = false;
             }
             
-            NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction);
+            NetMessage.SendData(28, -1, whoAmI, "", (int)npcIndex, (float)damage, knockback, (float)direction, crit);
             NetMessage.SendData(23, -1, -1, "", (int)npcIndex);
         }
     }
