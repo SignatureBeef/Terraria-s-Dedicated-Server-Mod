@@ -51,8 +51,16 @@
 		WRITE_SIGN = 47,
 		FLOW_LIQUID = 48,
 		SEND_SPAWN = 49,
-        PLAYER_BUFFS = 50,
-        SUMMON_SKELETRON = 51,
-        CLIENT_MOD = 52
+		PLAYER_BUFFS = 50,
+		SUMMON_SKELETRON = 51,
+		
+		//1.0.6
+		CHEST_UNLOCK = 52,
+		NPC_ADD_BUFF = 53,
+		NPC_SET_BUFF = 54,
+		PLAYER_ADD_BUFF = 55,
+		
+		//custom
+		CLIENT_MOD = 254,
 	}
 }
