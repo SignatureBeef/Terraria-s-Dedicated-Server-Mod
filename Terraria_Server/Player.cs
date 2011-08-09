@@ -30,6 +30,8 @@ namespace Terraria_Server
         public bool killGuide;
         public int[] buffType = new int[10];
         public int[] buffTime = new int[10];
+        
+        [Obsolete("Replaced by difficulty setting in 1.0.6")]
         public bool hardCore;
 		public bool pvpDeath;
 		public bool zoneDungeon;
@@ -204,6 +206,9 @@ namespace Terraria_Server
         
         public int TeleSpawnX { get; set; }
         public int TeleSpawnY { get; set; }
+        
+		public bool Male { get; set; }
+		public byte Difficulty { get; set; }
 
         public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
@@ -3756,6 +3761,9 @@ namespace Terraria_Server
 			
 			TeleSpawnX = -1;
 			TeleSpawnY = -1;
+			
+			Male = true;
+			Difficulty = 0;
 		}
 
         public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)

@@ -42,6 +42,8 @@ namespace Terraria_Server
 			Byte (playerId);
 
 			Byte (player.hair);
+			Byte (player.Male ? 1 : 0);
+			
 			Byte (player.hairColor.R);
 			Byte (player.hairColor.G);
 			Byte (player.hairColor.B);
@@ -70,7 +72,7 @@ namespace Terraria_Server
 			Byte (player.shoeColor.G);
 			Byte (player.shoeColor.B);
 			
-			Byte (player.hardCore);
+			Byte (player.Difficulty);
 			String (player.Name);
 			
 			End ();
@@ -471,7 +473,7 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void StrikePlayer (int victimId, string deathText, int direction, int damage, int pvpFlag)
+		public void StrikePlayer (int victimId, string deathText, int direction, int damage, int pvpFlag, bool crit = false)
 		{
 			Begin (Packet.STRIKE_PLAYER);
 			
@@ -479,6 +481,7 @@ namespace Terraria_Server
 			Byte (direction + 1);
 			Short (damage);
 			Byte (pvpFlag);
+			Byte (crit ? 1 : 0);
 			
 			String (deathText);
 			
@@ -508,7 +511,7 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		public void DamageNPC (int npcId, int damage, float knockback, int direction)
+		public void DamageNPC (int npcId, int damage, float knockback, int direction, bool crit = false)
 		{
 			Header (Packet.DAMAGE_NPC, 9);
 			
@@ -518,6 +521,7 @@ namespace Terraria_Server
 			Float (knockback);
 			
 			Byte (direction + 1);
+			Byte (crit ? 1 : 0);
 		}
 		
 		public void KillProjectile (int identity, int owner)
@@ -740,19 +744,67 @@ namespace Terraria_Server
 				Byte (player.buffType[i]);
 			}
 		}
-
-        public void SummonSkeletron()
-        {
-            throw new NotImplementedException("NetMessage.SummonSkeletron()");
-        }
-
-        public void ClientMod(int PlayerID)
-        {
-            //Let them know they are op
-            var player = Main.players[PlayerID];
-            Header(Packet.CLIENT_MOD, 4);
-
-            Int((player.Op) ? 1 : 0);
-        }
+		
+		public void SummonSkeletron (int playerId)
+		{
+			Header (Packet.SUMMON_SKELETRON, 2);
+			
+			Byte (playerId);
+			Byte (2);
+		}
+		
+		public void ChestUnlock (int playerId, int param, int x, int y)
+		{
+			Header (Packet.CHEST_UNLOCK, 10);
+			
+			Byte (playerId);
+			Byte (param);
+			
+			Int (x);
+			Int (y);
+		}
+		
+		public void NPCAddBuff (int npcId, int type, int time)
+		{
+			Header (Packet.NPC_ADD_BUFF, 5);
+			
+			Short (npcId);
+			Byte (type);
+			Short (time);
+		}
+		
+		public void NPCBuffs (int npcId)
+		{
+			Begin (Packet.NPC_BUFFS);
+			
+			Short (npcId);
+			
+			var npc = Main.npcs[npcId];
+			for (int i = 0; i < 5; i++)
+			{   // FIXME
+				//Byte (npc.BuffType[i]);
+				//Short (npc.BuffTime[i]);
+			}
+			
+			End ();
+		}
+		
+		public void PlayerAddBuff (int playerId, int type, int time)
+		{
+			Header (Packet.PLAYER_ADD_BUFF, 4);
+			
+			Byte (playerId);
+			Byte (type);
+			Short (time);
+		}
+		
+		public void ClientMod(int PlayerID)
+		{
+			//Let them know they are op
+			var player = Main.players[PlayerID];
+			Header(Packet.CLIENT_MOD, 4);
+			
+			Int((player.Op) ? 1 : 0);
+		}
 	}
 }

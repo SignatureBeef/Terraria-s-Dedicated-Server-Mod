@@ -287,15 +287,31 @@ namespace Terraria_Server
 						
 					case (int)Packet.PLAYER_BUFFS:
 						msg.PlayerBuffs (number);
-                        break;
-
-                    case (int)Packet.SUMMON_SKELETRON:
-                        msg.SummonSkeletron();
-                        break;
-
-                    case (int)Packet.CLIENT_MOD:
-                        msg.ClientMod(remoteClient);
-                        break;
+						break;
+					
+					case (int)Packet.SUMMON_SKELETRON:
+						msg.SummonSkeletron ((byte) number);
+						break;
+					
+					case (int)Packet.CHEST_UNLOCK:
+						msg.ChestUnlock (number, (int)number2, (int)number3, (int)number4);
+						break;
+					
+					case (int)Packet.NPC_ADD_BUFF:
+						msg.NPCAddBuff (number, (int)number2, (int)number3);
+						break;
+						
+					case (int)Packet.NPC_BUFFS:
+						msg.NPCBuffs (number);
+						break;
+						
+					case (int)Packet.PLAYER_ADD_BUFF:
+						msg.PlayerAddBuff (number, (int)number2, (int)number3);
+						break;
+					
+					case (int)Packet.CLIENT_MOD:
+						msg.ClientMod(remoteClient);
+						break;
 						
 					default:
 						{

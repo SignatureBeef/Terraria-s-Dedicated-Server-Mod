@@ -57,7 +57,7 @@
 		//1.0.6
 		CHEST_UNLOCK = 52,
 		NPC_ADD_BUFF = 53,
-		NPC_SET_BUFF = 54,
+		NPC_BUFFS = 54,
 		PLAYER_ADD_BUFF = 55,
 		
 		//custom
