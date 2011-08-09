@@ -419,5 +419,11 @@ namespace Terraria_Server
 			set { Program.properties.setValue ("log-rotation", value); }
 		}
 		
+		public int SpawnNPCMax
+		{
+			get { return Program.properties.getValue ("spawnnpc-max", 100); }
+			set { Program.properties.setValue ("spawnnpc-max", value); }
+		}
+		
     }
 }

@@ -643,7 +643,7 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void SpawnNPC(Server server, ISender sender, ArgumentList args)
 		{
-			Player player = sender as Player; ;
+			Player player = sender as Player;
 			if (args.Count > 3)
 			{
 				throw new CommandError("Too many arguments. NPC and player names with spaces require quotes.");
@@ -653,7 +653,7 @@ namespace Terraria_Server.Commands
 				player = args.GetOnlinePlayer(2);
 			}
 
-			String npcName = args[1].ToLower().Trim();
+			String npcName = args.GetString(1).ToLower().Trim();
 
 			// Get the class id of the npc
 			Int32 realNPCId = 0;
@@ -679,6 +679,11 @@ namespace Terraria_Server.Commands
 			try
 			{
 				NPCAmount = Int32.Parse(args[0]);
+				if (NPCAmount > Program.properties.SpawnNPCMax && sender is Player)
+				{
+					(sender as Player).Kick ("Don't spawn that many.");
+					return;
+				}
 			}
 			catch
 			{
