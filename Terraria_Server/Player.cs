@@ -10,6 +10,7 @@ using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -195,6 +196,12 @@ namespace Terraria_Server
 		public string DisconnectReason { get; set; }
 
         public bool Op { get; set; }
+        
+        public int OldSpawnX { get; set; }
+        public int OldSpawnY { get; set; }
+        
+        public int TeleSpawnX { get; set; }
+        public int TeleSpawnY { get; set; }
 
         public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
@@ -3741,6 +3748,12 @@ namespace Terraria_Server
 				this.adjTile[k] = false;
 				this.oldAdjTile[k] = false;
 			}
+			
+			OldSpawnX = -1;
+			OldSpawnY = -1;
+			
+			TeleSpawnX = -1;
+			TeleSpawnY = -1;
 		}
 
         public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
@@ -4044,50 +4057,141 @@ namespace Terraria_Server
             }
         }
 
-        public bool teleportTo(float tileX, float tileY)
-        {
-            PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
-            playerEvent.ToLocation = new Vector2(tileX, tileY);
-            playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
-            playerEvent.Sender = this;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
-            if (playerEvent.Cancelled)
-            {
-                return false;
-            }
-
-            //Preserve our Spawn point.
-            int spawnTileX = Main.spawnTileX;
-            int spawnTileY = Main.spawnTileY;
-
-            //Set our new target position
-            Main.spawnTileX = ((int)tileX) / 16;
-            Main.spawnTileY = ((int)tileY) / 16;
-
-            bool destroyed = false;
-            if (Main.players[this.whoAmi].SpawnX >= 0 && Main.players[this.whoAmi].SpawnY >= 0) //Do they have a bed?
-            {
-                if (bedDestruction) //Do they want their bed destroyed?
-                {
-                    NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
-                    Main.tile.At((int)tileX, (int)tileY - 1).SetActive(false);
-                    NetMessage.SendTileSquare(this.whoAmi, (int)tileX, (int)tileY - 1, 200);
-                    NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
-                    Main.tile.At((int)tileX, (int)tileY - 1).SetActive(true);
-                    destroyed = true;
-                }
-            }
-            else
-            {
-                NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
-                NetMessage.SendData((int)Packet.RECEIVING_PLAYER_JOINED, this.whoAmi, -1, "", this.whoAmi, 0f, 0f, 0f);
-            }
-            //Return to defaults
-            Main.spawnTileX = spawnTileX;
-            Main.spawnTileY = spawnTileY;
-            NetMessage.SendData((int)Packet.WORLD_DATA, this.whoAmi);
-            return destroyed;
-        }
+		public bool teleportTo (float tileX, float tileY) //FIXME: armor against race conditions
+		{
+			if (Main.players[whoAmi] != this)
+			{
+				ProgramLog.Error.Log ("Attempt to teleport inactive player {0}.", Name ?? IPAddress);
+				return false;
+			}
+			            
+			int tx = (int) (tileX / 16);
+			int ty = (int) (tileY / 16);
+			
+			if (tx < 0 || ty < 0 || tx >= Main.maxTilesX || ty >= Main.maxTilesY)
+			{
+				ProgramLog.Error.Log ("Attempt to teleport player {0} to invalid location: {1}, {2}.", Name ?? IPAddress, tx, ty);
+				return false;
+			}
+		
+			PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
+			playerEvent.ToLocation = new Vector2(tileX, tileY);
+			playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
+			playerEvent.Sender = this;
+			Program.server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
+			if (playerEvent.Cancelled)
+			{
+				return false;
+			}
+            
+			bool changeSpawn = false;
+			
+			int ox = Main.spawnTileX;
+			int oy = Main.spawnTileY;
+			if (SpawnX >= 0 && SpawnY >= 0)
+			{
+				changeSpawn = true;
+				ox = SpawnX;
+				oy = SpawnY;
+			}
+			else if (OldSpawnX >= 0 && OldSpawnY >= 0)
+			{
+				changeSpawn = true;
+				ox = OldSpawnX;
+				oy = OldSpawnY;
+			}
+			
+			var slot = Netplay.slots[whoAmi];
+			int sx = tx / 200;
+			int sy = ty / 150;
+			
+			// send up to 9 sections around the player
+			int fromX = Math.Max (0, sx - 1);
+			int fromY = Math.Max (0, sy - 1);
+			int toX = Math.Min (sx + 1, Main.maxTilesX/200-1);
+			int toY = Math.Min (sy + 1, Main.maxTilesY/150-1);
+			
+			int sections = 0;
+			
+			for (int x = fromX; x <= toX; x++)
+			{
+				for (int y = fromY; y <= toY; y++)
+				{
+					if (! slot.tileSection[x, y])
+					{
+						sections += 1;
+					}
+				}
+			}
+			
+			var msg = NetMessage.PrepareThreadInstance ();
+			
+			if (sections > 0)
+			{
+				msg.SendTileLoading (sections * 150, "Teleporting...");
+				msg.Send (whoAmi);
+				msg.Clear ();
+				
+				for (int x = fromX; x <= toX; x++)
+				{
+					for (int y = fromY; y <= toY; y++)
+					{
+						if (! slot.tileSection[x, y])
+						{
+							NetMessage.SendSection (whoAmi, x, y);
+						}
+					}
+				}
+				
+				msg.SendTileConfirm (fromX, fromY, toX, toY);
+			}
+			
+			if (changeSpawn)
+			{
+				// invalidate player's bed temporarily
+				var data = Main.tile.At (ox, oy).Data;
+				data.Active = false;
+				msg.SingleTileSquare (ox, oy, data);
+			}
+			
+			// change the global spawn point
+			msg.WorldData (tx, ty);
+			
+			// trigger respawn
+			TeleSpawnX = tx;
+			TeleSpawnY = ty;
+			msg.ReceivingPlayerJoined (whoAmi);
+			
+			// fix holes at target location
+			int fx = Math.Max (0, Math.Min (Main.maxTilesX - 8, tx - 4));
+			int fy = Math.Max (0, Math.Min (Main.maxTilesY - 8, ty - 4));
+			msg.TileSquare (7, fx, fy);
+			
+//			msg.Send (whoAmi);
+//			msg.Clear ();
+			
+			if (changeSpawn)
+			{
+				// restore player's bed
+				msg.TileSquare (1, ox, oy);
+				
+				int left = Math.Max (0, ox - 4);
+				int right = Math.Min (ox + 4, Main.maxTilesX);
+				
+				while (left < Main.maxTilesX && Main.tile.At (left, oy - 1).Type != 79) left += 1;
+				while (right > 0 && Main.tile.At (right, oy - 1).Type != 79) right -= 1;
+				
+				if (right - left >= 0 && oy >= 2)
+					msg.TileSquare (right - left + 1, left, oy - 2);
+			}
+			
+			// restore the global spawn point
+			msg.WorldData ();
+			
+			msg.Send (whoAmi);
+			
+			return true;
+		}
 
         public void teleportTo(Player player)
         {

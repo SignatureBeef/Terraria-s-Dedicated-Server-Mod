@@ -570,6 +570,11 @@ namespace Terraria_Server.WorldMod
 					}
 				}
 			}
+			
+			if (Main.worldName == null || Main.worldName == "")
+			{
+				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (Program.server.World.SavePath);
+			}
 		}
 	}
 }

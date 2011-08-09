@@ -24,14 +24,21 @@ namespace Terraria_Server.Messages
 
             playerIndex = whoAmI;
             num++;
-
+            
             Player player = Main.players[playerIndex];
+            
+            if (player.SpawnX >= 0 && player.SpawnY >= 0)
+            {
+                player.OldSpawnX = player.SpawnX;
+                player.OldSpawnY = player.SpawnY;
+            }
+
             player.SpawnX = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             player.SpawnY = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             player.Spawn();
-
+            
             if (Netplay.slots[whoAmI].state >= SlotState.SENDING_TILES)
             {
                 if (Netplay.slots[whoAmI].state == SlotState.SENDING_TILES)
@@ -40,7 +47,18 @@ namespace Terraria_Server.Messages
                     NetMessage.OnPlayerJoined (whoAmI); // this also forwards the message
                 }
                 else
-                    NetMessage.SendData(12, -1, whoAmI, "", whoAmI);
+                {
+                    var msg = NetMessage.PrepareThreadInstance ();
+                    if (player.SpawnX == -1 && player.SpawnY == -1 && player.TeleSpawnX != -1)
+                    {
+                        msg.ReceivingPlayerJoined (whoAmI, player.TeleSpawnX, player.TeleSpawnY);
+                        player.TeleSpawnX = -1;
+                        player.TeleSpawnY = -1;
+                    }
+                    else
+                        msg.ReceivingPlayerJoined (whoAmI);
+                    msg.BroadcastExcept (whoAmI);
+                }
             }
         }
     }

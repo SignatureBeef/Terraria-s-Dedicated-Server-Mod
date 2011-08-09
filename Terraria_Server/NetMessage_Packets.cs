@@ -100,7 +100,7 @@ namespace Terraria_Server
 			Header (Packet.WORLD_REQUEST, 0);
 		}
 		
-		public void WorldData ()
+		public void WorldData (int spawnX, int spawnY)
 		{
 			Begin (Packet.WORLD_DATA);
 			
@@ -111,8 +111,8 @@ namespace Terraria_Server
 			
 			Int (Main.maxTilesX);
 			Int (Main.maxTilesY);
-			Int (Main.spawnTileX);
-			Int (Main.spawnTileY);
+			Int (spawnX);
+			Int (spawnY);
 			
 			Int (Main.worldSurface);
 			Int (Main.rockLayer);
@@ -132,6 +132,11 @@ namespace Terraria_Server
 			End ();
 		}
 		
+		public void WorldData ()
+		{
+			WorldData (Main.spawnTileX, Main.spawnTileY);
+		}
+		
 		public void RequestTileBlock ()
 		{
 			throw new NotImplementedException ("NetMessage.RequestTileBlock()");
@@ -147,11 +152,10 @@ namespace Terraria_Server
 			End ();
 		}
 		
-		private void Tile (int x, int y)
+		private void Tile (TileData tile)
 		{
 			byte flags = 0;
 			
-			var tile   = Main.tile.At(x, y);
 			var active = tile.Active;
 			var wall   = tile.Wall;
 			var liquid = tile.Liquid;
@@ -186,6 +190,11 @@ namespace Terraria_Server
 				Byte (liquid);
 				Byte (tile.Lava);
 			}
+		}
+		
+		private void Tile (int x, int y)
+		{
+			Tile (Main.tile.At (x, y).Data);
 		}
 		
 		public void SendTileRow (int numColumns, int firstColumn, int row)
@@ -229,6 +238,17 @@ namespace Terraria_Server
 			End ();
 		}
 		
+		public void ReceivingPlayerJoined (int playerId, int sx, int sy)
+		{
+			Begin (Packet.RECEIVING_PLAYER_JOINED);
+			
+			Byte (playerId);
+			Int (sx);
+			Int (sy);
+			
+			End ();
+		}
+		
 		public void PlayerStateUpdate (int playerId)
 		{
 			var player = Main.players[playerId];
@@ -250,6 +270,33 @@ namespace Terraria_Server
 			
 			Float (player.Position.X);
 			Float (player.Position.Y);
+			Float (player.Velocity.X);
+			Float (player.Velocity.Y);
+			
+			End ();
+		}
+		
+		public void PlayerStateUpdate (int playerId, float px, float py)
+		{
+			var player = Main.players[playerId];
+			
+			Begin (Packet.PLAYER_STATE_UPDATE);
+			
+			byte flags = 0;
+			if (player.controlUp)      flags += 1;
+			if (player.controlDown)    flags += 2;
+			if (player.controlLeft)    flags += 4;
+			if (player.controlRight)   flags += 8;
+			if (player.controlJump)    flags += 16;
+			if (player.controlUseItem) flags += 32;
+			if (player.direction == 1) flags += 64;
+			
+			Byte (playerId);
+			Byte (flags);
+			Byte (player.selectedItemIndex);
+			
+			Float (px);
+			Float (py);
 			Float (player.Velocity.X);
 			Float (player.Velocity.Y);
 			
@@ -321,6 +368,19 @@ namespace Terraria_Server
 					Tile (x, y);
 				}
 			}
+			
+			End ();
+		}
+		
+		public void SingleTileSquare (int X, int Y, TileData tile)
+		{
+			Begin (Packet.TILE_SQUARE);
+			
+			Short (1);
+			Int (X);
+			Int (Y);
+			
+			Tile (tile);
 			
 			End ();
 		}
