@@ -144,10 +144,11 @@ namespace Terraria_Server.Networking
 				sendQueue.Clear ();
 				sendQueue.Enqueue (new Message { content = bytes, kind = Message.KICK });
 				
-				if (sending == false)
-				{
-					sending = SendMore (null);
-				}
+				SendMore (null);
+//				if (sending == false)
+//				{
+//					sending = SendMore (null);
+//				}
 			}
 		}
 		
@@ -263,10 +264,17 @@ namespace Terraria_Server.Networking
 				}
 				else
 				{
-					if (argz.BytesTransferred < argz.Count) throw new Exception ("ugh!");
+					if (argz.BytesTransferred < argz.Count) throw new ApplicationException ("Unexpected short write.");
 					
 					lock (sendQueue)
 					{
+						if (kicking)
+						{
+							sendPool.Put (argz);
+							sending = false;
+							return;
+						}
+						
 						sending = SendMore (argz);
 						if (! sending && argz.conn != null) sendPool.Put (argz);
 					}
