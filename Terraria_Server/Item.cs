@@ -170,6 +170,23 @@ namespace Terraria_Server
                     case "Cobalt Greaves":
                         return "Jungle Pants";
                 }
+            } else if (release <= 13)
+            {
+                if (oldName == "Jungle Rose")
+                {
+                    return "Jungle Spores";
+                }
+            } else if (release <= 20)
+            {
+                switch (oldName)
+                {
+                    case "Gills potion":
+                        return "Gills Potion";
+                    case "Thorn Chakrum":
+                        return "Thorn Chakram";
+                    case "Ball 'O Hurt":
+                        return "Ball O' Hurt";
+                }
             }
             return oldName;
         }
