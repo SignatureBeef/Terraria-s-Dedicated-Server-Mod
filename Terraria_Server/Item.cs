@@ -283,7 +283,7 @@ namespace Terraria_Server
                     {
                         this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
                     }
-                    if (this.Owner == Main.myPlayer && this.LavaWet && this.Type != 312 && this.Type != 318 && this.Type != 173 && this.Rare == 0)
+                    if (this.Owner == Main.myPlayer && this.LavaWet && this.Type != 312 && this.Type != 318 && this.Type != 173 && this.Type != 174 && this.Type != 175 && this.Rare == 0)
                     {
                         if (this.Type == 267)
                         {

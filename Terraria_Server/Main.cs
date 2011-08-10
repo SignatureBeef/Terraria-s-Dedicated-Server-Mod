@@ -23,7 +23,7 @@ namespace Terraria_Server
         public const int maxItemText = 100;
         public const int MAX_PLAYERS = 255;
         public const int maxChests = 1000;
-        public const int maxItemTypes = 327;
+        public const int maxItemTypes = 363;
         public const int maxProjectileTypes = 55;
         public const int maxProjectiles = 1000;
         public const int maxNPCTypes = 70;
