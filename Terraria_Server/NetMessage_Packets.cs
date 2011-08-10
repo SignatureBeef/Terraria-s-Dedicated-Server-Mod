@@ -513,7 +513,7 @@ namespace Terraria_Server
 		
 		public void DamageNPC (int npcId, int damage, float knockback, int direction, bool crit = false)
 		{
-			Header (Packet.DAMAGE_NPC, 9);
+			Header (Packet.DAMAGE_NPC, 10);
 			
 			Short (npcId);
 			Short (damage);
@@ -781,9 +781,9 @@ namespace Terraria_Server
 			
 			var npc = Main.npcs[npcId];
 			for (int i = 0; i < 5; i++)
-			{   // FIXME
-				//Byte (npc.BuffType[i]);
-				//Short (npc.BuffTime[i]);
+			{
+				Byte (npc.buffType[i]);
+				Short (npc.buffTime[i]);
 			}
 			
 			End ();
