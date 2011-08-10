@@ -20,13 +20,14 @@ namespace Terraria_Server
         //public static bool npcChatRelease = false;
         //public static bool npcChatFocus1 = false;
         //public static bool npcChatFocus2 = false;
+        public static bool[] debuff = new bool[27];
         public const int maxItemText = 100;
         public const int MAX_PLAYERS = 255;
         public const int maxChests = 1000;
         public const int maxItemTypes = 363;
         public const int maxProjectileTypes = 55;
         public const int maxProjectiles = 1000;
-        public const int maxNPCTypes = 70;
+        public const int maxNPCTypes = 74;
         public const int maxInventory = 44;
         public const double dayLength = 54000.0;
         public static bool stopSpawns = false;
@@ -239,6 +240,11 @@ namespace Terraria_Server
             Main.tileShine[66] = 900;
             Main.tileShine[67] = 900;
             Main.tileShine[68] = 900;
+
+            foreach (int i in new int[] { 20, 21, 22, 23, 24, 25 })
+            {
+                Main.debuff[i] = true;
+            }
 
             foreach (int i in new int[] { 3, 24, 28, 32, 51, 52, 61, 62, 69, 71, 73, 74, 82, 83, 84 })
             {

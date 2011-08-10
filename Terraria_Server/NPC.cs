@@ -153,6 +153,9 @@ namespace Terraria_Server
         public Vector2 oldPosition;
         public Vector2 oldVelocity;
         public int soundDelay;
+        public int[] buffType = new int[5];
+        public int[] buffTime = new int[5];
+        public bool[] buffImmune = new bool[27];
 		/// <summary>
 		/// Index number for Main.npcs[]
 		/// </summary>
@@ -3933,7 +3936,82 @@ namespace Terraria_Server
                 }
             }
         }
+        
+        public void AddBuff(int type, int time, bool quiet = false)
+        {
+            if (this.buffImmune[type])
+            {
+                return;
+            }
+            if (!quiet)
+            {
+                NetMessage.SendData(54, -1, -1, "", this.whoAmI, 0f, 0f, 0f, 0);
+            }
+            int num = -1;
+            for (int i = 0; i < 5; i++)
+            {
+                if (this.buffType[i] == type)
+                {
+                    if (this.buffTime[i] < time)
+                    {
+                        this.buffTime[i] = time;
+                    }
+                    return;
+                }
+            }
+            while (num == -1)
+            {
+                int num2 = -1;
+                for (int j = 0; j < 5; j++)
+                {
+                    if (!Main.debuff[this.buffType[j]])
+                    {
+                        num2 = j;
+                        break;
+                    }
+                }
+                if (num2 == -1)
+                {
+                    return;
+                }
+                for (int k = num2; k < 5; k++)
+                {
+                    if (this.buffType[k] == 0)
+                    {
+                        num = k;
+                        break;
+                    }
+                }
+                if (num == -1)
+                {
+                    this.DelBuff(num2);
+                }
+            }
+            this.buffType[num] = type;
+            this.buffTime[num] = time;
+        }
 
+        public void DelBuff(int b)
+        {
+            this.buffTime[b] = 0;
+            this.buffType[b] = 0;
+            for (int i = 0; i < 4; i++)
+            {
+                if (this.buffTime[i] == 0 || this.buffType[i] == 0)
+                {
+                    for (int j = i + 1; j < 5; j++)
+                    {
+                        this.buffTime[j - 1] = this.buffTime[j];
+                        this.buffType[j - 1] = this.buffType[j];
+                        this.buffTime[j] = 0;
+                        this.buffType[j] = 0;
+                    }
+                }
+            }
+            
+            NetMessage.SendData(54, -1, -1, "", this.whoAmI, 0f, 0f, 0f, 0);
+        }
+       
         public void FindFrame()
         {
             int num = 1;

@@ -147,6 +147,14 @@ namespace Terraria_Server.Definitions
         [XmlEnum(Name = "68")]
         N68_DUNGEON_GUARDIAN,
         [XmlEnum(Name = "69")]
-        N69_ANTLION
+        N69_ANTLION,
+        [XmlEnum(Name = "70")]
+        N70_SPIKE_BALL,
+        [XmlEnum(Name = "71")]
+        N71_DUNGEON_SLIME,
+        [XmlEnum(Name = "72")]
+        N72_BLAZING_WHEEL,
+        [XmlEnum(Name = "73")]
+        N73_GOBLIN_SCOUT
     }
 }
