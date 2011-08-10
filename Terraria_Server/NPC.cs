@@ -185,7 +185,7 @@ namespace Terraria_Server
 		/// Movement checks
 		/// </summary>
 		/// <param name="index">Main.npcs[] index number</param>
-        public void AI(int index)
+/*        public void AI(int index)
         {
             NPC npc = Main.npcs[index];
             if (npc.aiStyle == 0)
@@ -3940,7 +3940,7 @@ namespace Terraria_Server
         }
 /*        */
 		
-#if FALSE
+
         public void AI(int index)
         {
             NPC npc = Main.npcs[index];
@@ -4452,34 +4452,7 @@ namespace Terraria_Server
                             }
                             int num4 = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
                             int num5 = (int)((npc.Position.Y + (float)npc.Height - 15f) / 16f);
-                            if (!Main.tile.At(num4, num5).Exists)
-                            {
-                                Main.tile.CreateTileAt(num4, num5);
-                            }
-                            if (!Main.tile.At(num4, num5 - 1).Exists)
-                            {
-                                Main.tile.CreateTileAt(num4, num5 - 1);
-                            }
-                            if (!Main.tile.At(num4, num5 - 2).Exists)
-                            {
-                                Main.tile.CreateTileAt(num4, num5 - 2);
-                            }
-                            if (!Main.tile.At(num4, num5 - 3).Exists)
-                            {
-                                Main.tile.CreateTileAt(num4, num5 - 3);
-                            }
-                            if (!Main.tile.CreateTileAt(num4, num5 + 1).Exists)
-                            {
-                                Main.tile.CreateTileAt(num4, num5 + 1);
-                            }
-                            if (!Main.tile.At(num4 + npc.direction, num5 - 1).Exists)
-                            {
-                                Main.tile.CreateTileAt(num4 + npc.direction, num5 - 1);
-                            }
-                            if (!Main.tile.At(num4 + npc.direction, num5 + 1).Exists)
-                            {
-                                Main.tile.CreateTileAt(num4 + npc.direction, num5 + 1);
-                            }
+                            
                             bool flag2 = true;
                             if (npc.Type == 47 || npc.Type == 67)
                             {
@@ -6017,34 +5990,7 @@ namespace Terraria_Server
                                                         npc.ai[2] = -1f;
                                                         int num80 = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
                                                         int num81 = (int)((npc.Position.Y + (float)npc.Height - 16f) / 16f);
-                                                        if (!Main.tile.At(num80, num81).Exists)
-                                                        {
-                                                            Main.tile.CreateTileAt(num80, num81);
-                                                        }
-                                                        if (!Main.tile.At(num80, num81 - 1).Exists)
-                                                        {
-                                                            Main.tile.CreateTileAt(num80, num81 - 1);
-                                                        }
-                                                        if (!Main.tile.At(num80, num81 - 2).Exists)
-                                                        {
-                                                            Main.tile.CreateTileAt(num80, num81 - 2);
-                                                        }
-                                                        if (!Main.tile.At(num80, num81 - 3).Exists)
-                                                        {
-                                                            Main.tile.CreateTileAt(num80, num81 - 3);
-                                                        }
-                                                        if (!Main.tile.At(num80, num81 + 1).Exists)
-                                                        {
-                                                            Main.tile.CreateTileAt(num80, num81 + 1) ;
-                                                        }
-                                                        if (!Main.tile.At(num80 + npc.direction, num81 - 1).Exists)
-                                                        {
-                                                            Main.tile.CreateTileAt(num80 + npc.direction, num81 - 1);
-                                                        }
-                                                        if (!Main.tile.At(num80 + npc.direction, num81 + 1).Exists)
-                                                        {
-                                                            Main.tile.CreateTileAt(num80 + npc.direction, num81 + 1);
-                                                        }
+
                                                         if (npc.townNPC && Main.tile.At(num80, num81 - 2).Active && Main.tile.At(num80, num81 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
                                                             bool flag12 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction);
@@ -6140,39 +6086,7 @@ namespace Terraria_Server
                                                                 }
                                                                 try
                                                                 {
-                                                                    if (!Main.tile.At(num80, num81 + 1).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80, num81 + 1);
-                                                                    }
-                                                                    if (!Main.tile.At(num80 - npc.direction, num81 + 1).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80 - npc.direction, num81 + 1);
-                                                                    }
-                                                                    if (!Main.tile.At(num80, num81 + 2).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80, num81 + 2);
-                                                                    }
-                                                                    if (!Main.tile.At(num80 - npc.direction, num81 + 2).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80 - npc.direction, num81 + 2);
-                                                                    }
-                                                                    if (!Main.tile.At(num80, num81 + 3).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80, num81 + 3);
-                                                                    }
-                                                                    if (!Main.tile.At(num80 - npc.direction, num81 + 3).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80 - npc.direction, num81 + 3);
-                                                                    }
-                                                                    if (!Main.tile.At(num80, num81 + 4).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80, num81 + 4);
-                                                                    }
-                                                                    if (!Main.tile.At(num80 - npc.direction, num81 + 4).Exists)
-                                                                    {
-                                                                        Main.tile.CreateTileAt(num80 - npc.direction, num81 + 4);
-                                                                    }
-                                                                    else
+                                                                    if (Main.tile.At(num80 - npc.direction, num81 + 4).Exists)
                                                                     {
                                                                         if (num75 >= npc.homeTileX - 35 && num75 <= npc.homeTileX + 35 && (!Main.tile.At(num80, num81 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num80, num81 + 1).Type]) && (!Main.tile.At(num80 - npc.direction, num81 + 1).Active || !Main.tileSolid[(int)Main.tile.At(num80 - npc.direction, num81 + 1).Type]) && (!Main.tile.At(num80, num81 + 2).Active || !Main.tileSolid[(int)Main.tile.At(num80, num81 + 2).Type]) && (!Main.tile.At(num80 - npc.direction, num81 + 2).Active || !Main.tileSolid[(int)Main.tile.At(num80 - npc.direction, num81 + 2).Type]) && (!Main.tile.At(num80, num81 + 3).Active || !Main.tileSolid[(int)Main.tile.At(num80, num81 + 3).Type]) && (!Main.tile.At(num80 - npc.direction, num81 + 3).Active || !Main.tileSolid[(int)Main.tile.At(num80 - npc.direction, num81 + 3).Type]) && (!Main.tile.At(num80, num81 + 4).Active || !Main.tileSolid[(int)Main.tile.At(num80, num81 + 4).Type]) && (!Main.tile.At(num80 - npc.direction, num81 + 4).Active || !Main.tileSolid[(int)Main.tile.At(num80 - npc.direction, num81 + 4).Type]) && npc.Type != 46)
                                                                         {
@@ -6861,10 +6775,6 @@ namespace Terraria_Server
                                                         {
                                                             if (npc.aiStyle == 13)
                                                             {
-                                                                if (!Main.tile.At((int)npc.ai[0], (int)npc.ai[1]).Exists)
-                                                                {
-                                                                    Main.tile.CreateTileAt((int)npc.ai[0], (int)npc.ai[1]);
-                                                                }
                                                                 if (!Main.tile.At((int)npc.ai[0], (int)npc.ai[1]).Active)
                                                                 {
                                                                     npc.life = -1;
@@ -7672,18 +7582,7 @@ namespace Terraria_Server
                                                                                     }
                                                                                     int num163 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
                                                                                     int num164 = (int)(npc.Position.Y + (float)(npc.Height / 2)) / 16;
-                                                                                    if (Main.tile.At(num163, num164 - 1).Exists)
-                                                                                    {
-                                                                                        Main.tile.CreateTileAt(num163, num164 - 1);
-                                                                                    }
-                                                                                    if (Main.tile.CreateTileAt(num163, num164 + 1).Exists)
-                                                                                    {
-                                                                                        Main.tile.CreateTileAt(num163, num164 + 1);
-                                                                                    }
-                                                                                    if (Main.tile.CreateTileAt(num163, num164 + 2).Exists)
-                                                                                    {
-                                                                                        Main.tile.CreateTileAt(num163, num164 + 2);
-                                                                                    }
+                                                                                    
                                                                                     if (Main.tile.At(num163, num164 - 1).Liquid > 128)
                                                                                     {
                                                                                         if (Main.tile.At(num163, num164 + 1).Active)
@@ -7990,18 +7889,7 @@ namespace Terraria_Server
                                                                                         }
                                                                                         int num172 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
                                                                                         int num173 = (int)(npc.Position.Y + (float)(npc.Height / 2)) / 16;
-                                                                                        if (Main.tile.At(num172, num173 - 1).Exists)
-                                                                                        {
-                                                                                            Main.tile.CreateTileAt(num172, num173 - 1);
-                                                                                        }
-                                                                                        if (Main.tile.At(num172, num173 + 1).Exists)
-                                                                                        {
-                                                                                            Main.tile.CreateTileAt(num172, num173 + 1);
-                                                                                        }
-                                                                                        if (Main.tile.At(num172, num173 + 2).Exists)
-                                                                                        {
-                                                                                            Main.tile.CreateTileAt(num172, num173 + 2);
-                                                                                        }
+                                                                                        
                                                                                         if (Main.tile.At(num172, num173 - 1).Liquid > 128)
                                                                                         {
                                                                                             if (Main.tile.At(num172, num173 + 1).Active)
@@ -8089,18 +7977,7 @@ namespace Terraria_Server
                                                                                             int num183 = (int)(npc.Position.X + (float)npc.Width) / 16;
                                                                                             int num184 = (int)(npc.Position.Y + (float)npc.Height) / 16;
                                                                                             bool flag18 = false;
-                                                                                            if (Main.tile.At(num181, num184).Exists)
-                                                                                            {
-                                                                                                Main.tile.CreateTileAt(num181, num184);
-                                                                                            }
-                                                                                            if (Main.tile.At(num182, num184).Exists)
-                                                                                            {
-                                                                                                Main.tile.CreateTileAt(num181, num184);
-                                                                                            }
-                                                                                            if (Main.tile.At(num183, num184).Exists)
-                                                                                            {
-                                                                                                Main.tile.CreateTileAt(num181, num184);
-                                                                                            }
+                                                                                            
                                                                                             if ((Main.tile.At(num181, num184).Active && Main.tileSolid[
                                                                                                 (int)Main.tile.At(num181, num184).Type]) ||
                                                                                                     (Main.tile.At(num182, num184).Active && Main.tileSolid[
@@ -8284,7 +8161,7 @@ namespace Terraria_Server
                 }
             }
         }
-#endif
+
 
         public void AddBuff(int type, int time, bool quiet = false)
         {
