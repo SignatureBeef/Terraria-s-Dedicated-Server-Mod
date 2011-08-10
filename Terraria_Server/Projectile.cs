@@ -200,6 +200,11 @@ namespace Terraria_Server
             return cloned;
         }
 
+        public static int NewProjectile(float X, float Y, float SpeedX, float SpeedY, int Type, int Damage, float KnockBack, int Owner = 255)
+        {
+            return NewProjectile(X, Y, SpeedX, SpeedY, Type, Damage, KnockBack, Owner);
+        }
+
         /// <summary>
         /// Creates a new projectile instance with the specified parameters
         /// </summary>
