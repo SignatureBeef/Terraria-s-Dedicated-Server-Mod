@@ -157,6 +157,7 @@ namespace Terraria_Server
         public int[] buffType = new int[5];
         public int[] buffTime = new int[5];
         public bool[] buffImmune = new bool[27];
+        //public System.Collections.BitArray buffImmune = new System.Collections.BitArray (27);
 		/// <summary>
 		/// Index number for Main.npcs[]
 		/// </summary>
@@ -184,7 +185,7 @@ namespace Terraria_Server
 		/// Movement checks
 		/// </summary>
 		/// <param name="index">Main.npcs[] index number</param>
-        /*public static void AI(int index)
+        public void AI(int index)
         {
             NPC npc = Main.npcs[index];
             if (npc.aiStyle == 0)
@@ -3937,8 +3938,9 @@ namespace Terraria_Server
                 }
             }
         }
-        */
-
+/*        */
+		
+#if FALSE
         public void AI(int index)
         {
             NPC npc = Main.npcs[index];
@@ -8282,7 +8284,7 @@ namespace Terraria_Server
                 }
             }
         }
-		
+#endif
 
         public void AddBuff(int type, int time, bool quiet = false)
         {
@@ -11470,6 +11472,13 @@ namespace Terraria_Server
             Array.Copy(ai, cloned.ai, NPC.MAX_AI);
             cloned.immune = new int[256];
             Array.Copy(immune, cloned.immune, 256);
+            cloned.buffType = new int[5];
+            Array.Copy (buffType, cloned.buffType, 5);
+            cloned.buffTime = new int[5];
+            Array.Copy (buffTime, cloned.buffTime, 5);
+            //cloned.buffImmune = new System.Collections.BitArray (buffImmune);
+            cloned.buffImmune = new bool[27];
+            Array.Copy (buffImmune, cloned.buffImmune, 27);
             return cloned;
         }
     }
