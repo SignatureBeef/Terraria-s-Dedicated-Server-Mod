@@ -123,6 +123,7 @@ namespace Terraria_Server
 		/// Essentially the same as Ammo
 		/// </summary>
 		public ProjectileType UseAmmo;
+		public int UseAnimation;
 		public int UseStyle;
 		public int UseTime;
 		public bool UseTurn;
@@ -150,6 +151,7 @@ namespace Terraria_Server
 			Scale = 1f;
 			ToolTip = null;
 			UseTime = 100;
+			UseAnimation = 100;
 		}
 
 		/// <summary>
