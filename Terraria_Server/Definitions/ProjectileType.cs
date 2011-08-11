@@ -120,6 +120,8 @@ namespace Terraria_Server.Definitions
         [XmlEnum(Name = "53")]
         GLOWSTICK_STICKY,
         [XmlEnum(Name = "54")]
-        KNIFE_POISONED
+        KNIFE_POISONED,
+        [XmlEnum(Name = "55")]
+        STINGER,
     }
 }

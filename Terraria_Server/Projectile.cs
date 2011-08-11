@@ -164,6 +164,10 @@ namespace Terraria_Server
         /// Miscellaneous text associated with the projectile.  Only used in hardcore deaths and sign edits?
         /// </summary>
         public String miscText = "";
+        
+        public bool melee { get; set; }
+        public bool ranged { get; set; }
+        public bool magic { get; set; }
 
         public Projectile()
         {
@@ -267,6 +271,107 @@ namespace Terraria_Server
             }
             return num;
         }
+
+		public void StatusNPC (NPC npc)
+		{
+			switch (this.type)
+			{
+				case ProjectileType.ARROW_FIRE:
+					if (Main.rand.Next(3) == 0)
+						npc.AddBuff(24, 180, false);
+					break;
+				
+				case ProjectileType.BALL_OF_FIRE:
+					if (Main.rand.Next(2) == 0)
+						npc.AddBuff(24, 300, false);
+					break;
+					
+				case ProjectileType.FLAMARANG:
+					if (Main.rand.Next(5) == 0)
+						npc.AddBuff(24, 180, false);
+					break;
+					
+				case ProjectileType.FLAMELASH:
+					if (Main.rand.Next(2) == 0)
+						npc.AddBuff(24, 240, false);
+					break;
+					
+				case ProjectileType.SUNFURY:
+					if (Main.rand.Next(4) == 0)
+						npc.AddBuff(24, 180, false);
+					break;
+					
+				case ProjectileType.CHAKRUM_THORN:
+					if (Main.rand.Next(5) == 0)
+						npc.AddBuff(20, 420, false);
+					break;
+					
+				case ProjectileType.KNIFE_POISONED:
+					if (Main.rand.Next(2) == 0)
+						npc.AddBuff(20, 600, false);
+					break;
+					
+			}
+		}
+		
+		public void StatusPvP (Player player)
+		{
+			switch (this.type)
+			{
+				case ProjectileType.ARROW_FIRE:
+					if (Main.rand.Next(3) == 0)
+						player.AddBuff(24, 180, false);
+					break;
+				
+				case ProjectileType.BALL_OF_FIRE:
+					if (Main.rand.Next(2) == 0)
+						player.AddBuff(24, 300, false);
+					break;
+					
+				case ProjectileType.FLAMARANG:
+					if (Main.rand.Next(5) == 0)
+						player.AddBuff(24, 180, false);
+					break;
+					
+				case ProjectileType.FLAMELASH:
+					if (Main.rand.Next(2) == 0)
+						player.AddBuff(24, 240, false);
+					break;
+					
+				case ProjectileType.SUNFURY:
+					if (Main.rand.Next(4) == 0)
+						player.AddBuff(24, 180, false);
+					break;
+					
+				case ProjectileType.CHAKRUM_THORN:
+					if (Main.rand.Next(5) == 0)
+						player.AddBuff(20, 420, false);
+					break;
+					
+				case ProjectileType.KNIFE_POISONED:
+					if (Main.rand.Next(2) == 0)
+						player.AddBuff(20, 600, false);
+					break;
+					
+			}
+		}
+		
+		public void StatusPlayer (Player player)
+		{
+			switch (this.type)
+			{
+				case ProjectileType.STINGER:
+					if (Main.rand.Next(3) == 0)
+						player.AddBuff(20, 600, true);
+					break;
+					
+				case ProjectileType.SICKLE_DEMON:
+					if (Main.rand.Next(3) == 0)
+						player.AddBuff(22, 900, true);
+					break;
+					
+			}
+		}
 
         /// <summary>
         /// Runs damage calculation on hostile mobs and players

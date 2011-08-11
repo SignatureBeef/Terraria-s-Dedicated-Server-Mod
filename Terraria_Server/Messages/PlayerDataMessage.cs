@@ -12,7 +12,7 @@ namespace Terraria_Server.Messages
     class PlayerDataMessage : IMessage
     {
 
-        private const int MAX_HAIR_ID = 17;
+        private const int MAX_HAIR_ID = 36;
 
         public Packet GetPacket()
         {

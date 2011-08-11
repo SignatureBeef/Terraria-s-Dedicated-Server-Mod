@@ -39,9 +39,9 @@ namespace Terraria_Server.Messages
                 Netplay.slots[whoAmI].Kick ("Invalid projectile.");
                 return;
             }
-            else if (type == (int)ProjectileType.FEATHER_HARPY)
+            else if (type == (int)ProjectileType.FEATHER_HARPY || type == (int)ProjectileType.STINGER)
             {
-                Netplay.slots[whoAmI].Kick("Harpy feather cheat detected.");
+                Netplay.slots[whoAmI].Kick("Projectile cheat detected.");
                 return;
             }
             else if (type == (int)ProjectileType.HARPOON)
