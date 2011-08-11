@@ -15,7 +15,7 @@ namespace Terraria_Server.Messages
 			var type = readBuffer[num++];
 			var time = BitConverter.ToInt16 (readBuffer, num);
 			
-			//FIXME Main.npcs[npcId].AddBuff (type, time, true);
+			Main.npcs[npcId].AddBuff (type, time, true);
 			
 			NetMessage.SendData (54, -1, -1, "", npcId);
 		}

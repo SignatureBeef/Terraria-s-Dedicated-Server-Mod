@@ -4,6 +4,7 @@ using System.IO;
 using System.Xml.Serialization;
 using System.Reflection;
 using Terraria_Server.Logging;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Collections
 {
@@ -85,32 +86,54 @@ namespace Terraria_Server.Collections
             return CloneAndInit(defaultValue);
         }
 
-        public T Alter(T coneable, String name)
+        public void Alter (T subject, String name)
         {
             List<T> values;
-            if (typeLookup.TryGetValue(coneable.Type, out values))
+            if (typeLookup.TryGetValue(subject.Type, out values))
             {
                 foreach (T value in values)
                 {
                     if (value.Name == name)
                     {
-                        //T newClone = (T)coneable.Clone();
-                        T cloned = CloneAndInit(value);
-                        coneable.Name = cloned.Name;
-                        coneable.aiStyle = cloned.aiStyle;
-                        coneable.damage = cloned.damage;
-                        coneable.defense = cloned.defense;
-                        coneable.life = cloned.life;
-                        coneable.lifeMax = cloned.lifeMax;
-                        coneable.scale = cloned.scale;
-                        coneable.knockBackResist = cloned.knockBackResist;
-                        NPC.npcSlots = cloned.slots;
-
-                        return coneable;
+                        subject.Name = value.Name;
+                        subject.aiStyle = value.aiStyle;
+                        subject.damage = value.damage;
+                        subject.defense = value.defense;
+                        subject.life = value.lifeMax;
+                        subject.lifeMax = value.lifeMax;
+                        subject.scale = value.scale;
+                        subject.knockBackResist = value.knockBackResist;
+                        subject.slots = value.slots;
+                        return;
                     }
                 }
             }
-            return CloneAndInit(defaultValue);
+            throw new ApplicationException ("Unknown NPC '" + name + "'");
+        }
+        
+        [Obsolete("Not obsolete, but probably needs tweaking to work properly")]
+        public void SetDefaults (T obj, int type)
+        {
+            List<T> values;
+            if (typeLookup.TryGetValue(type, out values))
+            {
+                if (values.Count == 1)
+                {
+                    obj.CopyFieldsFrom (values[0]);
+                }
+                else
+                    throw new ApplicationException ("Registry.SetDefaults(T, int) called with a non-unique type.");
+            }
+        }
+        
+        [Obsolete("Not obsolete, but probably needs tweaking to work properly")]
+        public void SetDefaults (T obj, string name)
+        {
+            T value;
+            if (nameLookup.TryGetValue (name, out value))
+            {
+                obj.CopyFieldsFrom (value);
+            }
         }
 
         public T Create(String name)

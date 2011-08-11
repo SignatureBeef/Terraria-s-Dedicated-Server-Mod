@@ -137,11 +137,9 @@ namespace Terraria_Server
         public bool wet;
         public byte wetCount;
 
-        public Vector2 Velocity;
 		/// <summary>
 		/// AI chain array
 		/// </summary>
-        public float[] ai = new float[NPC.MAX_AI];
         public int aiAction;
         public bool closeDoor;
         public int directionY = 1;
@@ -149,14 +147,24 @@ namespace Terraria_Server
         public int doorY;
         public Rectangle frame;
         public int friendlyRegen;
-        public int[] immune = new int[256];
         public int oldDirectionY;
-        public Vector2 oldPosition;
-        public Vector2 oldVelocity;
         public int soundDelay;
-        public int[] buffType = new int[5];
-        public int[] buffTime = new int[5];
-        public bool[] buffImmune = new bool[27];
+
+		[DontClone] public Vector2 Velocity;
+		[DontClone] public Vector2 oldPosition;
+		[DontClone] public Vector2 oldVelocity;
+        
+		[DeepClone] public float[] ai = new float[NPC.MAX_AI];
+		[DeepClone] public int[] immune = new int[256];
+		[DeepClone] public int[] buffType = new int[5];
+		[DeepClone] public int[] buffTime = new int[5];
+		[DeepClone] public bool[] buffImmune = new bool[27];
+        
+        public int lifeRegen;
+        public int lifeRegenCount;
+        public bool poisoned;
+        public bool onFire;
+        public bool dontTakeDamage;
         //public System.Collections.BitArray buffImmune = new System.Collections.BitArray (27);
 		/// <summary>
 		/// Index number for Main.npcs[]
@@ -5356,7 +5364,9 @@ namespace Terraria_Server
                                                 float num53 = (float)npc.life / (float)npc.lifeMax;
                                                 float num54 = npc.ai[0];
                                                 //npc.SetDefaults(npc.Type, -1f);
-                                                npc = Registries.NPC.Create(npc.Type);
+                                                //npc = Registries.NPC.Create(npc.Type); WTF!?
+                                                Registries.NPC.SetDefaults (npc, 13); //FIXME: remember to tweak
+                                                npc.Active = true;
                                                 npc.life = (int)((float)npc.lifeMax * num53);
                                                 npc.ai[0] = num54;
                                                 npc.TargetClosest(true);
@@ -5369,7 +5379,8 @@ namespace Terraria_Server
                                                 float num56 = (float)npc.life / (float)npc.lifeMax;
                                                 float num57 = npc.ai[1];
                                                 //npc.SetDefaults(npc.Type, -1f);
-                                                npc = Registries.NPC.Create(npc.Type);
+                                                //npc = Registries.NPC.Create(npc.Type);
+                                                Registries.NPC.SetDefaults (npc, 14); //FIXME: remember to tweak
                                                 npc.life = (int)((float)npc.lifeMax * num56);
                                                 npc.ai[1] = num57;
                                                 npc.TargetClosest(true);
@@ -7456,7 +7467,7 @@ namespace Terraria_Server
                                                                                     int y = (int)(npc.Position.Y + (float)Main.rand.Next(npc.Height - 32));
                                                                                     int num162 = NPC.NewNPC(x, y, 1, 0);
                                                                                     //Main.npcs[num162].SetDefaults(1, -1f);
-                                                                                    Main.npcs[num162] = Registries.NPC.Create(1);
+                                                                                    //Main.npcs[num162] = Registries.NPC.Create(1);
                                                                                     Main.npcs[num162].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
                                                                                     Main.npcs[num162].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
                                                                                     Main.npcs[num162].ai[1] = (float)Main.rand.Next(3);
@@ -8162,6 +8173,23 @@ namespace Terraria_Server
             }
         }
 
+		public static bool NearSpikeBall (int x, int y)
+		{
+			Rectangle rectangle = new Rectangle(x * 16 - 200, y * 16 - 200, 400, 400);
+			for (int i = 0; i < 1000; i++)
+			{
+				var npc = Main.npcs[i];
+				if (npc.Active && npc.aiStyle == 20)
+				{
+					Rectangle rectangle2 = new Rectangle((int)npc.ai[1], (int)npc.ai[2], 20, 20);
+					if (rectangle.Intersects(rectangle2))
+					{
+						return true;
+					}
+				}
+			}
+			return false;
+		}
 
         public void AddBuff(int type, int time, bool quiet = false)
         {
@@ -8265,7 +8293,7 @@ namespace Terraria_Server
             {
                 num2 = 4;
             }
-            if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME || this.type == NPCType.N59_LAVA_SLIME)
+            if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME || this.type == NPCType.N59_LAVA_SLIME || this.type == NPCType.N71_DUNGEON_SLIME)
             {
                 this.frameCounter += 1.0;
                 if (num2 > 0)
@@ -8489,6 +8517,19 @@ namespace Terraria_Server
                     }
                 }
             }
+			if (this.type == NPCType.N72_BLAZING_WHEEL)
+			{
+				this.frameCounter += 1.0;
+				if (this.frameCounter >= 3.0)
+				{
+					this.frameCounter = 0.0;
+					this.frame.Y = this.frame.Y + num;
+					if (this.frame.Y / num >= Main.npcFrameCount[this.Type])
+					{
+						this.frame.Y = 0;
+					}
+				}
+			}
             if (this.type == NPCType.N65_SHARK)
             {
                 this.spriteDirection = this.direction;
@@ -8587,7 +8628,7 @@ namespace Terraria_Server
                     this.frameCounter = 0.0;
                 }
             }
-            if (this.type == NPCType.N17_MERCHANT || this.type == NPCType.N18_NURSE || this.type == NPCType.N19_ARMS_DEALER || this.type == NPCType.N20_DRYAD || this.type == NPCType.N22_GUIDE || this.type == NPCType.N38_DEMOLITIONIST || this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER || this.type == NPCType.N54_CLOTHIER || this.type == NPCType.N37_OLD_MAN)
+            if (this.type == NPCType.N17_MERCHANT || this.type == NPCType.N18_NURSE || this.type == NPCType.N19_ARMS_DEALER || this.type == NPCType.N20_DRYAD || this.type == NPCType.N22_GUIDE || this.type == NPCType.N38_DEMOLITIONIST || this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER || this.type == NPCType.N54_CLOTHIER || this.type == NPCType.N37_OLD_MAN || this.type == NPCType.N73_GOBLIN_SCOUT)
             {
                 if (this.Velocity.Y == 0f)
                 {
@@ -8948,7 +8989,7 @@ namespace Terraria_Server
                         {
                             if (Main.players[i].Active && rectangle.Intersects(new Rectangle((int)Main.players[i].Position.X, (int)Main.players[i].Position.Y, Main.players[i].Width, Main.players[i].Height)))
                             {
-                                Main.players[i].townNPCs += (int)NPC.npcSlots;
+                                Main.players[i].townNPCs += (int)this.slots;
                             }
                         }
                     }
@@ -8966,7 +9007,7 @@ namespace Terraria_Server
                             flag = true;
                             if (this.type != NPCType.N25_BURNING_SPHERE && this.type != NPCType.N30_CHAOS_BALL && this.type != NPCType.N33_WATER_SPHERE)
                             {
-                                Main.players[j].activeNPCs += (int)NPC.npcSlots;
+                                Main.players[j].activeNPCs += (int)this.slots;
                             }
                         }
                         if (rectangle3.Intersects(new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height)))
@@ -9040,8 +9081,8 @@ namespace Terraria_Server
                     NPC.maxSpawns = NPC.defaultMaxSpawns;
                     if (Main.players[j].Position.Y > (float)((Main.maxTilesY - 200) * 16))
                     {
-                        NPC.spawnRate = (int)((float)NPC.spawnRate * 0.4f);
-                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2.1f);
+                        //NPC.spawnRate = (int)((float)NPC.spawnRate * 0.4f);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 2.0f);
                     }
                     else if ((double)Main.players[j].Position.Y > Main.rockLayer * 16.0 + (double)NPC.sHeight)
                     {
@@ -9065,8 +9106,8 @@ namespace Terraria_Server
                     }
                     if (Main.players[j].zoneDungeon)
                     {
-                        NPC.spawnRate = (int)((double)NPC.defaultSpawnRate * 0.22);
-                        NPC.maxSpawns = NPC.defaultMaxSpawns * 2;
+                        NPC.spawnRate = (int)((double)NPC.defaultSpawnRate * 0.35);
+                        NPC.maxSpawns = (int) (NPC.maxSpawns * 1.85);
                     }
                     else if (Main.players[j].zoneJungle)
                     {
@@ -9075,8 +9116,8 @@ namespace Terraria_Server
                     }
                     else if (Main.players[j].zoneEvil)
                     {
-                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.4);
-                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.6f);
+                        NPC.spawnRate = (int)((double)NPC.spawnRate * 0.65);
+                        NPC.maxSpawns = (int)((float)NPC.maxSpawns * 1.3f);
                     }
                     else if (Main.players[j].zoneMeteor)
                     {
@@ -9415,11 +9456,23 @@ namespace Terraria_Server
                             {
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 68, 0);
                             }
-                            else if (Main.rand.Next(3) == 0)
+                            else if (Main.rand.Next(43) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 71, 0);
+                            }
+                            else if (Main.rand.Next(3) == 0 && !NPC.NearSpikeBall(num, num2))
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 70, 0);
+                            }
+                            else if (Main.rand.Next(5) == 0)
+                            {
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 72, 0);
+                            }
+                            else if (Main.rand.Next(7) == 0)
                             {
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 34, 0);
                             }
-                            else if (Main.rand.Next(6) == 0)
+                            else if (Main.rand.Next(7) == 0)
                             {
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 32, 0);
                             }
@@ -9428,11 +9481,11 @@ namespace Terraria_Server
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Big Boned");
+                                    Registries.NPC.Alter (Main.npcs[npcIndex], "Big Boned");
                                 }
                                 else if (Main.rand.Next(5) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Short Bones");
+                                    Registries.NPC.Alter (Main.npcs[npcIndex], "Short Bones");
                                 }
                             }
                         }
@@ -9462,11 +9515,11 @@ namespace Terraria_Server
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
                                 if (Main.rand.Next(4) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Little Stinger");
+                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Little Stinger");
                                 }
                                 else if (Main.rand.Next(4) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Big Stinger");
+                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Big Stinger");
                                 }
                             }
                         }
@@ -9486,11 +9539,11 @@ namespace Terraria_Server
                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
                             if (Main.rand.Next(3) == 0)
                             {
-                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Little Eater");
+                                Registries.NPC.Alter(Main.npcs[npcIndex], "Little Eater");
                             }
                             else if (Main.rand.Next(3) == 0)
                             {
-                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Big Eater");
+                                Registries.NPC.Alter(Main.npcs[npcIndex], "Big Eater");
                             }
                         }
                         else if ((double)num2 <= Main.worldSurface)
@@ -9514,20 +9567,24 @@ namespace Terraria_Server
                                 {
                                     npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 61, 0);
                                 }
+                                else if (num22 > Main.maxTilesX / 3 && Main.rand.Next(20) == 0)
+								{
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 73, 0);
+								}
                                 else
                                 {
                                     npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                     if (num20 == 60)
                                     {
-                                        Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Jungle Slime");
+                                        Registries.NPC.Alter(Main.npcs[npcIndex], "Jungle Slime");
                                     }
                                     else if (Main.rand.Next(3) == 0 || num22 < 200)
                                     {
-                                        Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Green Slime");
+                                        Registries.NPC.Alter(Main.npcs[npcIndex], "Green Slime");
                                     }
                                     else if (Main.rand.Next(10) == 0 && num22 > 400)
                                     {
-                                        Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Purple Slime");
+                                        Registries.NPC.Alter(Main.npcs[npcIndex], "Purple Slime");
                                     }
                                 }
                             }
@@ -9546,7 +9603,7 @@ namespace Terraria_Server
                         }
                         else if ((double)num2 <= Main.rockLayer)
                         {
-                            if (Main.rand.Next(30) == 0)
+                            if (Main.rand.Next(50) == 0)
                             {
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
                             }
@@ -9555,15 +9612,15 @@ namespace Terraria_Server
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                                 if (Main.rand.Next(5) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Yellow Slime");
+                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Yellow Slime");
                                 }
                                 else if (Main.rand.Next(2) == 0)
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Blue Slime");
+                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Blue Slime");
                                 }
                                 else
                                 {
-                                    Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Red Slime");
+                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Red Slime");
                                 }
                             }
                         }
@@ -9573,11 +9630,11 @@ namespace Terraria_Server
                             {
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 39, 1);
                             }
-                            else if (Main.rand.Next(20) == 0)
+                            else if (Main.rand.Next(14) == 0)
                             {
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 24, 0);
                             }
-                            else if (Main.rand.Next(12) == 0)
+                            else if (Main.rand.Next(10) == 0)
                             {
                                 if (Main.rand.Next(10) == 0)
                                 {
@@ -9597,7 +9654,7 @@ namespace Terraria_Server
                                 npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 60, 0);
                             }
                         }
-                        else if (Main.rand.Next(35) == 0)
+                        else if (Main.rand.Next(55) == 0)
                         {
                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 10, 1);
                         }
@@ -9610,11 +9667,11 @@ namespace Terraria_Server
                             npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
                             if (Main.players[j].zoneJungle)
                             {
-                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Jungle Slime");
+                                Registries.NPC.Alter(Main.npcs[npcIndex], "Jungle Slime");
                             }
                             else
                             {
-                                Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Black Slime");
+                                Registries.NPC.Alter(Main.npcs[npcIndex], "Black Slime");
                             }
                         }
                         else if (Main.rand.Next(2) == 0)
@@ -9642,7 +9699,7 @@ namespace Terraria_Server
                         }
                         if (Main.npcs[npcIndex].type == NPCType.N01_BLUE_SLIME && Main.rand.Next(250) == 0)
                         {
-                            Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Pinky");
+                            Registries.NPC.Alter(Main.npcs[npcIndex], "Pinky");
                         }
                         if (npcIndex < MAX_NPCS)
                         {
@@ -9914,16 +9971,18 @@ namespace Terraria_Server
 		/// <param name="knockBack">Knockback amount</param>
 		/// <param name="hitDirection">Direction of strike</param>
 		/// <returns>Amount of damage actually done</returns>
-        public double StrikeNPC(int Damage, float knockBack, int hitDirection)
+        public double StrikeNPC(int Damage, float knockBack, int hitDirection, bool crit = false)
         {
             if (!this.Active || this.life <= 0)
             {
                 return 0.0;
             }
             double num = Main.CalculateDamage(Damage, this.defense);
+            if (crit) num *= 2.0;
 
             if (num >= 1.0)
             {
+                this.justHit = true;
                 if (this.townNPC)
                 {
                     this.ai[0] = 1f;
@@ -9940,15 +9999,69 @@ namespace Terraria_Server
                 this.life -= (int)num;
                 if (knockBack > 0f && this.knockBackResist > 0f)
                 {
-                    if (!this.noGravity)
-                    {
-                        this.Velocity.Y = -knockBack * 0.75f * this.knockBackResist;
-                    }
-                    else
-                    {
-                        this.Velocity.Y = -knockBack * 0.5f * this.knockBackResist;
-                    }
-                    this.Velocity.X = knockBack * (float)hitDirection * this.knockBackResist;
+					float num2 = knockBack * this.knockBackResist;
+					if (crit)
+					{
+						num2 *= 1.4f;
+					}
+					if (num * 10.0 < (double)this.lifeMax)
+					{
+						if (hitDirection < 0 && this.Velocity.X > -num2)
+						{
+							if (this.Velocity.X > 0f)
+							{
+								this.Velocity.X = this.Velocity.X - num2;
+							}
+							this.Velocity.X = this.Velocity.X - num2;
+							if (this.Velocity.X < -num2)
+							{
+								this.Velocity.X = -num2;
+							}
+						}
+						else
+						{
+							if (hitDirection > 0 && this.Velocity.X < num2)
+							{
+								if (this.Velocity.X < 0f)
+								{
+									this.Velocity.X = this.Velocity.X + num2;
+								}
+								this.Velocity.X = this.Velocity.X + num2;
+								if (this.Velocity.X > num2)
+								{
+									this.Velocity.X = num2;
+								}
+							}
+						}
+						if (!this.noGravity)
+						{
+							num2 *= -0.75f;
+						}
+						else
+						{
+							num2 *= -0.5f;
+						}
+						if (this.Velocity.Y > num2)
+						{
+							this.Velocity.Y = this.Velocity.Y + num2;
+							if (this.Velocity.Y < num2)
+							{
+								this.Velocity.Y = num2;
+							}
+						}
+					}
+					else
+					{
+						if (!this.noGravity)
+						{
+							this.Velocity.Y = -num2 * 0.75f * this.knockBackResist;
+						}
+						else
+						{
+							this.Velocity.Y = -num2 * 0.5f * this.knockBackResist;
+						}
+						this.Velocity.X = num2 * (float)hitDirection * this.knockBackResist;
+					}
                 }
                 this.HitEffect(hitDirection, num);
 
@@ -9990,13 +10103,17 @@ namespace Terraria_Server
 		/// <summary>
 		/// Drops loot from dead NPC
 		/// </summary>
-        public void NPCLoot()
+        public void NPCLoot() //FIXME update
         {
             if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 23, Main.rand.Next(1, 3), false);
             }
-            if (this.type == NPCType.N02_DEMON_EYE)
+            else if (this.type == NPCType.N71_DUNGEON_SLIME)
+            {
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 327, 1, false);
+            }
+            else if (this.type == NPCType.N02_DEMON_EYE)
             {
                 if (Main.rand.Next(3) == 0)
                 {
@@ -10010,7 +10127,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.type == NPCType.N58_PIRANHA)
+            else if (this.type == NPCType.N58_PIRANHA)
             {
                 if (Main.rand.Next(500) == 0)
                 {
@@ -10024,39 +10141,43 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.type == NPCType.N03_ZOMBIE && Main.rand.Next(50) == 0)
+            else if (this.type == NPCType.N03_ZOMBIE && Main.rand.Next(50) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 216, 1, false);
             }
-            if (this.type == NPCType.N66_VOODOO_DEMON)
+            else if (this.type == NPCType.N66_VOODOO_DEMON)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 267, 1, false);
             }
-            if (this.type == NPCType.N62_DEMON && Main.rand.Next(50) == 0)
+            else if (this.type == NPCType.N62_DEMON && Main.rand.Next(50) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 272, 1, false);
             }
-            if (this.type == NPCType.N52_DOCTOR_BONES)
+            else if (this.type == NPCType.N52_DOCTOR_BONES)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 251, 1, false);
             }
-            if (this.type == NPCType.N53_THE_GROOM)
+            else if (this.type == NPCType.N53_THE_GROOM)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 239, 1, false);
             }
-            if (this.type == NPCType.N54_CLOTHIER)
+            else if (this.type == NPCType.N54_CLOTHIER)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 260, 1, false);
             }
-            if (this.type == NPCType.N55_GOLDFISH)
+            else if (this.type == NPCType.N55_GOLDFISH)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 261, 1, false);
             }
-            if (this.type == NPCType.N69_ANTLION && Main.rand.Next(10) == 0)
+            else if (this.type == NPCType.N69_ANTLION && Main.rand.Next(10) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 323, 1, false);
             }
-            if (this.type == NPCType.N04_EYE_OF_CTHULU)
+            else if (this.type == NPCType.N73_GOBLIN_SCOUT)
+            {
+                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 362, 1, false);
+            }
+            else if (this.type == NPCType.N04_EYE_OF_CTHULU)
             {
                 int stack = Main.rand.Next(30) + 20;
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 47, stack, false);
@@ -10069,11 +10190,11 @@ namespace Terraria_Server
                 stack = Main.rand.Next(3) + 1;
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 59, stack, false);
             }
-            if (this.type == NPCType.N06_EATER_OF_SOULS && Main.rand.Next(3) == 0)
+            else if (this.type == NPCType.N06_EATER_OF_SOULS && Main.rand.Next(3) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 68, 1, false);
             }
-            if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL)
+            else if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL)
             {
                 if (Main.rand.Next(3) == 0)
                 {
@@ -10081,50 +10202,57 @@ namespace Terraria_Server
                 }
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 69, Main.rand.Next(3, 9), false);
             }
-            if ((this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL) && Main.rand.Next(500) == 0)
+            else if ((this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL) && Main.rand.Next(500) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 215, 1, false);
             }
-            if (this.type == NPCType.N47_CORRUPT_BUNNY && Main.rand.Next(75) == 0)
+            else if (this.type == NPCType.N47_CORRUPT_BUNNY && Main.rand.Next(75) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 243, 1, false);
             }
-            if (this.type == NPCType.N39_BONE_SERPENT_HEAD || this.type == NPCType.N40_BONE_SERPENT_BODY || this.type == NPCType.N41_BONE_SERPENT_TAIL)
-            {
-                if (Main.rand.Next(100) == 0)
-                {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 220, 1, false);
-                }
-                else
-                {
-                    if (Main.rand.Next(100) == 0)
-                    {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 218, 1, false);
-                    }
-                }
-            }
-            if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
-            {
-                int stack2 = Main.rand.Next(1, 4);
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 86, stack2, false);
-                if (Main.rand.Next(2) == 0)
-                {
-                    stack2 = Main.rand.Next(2, 6);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
-                }
-                if (this.boss)
-                {
-                    stack2 = Main.rand.Next(10, 30);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
-                    stack2 = Main.rand.Next(10, 31);
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
-                }
-            }
-            if (this.type == NPCType.N63_BLUE_JELLYFISH || this.type == NPCType.N64_PINK_JELLYFISH)
+			else if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
+			{
+				int stack2 = Main.rand.Next(1, 3);
+				if (Main.rand.Next(2) == 0)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 86, stack2, false);
+				}
+				if (Main.rand.Next(2) == 0)
+				{
+					stack2 = Main.rand.Next(2, 6);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
+				}
+				if (this.boss)
+				{
+					stack2 = Main.rand.Next(10, 30);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
+					stack2 = Main.rand.Next(10, 31);
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 56, stack2, false);
+				}
+				if (Main.rand.Next(3) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLife < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statLifeMax)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 58, 1, false);
+				}
+			}
+//            if (this.type == NPCType.N39_BONE_SERPENT_HEAD || this.type == NPCType.N40_BONE_SERPENT_BODY || this.type == NPCType.N41_BONE_SERPENT_TAIL)
+//            {
+//                if (Main.rand.Next(100) == 0)
+//                {
+//                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 220, 1, false);
+//                }
+//                else
+//                {
+//                    if (Main.rand.Next(100) == 0)
+//                    {
+//                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 218, 1, false);
+//                    }
+//                }
+//            }
+            else if (this.type == NPCType.N63_BLUE_JELLYFISH || this.type == NPCType.N64_PINK_JELLYFISH)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 282, Main.rand.Next(1, 5), false);
             }
-            if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER)
+            else if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N44_UNDEAD_MINER)
             {
                 if (Main.rand.Next(25) == 0)
                 {
@@ -10138,37 +10266,34 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.type == NPCType.N45_TIM)
+            else if (this.type == NPCType.N45_TIM)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 238, 1, false);
             }
-            if (this.type == NPCType.N50_KING_SLIME)
+            else if (this.type == NPCType.N50_KING_SLIME)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, Main.rand.Next(256, 259), 1, false);
             }
-            if (this.type == NPCType.N23_METEOR_HEAD && Main.rand.Next(50) == 0)
+            else if (this.type == NPCType.N23_METEOR_HEAD && Main.rand.Next(50) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 116, 1, false);
             }
-            if (this.type == NPCType.N24_FIRE_IMP)
-            {
-                if (Main.rand.Next(50) == 0)
-                {
-                    Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 112, 1, false);
-                }
-                else
-                {
-                    if (Main.rand.Next(500) == 0)
-                    {
-                        Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 244, 1, false);
-                    }
-                }
-            }
-            if (this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N32_DARK_CASTER)
-            {
-                Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, 1, false);
-            }
-            if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N29_GOBLIN_SORCERER)
+			else if (this.type == NPCType.N24_FIRE_IMP && Main.rand.Next(300) == 0)
+			{
+				Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 244, 1, false);
+			}
+			else if (this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N34_CURSED_SKULL)
+			{
+				if (Main.rand.Next(75) == 0)
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 327, 1, false);
+				}
+				else
+				{
+					Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 154, Main.rand.Next(1, 4), false);
+				}
+			}
+            else if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N29_GOBLIN_SORCERER)
             {
                 if (Main.rand.Next(400) == 0)
                 {
@@ -10190,15 +10315,15 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.type == NPCType.N42_HORNET)
+            else if (this.type == NPCType.N42_HORNET && Main.rand.Next(2) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 209, 1, false);
             }
-            if (this.type == NPCType.N43_MAN_EATER && Main.rand.Next(5) == 0)
+            else if (this.type == NPCType.N43_MAN_EATER && Main.rand.Next(4) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 210, 1, false);
             }
-            if (this.type == NPCType.N65_SHARK)
+            else if (this.type == NPCType.N65_SHARK)
             {
                 if (Main.rand.Next(50) == 0)
                 {
@@ -10209,7 +10334,7 @@ namespace Terraria_Server
                     Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 319, 1, false);
                 }
             }
-            if (this.type == NPCType.N48_HARPY && Main.rand.Next(5) == 0)
+            else if (this.type == NPCType.N48_HARPY && Main.rand.Next(5) == 0)
             {
                 Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, 320, 1, false);
             }
@@ -10251,7 +10376,7 @@ namespace Terraria_Server
                 npcEvent.Sender = sender;
                 Program.server.PluginManager.processHook(Hooks.NPC_BOSSDEATH, npcEvent);
             }
-            if (Main.rand.Next(7) == 0 && this.lifeMax > 1)
+            if (Main.rand.Next(6) == 0 && this.lifeMax > 1)
             {
                 if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statMana < Main.players[(int)Player.FindClosest(this.Position, this.Width, this.Height)].statManaMax)
                 {
@@ -10361,7 +10486,7 @@ namespace Terraria_Server
 		/// <param name="dmg">Raw amount of damage done</param>
         public void HitEffect(int hitDirection = 0, double dmg = 10.0)
         {
-            if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
+            if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME || this.type == NPCType.N71_DUNGEON_SLIME)
             {
                 if (this.life > 0)
                 {
@@ -10379,10 +10504,11 @@ namespace Terraria_Server
                         for (int slimeNum = 0; slimeNum < spawnedSlimes; slimeNum++)
                         {
                             int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.Width / 2)), (int)(this.Position.Y + (float)this.Height), 1, 0);
-                            Main.npcs[npcIndex] = Registries.NPC.Alter(Main.npcs[npcIndex], "Baby Slime");
-                            Main.npcs[npcIndex].Velocity.X = this.Velocity.X * 2f;
-                            Main.npcs[npcIndex].Velocity.Y = this.Velocity.Y;
                             NPC npc = Main.npcs[npcIndex];
+                            Registries.NPC.Alter (npc, "Baby Slime");
+                            npc.Velocity.X = this.Velocity.X * 2f;
+                            npc.Velocity.Y = this.Velocity.Y;
+                            
                             npc.Velocity.X = npc.Velocity.X + ((float)Main.rand.Next(-20, 20) * 0.1f + (float)(slimeNum * this.direction) * 0.3f);
                             npc.Velocity.Y = npc.Velocity.Y - ((float)Main.rand.Next(0, 10) * 0.1f + (float)slimeNum);
                             npc.ai[1] = (float)slimeNum;
@@ -10394,25 +10520,26 @@ namespace Terraria_Server
                     }
                 }
             }
-            else if (this.type == NPCType.N59_LAVA_SLIME || this.type == NPCType.N60_HELLBAT)
-            {
-                if (this.life > 0)
-                {
-                    return;
-                }
-                if (this.type == NPCType.N59_LAVA_SLIME)
-                {
-                    int num5 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
-                    int num6 = (int)(this.Position.Y + (float)(this.Height / 2)) / 16;
-                    Main.tile.At(num5, num6).SetLava(true);
-                    if (Main.tile.At(num5, num6).Liquid < 200)
-                    {
-                        Main.tile.At(num5, num6).SetLiquid(200);
-                    }
-                    WorldModify.TileFrame(num5, num6, false, false);
-                    return;
-                }
-            }
+// removed in 1.0.6
+//            else if (this.type == NPCType.N59_LAVA_SLIME || this.type == NPCType.N60_HELLBAT)
+//            {
+//                if (this.life > 0)
+//                {
+//                    return;
+//                }
+//                if (this.type == NPCType.N59_LAVA_SLIME)
+//                {
+//                    int num5 = (int)(this.Position.X + (float)(this.Width / 2)) / 16;
+//                    int num6 = (int)(this.Position.Y + (float)(this.Height / 2)) / 16;
+//                    Main.tile.At(num5, num6).SetLava(true);
+//                    if (Main.tile.At(num5, num6).Liquid < 200)
+//                    {
+//                        Main.tile.At(num5, num6).SetLiquid(200);
+//                    }
+//                    WorldModify.TileFrame(num5, num6, false, false);
+//                    return;
+//                }
+//            }
             else if (this.type == NPCType.N50_KING_SLIME)
             {
                 if (this.life > 0)
@@ -10425,7 +10552,6 @@ namespace Terraria_Server
                     int x = (int)(this.Position.X + (float)Main.rand.Next(this.Width - 32));
                     int y = (int)(this.Position.Y + (float)Main.rand.Next(this.Height - 32));
                     int npcIndex = NPC.NewNPC(x, y, 1, 0);
-                    Main.npcs[npcIndex] = Registries.NPC.Create(1);
                     Main.npcs[npcIndex].Velocity.X = (float)Main.rand.Next(-15, 16) * 0.1f;
                     Main.npcs[npcIndex].Velocity.Y = (float)Main.rand.Next(-30, 1) * 0.1f;
                     Main.npcs[npcIndex].ai[1] = (float)Main.rand.Next(3);
@@ -10434,175 +10560,6 @@ namespace Terraria_Server
                         NetMessage.SendData(23, -1, -1, "", npcIndex);
                     }
                 }
-                return;
-            }
-            else if (this.type == NPCType.N49_CAVE_BAT || this.type == NPCType.N51_JUNGLE_BAT)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N46_BUNNY || this.type == NPCType.N55_GOLDFISH || this.type == NPCType.N67_CRAB)
-            {
-                if (this.life > 0)
-                {
-                    return;
-                }
-                if (this.type == NPCType.N46_BUNNY)
-                {
-                    return;
-                }
-                if (this.type == NPCType.N67_CRAB)
-                {
-                    return;
-                }
-            }
-            else if (this.type == NPCType.N47_CORRUPT_BUNNY || this.type == NPCType.N57_CORRUPT_GOLDFISH || this.type == NPCType.N58_PIRANHA)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N02_DEMON_EYE)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N69_ANTLION)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N61_VULTURE)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N65_SHARK)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N03_ZOMBIE || this.type == NPCType.N52_DOCTOR_BONES || this.type == NPCType.N53_THE_GROOM)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N04_EYE_OF_CTHULU)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N05_SERVANT_OF_CTHULU)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N06_EATER_OF_SOULS)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N07_DEVOURER_HEAD || this.type == NPCType.N08_DEVOURER_BODY || this.type == NPCType.N09_DEVOURER_TAIL)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N10_GIANT_WORM_HEAD || this.type == NPCType.N11_GIANT_WORM_BODY || this.type == NPCType.N12_GIANT_WORM_TAIL)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N13_EATER_OF_WORLDS_HEAD || this.type == NPCType.N14_EATER_OF_WORLDS_BODY || this.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N17_MERCHANT)
-            {
-                if (this.life > 0)
-                {
-                    return;
-                }
-                return;
-            }
-            else if (this.type == NPCType.N22_GUIDE)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N37_OLD_MAN || this.type == NPCType.N54_CLOTHIER)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N18_NURSE)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N19_ARMS_DEALER)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N38_DEMOLITIONIST)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N20_DRYAD)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N21_SKELETON || this.type == NPCType.N31_ANGRY_BONES || this.type == NPCType.N32_DARK_CASTER || this.type == NPCType.N44_UNDEAD_MINER || this.type == NPCType.N45_TIM)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N39_BONE_SERPENT_HEAD || this.type == NPCType.N40_BONE_SERPENT_BODY || this.type == NPCType.N41_BONE_SERPENT_TAIL)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N34_CURSED_SKULL)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N35_SKELETRON_HEAD || this.type == NPCType.N36_SKELETRON_HAND)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N23_METEOR_HEAD)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N24_FIRE_IMP)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N25_BURNING_SPHERE)
-            {
-
-                return;
-            }
-            else if (this.type == NPCType.N33_WATER_SPHERE)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N26_GOBLIN_PEON || this.type == NPCType.N27_GOBLIN_THIEF || this.type == NPCType.N28_GOBLIN_WARRIOR || this.type == NPCType.N29_GOBLIN_SORCERER)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N30_CHAOS_BALL)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N42_HORNET)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N43_MAN_EATER || this.type == NPCType.N56_SNATCHER)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N48_HARPY)
-            {
-                return;
-            }
-            else if (this.type == NPCType.N62_DEMON || this.type == NPCType.N66_VOODOO_DEMON)
-            {
-                if (this.life > 0)
-                {
-                    return;
-                }
-            }
-
-            Color newColor2 = new Color(50, 120, 255, 100);
-            if (this.type == NPCType.N64_PINK_JELLYFISH)
-            {
-                newColor2 = new Color(225, 70, 140, 100);
-            }
-            if (this.life > 0)
-            {
                 return;
             }
         }
@@ -10673,6 +10630,70 @@ namespace Terraria_Server
             npc.whoAmI = i;
             if (npc.Active)
             {
+				npc.lifeRegen = 0;
+				npc.poisoned = false;
+				npc.onFire = false;
+				for (int j = 0; j < 5; j++)
+				{
+					if (npc.buffType[j] > 0 && npc.buffTime[j] > 0)
+					{
+						npc.buffTime[j]--;
+						if (npc.buffType[j] == 20)
+						{
+							npc.poisoned = true;
+						}
+						else
+						{
+							if (npc.buffType[j] == 24)
+							{
+								npc.onFire = true;
+							}
+						}
+					}
+				}
+				
+				for (int k = 0; k < 5; k++)
+				{
+					if (npc.buffType[k] > 0 && npc.buffTime[k] <= 0)
+					{
+						npc.DelBuff(k);
+						NetMessage.SendData(54, -1, -1, "", npc.whoAmI, 0f, 0f, 0f, 0);
+					}
+				}
+				
+				if (npc.poisoned)
+				{
+					npc.lifeRegen = -4;
+				}
+				if (npc.onFire)
+				{
+					npc.lifeRegen = -8;
+				}
+				
+				npc.lifeRegenCount += npc.lifeRegen;
+				while (npc.lifeRegenCount >= 120)
+				{
+					npc.lifeRegenCount -= 120;
+					if (npc.life < npc.lifeMax)
+					{
+						npc.life++;
+					}
+					if (npc.life > npc.lifeMax)
+					{
+						npc.life = npc.lifeMax;
+					}
+				}
+				while (npc.lifeRegenCount <= -120)
+				{
+					npc.lifeRegenCount += 120;
+					npc.life--;
+					if (npc.life <= 0)
+					{
+						npc.life = 1;
+						npc.StrikeNPC(9999, 0f, 0, false);
+						NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 9999f, 0f, 0f, 0);
+					}
+				}
                 if (Main.bloodMoon)
                 {
                     if (npc.type == NPCType.N46_BUNNY)
@@ -10771,15 +10792,38 @@ namespace Terraria_Server
                         npc.lavaWet = true;
                         if (!npc.lavaImmune && npc.immune[255] == 0)
                         {
+                            npc.AddBuff(24, 420, false);
                             npc.immune[255] = 30;
                             npc.StrikeNPC(50, 0f, 0);
 
                             NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 50f);
                         }
                     }
-                    bool flag2 = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
+                    
+					bool flag2 = false;
+					if (npc.type == NPCType.N72_BLAZING_WHEEL)
+					{
+						flag2 = false;
+						npc.wetCount = 0;
+						flag = false;
+					}
+					else
+					{
+						flag2 = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
+					}
+					
                     if (flag2)
                     {
+						if (npc.onFire && !npc.lavaWet)
+						{
+							for (int n = 0; n < 5; n++)
+							{
+								if (npc.buffType[n] == 24)
+								{
+									npc.DelBuff(n);
+								}
+							}
+						}
                         if (!npc.wet && npc.wetCount == 0)
                         {
                             npc.wetCount = 10;
@@ -10811,6 +10855,10 @@ namespace Terraria_Server
                     {
                         flag3 = true;
                     }
+					if (npc.aiStyle == 14)
+					{
+						flag3 = true;
+					}
                     if (npc.aiStyle == 3 && npc.directionY == 1)
                     {
                         flag3 = true;
@@ -10842,7 +10890,20 @@ namespace Terraria_Server
                     }
                     else
                     {
-                        npc.Velocity = Collision.TileCollision(npc.Position, npc.Velocity, npc.Width, npc.Height, flag3, flag3);
+						if (npc.type == NPCType.N72_BLAZING_WHEEL)
+						{
+							Vector2 vector2 = new Vector2(npc.Position.X + (float)(npc.Width / 2), npc.Position.Y + (float)(npc.Height / 2));
+							int num14 = 12;
+							int num15 = 12;
+							vector2.X -= (float)(num14 / 2);
+							vector2.Y -= (float)(num15 / 2);
+							npc.Velocity = Collision.TileCollision(vector2, npc.Velocity, num14, num15, true, true);
+						}
+						else
+						{
+							npc.Velocity = Collision.TileCollision(npc.Position, npc.Velocity, npc.Width, npc.Height, flag3, flag3);
+						}
+                        
                         if (Collision.up)
                         {
                             npc.Velocity.Y = 0.01f;
@@ -10875,6 +10936,7 @@ namespace Terraria_Server
                 npc.FindFrame();
                 npc.CheckActive();
                 npc.netUpdate = false;
+                npc.justHit = false;
             }
         }
 
@@ -11340,11 +11402,15 @@ namespace Terraria_Server
         public override object Clone()
         {
             NPC cloned = (NPC)base.MemberwiseClone();
-            NPC.npcSlots = cloned.slots;
+            //NPC.npcSlots = cloned.slots;
             cloned.frame = default(Rectangle);
             cloned.Width = (int)((float)cloned.Width * cloned.scale);
             cloned.Height = (int)((float)cloned.Height * cloned.scale);
             cloned.life = cloned.lifeMax;
+            //cloned.life = (int)(cloned.lifeMax * cloned.scale);
+            //cloned.defense = (int)(cloned.
+            cloned.slots *= cloned.scale;
+            
             cloned.ai = new float[NPC.MAX_AI];
             Array.Copy(ai, cloned.ai, NPC.MAX_AI);
             cloned.immune = new int[256];

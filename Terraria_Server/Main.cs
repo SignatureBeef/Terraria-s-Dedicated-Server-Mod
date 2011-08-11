@@ -63,20 +63,24 @@ namespace Terraria_Server
 		public static int evilTiles;
 
 
-        public static bool[] tileCut = new bool[86];
-        public static bool[] tileAlch = new bool[86];
-        public static int[] tileShine = new int[86];
-        public static bool[] tileStone = new bool[86];
-        public static bool[] tileWaterDeath = new bool[86];
-        public static bool[] tileLavaDeath = new bool[86];
-        public static bool[] tileTable = new bool[86];
-        public static bool[] tileBlockLight = new bool[86];
-        public static bool[] tileDungeon = new bool[86];
-        public static bool[] tileSolidTop = new bool[86];
-        public static bool[] tileSolid = new bool[86];
-        public static bool[] tileNoAttach = new bool[86];
-        public static bool[] tileNoFail = new bool[86];
-        public static bool[] tileFrameImportant = new bool[86];
+		public static bool[] tileMergeDirt = new bool[106];
+		public static bool[] tileCut = new bool[106];
+		public static bool[] tileAlch = new bool[106];
+		public static int[] tileShine = new int[106];
+		public static bool[] wallHouse = new bool[21];
+		public static bool[] tileStone = new bool[106];
+		public static bool[] tileWaterDeath = new bool[106];
+		public static bool[] tileLavaDeath = new bool[106];
+		public static bool[] tileTable = new bool[106];
+		public static bool[] tileBlockLight = new bool[106];
+		public static bool[] tileDungeon = new bool[106];
+		public static bool[] tileSolidTop = new bool[106];
+		public static bool[] tileSolid = new bool[106];
+		public static bool[] tileNoAttach = new bool[106];
+		public static bool[] tileNoFail = new bool[106];
+		public static bool[] tileFrameImportant = new bool[106];
+		public static int[] backgroundWidth = new int[7];
+		public static int[] backgroundHeight = new int[7];
 
 		[ThreadStatic]
 		static Random threadRand;
@@ -94,7 +98,6 @@ namespace Terraria_Server
 			}
 		}
 		
-		public static bool[] wallHouse = new bool[14];
         public static TileCollection tile;
 		public static Item[] item = new Item[201];
 		public static NPC[] npcs = new NPC[NPC.MAX_NPCS + 1];
@@ -1057,7 +1060,7 @@ namespace Terraria_Server
 				ProgramLog.Log (e, "World update error");
 			}
 			LastWorldUpdateTime = s.Elapsed - start;
-			
+
 			start = s.Elapsed;
 			try
 			{

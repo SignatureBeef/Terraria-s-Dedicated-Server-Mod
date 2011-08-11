@@ -9,7 +9,7 @@ namespace Terraria_Server
         public bool Active { get; set; }
         public int Height { get; set; }
         public String Name { get; set; }
-        public Vector2 Position;
+        [DontClone] public Vector2 Position;
         public virtual int Type { get; set; }
         public virtual int aiStyle { get; set; }
         public virtual int damage { get; set; }

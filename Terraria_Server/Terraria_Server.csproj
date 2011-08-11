@@ -264,6 +264,7 @@
     <Compile Include="Messages\ChestUnlockMessage.cs" />
     <Compile Include="Messages\NPCAddBuffMessage.cs" />
     <Compile Include="Messages\PlayerAddBuffMessage.cs" />
+    <Compile Include="Misc\CloningExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
