@@ -22,7 +22,7 @@ namespace Terraria_Server.Messages
 			var type = readBuffer[num++];
 			var time = BitConverter.ToInt16 (readBuffer, num);
 			
-			//FIXME Main.players[whoAmI].AddBuff (type, time, true);
+			Main.players[whoAmI].AddBuff (type, time, true);
 			
 			NetMessage.SendData (55, whoAmI, -1, "", whoAmI, type, time, 0f, 0);
 		}

@@ -141,18 +141,19 @@ namespace Terraria_Server
 		public float magicBoost = 1f;
 		public int SpawnX = -1;
 		public int SpawnY = -1;
-		public int[] spX = new int[200];
-		public int[] spY = new int[200];
-		public String[] spN = new String[200];
-		public int[] spI = new int[200];
+// client-only
+//		public int[] spX = new int[200];
+//		public int[] spY = new int[200];
+//		public String[] spN = new String[200];
+//		public int[] spI = new int[200];
 		public static int tileRangeX = 5;
 		public static int tileRangeY = 4;
 		private static int tileTargetX = 0;
 		private static int tileTargetY = 0;
 		private static int jumpHeight = 15;
 		private static float jumpSpeed = 5.01f;
-		public bool[] adjTile = new bool[80];
-		public bool[] oldAdjTile = new bool[80];
+//		public bool[] adjTile = new bool[106];
+//		public bool[] oldAdjTile = new bool[106];
 		private static int itemGrabRange = 38;
 		private static float itemGrabSpeed = 0.45f;
 		private static float itemGrabSpeedMax = 4f;
@@ -209,7 +210,90 @@ namespace Terraria_Server
         
 		public bool Male { get; set; }
 		public byte Difficulty { get; set; }
-
+		
+		public bool ghost { get; set; }
+		public int ghostFrame { get; set; } // not sure if those are used by us
+		public int ghostFrameCounter { get; set; }
+		public bool hbLocked { get; set; }
+		
+		private float maxRegenDelay;
+		
+		public Item[] bank2 = new Item [Chest.MAX_ITEMS];
+		
+		public int meleeCrit { get; set; }
+		public int rangedCrit { get; set; }
+		public int magicCrit { get; set; }
+		
+		public int statManaMax2 { get; set; }
+		public int lifeRegenTime { get; set; }
+		public bool manaRegenBuff { get; set; }
+		
+		public bool ammoCost80 { get; set; }
+		public int stickyBreak { get; set; }
+		public bool archery { get; set; }
+		public bool poisoned { get; set; }
+		public bool blind { get; set; }
+		public bool onFire { get; set; }
+		public bool noItems { get; set; }
+		
+		public float meleeDamage { get; set; }
+		public float rangedDamage { get; set; }
+		public float magicDamage { get; set; }
+		public float moveSpeed { get; set; }
+		
+		public bool lightOrb { get; set; }
+		
+        public Player()
+		{
+            Width = 20;
+		    Height = 42;
+			
+			PluginData = System.Collections.Hashtable.Synchronized (new System.Collections.Hashtable());
+			
+			for (int i = 0; i < MAX_INVENTORY; i++)
+			{
+				if (i < 8)
+				{
+					this.armor[i] = new Item();
+					this.armor[i].Name = "";
+				}
+				this.inventory[i] = new Item();
+				this.inventory[i].Name = "";
+			}
+			for (int j = 0; j < Chest.MAX_ITEMS; j++)
+			{
+				this.bank[j] = new Item();
+				this.bank[j].Name = "";
+			}
+			this.grappling[0] = -1;
+			this.inventory[0] = Registries.Item.Create("Copper Pickaxe");
+            this.inventory[1] = Registries.Item.Create("Copper Axe");
+//			for (int k = 0; k < 80; k++)
+//			{
+//				this.adjTile[k] = false;
+//				this.oldAdjTile[k] = false;
+//			}
+			
+			OldSpawnX = -1;
+			OldSpawnY = -1;
+			
+			TeleSpawnX = -1;
+			TeleSpawnY = -1;
+			
+			Male = true;
+			Difficulty = 0;
+			
+			meleeCrit = 4;
+			rangedCrit = 4;
+			magicCrit = 4;
+			
+			meleeDamage = 1f;
+			rangedDamage = 1f;
+			magicDamage = 1f;
+			meleeSpeed = 1f;
+			moveSpeed = 1f;
+		}
+		
         public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, A, R, G, B);
@@ -259,11 +343,433 @@ namespace Terraria_Server
 			return result;
 		}
 		
-		public void AddBuff(int type, int time, bool quiet = true) //FIXME: add
+		public void AddBuff(int type, int time, bool quiet = true)
 		{
+			int num = -1;
+			for (int i = 0; i < 10; i++)
+			{
+				if (this.buffType[i] == type)
+				{
+					if (this.buffTime[i] < time)
+					{
+						this.buffTime[i] = time;
+					}
+					return;
+				}
+			}
+			while (num == -1)
+			{
+				int num2 = -1;
+				for (int j = 0; j < 10; j++)
+				{
+					if (!Main.debuff[this.buffType[j]])
+					{
+						num2 = j;
+						break;
+					}
+				}
+				if (num2 == -1)
+				{
+					return;
+				}
+				for (int k = num2; k < 10; k++)
+				{
+					if (this.buffType[k] == 0)
+					{
+						num = k;
+						break;
+					}
+				}
+				if (num == -1)
+				{
+					this.DelBuff(num2);
+				}
+			}
+			this.buffType[num] = type;
+			this.buffTime[num] = time;
 		}
 		
-        public void UpdatePlayer(int i)
+		public void DelBuff(int b)
+		{
+			this.buffTime[b] = 0;
+			this.buffType[b] = 0;
+			for (int i = 0; i < 9; i++)
+			{
+				if (this.buffTime[i] == 0 || this.buffType[i] == 0)
+				{
+					for (int j = i + 1; j < 10; j++)
+					{
+						this.buffTime[j - 1] = this.buffTime[j];
+						this.buffType[j - 1] = this.buffType[j];
+						this.buffTime[j] = 0;
+						this.buffType[j] = 0;
+					}
+				}
+			}
+		}
+		
+		public void StatusNPC (int type, NPC npc)
+		{
+			if (type == 121)
+			{
+				if (Main.rand.Next(2) == 0)
+				{
+					npc.AddBuff(24, 180, false);
+					return;
+				}
+			}
+			else
+			{
+				if (type == 122)
+				{
+					if (Main.rand.Next(10) == 0)
+					{
+						npc.AddBuff(24, 180, false);
+						return;
+					}
+				}
+				else
+				{
+					if (type == 190)
+					{
+						if (Main.rand.Next(4) == 0)
+						{
+							npc.AddBuff(20, 420, false);
+							return;
+						}
+					}
+					else
+					{
+						if (type == 217 && Main.rand.Next(5) == 0)
+						{
+							npc.AddBuff(24, 180, false);
+						}
+					}
+				}
+			}
+		}
+		public void StatusPvP(int type, Player player)
+		{
+			if (type == 121)
+			{
+				if (Main.rand.Next(2) == 0)
+				{
+					player.AddBuff(24, 180, false);
+					return;
+				}
+			}
+			else
+			{
+				if (type == 122)
+				{
+					if (Main.rand.Next(10) == 0)
+					{
+						player.AddBuff(24, 180, false);
+						return;
+					}
+				}
+				else
+				{
+					if (type == 190)
+					{
+						if (Main.rand.Next(4) == 0)
+						{
+							player.AddBuff(20, 420, false);
+							return;
+						}
+					}
+					else
+					{
+						if (type == 217 && Main.rand.Next(5) == 0)
+						{
+							player.AddBuff(24, 180, false);
+						}
+					}
+				}
+			}
+		}
+		
+		public void Ghost()
+		{
+			this.immune = false;
+			this.immuneAlpha = 0;
+			this.controlUp = false;
+			this.controlLeft = false;
+			this.controlDown = false;
+			this.controlRight = false;
+			this.controlJump = false;
+			
+			if (this.controlUp || this.controlJump)
+			{
+				if (this.Velocity.Y > 0f)
+				{
+					this.Velocity.Y = this.Velocity.Y * 0.9f;
+				}
+				this.Velocity.Y = this.Velocity.Y - 0.1f;
+				if (this.Velocity.Y < -3f)
+				{
+					this.Velocity.Y = -3f;
+				}
+			}
+			else
+			{
+				if (this.controlDown)
+				{
+					if (this.Velocity.Y < 0f)
+					{
+						this.Velocity.Y = this.Velocity.Y * 0.9f;
+					}
+					this.Velocity.Y = this.Velocity.Y + 0.1f;
+					if (this.Velocity.Y > 3f)
+					{
+						this.Velocity.Y = 3f;
+					}
+				}
+				else
+				{
+					if ((double)this.Velocity.Y < -0.1 || (double)this.Velocity.Y > 0.1)
+					{
+						this.Velocity.Y = this.Velocity.Y * 0.9f;
+					}
+					else
+					{
+						this.Velocity.Y = 0f;
+					}
+				}
+			}
+			if (this.controlLeft && !this.controlRight)
+			{
+				if (this.Velocity.X > 0f)
+				{
+					this.Velocity.X = this.Velocity.X * 0.9f;
+				}
+				this.Velocity.X = this.Velocity.X - 0.1f;
+				if (this.Velocity.X < -3f)
+				{
+					this.Velocity.X = -3f;
+				}
+			}
+			else
+			{
+				if (this.controlRight && !this.controlLeft)
+				{
+					if (this.Velocity.X < 0f)
+					{
+						this.Velocity.X = this.Velocity.X * 0.9f;
+					}
+					this.Velocity.X = this.Velocity.X + 0.1f;
+					if (this.Velocity.X > 3f)
+					{
+						this.Velocity.X = 3f;
+					}
+				}
+				else
+				{
+					if ((double)this.Velocity.X < -0.1 || (double)this.Velocity.X > 0.1)
+					{
+						this.Velocity.X = this.Velocity.X * 0.9f;
+					}
+					else
+					{
+						this.Velocity.X = 0f;
+					}
+				}
+			}
+			this.Position += this.Velocity;
+			this.ghostFrameCounter++;
+			if (this.Velocity.X < 0f)
+			{
+				this.direction = -1;
+			}
+			else
+			{
+				if (this.Velocity.X > 0f)
+				{
+					this.direction = 1;
+				}
+			}
+			if (this.ghostFrameCounter >= 8)
+			{
+				this.ghostFrameCounter = 0;
+				this.ghostFrame++;
+				if (this.ghostFrame >= 4)
+				{
+					this.ghostFrame = 0;
+				}
+			}
+			if (this.Position.X < Main.leftWorld + 336f + 16f)
+			{
+				this.Position.X = Main.leftWorld + 336f + 16f;
+				this.Velocity.X = 0f;
+			}
+			if (this.Position.X + (float)this.Width > Main.rightWorld - 336f - 32f)
+			{
+				this.Position.X = Main.rightWorld - 336f - 32f - (float)this.Width;
+				this.Velocity.X = 0f;
+			}
+			if (this.Position.Y < Main.topWorld + 336f + 16f)
+			{
+				this.Position.Y = Main.topWorld + 336f + 16f;
+				if ((double)this.Velocity.Y < -0.1)
+				{
+					this.Velocity.Y = -0.1f;
+				}
+			}
+			if (this.Position.Y > Main.bottomWorld - 336f - 32f - (float)this.Height)
+			{
+				this.Position.Y = Main.bottomWorld - 336f - 32f - (float)this.Height;
+				this.Velocity.Y = 0f;
+			}
+		}
+		
+		// factored out of UpdatePlayer
+		public void ApplyBuffs ()
+		{
+			for (int l = 0; l < 10; l++)
+			{
+				if (this.buffType[l] > 0 && this.buffTime[l] > 0)
+				{
+					if (this.whoAmi == Main.myPlayer)
+					{
+						this.buffTime[l]--;
+					}
+					
+					switch (this.buffType[l])
+					{
+						case 1:
+							//this.lavaImmune = true;
+							this.fireWalk = true;
+							break;
+						
+						case 2:
+							this.lifeRegen += 2;
+							break;
+						
+						case 3:
+							this.moveSpeed += 0.25f;
+							break;
+						
+						case 4:
+							//this.gills = true;
+							break;
+						
+						case 5:
+							this.statDefense += 10;
+							break;
+						
+						case 6:
+							this.manaRegenBuff = true;
+							break;
+						
+						case 7:
+							this.magicDamage += 0.2f;
+							break;
+						
+						case 8:
+							//this.slowFall = true;
+							break;
+						
+						case 9:
+							//this.findTreasure = true;
+							break;
+						
+						case 10:
+							//this.invis = true;
+							break;
+						
+						case 11:
+							//Lighting.addLight((int)(this.position.X + (float)(this.width / 2)) / 16, (int)(this.position.Y + (float)(this.height / 2)) / 16, 1f);
+							break;
+						
+						case 12:
+							//this.nightVision = true;
+							break;
+						
+						case 13:
+							//this.enemySpawns = true;
+							break;
+						
+						case 14:
+							//this.thorns = true;
+							break;
+							
+						case 15:
+							//this.waterWalk = true;
+							break;
+						
+						case 16:
+							this.archery = true;
+							break;
+						
+						case 17:
+							//this.detectCreature = true;
+							break;
+						
+						case 18:
+							//this.gravControl = true;
+							break;
+						
+						case 19:
+							this.lightOrb = true;
+							bool flag4 = true;
+							for (int m = 0; m < 1000; m++)
+							{
+								if (Main.projectile[m].Active && Main.projectile[m].Owner == this.whoAmi && Main.projectile[m].Type == 18)
+								{
+									flag4 = false;
+									break;
+								}
+							}
+							if (flag4)
+							{
+								Projectile.NewProjectile(this.Position.X + (float)(this.Width / 2), this.Position.Y + (float)(this.Height / 2), 0f, 0f, 18, 0, 0f, this.whoAmi);
+							}
+							break;
+						
+						case 20:
+							this.poisoned = true;
+							break;
+						
+						case 21:
+							this.potionDelay = this.buffTime[l];
+							break;
+						
+						case 22:
+							this.blind = true;
+							break;
+						
+						case 23:
+							this.noItems = true;
+							break;
+						
+						case 24:
+							this.onFire = true;
+							break;
+						
+						case 25:
+							this.statDefense -= 4;
+							this.meleeCrit += 2;
+							this.meleeDamage += 0.1f;
+							this.meleeSpeed += 0.1f;
+							break;
+						
+						case 26:
+							this.statDefense++;
+							this.meleeCrit++;
+							this.meleeDamage += 0.05f;
+							this.meleeSpeed += 0.05f;
+							this.magicCrit++;
+							this.magicDamage += 0.05f;
+							this.rangedCrit++;
+							this.magicDamage += 0.05f;
+							this.moveSpeed += 0.1f;
+							break;
+					}
+				}
+			}
+		}
+		
+		public void UpdatePlayer(int i)
 		{
             try
             {
@@ -284,6 +790,7 @@ namespace Terraria_Server
                 float num6 = num3;
                 if (this.Active)
                 {
+                    this.maxRegenDelay = (1f - (float)this.statMana / (float)this.statManaMax2) * 60f * 4f + 45f;
                     this.shadowCount++;
                     if (this.shadowCount == 1)
                     {
@@ -325,104 +832,65 @@ namespace Terraria_Server
                     {
                         this.potionDelay--;
                     }
-                    if (this.dead)
+                    
+					if (this.ghost)
+					{
+						this.Ghost();
+						return;
+					}
+					
+                    if (!this.dead)
                     {
-                        if (i == Main.myPlayer)
-                        {
-                            Main.npcChatText = "";
-                            Main.editSign = false;
-                        }
-                        this.sign = -1;
-                        this.talkNPC = -1;
-                        this.statLife = 0;
-                        this.channel = false;
-                        this.potionDelay = 0;
-                        this.chest = -1;
-                        this.changeItem = -1;
-                        this.itemAnimation = 0;
-                        this.immuneAlpha += 2;
-                        if (this.immuneAlpha > 255)
-                        {
-                            this.immuneAlpha = 255;
-                        }
-                        this.respawnTimer--;
-                        this.headPosition += this.headVelocity;
-                        this.bodyPosition += this.bodyVelocity;
-                        this.legPosition += this.legVelocity;
-                        this.headRotation += this.headVelocity.X * 0.1f;
-                        this.bodyRotation += this.bodyVelocity.X * 0.1f;
-                        this.legRotation += this.legVelocity.X * 0.1f;
-                        this.headVelocity.Y = this.headVelocity.Y + 0.1f;
-                        this.bodyVelocity.Y = this.bodyVelocity.Y + 0.1f;
-                        this.legVelocity.Y = this.legVelocity.Y + 0.1f;
-                        this.headVelocity.X = this.headVelocity.X * 0.99f;
-                        this.bodyVelocity.X = this.bodyVelocity.X * 0.99f;
-                        this.legVelocity.X = this.legVelocity.X * 0.99f;
-                        if (this.respawnTimer <= 0 && Main.myPlayer == this.whoAmi)
-                        {
-                            this.Spawn();
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if (i == Main.myPlayer)
-                        {
-                            this.zoneEvil = false;
-                            if (Main.evilTiles >= 500)
-                            {
-                                this.zoneEvil = true;
-                            }
-                            this.zoneMeteor = false;
-                            this.zoneDungeon = false;
-                            this.zoneJungle = false;
-                            this.controlUp = false;
-                            this.controlLeft = false;
-                            this.controlDown = false;
-                            this.controlRight = false;
-                            this.controlJump = false;
-                            this.controlUseItem = false;
-                            this.controlUseTile = false;
-                            this.controlThrow = false;
-                            this.controlInv = false;
-
-                            if (Main.playerInventory)
-                            {
-                                this.AdjTiles();
-                            }
-                            if (this.chest != -1)
-                            {
-                                int num12 = (int)(((double)this.Position.X + (double)this.Width * 0.5) / 16.0);
-                                int num13 = (int)(((double)this.Position.Y + (double)this.Height * 0.5) / 16.0);
-                                if (num12 < this.chestX - 5 || num12 > this.chestX + 6 || num13 < this.chestY - 4 || num13 > this.chestY + 5)
-                                {
-                                    this.chest = -1;
-                                }
-                                if (!Main.tile.At(this.chestX, this.chestY).Active)
-                                {
-                                    this.chest = -1;
-                                }
-                            }
-                            if (this.Velocity.Y == 0f)
-                            {
-                                int num14 = (int)(this.Position.Y / 16f) - this.fallStart;
-                                if (num14 > 25 && !this.noFallDmg)
-                                {
-                                    int damage = (num14 - 25) * 10;
-                                    this.immune = false;
-                                    this.Hurt(damage, -this.direction, false, false);
-                                }
-                                this.fallStart = (int)(this.Position.Y / 16f);
-                            }
-                            if (this.Velocity.Y < 0f || this.rocketDelay > 0 || this.wet)
-                            {
-                                this.fallStart = (int)(this.Position.Y / 16f);
-                            }
-                        }
-                        if (this.mouseInterface)
-                        {
-                            this.delayUseItem = true;
-                        }
+// client-only, not updated to 1.0.6
+//                        if (i == Main.myPlayer)
+//                        {
+//                            this.controlUp = false;
+//                            this.controlLeft = false;
+//                            this.controlDown = false;
+//                            this.controlRight = false;
+//                            this.controlJump = false;
+//                            this.controlUseItem = false;
+//                            this.controlUseTile = false;
+//                            this.controlThrow = false;
+//                            this.controlInv = false;
+//
+//                            if (Main.playerInventory)
+//                            {
+//                                this.AdjTiles();
+//                            }
+//                            if (this.chest != -1)
+//                            {
+//                                int num12 = (int)(((double)this.Position.X + (double)this.Width * 0.5) / 16.0);
+//                                int num13 = (int)(((double)this.Position.Y + (double)this.Height * 0.5) / 16.0);
+//                                if (num12 < this.chestX - 5 || num12 > this.chestX + 6 || num13 < this.chestY - 4 || num13 > this.chestY + 5)
+//                                {
+//                                    this.chest = -1;
+//                                }
+//                                if (!Main.tile.At(this.chestX, this.chestY).Active)
+//                                {
+//                                    this.chest = -1;
+//                                }
+//                            }
+//                            if (this.Velocity.Y == 0f)
+//                            {
+//                                int num14 = (int)(this.Position.Y / 16f) - this.fallStart;
+//                                if (num14 > 25 && !this.noFallDmg)
+//                                {
+//                                    int damage = (num14 - 25) * 10;
+//                                    this.immune = false;
+//                                    this.Hurt(damage, -this.direction, false, false);
+//                                }
+//                                this.fallStart = (int)(this.Position.Y / 16f);
+//                            }
+//                            if (this.Velocity.Y < 0f || this.rocketDelay > 0 || this.wet)
+//                            {
+//                                this.fallStart = (int)(this.Position.Y / 16f);
+//                            }
+//                        }
+//                        if (this.mouseInterface)
+//                        {
+//                            this.delayUseItem = true;
+//                        }
                         if (this.immune)
                         {
                             this.immuneTime--;
@@ -447,16 +915,16 @@ namespace Terraria_Server
                         {
                             this.immuneAlpha = 0;
                         }
-                        if (this.manaRegenDelay > 0)
-                        {
-                            this.manaRegenDelay--;
-                        }
                         this.statDefense = 0;
                         this.accWatch = 0;
                         this.accDepthMeter = 0;
                         this.lifeRegen = 0;
                         this.manaCost = 1f;
-                        this.meleeSpeed = 1f;
+                        this.meleeSpeed = 1f;this.meleeDamage = 1f;
+						this.meleeDamage = 1f;  
+						this.rangedDamage = 1f;
+						this.magicDamage = 1f;
+						this.moveSpeed = 1f;
                         this.boneArmor = false;
                         this.rocketBoots = false;
                         this.fireWalk = false;
@@ -466,30 +934,97 @@ namespace Terraria_Server
                         this.accFlipper = false;
                         this.spawnMax = false;
                         this.spaceGun = false;
-                        this.magicBoost = 1f;
-                        if (this.manaRegenDelay == 0)
-                        {
-                            this.manaRegen = this.statManaMax / 30 + 1;
-                        }
-                        else
-                        {
-                            this.manaRegen = 0;
-                        }
+						this.statManaMax2 = this.statManaMax;
+						this.ammoCost80 = false;
+						this.manaRegenBuff = false;
+						this.meleeCrit = 4;
+						this.rangedCrit = 4;
+						this.magicCrit = 4;
+						this.lightOrb = false;
+						this.archery = false;
+						this.poisoned = false;
+						this.blind = false;
+						this.onFire = false;
+						this.noItems = false;
+						
+						this.ApplyBuffs ();
+						
+						if (this.whoAmi == Main.myPlayer)
+						{
+							for (int n = 0; n < 10; n++)
+							{
+								if (this.buffType[n] > 0 && this.buffTime[n] <= 0)
+								{
+									this.DelBuff(n);
+								}
+							}
+						}
+						
+						if (this.manaRegenDelay > 0 && !this.channel)
+						{
+							this.manaRegenDelay--;
+							if ((this.Velocity.X == 0f && this.Velocity.Y == 0f) || this.grappling[0] >= 0 || this.manaRegenBuff)
+							{
+								this.manaRegenDelay--;
+							}
+						}
+						if (this.manaRegenBuff && this.manaRegenDelay > 20)
+						{
+							this.manaRegenDelay = 20;
+						}
+						if (this.manaRegenDelay <= 0)
+						{
+							this.manaRegenDelay = 0;
+							this.manaRegen = this.statManaMax2 / 7 + 1;
+							if ((this.Velocity.X == 0f && this.Velocity.Y == 0f) || this.grappling[0] >= 0 || this.manaRegenBuff)
+							{
+								this.manaRegen += this.statManaMax2 / 2;
+							}
+							float num14 = (float)this.statMana / (float)this.statManaMax2 * 0.8f + 0.2f;
+							if (this.manaRegenBuff)
+							{
+								num14 = 1f;
+							}
+							this.manaRegen = (int)((float)this.manaRegen * num14);
+						}
+						else
+						{
+							this.manaRegen = 0;
+						}
                         this.doubleJump = false;
-                        for (int l = 0; l < 8; l++)
-                        {
-                            this.statDefense += this.armor[l].Defense;
-                            this.lifeRegen += this.armor[l].LifeRegen;
-                            this.manaRegen += this.armor[l].ManaRegen;
-                            if (this.armor[l].Type == 193)
-                            {
-                                this.fireWalk = true;
-                            }
-                            if (this.armor[l].Type == 238)
-                            {
-                                this.magicBoost *= 1.15f;
-                            }
-                        }
+//						for (int a = 0; a < 8; a++)
+//						{
+//							this.statDefense += this.armor[a].defense;
+//							this.lifeRegen += this.armor[a].lifeRegen;
+//							if (this.armor[a].type == 193)
+//							{
+//								this.fireWalk = true;
+//							}
+//							if (this.armor[a].type == 238)
+//							{
+//								this.magicDamage += 0.15f;
+//							}
+//							if (this.armor[a].type == 123 || this.armor[a].type == 124 || this.armor[a].type == 125)
+//							{
+//								this.magicDamage += 0.05f;
+//							}
+//							if (this.armor[a].type == 151 || this.armor[a].type == 152 || this.armor[a].type == 153)
+//							{
+//								this.rangedDamage += 0.05f;
+//							}
+//							if (this.armor[a].type == 111 || this.armor[a].type == 228 || this.armor[a].type == 229 || this.armor[a].type == 230)
+//							{
+//								this.statManaMax2 += 20;
+//							}
+//							if (this.armor[a].type == 228 || this.armor[a].type == 229 || this.armor[a].type == 230)
+//							{
+//								this.magicCrit += 3;
+//							}
+//							if (this.armor[a].type == 100 || this.armor[a].type == 101 || this.armor[a].type == 102)
+//							{
+//								this.meleeSpeed += 0.07f;
+//							}
+//						}
                         this.head = this.armor[0].HeadSlot;
                         this.body = this.armor[1].BodySlot;
                         this.legs = this.armor[2].LegSlot;
@@ -1919,32 +2454,33 @@ namespace Terraria_Server
 			return false;
 		}
 		
-        public void AdjTiles()
-		{
-			int num = 4;
-			int num2 = 3;
-			for (int i = 0; i < 80; i++)
-			{
-				this.oldAdjTile[i] = this.adjTile[i];
-				this.adjTile[i] = false;
-			}
-			int num3 = (int)((this.Position.X + (float)(this.Width / 2)) / 16f);
-			int num4 = (int)((this.Position.Y + (float)this.Height) / 16f);
-			for (int j = num3 - num; j <= num3 + num; j++)
-			{
-				for (int k = num4 - num2; k < num4 + num2; k++)
-				{
-					if (Main.tile.At(j, k).Active)
-					{
-						this.adjTile[(int)Main.tile.At(j, k).Type] = true;
-						if (Main.tile.At(j, k).Type == 77)
-						{
-							this.adjTile[17] = true;
-						}
-					}
-				}
-			}
-		}
+// I don't think this does anything
+//        public void AdjTiles()
+//		{
+//			int num = 4;
+//			int num2 = 3;
+//			for (int i = 0; i < 80; i++)
+//			{
+//				this.oldAdjTile[i] = this.adjTile[i];
+//				this.adjTile[i] = false;
+//			}
+//			int num3 = (int)((this.Position.X + (float)(this.Width / 2)) / 16f);
+//			int num4 = (int)((this.Position.Y + (float)this.Height) / 16f);
+//			for (int j = num3 - num; j <= num3 + num; j++)
+//			{
+//				for (int k = num4 - num2; k < num4 + num2; k++)
+//				{
+//					if (Main.tile.At(j, k).Active)
+//					{
+//						this.adjTile[(int)Main.tile.At(j, k).Type] = true;
+//						if (Main.tile.At(j, k).Type == 77)
+//						{
+//							this.adjTile[17] = true;
+//						}
+//					}
+//				}
+//			}
+//		}
 		
         public void PlayerFrame()
 		{
@@ -2184,15 +2720,15 @@ namespace Terraria_Server
 		
         public void Spawn()
 		{
-			if (this.whoAmi == Main.myPlayer)
-			{
-				this.FindSpawn();
-				if (!Player.CheckSpawn(this.SpawnX, this.SpawnY))
-				{
-					this.SpawnX = -1;
-					this.SpawnY = -1;
-				}
-			}
+//			if (this.whoAmi == Main.myPlayer)
+//			{
+//				this.FindSpawn();
+//				if (!Player.CheckSpawn(this.SpawnX, this.SpawnY))
+//				{
+//					this.SpawnX = -1;
+//					this.SpawnY = -1;
+//				}
+//			}
 
             this.headPosition = default(Vector2);
             this.bodyPosition = default(Vector2);
@@ -2260,7 +2796,7 @@ namespace Terraria_Server
 			}
 		}
 
-        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, String deathText = " was slain...")
+        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, String deathText = " was slain...", bool crit = false)
         {
             if (!this.immune)
             {
@@ -3659,62 +4195,66 @@ namespace Terraria_Server
 			}
 			return WorldModify.StartRoomCheck(x, y - 1);
 		}
-		
-        public void FindSpawn()
-		{
-			for (int i = 0; i < 200; i++)
-			{
-				if (this.spN[i] == null)
-				{
-					this.SpawnX = -1;
-					this.SpawnY = -1;
-					return;
-				}
-				if (this.spN[i] == Main.worldName && this.spI[i] == Main.worldID)
-				{
-					this.SpawnX = this.spX[i];
-					this.SpawnY = this.spY[i];
-					return;
-				}
-			}
-		}
+
+// client only
+//        public void FindSpawn()
+//		{
+//			for (int i = 0; i < 200; i++)
+//			{
+//				if (this.spN[i] == null)
+//				{
+//					this.SpawnX = -1;
+//					this.SpawnY = -1;
+//					return;
+//				}
+//				if (this.spN[i] == Main.worldName && this.spI[i] == Main.worldID)
+//				{
+//					this.SpawnX = this.spX[i];
+//					this.SpawnY = this.spY[i];
+//					return;
+//				}
+//			}
+//		}
 		
         public void ChangeSpawn(int x, int y)
 		{
-			int num = 0;
-			while (num < 200 && this.spN[num] != null)
-			{
-				if (this.spN[num] == Main.worldName && this.spI[num] == Main.worldID)
-				{
-					for (int i = num; i > 0; i--)
-					{
-						this.spN[i] = this.spN[i - 1];
-						this.spI[i] = this.spI[i - 1];
-						this.spX[i] = this.spX[i - 1];
-						this.spY[i] = this.spY[i - 1];
-					}
-					this.spN[0] = Main.worldName;
-					this.spI[0] = Main.worldID;
-					this.spX[0] = x;
-					this.spY[0] = y;
-					return;
-				}
-				num++;
-			}
-			for (int j = 199; j > 0; j--)
-			{
-				if (this.spN[j - 1] != null)
-				{
-					this.spN[j] = this.spN[j - 1];
-					this.spI[j] = this.spI[j - 1];
-					this.spX[j] = this.spX[j - 1];
-					this.spY[j] = this.spY[j - 1];
-				}
-			}
-			this.spN[0] = Main.worldName;
-			this.spI[0] = Main.worldID;
-			this.spX[0] = x;
-			this.spY[0] = y;
+			SpawnX = x;
+			SpawnY = y;
+// this is client stuff for remembering spawn Positions for different worlds
+//			int num = 0;
+//			while (num < 200 && this.spN[num] != null)
+//			{
+//				if (this.spN[num] == Main.worldName && this.spI[num] == Main.worldID)
+//				{
+//					for (int i = num; i > 0; i--)
+//					{
+//						this.spN[i] = this.spN[i - 1];
+//						this.spI[i] = this.spI[i - 1];
+//						this.spX[i] = this.spX[i - 1];
+//						this.spY[i] = this.spY[i - 1];
+//					}
+//					this.spN[0] = Main.worldName;
+//					this.spI[0] = Main.worldID;
+//					this.spX[0] = x;
+//					this.spY[0] = y;
+//					return;
+//				}
+//				num++;
+//			}
+//			for (int j = 199; j > 0; j--)
+//			{
+//				if (this.spN[j - 1] != null)
+//				{
+//					this.spN[j] = this.spN[j - 1];
+//					this.spI[j] = this.spI[j - 1];
+//					this.spX[j] = this.spX[j - 1];
+//					this.spY[j] = this.spY[j - 1];
+//				}
+//			}
+//			this.spN[0] = Main.worldName;
+//			this.spI[0] = Main.worldID;
+//			this.spX[0] = x;
+//			this.spY[0] = y;
 		}
 
         public bool HasItem(int type)
@@ -3729,47 +4269,6 @@ namespace Terraria_Server
             return false;
         }
 		
-        public Player()
-		{
-            Width = 20;
-		    Height = 42;
-			
-			PluginData = System.Collections.Hashtable.Synchronized (new System.Collections.Hashtable());
-			
-			for (int i = 0; i < MAX_INVENTORY; i++)
-			{
-				if (i < 8)
-				{
-					this.armor[i] = new Item();
-					this.armor[i].Name = "";
-				}
-				this.inventory[i] = new Item();
-				this.inventory[i].Name = "";
-			}
-			for (int j = 0; j < Chest.MAX_ITEMS; j++)
-			{
-				this.bank[j] = new Item();
-				this.bank[j].Name = "";
-			}
-			this.grappling[0] = -1;
-			this.inventory[0] = Registries.Item.Create("Copper Pickaxe");
-            this.inventory[1] = Registries.Item.Create("Copper Axe");
-			for (int k = 0; k < 80; k++)
-			{
-				this.adjTile[k] = false;
-				this.oldAdjTile[k] = false;
-			}
-			
-			OldSpawnX = -1;
-			OldSpawnY = -1;
-			
-			TeleSpawnX = -1;
-			TeleSpawnY = -1;
-			
-			Male = true;
-			Difficulty = 0;
-		}
-
         public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
         {
             String result = "";

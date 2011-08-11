@@ -24,7 +24,7 @@ namespace Terraria_Server.Messages
             NPC npc = Main.npcs[(int)npcIndex];
             if (damage >= 0)
             {
-                npc.StrikeNPC((int)damage, knockback, direction/*FIXME, crit == 1*/);
+                npc.StrikeNPC((int)damage, knockback, direction, crit == 1);
             }
             else
             {

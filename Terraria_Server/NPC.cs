@@ -10103,7 +10103,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Drops loot from dead NPC
 		/// </summary>
-        public void NPCLoot() //FIXME update
+        public void NPCLoot()
         {
             if (this.type == NPCType.N01_BLUE_SLIME || this.type == NPCType.N16_MOTHER_SLIME)
             {

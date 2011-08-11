@@ -27,7 +27,7 @@ namespace Terraria_Server.Messages
             byte crit = readBuffer[num++];
             String deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             
-            if (player.Hurt((int)damage, hitDirection, pvp, true, deathText/*FIXME, crit == 1*/) > 0.0)
+            if (player.Hurt((int)damage, hitDirection, pvp, true, deathText, crit == 1) > 0.0)
             {
                 NetMessage.SendData(26, -1, whoAmI, deathText, playerIndex, (float)hitDirection, (float)damage, (float)pvpFlag, 0/*this is still 0 O_o*/);
             }
