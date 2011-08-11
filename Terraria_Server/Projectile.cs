@@ -164,6 +164,10 @@ namespace Terraria_Server
         /// Miscellaneous text associated with the projectile.  Only used in hardcore deaths and sign edits?
         /// </summary>
         public String miscText = "";
+        
+        public bool melee { get; set; }
+        public bool ranged { get; set; }
+        public bool magic { get; set; }
 
         public Projectile()
         {

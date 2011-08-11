@@ -8,6 +8,7 @@
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Fire Arrow</Name>
@@ -19,6 +20,7 @@
     <friendly>true</friendly>
     <light>1</light>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Shuriken</Name>
@@ -30,6 +32,7 @@
     <friendly>true</friendly>
     <penetrate>4</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Unholy Arrow</Name>
@@ -42,6 +45,7 @@
     <penetrate>5</penetrate>
     <light>0.2</light>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Jester's Arrow</Name>
@@ -56,6 +60,7 @@
     <light>0.4</light>
     <tileCollide>true</tileCollide>
     <ignoreWater>true</ignoreWater>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Enchanted Boomerang</Name>
@@ -67,6 +72,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Vilethorn</Name>
@@ -79,6 +85,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <ignoreWater>true</ignoreWater>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Vilethorn</Name>
@@ -91,6 +98,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <ignoreWater>true</ignoreWater>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Starfury</Name>
@@ -104,7 +112,8 @@
     <friendly>true</friendly>
     <penetrate>2</penetrate>
     <light>1</light>
-    <tileCollide>true</tileCollide>
+    <tileCollide>false</tileCollide>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Purification Powder</Name>
@@ -149,7 +158,7 @@
     <Width>18</Width>
     <Height>18</Height>
     <aiStyle>7</aiStyle>
-    <timeLeft>3600</timeLeft>
+    <timeLeft>36000</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
   </Projectile>
@@ -166,6 +175,7 @@
     <light>0.5</light>
     <tileCollide>true</tileCollide>
     <maxUpdates>1</maxUpdates>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Ball of Fire</Name>
@@ -178,6 +188,7 @@
     <friendly>true</friendly>
     <light>0.8</light>
     <tileCollide>true</tileCollide>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Magic Missile</Name>
@@ -190,6 +201,7 @@
     <friendly>true</friendly>
     <light>0.8</light>
     <tileCollide>true</tileCollide>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Dirt Ball</Name>
@@ -211,7 +223,7 @@
     <timeLeft>18000</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
-    <light>1</light>
+    <light>0.65</light>
     <ignoreWater>true</ignoreWater>
   </Projectile>
   <Projectile>
@@ -225,6 +237,7 @@
     <penetrate>-1</penetrate>
     <light>1</light>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Green Laser</Name>
@@ -240,6 +253,7 @@
     <light>0.75</light>
     <tileCollide>true</tileCollide>
     <maxUpdates>2</maxUpdates>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Bone</Name>
@@ -251,20 +265,22 @@
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Water Stream</Name>
     <Type>22</Type>
-    <Width>12</Width>
-    <Height>12</Height>
+    <Width>18</Width>
+    <Height>18</Height>
     <alpha>255</alpha>
     <aiStyle>12</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
-    <maxUpdates>1</maxUpdates>
+    <maxUpdates>2</maxUpdates>
     <ignoreWater>true</ignoreWater>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Harpoon</Name>
@@ -277,6 +293,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Spiky Ball</Name>
@@ -286,8 +303,9 @@
     <aiStyle>14</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
-    <penetrate>3</penetrate>
+    <penetrate>6</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Ball 'O Hurt</Name>
@@ -299,6 +317,8 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <melee>true</melee>
+    <scale>0.8</scale>
   </Projectile>
   <Projectile>
     <Name>Blue Moon</Name>
@@ -310,6 +330,8 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <melee>true</melee>
+    <scale>0.8</scale>
   </Projectile>
   <Projectile>
     <Name>Water Bolt</Name>
@@ -323,6 +345,7 @@
     <penetrate>10</penetrate>
     <light>0.8</light>
     <tileCollide>true</tileCollide>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Bomb</Name>
@@ -356,6 +379,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Sand Ball</Name>
@@ -376,7 +400,7 @@
     <Width>18</Width>
     <Height>18</Height>
     <aiStyle>7</aiStyle>
-    <timeLeft>3600</timeLeft>
+    <timeLeft>36000</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
   </Projectile>
@@ -391,6 +415,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Flamelash</Name>
@@ -401,9 +426,10 @@
     <aiStyle>9</aiStyle>
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
-    <penetrate>2</penetrate>
+    <penetrate>1</penetrate>
     <light>0.8</light>
     <tileCollide>true</tileCollide>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Sunfury</Name>
@@ -415,6 +441,8 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <melee>true</melee>
+    <scale>0.8</scale>
   </Projectile>
   <Projectile>
     <Name>Meteor Shot</Name>
@@ -430,6 +458,7 @@
     <light>0.6</light>
     <tileCollide>true</tileCollide>
     <maxUpdates>1</maxUpdates>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Sticky Bomb</Name>
@@ -488,6 +517,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Sand Ball</Name>
@@ -539,6 +569,7 @@
     <penetrate>5</penetrate>
     <light>0.2</light>
     <tileCollide>true</tileCollide>
+    <magic>true</magic>
   </Projectile>
   <Projectile>
     <Name>Dark Lance</Name>
@@ -552,6 +583,7 @@
     <penetrate>-1</penetrate>
     <hide>true</hide>
     <ownerHitCheck>true</ownerHitCheck>
+    <melee>true</melee>
   </Projectile>
   <Projectile>
     <Name>Trident</Name>
@@ -565,6 +597,7 @@
     <penetrate>-1</penetrate>
     <hide>true</hide>
     <ownerHitCheck>true</ownerHitCheck>
+    <melee>true</melee>
   </Projectile>
   <Projectile>
     <Name>Throwing Knife</Name>
@@ -576,6 +609,7 @@
     <friendly>true</friendly>
     <penetrate>2</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Spear</Name>
@@ -589,6 +623,7 @@
     <penetrate>-1</penetrate>
     <hide>true</hide>
     <ownerHitCheck>true</ownerHitCheck>
+    <melee>true</melee>
   </Projectile>
   <Projectile>
     <Name>Glowstick</Name>
@@ -599,7 +634,7 @@
     <aiStyle>14</aiStyle>
     <timeLeft>18000</timeLeft>
     <penetrate>-1</penetrate>
-    <light>0.8</light>
+    <light>1</light>
     <tileCollide>true</tileCollide>
   </Projectile>
   <Projectile>
@@ -622,6 +657,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
   </Projectile>
   <Projectile>
     <Name>Sticky Glowstick</Name>
@@ -632,7 +668,7 @@
     <aiStyle>14</aiStyle>
     <timeLeft>18000</timeLeft>
     <penetrate>-1</penetrate>
-    <light>0.8</light>
+    <light>1</light>
   </Projectile>
   <Projectile>
     <Name>Poisoned Knife</Name>
@@ -643,6 +679,18 @@
     <timeLeft>3600</timeLeft>
     <friendly>true</friendly>
     <penetrate>2</penetrate>
+    <tileCollide>true</tileCollide>
+    <ranged>true</ranged>
+  </Projectile>
+  <Projectile>
+    <Name>Stinger</Name>
+    <Type>55</Type>
+    <Width>10</Width>
+    <Height>10</Height>
+    <aiStyle>1</aiStyle>
+    <timeLeft>3600</timeLeft>
+    <hostile>true</hostile>
+    <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
   </Projectile>
 </ArrayOfProjectile>
