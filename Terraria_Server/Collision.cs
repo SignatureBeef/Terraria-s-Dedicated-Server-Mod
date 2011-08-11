@@ -60,7 +60,6 @@ namespace Terraria_Server
             return true;
         }
 
-
         public static bool EmptyTile(int x, int y, bool ignoreTiles = false)
         {
             Rectangle rectangle = new Rectangle(x * 16, y * 16, 16, 16);
@@ -94,7 +93,6 @@ namespace Terraria_Server
             }
             return true;
         }
-
 
         public static bool DrownCollision(Vector2 Position, int Width, int Height, float gravDir = -1f)
         {
@@ -158,7 +156,6 @@ namespace Terraria_Server
             return false;
         }
 
-
         public static bool WetCollision(Vector2 Position, int Width, int Height)
         {
             Vector2 vector = new Vector2(Position.X + (float)(Width / 2), Position.Y + (float)(Height / 2));
@@ -217,7 +214,6 @@ namespace Terraria_Server
             return false;
         }
 
-
         public static bool LavaCollision(Vector2 Position, int Width, int Height)
         {
             int num = Height - 2;
@@ -265,116 +261,155 @@ namespace Terraria_Server
             return false;
         }
 
+		public static Vector2 TileCollision(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fallThrough = false, bool fall2 = false)
+		{
+			Collision.up = false;
+			Collision.down = false;
+			Vector2 result = Velocity;
+			Vector2 vector = Velocity;
+			Vector2 vector2 = Position + Velocity;
+			Vector2 vector3 = Position;
+			int num = (int)(Position.X / 16f) - 1;
+			int num2 = (int)((Position.X + (float)Width) / 16f) + 2;
+			int num3 = (int)(Position.Y / 16f) - 1;
+			int num4 = (int)((Position.Y + (float)Height) / 16f) + 2;
+			int num5 = -1;
+			int num6 = -1;
+			int num7 = -1;
+			int num8 = -1;
+			if (num < 0)
+			{
+				num = 0;
+			}
+			if (num2 > Main.maxTilesX)
+			{
+				num2 = Main.maxTilesX;
+			}
+			if (num3 < 0)
+			{
+				num3 = 0;
+			}
+			if (num4 > Main.maxTilesY)
+			{
+				num4 = Main.maxTilesY;
+			}
+			for (int i = num; i < num2; i++)
+			{
+				for (int j = num3; j < num4; j++)
+				{
+					if (Main.tile.At(i, j).Active && (Main.tileSolid[(int)Main.tile.At(i, j).Type] || (Main.tileSolidTop[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j).FrameY == 0)))
+					{
+						Vector2 vector4;
+						vector4.X = (float)(i * 16);
+						vector4.Y = (float)(j * 16);
+						if (vector2.X + (float)Width > vector4.X && vector2.X < vector4.X + 16f && vector2.Y + (float)Height > vector4.Y && vector2.Y < vector4.Y + 16f)
+						{
+							if (vector3.Y + (float)Height <= vector4.Y)
+							{
+								Collision.down = true;
+								if (!Main.tileSolidTop[(int)Main.tile.At(i, j).Type] || !fallThrough || (Velocity.Y > 1f && !fall2))
+								{
+									num7 = i;
+									num8 = j;
+									if (num7 != num5)
+									{
+										result.Y = vector4.Y - (vector3.Y + (float)Height);
+									}
+								}
+							}
+							else
+							{
+								if (vector3.X + (float)Width <= vector4.X && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
+								{
+									num5 = i;
+									num6 = j;
+									if (num6 != num8)
+									{
+										result.X = vector4.X - (vector3.X + (float)Width);
+									}
+									if (num7 == num5)
+									{
+										result.Y = vector.Y;
+									}
+								}
+								else
+								{
+									if (vector3.X >= vector4.X + 16f && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
+									{
+										num5 = i;
+										num6 = j;
+										if (num6 != num8)
+										{
+											result.X = vector4.X + 16f - vector3.X;
+										}
+										if (num7 == num5)
+										{
+											result.Y = vector.Y;
+										}
+									}
+									else
+									{
+										if (vector3.Y >= vector4.Y + 16f && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
+										{
+											Collision.up = true;
+											num7 = i;
+											num8 = j;
+											result.Y = vector4.Y + 16f - vector3.Y;
+											if (num8 == num6)
+											{
+												result.X = vector.X;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			return result;
+		}
 
-        public static Vector2 TileCollision(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fallThrough = false, bool fall2 = false)
-        {
-            Collision.up = false;
-            Collision.down = false;
-            Vector2 result = Velocity;
-            Vector2 vector = Velocity;
-            Vector2 vector2 = Position + Velocity;
-            Vector2 vector3 = Position;
-            int num = (int)(Position.X / 16f) - 1;
-            int num2 = (int)((Position.X + (float)Width) / 16f) + 2;
-            int num3 = (int)(Position.Y / 16f) - 1;
-            int num4 = (int)((Position.Y + (float)Height) / 16f) + 2;
-            int num5 = -1;
-            int num6 = -1;
-            int num7 = -1;
-            int num8 = -1;
-            if (num < 0)
-            {
-                num = 0;
-            }
-            if (num2 > Main.maxTilesX)
-            {
-                num2 = Main.maxTilesX;
-            }
-            if (num3 < 0)
-            {
-                num3 = 0;
-            }
-            if (num4 > Main.maxTilesY)
-            {
-                num4 = Main.maxTilesY;
-            }
-            for (int i = num; i < num2; i++)
-            {
-                for (int j = num3; j < num4; j++)
-                {
-                    if (Main.tile.At(i, j).Active && (Main.tileSolid[(int)Main.tile.At(i, j).Type] || (Main.tileSolidTop[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j).FrameY == 0)))
-                    {
-                        Vector2 vector4;
-                        vector4.X = (float)(i * 16);
-                        vector4.Y = (float)(j * 16);
-                        if (vector2.X + (float)Width > vector4.X && vector2.X < vector4.X + 16f && vector2.Y + (float)Height > vector4.Y && vector2.Y < vector4.Y + 16f)
-                        {
-                            if (vector3.Y + (float)Height <= vector4.Y)
-                            {
-                                Collision.down = true;
-                                if (!Main.tileSolidTop[(int)Main.tile.At(i, j).Type] || !fallThrough || (Velocity.Y > 1f && !fall2))
-                                {
-                                    num7 = i;
-                                    num8 = j;
-                                    if (num7 != num5)
-                                    {
-                                        result.Y = vector4.Y - (vector3.Y + (float)Height);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (vector3.X + (float)Width <= vector4.X && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
-                                {
-                                    num5 = i;
-                                    num6 = j;
-                                    if (num6 != num8)
-                                    {
-                                        result.X = vector4.X - (vector3.X + (float)Width);
-                                    }
-                                    if (num7 == num5)
-                                    {
-                                        result.Y = vector.Y;
-                                    }
-                                }
-                                else
-                                {
-                                    if (vector3.X >= vector4.X + 16f && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
-                                    {
-                                        num5 = i;
-                                        num6 = j;
-                                        if (num6 != num8)
-                                        {
-                                            result.X = vector4.X + 16f - vector3.X;
-                                        }
-                                        if (num7 == num5)
-                                        {
-                                            result.Y = vector.Y;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (vector3.Y >= vector4.Y + 16f && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
-                                        {
-                                            Collision.up = true;
-                                            num7 = i;
-                                            num8 = j;
-                                            result.Y = vector4.Y + 16f - vector3.Y;
-                                            if (num8 == num6)
-                                            {
-                                                result.X = vector.X;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-
+		public static bool SolidCollision(Vector2 Position, int Width, int Height)
+		{
+			int num = (int)(Position.X / 16f) - 1;
+			int num2 = (int)((Position.X + (float)Width) / 16f) + 2;
+			int num3 = (int)(Position.Y / 16f) - 1;
+			int num4 = (int)((Position.Y + (float)Height) / 16f) + 2;
+			if (num < 0)
+			{
+				num = 0;
+			}
+			if (num2 > Main.maxTilesX)
+			{
+				num2 = Main.maxTilesX;
+			}
+			if (num3 < 0)
+			{
+				num3 = 0;
+			}
+			if (num4 > Main.maxTilesY)
+			{
+				num4 = Main.maxTilesY;
+			}
+			for (int i = num; i < num2; i++)
+			{
+				for (int j = num3; j < num4; j++)
+				{
+					if (Main.tile.At(i, j).Active && Main.tileSolid[(int)Main.tile.At(i, j).Type] && !Main.tileSolidTop[(int)Main.tile.At(i, j).Type])
+					{
+						Vector2 vector;
+						vector.X = (float)(i * 16);
+						vector.Y = (float)(j * 16);
+						if (Position.X + (float)Width > vector.X && Position.X < vector.X + 16f && Position.Y + (float)Height > vector.Y && Position.Y < vector.Y + 16f)
+						{
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
 
         public static Vector2 WaterCollision(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fallThrough = false, bool fall2 = false)
         {
@@ -420,7 +455,6 @@ namespace Terraria_Server
             }
             return result;
         }
-
 
         public static Vector2 AnyCollision(Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
@@ -566,7 +600,6 @@ namespace Terraria_Server
             }
         }
 
-
         public static Vector2 HurtTiles(Vector2 Position, Vector2 Velocity, int Width, int Height, bool fireImmune = false)
         {
             Vector2 vector = Position;
@@ -614,7 +647,15 @@ namespace Terraria_Server
                                 if (type == 69)
                                 {
                                     num5 = 25;
-                                }
+								}
+								else if (type == 80)
+								{
+									num5 = 6;
+								}
+								if (type == 32 || type == 69)
+								{
+									WorldModify.KillTile(i, j, false, false, false);
+								}
                                 return new Vector2((float)num6, (float)num5);
                             }
                         }
@@ -660,7 +701,6 @@ namespace Terraria_Server
             return default(Vector2);
         }
 
-
         public static bool StickyTiles(Vector2 Position, Vector2 Velocity, int Width, int Height)
         {
             Vector2 vector = Position;
@@ -703,7 +743,6 @@ namespace Terraria_Server
             }
             return result;
         }
-
 
         public static bool SolidTiles(int startX, int endX, int startY, int endY)
         {
