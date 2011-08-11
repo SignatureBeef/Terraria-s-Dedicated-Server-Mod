@@ -142,7 +142,7 @@ namespace Terraria_Server
                         vector2.X = (float)(i * 16);
                         vector2.Y = (float)(j * 16);
                         int num7 = 16;
-                        float num8 = (float)(0 - Main.tile.At(i, j).Liquid);
+                        float num8 = (float)(256 - Main.tile.At(i, j).Liquid);
                         num8 /= 32f;
                         vector2.Y += num8 * 2f;
                         num7 -= (int)(num8 * 2f);
@@ -200,7 +200,7 @@ namespace Terraria_Server
                         vector2.X = (float)(i * 16);
                         vector2.Y = (float)(j * 16);
                         int num7 = 16;
-                        float num8 = (float)(0 - Main.tile.At(i, j).Liquid);
+                        float num8 = (float)(256 - Main.tile.At(i, j).Liquid);
                         num8 /= 32f;
                         vector2.Y += num8 * 2f;
                         num7 -= (int)(num8 * 2f);
@@ -247,7 +247,7 @@ namespace Terraria_Server
                         vector.X = (float)(i * 16);
                         vector.Y = (float)(j * 16);
                         int num6 = 16;
-                        float num7 = (float)(0 - Main.tile.At(i, j).Liquid);
+                        float num7 = (float)(256 - Main.tile.At(i, j).Liquid);
                         num7 /= 32f;
                         vector.Y += num7 * 2f;
                         num6 -= (int)(num7 * 2f);
