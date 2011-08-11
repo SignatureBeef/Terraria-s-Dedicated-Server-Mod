@@ -259,6 +259,10 @@ namespace Terraria_Server
 			return result;
 		}
 		
+		public void AddBuff(int type, int time, bool quiet = true) //FIXME: add
+		{
+		}
+		
         public void UpdatePlayer(int i)
 		{
             try

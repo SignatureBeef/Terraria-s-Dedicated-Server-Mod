@@ -883,7 +883,13 @@ namespace Terraria_Server
                 }
             }
         }
-
+		
+		public static int DamageVar (float dmg)
+		{
+			float num = dmg * (1f + (float)Main.rand.Next(-15, 16) * 0.01f);
+			return (int)Math.Round((double)num);
+		}
+		
         public static double CalculateDamage(int Damage, int Defense)
 		{
 			double num = (double)Damage - (double)Defense * 0.5;
