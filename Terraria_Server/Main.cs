@@ -266,13 +266,15 @@ namespace Terraria_Server
             }
 
             foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 24, 26, 27, 28, 29, 
-                31, 33, 34, 35, 36, 42, 50, 55, 61, 71, 72, 73, 74, 77, 78, 79, 81, 82, 83, 84, 85 })
+                31, 33, 34, 35, 36, 42, 50, 55, 61, 71, 72, 73, 74, 77, 78, 79, 81, 82, 83, 84, 85, 86, 87, 88,
+                89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105 })
             {
                 Main.tileFrameImportant[i] = true;
             }
 
             foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 27, 28, 29, 32, 33,
-                34, 35, 36, 42, 49, 50, 52, 55, 61, 62, 69, 71, 72, 73, 74, 79, 80, 81})
+                34, 35, 36, 42, 49, 50, 52, 55, 61, 62, 69, 71, 72, 73, 74, 79, 80, 81, 86, 87, 88, 89, 91, 92,
+                93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105 })
             {
                 Main.tileLavaDeath[i] = true;
             }
@@ -283,32 +285,33 @@ namespace Terraria_Server
                 Main.tileBlockLight[i] = true;
             }
 
-            foreach (int i in new int[] { 14, 16, 18, 19 })
+            foreach (int i in new int[] { 14, 16, 18, 19, 87, 88, 101 })
             {
                 Main.tileSolidTop[i] = true;
             }
 
-            foreach (int i in new int[] { 3, 4, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 27, 50 })
+            foreach (int i in new int[] { 3, 4, 10, 13, 14, 15, 16, 17, 18, 19, 20, 21, 27, 50, 86, 87, 88, 89,
+                90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 101, 102 })
             {
                 Main.tileNoAttach[i] = true;
             }
 
-            foreach (int i in new int[] { 14, 18, 19 })
+            foreach (int i in new int[] { 14, 18, 19, 87, 88, 101 })
             {
                 Main.tileTable[i] = true;
             }
 
-            foreach (int i in new int[] { 4, 51 })
+            foreach (int i in new int[] { 4, 51, 93, 98 })
             {
                 Main.tileWaterDeath[i] = true;
             }
 
-            foreach (int i in new int[] { 1, 4, 5, 6, 10, 11, 12 })
+            foreach (int i in new int[] { 1, 4, 5, 6, 10, 11, 12, 16, 17, 18, 19, 20 })
             {
                 Main.wallHouse[i] = true;
             }
 
-            foreach (int i in new int[] { 3, 4, 24, 32, 50, 61, 73, 74, 82, 83, 84 })
+            foreach (int i in new int[] { 3, 4, 24, 32, 50, 61, 69, 73, 74, 82, 83, 84 })
             {
                 Main.tileNoFail[i] = true;
             }
@@ -460,7 +463,7 @@ namespace Terraria_Server
             NetMessage.SendData(25, -1, -1, text, 255, 175f, 75f, 255f);
 		}
 		
-        private static void StartInvasion()
+        public static void StartInvasion()
 		{
 			if (!WorldModify.shadowOrbSmashed)
 			{
@@ -472,7 +475,7 @@ namespace Terraria_Server
 				int num = 0;
 				foreach(Player player in Main.players)
 				{
-                    if (player.Active && player.statLife >= 200)
+                    if (player.Active && player.statLifeMax >= 200)
 					{
 						num++;
 					}
@@ -577,8 +580,8 @@ namespace Terraria_Server
                     if (num3 > 0)
                     {
                         int num4 = num3 * 150;
-                        NetMessage.SendData(9, i, -1, "Recieving tile data", num4);
-                        Netplay.slots[i].statusText2 = "is recieving tile data";
+                        NetMessage.SendData(9, i, -1, "Receiving tile data", num4);
+                        Netplay.slots[i].statusText2 = "is receiving tile data";
                         Netplay.slots[i].statusMax += num4;
                         for (int j = sectionX - 1; j < sectionX + 2; j++)
                         {
@@ -811,7 +814,7 @@ namespace Terraria_Server
                                         {
                                             num12 += Main.players[i].inventory[j].Stack * 1000000;
                                         }
-                                        if (Main.players[i].inventory[j].Type == 95 || Main.players[i].inventory[j].Type == 96 || Main.players[i].inventory[j].Type == 97 || Main.players[i].inventory[j].Type == 98 || Main.players[i].inventory[j].UseAmmo == ProjectileType.BALL_MUSKET)
+                                        if (Main.players[i].inventory[j].Ammo == ProjectileType.BALL_MUSKET || Main.players[i].inventory[j].UseAmmo == ProjectileType.BALL_MUSKET)
                                         {
                                             flag3 = true;
                                         }
