@@ -400,9 +400,11 @@ namespace Terraria_Server
                                 {
                                     this.direction = 1;
                                 }
-                                player.Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
-                                
-                                NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), playerIndex, (float)this.direction, (float)this.damage, 1f);
+								int dmg = Main.DamageVar ((float)this.damage);
+								this.StatusPlayer (player);
+								
+								player.Hurt(dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
+								NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), playerIndex, (float)this.direction, (float)dmg, 1f);
                             }
                         }
                     }
@@ -443,7 +445,7 @@ namespace Terraria_Server
                         for (int i = 0; i < NPC.MAX_NPCS; i++)
                         {
                             npc = Main.npcs[i];
-                            if (npc.Active && (!npc.friendly || (npc.type == NPCType.N22_GUIDE && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || npc.immune[this.Owner] == 0))
+                            if (npc.Active && !npc.dontTakeDamage && (!npc.friendly || (npc.type == NPCType.N22_GUIDE && this.Owner < 255 && Main.players[this.Owner].killGuide)) && (this.Owner < 0 || npc.immune[this.Owner] == 0))
                             {
                                 bool flag = false;
                                 if (this.type == ProjectileType.POWDER_VILE && (npc.type == NPCType.N47_CORRUPT_BUNNY || npc.type == NPCType.N57_CORRUPT_GOLDFISH))
@@ -493,9 +495,21 @@ namespace Terraria_Server
                                         {
                                             this.timeLeft = 1;
                                         }
-                                        npc.StrikeNPC(this.damage, this.knockBack, this.direction);
+                                        bool crit = false;
+                                        if (this.Owner < 255)
+                                        {
+                                            var owner = Main.players[this.Owner];
+                                            var rand = Main.rand.Next(1, 101);
+                                            crit = (this.melee && rand <= owner.meleeCrit)
+                                                || (this.ranged && rand <= owner.rangedCrit)
+                                                || (this.magic && rand <= owner.magicCrit);
+                                        }
+                                        int dmg = Main.DamageVar (this.damage);
                                         
-                                        NetMessage.SendData(28, -1, -1, "", i, (float)this.damage, this.knockBack, (float)this.direction);
+                                        this.StatusNPC (npc);
+                                        npc.StrikeNPC (dmg, this.knockBack, this.direction, crit);
+                                        
+                                        NetMessage.SendData(28, -1, -1, "", i, (float)dmg, this.knockBack, (float)this.direction, crit ? 1 : 0);
 
                                         if (this.penetrate != 1)
                                         {
@@ -570,9 +584,19 @@ namespace Terraria_Server
                                     {
                                         this.timeLeft = 1;
                                     }
-                                    playerIt.Hurt(this.damage, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
+                                    bool crit = false;
+                                    if (this.Owner < 255)
+                                    {
+                                        var owner = Main.players[this.Owner];
+                                        var rand = Main.rand.Next(1, 101);
+                                        crit = (this.melee && rand <= owner.meleeCrit);
+                                    }
+                                    int dmg = Main.DamageVar (this.damage);
+                                    
+                                    if (!playerIt.immune) this.StatusPvP (playerIt);
+                                    playerIt.Hurt (dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), crit);
                                                                         
-                                    NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), i, (float)this.direction, (float)this.damage, 1f);
+                                    NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), i, (float)this.direction, (float)dmg, 1f, crit ? 1 : 0);
 
                                     this.playerImmune[i] = 40;
                                     if (this.penetrate > 0)
@@ -631,7 +655,7 @@ namespace Terraria_Server
                     }
                 }
             }
-            if (this.hostile && Main.myPlayer < 255 && this.damage > 0)
+            if (this.hostile && Main.myPlayer < 255 && this.damage > 0) // client-only, but we may use it later
             {
                 if (player.Active && !player.dead && !player.immune)
                 {
@@ -646,9 +670,13 @@ namespace Terraria_Server
                         {
                             hitDirection = 1;
                         }
-                        player.Hurt(this.damage * 2, hitDirection, false, false, " was slain...");
                         
-                        NetMessage.SendData(26, -1, -1, "", playerIndex, (float)this.direction, (float)(this.damage * 2));
+                        if (! player.immune) this.StatusPlayer (player);
+
+                        int dmg = Main.DamageVar (this.damage);
+                        player.Hurt (dmg * 2, hitDirection, false, false, " was slain...");
+                        
+                        //NetMessage.SendData(26, -1, -1, "", playerIndex, (float)this.direction, (float)(this.damage * 2));
                     }
                 }
             }

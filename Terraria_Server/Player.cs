@@ -209,6 +209,10 @@ namespace Terraria_Server
         
 		public bool Male { get; set; }
 		public byte Difficulty { get; set; }
+		
+		public int meleeCrit { get; set; }
+		public int rangedCrit { get; set; }
+		public int magicCrit { get; set; }
 
         public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
@@ -2260,7 +2264,7 @@ namespace Terraria_Server
 			}
 		}
 
-        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, String deathText = " was slain...")
+        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, String deathText = " was slain...", bool crit = false)
         {
             if (!this.immune)
             {
@@ -3768,6 +3772,10 @@ namespace Terraria_Server
 			
 			Male = true;
 			Difficulty = 0;
+			
+			meleeCrit = 4;
+			rangedCrit = 4;
+			magicCrit = 4;
 		}
 
         public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
