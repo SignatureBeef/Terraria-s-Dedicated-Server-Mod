@@ -193,7 +193,11 @@ namespace Terraria_Server
 			2, 
 			8, 
 			1, 
-			5
+			5, 
+			1, 
+			2, 
+			4, 
+			16
 		};
 		public static int timeOut = 120;
 		public static int NetplayCounter;
