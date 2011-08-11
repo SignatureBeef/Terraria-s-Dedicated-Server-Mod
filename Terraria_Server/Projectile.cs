@@ -2211,15 +2211,6 @@ namespace Terraria_Server
             this.timeLeft = 0;
             switch(this.type)
             {
-                case ProjectileType.ARROW_WOODEN:
-                case ProjectileType.ARROW_FIRE:
-                case ProjectileType.SHURIKEN:
-                case ProjectileType.KNIFE_THROWING:
-                case ProjectileType.KNIFE_POISONED:
-                case ProjectileType.ARROW_UNHOLY:
-                case ProjectileType.ARROW_JESTER:
-                case ProjectileType.STARFURY:
-                case ProjectileType.FALLEN_STAR:
                 case ProjectileType.BALL_MUSKET:
                 case ProjectileType.LASER_GREEN:
                 case ProjectileType.SHOT_METEOR:
@@ -2227,13 +2218,7 @@ namespace Terraria_Server
                         Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
                     }
                     break;
-                case ProjectileType.BALL_OF_FIRE:
-                case ProjectileType.FLAMELASH:
-                case ProjectileType.MISSILE_MAGIC:
-                case ProjectileType.BALL_DIRT:
-                case ProjectileType.BONE:
-                case ProjectileType.BALL_SPIKY:
-                case ProjectileType.BOLT_WATER:
+                    
                 case ProjectileType.BOMB:
                 case ProjectileType.GRENADE:
                 case ProjectileType.BOMB_STICKY:
@@ -2246,6 +2231,7 @@ namespace Terraria_Server
                         this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                     }
                     break;
+                    
                 case ProjectileType.DYNAMITE:
                     {
                         this.Position.X = this.Position.X + (float)(this.Width / 2);
@@ -2263,11 +2249,7 @@ namespace Terraria_Server
                         this.Position.Y = this.Position.Y - (float)(this.Height / 2);
                     }
                     break;
-                case ProjectileType.BALL_SAND_DROP:
-                case ProjectileType.BALL_SAND_GUN:
-                case ProjectileType.FEATHER_HARPY:
-                case ProjectileType.BALL_MUD:
-                case ProjectileType.BALL_ASH:
+                    
                 case ProjectileType.ARROW_HELLFIRE:
                     {
                         if (this.Owner == Main.myPlayer)
@@ -2283,9 +2265,7 @@ namespace Terraria_Server
                         }
                     }
                     break;
-                case ProjectileType.SICKLE_DEMON:
-                case ProjectileType.SCYTHE_DEMON:
-                case ProjectileType.SEED:
+                    
                 default:
                     break;
             }
