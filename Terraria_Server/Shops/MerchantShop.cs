@@ -27,8 +27,12 @@ namespace Terraria_Server.Shops
             }
             if (!Main.dayTime)
             {
-                contents[i] = Registries.Item.Create(282);
+                contents[i++] = Registries.Item.Create(282);
             }
+			if (NPC.downedBoss3)
+			{
+				contents[i++] = Registries.Item.Create(346);
+			}
         }
     }
 }

@@ -4,10 +4,30 @@ namespace Terraria_Server.Shops
 {
     public class Chest
     {
-        public const int MAX_ITEMS = 20;
+        public static int MAX_ITEMS = 20;
         public Item[] contents = new Item[MAX_ITEMS];
         public int x;
-        public int y;
+		public int y;
+
+		public object Clone()
+		{
+			return base.MemberwiseClone();
+		}
+
+		public static void Unlock(int X, int Y)
+		{
+			for (int i = X; i <= X + 1; i++)
+			{
+				for (int j = Y; j <= Y + 1; j++)
+				{
+					if ((Main.tile.At(i, j).FrameX >= 72 && Main.tile.At(i, j).FrameX <= 106) || (Main.tile.At(i, j).FrameX >= 144 && Main.tile.At(i, j).FrameX <= 178))
+					{
+						var tile = Main.tile.At(i, j);
+						tile.SetFrameX((short)(tile.FrameX - 36));
+					}
+				}
+			}
+		}
 
         public Chest()
         {
@@ -15,11 +35,6 @@ namespace Terraria_Server.Shops
             {
                 this.contents[i] = new Item();
             }
-        }
-
-        public object Clone()
-        {
-            return base.MemberwiseClone();
         }
 
         public bool hasContents()
