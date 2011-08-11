@@ -11,7 +11,8 @@
     <RootNamespace>Terraria_Utilities</RootNamespace>
     <AssemblyName>Terraria_Utilities</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -49,7 +50,9 @@
     <Compile Include="Serialize\DiffSerializer.cs" />
     <Compile Include="Serialize\Serializer.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Terraria_Server\Terraria_Server.csproj">
       <Project>{6B42E70C-75CD-410B-9D4A-3EA75B6F5176}</Project>

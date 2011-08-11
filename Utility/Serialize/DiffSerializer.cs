@@ -41,6 +41,7 @@ namespace Terraria_Utilities.Serialize
         {
             if (!skipName)
             {
+				writer.WriteString("\n\t");
                 writer.WriteEndElement();
             }
         }
@@ -64,6 +65,7 @@ namespace Terraria_Utilities.Serialize
         {
             if (nodeValue != null && !nodeValue.Equals(baseValue))
             {
+				writer.WriteString("\n\t\t");
                 writer.WriteStartElement(name);
                 if (type.Equals(typeof(bool)))
                 {
@@ -121,6 +123,7 @@ namespace Terraria_Utilities.Serialize
 
             if (!skipName)
             {
+				writer.WriteString("\n\t");
                 writer.WriteStartElement(baseType.Name);
             }
         }

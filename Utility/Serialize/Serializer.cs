@@ -10,7 +10,7 @@ namespace Terraria_Utilities.Serialize
 {
     public class Serializer
     {
-        public static readonly String[] ITEM_IGNORE_FIELDS = new String[] { "Active", "Stack" };
+        public static readonly String[] ITEM_IGNORE_FIELDS = new String[] { "Active", "Stack", "useAnimation", "useSound", "Owner" };
         public static readonly MethodInfo ITEM_SET_DEFAULTS = typeof(Item).GetMethod("SetDefaults", new Type[] { typeof(int), typeof(bool) });
 
         public static readonly String[] NPC_IGNORE_FIELDS = new String[] { "immune", "ai", "Active", "direction", "oldtarget", "target", "life" };
@@ -22,10 +22,11 @@ namespace Terraria_Utilities.Serialize
         {
             DiffSerializer serializer = new DiffSerializer(type, ignoreFields);
             FileStream fs = new FileStream(type.Name + "s.xml", FileMode.OpenOrCreate);
-            XmlDictionaryWriter.Create(fs);
+			XmlWriterSettings ws = new XmlWriterSettings();
+			ws.Indent = true;
+            XmlDictionaryWriter.Create(fs, ws);
             XmlDictionaryWriter writer = XmlDictionaryWriter.CreateTextWriter(fs);
             writer.WriteStartElement("ArrayOf" + type.Name);
-            
             PropertyInfo name = type.GetProperty("Name");
             int count = 0;
             for (int i = 0; i < 1000; i++)
@@ -39,6 +40,7 @@ namespace Terraria_Utilities.Serialize
                     count++;
                 }
             }
+			writer.WriteString("\n");
             writer.WriteEndElement();
             writer.Close();
             fs.Close();
