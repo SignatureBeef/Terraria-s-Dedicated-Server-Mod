@@ -21,7 +21,8 @@ namespace Terraria_Server
         //public static bool npcChatFocus1 = false;
         //public static bool npcChatFocus2 = false;
         public const int MAX_TILE_SETS = 106;
-
+        
+        public static Item trashItem { get; set; }
         public static bool[] debuff = new bool[27];
         public const int maxItemText = 100;
         public const int MAX_PLAYERS = 255;
@@ -1102,6 +1103,5 @@ namespace Terraria_Server
 			}
 			LastServerUpdateTime = s.Elapsed - start;
 		}
-
     }
 }

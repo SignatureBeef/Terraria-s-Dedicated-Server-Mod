@@ -42,6 +42,7 @@ namespace Terraria_Server.WorldMod
 
 		public static void clearWorld()
 		{
+            Main.trashItem = new Item();
 			WorldModify.spawnEye = false;
 			WorldModify.spawnNPC = 0;
 			WorldModify.shadowOrbCount = 0;

@@ -14,7 +14,8 @@ using Terraria_Server.Logging;
 namespace Terraria_Server.WorldMod
 {
 	public class WorldGen
-	{
+    {
+        public static bool mudWall { get; set; }
 		private static int maxDRooms = 100;
 		private const int RECTANGLE_OFFSET = 25;
 		private const int TILE_OFFSET = 15;
@@ -67,7 +68,8 @@ namespace Terraria_Server.WorldMod
 		public static int numDungeons;
 
 		private static void resetGen()
-		{
+        {
+            mudWall = false;
 			hellChest = 0;
 			JungleX = 0;
 			numMCaves = 0;
@@ -282,7 +284,7 @@ namespace Terraria_Server.WorldMod
 				}
 				if (k == 1)
 				{
-					num16 *= 3;
+					num16 *= 2;
 				}
 				int num18 = num15 - num16;
 				num16 = WorldModify.genRand.Next(35, 90);
@@ -292,7 +294,7 @@ namespace Terraria_Server.WorldMod
 				}
 				if (k == 1)
 				{
-					num16 *= 3;
+					num16 *= 2;
 				}
 				int num19 = num15 + num16;
 				if (num18 < 0)
@@ -370,7 +372,7 @@ namespace Terraria_Server.WorldMod
 			}
 			numMCaves = 0;
 
-			ProgramLog.Log("Generating hills...");
+			ProgramLog.Log("Generating Hills...");
 			for (int num23 = 0; num23 < (int)((double)Main.maxTilesX * 0.0008); num23++)
 			{
 				int num24 = 0;
@@ -2020,73 +2022,85 @@ namespace Terraria_Server.WorldMod
 					}
 				}
 
-			int num231 = 0;
-			for (int num232 = 0; num232 < numJChests; num232++)
-			{
-				num231++;
-				int contain = 211;
-				if (num231 == 1)
-				{
-					contain = 211;
-				}
-				else if (num231 == 2)
-				{
-					contain = 212;
-				}
-				else if (num231 == 3)
-				{
-					contain = 213;
-				}
-				if (num231 > 3)
-				{
-					num231 = 0;
-				}
-				if (!AddBuriedChest(JChestX[num232] + WorldModify.genRand.Next(2), JChestY[num232], contain, false))
-				{
-					for (int num233 = JChestX[num232]; num233 <= JChestX[num232] + 1; num233++)
-					{
-						for (int num234 = JChestY[num232]; num234 <= JChestY[num232] + 1; num234++)
-						{
-							WorldModify.KillTile(num233, num234, false, false, false);
-						}
-					}
-					AddBuriedChest(JChestX[num232], JChestY[num232], contain, false);
-				}
-			}
+            var num238max = numJChests;
+            using (var prog = new ProgressLogger(num238max - 1, "Hiding jungle treasure"))
+            {
+                int num231 = 0;
+                for (int num232 = 0; num232 < num238max; num232++)
+                {
+                    num231++;
+                    int contain = 211;
+                    if (num231 == 1)
+                    {
+                        contain = 211;
+                    }
+                    else if (num231 == 2)
+                    {
+                        contain = 212;
+                    }
+                    else if (num231 == 3)
+                    {
+                        contain = 213;
+                    }
+                    if (num231 > 3)
+                    {
+                        num231 = 0;
+                    }
+                    if (!AddBuriedChest(JChestX[num232] + WorldModify.genRand.Next(2), JChestY[num232], contain, false))
+                    {
+                        for (int num233 = JChestX[num232]; num233 <= JChestX[num232] + 1; num233++)
+                        {
+                            for (int num234 = JChestY[num232]; num234 <= JChestY[num232] + 1; num234++)
+                            {
+                                WorldModify.KillTile(num233, num234, false, false, false);
+                            }
+                        }
+                        AddBuriedChest(JChestX[num232], JChestY[num232], contain, false);
+                    }
+                }
+            }
+			
+            //Water Treasure
 			float num235 = (float)(Main.maxTilesX / 4200);
 			int num236 = 0;
 			int num237 = 0;
-			while ((float)num237 < 10f * num235)
-			{
-				int contain2 = 0;
-				num236++;
-				if (num236 == 1)
-				{
-					contain2 = 186;
-				}
-				else if (num236 == 2)
-				{
-					contain2 = 277;
-				}
-				else
-				{
-					contain2 = 187;
-					num236 = 0;
-				}
-				bool flag16 = false;
-				while (!flag16)
-				{
-					int num238 = WorldModify.genRand.Next(1, Main.maxTilesX);
-					int num239 = WorldModify.genRand.Next(1, Main.maxTilesY - 200);
-					while (Main.tile.At(num238, num239).Liquid < 200 || Main.tile.At(num238, num239).Lava)
-					{
-						num238 = WorldModify.genRand.Next(1, Main.maxTilesX);
-						num239 = WorldModify.genRand.Next(1, Main.maxTilesY - 200);
-					}
-					flag16 = AddBuriedChest(num238, num239, contain2, true);
-				}
-				num237++;
-			}
+            using (var prog = new ProgressLogger(100, "Hiding water treasure"))
+            {
+                while ((float)num237 < 10f * num235)
+                {
+                    int contain2 = 0;
+                    num236++;
+                    if (num236 == 1)
+                    {
+                        contain2 = 186;
+                    }
+                    else if (num236 == 2)
+                    {
+                        contain2 = 277;
+                    }
+                    else
+                    {
+                        contain2 = 187;
+                        num236 = 0;
+                    }
+                    bool flag16 = false;
+                    while (!flag16)
+                    {
+                        int num238 = WorldModify.genRand.Next(1, Main.maxTilesX);
+                        int num239 = WorldModify.genRand.Next(1, Main.maxTilesY - 200);
+                        while (Main.tile.At(num238, num239).Liquid < 200 || Main.tile.At(num238, num239).Lava)
+                        {
+                            num238 = WorldModify.genRand.Next(1, Main.maxTilesX);
+                            num239 = WorldModify.genRand.Next(1, Main.maxTilesY - 200);
+                        }
+                        flag16 = AddBuriedChest(num238, num239, contain2, true);
+                    }
+                    num237++;
+                }
+            }
+
+            if(numIslandHouses > 0) 
+                ProgramLog.Log("Adding Island Houses");
 			for (int num240 = 0; num240 < numIslandHouses; num240++)
 			{
 				IslandHouse(fihX[num240], fihY[num240]);
@@ -6645,6 +6659,5 @@ namespace Terraria_Server.WorldMod
 			}
 			return false;
 		}
-
-	}
+    }
 }
