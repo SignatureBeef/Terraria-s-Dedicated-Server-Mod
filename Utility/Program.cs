@@ -21,7 +21,7 @@ namespace Terraria_Utilities
         static void Main(string[] args)
         {
             Console.WriteLine(WELCOME_MESSAGE);
-            Serializer.Serialize(typeof(Projectile), Serializer.PROJECTILE_IGNORE_FIELDS);
+            Serializer.Serialize(typeof(Item), Serializer.ITEM_IGNORE_FIELDS);
             Console.ReadLine();
         }
     }

@@ -10,7 +10,7 @@ namespace Terraria_Utilities.Serialize
 {
     public class Serializer
     {
-        public static readonly String[] ITEM_IGNORE_FIELDS = new String[] { "Active", "Stack", "useAnimation", "useSound", "Owner" };
+        public static readonly String[] ITEM_IGNORE_FIELDS = new String[] { "Active", "Stack", "UseSound", "Owner", "NoUseGraphic", "Alpha", "Color", "Accessory", "Material", "Vanity", "ManaIncrease" };
         public static readonly MethodInfo ITEM_SET_DEFAULTS = typeof(Item).GetMethod("SetDefaults", new Type[] { typeof(int), typeof(bool) });
 
         public static readonly String[] NPC_IGNORE_FIELDS = new String[] { "immune", "ai", "Active", "direction", "oldtarget", "target", "life" };
@@ -32,7 +32,7 @@ namespace Terraria_Utilities.Serialize
             for (int i = 0; i < 1000; i++)
             {
                 object obj = Activator.CreateInstance(type);
-                PROJECTILE_SET_DEFAULTS.Invoke(obj, new object[] { (ProjectileType)i });
+                ITEM_SET_DEFAULTS.Invoke(obj, new object[] { i, false });
                 String value = (String)name.GetValue(obj, null);
                 if (!String.IsNullOrWhiteSpace(value))
                 {
