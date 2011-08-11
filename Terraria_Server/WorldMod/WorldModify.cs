@@ -19,8 +19,11 @@ namespace Terraria_Server.WorldMod
 		private const int TILES_OFFSET_2 = 10;
 		private const int TILE_OFFSET_3 = 16;
 		private const int TILE_OFFSET_4 = 23;
-		private const int TILE_SCALE = 16;
-		private const int TREE_RADIUS = 2;
+        private const int TILE_SCALE = 16;
+        private const int TREE_RADIUS = 2;
+        private const int MAX_HOUSETILES = 106;
+
+
 		public static int lavaLine;
 		public static int waterLine;
 		public static bool noTileActions = false;
@@ -72,7 +75,7 @@ namespace Terraria_Server.WorldMod
 		public static int roomY1;
 		public static int roomY2;
 		public static bool canSpawn;
-		public static bool[] houseTile = new bool[86];
+        public static bool[] houseTile = new bool[MAX_HOUSETILES];
 		public static int bestX = 0;
 		public static int bestY = 0;
 		public static int hiScore = 0;
@@ -99,52 +102,50 @@ namespace Terraria_Server.WorldMod
 			WorldModify.ScoreRoom(-1);
 			if (WorldModify.hiScore > 0)
 			{
-				int num = -1;
+				int npcIndex = -1;
 				for (int i = 0; i < 1000; i++)
 				{
 					if (Main.npcs[i].Active && Main.npcs[i].homeless && Main.npcs[i].Type == WorldModify.spawnNPC)
 					{
-						num = i;
+                        npcIndex = i;
 						break;
 					}
 				}
-				if (num == -1)
+                if (npcIndex == -1)
 				{
-					int num2 = WorldModify.bestX;
-					int num3 = WorldModify.bestY;
-					bool flag = false;
+					int posX = WorldModify.bestX;
+					int posY = WorldModify.bestY;
+					bool flag = true;
+                    Rectangle value = new Rectangle(posX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, posY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                    for (int j = 0; j < 255; j++)
+                    {
+                        if (Main.players[j].Active)
+                        {
+                            Rectangle rectangle = new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height);
+                            if (rectangle.Intersects(value))
+                            {
+                                flag = false;
+                                break;
+                            }
+                        }
+                    }
 					if (!flag)
 					{
-						flag = true;
-						Rectangle value = new Rectangle(num2 * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, num3 * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
-						for (int j = 0; j < 255; j++)
-						{
-							if (Main.players[j].Active)
-							{
-								Rectangle rectangle = new Rectangle((int)Main.players[j].Position.X, (int)Main.players[j].Position.Y, Main.players[j].Width, Main.players[j].Height);
-								if (rectangle.Intersects(value))
-								{
-									flag = false;
-									break;
-								}
-							}
-						}
-					}
-					if (!flag)
-					{
+                        //Find a suitable home/spawn location?
 						for (int k = 1; k < 500; k++)
 						{
+                            //See if it's in a 'flat' area?
 							for (int l = 0; l < 2; l++)
 							{
 								if (l == 0)
 								{
-									num2 = WorldModify.bestX + k;
+                                    posX = WorldModify.bestX + k;
 								}
 								else
 								{
-									num2 = WorldModify.bestX - k;
+                                    posX = WorldModify.bestX - k;
 								}
-								if (num2 > 10 && num2 < Main.maxTilesX - 10)
+                                if (posX > 10 && posX < Main.maxTilesX - 10)
 								{
 									int num4 = WorldModify.bestY - k;
 									double num5 = (double)(WorldModify.bestY + k);
@@ -156,16 +157,16 @@ namespace Terraria_Server.WorldMod
 									{
 										num5 = Main.worldSurface;
 									}
-									int num6 = num4;
-									while ((double)num6 < num5)
+									int relativeX = num4;
+									while ((double)relativeX < num5)
 									{
-										num3 = num6;
-										if (Main.tile.At(num2, num3).Active && Main.tileSolid[(int)Main.tile.At(num2, num3).Type])
+										posY = relativeX;
+                                        if (Main.tile.At(posX, posY).Active && Main.tileSolid[(int)Main.tile.At(posX, posY).Type])
 										{
-											if (!Collision.SolidTiles(num2 - 1, num2 + 1, num3 - 3, num3 - 1))
+                                            if (!Collision.SolidTiles(posX - 1, posX + 1, posY - 3, posY - 1))
 											{
 												flag = true;
-												Rectangle value2 = new Rectangle(num2 * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, num3 * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
+                                                Rectangle value2 = new Rectangle(posX * 16 + 8 - NPC.sWidth / 2 - NPC.safeRangeX, posY * 16 + 8 - NPC.sHeight / 2 - NPC.safeRangeY, NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
 												for (int m = 0; m < 255; m++)
 												{
 													if (Main.players[m].Active)
@@ -184,7 +185,7 @@ namespace Terraria_Server.WorldMod
 										}
 										else
 										{
-											num6++;
+											relativeX++;
 										}
 									}
 								}
@@ -199,30 +200,30 @@ namespace Terraria_Server.WorldMod
 							}
 						}
 					}
-					int num7 = NPC.NewNPC(num2 * 16, num3 * 16, WorldModify.spawnNPC, 1);
-					Main.npcs[num7].homeTileX = WorldModify.bestX;
-					Main.npcs[num7].homeTileY = WorldModify.bestY;
-					if (num2 < WorldModify.bestX)
+                    int townNPCIndex = NPC.NewNPC(posX * 16, posY * 16, WorldModify.spawnNPC, 1);
+					Main.npcs[townNPCIndex].homeTileX = WorldModify.bestX;
+					Main.npcs[townNPCIndex].homeTileY = WorldModify.bestY;
+                    if (posX < WorldModify.bestX)
 					{
-						Main.npcs[num7].direction = 1;
+						Main.npcs[townNPCIndex].direction = 1;
 					}
 					else
 					{
-						if (num2 > WorldModify.bestX)
+                        if (posX > WorldModify.bestX)
 						{
-							Main.npcs[num7].direction = -1;
+							Main.npcs[townNPCIndex].direction = -1;
 						}
 					}
-					Main.npcs[num7].netUpdate = true;
+					Main.npcs[townNPCIndex].netUpdate = true;
 					
-					NetMessage.SendData(25, -1, -1, Main.npcs[num7].Name + " has arrived!", 255, 50f, 125f, 255f);
+					NetMessage.SendData(25, -1, -1, Main.npcs[townNPCIndex].Name + " has arrived!", 255, 50f, 125f, 255f);
 				}
 				else
 				{
 					WorldModify.spawnNPC = 0;
-					Main.npcs[num].homeTileX = WorldModify.bestX;
-					Main.npcs[num].homeTileY = WorldModify.bestY;
-					Main.npcs[num].homeless = false;
+					Main.npcs[npcIndex].homeTileX = WorldModify.bestX;
+                    Main.npcs[npcIndex].homeTileY = WorldModify.bestY;
+                    Main.npcs[npcIndex].homeless = false;
 				}
 				WorldModify.spawnNPC = 0;
 			}
@@ -230,8 +231,14 @@ namespace Terraria_Server.WorldMod
 		
 		public static bool RoomNeeds(int npcType)
 		{
-			if (WorldModify.houseTile[15] && (WorldModify.houseTile[14] || WorldModify.houseTile[18]) && (WorldModify.houseTile[4] || WorldModify.houseTile[33] || WorldModify.houseTile[34] || WorldModify.houseTile[35] || WorldModify.houseTile[36] || WorldModify.houseTile[42] || WorldModify.houseTile[49]) && (WorldModify.houseTile[10] || WorldModify.houseTile[11] || WorldModify.houseTile[19]))
-			{
+            if ((WorldModify.houseTile[15] || WorldModify.houseTile[79] || WorldModify.houseTile[89] || WorldModify.houseTile[102]) &&
+                (WorldModify.houseTile[14] || WorldModify.houseTile[18] || WorldModify.houseTile[87] || WorldModify.houseTile[88] ||
+                    WorldModify.houseTile[90] || WorldModify.houseTile[101]) &&
+                (WorldModify.houseTile[4] || WorldModify.houseTile[33] || WorldModify.houseTile[34] || WorldModify.houseTile[35] ||
+                    WorldModify.houseTile[36] || WorldModify.houseTile[42] || WorldModify.houseTile[49] || WorldModify.houseTile[93] ||
+                        WorldModify.houseTile[95] || WorldModify.houseTile[98] || WorldModify.houseTile[100]) &&
+                (WorldModify.houseTile[10] || WorldModify.houseTile[11] || WorldModify.houseTile[19]))
+            {
 				WorldModify.canSpawn = true;
 			}
 			else
@@ -445,7 +452,7 @@ namespace Terraria_Server.WorldMod
 			WorldModify.roomY1 = y;
 			WorldModify.roomY2 = y;
 			WorldModify.numRoomTiles = 0;
-			for (int i = 0; i < 86; i++)
+			for (int i = 0; i < MAX_HOUSETILES; i++)
 			{
 				WorldModify.houseTile[i] = false;
 			}
@@ -1484,15 +1491,25 @@ namespace Terraria_Server.WorldMod
 				return;
 			}
 			int num = j;
-			bool flag = true;
-			if (Main.tile.At(x, num).FrameY == 18)
+            bool flag = true;
+
+            int FrameY = (int)Main.tile.At(x, num).FrameY;
+
+            int num2 = 0;
+            while (FrameY >= 40)
+            {
+                FrameY -= 40;
+                num2++;
+            }
+
+            if (FrameY == 18)
 			{
 				num--;
 			}
-			if (Main.tile.At(x, num).FrameY == 0 && Main.tile.At(x, num + 1).FrameY == 18 && Main.tile.At(x, num).Type == type && Main.tile.At(x, num + 1).Type == type)
-			{
-				flag = false;
-			}
+            if (FrameY == 40 * num2 && (int)Main.tile.At(x, num + 1).FrameY == 40 * num2 + 18 && Main.tile.At(x, num).Type == type && Main.tile.At(x, num + 1).Type == type)
+            {
+                flag = false;
+            }
 			if (!Main.tile.At(x, num + 2).Active || !Main.tileSolid[(int)Main.tile.At(x, num + 2).Type])
 			{
 				flag = true;
@@ -1514,7 +1531,14 @@ namespace Terraria_Server.WorldMod
 				}
 				if (type == 15)
 				{
-					Item.NewItem(x * 16, num * 16, 32, 32, 34, 1, false);
+                    if (num2 == 1)
+                    {
+                        Item.NewItem(x * 16, num * 16, 32, 32, 358, 1, false);
+                    }
+                    else
+                    {
+                        Item.NewItem(x * 16, num * 16, 32, 32, 34, 1, false);
+                    }
 				}
 				WorldModify.destroyObject = false;
 			}
