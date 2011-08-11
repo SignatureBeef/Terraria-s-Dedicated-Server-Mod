@@ -213,6 +213,8 @@ namespace Terraria_Server
 		public int meleeCrit { get; set; }
 		public int rangedCrit { get; set; }
 		public int magicCrit { get; set; }
+		
+		public bool lightOrb { get; set; }
 
         public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {

@@ -847,7 +847,35 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                if (this.aiStyle == 3 || this.aiStyle == 13 || this.aiStyle == 15)
+								if (this.aiStyle == 15)
+								{
+									bool flag4 = false;
+									if (value2.X != this.Velocity.X)
+									{
+										if (Math.Abs(value2.X) > 4f)
+										{
+											flag4 = true;
+										}
+										this.Position.X = this.Position.X + this.Velocity.X;
+										this.Velocity.X = -value2.X * 0.2f;
+									}
+									if (value2.Y != this.Velocity.Y)
+									{
+										if (Math.Abs(value2.Y) > 4f)
+										{
+											flag4 = true;
+										}
+										this.Position.Y = this.Position.Y + this.Velocity.Y;
+										this.Velocity.Y = -value2.Y * 0.2f;
+									}
+									this.ai[0] = 1f;
+									if (flag4)
+									{
+										this.netUpdate = true;
+										Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
+									}
+								}
+								else if (this.aiStyle == 3 || this.aiStyle == 13)
                                 {
                                     Collision.HitTiles(this.Position, this.Velocity, this.Width, this.Height);
                                     if (this.type == ProjectileType.CHAKRUM_THORN)
@@ -884,7 +912,14 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            if (this.Velocity.Y != value2.Y)
+                                            if (this.type == ProjectileType.BALL_MUSKET && this.Velocity.Y > 4f)
+                                            {
+                                                if (this.Velocity.Y != value2.Y)
+                                                {
+                                                    this.Velocity.Y = -value2.Y * 0.8f;
+                                                }
+                                            }
+                                            else if (this.Velocity.Y != value2.Y)
                                             {
                                                 this.Velocity.Y = -value2.Y;
                                             }
@@ -1028,7 +1063,7 @@ namespace Terraria_Server
                         this.alpha = 0;
                     }
                 }
-                if (this.type != ProjectileType.ARROW_JESTER && this.type != ProjectileType.BALL_MUSKET && this.type != ProjectileType.LASER_GREEN && this.type != ProjectileType.SHOT_METEOR && this.type != ProjectileType.FEATHER_HARPY)
+                if (this.type != ProjectileType.ARROW_JESTER && this.type != ProjectileType.BALL_MUSKET && this.type != ProjectileType.LASER_GREEN && this.type != ProjectileType.SHOT_METEOR && this.type != ProjectileType.FEATHER_HARPY && this.type != ProjectileType.STINGER)
                 {
                     this.ai[0] += 1f;
                 }
@@ -1208,6 +1243,15 @@ namespace Terraria_Server
                     {
                         if (this.aiStyle == 5)
                         {
+							//FIXME if (this.ai[1] == 0f && !Collision.SolidCollision(this.Position, this.Width, this.Height))
+							{
+								this.ai[1] = 1f;
+								this.netUpdate = true;
+							}
+							if (this.ai[1] != 0f)
+							{
+								this.tileCollide = true;
+							}
                             if (this.soundDelay == 0)
                             {
                                 this.soundDelay = 20 + Main.rand.Next(40);
@@ -1228,6 +1272,10 @@ namespace Terraria_Server
                                 this.ai[0] = 1f;
                             }
                             this.rotation += (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y)) * 0.01f * (float)this.direction;
+							if (this.ai[1] == 1f)
+							{
+								this.light = 0.9f;
+							}
                         }
                         else
                         {
@@ -1486,6 +1534,7 @@ namespace Terraria_Server
                                         {
                                             if (Main.myPlayer == this.Owner && this.ai[0] == 0f)
                                             {
+                                                // client-code, not updated from 1.0.6
                                                 if (!Main.players[this.Owner].channel)
                                                 {
                                                     this.Kill();
@@ -1514,6 +1563,7 @@ namespace Terraria_Server
                                             {
                                                 if (Main.myPlayer == this.Owner && this.ai[0] == 0f)
                                                 {
+                                                    // client-code, not updated from 1.0.6
                                                     if (!Main.players[this.Owner].channel)
                                                     {
                                                         this.ai[0] = 1f;
@@ -1572,18 +1622,22 @@ namespace Terraria_Server
                                                     this.rotation += 0.02f;
                                                     if (Main.myPlayer == this.Owner)
                                                     {
+														if (Main.players[this.Owner].lightOrb)
+														{
+															this.timeLeft = 2;
+														}
                                                         if (Main.players[this.Owner].dead)
                                                         {
                                                             this.Kill();
                                                             return;
                                                         }
-                                                        float num51 = 4f;
+                                                        float num51 = 2.5f;
                                                         Vector2 vector8 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
                                                         float num52 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector8.X;
                                                         float num53 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector8.Y;
                                                         float num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
                                                         num54 = (float)Math.Sqrt((double)(num52 * num52 + num53 * num53));
-                                                        if (num54 > (float)Main.screenWidth)
+                                                        if (num54 > 800f)
                                                         {
                                                             this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
                                                             this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
@@ -1615,7 +1669,7 @@ namespace Terraria_Server
                                                 {
                                                     if (this.aiStyle == 12)
                                                     {
-                                                        this.scale -= 0.05f;
+                                                        this.scale -= 0.04f;
                                                         if (this.scale <= 0f)
                                                         {
                                                             this.Kill();
@@ -1655,7 +1709,7 @@ namespace Terraria_Server
                                                         float num58 = (float)Math.Sqrt((double)(num56 * num56 + num57 * num57));
                                                         if (this.ai[0] == 0f)
                                                         {
-                                                            if (num58 > 600f)
+                                                            if (num58 > 700f)
                                                             {
                                                                 this.ai[0] = 1f;
                                                             }
@@ -1770,60 +1824,105 @@ namespace Terraria_Server
                                                                 this.Kill();
                                                                 return;
                                                             }
-                                                            Main.players[this.Owner].itemAnimation = 5;
-                                                            Main.players[this.Owner].itemTime = 5;
+                                                            Main.players[this.Owner].itemAnimation = 10;
+                                                            Main.players[this.Owner].itemTime = 10;
                                                             if (this.Position.X + (float)(this.Width / 2) > Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2))
                                                             {
                                                                 Main.players[this.Owner].direction = 1;
+                                                                this.direction = 1;
                                                             }
                                                             else
                                                             {
                                                                 Main.players[this.Owner].direction = -1;
+                                                                this.direction = -1;
                                                             }
                                                             Vector2 vector11 = new Vector2(this.Position.X + (float)this.Width * 0.5f, this.Position.Y + (float)this.Height * 0.5f);
-                                                            float num68 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector11.X;
-                                                            float num69 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector11.Y;
-                                                            float num70 = (float)Math.Sqrt((double)(num68 * num68 + num69 * num69));
+                                                            float num73 = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - vector11.X;
+                                                            float num74 = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - vector11.Y;
+                                                            float num75 = (float)Math.Sqrt((double)(num73 * num73 + num74 * num74));
+
                                                             if (this.ai[0] == 0f)
                                                             {
                                                                 this.tileCollide = true;
-                                                                if (num70 > 300f)
+                                                                if (num75 > 160f)
                                                                 {
                                                                     this.ai[0] = 1f;
+                                                                    this.netUpdate = true;
                                                                 }
                                                                 else
                                                                 {
-                                                                    this.ai[1] += 1f;
-                                                                    if (this.ai[1] > 2f)
-                                                                    {
-                                                                        this.alpha = 0;
-                                                                    }
-                                                                    if (this.ai[1] >= 5f)
-                                                                    {
-                                                                        this.ai[1] = 15f;
-                                                                        this.Velocity.Y = this.Velocity.Y + 0.5f;
-                                                                        this.Velocity.X = this.Velocity.X * 0.95f;
-                                                                    }
+																	if (!Main.players[this.Owner].channel)
+																	{
+																		if (this.Velocity.Y < 0f)
+																		{
+																			this.Velocity.Y = this.Velocity.Y * 0.9f;
+																		}
+																		this.Velocity.Y = this.Velocity.Y + 1f;
+																		this.Velocity.X = this.Velocity.X * 0.9f;
+																	}
                                                                 }
                                                             }
                                                             else
                                                             {
                                                                 if (this.ai[0] == 1f)
                                                                 {
-                                                                    this.tileCollide = false;
-                                                                    float num71 = 11f;
-                                                                    if (num70 < 20f)
-                                                                    {
-                                                                        this.Kill();
-                                                                    }
-                                                                    num70 = num71 / num70;
-                                                                    num68 *= num70;
-                                                                    num69 *= num70;
-                                                                    this.Velocity.X = num68;
-                                                                    this.Velocity.Y = num69;
-                                                                }
-                                                            }
-                                                            this.rotation += this.Velocity.X * 0.03f;
+																	var owner = Main.players[this.Owner];
+																	float num76 = 14f / owner.meleeSpeed;
+																	float num77 = 0.9f / owner.meleeSpeed;
+																	Math.Abs(num73);
+																	Math.Abs(num74);
+																	if (this.ai[1] == 1f)
+																	{
+																		this.tileCollide = false;
+																	}
+																	if (!owner.channel || num75 > 300f || !this.tileCollide)
+																	{
+																		this.ai[1] = 1f;
+																		if (this.tileCollide)
+																		{
+																			this.netUpdate = true;
+																		}
+																		this.tileCollide = false;
+																		if (num75 < 20f)
+																		{
+																			this.Kill();
+																		}
+																	}
+																	if (!this.tileCollide)
+																	{
+																		num77 *= 2f;
+																	}
+																	if (num75 > 60f || !this.tileCollide)
+																	{
+																		num75 = num76 / num75;
+																		num73 *= num75;
+																		num74 *= num75;
+																		float num78 = num73 - this.Velocity.X;
+																		float num79 = num74 - this.Velocity.Y;
+																		float num80 = (float)Math.Sqrt((double)(num78 * num78 + num79 * num79));
+																		num80 = num77 / num80;
+																		num78 *= num80;
+																		num79 *= num80;
+																		this.Velocity.X = this.Velocity.X * 0.98f;
+																		this.Velocity.Y = this.Velocity.Y * 0.98f;
+																		this.Velocity.X = this.Velocity.X + num78;
+																		this.Velocity.Y = this.Velocity.Y + num79;
+																	}
+																	else
+																	{
+																		if (Math.Abs(this.Velocity.X) + Math.Abs(this.Velocity.Y) < 6f)
+																		{
+																			this.Velocity.X = this.Velocity.X * 0.96f;
+																			this.Velocity.Y = this.Velocity.Y + 0.2f;
+																		}
+																		if (owner.Velocity.X == 0f)
+																		{
+																			this.Velocity.X = this.Velocity.X * 0.96f;
+																		}
+																	}
+																}
+															}
+															this.rotation = (float)Math.Atan2((double)num74, (double)num73) - this.Velocity.X * 0.1f;
                                                             return;
                                                         }
                                                         else
@@ -2021,6 +2120,7 @@ namespace Terraria_Server
                                                                 {
                                                                     this.direction = Main.players[this.Owner].direction;
                                                                     Main.players[this.Owner].heldProj = this.whoAmI;
+                                                                    Main.players[this.Owner].itemTime = Main.players[this.Owner].itemAnimation;
                                                                     this.Position.X = Main.players[this.Owner].Position.X + (float)(Main.players[this.Owner].Width / 2) - (float)(this.Width / 2);
                                                                     this.Position.Y = Main.players[this.Owner].Position.Y + (float)(Main.players[this.Owner].Height / 2) - (float)(this.Height / 2);
                                                                     if (this.type == ProjectileType.LANCE_DARK)
@@ -2030,7 +2130,7 @@ namespace Terraria_Server
                                                                             this.ai[0] = 3f;
                                                                             this.netUpdate = true;
                                                                         }
-                                                                        if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].inventory[Main.players[this.Owner].selectedItemIndex].UseAnimation / 3)
+                                                                        if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
                                                                         {
                                                                             this.ai[0] -= 1.6f;
                                                                         }
@@ -2048,7 +2148,7 @@ namespace Terraria_Server
                                                                                 this.ai[0] = 4f;
                                                                                 this.netUpdate = true;
                                                                             }
-                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].inventory[Main.players[this.Owner].selectedItemIndex].UseAnimation / 3)
+                                                                            if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
                                                                             {
                                                                                 this.ai[0] -= 1.2f;
                                                                             }
@@ -2066,7 +2166,7 @@ namespace Terraria_Server
                                                                                     this.ai[0] = 4f;
                                                                                     this.netUpdate = true;
                                                                                 }
-                                                                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].inventory[Main.players[this.Owner].selectedItemIndex].UseAnimation / 3)
+                                                                                if (Main.players[this.Owner].itemAnimation < Main.players[this.Owner].itemAnimationMax / 3)
                                                                                 {
                                                                                     this.ai[0] -= 1.1f;
                                                                                 }
