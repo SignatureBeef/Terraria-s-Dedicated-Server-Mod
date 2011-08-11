@@ -5,6 +5,7 @@
 		<Height>28</Height>
 		<Type>1</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>20</UseAnimation>
 		<UseTime>17</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>55</Pick>
@@ -22,6 +23,7 @@
 		<Height>28</Height>
 		<Type>4</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>20</UseAnimation>
 		<UseTime>21</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>13</Damage>
@@ -35,6 +37,7 @@
 		<Height>28</Height>
 		<Type>6</Type>
 		<UseStyle>3</UseStyle>
+		<UseAnimation>11</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>11</Damage>
@@ -49,6 +52,7 @@
 		<Height>28</Height>
 		<Type>10</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>26</UseAnimation>
 		<UseTime>18</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>9</Axe>
@@ -66,6 +70,7 @@
 		<Height>28</Height>
 		<Type>7</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>28</UseAnimation>
 		<UseTime>23</UseTime>
 		<MaxStack>1</MaxStack>
 		<Hammer>55</Hammer>
@@ -82,6 +87,7 @@
 		<Height>28</Height>
 		<Type>99</Type>
 		<UseStyle>5</UseStyle>
+		<UseAnimation>26</UseAnimation>
 		<UseTime>26</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>11</Damage>
@@ -97,6 +103,7 @@
 		<Height>28</Height>
 		<Type>1</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>19</UseAnimation>
 		<UseTime>11</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>45</Pick>
@@ -113,6 +120,7 @@
 		<Height>28</Height>
 		<Type>4</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>21</UseAnimation>
 		<UseTime>21</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>11</Damage>
@@ -125,6 +133,7 @@
 		<Height>28</Height>
 		<Type>6</Type>
 		<UseStyle>3</UseStyle>
+		<UseAnimation>12</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>9</Damage>
@@ -139,6 +148,7 @@
 		<Height>28</Height>
 		<Type>10</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>26</UseAnimation>
 		<UseTime>18</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>10</Axe>
@@ -155,6 +165,7 @@
 		<Height>28</Height>
 		<Type>7</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>29</UseAnimation>
 		<UseTime>19</UseTime>
 		<MaxStack>1</MaxStack>
 		<Hammer>45</Hammer>
@@ -171,6 +182,7 @@
 		<Height>28</Height>
 		<Type>99</Type>
 		<UseStyle>5</UseStyle>
+		<UseAnimation>27</UseAnimation>
 		<UseTime>27</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>9</Damage>
@@ -186,6 +198,7 @@
 		<Height>28</Height>
 		<Type>1</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>23</UseAnimation>
 		<UseTime>15</UseTime>
 		<MaxStack>1</MaxStack>
 		<Pick>35</Pick>
@@ -203,6 +216,7 @@
 		<Height>28</Height>
 		<Type>4</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>23</UseAnimation>
 		<UseTime>21</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>8</Damage>
@@ -215,6 +229,7 @@
 		<Height>28</Height>
 		<Type>6</Type>
 		<UseStyle>3</UseStyle>
+		<UseAnimation>13</UseAnimation>
 		<UseTime>12</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>5</Damage>
@@ -229,6 +244,7 @@
 		<Height>28</Height>
 		<Type>10</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>30</UseAnimation>
 		<UseTime>21</UseTime>
 		<MaxStack>1</MaxStack>
 		<Axe>7</Axe>
@@ -246,6 +262,7 @@
 		<Height>28</Height>
 		<Type>7</Type>
 		<UseStyle>1</UseStyle>
+		<UseAnimation>33</UseAnimation>
 		<UseTime>23</UseTime>
 		<MaxStack>1</MaxStack>
 		<Hammer>35</Hammer>
@@ -263,6 +280,7 @@
 		<Height>28</Height>
 		<Type>99</Type>
 		<UseStyle>5</UseStyle>
+		<UseAnimation>29</UseAnimation>
 		<UseTime>28</UseTime>
 		<MaxStack>1</MaxStack>
 		<Damage>6</Damage>
