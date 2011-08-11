@@ -1243,7 +1243,7 @@ namespace Terraria_Server
                     {
                         if (this.aiStyle == 5)
                         {
-							//FIXME if (this.ai[1] == 0f && !Collision.SolidCollision(this.Position, this.Width, this.Height))
+							if (this.ai[1] == 0f && !Collision.SolidCollision(this.Position, this.Width, this.Height))
 							{
 								this.ai[1] = 1f;
 								this.netUpdate = true;
