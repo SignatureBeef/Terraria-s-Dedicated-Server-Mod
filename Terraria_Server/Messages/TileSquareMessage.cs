@@ -62,7 +62,7 @@ namespace Terraria_Server.Messages
                         int wasType = (int)tile.Type;
                         tile.Type = readBuffer[num++];
                         
-                        if (tile.Type > 85)
+                        if (tile.Type > 105)
                         {
                             slot.Kick ("Invalid tile received from client.");
                             return;
@@ -86,7 +86,7 @@ namespace Terraria_Server.Messages
                     {
                         tile.Wall = readBuffer[num++];
                         
-                        if (tile.Wall > 13)
+                        if (tile.Wall > 20)
                         {
                             slot.Kick ("Invalid tile received from client.");
                             return;

@@ -45,7 +45,7 @@ namespace Terraria_Server.Messages
             switch (tileAction)
             {
                 case 1:
-                    if (tileType > 85)
+                    if (tileType > 105)
                     {
                         slot.Kick ("Invalid tile received from client.");
                         return;
@@ -59,7 +59,7 @@ namespace Terraria_Server.Messages
                     wall = true;
                     break;
                 case 3:
-                    if (tileType > 13)
+                    if (tileType > 20)
                     {
                         slot.Kick ("Invalid tile received from client.");
                         return;
