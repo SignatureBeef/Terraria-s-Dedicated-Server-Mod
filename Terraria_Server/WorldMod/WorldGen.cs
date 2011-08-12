@@ -2493,7 +2493,7 @@ namespace Terraria_Server.WorldMod
 			WorldModify.gen = false;
 		}
 
-		public static bool AddBuriedChest(int i, int j, int contain = 0, bool notNearOtherChests = false)
+        public static bool AddBuriedChest(int i, int j, int contain = 0, bool notNearOtherChests = false, int Style = -1)
 		{
 			if (WorldModify.genRand == null)
 			{
@@ -2503,16 +2503,62 @@ namespace Terraria_Server.WorldMod
 			while (k < Main.maxTilesY)
 			{
 				if (Main.tile.At(i, k).Active && Main.tileSolid[(int)Main.tile.At(i, k).Type])
-				{
+                {
+                    bool flag = false;
 					int num = k;
 					int style = 0;
 					if ((double)num >= Main.worldSurface + 25.0 || contain > 0)
 					{
 						style = 1;
-					}
+                    }
+                    if (Style >= 0)
+                    {
+                        style = Style;
+                    }
+                    if (num > Main.maxTilesY - 205 && contain == 0)
+                    {
+                        if (WorldGen.hellChest == 0)
+                        {
+                            contain = 274;
+                            style = 4;
+                            flag = true;
+                        }
+                        else
+                        {
+                            if (WorldGen.hellChest == 1)
+                            {
+                                contain = 220;
+                                style = 4;
+                                flag = true;
+                            }
+                            else
+                            {
+                                if (WorldGen.hellChest == 2)
+                                {
+                                    contain = 112;
+                                    style = 4;
+                                    flag = true;
+                                }
+                                else
+                                {
+                                    if (WorldGen.hellChest == 3)
+                                    {
+                                        contain = 218;
+                                        style = 4;
+                                        flag = true;
+                                        WorldGen.hellChest = 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
 					int num2 = WorldModify.PlaceChest(i - 1, num - 1, 21, notNearOtherChests, style);
 					if (num2 >= 0)
-					{
+                    {
+                        if (flag)
+                        {
+                            WorldGen.hellChest++;
+                        }
 						int num3 = 0;
 						while (num3 == 0)
 						{
@@ -2828,6 +2874,11 @@ namespace Terraria_Server.WorldMod
 									}
 									num3++;
 								}
+                                if (WorldModify.genRand.Next(5) == 0)
+                                {
+                                    Main.chest[num2].contents[num3] = Registries.Item.Create(43);
+                                    num3++;
+                                }
 								if (WorldModify.genRand.Next(3) == 0)
 								{
 									Main.chest[num2].contents[num3] = Registries.Item.Create(167);
@@ -2959,32 +3010,33 @@ namespace Terraria_Server.WorldMod
 								}
 								else
 								{
-									if (hellChest == 0)
-									{
-										Main.chest[num2].contents[num3] = Registries.Item.Create(274);
-									}
-									else
-									{
-										int num22 = WorldModify.genRand.Next(4);
-										if (num22 == 0)
-										{
-											Main.chest[num2].contents[num3] = Registries.Item.Create(49);
-										}
-										if (num22 == 1)
-										{
-											Main.chest[num2].contents[num3] = Registries.Item.Create(50);
-										}
-										if (num22 == 2)
-										{
-											Main.chest[num2].contents[num3] = Registries.Item.Create(53);
-										}
-										if (num22 == 3)
-										{
-											Main.chest[num2].contents[num3] = Registries.Item.Create(54);
-										}
-									}
+                                    //if (hellChest == 0)
+                                    //{
+                                    //    Main.chest[num2].contents[num3] = Registries.Item.Create(274);
+                                    //}
+                                    //else
+                                    //{
+										
+                                    //}
+                                    int num22 = WorldModify.genRand.Next(4);
+                                    if (num22 == 0)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(49);
+                                    }
+                                    if (num22 == 1)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(50);
+                                    }
+                                    if (num22 == 2)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(53);
+                                    }
+                                    if (num22 == 3)
+                                    {
+                                        Main.chest[num2].contents[num3] = Registries.Item.Create(54);
+                                    }
 									num3++;
-									hellChest++;
+									//hellChest++;
 								}
 								if (WorldModify.genRand.Next(3) == 0)
 								{
@@ -3774,53 +3826,66 @@ namespace Terraria_Server.WorldMod
 
 				prog.Value = 95;
 
-				for (int num76 = 0; num76 < numDRooms; num76++)
-				{
-					int num77 = 0;
-					while (num77 < 1000)
-					{
-						int num78 = (int)((double)dRoomSize[num76] * 0.4);
-						int i2 = dRoomX[num76] + WorldModify.genRand.Next(-num78, num78 + 1);
-						int j2 = dRoomY[num76] + WorldModify.genRand.Next(-num78, num78 + 1);
-						int num79 = 0;
-						int num80 = num76;
-						switch (num80)
-						{
-							case 0:
-								num79 = 113;
-								break;
-							case 1:
-								num79 = 155;
-								break;
-							case 2:
-								num79 = 156;
-								break;
-							case 3:
-								num79 = 157;
-								break;
-							case 4:
-								num79 = 163;
-								break;
-							case 5:
-								num79 = 164;
-								break;
-							default:
-								break;
-						}
-						if (num79 == 0 && WorldModify.genRand.Next(2) == 0)
-						{
-							num77 = 1000;
-						}
-						else
-						{
-							if (AddBuriedChest(i2, j2, num79, false))
-							{
-								num77 += 1000;
-							}
-							num77++;
-						}
-					}
-				}
+                int num76 = 0;
+                for (int num77 = 0; num77 < WorldGen.numDRooms; num77++)
+                {
+                    int num78 = 0;
+                    while (num78 < 1000)
+                    {
+                        int num79 = (int)((double)WorldGen.dRoomSize[num77] * 0.4);
+                        int i2 = WorldGen.dRoomX[num77] + WorldModify.genRand.Next(-num79, num79 + 1);
+                        int num80 = WorldGen.dRoomY[num77] + WorldModify.genRand.Next(-num79, num79 + 1);
+                        int num81 = 0;
+                        num76++;
+                        int style = 2;
+                        switch (num76)
+                        {
+                            case 1:
+                                num81 = 329;
+                                break;
+                            case 2:
+                                num81 = 155;
+                                break;
+                            case 3:
+                                num81 = 156;
+                                break;
+                            case 4:
+                                num81 = 157;
+                                break;
+                            case 5:
+                                num81 = 163;
+                                break;
+                            case 6:
+                                num81 = 113;
+                                break;
+                            case 7:
+                                num81 = 327;
+                                style = 0;
+                                break;
+                            default:
+                                num81 = 164;
+                                num76 = 0;
+                                break;
+                        }
+                        if ((double)num80 < Main.worldSurface + 50.0)
+                        {
+                            num81 = 327;
+                            style = 0;
+                        }
+                        if (num81 == 0 && WorldModify.genRand.Next(2) == 0)
+                        {
+                            num78 = 1000;
+                        }
+                        else
+                        {
+                            if (WorldGen.AddBuriedChest(i2, num80, num81, false, style))
+                            {
+                                num78 += 1000;
+                            }
+                            num78++;
+                        }
+                    }
+                }
 				dMinX -= 25;
 				dMaxX += 25;
 				dMinY -= 25;
@@ -3844,7 +3909,7 @@ namespace Terraria_Server.WorldMod
 				num12 = 0;
 				num13 = 1000;
 				num14 = 0;
-				while (num14 < Main.maxTilesX / 40)
+				while (num14 < Main.maxTilesX / 200)
 				{
 					num12++;
 					int num81 = WorldModify.genRand.Next(dMinX, dMaxX);
@@ -3917,6 +3982,17 @@ namespace Terraria_Server.WorldMod
 			{
 				num2 = 1;
 			}
+            if (i > Main.maxTilesX - 400)
+            {
+                num2 = -1;
+            }
+            else
+            {
+                if (i < 400)
+                {
+                    num2 = 1;
+                }
+            }
 			value.Y = -1f;
 			value.X = (float)num2;
 			if (WorldModify.genRand.Next(3) == 0)
@@ -4498,6 +4574,15 @@ namespace Terraria_Server.WorldMod
 
 		public static void DungeonEnt(int i, int j, int tileType, int wallType)
 		{
+            int lMax = 60;
+            for (int k = i - lMax; k < i + lMax; k++)
+            {
+                for (int l = j - lMax; l < j + lMax; l++)
+                {
+                    Main.tile.At(k, l).SetLiquid(0);
+                    Main.tile.At(k, l).SetLava(false);
+                }
+            }
 			double num = dxStrength1;
 			double num2 = dyStrength1;
 			Vector2 vector;
