@@ -978,38 +978,52 @@ namespace Terraria_Server
                 Main.liquid[liquidIndex].kill = 0;
                 return;
             }
-
+			if (Main.tile.At(x, y).Liquid < 250 && Main.tile.At(x, y - 1).Liquid > 0)
+			{
+				Liquid.AddWater(x, y - 1);
+			}
             if (Main.tile.At(x, y).Liquid == 0)
             {
                 Main.tile.At(x, y).SetLava (false);
             }
-            else if (Main.tile.At(x, y).Lava)
+            else
             {
-                Liquid.LavaCheck(x, y);
-                for (int i = x - 1; i <= x + 1; i++)
+				if (Main.tile.At(x + 1, y).Liquid > 0 && Main.tile.At(x + 1, y + 1).Liquid < 250 && !Main.tile.At(x + 1, y + 1).Active)
+				{
+					Liquid.AddWater(x + 1, y);
+				}
+				if (Main.tile.At(x - 1, y).Liquid > 0 && Main.tile.At(x - 1, y + 1).Liquid < 250 && !Main.tile.At(x - 1, y + 1).Active)
+				{
+					Liquid.AddWater(x - 1, y);
+				}
+                if (Main.tile.At(x, y).Lava)
                 {
-                    for (int j = y - 1; j <= y + 1; j++)
-                    {
-                        if (Main.tile.At(i, j).Active)
-                        {
-                            if (Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 23)
-                            {
-                                Main.tile.At(i, j).SetType (0);
-                                WorldModify.SquareTileFrame(i, j, true);
-                                
-                                NetMessage.SendTileSquare(-1, x, y, 3);
-                            }
-                            else if (Main.tile.At(i, j).Type == 60 || Main.tile.At(i, j).Type == 70)
-                            {
-                                Main.tile.At(i, j).SetType (59);
-                                WorldModify.SquareTileFrame(i, j, true);
-                                
-                                NetMessage.SendTileSquare(-1, x, y, 3);
-                            }
-                        }
-                    }
-                }
-            }
+					Liquid.LavaCheck(x, y);
+					for (int i = x - 1; i <= x + 1; i++)
+					{
+						for (int j = y - 1; j <= y + 1; j++)
+						{
+							if (Main.tile.At(i, j).Active)
+							{
+								if (Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 23)
+								{
+									Main.tile.At(i, j).SetType (0);
+									WorldModify.SquareTileFrame(i, j, true);
+						
+									NetMessage.SendTileSquare(-1, x, y, 3);
+								}
+								else if (Main.tile.At(i, j).Type == 60 || Main.tile.At(i, j).Type == 70)
+								{
+									Main.tile.At(i, j).SetType (59);
+									WorldModify.SquareTileFrame(i, j, true);
+						
+									NetMessage.SendTileSquare(-1, x, y, 3);
+								}
+							}
+						}
+					}
+				}
+			}
 
             
             NetMessage.SendWater(x, y);
