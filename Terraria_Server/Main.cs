@@ -21,6 +21,7 @@ namespace Terraria_Server
         //public static bool npcChatFocus1 = false;
         //public static bool npcChatFocus2 = false;
         public const int MAX_TILE_SETS = 106;
+        public const int MAX_WALL_SETS = 21;
         
         public static Item trashItem { get; set; }
         public static bool[] debuff = new bool[27];
@@ -66,22 +67,22 @@ namespace Terraria_Server
 		public static int evilTiles;
 
 
-		public static bool[] tileMergeDirt = new bool[106];
-		public static bool[] tileCut = new bool[106];
-		public static bool[] tileAlch = new bool[106];
-		public static int[] tileShine = new int[106];
-		public static bool[] wallHouse = new bool[21];
-		public static bool[] tileStone = new bool[106];
-		public static bool[] tileWaterDeath = new bool[106];
-		public static bool[] tileLavaDeath = new bool[106];
-		public static bool[] tileTable = new bool[106];
-		public static bool[] tileBlockLight = new bool[106];
-		public static bool[] tileDungeon = new bool[106];
-		public static bool[] tileSolidTop = new bool[106];
-		public static bool[] tileSolid = new bool[106];
-		public static bool[] tileNoAttach = new bool[106];
-		public static bool[] tileNoFail = new bool[106];
-		public static bool[] tileFrameImportant = new bool[106];
+		public static bool[] tileMergeDirt = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileCut = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileAlch = new bool[Main.MAX_TILE_SETS];
+		public static int[] tileShine = new int[Main.MAX_TILE_SETS];
+		public static bool[] wallHouse = new bool[Main.MAX_WALL_SETS];
+		public static bool[] tileStone = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileWaterDeath = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileLavaDeath = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileTable = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileBlockLight = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileDungeon = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileSolidTop = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileSolid = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileNoAttach = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileNoFail = new bool[Main.MAX_TILE_SETS];
+		public static bool[] tileFrameImportant = new bool[Main.MAX_TILE_SETS];
 		public static int[] backgroundWidth = new int[7];
 		public static int[] backgroundHeight = new int[7];
 
