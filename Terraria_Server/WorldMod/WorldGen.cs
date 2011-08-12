@@ -5605,6 +5605,10 @@ namespace Terraria_Server.WorldMod
 					{
 						if ((double)(Math.Abs((float)k - value.X) + Math.Abs((float)l - value.Y)) < strength * 0.5 * (1.0 + (double)WorldModify.genRand.Next(-10, 11) * 0.015))
 						{
+                            if (mudWall && (double)l > Main.worldSurface && l < Main.maxTilesY - 210 - WorldModify.genRand.Next(3))
+                            {
+                                WorldModify.PlaceWall(k, l, 15, true);
+                            }
 							if (type < 0)
 							{
 								if (type == -2 && Main.tile.At(k, l).Active && (l < WorldModify.waterLine || l > WorldModify.lavaLine))
@@ -5793,6 +5797,73 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 		}
+
+        public static void MudWallRunner(int i, int j)
+        {
+            double num = (double)WorldModify.genRand.Next(5, 15);
+            float num2 = (float)WorldModify.genRand.Next(5, 20);
+            float num3 = num2;
+            Vector2 value;
+            value.X = (float)i;
+            value.Y = (float)j;
+            Vector2 value2;
+            value2.X = (float)WorldModify.genRand.Next(-10, 11) * 0.1f;
+            value2.Y = (float)WorldModify.genRand.Next(-10, 11) * 0.1f;
+            while (num > 0.0 && num3 > 0f)
+            {
+                double num4 = num * (double)(num3 / num2);
+                num3 -= 1f;
+                int num5 = (int)((double)value.X - num4 * 0.5);
+                int num6 = (int)((double)value.X + num4 * 0.5);
+                int num7 = (int)((double)value.Y - num4 * 0.5);
+                int num8 = (int)((double)value.Y + num4 * 0.5);
+                if (num5 < 0)
+                {
+                    num5 = 0;
+                }
+                if (num6 > Main.maxTilesX)
+                {
+                    num6 = Main.maxTilesX;
+                }
+                if (num7 < 0)
+                {
+                    num7 = 0;
+                }
+                if (num8 > Main.maxTilesY)
+                {
+                    num8 = Main.maxTilesY;
+                }
+                for (int k = num5; k < num6; k++)
+                {
+                    for (int l = num7; l < num8; l++)
+                    {
+                        if ((double)(Math.Abs((float)k - value.X) + Math.Abs((float)l - value.Y)) < num * 0.5 * (1.0 + (double)WorldModify.genRand.Next(-10, 11) * 0.015))
+                        {
+                            Main.tile.At(k, l).SetWall(0);
+                        }
+                    }
+                }
+                value += value2;
+                value2.X += (float)WorldModify.genRand.Next(-10, 11) * 0.05f;
+                if (value2.X > 1f)
+                {
+                    value2.X = 1f;
+                }
+                if (value2.X < -1f)
+                {
+                    value2.X = -1f;
+                }
+                value2.Y += (float)WorldModify.genRand.Next(-10, 11) * 0.05f;
+                if (value2.Y > 1f)
+                {
+                    value2.Y = 1f;
+                }
+                if (value2.Y < -1f)
+                {
+                    value2.Y = -1f;
+                }
+            }
+        }
 
 		public static void FloatingIsland(int i, int j)
 		{
@@ -6542,22 +6613,32 @@ namespace Terraria_Server.WorldMod
 				}
 				if (Main.tile.At(i, num2 + 1).Active)
 				{
-					HellHouse(i, num2);
+                    byte b = (byte)WorldModify.genRand.Next(75, 77);
+                    byte wall = 13;
+                    if (WorldModify.genRand.Next(5) > 0)
+                    {
+                        b = 75;
+                    }
+                    if (b == 75)
+                    {
+                        wall = 14;
+                    }
+                    HellHouse(i, num2, b, wall);
 					i += WorldModify.genRand.Next(15, 80);
 				}
 			}
 		}
 
-		public static void HellHouse(int i, int j)
+        public static void HellHouse(int i, int j, byte type = 76, byte wall = 13)
 		{
 			int num = WorldModify.genRand.Next(8, 20);
-			int num2 = WorldModify.genRand.Next(3);
-			int num3 = WorldModify.genRand.Next(7);
+            int num2 = WorldModify.genRand.Next(1, 3);
+            int num3 = WorldModify.genRand.Next(4, 13);
 			int num4 = j;
 			for (int k = 0; k < num2; k++)
 			{
 				int num5 = WorldModify.genRand.Next(5, 9);
-				HellRoom(i, num4, num, num5);
+                HellRoom(i, num4, num, num5, type, wall);
 				num4 -= num5;
 			}
 			num4 = j;
@@ -6565,13 +6646,15 @@ namespace Terraria_Server.WorldMod
 			{
 				int num6 = WorldModify.genRand.Next(5, 9);
 				num4 += num6;
-				HellRoom(i, num4, num, num6);
+                HellRoom(i, num4, num, num6, type, wall);
 			}
 			for (int m = i - num / 2; m <= i + num / 2; m++)
 			{
 				num4 = j;
-				while (num4 < Main.maxTilesY && ((Main.tile.At(m, num4).Active && Main.tile.At(m, num4).Type == 76) || Main.tile.At(m, num4).Wall == 13))
-				{
+                while (num4 < Main.maxTilesY && ((Main.tile.At(m, num4).Active && 
+                    (Main.tile.At(m, num4).Type == 76 || Main.tile.At(m, num4).Type == 75)) ||
+                    Main.tile.At(i, num4).Wall == 13 || Main.tile.At(i, num4).Wall == 14))
+                {
 					num4++;
 				}
 				int num7 = 6 + WorldModify.genRand.Next(3);
@@ -6590,17 +6673,17 @@ namespace Terraria_Server.WorldMod
 			int num8 = 0;
 			int num9 = 0;
 			num4 = j;
-			while (num4 < Main.maxTilesY && ((Main.tile.At(i, num4).Active && Main.tile.At(i, num4).Type == 76) || Main.tile.At(i, num4).Wall == 13))
-			{
+            while (num4 < Main.maxTilesY && ((Main.tile.At(i, num4).Active && (Main.tile.At(i, num4).Type == 76 || Main.tile.At(i, num4).Type == 75)) || Main.tile.At(i, num4).Wall == 13 || Main.tile.At(i, num4).Wall == 14))
+            {
 				num4++;
 			}
 			num4--;
 			num9 = num4;
-			while ((Main.tile.At(i, num4).Active && Main.tile.At(i, num4).Type == 76) || Main.tile.At(i, num4).Wall == 13)
-			{
+            while ((Main.tile.At(i, num4).Active && (Main.tile.At(i, num4).Type == 76 || Main.tile.At(i, num4).Type == 75)) || Main.tile.At(i, num4).Wall == 13 || Main.tile.At(i, num4).Wall == 14)
+            {
 				num4--;
-				if (Main.tile.At(i, num4).Active && Main.tile.At(i, num4).Type == 76)
-				{
+                if (Main.tile.At(i, num4).Active && (Main.tile.At(i, num4).Type == 76 || Main.tile.At(i, num4).Type == 75))
+                {
 					int num10 = WorldModify.genRand.Next(i - num / 2 + 1, i + num / 2 - 1);
 					int num11 = WorldModify.genRand.Next(i - num / 2 + 1, i + num / 2 - 1);
 					if (num10 > num11)
@@ -6621,11 +6704,15 @@ namespace Terraria_Server.WorldMod
 						}
 					}
 					for (int n = num10; n <= num11; n++)
-					{
-						if (Main.tile.At(n, num4 - 1).Wall == 13)
-						{
-							Main.tile.At(n, num4).SetWall(13);
-						}
+                    {
+                        if (Main.tile.At(n, num4 - 1).Wall == 13)
+                        {
+                            Main.tile.At(n, num4).SetWall(13);
+                        }
+                        if (Main.tile.At(n, num4 - 1).Wall == 14)
+                        {
+                            Main.tile.At(n, num4).SetWall(14);
+                        }
 						Main.tile.At(n, num4).SetType(19);
 						Main.tile.At(n, num4).SetActive(true);
 					}
@@ -6668,8 +6755,12 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-		public static void HellRoom(int i, int j, int width, int height)
+        public static void HellRoom(int i, int j, int width, int height, byte type = 76, byte wall = 13)
 		{
+            if (j > Main.maxTilesY - 40)
+            {
+                return;
+            }
 			for (int k = i - width / 2; k <= i + width / 2; k++)
 			{
 				for (int l = j - height; l <= j; l++)
@@ -6677,7 +6768,7 @@ namespace Terraria_Server.WorldMod
 					try
 					{
 						Main.tile.At(k, l).SetActive(true);
-						Main.tile.At(k, l).SetType(76);
+                        Main.tile.At(k, l).SetType(type);
 						Main.tile.At(k, l).SetLiquid(0);
 						Main.tile.At(k, l).SetLava(false);
 					}
