@@ -65,29 +65,35 @@ namespace Terraria_Utilities.Serialize
         {
             if (nodeValue != null && !nodeValue.Equals(baseValue))
             {
-				writer.WriteString("\n\t\t");
-                writer.WriteStartElement(name);
-                if (type.Equals(typeof(bool)))
-                {
-                    if ((bool)nodeValue)
-                    {
-                        writer.WriteString("true");
-                    }
-                    else
-                    {
-                        writer.WriteString("false");
-                    }
-                }
-                else if (type.IsPrimitive || type.Equals(typeof(String)))
-                {
-                    writer.WriteString(nodeValue.ToString());
-                }
-                else
-                {
-                    DiffSerializer innerSerializer = new DiffSerializer(type, null, true);
-                    innerSerializer.WriteObject(writer, nodeValue);
-                }
-                writer.WriteEndElement();
+				if (!name.Equals("value__"))
+				{
+					writer.WriteString("\n\t\t");
+					writer.WriteStartElement(name);
+				}
+				if (type.Equals(typeof(bool)))
+				{
+					if ((bool)nodeValue)
+					{
+						writer.WriteString("true");
+					}
+					else
+					{
+						writer.WriteString("false");
+					}
+				}
+				else if (type.IsPrimitive || type.Equals(typeof(String)))
+				{
+					writer.WriteString(nodeValue.ToString());
+				}
+				else
+				{
+					DiffSerializer innerSerializer = new DiffSerializer(type, null, true);
+					innerSerializer.WriteObject(writer, nodeValue);
+				}
+				if (!name.Equals("value__"))
+				{
+					writer.WriteEndElement();
+				}
             }
         }
 
