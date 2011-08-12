@@ -7,7 +7,7 @@ namespace Terraria_Server
     public class ServerProperties : PropertiesFile
     {
         private const bool DEFAULT_AUTOMATIC_UPDATES = false;
-        private const String DEFAULT_GREETING = "Welcome to a TDSM Server!";
+        private const String DEFAULT_GREETING = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
         private const String DEFAULT_MAP_SIZE = "small";
         private const int DEFAULT_MAX_PLAYERS = 8;
         private const bool DEFAULT_NPC_DOOR_OPEN_CANCEL = false;
@@ -69,6 +69,7 @@ namespace Terraria_Server
             temp = RConBindAddress;
             temp = RConHashNonce;
             temp = LogRotation;
+            temp = SpawnNPCMax;
         }
 
         public int MaxPlayers
