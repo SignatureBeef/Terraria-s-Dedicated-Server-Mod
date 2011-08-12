@@ -137,8 +137,8 @@ namespace Terraria_Server.WorldMod
 				return false;
 			}
 
-			try
-			{
+            //try
+            //{
 				WorldModify.saveLock = true;
 				lock (padlock)
 				{
@@ -339,16 +339,16 @@ namespace Terraria_Server.WorldMod
 					stopwatch.Stop();
 					ProgramLog.Log("Save duration: " + stopwatch.Elapsed.Seconds + " Second(s)");
 				}
-			}
-			catch (Exception e)
-			{
-				ProgramLog.Log(e, "Exception saving the world");
-				success = false;
-			}
-			finally
-			{
-				WorldModify.saveLock = false;
-			}
+            //}
+            //catch (Exception e)
+            //{
+            //    ProgramLog.Log(e, "Exception saving the world");
+            //    success = false;
+            //}
+            //finally
+            //{
+            //    WorldModify.saveLock = false;
+            //}
 
 			return success;
 		}

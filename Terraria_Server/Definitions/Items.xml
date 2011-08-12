@@ -502,13 +502,9 @@
 		<Damage>4</Damage>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>1</value__>
-		</Shoot>
+		<Shoot>1</Shoot>
 		<ShootSpeed>6.1</ShootSpeed>
-		<UseAmmo>
-			<value__>1</value__>
-		</UseAmmo>
+		<UseAmmo>1</UseAmmo>
 		<UseAnimation>30</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>30</UseTime>
@@ -519,17 +515,13 @@
 		<Height>28</Height>
 		<Type>40</Type>
 		<Width>10</Width>
-		<Ammo>
-			<value__>1</value__>
-		</Ammo>
+		<Ammo>1</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>4</Damage>
 		<KnockBack>2</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>1</value__>
-		</Shoot>
+		<Shoot>1</Shoot>
 		<ShootSpeed>3</ShootSpeed>
 		<Value>10</Value>
 	</Item>
@@ -538,17 +530,13 @@
 		<Height>28</Height>
 		<Type>41</Type>
 		<Width>10</Width>
-		<Ammo>
-			<value__>1</value__>
-		</Ammo>
+		<Ammo>1</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>6</Damage>
 		<KnockBack>2</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>2</value__>
-		</Shoot>
+		<Shoot>2</Shoot>
 		<ShootSpeed>3.5</ShootSpeed>
 		<Value>15</Value>
 	</Item>
@@ -562,9 +550,7 @@
 		<MaxStack>250</MaxStack>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>3</value__>
-		</Shoot>
+		<Shoot>3</Shoot>
 		<ShootSpeed>9</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -592,13 +578,9 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>1</value__>
-		</Shoot>
+		<Shoot>1</Shoot>
 		<ShootSpeed>6.7</ShootSpeed>
-		<UseAmmo>
-			<value__>1</value__>
-		</UseAmmo>
+		<UseAmmo>1</UseAmmo>
 		<UseAnimation>25</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>25</UseTime>
@@ -640,18 +622,14 @@
 		<Height>28</Height>
 		<Type>47</Type>
 		<Width>10</Width>
-		<Ammo>
-			<value__>1</value__>
-		</Ammo>
+		<Ammo>1</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>8</Damage>
 		<KnockBack>3</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>4</value__>
-		</Shoot>
+		<Shoot>1</Shoot>
 		<ShootSpeed>3.4</ShootSpeed>
 		<Value>40</Value>
 	</Item>
@@ -699,18 +677,14 @@
 		<Height>28</Height>
 		<Type>51</Type>
 		<Width>10</Width>
-		<Ammo>
-			<value__>1</value__>
-		</Ammo>
+		<Ammo>1</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>9</Damage>
 		<KnockBack>4</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>5</value__>
-		</Shoot>
+		<Shoot>5</Shoot>
 		<ShootSpeed>0.5</ShootSpeed>
 		<Value>100</Value>
 	</Item>
@@ -750,9 +724,7 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>6</value__>
-		</Shoot>
+		<Shoot>6</Shoot>
 		<ShootSpeed>10</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -867,9 +839,7 @@
 		<Mana>12</Mana>
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>7</value__>
-		</Shoot>
+		<Shoot>7</Shoot>
 		<ShootSpeed>32</ShootSpeed>
 		<ToolTip>Summons a vile thorn</ToolTip>
 		<UseAnimation>30</UseAnimation>
@@ -889,9 +859,7 @@
 		<Mana>16</Mana>
 		<Rare>1</Rare>
 		<Scale>1.15</Scale>
-		<Shoot>
-			<value__>9</value__>
-		</Shoot>
+		<Shoot>9</Shoot>
 		<ShootSpeed>12</ShootSpeed>
 		<ToolTip>Causes stars to rain from the sky</ToolTip>
 		<ToolTip2>'Forged with the fury of heaven'</ToolTip2>
@@ -908,9 +876,7 @@
 		<Consumable>true</Consumable>
 		<MaxStack>99</MaxStack>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>10</value__>
-		</Shoot>
+		<Shoot>10</Shoot>
 		<ShootSpeed>4</ShootSpeed>
 		<ToolTip>Cleanses the corruption</ToolTip>
 		<UseAnimation>15</UseAnimation>
@@ -927,9 +893,7 @@
 		<Damage>8</Damage>
 		<MaxStack>99</MaxStack>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>11</value__>
-		</Shoot>
+		<Shoot>11</Shoot>
 		<ShootSpeed>4</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -1001,9 +965,7 @@
 		<Height>20</Height>
 		<Type>75</Type>
 		<Width>18</Width>
-		<Ammo>
-			<value__>15</value__>
-		</Ammo>
+		<Ammo>15</Ammo>
 		<Consumable>true</Consumable>
 		<HealMana>20</HealMana>
 		<MaxStack>100</MaxStack>
@@ -1096,9 +1058,7 @@
 		<KnockBack>7</KnockBack>
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>13</value__>
-		</Shoot>
+		<Shoot>13</Shoot>
 		<ShootSpeed>11</ShootSpeed>
 		<ToolTip>'Get over here!'</ToolTip>
 		<UseAnimation>20</UseAnimation>
@@ -1223,13 +1183,9 @@
 		<Ranged>true</Ranged>
 		<Rare>1</Rare>
 		<Scale>0.9</Scale>
-		<Shoot>
-			<value__>14</value__>
-		</Shoot>
+		<Shoot>14</Shoot>
 		<ShootSpeed>5</ShootSpeed>
-		<UseAmmo>
-			<value__>14</value__>
-		</UseAmmo>
+		<UseAmmo>14</UseAmmo>
 		<UseAnimation>16</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>16</UseTime>
@@ -1246,13 +1202,9 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>10</value__>
-		</Shoot>
+		<Shoot>10</Shoot>
 		<ShootSpeed>8</ShootSpeed>
-		<UseAmmo>
-			<value__>14</value__>
-		</UseAmmo>
+		<UseAmmo>14</UseAmmo>
 		<UseAnimation>43</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>43</UseTime>
@@ -1263,17 +1215,13 @@
 		<Height>8</Height>
 		<Type>97</Type>
 		<Width>8</Width>
-		<Ammo>
-			<value__>14</value__>
-		</Ammo>
+		<Ammo>14</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>7</Damage>
 		<KnockBack>2</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>14</value__>
-		</Shoot>
+		<Shoot>14</Shoot>
 		<ShootSpeed>4</ShootSpeed>
 		<Value>7</Value>
 	</Item>
@@ -1287,15 +1235,11 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>2</Rare>
-		<Shoot>
-			<value__>10</value__>
-		</Shoot>
+		<Shoot>10</Shoot>
 		<ShootSpeed>7</ShootSpeed>
 		<ToolTip>33% chance to not consume ammo</ToolTip>
 		<ToolTip2>'Half shark, half gun, completely awesome.'</ToolTip2>
-		<UseAmmo>
-			<value__>14</value__>
-		</UseAmmo>
+		<UseAmmo>14</UseAmmo>
 		<UseAnimation>8</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>8</UseTime>
@@ -1309,13 +1253,9 @@
 		<Damage>8</Damage>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>1</value__>
-		</Shoot>
+		<Shoot>1</Shoot>
 		<ShootSpeed>6.6</ShootSpeed>
-		<UseAmmo>
-			<value__>1</value__>
-		</UseAmmo>
+		<UseAmmo>1</UseAmmo>
 		<UseAnimation>28</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>28</UseTime>
@@ -1495,9 +1435,7 @@
 		<Mana>19</Mana>
 		<NoMelee>true</NoMelee>
 		<Rare>3</Rare>
-		<Shoot>
-			<value__>15</value__>
-		</Shoot>
+		<Shoot>15</Shoot>
 		<ShootSpeed>6</ShootSpeed>
 		<ToolTip>Throws balls of fire</ToolTip>
 		<UseAnimation>20</UseAnimation>
@@ -1517,9 +1455,7 @@
 		<Mana>10</Mana>
 		<NoMelee>true</NoMelee>
 		<Rare>2</Rare>
-		<Shoot>
-			<value__>16</value__>
-		</Shoot>
+		<Shoot>16</Shoot>
 		<ShootSpeed>6</ShootSpeed>
 		<ToolTip>Casts a controllable missile</ToolTip>
 		<UseAnimation>17</UseAnimation>
@@ -1538,9 +1474,7 @@
 		<Mana>5</Mana>
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>17</value__>
-		</Shoot>
+		<Shoot>17</Shoot>
 		<ToolTip>Magically move dirt</ToolTip>
 		<UseAnimation>20</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -1559,9 +1493,7 @@
 		<Mana>40</Mana>
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>18</value__>
-		</Shoot>
+		<Shoot>18</Shoot>
 		<ToolTip>Creates a magical orb of light</ToolTip>
 		<UseAnimation>20</UseAnimation>
 		<UseStyle>4</UseStyle>
@@ -1611,9 +1543,7 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>3</Rare>
-		<Shoot>
-			<value__>19</value__>
-		</Shoot>
+		<Shoot>19</Shoot>
 		<ShootSpeed>11</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -1631,14 +1561,10 @@
 		<Ranged>true</Ranged>
 		<Rare>3</Rare>
 		<Scale>1.1</Scale>
-		<Shoot>
-			<value__>1</value__>
-		</Shoot>
+		<Shoot>1</Shoot>
 		<ShootSpeed>8</ShootSpeed>
 		<ToolTip>Lights wooden arrows ablaze</ToolTip>
-		<UseAmmo>
-			<value__>1</value__>
-		</UseAmmo>
+		<UseAmmo>1</UseAmmo>
 		<UseAnimation>25</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>25</UseTime>
@@ -1738,9 +1664,7 @@
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
 		<Scale>0.8</Scale>
-		<Shoot>
-			<value__>20</value__>
-		</Shoot>
+		<Shoot>20</Shoot>
 		<ShootSpeed>10</ShootSpeed>
 		<UseAnimation>19</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -2110,9 +2034,7 @@
 		<KnockBack>4</KnockBack>
 		<MaxStack>99</MaxStack>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>21</value__>
-		</Shoot>
+		<Shoot>21</Shoot>
 		<ShootSpeed>8</ShootSpeed>
 		<UseAnimation>12</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -2156,9 +2078,7 @@
 		<Magic>true</Magic>
 		<Mana>7</Mana>
 		<Rare>2</Rare>
-		<Shoot>
-			<value__>22</value__>
-		</Shoot>
+		<Shoot>22</Shoot>
 		<ShootSpeed>11</ShootSpeed>
 		<ToolTip>Sprays out a shower of water</ToolTip>
 		<UseAnimation>16</UseAnimation>
@@ -2195,9 +2115,7 @@
 		<Ranged>true</Ranged>
 		<Rare>2</Rare>
 		<Scale>1.1</Scale>
-		<Shoot>
-			<value__>23</value__>
-		</Shoot>
+		<Shoot>23</Shoot>
 		<ShootSpeed>11</ShootSpeed>
 		<UseAnimation>30</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -2215,9 +2133,7 @@
 		<MaxStack>250</MaxStack>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>24</value__>
-		</Shoot>
+		<Shoot>24</Shoot>
 		<ShootSpeed>5</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -2236,9 +2152,7 @@
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
 		<Scale>1.1</Scale>
-		<Shoot>
-			<value__>25</value__>
-		</Shoot>
+		<Shoot>25</Shoot>
 		<ShootSpeed>12</ShootSpeed>
 		<UseAnimation>45</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -2256,9 +2170,7 @@
 		<Melee>true</Melee>
 		<Rare>2</Rare>
 		<Scale>1.1</Scale>
-		<Shoot>
-			<value__>26</value__>
-		</Shoot>
+		<Shoot>26</Shoot>
 		<ShootSpeed>12</ShootSpeed>
 		<UseAnimation>45</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -2276,13 +2188,9 @@
 		<Ranged>true</Ranged>
 		<Rare>2</Rare>
 		<Scale>0.75</Scale>
-		<Shoot>
-			<value__>14</value__>
-		</Shoot>
+		<Shoot>14</Shoot>
 		<ShootSpeed>10</ShootSpeed>
-		<UseAmmo>
-			<value__>14</value__>
-		</UseAmmo>
+		<UseAmmo>14</UseAmmo>
 		<UseAnimation>12</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>12</UseTime>
@@ -2300,9 +2208,7 @@
 		<Mana>14</Mana>
 		<Rare>2</Rare>
 		<Scale>0.9</Scale>
-		<Shoot>
-			<value__>27</value__>
-		</Shoot>
+		<Shoot>27</Shoot>
 		<ShootSpeed>4.5</ShootSpeed>
 		<ToolTip>Casts a slow moving bolt of water</ToolTip>
 		<UseAnimation>17</UseAnimation>
@@ -2318,9 +2224,7 @@
 		<Damage>0</Damage>
 		<MaxStack>20</MaxStack>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>28</value__>
-		</Shoot>
+		<Shoot>28</Shoot>
 		<ShootSpeed>5</ShootSpeed>
 		<ToolTip>A small explosion that will destroy some tiles</ToolTip>
 		<UseAnimation>25</UseAnimation>
@@ -2337,9 +2241,7 @@
 		<MaxStack>3</MaxStack>
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>29</value__>
-		</Shoot>
+		<Shoot>29</Shoot>
 		<ShootSpeed>4</ShootSpeed>
 		<ToolTip>A large explosion that will destroy most tiles</ToolTip>
 		<UseAnimation>40</UseAnimation>
@@ -2358,9 +2260,7 @@
 		<MaxStack>20</MaxStack>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>30</value__>
-		</Shoot>
+		<Shoot>30</Shoot>
 		<ShootSpeed>5.5</ShootSpeed>
 		<ToolTip>A small explosion that will not destroy tiles</ToolTip>
 		<UseAnimation>45</UseAnimation>
@@ -2373,9 +2273,7 @@
 		<Height>12</Height>
 		<Type>169</Type>
 		<Width>12</Width>
-		<Ammo>
-			<value__>42</value__>
-		</Ammo>
+		<Ammo>42</Ammo>
 		<AutoReuse>true</AutoReuse>
 		<Consumable>true</Consumable>
 		<CreateTile>53</CreateTile>
@@ -2556,9 +2454,7 @@
 		<KnockBack>7</KnockBack>
 		<NoMelee>true</NoMelee>
 		<Rare>3</Rare>
-		<Shoot>
-			<value__>32</value__>
-		</Shoot>
+		<Shoot>32</Shoot>
 		<ShootSpeed>13</ShootSpeed>
 		<UseAnimation>20</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -2639,9 +2535,7 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>3</Rare>
-		<Shoot>
-			<value__>33</value__>
-		</Shoot>
+		<Shoot>33</Shoot>
 		<ShootSpeed>11</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -2728,14 +2622,10 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>2</Rare>
-		<Shoot>
-			<value__>12</value__>
-		</Shoot>
+		<Shoot>12</Shoot>
 		<ShootSpeed>14</ShootSpeed>
 		<ToolTip>Shoots fallen stars</ToolTip>
-		<UseAmmo>
-			<value__>15</value__>
-		</UseAmmo>
+		<UseAmmo>15</UseAmmo>
 		<UseAnimation>40</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>40</UseTime>
@@ -2999,9 +2889,7 @@
 		<Mana>16</Mana>
 		<NoMelee>true</NoMelee>
 		<Rare>3</Rare>
-		<Shoot>
-			<value__>34</value__>
-		</Shoot>
+		<Shoot>34</Shoot>
 		<ShootSpeed>6</ShootSpeed>
 		<ToolTip>Summons a controllable ball of fire</ToolTip>
 		<UseAnimation>20</UseAnimation>
@@ -3020,13 +2908,9 @@
 		<Ranged>true</Ranged>
 		<Rare>3</Rare>
 		<Scale>0.75</Scale>
-		<Shoot>
-			<value__>14</value__>
-		</Shoot>
+		<Shoot>14</Shoot>
 		<ShootSpeed>13</ShootSpeed>
-		<UseAmmo>
-			<value__>14</value__>
-		</UseAmmo>
+		<UseAmmo>14</UseAmmo>
 		<UseAnimation>11</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>11</UseTime>
@@ -3044,9 +2928,7 @@
 		<NoMelee>true</NoMelee>
 		<Rare>3</Rare>
 		<Scale>1.1</Scale>
-		<Shoot>
-			<value__>35</value__>
-		</Shoot>
+		<Shoot>35</Shoot>
 		<ShootSpeed>12</ShootSpeed>
 		<UseAnimation>45</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -3218,18 +3100,14 @@
 		<Height>8</Height>
 		<Type>234</Type>
 		<Width>8</Width>
-		<Ammo>
-			<value__>14</value__>
-		</Ammo>
+		<Ammo>14</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>9</Damage>
 		<KnockBack>1</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
 		<Rare>1</Rare>
-		<Shoot>
-			<value__>36</value__>
-		</Shoot>
+		<Shoot>36</Shoot>
 		<ShootSpeed>3</ShootSpeed>
 		<Value>8</Value>
 	</Item>
@@ -3242,9 +3120,7 @@
 		<Damage>0</Damage>
 		<MaxStack>20</MaxStack>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>37</value__>
-		</Shoot>
+		<Shoot>37</Shoot>
 		<ShootSpeed>5</ShootSpeed>
 		<ToolTip>'Tossing may be difficult.'</ToolTip>
 		<UseAnimation>25</UseAnimation>
@@ -3501,18 +3377,14 @@
 		<Height>28</Height>
 		<Type>265</Type>
 		<Width>10</Width>
-		<Ammo>
-			<value__>1</value__>
-		</Ammo>
+		<Ammo>1</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>10</Damage>
 		<KnockBack>8</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
 		<Rare>2</Rare>
-		<Shoot>
-			<value__>41</value__>
-		</Shoot>
+		<Shoot>41</Shoot>
 		<ShootSpeed>6.5</ShootSpeed>
 		<Value>100</Value>
 	</Item>
@@ -3526,14 +3398,10 @@
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
 		<Rare>2</Rare>
-		<Shoot>
-			<value__>42</value__>
-		</Shoot>
+		<Shoot>42</Shoot>
 		<ShootSpeed>14</ShootSpeed>
 		<ToolTip>'This is a good idea!'</ToolTip>
-		<UseAmmo>
-			<value__>42</value__>
-		</UseAmmo>
+		<UseAmmo>42</UseAmmo>
 		<UseAnimation>20</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>20</UseTime>
@@ -3594,9 +3462,7 @@
 		<NoMelee>true</NoMelee>
 		<Rare>3</Rare>
 		<Scale>0.9</Scale>
-		<Shoot>
-			<value__>45</value__>
-		</Shoot>
+		<Shoot>45</Shoot>
 		<ShootSpeed>0.2</ShootSpeed>
 		<ToolTip>Casts a demon scythe</ToolTip>
 		<UseAnimation>20</UseAnimation>
@@ -3630,9 +3496,7 @@
 		<NoMelee>true</NoMelee>
 		<Rare>3</Rare>
 		<Scale>1.1</Scale>
-		<Shoot>
-			<value__>46</value__>
-		</Shoot>
+		<Shoot>46</Shoot>
 		<ShootSpeed>5</ShootSpeed>
 		<UseAnimation>25</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -3673,9 +3537,7 @@
 		<NoMelee>true</NoMelee>
 		<Rare>1</Rare>
 		<Scale>1.1</Scale>
-		<Shoot>
-			<value__>47</value__>
-		</Shoot>
+		<Shoot>47</Shoot>
 		<ShootSpeed>4</ShootSpeed>
 		<UseAnimation>31</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -3687,17 +3549,13 @@
 		<Height>8</Height>
 		<Type>278</Type>
 		<Width>8</Width>
-		<Ammo>
-			<value__>14</value__>
-		</Ammo>
+		<Ammo>14</Ammo>
 		<Consumable>true</Consumable>
 		<Damage>9</Damage>
 		<KnockBack>3</KnockBack>
 		<MaxStack>250</MaxStack>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>14</value__>
-		</Shoot>
+		<Shoot>14</Shoot>
 		<ShootSpeed>4.5</ShootSpeed>
 		<Value>15</Value>
 	</Item>
@@ -3712,9 +3570,7 @@
 		<MaxStack>250</MaxStack>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>48</value__>
-		</Shoot>
+		<Shoot>48</Shoot>
 		<ShootSpeed>10</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -3730,9 +3586,7 @@
 		<KnockBack>6.5</KnockBack>
 		<Melee>true</Melee>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>49</value__>
-		</Shoot>
+		<Shoot>49</Shoot>
 		<ShootSpeed>3.7</ShootSpeed>
 		<UseAnimation>31</UseAnimation>
 		<UseStyle>5</UseStyle>
@@ -3748,14 +3602,10 @@
 		<Damage>9</Damage>
 		<KnockBack>4</KnockBack>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>10</value__>
-		</Shoot>
+		<Shoot>10</Shoot>
 		<ShootSpeed>11</ShootSpeed>
 		<ToolTip>Allows the collection of seeds for ammo</ToolTip>
-		<UseAmmo>
-			<value__>51</value__>
-		</UseAmmo>
+		<UseAmmo>51</UseAmmo>
 		<UseAnimation>45</UseAnimation>
 		<UseStyle>5</UseStyle>
 		<UseTime>45</UseTime>
@@ -3770,9 +3620,7 @@
 		<HoldStyle>1</HoldStyle>
 		<MaxStack>99</MaxStack>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>50</value__>
-		</Shoot>
+		<Shoot>50</Shoot>
 		<ShootSpeed>6</ShootSpeed>
 		<ToolTip>Works when wet</ToolTip>
 		<UseAnimation>15</UseAnimation>
@@ -3785,13 +3633,9 @@
 		<Height>8</Height>
 		<Type>283</Type>
 		<Width>8</Width>
-		<Ammo>
-			<value__>51</value__>
-		</Ammo>
+		<Ammo>51</Ammo>
 		<MaxStack>250</MaxStack>
-		<Shoot>
-			<value__>51</value__>
-		</Shoot>
+		<Shoot>51</Shoot>
 		<ToolTip>For use with Blowpipe</ToolTip>
 	</Item>
 	<Item>
@@ -3803,9 +3647,7 @@
 		<KnockBack>5</KnockBack>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>52</value__>
-		</Shoot>
+		<Shoot>51</Shoot>
 		<ShootSpeed>6.5</ShootSpeed>
 		<UseAnimation>16</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -3829,9 +3671,7 @@
 		<HoldStyle>1</HoldStyle>
 		<MaxStack>99</MaxStack>
 		<NoMelee>true</NoMelee>
-		<Shoot>
-			<value__>53</value__>
-		</Shoot>
+		<Shoot>53</Shoot>
 		<ShootSpeed>6</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
@@ -3849,9 +3689,7 @@
 		<MaxStack>250</MaxStack>
 		<NoMelee>true</NoMelee>
 		<Ranged>true</Ranged>
-		<Shoot>
-			<value__>54</value__>
-		</Shoot>
+		<Shoot>54</Shoot>
 		<ShootSpeed>11</ShootSpeed>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>

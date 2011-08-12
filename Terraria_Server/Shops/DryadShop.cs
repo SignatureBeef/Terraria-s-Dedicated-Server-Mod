@@ -4,6 +4,7 @@ namespace Terraria_Server.Shops
 {
     public class DryadShop : Shop
     {
+        //Type 3
         protected override void Setup()
         {
             int i = 0;

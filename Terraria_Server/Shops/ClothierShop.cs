@@ -4,6 +4,7 @@ namespace Terraria_Server.Shops
 {
     public class ClothierShop : Shop
     {
+        //Type 5
         protected override void Setup()
         {
             int i = 0;
