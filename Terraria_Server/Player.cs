@@ -18,7 +18,7 @@ namespace Terraria_Server
     {
         private const int MAX_INVENTORY = 44;
         private const int MAX_HEALTH = 400;
-        private const int MAX_MANA = 200;
+        private const int MAX_MANA = 360;
 
         public bool HasClientMod = false;
 
