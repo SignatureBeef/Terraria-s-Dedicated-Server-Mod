@@ -34,14 +34,14 @@ namespace Terraria_Server.Messages
             byte projectileOwner = readBuffer[num++];
             byte type = readBuffer[num++];
             
-            if (type > 54)
+            if (type > 55)
             {
                 Netplay.slots[whoAmI].Kick ("Invalid projectile.");
                 return;
             }
-            else if (type == (int)ProjectileType.FEATHER_HARPY || type == (int)ProjectileType.STINGER)
+            else if (type == (int)ProjectileType.FEATHER_HARPY || type == (int)ProjectileType.STINGER || type == (int)ProjectileType.SICKLE_DEMON)
             {
-                Netplay.slots[whoAmI].Kick("Projectile cheat detected.");
+                Netplay.slots[whoAmI].Kick ("Projectile cheat detected.");
                 return;
             }
             else if (type == (int)ProjectileType.HARPOON)

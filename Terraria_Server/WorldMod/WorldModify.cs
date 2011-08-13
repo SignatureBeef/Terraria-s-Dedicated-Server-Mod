@@ -4156,9 +4156,9 @@ namespace Terraria_Server.WorldMod
 			if (flag)
 			{
 				int type2 = 48;
-				if (Main.tile.At(i, j).FrameX >= 36)
+				if (Main.tile.At(i, j).FrameX >= 216)
 				{
-					type2 = 306;
+					type2 = 348;
 				}
                 else if (Main.tile.At(i, j).FrameX >= 180)
                 {

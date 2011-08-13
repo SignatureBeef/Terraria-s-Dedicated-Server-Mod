@@ -240,7 +240,7 @@ namespace Terraria_Server.Networking
 					if (player != null) player.DisconnectReason = reason;
 				}
 				else
-					ProgramLog.Admin.Log ("{0}: disconnecting for: {2}", RemoteAddress, reason);
+					ProgramLog.Admin.Log ("{0}: disconnecting for: {1}", RemoteAddress, reason);
 			}
 			
 			if (! kicking)
