@@ -638,7 +638,7 @@ namespace Terraria_Server
                             {
                                 if (npc.Intersects(rectangle))
                                 {
-                                    NPC.Transform(i, 47);
+                                    npc.Transform (47);
                                 }
                             }
                             else
@@ -647,7 +647,7 @@ namespace Terraria_Server
                                 {
                                     if (npc.Intersects(rectangle))
                                     {
-                                        NPC.Transform(i, 57);
+                                        npc.Transform (57);
                                     }
                                 }
                             }

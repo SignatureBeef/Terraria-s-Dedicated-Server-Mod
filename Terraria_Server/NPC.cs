@@ -113,8 +113,8 @@ namespace Terraria_Server
 		/// Whether NPC is affected by tile collisions
 		/// </summary>
         public bool noTileCollide;
-        public int oldDirection;
-        public int oldTarget;
+        [DontClone] public int oldDirection;
+        [DontClone] public int oldTarget;
         public float rotation;
         public int spriteDirection;
 		/// <summary>
@@ -159,7 +159,101 @@ namespace Terraria_Server
 		[DeepClone] public int[] buffType = new int[5];
 		[DeepClone] public int[] buffTime = new int[5];
 		[DeepClone] public bool[] buffImmune = new bool[27];
-        
+		
+		public bool PoisonImmunity
+		{
+			get { return buffImmune[20]; }
+			set { buffImmune[20] = value; }
+		}
+		
+		public bool BurningImmunity
+		{
+			get { return buffImmune[24]; }
+			set { buffImmune[24] = value; }
+		}
+		
+		// for deserializing only
+		
+		public string Inherits
+		{
+			get { return ""; }
+			set
+			{
+				if (value == "") return;
+				
+				int i;
+				if (int.TryParse (value, out i))
+				{
+					var saveName = Name;
+					Registries.NPC.SetDefaults (this, i);
+					Name = saveName;
+					//Logging.ProgramLog.Debug.Log ("{0}({1}) is inheriting {2}", Name, Type, i);
+				}
+				else
+				{
+					var saveName = Name;
+					Registries.NPC.SetDefaults (this, value);
+					Name = saveName;
+					//Logging.ProgramLog.Debug.Log ("{0}({1}) is inheriting {2}", Name, Type, value);
+				}
+			}
+		}
+		
+		public string ScaleDamage
+		{
+			get { return ""; }
+			set
+			{
+				damage = (int) (damage * scale);
+			}
+		}
+		
+		public string ScaleDefense
+		{
+			get { return ""; }
+			set
+			{
+				defense = (int) (defense * scale);
+			}
+		}
+		
+		public string ScaleLifeMax
+		{
+			get { return ""; }
+			set
+			{
+				lifeMax = (int) (lifeMax * scale);
+			}
+			
+		}
+		
+		public string ScaleValue
+		{
+			get { return ""; }
+			set
+			{
+				this.value *= scale;
+			}
+		}
+		
+		public string ScaleSlots
+		{
+			get { return ""; }
+			set
+			{
+				this.slots *= scale;
+			}
+		}
+		
+		public string ScaleKnockBackResist
+		{
+			get { return ""; }
+			set
+			{
+				this.knockBackResist *= 2f - scale;
+			}
+		}
+		
         public int lifeRegen;
         public int lifeRegenCount;
         public bool poisoned;
@@ -169,7 +263,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Index number for Main.npcs[]
 		/// </summary>
-        public int whoAmI;
+		[DontClone] public int whoAmI;
         
 		/// <summary>
 		/// NPC Constructor.  Sets many defaults
@@ -9478,15 +9572,12 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 31, 0);
+                                string what = "Angry Bones";
                                 if (Main.rand.Next(4) == 0)
-                                {
-                                    Registries.NPC.Alter (Main.npcs[npcIndex], "Big Boned");
-                                }
+                                    what = "Big Boned";
                                 else if (Main.rand.Next(5) == 0)
-                                {
-                                    Registries.NPC.Alter (Main.npcs[npcIndex], "Short Bones");
-                                }
+                                    what = "Short Bones";
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
                             }
                         }
                         else if (Main.players[j].zoneMeteor)
@@ -9512,15 +9603,12 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 42, 0);
+                                string what = "Hornet";
                                 if (Main.rand.Next(4) == 0)
-                                {
-                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Little Stinger");
-                                }
+                                    what = "Little Stinger";
                                 else if (Main.rand.Next(4) == 0)
-                                {
-                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Big Stinger");
-                                }
+                                    what = "Big Stinger";
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
                             }
                         }
                         else if (num20 == 60 && Main.rand.Next(4) == 0)
@@ -9536,15 +9624,12 @@ namespace Terraria_Server
                         }
                         else if ((num20 == 22 && Main.players[j].zoneEvil) || num20 == 23 || num20 == 25)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 6, 0);
+                            string what = "Eater of Souls";
                             if (Main.rand.Next(3) == 0)
-                            {
-                                Registries.NPC.Alter(Main.npcs[npcIndex], "Little Eater");
-                            }
+                                what = "Little Eater";
                             else if (Main.rand.Next(3) == 0)
-                            {
-                                Registries.NPC.Alter(Main.npcs[npcIndex], "Big Eater");
-                            }
+                                what = "Big Eater";
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
                         }
                         else if ((double)num2 <= Main.worldSurface)
                         {
@@ -9573,19 +9658,14 @@ namespace Terraria_Server
 								}
                                 else
                                 {
-                                    npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
-                                    if (num20 == 60)
-                                    {
-                                        Registries.NPC.Alter(Main.npcs[npcIndex], "Jungle Slime");
-                                    }
-                                    else if (Main.rand.Next(3) == 0 || num22 < 200)
-                                    {
-                                        Registries.NPC.Alter(Main.npcs[npcIndex], "Green Slime");
-                                    }
-                                    else if (Main.rand.Next(10) == 0 && num22 > 400)
-                                    {
-                                        Registries.NPC.Alter(Main.npcs[npcIndex], "Purple Slime");
-                                    }
+									string what = "Blue Slime";
+									if (num20 == 60)
+										what = "Jungle Slime";
+									if (Main.rand.Next(3) == 0 || num22 < 200)
+										what = "Green Slime";
+									else if (Main.rand.Next(10) == 0 && num22 > 400)
+										what = "Purple Slime";
+									npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
                                 }
                             }
                             else if (Main.rand.Next(6) == 0 || (Main.moonPhase == 4 && Main.rand.Next(2) == 0))
@@ -9609,19 +9689,12 @@ namespace Terraria_Server
                             }
                             else
                             {
-                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                                string what = "Red Slime";
                                 if (Main.rand.Next(5) == 0)
-                                {
-                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Yellow Slime");
-                                }
+                                    what = "Yellow Slime";
                                 else if (Main.rand.Next(2) == 0)
-                                {
-                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Blue Slime");
-                                }
-                                else
-                                {
-                                    Registries.NPC.Alter(Main.npcs[npcIndex], "Red Slime");
-                                }
+                                    what = "Blue Slime";
+                                npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
                             }
                         }
                         else if (num2 > Main.maxTilesY - 190)
@@ -9664,15 +9737,10 @@ namespace Terraria_Server
                         }
                         else if (Main.rand.Next(4) == 0)
                         {
-                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, 1, 0);
+                            string what = "Black Slime";
                             if (Main.players[j].zoneJungle)
-                            {
-                                Registries.NPC.Alter(Main.npcs[npcIndex], "Jungle Slime");
-                            }
-                            else
-                            {
-                                Registries.NPC.Alter(Main.npcs[npcIndex], "Black Slime");
-                            }
+                                what = "Jungle Slime";
+                            npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, what, 0);
                         }
                         else if (Main.rand.Next(2) == 0)
                         {
@@ -9699,7 +9767,7 @@ namespace Terraria_Server
                         }
                         if (Main.npcs[npcIndex].type == NPCType.N01_BLUE_SLIME && Main.rand.Next(250) == 0)
                         {
-                            Registries.NPC.Alter(Main.npcs[npcIndex], "Pinky");
+                            Main.npcs[npcIndex].Transform ("Pinky");
                         }
                         if (npcIndex < MAX_NPCS)
                         {
@@ -9711,7 +9779,7 @@ namespace Terraria_Server
                 }
             }
         }
-
+        
 		/// <summary>
 		/// Spawns specified NPC type on specified player
 		/// </summary>
@@ -9882,7 +9950,7 @@ namespace Terraria_Server
                 NetMessage.SendData(25, -1, -1, str + " has awoken!", 255, 175f, 75f, 255f);
             }
         }
-
+		
 		/// <summary>
 		/// Creates new instance of specified NPC at specified
 		/// </summary>
@@ -9891,78 +9959,131 @@ namespace Terraria_Server
 		/// <param name="type">Type of NPC to create</param>
 		/// <param name="start">Index to start from looking for free index</param>
 		/// <returns>Main.npcs[] index value</returns>
-        public static int NewNPC(int x, int y, int type, int start = 0)
+		public static int NewNPC (int x, int y, int type, int start = 0)
+		{
+			int id = FindNPCSlot (start);
+			if (id >= 0)
+			{
+				var npc = Registries.NPC.Create (type);
+				id = NewNPC (x, y, npc, id);
+				
+				if (id >= 0 && type == 50)
+				{
+					//TODO: move elsewhere
+					NetMessage.SendData(25, -1, -1, npc.Name + " has awoken!", 255, 175f, 75f, 255f);
+				}
+				
+				return id;
+			}
+			return MAX_NPCS;
+		}
+		
+		public static int NewNPC (int x, int y, string name, int start = 0)
+		{
+			int id = FindNPCSlot (start);
+			if (id >= 0)
+			{
+				NewNPC (x, y, Registries.NPC.Create (name), id);
+				return id;
+			}
+			return MAX_NPCS;
+		}
+		
+		public static int FindNPCSlot (int start)
+		{
+			for (int i = start; i < MAX_NPCS; i++)
+			{
+				if (!Main.npcs[i].Active)
+				{
+					return i;
+					break;
+				}
+			}
+			return -1;
+		}
+		
+        public static int NewNPC(int x, int y, NPC npc, int npcIndex)
         {
-            int npcIndex = -1;
-            for (int i = start; i < MAX_NPCS; i++)
+            npc.Position.X = (float)(x - npc.Width / 2);
+            npc.Position.Y = (float)(y - npc.Height);
+            npc.Active = true;
+            npc.timeLeft = (int)((double)NPC.active_TIME * 1.25);
+            npc.wet = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
+
+            if (!WorldModify.gen)
             {
-                if (!Main.npcs[i].Active)
+                NPCSpawnEvent npcEvent = new NPCSpawnEvent();
+                npcEvent.NPC = npc;
+                Sender sender = new Sender();
+                sender.Op = true;
+                npcEvent.Sender = sender;
+                Program.server.PluginManager.processHook(Hooks.NPC_SPAWN, npcEvent);
+                if (npcEvent.Cancelled)
                 {
-                    npcIndex = i;
-                    break;
+                    return MAX_NPCS;
                 }
             }
 
-            if (npcIndex >= 0)
-            {
-                NPC npc = Registries.NPC.Create(type);
-                //NPC oldNPC = Main.npcs[npcIndex];
-                npc.Position.X = (float)(x - npc.Width / 2);
-                npc.Position.Y = (float)(y - npc.Height);
-                npc.Active = true;
-                npc.timeLeft = (int)((double)NPC.active_TIME * 1.25);
-                npc.wet = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
-
-                if (!WorldModify.gen)
-                {
-                    NPCSpawnEvent npcEvent = new NPCSpawnEvent();
-                    npcEvent.NPC = npc;
-                    Sender sender = new Sender();
-                    sender.Op = true;
-                    npcEvent.Sender = sender;
-                    Program.server.PluginManager.processHook(Hooks.NPC_SPAWN, npcEvent);
-                    if (npcEvent.Cancelled)
-                    {
-                        return MAX_NPCS;
-                    }
-                }
-
-
-                Main.npcs[npcIndex] = npc;
-
-                if (type == 50)
-                {
-                    NetMessage.SendData(25, -1, -1, npc.Name + " has awoken!", 255, 175f, 75f, 255f);
-                }
-                return npcIndex;
-            }
-            return MAX_NPCS;
+            Main.npcs[npcIndex] = npc;
+            
+            return npcIndex;
         }
-
+		
+		public void SetDefaults (int type)
+		{
+			oldDirection = direction;
+			oldTarget = target;
+			Registries.NPC.SetDefaults (this, type);
+			life = lifeMax;
+			Width = (int) (Width * scale);
+			Height = (int) (Height * scale);
+		}
+		
+		public void SetDefaults (string type)
+		{
+			oldDirection = direction;
+			oldTarget = target;
+			Registries.NPC.SetDefaults (this, type);
+			life = lifeMax;
+			Width = (int) (Width * scale);
+			Height = (int) (Height * scale);
+		}
+		
 		/// <summary>
 		/// Transforms specified NPC into specified type.
 		/// Used currently for bunny/goldfish to evil bunny/goldfish and Eater of Worlds segmenting transformations
 		/// </summary>
 		/// <param name="npcIndex"></param>
 		/// <param name="newType"></param>
-        public static void Transform(int npcIndex, int newType)
+        public void Transform (int newType)
 		{
-			NPC npc = Registries.NPC.Create(newType);
-			Main.npcs[npcIndex].netUpdate = true;
-			Main.npcs[npcIndex].Type = newType;
-			Main.npcs[npcIndex].Name = npc.Name;
-			Main.npcs[npcIndex].life = npc.life;
-			Main.npcs[npcIndex].lifeMax = npc.lifeMax;
-			Main.npcs[npcIndex].knockBackResist = npc.knockBackResist;
-			Main.npcs[npcIndex].friendly = npc.friendly;
-			Main.npcs[npcIndex].damage = npc.damage;
-			Main.npcs[npcIndex].defense = npc.defense;
-			Main.npcs[npcIndex].ai = npc.ai;
-			Main.npcs[npcIndex].aiAction = npc.aiAction;
-			Main.npcs[npcIndex].aiStyle = npc.aiStyle;
-			Main.npcs[npcIndex].TargetClosest(true);
-			NetMessage.SendData(23, -1, -1, "", Main.npcs[npcIndex].whoAmI);
-        }
+			var v = Velocity;
+			SetDefaults (newType);
+			Velocity = v;
+			
+			if (Main.npcs[whoAmI] == this)
+			{
+				Active = true;
+				TargetClosest(true);
+				netUpdate = true;
+				NetMessage.SendData (23, -1, -1, "", whoAmI);
+			}
+		}
+        
+		public void Transform (string newType)
+		{
+			var v = Velocity;
+			SetDefaults (newType);
+			Velocity = v;
+			
+			if (Main.npcs[whoAmI] == this)
+			{
+				Active = true;
+				TargetClosest(true);
+				netUpdate = true;
+				NetMessage.SendData (23, -1, -1, "", whoAmI);
+			}
+		}
 
 		/// <summary>
 		/// Damages the NPC
@@ -10503,9 +10624,8 @@ namespace Terraria_Server
                         int spawnedSlimes = Main.rand.Next(2) + 2;
                         for (int slimeNum = 0; slimeNum < spawnedSlimes; slimeNum++)
                         {
-                            int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.Width / 2)), (int)(this.Position.Y + (float)this.Height), 1, 0);
+                            int npcIndex = NPC.NewNPC((int)(this.Position.X + (float)(this.Width / 2)), (int)(this.Position.Y + (float)this.Height), "Baby Slime", 0);
                             NPC npc = Main.npcs[npcIndex];
-                            Registries.NPC.Alter (npc, "Baby Slime");
                             npc.Velocity.X = this.Velocity.X * 2f;
                             npc.Velocity.Y = this.Velocity.Y;
                             
@@ -10698,13 +10818,11 @@ namespace Terraria_Server
                 {
                     if (npc.type == NPCType.N46_BUNNY)
                     {
-                        Transform(i, 47);
-                        npc = Main.npcs[i];
+                        npc.Transform (47);
                     }
                     else if (npc.type == NPCType.N55_GOLDFISH)
                     {
-                        Transform(i, 57);
-                        npc = Main.npcs[i];
+                        npc.Transform (57);
                     }
                 }
                 float num = 10f;
@@ -11409,7 +11527,7 @@ namespace Terraria_Server
             cloned.life = cloned.lifeMax;
             //cloned.life = (int)(cloned.lifeMax * cloned.scale);
             //cloned.defense = (int)(cloned.
-            cloned.slots *= cloned.scale;
+            //cloned.slots *= cloned.scale;
             
             cloned.ai = new float[NPC.MAX_AI];
             Array.Copy(ai, cloned.ai, NPC.MAX_AI);

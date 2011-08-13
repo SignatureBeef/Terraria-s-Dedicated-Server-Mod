@@ -9,114 +9,81 @@
 		<Height>18</Height>
 		<lifeMax>25</lifeMax>
 		<Width>24</Width>
+		<PoisonImmunity>true</PoisonImmunity>
 	</NPC>
 	<NPC>
 		<Name>Green Slime</Name>
-		<Type>1</Type>
+		<Inherits>Blue Slime</Inherits>
 		<value>3</value>
-		<aiStyle>1</aiStyle>
 		<damage>6</damage>
 		<defense>0</defense>
-		<Height>18</Height>
 		<lifeMax>14</lifeMax>
-		<life>14</life>
-		<Width>24</Width>
 		<scale>0.9</scale>
 		<knockBackResist>1.2</knockBackResist>
 	</NPC>
 	<NPC>
 		<Name>Pinky</Name>
-		<Type>1</Type>
+		<Inherits>Blue Slime</Inherits>
 		<value>10000</value>
-		<aiStyle>1</aiStyle>
 		<damage>5</damage>
 		<defense>5</defense>
-		<Height>18</Height>
 		<lifeMax>150</lifeMax>
-		<life>150</life>
-		<Width>24</Width>
 		<scale>0.6</scale>
 		<knockBackResist>1.4</knockBackResist>
 	</NPC>
 	<NPC>
 		<Name>Baby Slime</Name>
-		<Type>1</Type>
+		<Inherits>Blue Slime</Inherits>
 		<value>10</value>
-		<aiStyle>1</aiStyle>
 		<damage>13</damage>
 		<defense>4</defense>
-		<Height>18</Height>
 		<lifeMax>30</lifeMax>
-		<life>30</life>
-		<Width>24</Width>
 		<scale>0.9</scale>
 		<knockBackResist>0.95</knockBackResist>
 	</NPC>
 	<NPC>
 		<Name>Black Slime</Name>
-		<Type>1</Type>
-		<type>1</type>
+		<Inherits>Blue Slime</Inherits>
 		<value>20</value>
-		<aiStyle>1</aiStyle>
 		<damage>15</damage>
 		<defense>4</defense>
-		<Height>18</Height>
 		<lifeMax>45</lifeMax>
-		<life>45</life>
-		<Width>24</Width>
 	</NPC>
 	<NPC>
 		<Name>Purple Slime</Name>
-		<Type>1</Type>
+		<Inherits>Blue Slime</Inherits>
 		<value>10</value>
-		<aiStyle>1</aiStyle>
 		<damage>12</damage>
 		<defense>6</defense>
-		<Height>18</Height>
 		<lifeMax>40</lifeMax>
-		<life>40</life>
-		<Width>24</Width>
 		<scale>1.2</scale>
-		<knockBackResist>0.95</knockBackResist>
+		<knockBackResist>0.9</knockBackResist>
 	</NPC>
 	<NPC>
 		<Name>Red Slime</Name>
-		<Type>1</Type>
+		<Inherits>Blue Slime</Inherits>
 		<value>8</value>
-		<aiStyle>1</aiStyle>
 		<damage>12</damage>
 		<defense>4</defense>
-		<Height>18</Height>
 		<lifeMax>35</lifeMax>
-		<life>35</life>
-		<Width>24</Width>
 	</NPC>
 	<NPC>
 		<Name>Yellow Slime</Name>
-		<Type>1</Type>
+		<Inherits>Blue Slime</Inherits>
 		<value>10</value>
-		<aiStyle>1</aiStyle>
 		<damage>15</damage>
 		<defense>7</defense>
-		<Height>18</Height>
 		<lifeMax>45</lifeMax>
-		<life>45</life>
-		<Width>24</Width>
 		<scale>1.2</scale>
 	</NPC>
 	<NPC>
 		<Name>Jungle Slime</Name>
-		<Type>1</Type>
+		<Inherits>Blue Slime</Inherits>
 		<value>500</value>
-		<aiStyle>1</aiStyle>
 		<damage>18</damage>
 		<defense>6</defense>
-		<Height>18</Height>
 		<lifeMax>60</lifeMax>
-		<life>60</life>
-		<Width>24</Width>
 		<scale>1.2</scale>
-		<knockBackResist>0.95</knockBackResist>
 	</NPC>
 	<NPC>
 		<Name>Demon Eye</Name>
@@ -152,11 +119,12 @@
 		<timeLeft>22500</timeLeft>
 		<value>30000</value>
 		<aiStyle>4</aiStyle>
-		<damage>18</damage>
+		<damage>15</damage>
 		<defense>12</defense>
 		<Height>110</Height>
-		<lifeMax>3000</lifeMax>
+		<lifeMax>2800</lifeMax>
 		<Width>100</Width>
+		<slots>5</slots>
 	</NPC>
 	<NPC>
 		<Name>Servant of Cthulhu</Name>
@@ -164,7 +132,7 @@
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
 		<aiStyle>5</aiStyle>
-		<damage>23</damage>
+		<damage>12</damage>
 		<Height>20</Height>
 		<lifeMax>8</lifeMax>
 		<Width>20</Width>
@@ -174,10 +142,10 @@
 		<Type>6</Type>
 		<knockBackResist>0.5</knockBackResist>
 		<noGravity>true</noGravity>
-		<slots>0.75</slots>
+		<slots>1</slots>
 		<value>90</value>
 		<aiStyle>5</aiStyle>
-		<damage>23</damage>
+		<damage>22</damage>
 		<defense>8</defense>
 		<Height>30</Height>
 		<lifeMax>40</lifeMax>
@@ -185,35 +153,25 @@
 	</NPC>
 	<NPC>
 		<Name>Little Eater</Name>
-		<Type>6</Type>
-		<knockBackResist>0.575</knockBackResist>
-		<noGravity>true</noGravity>
-		<slots>0.6375</slots>
-		<value>76.5</value>
-		<aiStyle>5</aiStyle>
-		<damage>19</damage>
-		<defense>6</defense>
-		<Height>30</Height>
-		<lifeMax>34</lifeMax>
-		<life>34</life>
-		<Width>30</Width>
+		<Inherits>Eater of Souls</Inherits>
 		<scale>0.85</scale>
+		<ScaleDefense/>
+		<ScaleDamage/>
+		<ScaleLifeMax/>
+		<ScaleValue/>
+		<ScaleSlots/>
+		<ScaleKnockBackResist/>
 	</NPC>
 	<NPC>
 		<Name>Big Eater</Name>
-		<Type>6</Type>
-		<knockBackResist>0.425</knockBackResist>
-		<noGravity>true</noGravity>
-		<slots>0.8625</slots>
-		<value>103.5</value>
-		<aiStyle>5</aiStyle>
-		<damage>26</damage>
-		<defense>9</defense>
-		<Height>30</Height>
-		<lifeMax>46</lifeMax>
-		<life>46</life>
-		<Width>30</Width>
+		<Inherits>Eater of Souls</Inherits>
 		<scale>1.15</scale>
+		<ScaleDefense/>
+		<ScaleDamage/>
+		<ScaleLifeMax/>
+		<ScaleValue/>
+		<ScaleSlots/>
+		<ScaleKnockBackResist/>
 	</NPC>
 	<NPC>
 		<Name>Devourer Head</Name>
@@ -225,10 +183,10 @@
 		<slots>3.5</slots>
 		<value>140</value>
 		<aiStyle>6</aiStyle>
-		<damage>32</damage>
+		<damage>31</damage>
 		<defense>2</defense>
 		<Height>22</Height>
-		<lifeMax>30</lifeMax>
+		<lifeMax>20</lifeMax>
 		<Width>22</Width>
 	</NPC>
 	<NPC>
@@ -243,7 +201,7 @@
 		<damage>16</damage>
 		<defense>6</defense>
 		<Height>22</Height>
-		<lifeMax>45</lifeMax>
+		<lifeMax>40</lifeMax>
 		<Width>22</Width>
 	</NPC>
 	<NPC>
@@ -258,7 +216,7 @@
 		<damage>13</damage>
 		<defense>10</defense>
 		<Height>22</Height>
-		<lifeMax>70</lifeMax>
+		<lifeMax>50</lifeMax>
 		<Width>22</Width>
 	</NPC>
 	<NPC>
@@ -312,13 +270,13 @@
 		<knockBackResist>0</knockBackResist>
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
-		<scale>1.1</scale>
 		<slots>8</slots>
 		<value>300</value>
 		<aiStyle>6</aiStyle>
-		<damage>43</damage>
+		<damage>22</damage>
+		<defense>2</defense>
 		<Height>38</Height>
-		<lifeMax>80</lifeMax>
+		<lifeMax>65</lifeMax>
 		<Width>38</Width>
 	</NPC>
 	<NPC>
@@ -328,13 +286,12 @@
 		<knockBackResist>0</knockBackResist>
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
-		<scale>1.1</scale>
 		<value>300</value>
 		<aiStyle>6</aiStyle>
-		<damage>18</damage>
-		<defense>6</defense>
+		<damage>13</damage>
+		<defense>4</defense>
 		<Height>38</Height>
-		<lifeMax>210</lifeMax>
+		<lifeMax>150</lifeMax>
 		<Width>38</Width>
 	</NPC>
 	<NPC>
@@ -344,13 +301,12 @@
 		<knockBackResist>0</knockBackResist>
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
-		<scale>1.1</scale>
 		<value>300</value>
 		<aiStyle>6</aiStyle>
 		<damage>11</damage>
-		<defense>7</defense>
+		<defense>8</defense>
 		<Height>38</Height>
-		<lifeMax>300</lifeMax>
+		<lifeMax>220</lifeMax>
 		<Width>38</Width>
 	</NPC>
 	<NPC>
@@ -366,6 +322,7 @@
 		<Height>24</Height>
 		<lifeMax>90</lifeMax>
 		<Width>36</Width>
+		<PoisonImmunity>true</PoisonImmunity>
 	</NPC>
 	<NPC>
 		<Name>Merchant</Name>
@@ -430,6 +387,7 @@
 		<Height>40</Height>
 		<lifeMax>60</lifeMax>
 		<Width>18</Width>
+		<PoisonImmunity>true</PoisonImmunity>
 	</NPC>
 	<NPC>
 		<Name>Guide</Name>
@@ -457,6 +415,8 @@
 		<Height>22</Height>
 		<lifeMax>26</lifeMax>
 		<Width>22</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Fire Imp</Name>
@@ -464,13 +424,14 @@
 		<knockBackResist>0.5</knockBackResist>
 		<lavaImmune>true</lavaImmune>
 		<slots>3</slots>
-		<value>400</value>
+		<value>340</value>
 		<aiStyle>8</aiStyle>
 		<damage>30</damage>
-		<defense>20</defense>
+		<defense>16</defense>
 		<Height>40</Height>
-		<lifeMax>80</lifeMax>
+		<lifeMax>70</lifeMax>
 		<Width>18</Width>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Burning Sphere</Name>
@@ -479,7 +440,7 @@
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
 		<aiStyle>9</aiStyle>
-		<damage>25</damage>
+		<damage>30</damage>
 		<Height>16</Height>
 		<lifeMax>1</lifeMax>
 		<Width>16</Width>
@@ -495,6 +456,7 @@
 		<Height>40</Height>
 		<lifeMax>60</lifeMax>
 		<Width>18</Width>
+		<scale>0.9</scale>
 	</NPC>
 	<NPC>
 		<Name>Goblin Thief</Name>
@@ -507,6 +469,7 @@
 		<Height>40</Height>
 		<lifeMax>80</lifeMax>
 		<Width>18</Width>
+		<scale>0.95</scale>
 	</NPC>
 	<NPC>
 		<Name>Goblin Warrior</Name>
@@ -519,6 +482,7 @@
 		<Height>40</Height>
 		<lifeMax>110</lifeMax>
 		<Width>18</Width>
+		<scale>1.1</scale>
 	</NPC>
 	<NPC>
 		<Name>Goblin Sorcerer</Name>
@@ -547,42 +511,36 @@
 	<NPC>
 		<Name>Angry Bones</Name>
 		<Type>31</Type>
-		<knockBackResist>0.6</knockBackResist>
+		<knockBackResist>0.8</knockBackResist>
 		<value>130</value>
 		<aiStyle>3</aiStyle>
-		<damage>30</damage>
-		<defense>10</defense>
+		<damage>26</damage>
+		<defense>8</defense>
 		<Height>40</Height>
-		<lifeMax>100</lifeMax>
+		<lifeMax>80</lifeMax>
 		<Width>18</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Short Bones</Name>
-		<Type>31</Type>
-		<knockBackResist>0.6</knockBackResist>
-		<value>117</value>
-		<aiStyle>3</aiStyle>
-		<damage>27</damage>
-		<defense>9</defense>
-		<Height>40</Height>
-		<lifeMax>90</lifeMax>
-		<life>90</life>
-		<Width>18</Width>
+		<Inherits>Angry Bones</Inherits>
 		<scale>0.9</scale>
+		<ScaleDamage/>
+		<ScaleDefense/>
+		<ScaleLifeMax/>
+		<ScaleValue/>
 	</NPC>
 	<NPC>
 		<Name>Big Boned</Name>
-		<Type>31</Type>
-		<knockBackResist>0.51</knockBackResist>
-		<value>149.5</value>
-		<aiStyle>3</aiStyle>
-		<damage>37</damage>
-		<defense>12</defense>
-		<Height>40</Height>
-		<lifeMax>100</lifeMax>
-		<Width>18</Width>
-		<slots>2</slots>
+		<Inherits>Angry Bones</Inherits>
 		<scale>1.15</scale>
+		<ScaleDefense/>
+		<ScaleDamage/>
+		<ScaleLifeMax/>
+		<ScaleValue/>
+		<slots>2</slots>
+		<ScaleKnockBackResist/>
 	</NPC>
 	<NPC>
 		<Name>Dark Caster</Name>
@@ -592,10 +550,12 @@
 		<value>140</value>
 		<aiStyle>8</aiStyle>
 		<damage>20</damage>
-		<defense>4</defense>
+		<defense>2</defense>
 		<Height>40</Height>
 		<lifeMax>50</lifeMax>
 		<Width>18</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Water Sphere</Name>
@@ -612,7 +572,7 @@
 	<NPC>
 		<Name>Cursed Skull</Name>
 		<Type>34</Type>
-		<knockBackResist>0</knockBackResist>
+		<knockBackResist>0.2</knockBackResist>
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
 		<slots>0.75</slots>
@@ -621,8 +581,10 @@
 		<damage>35</damage>
 		<defense>6</defense>
 		<Height>28</Height>
-		<lifeMax>80</lifeMax>
+		<lifeMax>40</lifeMax>
 		<Width>26</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Skeletron Head</Name>
@@ -634,11 +596,13 @@
 		<slots>6</slots>
 		<value>50000</value>
 		<aiStyle>11</aiStyle>
-		<damage>30</damage>
+		<damage>32</damage>
 		<defense>10</defense>
 		<Height>102</Height>
-		<lifeMax>5000</lifeMax>
+		<lifeMax>4400</lifeMax>
 		<Width>80</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Skeletron Hand</Name>
@@ -647,11 +611,13 @@
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
 		<aiStyle>12</aiStyle>
-		<damage>25</damage>
-		<defense>18</defense>
+		<damage>20</damage>
+		<defense>14</defense>
 		<Height>52</Height>
-		<lifeMax>800</lifeMax>
+		<lifeMax>600</lifeMax>
 		<Width>52</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Old Man</Name>
@@ -687,13 +653,15 @@
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
 		<slots>6</slots>
-		<value>300</value>
+		<value>1200</value>
 		<aiStyle>6</aiStyle>
-		<damage>40</damage>
+		<damage>30</damage>
 		<defense>10</defense>
 		<Height>22</Height>
-		<lifeMax>120</lifeMax>
+		<lifeMax>70</lifeMax>
 		<Width>22</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Bone Serpent Body</Name>
@@ -702,13 +670,15 @@
 		<knockBackResist>0</knockBackResist>
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
-		<value>300</value>
+		<value>1200</value>
 		<aiStyle>6</aiStyle>
-		<damage>30</damage>
+		<damage>15</damage>
 		<defense>12</defense>
 		<Height>22</Height>
 		<lifeMax>150</lifeMax>
 		<Width>22</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Bone Serpent Tail</Name>
@@ -717,58 +687,51 @@
 		<knockBackResist>0</knockBackResist>
 		<noGravity>true</noGravity>
 		<noTileCollide>true</noTileCollide>
-		<value>300</value>
+		<value>1200</value>
 		<aiStyle>6</aiStyle>
-		<damage>20</damage>
+		<damage>10</damage>
 		<defense>18</defense>
 		<Height>22</Height>
 		<lifeMax>200</lifeMax>
 		<Width>22</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Hornet</Name>
 		<Type>42</Type>
-		<knockBackResist>0.8</knockBackResist>
+		<knockBackResist>0.5</knockBackResist>
 		<noGravity>true</noGravity>
 		<value>200</value>
 		<aiStyle>5</aiStyle>
-		<damage>40</damage>
+		<damage>38</damage>
 		<defense>12</defense>
 		<Height>32</Height>
-		<lifeMax>100</lifeMax>
+		<lifeMax>50</lifeMax>
 		<Width>34</Width>
+		<PoisonImmunity>true</PoisonImmunity>
 	</NPC>
 	<NPC>
 		<Name>Little Stinger</Name>
-		<Type>42</Type>
-		<knockBackResist>0.92</knockBackResist>
-		<noGravity>true</noGravity>
-		<value>170</value>
-		<aiStyle>5</aiStyle>
-		<damage>34</damage>
-		<defense>10</defense>
-		<Height>32</Height>
-		<lifeMax>85</lifeMax>
-		<life>85</life>
-		<Width>34</Width>
+		<Inherits>Hornet</Inherits>
 		<scale>0.85</scale>
-		<slots>0.85</slots>
+		<ScaleDefense/>
+		<ScaleDamage/>
+		<ScaleLifeMax/>
+		<ScaleValue/>
+		<ScaleSlots/>
+		<ScaleKnockBackResist/>
 	</NPC>
 	<NPC>
 		<Name>Big Stinger</Name>
-		<Type>42</Type>
-		<knockBackResist>0.68</knockBackResist>
-		<noGravity>true</noGravity>
-		<value>230</value>
-		<aiStyle>5</aiStyle>
-		<damage>46</damage>
-		<defense>13</defense>
-		<Height>32</Height>
-		<lifeMax>115</lifeMax>
-		<life>115</life>
-		<Width>34</Width>
+		<Inherits>Hornet</Inherits>
 		<scale>1.15</scale>
-		<slots>1.15</slots>
+		<ScaleDefense/>
+		<ScaleDamage/>
+		<ScaleLifeMax/>
+		<ScaleValue/>
+		<ScaleSlots/>
+		<ScaleKnockBackResist/>
 	</NPC>
 	<NPC>
 		<Name>Man Eater</Name>
@@ -779,11 +742,12 @@
 		<noTileCollide>true</noTileCollide>
 		<value>350</value>
 		<aiStyle>13</aiStyle>
-		<damage>60</damage>
+		<damage>45</damage>
 		<defense>14</defense>
 		<Height>30</Height>
-		<lifeMax>200</lifeMax>
+		<lifeMax>130</lifeMax>
 		<Width>30</Width>
+		<PoisonImmunity>true</PoisonImmunity>
 	</NPC>
 	<NPC>
 		<Name>Undead Miner</Name>
@@ -796,6 +760,8 @@
 		<Height>40</Height>
 		<lifeMax>70</lifeMax>
 		<Width>18</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Tim</Name>
@@ -808,6 +774,8 @@
 		<Height>40</Height>
 		<lifeMax>200</lifeMax>
 		<Width>18</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Bunny</Name>
@@ -848,11 +816,11 @@
 		<slots>0.5</slots>
 		<value>90</value>
 		<aiStyle>14</aiStyle>
-		<damage>15</damage>
+		<damage>13</damage>
 		<defense>2</defense>
-		<Height>12</Height>
-		<lifeMax>25</lifeMax>
-		<Width>12</Width>
+		<Height>18</Height>
+		<lifeMax>16</lifeMax>
+		<Width>22</Width>
 	</NPC>
 	<NPC>
 		<Name>King Slime</Name>
@@ -867,6 +835,8 @@
 		<Height>92</Height>
 		<lifeMax>2000</lifeMax>
 		<Width>98</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Jungle Bat</Name>
@@ -877,9 +847,9 @@
 		<aiStyle>14</aiStyle>
 		<damage>20</damage>
 		<defense>4</defense>
-		<Height>12</Height>
-		<lifeMax>60</lifeMax>
-		<Width>12</Width>
+		<Height>18</Height>
+		<lifeMax>34</lifeMax>
+		<Width>22</Width>
 	</NPC>
 	<NPC>
 		<Name>Doctor Bones</Name>
@@ -941,8 +911,9 @@
 		<damage>25</damage>
 		<defense>10</defense>
 		<Height>30</Height>
-		<lifeMax>100</lifeMax>
+		<lifeMax>60</lifeMax>
 		<Width>30</Width>
+		<PoisonImmunity>true</PoisonImmunity>
 	</NPC>
 	<NPC>
 		<Name>Corrupt Goldfish</Name>
@@ -980,6 +951,9 @@
 		<Height>18</Height>
 		<lifeMax>50</lifeMax>
 		<Width>24</Width>
+		<value>120</value>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Hellbat</Name>
@@ -990,11 +964,12 @@
 		<slots>0.5</slots>
 		<value>120</value>
 		<aiStyle>14</aiStyle>
-		<damage>30</damage>
+		<damage>35</damage>
 		<defense>8</defense>
-		<Height>12</Height>
-		<lifeMax>55</lifeMax>
-		<Width>12</Width>
+		<Height>18</Height>
+		<lifeMax>46</lifeMax>
+		<Width>22</Width>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Vulture</Name>
@@ -1011,16 +986,17 @@
 	<NPC>
 		<Name>Demon</Name>
 		<Type>62</Type>
-		<knockBackResist>0.6</knockBackResist>
+		<knockBackResist>0.8</knockBackResist>
 		<lavaImmune>true</lavaImmune>
 		<slots>2</slots>
 		<value>300</value>
 		<aiStyle>14</aiStyle>
-		<damage>50</damage>
+		<damage>32</damage>
 		<defense>8</defense>
 		<Height>48</Height>
 		<lifeMax>120</lifeMax>
 		<Width>28</Width>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Blue Jellyfish</Name>
@@ -1062,16 +1038,17 @@
 	<NPC>
 		<Name>Voodoo Demon</Name>
 		<Type>66</Type>
-		<knockBackResist>0.6</knockBackResist>
+		<knockBackResist>0.8</knockBackResist>
 		<lavaImmune>true</lavaImmune>
 		<slots>2</slots>
 		<value>1000</value>
 		<aiStyle>14</aiStyle>
-		<damage>50</damage>
+		<damage>32</damage>
 		<defense>8</defense>
 		<Height>48</Height>
-		<lifeMax>120</lifeMax>
+		<lifeMax>140</lifeMax>
 		<Width>28</Width>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Crab</Name>
@@ -1096,6 +1073,8 @@
 		<Height>102</Height>
 		<lifeMax>9999</lifeMax>
 		<Width>80</Width>
+		<PoisonImmunity>true</PoisonImmunity>
+		<BurningImmunity>true</BurningImmunity>
 	</NPC>
 	<NPC>
 		<Name>Antlion</Name>
@@ -1148,6 +1127,7 @@
     <knockBackResist>0.6</knockBackResist>
     <oldTarget>255</oldTarget>
     <value>150</value>
+		<PoisonImmunity>true</PoisonImmunity>
   </NPC>
   <NPC>
     <Width>40</Width>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml;
 using System.Xml.Serialization;
 using System.Reflection;
 using Terraria_Server.Logging;
@@ -17,53 +18,55 @@ namespace Terraria_Server.Collections
 
         private readonly T defaultValue;
 
-        public Registry(String filePath)
+        public Registry ()
         {
             this.defaultValue = Activator.CreateInstance<T>();
-            StreamReader reader = new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream(DEFINITIONS + filePath));
-            XmlSerializer serializer = new XmlSerializer(typeof(T[]));
-            T[] deserialized;
-            try
-            {
-                deserialized  = (T[]) serializer.Deserialize(reader);
-                T errored = deserialized[0];
-                try
-                {
-                    foreach (T t in deserialized)
-                    {
-                        errored = t;
-
-                        if (typeLookup.ContainsKey(t.Type))
-                        {
-                            List<T> values;
-                            if (typeLookup.TryGetValue(t.Type, out values))
-                            {
-                                values.Add(t);
-                            }
-                        }
-                        else
-                        {
-                            List<T> values = new List<T>();
-                            values.Add(t);
-                            typeLookup.Add(t.Type, values);
-                        }
-
-                        if (!nameLookup.ContainsKey(t.Name))
-                        {
-                            nameLookup.Add(t.Name, t);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    ProgramLog.Log (e, "Error adding element: " + errored.ToString());
-                }
-            }
-            catch (Exception e)
-            {
-                ProgramLog.Log (e, "Error deserializing: " + filePath);
-            }
         }
+        
+		public void Load (string filePath)
+		{
+			var document = new XmlDocument ();
+			document.Load (Assembly.GetExecutingAssembly().GetManifestResourceStream(DEFINITIONS + filePath));
+			var nodes = document.SelectNodes ("/*/*");
+			var ser = new XmlSerializer (typeof(T));
+			
+			foreach (XmlNode node in nodes)
+			{
+				try
+				{
+					var rdr = new XmlNodeReader (node);
+					var t = (T) ser.Deserialize (rdr);
+					
+					//ProgramLog.Debug.Log ("Created entity {0}, {1}", t.Type, t.Name);
+				
+					if (typeLookup.ContainsKey(t.Type))
+					{
+						List<T> values;
+						if (typeLookup.TryGetValue(t.Type, out values))
+						{
+							values.Add(t);
+						}
+					}
+					else
+					{
+						List<T> values = new List<T>();
+						values.Add(t);
+						typeLookup.Add(t.Type, values);
+					}
+					
+					if (!nameLookup.ContainsKey(t.Name))
+					{
+						nameLookup.Add(t.Name, t);
+					}
+				}
+				catch (Exception e)
+				{
+					ProgramLog.Log (e, "Error adding element");
+					ProgramLog.Error.Log ("Element was:\n" + node.ToString());
+				}
+				
+			}
+		}
 
         public T Default
         {
@@ -86,54 +89,31 @@ namespace Terraria_Server.Collections
             return CloneAndInit(defaultValue);
         }
 
-        public void Alter (T subject, String name)
-        {
-            List<T> values;
-            if (typeLookup.TryGetValue(subject.Type, out values))
-            {
-                foreach (T value in values)
-                {
-                    if (value.Name == name)
-                    {
-                        subject.Name = value.Name;
-                        subject.aiStyle = value.aiStyle;
-                        subject.damage = value.damage;
-                        subject.defense = value.defense;
-                        subject.life = value.lifeMax;
-                        subject.lifeMax = value.lifeMax;
-                        subject.scale = value.scale;
-                        subject.knockBackResist = value.knockBackResist;
-                        subject.slots = value.slots;
-                        return;
-                    }
-                }
-            }
-            throw new ApplicationException ("Unknown NPC '" + name + "'");
-        }
-        
-        [Obsolete("Not obsolete, but probably needs tweaking to work properly")]
         public void SetDefaults (T obj, int type)
         {
             List<T> values;
             if (typeLookup.TryGetValue(type, out values))
             {
-                if (values.Count == 1)
+                if (values.Count > 0)
                 {
                     obj.CopyFieldsFrom (values[0]);
+                    return;
                 }
                 else
-                    throw new ApplicationException ("Registry.SetDefaults(T, int) called with a non-unique type.");
+                    throw new ApplicationException ("Registry.SetDefaults(T, int): type " + type + " not found.");
             }
+            throw new ApplicationException ("Registry.SetDefaults(T, int): type " + type + " not found.");
         }
         
-        [Obsolete("Not obsolete, but probably needs tweaking to work properly")]
         public void SetDefaults (T obj, string name)
         {
             T value;
             if (nameLookup.TryGetValue (name, out value))
             {
                 obj.CopyFieldsFrom (value);
+                return;
             }
+            throw new ApplicationException ("Registry.SetDefaults(T, string): type '" + name + "' not found.");
         }
 
         public T Create(String name)
@@ -176,5 +156,15 @@ namespace Terraria_Server.Collections
             }
             return cloned;
         }
+        
+		public T GetTemplate (int type)
+		{
+			List<T> values;
+			if (typeLookup.TryGetValue (type, out values))
+			{
+				return values[0];
+			}
+			return default(T);
+		}
     }
 }

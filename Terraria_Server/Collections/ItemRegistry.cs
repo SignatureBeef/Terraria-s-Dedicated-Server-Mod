@@ -13,9 +13,9 @@ namespace Terraria_Server.Collections
         private const String ITEMS_BY_NAME = "ItemsByName.xml";
         private const String ITEM_FILE = "Items.xml";
 
-        public ItemRegistry()
-            : base(ITEM_FILE) 
+        public void Load () 
         { 
+            base.Load (ITEM_FILE);
             /*
              * We need to load additional items into the name lookup and only the name
              * lookup dictionary. This is at least until the item list can be fixed so
@@ -36,7 +36,7 @@ namespace Terraria_Server.Collections
                 ProgramLog.Log (e);
             }
         }
-
+        
         public override Item Create(int type, int stack = 1)
         {
             Item item = CloneAndInit(base.Create(type), stack);

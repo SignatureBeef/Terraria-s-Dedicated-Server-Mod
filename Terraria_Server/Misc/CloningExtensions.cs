@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -37,16 +38,24 @@ public static class CloningExtensions
 			// finds all non-readonly fields without a DontClone attribute and creates a list of
 			// assignment statements for copying them over
 			// fields with DeepClone are assumed to implement ICloneable
-			var bindings =
-				from field in typeof(T).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
-				where !field.IsInitOnly && Attribute.GetCustomAttribute (field, typeof(DontCloneAttribute)) == null
-				select Expression.Assign(Expression.Field(target, field),
-					(field.GetType().IsValueType || Attribute.GetCustomAttribute (field, typeof(DeepCloneAttribute)) == null)
-					? Expression.Field(template, field)
-					: (field.FieldType.GetInterfaces().Contains (typeof(ICloneable))
-						? Expression.Convert (Expression.Call (Expression.Field(template, field), typeof(ICloneable).GetMethod("Clone")), field.FieldType)
-						: Throw (field) ) );
-
+			var type = typeof(T);
+			var bindings = new List<BinaryExpression> ();
+			
+			while (type != typeof(object))
+			{
+				bindings.AddRange (
+					from field in type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.DeclaredOnly)
+					where !field.IsInitOnly && Attribute.GetCustomAttribute (field, typeof(DontCloneAttribute)) == null
+					select Expression.Assign(Expression.Field(target, field),
+						(field.FieldType.IsValueType || Attribute.GetCustomAttribute (field, typeof(DeepCloneAttribute)) == null)
+						? Expression.Field(template, field)
+						: (field.FieldType.GetInterfaces().Contains (typeof(ICloneable))
+							? Expression.Convert (Expression.Call (Expression.Field(template, field), typeof(ICloneable).GetMethod("Clone")), field.FieldType)
+							: Throw (field) ) ));
+				
+				type = type.BaseType;
+			}
+			
 			copyover = Expression.Lambda<Action<T,T>>(Expression.Block (bindings), new ParameterExpression[] {template, target}).Compile();
 		}
 		

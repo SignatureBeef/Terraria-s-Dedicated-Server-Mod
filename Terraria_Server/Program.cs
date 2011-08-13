@@ -145,6 +145,13 @@ namespace Terraria_Server
 				RemoteConsole.RConServer.Start ("rcon_logins.properties");
 				
 				ProgramLog.Log ("Preparing Server Data...");
+				
+				using (var prog = new ProgressLogger (1, "Loading item definitions"))
+					Collections.Registries.Item.Load ();
+				using (var prog = new ProgressLogger (1, "Loading NPC definitions"))
+					Collections.Registries.NPC.Load (Collections.Registries.NPC_FILE);
+				using (var prog = new ProgressLogger (1, "Loading projectile definitions"))
+					Collections.Registries.Projectile.Load (Collections.Registries.PROJECTILE_FILE);
 
 				String worldFile = properties.WorldPath;
 				FileInfo file = new FileInfo(worldFile);
