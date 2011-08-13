@@ -1505,7 +1505,7 @@ namespace Terraria_Server.WorldMod
 			{
 				num--;
 			}
-            if (FrameY == 40 * num2 && (int)Main.tile.At(x, num + 1).FrameY == 40 * num2 + 18 && Main.tile.At(x, num).Type == type && Main.tile.At(x, num + 1).Type == type)
+            if ((int)Main.tile.At(x, num).FrameY == 40 * num2 && (int)Main.tile.At(x, num + 1).FrameY == 40 * num2 + 18 && Main.tile.At(x, num).Type == type && Main.tile.At(x, num + 1).Type == type)
             {
                 flag = false;
             }
@@ -2367,7 +2367,7 @@ namespace Terraria_Server.WorldMod
 			bool flag = false;
 			int num = i;
 			num += (int)(Main.tile.At(i, j).FrameX / 18 * -1);
-			if (type == 79 && Main.tile.At(i, j).FrameX >= 72)
+			if ((type == 79 || type == 90) && Main.tile.At(i, j).FrameX >= 72)
 			{
 				num += 4;
 			}

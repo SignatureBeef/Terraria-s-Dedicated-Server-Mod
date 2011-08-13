@@ -121,7 +121,7 @@ namespace Terraria_Server.Messages
                     break;
             }
 
-            NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType);
+            NetMessage.SendData(17, -1, whoAmI, "", (int)tileAction, (float)x, (float)y, (float)tileType, style);
             if (tileAction == 1 && tileType == 53)
             {
                 NetMessage.SendTileSquare(-1, x, y, 1);
