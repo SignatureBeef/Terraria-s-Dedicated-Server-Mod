@@ -133,7 +133,7 @@ namespace Terraria_Server.RemoteConsole
 						
 						start = i + 1;
 						
-						if (bytesRead > i + 2 && readBuffer[start + 2] == 13)
+						if (bytesRead > start + 2 && readBuffer[start + 2] == 13)
 						{
 							start += 1;
 						}
@@ -163,7 +163,7 @@ namespace Terraria_Server.RemoteConsole
 			if (start > 0)
 			{
 				if (start < bytesRead)
-					Buffer.BlockCopy (readBuffer, i, readBuffer, 0, bytesRead - start);
+					Buffer.BlockCopy (readBuffer, start, readBuffer, 0, bytesRead - start);
 				
 				bytesRead -= start;
 			}

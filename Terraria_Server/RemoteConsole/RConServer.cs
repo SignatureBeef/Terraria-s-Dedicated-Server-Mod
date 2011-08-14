@@ -105,7 +105,39 @@ namespace Terraria_Server.RemoteConsole
 					errorList.Clear ();
 					errorList.AddRange (clientList);
 					
-					Socket.Select (readList, null, errorList, 500000);
+					try
+					{
+						Socket.Select (readList, null, errorList, 500000);
+					}
+					catch (SocketException e)
+					{
+						ProgramLog.Log (e, "Remote console server loop select exception");
+						
+						// sigh, so many places to handle errors
+						
+						listener.Pending();
+						
+						var newList = new List<Socket> ();
+						foreach (var sock in clientList)
+						{
+							var close = false;
+							try
+							{
+								if (sock.Connected) newList.Add (sock);
+								else close = true;
+							}
+							catch
+							{
+								close = true;
+							}
+							
+							if (close && socketToObject.ContainsKey (sock))
+								DisposeClient (socketToObject[sock]);
+						}
+						
+						clientList = newList;
+						continue;
+					}
 					
 					lock (deadClients)
 						while (deadClients.Count > 0)
