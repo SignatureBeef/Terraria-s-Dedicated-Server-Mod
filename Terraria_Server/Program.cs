@@ -75,7 +75,7 @@ namespace Terraria_Server
 				var logFile = Statics.DataPath + Path.DirectorySeparatorChar + "server.log";
 				ProgramLog.OpenLogFile (logFile);
 
-				String PIDFile = properties.PIDFile.ToString();
+				String PIDFile = properties.PIDFile.Trim();
 				if (PIDFile.Length > 0)
 				{
 					String ProcessUID = Process.GetCurrentProcess().Id.ToString();
@@ -314,7 +314,12 @@ namespace Terraria_Server
                 {
                 }
             }
-			
+
+            if (File.Exists(properties.PIDFile.Trim()))
+            {
+                File.Delete(properties.PIDFile.Trim());
+            }
+
 			if (Program.tConsole != null)
 			{
 				Program.tConsole.Close();
