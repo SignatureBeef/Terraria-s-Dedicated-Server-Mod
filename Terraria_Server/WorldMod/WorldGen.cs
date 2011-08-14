@@ -105,14 +105,14 @@ namespace Terraria_Server.WorldMod
 			double num6 = num3;
 			double num7 = num4;
 			double num8 = num4;
-			int num9 = 0;
+			int Direction = 0;
 			if (WorldModify.genRand.Next(2) == 0)
 			{
-				num9 = -1;
+				Direction = -1;
 			}
 			else
 			{
-				num9 = 1;
+				Direction = 1;
 			}
 
 			using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Generating world terrain"))
@@ -267,64 +267,64 @@ namespace Terraria_Server.WorldMod
 			num14 += 2;
 			for (int k = 0; k < num14; k++)
 			{
-				int num15 = WorldModify.genRand.Next(Main.maxTilesX);
-				while ((float)num15 > (float)Main.maxTilesX * 0.45f && (float)num15 < (float)Main.maxTilesX * 0.55f)
+				int sandStartX = WorldModify.genRand.Next(Main.maxTilesX);
+				while ((float)sandStartX > (float)Main.maxTilesX * 0.45f && (float)sandStartX < (float)Main.maxTilesX * 0.55f)
 				{
-					num15 = WorldModify.genRand.Next(Main.maxTilesX);
+					sandStartX = WorldModify.genRand.Next(Main.maxTilesX);
 				}
-				int num16 = WorldModify.genRand.Next(35, 90);
+				int sandStartEnd = WorldModify.genRand.Next(35, 90);
 				if (k == 1)
 				{
 					float num17 = (float)(Main.maxTilesX / 4200);
-					num16 += (int)((float)WorldModify.genRand.Next(20, 40) * num17);
+					sandStartEnd += (int)((float)WorldModify.genRand.Next(20, 40) * num17);
 				}
 				if (WorldModify.genRand.Next(3) == 0)
 				{
-					num16 *= 2;
+					sandStartEnd *= 2;
 				}
 				if (k == 1)
 				{
-					num16 *= 2;
+					sandStartEnd *= 2;
 				}
-				int num18 = num15 - num16;
-				num16 = WorldModify.genRand.Next(35, 90);
+				int sandBoundaries = sandStartX - sandStartEnd;
+				sandStartEnd = WorldModify.genRand.Next(35, 90);
 				if (WorldModify.genRand.Next(3) == 0)
 				{
-					num16 *= 2;
+					sandStartEnd *= 2;
 				}
 				if (k == 1)
 				{
-					num16 *= 2;
+					sandStartEnd *= 2;
 				}
-				int num19 = num15 + num16;
-				if (num18 < 0)
+				int SandLength = sandStartX + sandStartEnd;
+				if (sandBoundaries < 0)
 				{
-					num18 = 0;
+					sandBoundaries = 0;
 				}
-				if (num19 > Main.maxTilesX)
+				if (SandLength > Main.maxTilesX)
 				{
-					num19 = Main.maxTilesX;
+					SandLength = Main.maxTilesX;
 				}
 				if (k == 0)
 				{
-					num18 = 0;
-					num19 = WorldModify.genRand.Next(260, 300);
-					if (num9 == 1)
+					sandBoundaries = 0;
+					SandLength = WorldModify.genRand.Next(260, 300);
+					if (Direction == 1)
 					{
-						num19 += 40;
+						SandLength += 40;
 					}
 				}
 				else if (k == 2)
 				{
-					num18 = Main.maxTilesX - WorldModify.genRand.Next(260, 300);
-					num19 = Main.maxTilesX;
-					if (num9 == -1)
+					sandBoundaries = Main.maxTilesX - WorldModify.genRand.Next(260, 300);
+					SandLength = Main.maxTilesX;
+					if (Direction == -1)
 					{
-						num18 -= 40;
+						sandBoundaries -= 40;
 					}
 				}
 				int num20 = WorldModify.genRand.Next(50, 100);
-				for (int l = num18; l < num19; l++)
+				for (int l = sandBoundaries; l < SandLength; l++)
 				{
 					if (WorldModify.genRand.Next(2) == 0)
 					{
@@ -344,18 +344,18 @@ namespace Terraria_Server.WorldMod
 						if (Main.tile.At(l, num21).Active)
 						{
 							int num22 = num20;
-							if (l - num18 < num22)
+							if (l - sandBoundaries < num22)
 							{
-								num22 = l - num18;
+								num22 = l - sandBoundaries;
 							}
-							if (num19 - l < num22)
+							if (SandLength - l < num22)
 							{
-								num22 = num19 - l;
+								num22 = SandLength - l;
 							}
 							num22 += WorldModify.genRand.Next(5);
 							for (int m = num21; m < num21 + num22; m++)
 							{
-								if (l > num18 + WorldModify.genRand.Next(5) && l < num19 - WorldModify.genRand.Next(5))
+								if (l > sandBoundaries + WorldModify.genRand.Next(5) && l < SandLength - WorldModify.genRand.Next(5))
 								{
 									Main.tile.At(l, m).SetType(53);
 								}
@@ -378,17 +378,17 @@ namespace Terraria_Server.WorldMod
 				int num24 = 0;
 				bool flag = false;
 				bool flag2 = false;
-				int num25 = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.25), (int)((double)Main.maxTilesX * 0.75));
+				int HillX = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.25), (int)((double)Main.maxTilesX * 0.75));
 				while (!flag2)
 				{
 					flag2 = true;
-					while (num25 > Main.maxTilesX / 2 - 100 && num25 < Main.maxTilesX / 2 + 100)
+					while (HillX > Main.maxTilesX / 2 - 100 && HillX < Main.maxTilesX / 2 + 100)
 					{
-						num25 = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.25), (int)((double)Main.maxTilesX * 0.75));
+						HillX = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.25), (int)((double)Main.maxTilesX * 0.75));
 					}
 					for (int num26 = 0; num26 < numMCaves; num26++)
 					{
-						if (num25 > mCaveX[num26] - 50 && num25 < mCaveX[num26] + 50)
+						if (HillX > mCaveX[num26] - 50 && HillX < mCaveX[num26] + 50)
 						{
 							num24++;
 							flag2 = false;
@@ -403,18 +403,18 @@ namespace Terraria_Server.WorldMod
 				}
 				if (!flag)
 				{
-					int num27 = 0;
-					while ((double)num27 < Main.worldSurface)
+					int HillY = 0;
+					while ((double)HillY < Main.worldSurface)
 					{
-						if (Main.tile.At(num25, num27).Active)
+						if (Main.tile.At(HillX, HillY).Active)
 						{
-							Mountinater(num25, num27);
-							mCaveX[numMCaves] = num25;
-							mCaveY[numMCaves] = num27;
+							Mountinater(HillX, HillY);
+							mCaveX[numMCaves] = HillX;
+							mCaveY[numMCaves] = HillY;
 							numMCaves++;
 							break;
 						}
-						num27++;
+						HillY++;
 					}
 				}
 			}
@@ -644,7 +644,7 @@ namespace Terraria_Server.WorldMod
 				num59 *= 1.5f;
 				int num60 = 0;
 				float num61 = (float)WorldModify.genRand.Next(15, 30) * 0.01f;
-				if (num9 == -1)
+				if (Direction == -1)
 				{
 					num61 = 1f - num61;
 					num60 = (int)((float)Main.maxTilesX * num61);
@@ -658,7 +658,7 @@ namespace Terraria_Server.WorldMod
 				num62 += WorldModify.genRand.Next((int)(-100f * num59), (int)(101f * num59));
 				int num63 = num60;
 				int num64 = num62;
-				TileRunner(num60, num62, (double)WorldModify.genRand.Next((int)(250f * num59), (int)(500f * num59)), WorldModify.genRand.Next(50, 150), 59, false, (float)(num9 * 3), 0f, false, true);
+				TileRunner(num60, num62, (double)WorldModify.genRand.Next((int)(250f * num59), (int)(500f * num59)), WorldModify.genRand.Next(50, 150), 59, false, (float)(Direction * 3), 0f, false, true);
 
 				jungleprog.Value = 15;
 
@@ -676,7 +676,7 @@ namespace Terraria_Server.WorldMod
 				num62 += WorldModify.genRand.Next((int)(-150f * num59), (int)(151f * num59));
 				int num69 = num60;
 				int num70 = num62;
-				TileRunner(num60, num62, (double)WorldModify.genRand.Next((int)(250f * num59), (int)(500f * num59)), WorldModify.genRand.Next(50, 150), 59, false, (float)(num9 * -3), 0f, false, true);
+				TileRunner(num60, num62, (double)WorldModify.genRand.Next((int)(250f * num59), (int)(500f * num59)), WorldModify.genRand.Next(50, 150), 59, false, (float)(Direction * -3), 0f, false, true);
 
 				jungleprog.Value = 45;
 
@@ -1210,7 +1210,7 @@ namespace Terraria_Server.WorldMod
 			}
 			else //1 dungeon
 			{
-				if (num9 != -1)
+				if (Direction != -1)
 				{
 					x = x2; //X axis = right
 				}
@@ -1227,9 +1227,9 @@ namespace Terraria_Server.WorldMod
 				MakeDungeon(x, y, 41, 7);
 			}
 
-			if (num9 != -1)
+			if (Direction != -1)
 			{
-				num9 = 1;
+				Direction = 1;
 			}
 
 			int num144 = 0;
@@ -1450,7 +1450,7 @@ namespace Terraria_Server.WorldMod
 				{
 					num177 = 0;
 					num178 = WorldModify.genRand.Next(125, 200) + 50;
-					if (num9 == 1)
+					if (Direction == 1)
 					{
 						num178 = 275;
 					}
@@ -1569,7 +1569,7 @@ namespace Terraria_Server.WorldMod
 				{
 					num177 = Main.maxTilesX - WorldModify.genRand.Next(125, 200) - 50;
 					num178 = Main.maxTilesX;
-					if (num9 == -1)
+					if (Direction == -1)
 					{
 						num177 = Main.maxTilesX - 275;
 					}
