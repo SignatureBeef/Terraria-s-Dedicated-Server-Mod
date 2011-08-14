@@ -86,7 +86,7 @@ namespace Terraria_Server.Messages
 
 			string address = slot.remoteAddress.Split(':')[0];
 			
-			if (Program.server.BanList.containsException (address))
+			if (Program.server.BanList.containsException (address) || Program.server.BanList.containsException (player.Name))
 			{
 				ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", newName);
 				slot.Kick ("You are banned from this server.");
