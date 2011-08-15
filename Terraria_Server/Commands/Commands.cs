@@ -25,7 +25,7 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Exit(Server server, ISender sender, ArgumentList args)
 		{
-			if (sender is Player || sender is RConSender)
+			if (sender is Player) // || sender is RConSender) //Requested for Rcon Users.
 			{
 				sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
 				return;

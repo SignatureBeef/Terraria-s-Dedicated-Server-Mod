@@ -6082,7 +6082,7 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 		
-		public static void WaterCheck()
+		public static void WaterCheck(ProgressLogger prog = null)
 		{
 			Liquid.numLiquid = 0;
 			LiquidBuffer.numLiquidBuffer = 0;
@@ -6148,6 +6148,8 @@ namespace Terraria_Server.WorldMod
 						}
 					}
 				}
+                if (prog != null)
+                    prog.Value++;
 			}
 		}
 		

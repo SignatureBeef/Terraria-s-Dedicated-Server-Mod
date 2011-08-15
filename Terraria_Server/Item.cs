@@ -236,7 +236,7 @@ namespace Terraria_Server
 					{
 						this.Velocity.X = 0f;
 					}
-					this.LavaWet = Collision.LavaCollision(this.Position, this.Width, this.Height;
+					this.LavaWet = Collision.LavaCollision(this.Position, this.Width, this.Height);
 					if (Collision.WetCollision(this.Position, this.Width, this.Height))
 					{
 						if (!this.Wet)
