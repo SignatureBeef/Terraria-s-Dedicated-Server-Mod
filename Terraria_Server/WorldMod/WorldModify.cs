@@ -2206,51 +2206,43 @@ namespace Terraria_Server.WorldMod
 			return Main.tile.At(x, y);
 		}
 
-		private static TileRef[,] GetTiles(int x, int y)
-		{
-			TileRef[,] tiles = new TileRef[3,3];
-			for (int modX = 0; modX < 3; modX++)
-			{
-				for (int modY = 0; modY < 3; modY++)
-				{
-					tiles[modX, modY] = GetTile(x - 1 + modX, y - 1 + modY);
-				}
-			}
-			return tiles;
-		}
-
 		public static void Check1x2Top(int x, int y, byte type)
 		{
 			if (WorldModify.destroyObject)
 			{
 				return;
 			}
-
-			TileRef[,] tiles = GetTiles(x, y);
-			if (tiles[1, 1].FrameY == 18)
-			{
-				tiles = GetTiles(x, --y);
-			}
-
+			
 			bool flag = true;
-			if (tiles[1, 2].FrameY == 0 && tiles[1, 2].FrameY == 18 && tiles[1, 1].Type == type && tiles[1, 2].Type == type)
+			
+			if (Main.tile.At(x, y).FrameY == 18)
+			{
+				y--;
+			}
+			
+			if (Main.tile.At(x, y).FrameY == 0
+				&& Main.tile.At(x, y + 1).FrameY == 18
+				&& Main.tile.At(x, y).Type == type
+				&& Main.tile.At(x, y + 1).Type == type)
 			{
 				flag = false;
-
-				if (!tiles[1, 0].Active || !Main.tileSolid[(int)tiles[1, 0].Type] || Main.tileSolidTop[(int)tiles[1, 0].Type])
-				{
-					flag = true;
-				}
 			}
-
+			
+			if (!Main.tile.At(x, y - 1).Active
+				|| !Main.tileSolid[(int)Main.tile.At(x, y - 1).Type]
+				|| Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type])
+			{
+				flag = true;
+			}
+			
 			if (flag)
 			{
 				WorldModify.destroyObject = true;
-				if (tiles[1, 1].Type == type)
+				if (Main.tile.At(x, y).Type == type)
 				{
 					WorldModify.KillTile(x, y, false, false, false);
 				}
-                if (tiles[1, 2].Type == type)
+				if (Main.tile.At(x, y + 1).Type == type)
 				{
 					WorldModify.KillTile(x, y + 1, false, false, false);
 				}
@@ -2268,42 +2260,53 @@ namespace Terraria_Server.WorldMod
 			{
 				return;
 			}
-
-			TileRef[,] tiles = GetTiles(x, y);
-			if (tiles[1,1].FrameX == 18)
-			{
-				tiles = GetTiles(--x, y);
-			}
-
+			
 			bool flag = true;
-			if (tiles[1, 1].FrameX == 0 && tiles[2, 1].FrameX == 18 && tiles[1, 1].Type == type && tiles[2, 1].Type == type)
+			
+			if (Main.tile.At(x, y).FrameX == 18)
+			{
+				x--;
+			}
+			
+			if (Main.tile.At(x, y).FrameX == 0
+				&& Main.tile.At(x + 1, y).FrameX == 18
+				&& Main.tile.At(x, y).Type == type
+				&& Main.tile.At(x + 1, y).Type == type)
 			{
 				flag = false;
-				if(!tiles[1, 2].Active || !tiles[2, 2].Active)
+			}
+			
+			if (type == 29 || type == 103)
+			{
+				if (!Main.tile.At(x, y + 1).Active || !Main.tileTable[(int)Main.tile.At(x, y + 1).Type])
 				{
 					flag = true;
 				}
-                else if (type == 29 || type == 103)
-				{
-					if(!Main.tileTable[(int)tiles[1, 2].Type] || !Main.tileTable[(int)tiles[2, 2].Type])
-					{
-						flag = true;
-					}
-				}
-				else if (type != 29 && (!Main.tileSolid[(int)tiles[1, 2].Type] || !Main.tileSolid[(int)tiles[2, 2].Type]))
+				if (!Main.tile.At(x + 1, y + 1).Active || !Main.tileTable[(int)Main.tile.At(x + 1, y + 1).Type])
 				{
 					flag = true;
 				}
 			}
-
+			else
+			{
+				if (!Main.tile.At(x, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y + 1).Type])
+				{
+					flag = true;
+				}
+				if (!Main.tile.At(x + 1, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(x + 1, y + 1).Type])
+				{
+					flag = true;
+				}
+			}
+			
 			if (flag)
 			{
 				WorldModify.destroyObject = true;
-                if (tiles[1, 1].Type == type)
+                if (Main.tile.At(x, y).Type == type)
 				{
 					WorldModify.KillTile(x, y, false, false, false);
 				}
-                if (tiles[2, 1].Type == type)
+                if (Main.tile.At(x + 1, y).Type == type)
 				{
 					WorldModify.KillTile(x + 1, y, false, false, false);
 				}
@@ -2331,30 +2334,41 @@ namespace Terraria_Server.WorldMod
 		
 		public static void Place2x1(int x, int y, int type)
 		{
-			TileRef[,] tiles = GetTiles(x, y);
-
 			bool flag = false;
-			if (type != 29 && tiles[1, 2].Active && tiles[2, 2].Active && Main.tileSolid[(int)tiles[1, 2].Type]
-				&& Main.tileSolid[(int)tiles[2, 2].Type] && !tiles[1, 1].Active && !tiles[2, 1].Active)
+			if (type != 29 && type != 103
+				&& Main.tile.At(x, y + 1).Active
+				&& Main.tile.At(x + 1, y + 1).Active
+				&& Main.tileSolid[(int)Main.tile.At(x, y + 1).Type]
+				&& Main.tileSolid[(int)Main.tile.At(x + 1, y + 1).Type]
+				&& !Main.tile.At(x, y).Active
+				&& !Main.tile.At(x + 1, y).Active)
 			{
 				flag = true;
 			}
-            else if (type == 29 && tiles[1, 2].Active && tiles[2, 2].Active && Main.tileTable[(int)tiles[1, 2].Type]
-				&& Main.tileTable[(int)tiles[2, 2].Type] && !tiles[1, 1].Active && !tiles[2, 1].Active)
+			else
 			{
-				flag = true;
+				if ((type == 29 || type == 103)
+					&& Main.tile.At(x, y + 1).Active
+					&& Main.tile.At(x + 1, y + 1).Active
+					&& Main.tileTable[(int)Main.tile.At(x, y + 1).Type]
+					&& Main.tileTable[(int)Main.tile.At(x + 1, y + 1).Type]
+					&& !Main.tile.At(x, y).Active
+					&& !Main.tile.At(x + 1, y).Active)
+				{
+					flag = true;
+				}
 			}
-
+			
 			if (flag)
 			{
-				tiles[1, 1].SetActive (true);
-				tiles[1, 1].SetFrameY (0);
-				tiles[1, 1].SetFrameX (0);
-				tiles[1, 1].SetType ((byte)type);
-				tiles[2, 1].SetActive (true);
-				tiles[2, 1].SetFrameY (0);
-				tiles[2, 1].SetFrameX (18);
-				tiles[2, 1].SetType ((byte)type);
+				Main.tile.At(x, y).SetActive (true);
+				Main.tile.At(x, y).SetFrameY (0);
+				Main.tile.At(x, y).SetFrameX (0);
+				Main.tile.At(x, y).SetType ((byte)type);
+				Main.tile.At(x + 1, y).SetActive (true);
+				Main.tile.At(x + 1, y).SetFrameY (0);
+				Main.tile.At(x + 1, y).SetFrameX (18);
+				Main.tile.At(x + 1, y).SetType ((byte)type);
 			}
 		}
 		
