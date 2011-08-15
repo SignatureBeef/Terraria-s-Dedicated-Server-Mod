@@ -12,7 +12,7 @@ namespace Terraria_Server
         private const int DEFAULT_MAX_PLAYERS = 8;
         private const bool DEFAULT_NPC_DOOR_OPEN_CANCEL = false;
         private const int DEFAULT_PORT = 7777;
-        private const int DEFAULT_SEED = -1;
+        private const String DEFAULT_SEED = "-1";
         private const String DEFAULT_SERVER_IP = "0.0.0.0";
         private const bool DEFAULT_USE_CUSTOM_TILES = false;
         private const bool DEFAULT_USE_CUSTOM_GEN_OPTS = false;
@@ -144,7 +144,7 @@ namespace Terraria_Server
             }
         }
 
-        public int Seed
+        public String Seed
         {
             get
             {

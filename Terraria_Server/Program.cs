@@ -171,10 +171,10 @@ namespace Terraria_Server
 					}
 					ProgramLog.Log ("Generating World '{0}'", worldFile);
 
-					int seed = properties.Seed;
-					if (seed == -1)
+					String seed = properties.Seed;
+					if (seed == "-1")
 					{
-						seed = new Random().Next(100);
+						seed = new Random().Next(100).ToString();
 						ProgramLog.Log ("Generated seed: {0}", seed);
 					}
 
@@ -215,7 +215,7 @@ namespace Terraria_Server
 						WorldGen.numDungeons = 1;
 						WorldModify.ficount = (int)((double)Server.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
 					}
-					WorldGen.generateWorld(seed);
+                    WorldGen.GenerateWorld(seed);
 					WorldIO.saveWorld(worldFile, true);
 				}
 				
@@ -466,7 +466,7 @@ namespace Terraria_Server
 					{
 						try
 						{
-							properties.Seed = Convert.ToInt32(args[i + 1]);
+							properties.Seed = args[i + 1];
 						}
 						catch (Exception)
 						{
