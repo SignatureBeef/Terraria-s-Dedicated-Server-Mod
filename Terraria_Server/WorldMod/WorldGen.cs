@@ -260,7 +260,7 @@ namespace Terraria_Server.WorldMod
 			WorldModify.waterLine = (int)(Main.rockLayer + (double)Main.maxTilesY) / 2;
 			WorldModify.waterLine += WorldModify.genRand.Next(-100, 20);
 			WorldModify.lavaLine = WorldModify.waterLine + WorldModify.genRand.Next(50, 80);
-			int num13 = 0;
+			int outlier = 0;
 
 			ProgramLog.Log("Adding sand...");
 			int num14 = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.0007), (int)((double)Main.maxTilesX * 0.002));
@@ -421,32 +421,32 @@ namespace Terraria_Server.WorldMod
 
 			using (var prog = new ProgressLogger(Main.maxTilesX - 3, "Putting dirt behind dirt"))
 			{
-				for (int num28 = 1; num28 < Main.maxTilesX - 1; num28++)
+				for (int posX = 1; posX < Main.maxTilesX - 1; posX++)
 				{
-					prog.Value = num28 - 1;
+					prog.Value = posX - 1;
 
 					bool flag3 = false;
-					num13 += WorldModify.genRand.Next(-1, 2);
-					if (num13 < 0)
+					outlier += WorldModify.genRand.Next(-1, 2);
+					if (outlier < 0)
 					{
-						num13 = 0;
+						outlier = 0;
 					}
-					if (num13 > 10)
+					if (outlier > 10)
 					{
-						num13 = 10;
+						outlier = 10;
 					}
-					int num30 = 0;
-					while ((double)num30 < Main.worldSurface + 10.0 && (double)num30 <= Main.worldSurface + (double)num13)
+					int posY = 0;
+					while ((double)posY < Main.worldSurface + 10.0 && (double)posY <= Main.worldSurface + (double)outlier)
 					{
 						if (flag3)
 						{
-							Main.tile.At(num28, num30).SetWall(2);
+							Main.tile.At(posX, posY).SetWall(2);
 						}
-						if (Main.tile.At(num28, num30).Active && Main.tile.At(num28 - 1, num30).Active && Main.tile.At(num28 + 1, num30).Active && Main.tile.At(num28, num30 + 1).Active && Main.tile.At(num28 - 1, num30 + 1).Active && Main.tile.At(num28 + 1, num30 + 1).Active)
+						if (Main.tile.At(posX, posY).Active && Main.tile.At(posX - 1, posY).Active && Main.tile.At(posX + 1, posY).Active && Main.tile.At(posX, posY + 1).Active && Main.tile.At(posX - 1, posY + 1).Active && Main.tile.At(posX + 1, posY + 1).Active)
 						{
 							flag3 = true;
 						}
-						num30++;
+						posY++;
 					}
 				}
 			}
