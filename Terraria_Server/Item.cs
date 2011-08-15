@@ -204,14 +204,14 @@ namespace Terraria_Server
 		{
 			if (this.Active)
 			{
-				float num = 0.1f;
-				float num2 = 7f;
+				float addVelocity = 0.1f;
+				float maxVelocity = 7f;
+				Vector2 value = this.Velocity * 0.5f;
 				if (this.Wet)
 				{
-					num2 = 5f;
-					num = 0.08f;
+					maxVelocity = 5f;
+					addVelocity = 0.08f;
 				}
-				Vector2 value = this.Velocity * 0.5f;
 				if (this.OwnTime > 0)
 				{
 					this.OwnTime--;
@@ -226,23 +226,18 @@ namespace Terraria_Server
 				}
 				if (!this.BeingGrabbed)
 				{
-					this.Velocity.Y = this.Velocity.Y + num;
-					if (this.Velocity.Y > num2)
+					this.Velocity.Y = this.Velocity.Y + addVelocity;
+					if (this.Velocity.Y > maxVelocity)
 					{
-						this.Velocity.Y = num2;
+						this.Velocity.Y = maxVelocity;
 					}
 					this.Velocity.X = this.Velocity.X * 0.95f;
 					if ((double)this.Velocity.X < 0.1 && (double)this.Velocity.X > -0.1)
 					{
 						this.Velocity.X = 0f;
 					}
-					bool flag = Collision.LavaCollision(this.Position, this.Width, this.Height);
-					if (flag)
-					{
-						this.LavaWet = true;
-					}
-					bool flag2 = Collision.WetCollision(this.Position, this.Width, this.Height);
-					if (flag2)
+					this.LavaWet = Collision.LavaCollision(this.Position, this.Width, this.Height;
+					if (Collision.WetCollision(this.Position, this.Width, this.Height))
 					{
 						if (!this.Wet)
 						{
@@ -253,12 +248,9 @@ namespace Terraria_Server
 							this.Wet = true;
 						}
 					}
-					else
+					else if (this.Wet)
 					{
-						if (this.Wet)
-						{
-							this.Wet = false;
-						}
+						this.Wet = false;
 					}
 					if (!this.Wet)
 					{
@@ -270,18 +262,15 @@ namespace Terraria_Server
 					}
 					if (this.Wet)
 					{
-						if (this.Wet)
+						Vector2 vector = this.Velocity;
+						this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
+						if (this.Velocity.X != vector.X)
 						{
-							Vector2 vector = this.Velocity;
-							this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
-							if (this.Velocity.X != vector.X)
-							{
-								value.X = this.Velocity.X;
-							}
-							if (this.Velocity.Y != vector.Y)
-							{
-								value.Y = this.Velocity.Y;
-							}
+							value.X = this.Velocity.X;
+						}
+						if (this.Velocity.Y != vector.Y)
+						{
+							value.Y = this.Velocity.Y;
 						}
 					}
 					else
