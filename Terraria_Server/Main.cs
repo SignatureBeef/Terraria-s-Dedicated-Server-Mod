@@ -604,10 +604,11 @@ namespace Terraria_Server
             }
         }
 
+        static TimeChangedEvent timeEvent = new TimeChangedEvent();
         private static void UpdateTime()
         {
             Main.time += 1.0;
-            TimeChangedEvent timeEvent = new TimeChangedEvent();
+            
             Program.server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
 
             if (!Main.dayTime)
