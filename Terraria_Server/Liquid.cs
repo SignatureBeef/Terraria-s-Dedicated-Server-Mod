@@ -25,7 +25,7 @@ namespace Terraria_Server
         public int kill;
         public int delay;
 
-        public static double QuickWater(int verbose = 0, int minY = -1, int maxY = -1)
+        public static double QuickWater(int verbose = 0, int minY = -1, int maxY = -1, ProgressLogger prog = null)
         {
             int num = 0;
 
@@ -41,19 +41,23 @@ namespace Terraria_Server
 
             for (int i = maxY; i >= minY; i--)
             {
-                if (verbose > 0)
+                if (prog != null)
                 {
-                    float num2 = (float)(maxY - i) / (float)(maxY - minY + 1);
-                    num2 /= (float)verbose;
-                    Main.statusText = "Settling liquids: " + (int)(num2 * 100f + 1f) + "%";
-                }
-                else if (verbose < 0)
-                {
-                    float num3 = (float)(maxY - i) / (float)(maxY - minY + 1);
-                    num3 /= (float)(-(float)verbose);
-                    Main.statusText = "Creating underworld: " + (int)(num3 * 100f + 1f) + "%";
-
-                }
+                    if (verbose > 0)
+                    {
+                        float num2 = (float)(maxY - i) / (float)(maxY - minY + 1);
+                        num2 /= (float)verbose;
+                        //Main.statusText = "Settling liquids: " + (int)(num2 * 100f + 1f) + "%";
+                        prog.Value += (int)(num2 * 100f + 1f);
+                    }
+                    else if (verbose < 0)
+                    {
+                        float num3 = (float)(maxY - i) / (float)(maxY - minY + 1);
+                        num3 /= (float)(-(float)verbose);
+                        //Main.statusText = "Creating underworld: " + (int)(num3 * 100f + 1f) + "%";
+                        prog.Value += (int)(num3 * 100f + 1f);
+                    }
+                }                
 
                 for (int j = 0; j < 2; j++)
                 {
