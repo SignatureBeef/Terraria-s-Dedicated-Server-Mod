@@ -4468,7 +4468,7 @@ namespace Terraria_Server.WorldMod
 					}
 					else if (type == 13 || type == 33 || type == 49 || type == 50 || type == 78)
 					{
-						WorldModify.PlaceOnTable1x1(i, j, type);
+                        WorldModify.PlaceOnTable1x1(i, j, type, style);
 						WorldModify.SquareTileFrame(i, j, true);
 					}
                     else if (type == 14 || type == 26 || type == 86 || type == 87 || type == 88 || type == 89)
@@ -4809,7 +4809,7 @@ namespace Terraria_Server.WorldMod
 						    {
 							    dropItem = 350;
 						    }
-						    else if (tile.FrameX == 72)
+                            else if (Main.tile.At(x, y).FrameX == 72)
 							{
 								dropItem = 351;
 							}
