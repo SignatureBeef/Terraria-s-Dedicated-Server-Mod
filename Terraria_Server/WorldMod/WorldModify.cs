@@ -2455,10 +2455,6 @@ namespace Terraria_Server.WorldMod
 						flag = true;
 					}
 				}
-				if (!Main.tile.At(k, num2 + 2).Active || !Main.tileSolid[(int)Main.tile.At(k, num2 + 2).Type])
-				{
-					flag = true;
-                }
                 if (type == 95)
                 {
                     if (!Main.tile.At(k, num2 - 1).Active || 
