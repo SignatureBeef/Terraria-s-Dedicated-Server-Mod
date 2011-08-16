@@ -4940,11 +4940,16 @@ namespace Terraria_Server.WorldMod
 							}
 							else if (Main.tile.At(i, j).Type == 61 || Main.tile.At(i, j).Type == 74)
 							{
-								if (Main.tile.At(i, j).FrameX == 162)
+                                TileRef tile = Main.tile.At(i, j);
+                                if (tile.FrameX == 144)
+                                {
+                                    Item.NewItem(i * 16, j * 16, 16, 16, 331, WorldModify.genRand.Next(1, 3), false);
+                                }
+                                if (tile.FrameX == 162)
 								{
 									num4 = 223;
 								}
-								else if (Main.tile.At(i, j).FrameX >= 108 && Main.tile.At(i, j).FrameX <= 126 && (double)j > Main.rockLayer)
+                                else if (tile.FrameX >= 108 && tile.FrameX <= 126 && WorldModify.genRand.Next(100) == 0)
 						        {
 							        num4 = 208;
 						        }
