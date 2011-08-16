@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
                 || num9 < 10
                 || num9 > Main.maxTilesY - 10);
             
-            int num10 = 2250;
+            int num10 = 1350;
             if (flag3)
             {
                 num10 *= 2;
@@ -43,7 +43,7 @@ namespace Terraria_Server.Messages
             int sectionX = Netplay.GetSectionX(Main.spawnTileX);
             int sectionY = Netplay.GetSectionY(Main.spawnTileY);
 
-            for (int x = sectionX - 2; x < sectionX + 3; x++)
+            for (int x = sectionX - 1; x < sectionX + 2; x++)
             {
                 for (int y = sectionY - 1; y < sectionY + 2; y++)
                 {
@@ -55,17 +55,17 @@ namespace Terraria_Server.Messages
             {
                 num8 = Netplay.GetSectionX(num8);
                 num9 = Netplay.GetSectionY(num9);
-                for (int num11 = num8 - 2; num11 < num8 + 3; num11++)
+                for (int num11 = num8 - 1; num11 < num8 + 2; num11++)
                 {
                     for (int num12 = num9 - 1; num12 < num9 + 2; num12++)
                     {
                         NetMessage.SendSection(whoAmI, num11, num12);
                     }
                 }
-                NetMessage.SendData(11, whoAmI, -1, "", num8 - 2, (float)(num9 - 1), (float)(num8 + 2), (float)(num9 + 1));
+                NetMessage.SendData(11, whoAmI, -1, "", num8 - 1, (float)(num9 - 1), (float)(num8 + 1), (float)(num9 + 1));
             }
 
-            NetMessage.SendData(11, whoAmI, -1, "", sectionX - 2, (float)(sectionY - 1), (float)(sectionX + 2), (float)(sectionY + 1));
+            NetMessage.SendData(11, whoAmI, -1, "", sectionX - 1, (float)(sectionY - 1), (float)(sectionX + 1), (float)(sectionY + 1));
 
             //Can't switch to a for each because there are 201 items.
             for (int itemIndex = 0; itemIndex < 200; itemIndex++)
