@@ -4957,7 +4957,6 @@ namespace Terraria_Server
                                             }
                                             npc.rotation += npc.ai[2];
                                             npc.ai[1] += 1f;
-                                            Color newColor;
                                             if (npc.ai[1] == 100f)
                                             {
                                                 npc.ai[0] += 1f;
@@ -9996,7 +9995,6 @@ namespace Terraria_Server
 				if (!Main.npcs[i].Active)
 				{
 					return i;
-					break;
 				}
 			}
 			return -1;
@@ -10053,7 +10051,6 @@ namespace Terraria_Server
 		/// Transforms specified NPC into specified type.
 		/// Used currently for bunny/goldfish to evil bunny/goldfish and Eater of Worlds segmenting transformations
 		/// </summary>
-		/// <param name="npcIndex"></param>
 		/// <param name="newType"></param>
         public void Transform (int newType)
 		{
@@ -10089,8 +10086,9 @@ namespace Terraria_Server
 		/// Damages the NPC
 		/// </summary>
 		/// <param name="Damage">Damage to calculate</param>
-		/// <param name="knockBack">Knockback amount</param>
-		/// <param name="hitDirection">Direction of strike</param>
+        /// <param name="knockBack">Knockback amount</param>
+        /// <param name="hitDirection">Direction of strike</param>
+        /// <param name="crit">If the hit was critical</param>
 		/// <returns>Amount of damage actually done</returns>
         public double StrikeNPC(int Damage, float knockBack, int hitDirection, bool crit = false)
         {

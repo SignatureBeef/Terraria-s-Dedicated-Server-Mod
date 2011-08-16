@@ -148,8 +148,8 @@ namespace Terraria_Server
 //		public int[] spI = new int[200];
 		public static int tileRangeX = 5;
 		public static int tileRangeY = 4;
-		private static int tileTargetX = 0;
-		private static int tileTargetY = 0;
+        //private static int tileTargetX = 0;
+        //private static int tileTargetY = 0;
 		private static int jumpHeight = 15;
 		private static float jumpSpeed = 5.01f;
 //		public bool[] adjTile = new bool[106];
@@ -1261,12 +1261,10 @@ namespace Terraria_Server
 						this.manaRegenCount += this.manaRegen;
 						while (this.manaRegenCount >= 120)
 						{
-							bool flag5 = false;
 							this.manaRegenCount -= 120;
 							if (this.statMana < this.statManaMax2)
 							{
 								this.statMana++;
-								flag5 = true;
 							}
 							if (this.statMana >= this.statManaMax2)
 							{

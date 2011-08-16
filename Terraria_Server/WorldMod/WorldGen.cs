@@ -1999,41 +1999,40 @@ namespace Terraria_Server.WorldMod
 
 				Liquid.QuickWater(3, -1, -1, prog);
                 WorldModify.WaterCheck(prog);
-				int num213 = 0;
+				int liquidLeft = 0;
 				Liquid.quickSettle = true;
-				while (num213 < 10)
+				while (liquidLeft < 10)
 				{
-					int num214 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-					num213++;
-					float num215 = 0f;
+					int liquidAmount = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+					liquidLeft++;
+					float preserver = 0f;
 					while (Liquid.numLiquid > 0)
 					{
-						float num216 = (float)(num214 - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)num214;
-						if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > num214)
+						float liquidLeftO = (float)(liquidAmount - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)liquidAmount;
+						if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > liquidAmount)
 						{
-							num214 = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+							liquidAmount = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
 						}
-						if (num216 > num215)
+						if (liquidLeftO > preserver)
 						{
-							num215 = num216;
+							preserver = liquidLeftO;
 						}
 						else
 						{
-							num216 = num215;
+							liquidLeftO = preserver;
 						}
-						if (num213 == 1)
+						if (liquidLeft == 1)
 						{
-							prog.Value = (int)(num216 * 100f / 3f + 33f);
+							prog.Value = (int)(liquidLeftO * 100f / 3f + 33f);
 						}
-						int num217 = 10;
-						if (num213 <= num217)
+						if (liquidLeft <= 10)
 						{
 						    Liquid.UpdateLiquid();
 						}
 					}
 					WorldModify.WaterCheck(prog);
 
-					prog.Value = (int)((float)num213 * 10f / 3f + 66f);
+					prog.Value = (int)((float)liquidLeft * 10f / 3f + 66f);
 				}
 				Liquid.quickSettle = false;
 			} // end settling

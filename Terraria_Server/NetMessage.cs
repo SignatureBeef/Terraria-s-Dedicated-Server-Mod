@@ -450,7 +450,7 @@ namespace Terraria_Server
 			}
 			return;
 
-			try
+			/*try
 			{
 				var msg = NetMessage.PrepareThreadInstance();
 
@@ -482,7 +482,7 @@ namespace Terraria_Server
 			}
 			catch
 			{
-			}
+			}*/
 		}
 		
 		public static void Broadcast (byte[] bytes)

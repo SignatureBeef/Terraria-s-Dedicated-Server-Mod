@@ -68,7 +68,7 @@ namespace Terraria_Server
 		public byte[] readBuffer;
 		
 		private volatile Queue<byte[]> writeQueue;
-		private ProgramThread  writeThread;
+		//private ProgramThread  writeThread;
 		private AutoResetEvent writeSignal;
 		
 		public bool Connected

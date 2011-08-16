@@ -27,7 +27,7 @@ namespace Terraria_Server
 		public static bool spamCheck = false;
 		public static bool ServerUp = false;
 		public static bool anyClients = false;
-		internal static Queue<Socket> deadClients;
+        //internal static Queue<Socket> deadClients;
 		
 		public static void SafeClose (this Socket socket)
 		{

@@ -168,7 +168,7 @@ namespace Terraria_Server.Logging
 		}
 		
 		static Dictionary<Thread, string> poolNames = new Dictionary<Thread, string> ();
-		static int nextPoolIndex = 0;
+        //static int nextPoolIndex = 0;
 		
 		static void Build (LogEntry entry, out OutputEntry output)
 		{

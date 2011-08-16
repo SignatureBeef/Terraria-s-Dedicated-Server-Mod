@@ -224,7 +224,7 @@ namespace Terraria_Server.Networking
 			{
 				HandleError (e.SocketErrorCode);
 			}
-			catch (ObjectDisposedException e)
+			catch (ObjectDisposedException)
 			{
 				HandleError (SocketError.OperationAborted);
 			}
