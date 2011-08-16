@@ -4667,30 +4667,32 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 		
-		public static void KillTile(int i, int j, bool fail = false, bool effectOnly = false, bool noItem = false, Player player = null)
+		public static void KillTile(int x, int y, bool fail = false, bool effectOnly = false, bool noItem = false, Player player = null)
 		{
-			if (i >= 0 && j >= 0 && i < Main.maxTilesX && j < Main.maxTilesY)
-			{
-				if (Main.tile.At(i, j).Active)
+			if (x >= 0 && y >= 0 && x < Main.maxTilesX && y < Main.maxTilesY)
+            {
+                TileRef tile = Main.tile.At(x, y);
+
+				if (tile.Active)
 				{
-					if (j >= 1 && Main.tile.At(i, j - 1).Active && ((Main.tile.At(i, j - 1).Type == 5 && Main.tile.At(i, j).Type != 5) || (Main.tile.At(i, j - 1).Type == 21 && Main.tile.At(i, j).Type != 21) || (Main.tile.At(i, j - 1).Type == 26 && Main.tile.At(i, j).Type != 26) || (Main.tile.At(i, j - 1).Type == 72 && Main.tile.At(i, j).Type != 72) || (Main.tile.At(i, j - 1).Type == 12 && Main.tile.At(i, j).Type != 12)) && (Main.tile.At(i, j - 1).Type != 5 || ((Main.tile.At(i, j - 1).FrameX != 66 || Main.tile.At(i, j - 1).FrameY < 0 || Main.tile.At(i, j - 1).FrameY > 44) && (Main.tile.At(i, j - 1).FrameX != 88 || Main.tile.At(i, j - 1).FrameY < 66 || Main.tile.At(i, j - 1).FrameY > 110) && Main.tile.At(i, j - 1).FrameY < 198)))
+					if (y >= 1 && Main.tile.At(x, y - 1).Active && ((Main.tile.At(x, y - 1).Type == 5 && tile.Type != 5) || (Main.tile.At(x, y - 1).Type == 21 && tile.Type != 21) || (Main.tile.At(x, y - 1).Type == 26 && tile.Type != 26) || (Main.tile.At(x, y - 1).Type == 72 && tile.Type != 72) || (Main.tile.At(x, y - 1).Type == 12 && tile.Type != 12)) && (Main.tile.At(x, y - 1).Type != 5 || ((Main.tile.At(x, y - 1).FrameX != 66 || Main.tile.At(x, y - 1).FrameY < 0 || Main.tile.At(x, y - 1).FrameY > 44) && (Main.tile.At(x, y - 1).FrameX != 88 || Main.tile.At(x, y - 1).FrameY < 66 || Main.tile.At(x, y - 1).FrameY > 110) && Main.tile.At(x, y - 1).FrameY < 198)))
 					{
 						return;
 					}
 					if (!effectOnly && !WorldModify.stopDrops)
 					{
-						if (Main.tile.At(i, j).Type == 3)
+						if (tile.Type == 3)
 						{
-							if (Main.tile.At(i, j).FrameX == 144)
+							if (tile.FrameX == 144)
 							{
-								Item.NewItem(i * 16, j * 16, 16, 16, 5, 1, false);
+								Item.NewItem(x * 16, y * 16, 16, 16, 5, 1, false);
 							}
 						}
-						else if (Main.tile.At(i, j).Type == 24)
+						else if (tile.Type == 24)
 						{
-							if (Main.tile.At(i, j).FrameX == 144)
+							if (tile.FrameX == 144)
 							{
-								Item.NewItem(i * 16, j * 16, 16, 16, 60, 1, false);
+								Item.NewItem(x * 16, y * 16, 16, 16, 60, 1, false);
 							}
 						}
                     }
@@ -4700,299 +4702,298 @@ namespace Terraria_Server.WorldMod
 					}
 					if (fail)
 					{
-						if (Main.tile.At(i, j).Type == 2 || Main.tile.At(i, j).Type == 23)
+						if (tile.Type == 2 || tile.Type == 23)
 						{
-							Main.tile.At(i, j).SetType (0);
+							tile.SetType (0);
 						}
-						if (Main.tile.At(i, j).Type == 60 || Main.tile.At(i, j).Type == 70)
+						if (tile.Type == 60 || tile.Type == 70)
 						{
-							Main.tile.At(i, j).SetType (59);
+							tile.SetType (59);
 						}
-						WorldModify.SquareTileFrame(i, j, true);
+						WorldModify.SquareTileFrame(x, y, true);
 						return;
 					}
-					if (Main.tile.At(i, j).Type == 21)
+					if (tile.Type == 21)
 					{
-						int l = (int)(Main.tile.At(i, j).FrameX / 18);
-						int y = j - (int)(Main.tile.At(i, j).FrameY / 18);
+						int l = (int)(tile.FrameX / 18);
+						int chestY = y - (int)(tile.FrameY / 18);
 						while (l > 1)
 						{
 							l -= 2;
 						}
-						l = i - l;
-						if (!Chest.DestroyChest(l, y))
+						l = x - l;
+                        if (!Chest.DestroyChest(l, chestY))
 						{
 							return;
 						}
 					}
 					if (!noItem && !WorldModify.stopDrops)
 					{
-						int num4 = 0;
-						if (Main.tile.At(i, j).Type == 0 || Main.tile.At(i, j).Type == 2)
+						int dropItem = 0;
+						if (tile.Type == 0 || tile.Type == 2)
 						{
-							num4 = 2;
+							dropItem = 2;
 						}
-						else if (Main.tile.At(i, j).Type == 1)
+						else if (tile.Type == 1)
 				        {
-					        num4 = 3;
+					        dropItem = 3;
 				        }
-				        else if (Main.tile.At(i, j).Type == 3 || Main.tile.At(i, j).Type == 73)
+				        else if (tile.Type == 3 || tile.Type == 73)
 						{
-							if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(new Vector2((float)(i * 16), (float)(j * 16)), 16, 16)].HasItem(281))
+							if (Main.rand.Next(2) == 0 && Main.players[(int)Player.FindClosest(new Vector2((float)(x * 16), (float)(y * 16)), 16, 16)].HasItem(281))
 							{
-								num4 = 283;
+								dropItem = 283;
 							}
 						}
-						else if (Main.tile.At(i, j).Type == 4)
+						else if (tile.Type == 4)
 						{
-							num4 = 8;
+							dropItem = 8;
 						}
-						else if (Main.tile.At(i, j).Type == 5)
+						else if (tile.Type == 5)
 						{
-							if (Main.tile.At(i, j).FrameX >= 22 && Main.tile.At(i, j).FrameY >= 198)
+							if (tile.FrameX >= 22 && tile.FrameY >= 198)
 							{
 								if (WorldModify.genRand.Next(2) == 0)
 								{
-									int num5 = j;
-									while ((!Main.tile.At(i, num5).Active || !Main.tileSolid[(int)Main.tile.At(i, num5).Type] || Main.tileSolidTop[(int)Main.tile.At(i, num5).Type]))
+									int num5 = y;
+									while ((!Main.tile.At(x, num5).Active || !Main.tileSolid[(int)Main.tile.At(x, num5).Type] || Main.tileSolidTop[(int)Main.tile.At(x, num5).Type]))
 									{
 										num5++;
 									}
-									if (Main.tile.At(i, num5).Type == 2)
+									if (Main.tile.At(x, num5).Type == 2)
 									{
-										num4 = 27;
+										dropItem = 27;
 									}
 									else
 									{
-										num4 = 9;
+										dropItem = 9;
 									}
 								}
 								else
 								{
-									num4 = 9;
+									dropItem = 9;
 								}
 							}
 							else
 							{
-								num4 = 9;
+								dropItem = 9;
 							}
 						}
-						else if (Main.tile.At(i, j).Type == 6)
+						else if (tile.Type == 6)
 						{
-							num4 = 11;
+							dropItem = 11;
 						}
-						else if (Main.tile.At(i, j).Type == 7)
+						else if (tile.Type == 7)
 						{
-							num4 = 12;
+							dropItem = 12;
 						}
-						else if (Main.tile.At(i, j).Type == 8)
+						else if (tile.Type == 8)
 						{
-							num4 = 13;
+							dropItem = 13;
 						}
-						else if (Main.tile.At(i, j).Type == 9)
+						else if (tile.Type == 9)
 						{
-							num4 = 14;
+							dropItem = 14;
 						}
-						else if (Main.tile.At(i, j).Type == 13)
+						else if (tile.Type == 13)
 						{
-						    if (Main.tile.At(i, j).FrameX == 18)
+						    if (tile.FrameX == 18)
 						    {
-							    num4 = 28;
+							    dropItem = 28;
 						    }
-						    else if (Main.tile.At(i, j).FrameX == 36)
+						    else if (tile.FrameX == 36)
 							{
-								num4 = 110;
+								dropItem = 110;
 							}
-							else if (Main.tile.At(i, j).FrameX == 54)
+							else if (tile.FrameX == 54)
 						    {
-							    num4 = 350;
+							    dropItem = 350;
 						    }
-						    else if (Main.tile.At(i, j).FrameX == 72)
+						    else if (tile.FrameX == 72)
 							{
-								num4 = 351;
+								dropItem = 351;
 							}
 							else
 							{
-								num4 = 31;
+								dropItem = 31;
 							}
 					    }
-					    else if (Main.tile.At(i, j).Type == 19)
+					    else if (tile.Type == 19)
 						{
-							num4 = 94;
+							dropItem = 94;
 						}
-						else if (Main.tile.At(i, j).Type == 22)
+						else if (tile.Type == 22)
 						{
-							num4 = 56;
+							dropItem = 56;
 						}
-						else if (Main.tile.At(i, j).Type == 23)
+						else if (tile.Type == 23)
 						{
-							num4 = 2;
+							dropItem = 2;
 						}
-						else if (Main.tile.At(i, j).Type == 25)
+						else if (tile.Type == 25)
 						{
-							num4 = 61;
+							dropItem = 61;
 						}
-						else if (Main.tile.At(i, j).Type == 30)
+						else if (tile.Type == 30)
 						{
-							num4 = 9;
+							dropItem = 9;
 						}
-						else if (Main.tile.At(i, j).Type == 33)
+						else if (tile.Type == 33)
 						{
-							num4 = 105;
+							dropItem = 105;
 						}
-						else if (Main.tile.At(i, j).Type == 37)
+						else if (tile.Type == 37)
 						{
-							num4 = 116;
+							dropItem = 116;
 						}
-						else if (Main.tile.At(i, j).Type == 38)
+						else if (tile.Type == 38)
 						{
-							num4 = 129;
+							dropItem = 129;
 						}
-						else if (Main.tile.At(i, j).Type == 39)
+						else if (tile.Type == 39)
 				        {
-					        num4 = 131;
+					        dropItem = 131;
 				        }
-				        else if (Main.tile.At(i, j).Type == 40)
+				        else if (tile.Type == 40)
 						{
-							num4 = 133;
+							dropItem = 133;
 						}
-						else if (Main.tile.At(i, j).Type == 41)
+						else if (tile.Type == 41)
 						{
-							num4 = 134;
+							dropItem = 134;
 						}
-						else if (Main.tile.At(i, j).Type == 43)
+						else if (tile.Type == 43)
 					    {
-						    num4 = 137;
+						    dropItem = 137;
 					    }
-					    else if (Main.tile.At(i, j).Type == 44)
+					    else if (tile.Type == 44)
 						{
-							num4 = 139;
+							dropItem = 139;
 						}
-						else if (Main.tile.At(i, j).Type == 45)
+						else if (tile.Type == 45)
 						{
-							num4 = 141;
+							dropItem = 141;
 						}
-						else if (Main.tile.At(i, j).Type == 46)
+						else if (tile.Type == 46)
 						{
-							num4 = 143;
+							dropItem = 143;
 						}
-						else if (Main.tile.At(i, j).Type == 47)
+						else if (tile.Type == 47)
 						{
-							num4 = 145;
+							dropItem = 145;
 						}
-						else if (Main.tile.At(i, j).Type == 48)
+						else if (tile.Type == 48)
 						{
-							num4 = 147;
+							dropItem = 147;
 						}
-						else if (Main.tile.At(i, j).Type == 49)
+						else if (tile.Type == 49)
 						{
-							num4 = 148;
+							dropItem = 148;
 						}
-						else if (Main.tile.At(i, j).Type == 51)
+						else if (tile.Type == 51)
 						{
-							num4 = 150;
+							dropItem = 150;
 						}
-						else if (Main.tile.At(i, j).Type == 53)
+						else if (tile.Type == 53)
 						{
-							num4 = 169;
+							dropItem = 169;
 						}
-						else if (Main.tile.At(i, j).Type != 54)
+						else if (tile.Type != 54)
 						{
-							if (Main.tile.At(i, j).Type == 56)
+							if (tile.Type == 56)
 							{
-								num4 = 173;
+								dropItem = 173;
 							}
-							else if (Main.tile.At(i, j).Type == 57)
+							else if (tile.Type == 57)
 							{
-								num4 = 172;
+								dropItem = 172;
 							}
-							else if (Main.tile.At(i, j).Type == 58)
+							else if (tile.Type == 58)
 							{
-								num4 = 174;
+								dropItem = 174;
 							}
-							else if (Main.tile.At(i, j).Type == 60)
+							else if (tile.Type == 60)
 							{
-								num4 = 176;
+								dropItem = 176;
 							}
-							else if (Main.tile.At(i, j).Type == 70)
+							else if (tile.Type == 70)
 							{
-								num4 = 176;
+								dropItem = 176;
 							}
-							else if (Main.tile.At(i, j).Type == 75)
+							else if (tile.Type == 75)
 							{
-								num4 = 192;
+								dropItem = 192;
 							}
-							else if (Main.tile.At(i, j).Type == 76)
+							else if (tile.Type == 76)
 							{
-								num4 = 214;
+								dropItem = 214;
 							}
-							else if (Main.tile.At(i, j).Type == 78)
+							else if (tile.Type == 78)
 							{
-								num4 = 222;
+								dropItem = 222;
 							}
-							else if (Main.tile.At(i, j).Type == 81)
+							else if (tile.Type == 81)
 							{
-								num4 = 275;
+								dropItem = 275;
 							}
-							else if (Main.tile.At(i, j).Type == 80)
+							else if (tile.Type == 80)
 							{
-								num4 = 276;
+								dropItem = 276;
 							}
-							else if (Main.tile.At(i, j).Type == 61 || Main.tile.At(i, j).Type == 74)
+							else if (tile.Type == 61 || tile.Type == 74)
 							{
-                                TileRef tile = Main.tile.At(i, j);
                                 if (tile.FrameX == 144)
                                 {
-                                    Item.NewItem(i * 16, j * 16, 16, 16, 331, WorldModify.genRand.Next(1, 3), false);
+                                    Item.NewItem(x * 16, y * 16, 16, 16, 331, WorldModify.genRand.Next(1, 3), false);
                                 }
                                 if (tile.FrameX == 162)
 								{
-									num4 = 223;
+									dropItem = 223;
 								}
                                 else if (tile.FrameX >= 108 && tile.FrameX <= 126 && WorldModify.genRand.Next(100) == 0)
 						        {
-							        num4 = 208;
+							        dropItem = 208;
 						        }
 						        else if (WorldModify.genRand.Next(100) == 0)
 								{
-									num4 = 195;
+									dropItem = 195;
 								}
 							}
-							else if (Main.tile.At(i, j).Type == 59 || Main.tile.At(i, j).Type == 60)
+							else if (tile.Type == 59 || tile.Type == 60)
 						    {
-							    num4 = 176;
+							    dropItem = 176;
 						    }
-						    else if (Main.tile.At(i, j).Type == 71 || Main.tile.At(i, j).Type == 72)
+						    else if (tile.Type == 71 || tile.Type == 72)
 							{
 								if (WorldModify.genRand.Next(50) == 0)
 								{
-									num4 = 194;
+									dropItem = 194;
 								}
 								else if (WorldModify.genRand.Next(2) == 0)
 								{
-									num4 = 183;
+									dropItem = 183;
 								}
 							}
-							else if (Main.tile.At(i, j).Type >= 63 && Main.tile.At(i, j).Type <= 68)
+							else if (tile.Type >= 63 && tile.Type <= 68)
 							{
-								num4 = (int)(Main.tile.At(i, j).Type - 63 + 177);
+								dropItem = (int)(tile.Type - 63 + 177);
 							}
-							else if (Main.tile.At(i, j).Type == 50)
+							else if (tile.Type == 50)
 							{
-								if (Main.tile.At(i, j).FrameX == 90)
+								if (tile.FrameX == 90)
 								{
-									num4 = 165;
+									dropItem = 165;
 								}
 								else
 								{
-									num4 = 149;
+									dropItem = 149;
 								}
 							}
-							else if (Main.tileAlch[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j).Type > 82)
+							else if (Main.tileAlch[(int)tile.Type] && tile.Type > 82)
 							{
-								int num6 = (int)(Main.tile.At(i, j).FrameX / 18);
+								int num6 = (int)(tile.FrameX / 18);
 								bool flag = false;
-								if (Main.tile.At(i, j).Type == 84)
+								if (tile.Type == 84)
 								{
 									flag = true;
 								}
@@ -5008,33 +5009,33 @@ namespace Terraria_Server.WorldMod
 								{
 									flag = true;
 								}
-								num4 = 313 + num6;
+								dropItem = 313 + num6;
 								if (flag)
 								{
-									Item.NewItem(i * 16, j * 16, 16, 16, 307 + num6, WorldModify.genRand.Next(1, 4), false);
+									Item.NewItem(x * 16, y * 16, 16, 16, 307 + num6, WorldModify.genRand.Next(1, 4), false);
 								}
 							}
 						}
-						if (num4 > 0)
+						if (dropItem > 0)
 						{
-							Item.NewItem(i * 16, j * 16, 16, 16, num4, 1, false);
+							Item.NewItem(x * 16, y * 16, 16, 16, dropItem, 1, false);
 						}
 					}
-					Main.tile.At(i, j).SetActive (false);
-					if (Main.tileSolid[(int)Main.tile.At(i, j).Type])
+					tile.SetActive (false);
+					if (Main.tileSolid[(int)tile.Type])
 					{
-						Main.tile.At(i, j).SetLighted (false);
+						tile.SetLighted (false);
 					}
-					Main.tile.At(i, j).SetFrameX (-1);
-					Main.tile.At(i, j).SetFrameY (-1);
-					Main.tile.At(i, j).SetFrameNumber (0);
-                    if (Main.tile.At(i, j).Type == 58 && j > Main.maxTilesY - 200)
+					tile.SetFrameX (-1);
+					tile.SetFrameY (-1);
+					tile.SetFrameNumber (0);
+                    if (tile.Type == 58 && y > Main.maxTilesY - 200)
                     {
-                        Main.tile.At(i, j).SetLava(true);
-                        Main.tile.At(i, j).SetLiquid(128);
+                        tile.SetLava(true);
+                        tile.SetLiquid(128);
                     }
-					Main.tile.At(i, j).SetType (0);
-					WorldModify.SquareTileFrame(i, j, true);
+					tile.SetType (0);
+					WorldModify.SquareTileFrame(x, y, true);
 				}
 			}
 		}
@@ -5095,14 +5096,16 @@ namespace Terraria_Server.WorldMod
 				WorldModify.genRand = new Random();
 			}
 
+            TileRef Tile;
+            TileRef Tile2;
 			while ((float)num3 < (float)(Main.maxTilesX * Main.maxTilesY) * num)
 			{
 				int TileX = WorldModify.genRand.Next(10, Main.maxTilesX - 10);
 				int TileY = WorldModify.genRand.Next(10, (int)Main.worldSurface - 1);
-                TileRef Tile = Main.tile.At(TileX, TileY);
+                Tile = Main.tile.At(TileX, TileY);
                 int num6 = TileX - 1;
                 int num7 = TileX + 2;
-                int num8 = TileY - 1;
+                int rTileY = TileY - 1;
                 int num9 = TileY + 2;
 				if (num6 < 10)
 				{
@@ -5112,14 +5115,17 @@ namespace Terraria_Server.WorldMod
 				{
 					num7 = Main.maxTilesX - 10;
 				}
-				if (num8 < 10)
+				if (rTileY < 10)
 				{
-					num8 = 10;
+					rTileY = 10;
 				}
 				if (num9 > Main.maxTilesY - 10)
 				{
 					num9 = Main.maxTilesY - 10;
 				}
+
+                Tile2 = Main.tile.At(TileX, rTileY);
+
 				if (true)
 				{
 					if (Main.tileAlch[(int)Tile.Type])
@@ -5145,16 +5151,16 @@ namespace Terraria_Server.WorldMod
 						}
 						else if (Tile.Type == 53)
 						{
-                            if (!Main.tile.At(TileX, num8).Active)
+                            if (!Tile2.Active)
 							{
                                 if (TileX < 250 || TileX > Main.maxTilesX - 250)
 								{
-									if (WorldModify.genRand.Next(500) == 0 && Main.tile.At(TileX, num8).Liquid == 255 && Main.tile.At(TileX, num8 - 1).Liquid == 255 && Main.tile.At(TileX, num8 - 2).Liquid == 255 && Main.tile.At(TileX, num8 - 3).Liquid == 255 && Main.tile.At(TileX, num8 - 4).Liquid == 255)
+									if (WorldModify.genRand.Next(500) == 0 && Tile2.Liquid == 255 && Main.tile.At(TileX, rTileY - 1).Liquid == 255 && Main.tile.At(TileX, rTileY - 2).Liquid == 255 && Main.tile.At(TileX, rTileY - 3).Liquid == 255 && Main.tile.At(TileX, rTileY - 4).Liquid == 255)
 									{
-										WorldModify.PlaceTile(TileX, num8, 81, true, false, -1, 0);
-										if (Main.tile.At(TileX, num8).Active)
+										WorldModify.PlaceTile(TileX, rTileY, 81, true, false, -1, 0);
+										if (Tile2.Active)
 										{
-											NetMessage.SendTileSquare(-1, TileX, num8, 1);
+											NetMessage.SendTileSquare(-1, TileX, rTileY, 1);
 										}
 									}
 								}
@@ -5166,38 +5172,38 @@ namespace Terraria_Server.WorldMod
 						}
 						else if (Tile.Type == 78)
 						{
-							if (!Main.tile.At(TileX, num8).Active)
+							if (!Tile2.Active)
 							{
-								WorldModify.PlaceTile(TileX, num8, 3, true, false, -1, 0);
-								if (Main.tile.At(TileX, num8).Active)
+								WorldModify.PlaceTile(TileX, rTileY, 3, true, false, -1, 0);
+								if (Tile2.Active)
 								{
-									NetMessage.SendTileSquare(-1, TileX, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, rTileY, 1);
 								}
 							}
 						}
 						else if (Tile.Type == 2 || Tile.Type == 23 || Tile.Type == 32)
 						{
 							int num10 = (int)Tile.Type;
-							if (!Main.tile.At(TileX, num8).Active && WorldModify.genRand.Next(12) == 0 && num10 == 2)
+							if (!Tile2.Active && WorldModify.genRand.Next(12) == 0 && num10 == 2)
 							{
-								WorldModify.PlaceTile(TileX, num8, 3, true, false, -1, 0);
-								if (Main.tile.At(TileX, num8).Active)
+								WorldModify.PlaceTile(TileX, rTileY, 3, true, false, -1, 0);
+								if (Tile2.Active)
 								{
-									NetMessage.SendTileSquare(-1, TileX, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, rTileY, 1);
 								}
 							}
-							if (!Main.tile.At(TileX, num8).Active && WorldModify.genRand.Next(10) == 0 && num10 == 23)
+							if (!Tile2.Active && WorldModify.genRand.Next(10) == 0 && num10 == 23)
 							{
-								WorldModify.PlaceTile(TileX, num8, 24, true, false, -1, 0);
-								if (Main.tile.At(TileX, num8).Active)
+								WorldModify.PlaceTile(TileX, rTileY, 24, true, false, -1, 0);
+								if (Tile2.Active)
 								{
-									NetMessage.SendTileSquare(-1, TileX, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, rTileY, 1);
 								}
 							}
 							bool flag2 = false;
 							for (int j = num6; j < num7; j++)
 							{
-								for (int k = num8; k < num9; k++)
+								for (int k = rTileY; k < num9; k++)
 								{
 									if ((TileX != j || TileY != k) && Main.tile.At(j, k).Active)
 									{
@@ -5356,22 +5362,22 @@ namespace Terraria_Server.WorldMod
 						if (Tile.Type == 60)
 						{
 							int type = (int)Tile.Type;
-							if (!Main.tile.At(TileX, num8).Active && WorldModify.genRand.Next(7) == 0)
+							if (!Tile2.Active && WorldModify.genRand.Next(7) == 0)
 							{
-								WorldModify.PlaceTile(TileX, num8, 61, true, false, -1, 0);
-								if (Main.tile.At(TileX, num8).Active)
+								WorldModify.PlaceTile(TileX, rTileY, 61, true, false, -1, 0);
+								if (Tile2.Active)
 								{
-									NetMessage.SendTileSquare(-1, TileX, num8, 1);
+									NetMessage.SendTileSquare(-1, TileX, rTileY, 1);
 								}
 							}
-							else if (WorldModify.genRand.Next(500) == 0 && (!Main.tile.At(TileX, num8).Active || Main.tile.At(TileX, num8).Type == 61 || Main.tile.At(TileX, num8).Type == 74 || Main.tile.At(TileX, num8).Type == 69) && !WorldModify.PlayerLOS(TileX, TileY))
+							else if (WorldModify.genRand.Next(500) == 0 && (!Tile2.Active || Tile2.Type == 61 || Tile2.Type == 74 || Tile2.Type == 69) && !WorldModify.PlayerLOS(TileX, TileY))
 							{
 								WorldModify.GrowTree(TileX, TileY);
 							}
 							bool flag5 = false;
 							for (int num22 = num6; num22 < num7; num22++)
 							{
-								for (int num23 = num8; num23 < num9; num23++)
+								for (int num23 = rTileY; num23 < num9; num23++)
 								{
 									if ((TileX != num22 || TileY != num23) && Main.tile.At(num22, num23).Active && Main.tile.At(num22, num23).Type == 59)
 									{
