@@ -194,6 +194,8 @@ namespace Terraria_Server.Networking
 							NetMessage.buffer[slot].GetData (readBuffer, processed + 4, msgLen - 4);
 						else
 							return;
+						
+						if (kicking) return;
 					}
 						
 

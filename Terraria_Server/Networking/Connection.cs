@@ -504,7 +504,7 @@ namespace Terraria_Server.Networking
 				
 				if (args.conn == null)
 				{
-					ProgramLog.Error.Log ("SocketAsyncEventArgsExt freed twice.");
+					ProgramLog.Error.Log ("{0} freed twice.", typeof(T).Name);
 					return;
 				}
 				
