@@ -4057,6 +4057,11 @@ namespace Terraria_Server
             }
             else
             {
+				bool flag = false;
+				if (!Main.dayTime || this.life != this.lifeMax || (double)this.position.Y > Main.worldSurface * 16.0)
+				{
+					flag = true;
+				}
                 if (npc.aiStyle == 1)
                 {                    
                     if (npc.ai[2] > 1f)
@@ -4105,7 +4110,7 @@ namespace Terraria_Server
                                 npc.Velocity.Y = -4f;
                             }
                         }
-                        if (npc.ai[2] == 1f)
+                        if (npc.ai[2] == 1f && flag)
                         {
                             npc.TargetClosest(true);
                         }
@@ -4130,7 +4135,7 @@ namespace Terraria_Server
                         {
                             npc.Velocity.X = 0f;
                         }
-                        if (!Main.dayTime || npc.life != npc.lifeMax || (double)npc.Position.Y > Main.worldSurface * 16.0)
+                        if (flag)
                         {
                             npc.ai[0] += 1f;
                         }
@@ -4146,7 +4151,7 @@ namespace Terraria_Server
                         if (npc.ai[0] >= 0f)
                         {
                             npc.netUpdate = true;
-                            if ((!Main.dayTime || npc.life != npc.lifeMax || (double)npc.Position.Y > Main.worldSurface * 16.0) && npc.ai[2] == 1f)
+                            if (flag && npc.ai[2] == 1f)
                             {
                                 npc.TargetClosest(true);
                             }
@@ -4352,12 +4357,12 @@ namespace Terraria_Server
                         if (npc.aiStyle == 3)
                         {
                             int num3 = 60;
-                            bool flag = false;
+                            bool flag2 = false;
                             if (npc.Velocity.Y == 0f && ((npc.Velocity.X > 0f && npc.direction < 0) || (npc.Velocity.X < 0f && npc.direction > 0)))
                             {
-                                flag = true;
+                                flag2 = true;
                             }
-                            if (npc.Position.X == npc.oldPosition.X || npc.ai[3] >= (float)num3 || flag)
+                            if (npc.Position.X == npc.oldPosition.X || npc.ai[3] >= (float)num3 || flag2)
                             {
                                 npc.ai[3] += 1f;
                             }
@@ -4555,12 +4560,12 @@ namespace Terraria_Server
                             int num4 = (int)((npc.Position.X + (float)(npc.Width / 2) + (float)(15 * npc.direction)) / 16f);
                             int num5 = (int)((npc.Position.Y + (float)npc.Height - 15f) / 16f);
                             
-                            bool flag2 = true;
+                            bool flag3 = true;
                             if (npc.Type == 47 || npc.Type == 67)
                             {
-                                flag2 = false;
+                                flag3 = false;
                             }
-                            if (Main.tile.At(num4, num5 - 1).Active && Main.tile.At(num4, num5 - 1).Type == 10 && flag2)
+                            if (Main.tile.At(num4, num5 - 1).Active && Main.tile.At(num4, num5 - 1).Type == 10 && flag3)
                             {
                                 npc.ai[2] += 1f;
                                 npc.ai[3] = 0f;
@@ -4581,14 +4586,14 @@ namespace Terraria_Server
                                         npc.ai[1] += 6f;
                                     }
                                     npc.ai[2] = 0f;
-                                    bool flag3 = false;
+                                    bool flag4 = false;
                                     if (npc.ai[1] >= 10f)
                                     {
-                                        flag3 = true;
+                                        flag4 = true;
                                         npc.ai[1] = 10f;
                                     }
                                     WorldModify.KillTile(num4, num5 - 1, true, false, false);
-                                    if (!flag3 && flag3)
+                                    if (flag4)
                                     {
                                         if (npc.Type == 26)
                                         {
@@ -4598,13 +4603,13 @@ namespace Terraria_Server
                                         }
                                         else
                                         {
-                                            bool flag4 = WorldModify.OpenDoor(num4, num5, npc.direction);
-                                            if (!flag4)
+                                            bool flag5 = WorldModify.OpenDoor(num4, num5, npc.direction);
+                                            if (!flag5)
                                             {
                                                 npc.ai[3] = (float)num3;
                                                 npc.netUpdate = true;
                                             }
-                                            if (flag4)
+                                            else
                                             {
                                                 NetMessage.SendData(19, -1, -1, "", 0, (float)num4, (float)num5, (float)npc.direction, 0);
                                                 return;
@@ -5482,16 +5487,16 @@ namespace Terraria_Server
                                             }
                                             if (npc.life == 0)
                                             {
-                                                bool flag5 = true;
+                                                bool flag6 = true;
                                                 for (int l = 0; l < 1000; l++)
                                                 {
                                                     if (Main.npcs[l].Active && (Main.npcs[l].Type == 13 || Main.npcs[l].Type == 14 || Main.npcs[l].Type == 15))
                                                     {
-                                                        flag5 = false;
+                                                        flag6 = false;
                                                         break;
                                                     }
                                                 }
-                                                if (flag5)
+                                                if (flag6)
                                                 {
                                                     npc.boss = true;
                                                     npc.NPCLoot();
@@ -5522,7 +5527,7 @@ namespace Terraria_Server
                                         {
                                             num61 = Main.maxTilesY;
                                         }
-                                        bool flag6 = false;
+                                        bool flag7 = false;
                                         for (int m = num58; m < num59; m++)
                                         {
                                             for (int n = num60; n < num61; n++)
@@ -5534,7 +5539,7 @@ namespace Terraria_Server
                                                     vector9.Y = (float)(n * 16);
                                                     if (npc.Position.X + (float)npc.Width > vector9.X && npc.Position.X < vector9.X + 16f && npc.Position.Y + (float)npc.Height > vector9.Y && npc.Position.Y < vector9.Y + 16f)
                                                     {
-                                                        flag6 = true;
+                                                        flag7 = true;
                                                         if (Main.rand.Next(40) == 0 && Main.tile.At(m, n).Active)
                                                         {
                                                             WorldModify.KillTile(m, n, true, true, false);
@@ -5547,11 +5552,11 @@ namespace Terraria_Server
                                                 }
                                             }
                                         }
-                                        if (!flag6 && (npc.Type == 7 || npc.Type == 10 || npc.Type == 13 || npc.Type == 39))
+                                        if (!flag7 && (npc.Type == 7 || npc.Type == 10 || npc.Type == 13 || npc.Type == 39))
                                         {
                                             Rectangle rectangle = new Rectangle((int)npc.Position.X, (int)npc.Position.Y, npc.Width, npc.Height);
                                             int num62 = 1000;
-                                            bool flag7 = true;
+                                            bool flag8 = true;
                                             for (int num63 = 0; num63 < 255; num63++)
                                             {
                                                 if (Main.players[num63].Active)
@@ -5559,14 +5564,14 @@ namespace Terraria_Server
                                                     Rectangle rectangle2 = new Rectangle((int)Main.players[num63].Position.X - num62, (int)Main.players[num63].Position.Y - num62, num62 * 2, num62 * 2);
                                                     if (rectangle.Intersects(rectangle2))
                                                     {
-                                                        flag7 = false;
+                                                        flag8 = false;
                                                         break;
                                                     }
                                                 }
                                             }
-                                            if (flag7)
+                                            if (flag8)
                                             {
-                                                flag6 = true;
+                                                flag7 = true;
                                             }
                                         }
                                         float num64 = 8f;
@@ -5599,7 +5604,7 @@ namespace Terraria_Server
                                             npc.Position.Y = npc.Position.Y + num67;
                                             return;
                                         }
-                                        if (!flag6)
+                                        if (!flag7)
                                         {
                                             npc.TargetClosest(true);
                                             npc.Velocity.Y = npc.Velocity.Y + 0.11f;
@@ -5673,15 +5678,15 @@ namespace Terraria_Server
                                             num67 *= num68;
                                             if ((npc.Type == 13 || npc.Type == 7) && !Main.players[npc.target].zoneEvil)
                                             {
-                                                bool flag8 = true;
+                                                bool flag9 = true;
                                                 for (int num72 = 0; num72 < 255; num72++)
                                                 {
                                                     if (Main.players[num72].Active && !Main.players[num72].dead && Main.players[num72].zoneEvil)
                                                     {
-                                                        flag8 = false;
+                                                        flag9 = false;
                                                     }
                                                 }
-                                                if (flag8)
+                                                if (flag9)
                                                 {
                                                     if ((double)(npc.Position.Y / 16f) > (Main.rockLayer + (double)Main.maxTilesY) / 2.0)
                                                     {
@@ -5798,7 +5803,7 @@ namespace Terraria_Server
                                             {
                                                 npc.TargetClosest(true);
                                             }
-                                            bool flag9 = false;
+                                            bool flag10 = false;
                                             npc.directionY = -1;
                                             if (npc.direction == 0)
                                             {
@@ -5808,7 +5813,7 @@ namespace Terraria_Server
                                             {
                                                 if (Main.players[num77].Active && Main.players[num77].talkNPC == npc.whoAmI)
                                                 {
-                                                    flag9 = true;
+                                                    flag10 = true;
                                                     if (npc.ai[0] != 0f)
                                                     {
                                                         npc.netUpdate = true;
@@ -5845,7 +5850,7 @@ namespace Terraria_Server
                                             }
                                             if (npc.townNPC && !Main.dayTime && (num75 != npc.homeTileX || num76 != npc.homeTileY) && !npc.homeless)
                                             {
-                                                bool flag10 = true;
+                                                bool flag11 = true;
                                                 for (int num78 = 0; num78 < 2; num78++)
                                                 {
                                                     Rectangle rectangle3 = new Rectangle((int)(npc.Position.X + (float)(npc.Width / 2) - (float)(NPC.sWidth / 2) - (float)NPC.safeRangeX), (int)(npc.Position.Y + (float)(npc.Height / 2) - (float)(NPC.sHeight / 2) - (float)NPC.safeRangeY), NPC.sWidth + NPC.safeRangeX * 2, NPC.sHeight + NPC.safeRangeY * 2);
@@ -5860,17 +5865,17 @@ namespace Terraria_Server
                                                             Rectangle rectangle4 = new Rectangle((int)Main.players[num79].Position.X, (int)Main.players[num79].Position.Y, Main.players[num79].Width, Main.players[num79].Height);
                                                             if (rectangle4.Intersects(rectangle3))
                                                             {
-                                                                flag10 = false;
+                                                                flag11 = false;
                                                                 break;
                                                             }
                                                         }
-                                                        if (!flag10)
+                                                        if (!flag11)
                                                         {
                                                             break;
                                                         }
                                                     }
                                                 }
-                                                if (flag10)
+                                                if (flag11)
                                                 {
                                                     if (npc.Type == 37 || !Collision.SolidTiles(npc.homeTileX - 1, npc.homeTileX + 1, npc.homeTileY - 3, npc.homeTileY - 1))
                                                     {
@@ -5893,7 +5898,7 @@ namespace Terraria_Server
                                                 {
                                                     npc.ai[2] -= 1f;
                                                 }
-                                                if (!Main.dayTime && !flag9)
+                                                if (!Main.dayTime && !flag10)
                                                 {
                                                     if (num75 == npc.homeTileX && num76 == npc.homeTileY)
                                                     {
@@ -5919,7 +5924,7 @@ namespace Terraria_Server
                                                     }
                                                     else
                                                     {
-                                                        if (!flag9)
+                                                        if (!flag10)
                                                         {
                                                             if (num75 > npc.homeTileX)
                                                             {
@@ -6045,8 +6050,8 @@ namespace Terraria_Server
                                                     }
                                                     if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
                                                     {
-                                                        bool flag11 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false);
-                                                        if (flag11)
+                                                        bool flag12 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false);
+                                                        if (flag12)
                                                         {
                                                             npc.closeDoor = false;
                                                             NetMessage.SendData(19, -1, -1, "", 1, (float)npc.doorX, (float)npc.doorY, (float)npc.direction, 0);
@@ -6097,8 +6102,8 @@ namespace Terraria_Server
 
                                                         if (npc.townNPC && Main.tile.At(num80, num81 - 2).Active && Main.tile.At(num80, num81 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                                                         {
-                                                            bool flag12 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction);
-                                                            if (flag12)
+                                                            bool flag13 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction);
+                                                            if (flag13)
                                                             {
                                                                 npc.closeDoor = true;
                                                                 npc.doorX = num80;
@@ -6262,13 +6267,13 @@ namespace Terraria_Server
                                                         int num93 = (int)npc.Position.Y / 16;
                                                         int num94 = 20;
                                                         int num95 = 0;
-                                                        bool flag13 = false;
+                                                        bool flag14 = false;
                                                         if (Math.Abs(npc.Position.X - Main.players[npc.target].Position.X) + Math.Abs(npc.Position.Y - Main.players[npc.target].Position.Y) > 2000f)
                                                         {
                                                             num95 = 100;
-                                                            flag13 = true;
+                                                            flag14 = true;
                                                         }
-                                                        while (!flag13 && num95 < 100)
+                                                        while (!flag14 && num95 < 100)
                                                         {
                                                             num95++;
                                                             int num96 = Main.rand.Next(num90 - num94, num90 + num94);
@@ -6277,24 +6282,24 @@ namespace Terraria_Server
                                                             {
                                                                 if ((num98 < num91 - 4 || num98 > num91 + 4 || num96 < num90 - 4 || num96 > num90 + 4) && (num98 < num93 - 1 || num98 > num93 + 1 || num96 < num92 - 1 || num96 > num92 + 1) && Main.tile.At(num96, num98).Active)
                                                                 {
-                                                                    bool flag14 = true;
+                                                                    bool flag15 = true;
                                                                     if (npc.Type == 32 && Main.tile.At(num96, num98 - 1).Wall == 0)
                                                                     {
-                                                                        flag14 = false;
+                                                                        flag15 = false;
                                                                     }
                                                                     else
                                                                     {
                                                                         if (Main.tile.At(num96, num98 - 1).Lava)
                                                                         {
-                                                                            flag14 = false;
+                                                                            flag15 = false;
                                                                         }
                                                                     }
-                                                                    if (flag14 && Main.tileSolid[(int)Main.tile.At(num96, num98).Type] && !Collision.SolidTiles(num96 - 1, num96 + 1, num98 - 4, num98 - 1))
+                                                                    if (flag15 && Main.tileSolid[(int)Main.tile.At(num96, num98).Type] && !Collision.SolidTiles(num96 - 1, num96 + 1, num98 - 4, num98 - 1))
                                                                     {
                                                                         npc.ai[1] = 20f;
                                                                         npc.ai[2] = (float)num96;
                                                                         npc.ai[3] = (float)num98;
-                                                                        flag13 = true;
+                                                                        flag14 = true;
                                                                         break;
                                                                     }
                                                                 }
@@ -7606,16 +7611,16 @@ namespace Terraria_Server
                                                                                         }
                                                                                     }
                                                                                 }
-                                                                                bool flag15 = false;
+                                                                                bool flag16 = false;
                                                                                 if (!npc.friendly)
                                                                                 {
                                                                                     npc.TargetClosest(false);
                                                                                     if (Main.players[npc.target].wet && !Main.players[npc.target].dead)
                                                                                     {
-                                                                                        flag15 = true;
+                                                                                        flag16 = true;
                                                                                     }
                                                                                 }
-                                                                                if (flag15)
+                                                                                if (flag16)
                                                                                 {
                                                                                     npc.TargetClosest(true);
                                                                                     if (npc.Type == 65)
@@ -7937,16 +7942,16 @@ namespace Terraria_Server
                                                                                             }
                                                                                         }
                                                                                     }
-                                                                                    bool flag16 = false;
+                                                                                    bool flag17 = false;
                                                                                     if (!npc.friendly)
                                                                                     {
                                                                                         npc.TargetClosest(false);
                                                                                         if (Main.players[npc.target].wet && !Main.players[npc.target].dead)
                                                                                         {
-                                                                                            flag16 = true;
+                                                                                            flag17 = true;
                                                                                         }
                                                                                     }
-                                                                                    if (flag16)
+                                                                                    if (flag17)
                                                                                     {
                                                                                         npc.rotation = (float)Math.Atan2((double)npc.Velocity.Y, (double)npc.Velocity.X) + 1.57f;
                                                                                         npc.Velocity *= 0.98f;
@@ -8032,11 +8037,11 @@ namespace Terraria_Server
                                                                                         num177 = num174 / num177;
                                                                                         num175 *= num177;
                                                                                         num176 *= num177;
-                                                                                        bool flag17 = false;
+                                                                                        bool flag18 = false;
                                                                                         if (npc.directionY < 0)
                                                                                         {
                                                                                             npc.rotation = (float)(Math.Atan2((double)num176, (double)num175) + 1.57);
-                                                                                            flag17 = ((double)npc.rotation >= -1.2 && (double)npc.rotation <= 1.2);
+                                                                                            flag18 = ((double)npc.rotation >= -1.2 && (double)npc.rotation <= 1.2);
                                                                                             if ((double)npc.rotation < -0.8)
                                                                                             {
                                                                                                 npc.rotation = -0.8f;
@@ -8062,7 +8067,7 @@ namespace Terraria_Server
                                                                                         {
                                                                                             npc.ai[0] -= 1f;
                                                                                         }
-                                                                                        if (flag17 && npc.ai[0] == 0f && Collision.CanHit(npc.Position, npc.Width, npc.Height, Main.players[npc.target].Position, Main.players[npc.target].Width, Main.players[npc.target].Height))
+                                                                                        if (flag18 && npc.ai[0] == 0f && Collision.CanHit(npc.Position, npc.Width, npc.Height, Main.players[npc.target].Position, Main.players[npc.target].Width, Main.players[npc.target].Height))
                                                                                         {
                                                                                             npc.ai[0] = 200f;
                                                                                             int num178 = 10;
@@ -8080,7 +8085,7 @@ namespace Terraria_Server
                                                                                             int num182 = (int)(npc.Position.X + (float)(npc.Width / 2)) / 16;
                                                                                             int num183 = (int)(npc.Position.X + (float)npc.Width) / 16;
                                                                                             int num184 = (int)(npc.Position.Y + (float)npc.Height) / 16;
-                                                                                            bool flag18 = false;
+                                                                                            bool flag19 = false;
                                                                                             
                                                                                             if ((Main.tile.At(num181, num184).Active && Main.tileSolid[
                                                                                                 (int)Main.tile.At(num181, num184).Type]) ||
@@ -8089,9 +8094,9 @@ namespace Terraria_Server
                                                                                                             (Main.tile.At(num183, num184).Active && Main.tileSolid[
                                                                                                                 (int)Main.tile.At(num183, num184).Type]))
                                                                                             {
-                                                                                                flag18 = true;
+                                                                                                flag19 = true;
                                                                                             }
-                                                                                            if (flag18)
+                                                                                            if (flag19)
                                                                                             {
                                                                                                 npc.noGravity = true;
                                                                                                 npc.noTileCollide = true;
