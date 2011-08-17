@@ -4991,6 +4991,18 @@ namespace Terraria_Server
 				msg.SendTileConfirm (fromX, fromY, toX, toY);
 			}
 			
+			// kill players' hooks and vines
+			foreach (var proj in Main.projectile)
+			{
+				if (proj.Active && proj.Owner == whoAmi
+					&& (proj.type == ProjectileType.HOOK || proj.type == ProjectileType.WHIP_IVY))
+				{
+					proj.Active = false;
+					proj.type = ProjectileType.UNKNOWN;
+					msg.Projectile (proj);
+				}
+			}
+			
 			if (changeSpawn)
 			{
 				// invalidate player's bed temporarily
