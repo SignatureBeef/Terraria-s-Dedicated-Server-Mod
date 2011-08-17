@@ -152,8 +152,8 @@ namespace Terraria_Server
         //private static int tileTargetY = 0;
 		private static int jumpHeight = 15;
 		private static float jumpSpeed = 5.01f;
-//		public bool[] adjTile = new bool[106];
-//		public bool[] oldAdjTile = new bool[106];
+//		public bool[] adjTile = new bool[107];
+//		public bool[] oldAdjTile = new bool[107];
 		private static int itemGrabRange = 38;
 		private static float itemGrabSpeed = 0.45f;
 		private static float itemGrabSpeedMax = 4f;
@@ -1271,6 +1271,10 @@ namespace Terraria_Server
 								this.statMana = this.statManaMax2;
 							}
 						}
+						if (this.manaRegenCount < 0)
+						{
+							this.manaRegenCount = 0;
+						}
 						num4 *= this.moveSpeed;
 						num3 *= this.moveSpeed;
 						if (this.jumpBoost)
@@ -2223,7 +2227,7 @@ namespace Terraria_Server
             }
 		}
 		
-        public bool SellItem(int price)
+        public bool SellItem(int price, int stack)
 		{
 			if (price <= 0)
 			{
@@ -2236,6 +2240,7 @@ namespace Terraria_Server
 				array[i] = (Item)this.inventory[i].Clone();
 			}
 			int j = price / 5;
+			j *= stack;
 			if (j < 1)
 			{
 				j = 1;
@@ -2629,7 +2634,7 @@ namespace Terraria_Server
 //		{
 //			int num = 4;
 //			int num2 = 3;
-//			for (int i = 0; i < 80; i++)
+//			for (int i = 0; i < 107; i++)
 //			{
 //				this.oldAdjTile[i] = this.adjTile[i];
 //				this.adjTile[i] = false;
