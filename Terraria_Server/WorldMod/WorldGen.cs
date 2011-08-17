@@ -6684,6 +6684,16 @@ namespace Terraria_Server.WorldMod
 			{
 				return;
 			}
+			for (int i = x - 1; i < x + 1; i++)
+			{
+				for (int j = y - 1; j < y + 1; j++)
+				{
+					if (Main.tile.At(i, j).Active && Main.tile.At(i, j).Type == 31)
+					{
+						return;
+					}
+				}
+			}
 			Main.tile.At(x - 1, y - 1).SetActive(true);
 			Main.tile.At(x - 1, y - 1).SetType(31);
 			Main.tile.At(x - 1, y - 1).SetFrameX(0);

@@ -2800,9 +2800,23 @@ namespace Terraria_Server.WorldMod
 					}
 				}
 			}
-			if (!Main.tile.At(num + 1, num2 - 1).Active || !Main.tileSolid[(int)Main.tile.At(num + 1, num2 - 1).Type] || Main.tileSolidTop[(int)Main.tile.At(num + 1, num2 - 1).Type])
+			if (type == 106)
 			{
-				flag = true;
+				for (int m = num; m < num + 3; m++)
+				{
+					if (!Main.tile.At(m, num2 + 3).Active || !Main.tileSolid[(int)Main.tile.At(m, num2 + 3).Type])
+					{
+						flag = true;
+						break;
+					}
+				}
+			}
+			else
+			{
+				if (!Main.tile.At(num + 1, num2 - 1).Active || !Main.tileSolid[(int)Main.tile.At(num + 1, num2 - 1).Type] || Main.tileSolidTop[(int)Main.tile.At(num + 1, num2 - 1).Type])
+				{
+					flag = true;
+				}
 			}
 			if (flag)
 			{
@@ -2829,6 +2843,13 @@ namespace Terraria_Server.WorldMod
 				{
 					Item.NewItem(i * 16, j * 16, 32, 32, 108, 1, false);
 				}
+				else
+				{
+					if (type == 106)
+					{
+						Item.NewItem(i * 16, j * 16, 32, 32, 363, 1, false);
+					}
+				}
 				WorldModify.destroyObject = false;
 				for (int num3 = num - 1; num3 < num + 4; num3++)
 				{
@@ -2843,58 +2864,84 @@ namespace Terraria_Server.WorldMod
 		public static void Place3x3(int x, int y, int type)
 		{
 			bool flag = true;
-			for (int i = x - 1; i < x + 2; i++)
+			int num = 0;
+			if (type == 106)
 			{
-				for (int j = y; j < y + 3; j++)
+				num = -2;
+				for (int i = x - 1; i < x + 2; i++)
 				{
-					if (Main.tile.At(i, j).Active)
+					for (int j = y - 2; j < y + 1; j++)
+					{
+						if (Main.tile.At(i, j).Active)
+						{
+							flag = false;
+						}
+					}
+				}
+				for (int k = x - 1; k < x + 2; k++)
+				{
+					if (!Main.tile.At(k, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(k, y + 1).Type])
 					{
 						flag = false;
+						break;
 					}
 				}
 			}
-			if (!Main.tile.At(x, y - 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y - 1).Type] || Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type])
+			else
 			{
-				flag = false;
+				for (int l = x - 1; l < x + 2; l++)
+				{
+					for (int m = y; m < y + 3; m++)
+					{
+						if (Main.tile.At(l, m).Active)
+						{
+							flag = false;
+						}
+					}
+				}
+				if (!Main.tile.At(x, y - 1).Active || !Main.tileSolid[(int)Main.tile.At(x, y - 1).Type] || Main.tileSolidTop[(int)Main.tile.At(x, y - 1).Type])
+				{
+					flag = false;
+				}
 			}
 			if (flag)
 			{
-				Main.tile.At(x - 1, y).SetActive (true);
-				Main.tile.At(x - 1, y).SetFrameY (0);
-				Main.tile.At(x - 1, y).SetFrameX (0);
-				Main.tile.At(x - 1, y).SetType ((byte)type);
-				Main.tile.At(x, y).SetActive (true);
-				Main.tile.At(x, y).SetFrameY (0);
-				Main.tile.At(x, y).SetFrameX (18);
-				Main.tile.At(x, y).SetType ((byte)type);
-				Main.tile.At(x + 1, y).SetActive (true);
-				Main.tile.At(x + 1, y).SetFrameY (0);
-				Main.tile.At(x + 1, y).SetFrameX (36);
-				Main.tile.At(x + 1, y).SetType ((byte)type);
-				Main.tile.At(x - 1, y + 1).SetActive (true);
-				Main.tile.At(x - 1, y + 1).SetFrameY (18);
-				Main.tile.At(x - 1, y + 1).SetFrameX (0);
-				Main.tile.At(x - 1, y + 1).SetType ((byte)type);
-				Main.tile.At(x, y + 1).SetActive (true);
-				Main.tile.At(x, y + 1).SetFrameY (18);
-				Main.tile.At(x, y + 1).SetFrameX (18);
-				Main.tile.At(x, y + 1).SetType ((byte)type);
-				Main.tile.At(x + 1, y + 1).SetActive (true);
-				Main.tile.At(x + 1, y + 1).SetFrameY (18);
-				Main.tile.At(x + 1, y + 1).SetFrameX (36);
-				Main.tile.At(x + 1, y + 1).SetType ((byte)type);
-				Main.tile.At(x - 1, y + 2).SetActive (true);
-				Main.tile.At(x - 1, y + 2).SetFrameY (36);
-				Main.tile.At(x - 1, y + 2).SetFrameX (0);
-				Main.tile.At(x - 1, y + 2).SetType ((byte)type);
-				Main.tile.At(x, y + 2).SetActive (true);
-				Main.tile.At(x, y + 2).SetFrameY (36);
-				Main.tile.At(x, y + 2).SetFrameX (18);
-				Main.tile.At(x, y + 2).SetType ((byte)type);
-				Main.tile.At(x + 1, y + 2).SetActive (true);
-				Main.tile.At(x + 1, y + 2).SetFrameY (36);
-				Main.tile.At(x + 1, y + 2).SetFrameX (36);
-				Main.tile.At(x + 1, y + 2).SetType ((byte)type);
+				Main.tile.At(x - 1, y + num).SetActive (true);
+				Main.tile.At(x - 1, y + num).SetFrameY(0);
+				Main.tile.At(x - 1, y + num).SetFrameX(0);
+				Main.tile.At(x - 1, y + num).SetType((byte)type);
+				Main.tile.At(x, y + num).SetActive(true);
+				Main.tile.At(x, y + num).SetFrameY(0);
+				Main.tile.At(x, y + num).SetFrameX(18);
+				Main.tile.At(x, y + num).SetType((byte)type);
+				Main.tile.At(x + 1, y + num).SetActive(true);
+				Main.tile.At(x + 1, y + num).SetFrameY(0);
+				Main.tile.At(x + 1, y + num).SetFrameX(36);
+				Main.tile.At(x + 1, y + num).SetType((byte)type);
+				Main.tile.At(x - 1, y + 1 + num).SetActive(true);
+				Main.tile.At(x - 1, y + 1 + num).SetFrameY(18);
+				Main.tile.At(x - 1, y + 1 + num).SetFrameX(0);
+				Main.tile.At(x - 1, y + 1 + num).SetType((byte)type);
+				Main.tile.At(x, y + 1 + num).SetActive(true);
+				Main.tile.At(x, y + 1 + num).SetFrameY(18);
+				Main.tile.At(x, y + 1 + num).SetFrameX(18);
+				Main.tile.At(x, y + 1 + num).SetType((byte)type);
+				Main.tile.At(x + 1, y + 1 + num).SetActive(true);
+				Main.tile.At(x + 1, y + 1 + num).SetFrameY(18);
+				Main.tile.At(x + 1, y + 1 + num).SetFrameX(36);
+				Main.tile.At(x + 1, y + 1 + num).SetType((byte)type);
+				Main.tile.At(x - 1, y + 2 + num).SetActive(true);
+				Main.tile.At(x - 1, y + 2 + num).SetFrameY(36);
+				Main.tile.At(x - 1, y + 2 + num).SetFrameX(0);
+				Main.tile.At(x - 1, y + 2 + num).SetType((byte)type);
+				Main.tile.At(x, y + 2 + num).SetActive(true);
+				Main.tile.At(x, y + 2 + num).SetFrameY(36);
+				Main.tile.At(x, y + 2 + num).SetFrameX(18);
+				Main.tile.At(x, y + 2 + num).SetType((byte)type);
+				Main.tile.At(x + 1, y + 2 + num).SetActive(true);
+				Main.tile.At(x + 1, y + 2 + num).SetFrameY(36);
+				Main.tile.At(x + 1, y + 2 + num).SetFrameX(36);
+				Main.tile.At(x + 1, y + 2 + num).SetType((byte)type);
 			}
 		}
 
@@ -4461,7 +4508,7 @@ namespace Terraria_Server.WorldMod
 							WorldModify.SquareTileFrame(i, j, true);
 						}
 					}
-					else if (type == 34 || type == 35 || type == 36)
+					else if (type == 34 || type == 35 || type == 36 || type == 106)
 					{
 						WorldModify.Place3x3(i, j, type);
 						WorldModify.SquareTileFrame(i, j, true);
@@ -4655,7 +4702,7 @@ namespace Terraria_Server.WorldMod
 					}
 					if (Main.tile.At(i, j).Wall == 20)
 					{
-						num2 = 173;
+						num2 = 330;
 					}
 					if (num2 > 0)
 					{
@@ -5688,7 +5735,15 @@ namespace Terraria_Server.WorldMod
 					{
 						if (Main.tile.At(k, l).Wall > 0 && (int)Main.tile.At(k, l).Wall != type)
 						{
-							return;
+							bool flag = false;
+							if (Main.tile.At(i, j).Wall == 0 && (type == 2 || type == 16) && (Main.tile.At(k, l).Wall == 2 || Main.tile.At(k, l).Wall == 16))
+							{
+								flag = true;
+							}
+							if (!flag)
+							{
+								return;
+							}
 						}
 					}
 				}
@@ -6066,6 +6121,38 @@ namespace Terraria_Server.WorldMod
 						num4 = wall;
 						num5 = wall;
 					}
+				}
+				if (num7 > 0)
+				{
+					num7 = wall;
+				}
+				if (num6 > 0)
+				{
+					num6 = wall;
+				}
+				if (num8 > 0)
+				{
+					num8 = wall;
+				}
+				if (num2 > 0)
+				{
+					num2 = wall;
+				}
+				if (num > 0)
+				{
+					num = wall;
+				}
+				if (num3 > 0)
+				{
+					num3 = wall;
+				}
+				if (num4 > 0)
+				{
+					num4 = wall;
+				}
+				if (num5 > 0)
+				{
+					num5 = wall;
 				}
 				int num9 = 0;
 				if (resetFrame)
@@ -6645,88 +6732,91 @@ namespace Terraria_Server.WorldMod
                                         {
                                             WorldModify.KillTile(num10 + 1, num11 + 1, false, false, false);
                                         }
-                                        if (num9 == 12)
-                                            {
-                                                Item.NewItem(num10 * 16, num11 * 16, 32, 32, 29, 1, false);
-                                            }
-                                            else
-                                            {
-                                                if (num9 == 31)
-                                                {
-                                                    if (WorldModify.genRand.Next(2) == 0)
-                                                    {
-                                                        WorldModify.spawnMeteor = true;
-                                                    }
-                                                    int num12 = Main.rand.Next(5);
-                                                    if (!WorldModify.shadowOrbSmashed)
-                                                    {
-                                                        num12 = 0;
-                                                    }
-                                                    if (num12 == 0)
-                                                    {
-                                                        Item.NewItem(num10 * 16, num11 * 16, 32, 32, 96, 1, false);
-                                                        int stack = WorldModify.genRand.Next(25, 51);
-                                                        Item.NewItem(num10 * 16, num11 * 16, 32, 32, 97, stack, false);
-                                                    }
-                                                    else
-                                                    {
-                                                        if (num12 == 1)
-                                                        {
-                                                            Item.NewItem(num10 * 16, num11 * 16, 32, 32, 64, 1, false);
-                                                        }
-                                                        else
-                                                        {
-                                                            if (num12 == 2)
-                                                            {
-                                                                Item.NewItem(num10 * 16, num11 * 16, 32, 32, 162, 1, false);
-                                                            }
-                                                            else
-                                                            {
-                                                                if (num12 == 3)
-                                                                {
-                                                                    Item.NewItem(num10 * 16, num11 * 16, 32, 32, 115, 1, false);
-                                                                }
-                                                                else
-                                                                {
-                                                                    if (num12 == 4)
-                                                                    {
-                                                                        Item.NewItem(num10 * 16, num11 * 16, 32, 32, 111, 1, false);
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    WorldModify.shadowOrbSmashed = true;
-                                                    WorldModify.shadowOrbCount++;
-                                                    if (WorldModify.shadowOrbCount >= 3)
-                                                    {
-                                                        WorldModify.shadowOrbCount = 0;
-                                                        float num13 = (float)(num10 * 16);
-                                                        float num14 = (float)(num11 * 16);
-                                                        float num15 = -1f;
-                                                        int plr = 0;
-                                                        for (int k = 0; k < 255; k++)
-                                                        {
-                                                            float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
-                                                            if (num16 < num15 || num15 == -1f)
-                                                            {
-                                                                plr = 0;
-                                                                num15 = num16;
-                                                            }
-                                                        }
-                                                        NPC.SpawnOnPlayer(Main.players[plr], plr, 13); //Check me
-                                                    }
-                                                    else
-                                                    {
-                                                        string text = "A horrible chill goes down your spine...";
-                                                        if (WorldModify.shadowOrbCount == 2)
-                                                        {
-                                                            text = "Screams echo around you...";
-                                                        }
-                                                        NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f, 0);
-                                                    }
-                                                }
-                                            }
+										if (!WorldGen.noTileActions)
+										{
+											if (num9 == 12)
+											{
+												Item.NewItem(num10 * 16, num11 * 16, 32, 32, 29, 1, false);
+											}
+											else
+											{
+												if (num9 == 31)
+												{
+													if (WorldModify.genRand.Next(2) == 0)
+													{
+														WorldModify.spawnMeteor = true;
+													}
+													int num12 = Main.rand.Next(5);
+													if (!WorldModify.shadowOrbSmashed)
+													{
+														num12 = 0;
+													}
+													if (num12 == 0)
+													{
+														Item.NewItem(num10 * 16, num11 * 16, 32, 32, 96, 1, false);
+														int stack = WorldModify.genRand.Next(25, 51);
+														Item.NewItem(num10 * 16, num11 * 16, 32, 32, 97, stack, false);
+													}
+													else
+													{
+														if (num12 == 1)
+														{
+															Item.NewItem(num10 * 16, num11 * 16, 32, 32, 64, 1, false);
+														}
+														else
+														{
+															if (num12 == 2)
+															{
+																Item.NewItem(num10 * 16, num11 * 16, 32, 32, 162, 1, false);
+															}
+															else
+															{
+																if (num12 == 3)
+																{
+																	Item.NewItem(num10 * 16, num11 * 16, 32, 32, 115, 1, false);
+																}
+																else
+																{
+																	if (num12 == 4)
+																	{
+																		Item.NewItem(num10 * 16, num11 * 16, 32, 32, 111, 1, false);
+																	}
+																}
+															}
+														}
+													}
+													WorldModify.shadowOrbSmashed = true;
+													WorldModify.shadowOrbCount++;
+													if (WorldModify.shadowOrbCount >= 3)
+													{
+														WorldModify.shadowOrbCount = 0;
+														float num13 = (float)(num10 * 16);
+														float num14 = (float)(num11 * 16);
+														float num15 = -1f;
+														int plr = 0;
+														for (int k = 0; k < 255; k++)
+														{
+															float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
+															if (num16 < num15 || num15 == -1f)
+															{
+																plr = 0;
+																num15 = num16;
+															}
+														}
+														NPC.SpawnOnPlayer(Main.players[plr], plr, 13); //Check me
+													}
+													else
+													{
+														string text = "A horrible chill goes down your spine...";
+														if (WorldModify.shadowOrbCount == 2)
+														{
+															text = "Screams echo around you...";
+														}
+														NetMessage.SendData(25, -1, -1, text, 255, 50f, 255f, 130f, 0);
+													}
+												}
+											}
+										}
                                         WorldModify.destroyObject = false;
                                     }
                                 }
@@ -7043,7 +7133,7 @@ namespace Terraria_Server.WorldMod
                                     }
                                     return;
                                 }
-                                if (num9 == 34 || num9 == 35 || num9 == 36)
+								if (num9 == 34 || num9 == 35 || num9 == 36 || num9 == 106)
                                 {
                                     WorldModify.Check3x3(i, j, (int)((byte)num9));
                                     return;

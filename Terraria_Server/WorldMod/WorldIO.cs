@@ -252,6 +252,10 @@ namespace Terraria_Server.WorldMod
 									binaryWriter.Write(chest.y);
 									for (int l = 0; l < Chest.MAX_ITEMS; l++)
 									{
+										if (chest.contents[l].Type == 0)
+										{
+											chest.contents[l].Stack = 0;
+										}
 										binaryWriter.Write((byte)chest.contents[l].Stack);
 										if (chest.contents[l].Stack > 0)
 										{
