@@ -469,7 +469,7 @@
 		<Consumable>true</Consumable>
 		<CreateTile>18</CreateTile>
 		<MaxStack>99</MaxStack>
-		<ToolTip>Used for crafting</ToolTip>
+		<ToolTip>Used for basic crafting</ToolTip>
 		<UseAnimation>15</UseAnimation>
 		<UseStyle>1</UseStyle>
 		<UseTime>10</UseTime>
@@ -934,7 +934,7 @@
 		<Type>71</Type>
 		<Width>10</Width>
 		<MaxStack>100</MaxStack>
-		<Value>4</Value>
+		<Value>5</Value>
 	</Item>
 	<Item>
 		<Name>Silver Coin</Name>
@@ -942,7 +942,7 @@
 		<Type>72</Type>
 		<Width>10</Width>
 		<MaxStack>100</MaxStack>
-		<Value>400</Value>
+		<Value>500</Value>
 	</Item>
 	<Item>
 		<Name>Gold Coin</Name>
@@ -950,7 +950,7 @@
 		<Type>73</Type>
 		<Width>10</Width>
 		<MaxStack>100</MaxStack>
-		<Value>40000</Value>
+		<Value>50000</Value>
 	</Item>
 	<Item>
 		<Name>Platinum Coin</Name>
@@ -958,7 +958,7 @@
 		<Type>74</Type>
 		<Width>10</Width>
 		<MaxStack>100</MaxStack>
-		<Value>4000000</Value>
+		<Value>5000000</Value>
 	</Item>
 	<Item>
 		<Name>Fallen Star</Name>
@@ -1407,7 +1407,7 @@
 		<Type>110</Type>
 		<Width>14</Width>
 		<Consumable>true</Consumable>
-		<HealMana>100</HealMana>
+		<HealMana>50</HealMana>
 		<MaxStack>30</MaxStack>
 		<UseAnimation>17</UseAnimation>
 		<UseStyle>2</UseStyle>
@@ -2502,7 +2502,7 @@
 		<Type>189</Type>
 		<Width>14</Width>
 		<Consumable>true</Consumable>
-		<HealMana>200</HealMana>
+		<HealMana>100</HealMana>
 		<MaxStack>30</MaxStack>
 		<Rare>1</Rare>
 		<UseAnimation>17</UseAnimation>
@@ -3003,8 +3003,8 @@
 		<Type>226</Type>
 		<Width>14</Width>
 		<Consumable>true</Consumable>
-		<HealLife>100</HealLife>
-		<HealMana>100</HealMana>
+		<HealLife>50</HealLife>
+		<HealMana>50</HealMana>
 		<MaxStack>20</MaxStack>
 		<Potion>true</Potion>
 		<UseAnimation>17</UseAnimation>
@@ -3019,8 +3019,8 @@
 		<Type>227</Type>
 		<Width>14</Width>
 		<Consumable>true</Consumable>
-		<HealLife>200</HealLife>
-		<HealMana>200</HealMana>
+		<HealLife>100</HealLife>
+		<HealMana>100</HealMana>
 		<MaxStack>20</MaxStack>
 		<Potion>true</Potion>
 		<UseAnimation>17</UseAnimation>
@@ -4743,5 +4743,21 @@
 		<Width>28</Width>
 		<MaxStack>99</MaxStack>
 		<Value>30</Value>
+	</Item>
+	<Item>
+		<Name>Sawmill</Name>
+		<Height>20</Height>
+		<Type>363</Type>
+		<Width>20</Width>
+		<Consumable>true</Consumable>
+		<ToolTip>Used for advanced wood crafting</ToolTip>
+		<UseAnimation>15</UseAnimation>
+		<UseStyle>1</UseStyle>
+		<UseTime>10</UseTime>
+		<UseTurn>true</UseTurn>
+		<AutoReuse>true</AutoReuse>
+		<MaxStack>99</MaxStack>
+		<CreateTile>106</CreateTile>
+		<Value>300</Value>
 	</Item>
 </ArrayOfItem>
