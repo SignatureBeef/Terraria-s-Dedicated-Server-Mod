@@ -1148,7 +1148,11 @@ namespace Terraria_Server
                             float num8 = (float)Math.Sqrt((double)(num6 * num6 + num7 * num7));
                             num8 = num4 / num8;
                             num6 *= num8;
-                            num7 *= num8;
+							num7 *= num8;
+							if (num8 > 3000f)
+							{
+								this.Kill();
+							}
                             if (this.Velocity.X < num6)
                             {
                                 this.Velocity.X = this.Velocity.X + num5;

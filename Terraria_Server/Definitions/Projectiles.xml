@@ -225,6 +225,7 @@
     <penetrate>-1</penetrate>
     <light>0.65</light>
     <ignoreWater>true</ignoreWater>
+	<scale>0.8</scale>
   </Projectile>
   <Projectile>
     <Name>Flamarang</Name>
