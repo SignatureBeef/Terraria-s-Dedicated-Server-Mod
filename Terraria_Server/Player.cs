@@ -4994,6 +4994,8 @@ namespace Terraria_Server
 				}
 				
 				msg.SendTileConfirm (fromX, fromY, toX, toY);
+				msg.Send (whoAmi);
+				msg.Clear ();
 			}
 			
 			// kill players' hooks and vines
@@ -5007,6 +5009,8 @@ namespace Terraria_Server
 					msg.Projectile (proj);
 				}
 			}
+			msg.Broadcast ();
+			msg.Clear ();
 			
 			if (changeSpawn)
 			{
