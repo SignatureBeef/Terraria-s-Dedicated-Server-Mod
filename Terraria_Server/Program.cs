@@ -14,7 +14,7 @@ namespace Terraria_Server
 {
 	public class Program
 	{
-		public const String VERSION_NUMBER = "v1.0.6";
+		public const String VERSION_NUMBER = "v1.0.6.1";
 
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;

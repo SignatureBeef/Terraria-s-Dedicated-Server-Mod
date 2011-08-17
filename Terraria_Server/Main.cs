@@ -20,7 +20,7 @@ namespace Terraria_Server
         //public static bool npcChatRelease = false;
         //public static bool npcChatFocus1 = false;
         //public static bool npcChatFocus2 = false;
-        public const int MAX_TILE_SETS = 106;
+        public const int MAX_TILE_SETS = 107;
         public const int MAX_WALL_SETS = 21;
         
         public static Item trashItem { get; set; }
@@ -28,7 +28,7 @@ namespace Terraria_Server
         public const int maxItemText = 100;
         public const int MAX_PLAYERS = 255;
         public const int maxChests = 1000;
-        public const int maxItemTypes = 363;
+        public const int maxItemTypes = 364;
         public const int maxProjectileTypes = 55;
         public const int maxProjectiles = 1000;
         public const int maxNPCTypes = 74;
@@ -269,14 +269,14 @@ namespace Terraria_Server
 
             foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 21, 24, 26, 27, 28, 29, 
                 31, 33, 34, 35, 36, 42, 50, 55, 61, 71, 72, 73, 74, 77, 78, 79, 81, 82, 83, 84, 85, 86, 87, 88,
-                89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105 })
+                89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106 })
             {
                 Main.tileFrameImportant[i] = true;
             }
 
             foreach (int i in new int[] { 3, 5, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 27, 28, 29, 32, 33,
                 34, 35, 36, 42, 49, 50, 52, 55, 61, 62, 69, 71, 72, 73, 74, 79, 80, 81, 86, 87, 88, 89, 91, 92,
-                93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105 })
+                93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106 })
             {
                 Main.tileLavaDeath[i] = true;
             }
