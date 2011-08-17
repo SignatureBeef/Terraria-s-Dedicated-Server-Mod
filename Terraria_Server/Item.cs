@@ -408,25 +408,25 @@ namespace Terraria_Server
 			{
 				return;
 			}
-			int playerIndex = this.Owner;
+			int currentOwner = this.Owner;
 			this.Owner = 255;
-			float num2 = -1f;
+			float leastDistance = -1f;
 			int count = 0;
 			foreach (Player player in Main.players)
 			{
 				if (this.OwnIgnore != count && player.Active && player.ItemSpace(Main.item[whoAmI]))
 				{
-					float num3 = Math.Abs(player.Position.X + (float)(player.Width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(player.Position.Y + (float)(player.Height / 2) - this.Position.Y - (float)this.Height);
-					if (num3 < (float)(Main.screenWidth / 2 + Main.screenHeight / 2) && (num2 == -1f || num3 < num2))
+					float distance = Math.Abs(player.Position.X + (float)(player.Width / 2) - this.Position.X - (float)(this.Width / 2)) + Math.Abs(player.Position.Y + (float)(player.Height / 2) - this.Position.Y - (float)this.Height);
+					if (distance < (float)(Main.screenWidth / 2 + Main.screenHeight / 2) && (leastDistance == -1f || distance < leastDistance))
 					{
-						num2 = num3;
+						leastDistance = distance;
 						this.Owner = count;
 					}
 				}
 				count++;
 			}
 
-			if (this.Owner != playerIndex && ((playerIndex == 255) || !Main.players[playerIndex].Active))
+			if (this.Owner != currentOwner && ((currentOwner == 255) || !Main.players[currentOwner].Active))
 			{
 				NetMessage.SendData(21, -1, -1, "", whoAmI);
 				if (this.Active)
