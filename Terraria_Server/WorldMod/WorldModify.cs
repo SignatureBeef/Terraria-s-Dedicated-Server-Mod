@@ -6732,7 +6732,7 @@ namespace Terraria_Server.WorldMod
                                         {
                                             WorldModify.KillTile(num10 + 1, num11 + 1, false, false, false);
                                         }
-										if (!WorldGen.noTileActions)
+										if (!WorldModify.noTileActions)
 										{
 											if (num9 == 12)
 											{

@@ -4058,7 +4058,7 @@ namespace Terraria_Server
             else
             {
 				bool flag = false;
-				if (!Main.dayTime || this.life != this.lifeMax || (double)this.position.Y > Main.worldSurface * 16.0)
+				if (!Main.dayTime || this.life != this.lifeMax || (double)this.Position.Y > Main.worldSurface * 16.0)
 				{
 					flag = true;
 				}
