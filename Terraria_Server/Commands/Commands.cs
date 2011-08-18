@@ -710,32 +710,81 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Teleport(Server server, ISender sender, ArgumentList args)
 		{
-			// /tp <player> <toplayer>
-			if (args.Count > 1 && args[0] != null && args[1] != null && args[0].Trim().Length > 0 && args[1].Trim().Length > 0)
+			Player subject;
+			Player target;
+			
+			if (! args.TryPopOne (out subject))
 			{
-				Player player = Program.server.GetPlayerByName(args[0].Trim());
-				Player toplayer = Program.server.GetPlayerByName(args[1].Trim());
-
-				if (player == null || toplayer == null)
+				subject = sender as Player;
+				if (subject == null)
 				{
-					sender.sendMessage("Could not find a Player on the Server");
+					sender.sendMessage ("Need specify who to teleport.");
+					return;
+				}
+				
+				if (args.Count == 0)
+				{
+					subject.teleportTo (Main.spawnTileX, Main.spawnTileY);
+					
+					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to spawn."), true);
+					return;
+				}
+			}
+			else if (args.Count == 0)
+			{
+				target = subject;
+				
+				subject = sender as Player;
+				if (subject == null)
+				{
+					sender.sendMessage ("Need specify who to teleport.");
 					return;
 				}
 
-				player.teleportTo(toplayer);
+				subject.teleportTo (target);
 
-				Program.server.notifyOps("Teleported " + player.Name + " to " +
-					toplayer.Name + " {" + sender.Name + "}", true);
-
+				Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+					target.Name, ". {", sender.Name, "}"), true);
 				return;
 			}
-			else
+			
+			int x;
+			int y;
+			
+			if (args.Count == 1)
 			{
-				goto ERROR;
+				if (args.TryParseOne (out target))
+				{
+					subject.teleportTo (target);
+	
+					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+						target.Name, ". {", sender.Name, "}"), true);
+				}
+				else
+					sender.sendMessage ("Target player not found.");
+				return;
 			}
+			else if (args.Count == 2)
+			{
+				if (args.TryParseTwo (out x, out y))
+				{
+					if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
+					{
+						sender.sendMessage (string.Format ("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX, Main.maxTilesY));
+						return;
+					}
+					
+					subject.teleportTo (x, y);
 
-		ERROR:
-			sender.sendMessage("Command Error!");
+					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+						x, ":", y, ". {", sender.Name, "}"), true);
+				}
+				else
+					throw new CommandError ("Invalid coordinates.");
+				return;
+			}
+			
+			throw new CommandError ("");
 		}
 
 		/// <summary>

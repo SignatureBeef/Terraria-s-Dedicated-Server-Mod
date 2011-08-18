@@ -216,7 +216,11 @@ namespace Terraria_Server.Commands
             AddCommand("tp")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Teleport a player to another player.")
-                .WithHelpText("Usage:   tp \"<player>\" \"<toplayer>\"")
+                .WithHelpText("Usage:   tp <player> <toplayer> - another player")
+                .WithHelpText("         tp <player> <x> <y>")
+                .WithHelpText("         tp <toplayer>          - yourself")
+                .WithHelpText("         tp <x> <y>")
+                .WithHelpText("         tp                     - yourself to spawn")
                 .Calls(Commands.Teleport);
 
             AddCommand("tphere")
