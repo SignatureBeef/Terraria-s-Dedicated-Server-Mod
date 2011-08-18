@@ -11,6 +11,7 @@ namespace Terraria_Server.Messages
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
+            int player = readBuffer[num++]; //TODO: maybe check for forgery
             byte action = readBuffer[num];
             if (action == 1)
             {
@@ -18,7 +19,7 @@ namespace Terraria_Server.Messages
             }
             else if (action == 2)
             {
-                NetMessage.SendData (51, -1, whoAmI, "", action, (float)readBuffer[num + 1], 0f, 0f, 0);
+                NetMessage.SendData (51, -1, whoAmI, "", player, action, 0f, 0f, 0);
             }
         }
     }
