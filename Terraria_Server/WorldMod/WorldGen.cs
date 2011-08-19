@@ -66,6 +66,9 @@ namespace Terraria_Server.WorldMod
 		public static int dungeonY;
 		public static Vector2 lastDungeonHall = default(Vector2);
 		public static int numDungeons;
+        public static double rockLayer;
+        public static double terrarainMaxY;
+        public static double worldSurface;
 
 		private static void resetGen()
         {
@@ -125,10 +128,10 @@ namespace Terraria_Server.WorldMod
 			TerrainY *= (double)WorldModify.genRand.Next(90, 110) * 0.005;
 			double num4 = TerrainY + (double)Main.maxTilesY * 0.2;
 			num4 *= (double)WorldModify.genRand.Next(90, 110) * 0.01;
-			double terrarainMaxY = TerrainY;
-			double worldSurface = TerrainY;
+			terrarainMaxY = TerrainY;
+			worldSurface = TerrainY;
 			double num7 = num4;
-			double rockLayer = num4;
+			rockLayer = num4;
 			int Direction = 0;
 			if (WorldModify.genRand.Next(2) == 0)
 			{
@@ -284,10 +287,158 @@ namespace Terraria_Server.WorldMod
 			WorldModify.waterLine = (int)(Main.rockLayer + (double)Main.maxTilesY) / 2;
 			WorldModify.waterLine += WorldModify.genRand.Next(-100, 20);
 			WorldModify.lavaLine = WorldModify.waterLine + WorldModify.genRand.Next(50, 80);
-			int outlier = 0;
 
-			int sandLines = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.0007), 
-                (int)((double)Main.maxTilesX * 0.002)) + 2;
+            AddSand(Direction);
+            GenerateHills();
+            PutDirtBehindDirt();
+            PlaceRocksWithinDirt();
+            PlaceDirtWithinRocks(num7);
+            AddClay();
+            MakeRandomHoles();
+            GenerateSmallCaves();
+            GenerateLargeCaves();
+            GenerateSurfaceCaves();
+
+            GenerateJungle(Direction);
+
+            GenerateFloatingIslands();
+
+            AddMushroomPatches();
+
+            PlaceMudInDirt(num7);
+
+            AddShinies(num7);
+
+            AddWebs();
+
+            CreateUnderworld();
+			AddHellHouses();
+
+            AddWaterBodies();
+
+
+			int x = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.05), (int)((double)Main.maxTilesX * 0.2)); //Left?
+			int x2 = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.8), (int)((double)Main.maxTilesX * 0.95)); //Right?
+			int y = 0;
+
+			if (numDungeons >= 2) //Custom Dungeons (0 allowed?)
+			{
+				numDungeons = 2; //Limt dungeons at 2, May not fit?
+			}
+			else //1 dungeon
+			{
+				if (Direction != -1)
+				{
+					x = x2; //X axis = right
+				}
+			}
+
+			for (int dnum = 0; dnum < numDungeons; dnum++)
+			{
+				y = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldModify.genRand.Next(-200, 200); //Generate a custon Y each time
+				if (dnum == 1)
+				{
+					//num9 = direction
+					x = ((x == x2) ? x : x2); //we want the opposite of the original
+				}
+				MakeDungeon(x, y, 41, 7);
+			}
+
+			if (Direction != -1)
+			{
+				Direction = 1;
+			}
+
+            MakeWorldEvil();
+
+            GenerateMountainCaves();
+
+            CreateBeaches(Direction);
+
+            AddGems();
+            GravitateSand();
+
+			CleanUpDirtBackgrounds();
+
+            PlaceAltars();
+
+            SettleLiquids();
+
+            PlaceLifeCrystals();
+            HideTreasure();
+            HideMoreTreasure();
+            HideJungleTreasure();
+            HideWaterTreasure();
+
+            AddIslandHouses();
+
+            PlaceBreakables();
+
+            PlaceHellforges();
+
+            SpreadGrass();
+            GrowCacti();
+
+
+			int num256 = 5;
+			bool flag21 = true;
+			while (flag21)
+			{
+				int num257 = Main.maxTilesX / 2 + WorldModify.genRand.Next(-num256, num256 + 1);
+				for (int num258 = 0; num258 < Main.maxTilesY; num258++)
+				{
+					if (Main.tile.At(num257, num258).Active)
+					{
+						Main.spawnTileX = num257;
+						Main.spawnTileY = num258;
+						Main.tile.At(num257, num258 - 1).SetLighted(true);
+						break;
+					}
+				}
+				flag21 = false;
+				num256++;
+				if ((double)Main.spawnTileY > Main.worldSurface)
+				{
+					flag21 = true;
+				}
+				if (Main.tile.At(Main.spawnTileX, Main.spawnTileY - 1).Liquid > 0)
+				{
+					flag21 = true;
+				}
+			}
+			int num259 = 10;
+			while ((double)Main.spawnTileY > Main.worldSurface)
+			{
+				int num260 = WorldModify.genRand.Next(Main.maxTilesX / 2 - num259, Main.maxTilesX / 2 + num259);
+				for (int num261 = 0; num261 < Main.maxTilesY; num261++)
+				{
+					if (Main.tile.At(num260, num261).Active)
+					{
+						Main.spawnTileX = num260;
+						Main.spawnTileY = num261;
+						Main.tile.At(num260, num261 - 1).SetLighted(true);
+						break;
+					}
+				}
+				num259++;
+			}
+
+
+            PlaceGuide();
+            PlantSunflowers();
+            PlantTrees();
+            PlantHerbs();
+            PlantWeeds();
+            GrowVines();
+            PlantFlowers();
+            PlantMushrooms();
+
+			WorldModify.gen = false;
+		}
+
+        public static void AddSand(int direction)
+        {
+            int sandLines = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.0007), (int)((double)Main.maxTilesX * 0.002)) + 2;
             var someotherCaveGen = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 8E-06);
             using (var sandProg = new ProgressLogger(sandLines + someotherCaveGen, "Adding sand"))
             {
@@ -334,7 +485,7 @@ namespace Terraria_Server.WorldMod
                     {
                         sandBoundaries = 0;
                         SandLength = WorldModify.genRand.Next(260, 300);
-                        if (Direction == 1)
+                        if (direction == 1)
                         {
                             SandLength += 40;
                         }
@@ -343,7 +494,7 @@ namespace Terraria_Server.WorldMod
                     {
                         sandBoundaries = Main.maxTilesX - WorldModify.genRand.Next(260, 300);
                         SandLength = Main.maxTilesX;
-                        if (Direction == -1)
+                        if (direction == -1)
                         {
                             sandBoundaries -= 40;
                         }
@@ -400,9 +551,12 @@ namespace Terraria_Server.WorldMod
                 }
                 numMCaves = 0;
             }
+        }
 
+        public static void GenerateHills()
+        {
             var maxHills = (int)((double)Main.maxTilesX * 0.0008);
-            using(var hillProg = new ProgressLogger(maxHills, "Generating hills"))
+            using (var hillProg = new ProgressLogger(maxHills, "Generating hills"))
             {
                 for (int i = 0; i < maxHills; i++)
                 {
@@ -451,38 +605,47 @@ namespace Terraria_Server.WorldMod
                 }
                 hillProg.Value++;
             }            
+        }
 
-			using (var prog = new ProgressLogger(Main.maxTilesX - 3, "Putting dirt behind dirt"))
-			{
-				for (int posX = 1; posX < Main.maxTilesX - 1; posX++)
-				{
-					prog.Value = posX - 1;
+        public static void PutDirtBehindDirt()
+        {
+            int outlier = 0;
 
-					bool flag3 = false;
-					outlier += WorldModify.genRand.Next(-1, 2);
-					if (outlier < 0)
-					{
-						outlier = 0;
-					}
-					if (outlier > 10)
-					{
-						outlier = 10;
-					}
-					int posY = 0;
-					while ((double)posY < Main.worldSurface + 10.0 && (double)posY <= Main.worldSurface + (double)outlier)
-					{
-						if (flag3)
-						{
-							Main.tile.At(posX, posY).SetWall(2);
-						}
-						if (Main.tile.At(posX, posY).Active && Main.tile.At(posX - 1, posY).Active && Main.tile.At(posX + 1, posY).Active && Main.tile.At(posX, posY + 1).Active && Main.tile.At(posX - 1, posY + 1).Active && Main.tile.At(posX + 1, posY + 1).Active)
-						{
-							flag3 = true;
-						}
-						posY++;
-					}
-				}
-			}
+            using (var prog = new ProgressLogger(Main.maxTilesX - 3, "Putting dirt behind dirt"))
+            {
+                for (int posX = 1; posX < Main.maxTilesX - 1; posX++)
+                {
+                    prog.Value = posX - 1;
+
+                    bool flag3 = false;
+                    outlier += WorldModify.genRand.Next(-1, 2);
+                    if (outlier < 0)
+                    {
+                        outlier = 0;
+                    }
+                    if (outlier > 10)
+                    {
+                        outlier = 10;
+                    }
+                    int posY = 0;
+                    while ((double)posY < Main.worldSurface + 10.0 && (double)posY <= Main.worldSurface + (double)outlier)
+                    {
+                        if (flag3)
+                        {
+                            Main.tile.At(posX, posY).SetWall(2);
+                        }
+                        if (Main.tile.At(posX, posY).Active && Main.tile.At(posX - 1, posY).Active && Main.tile.At(posX + 1, posY).Active && Main.tile.At(posX, posY + 1).Active && Main.tile.At(posX - 1, posY + 1).Active && Main.tile.At(posX + 1, posY + 1).Active)
+                        {
+                            flag3 = true;
+                        }
+                        posY++;
+                    }
+                }
+            }
+        }
+
+        public static void PlaceRocksWithinDirt()
+        {
 
             var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0002);
             var Max2 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0045);
@@ -504,8 +667,11 @@ namespace Terraria_Server.WorldMod
                     rockProg.Value++;
                 }
             }			
+        }
 
-            Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.005);
+        public static void PlaceDirtWithinRocks(double num7)
+        {
+            var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.005);
             using (var dirtProg = new ProgressLogger(Max, "Placing dirt within the rocks"))
             {
                 for (int i = 0; i < Max; i++)
@@ -514,9 +680,12 @@ namespace Terraria_Server.WorldMod
                     dirtProg.Value++;
                 }
             }            
+        }
 
-            Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05);
-            Max2 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 5E-05);
+        public static void AddClay()
+        {
+            var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05);
+            var Max2 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 5E-05);
             var Max3 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05);
             var Max4 = Main.maxTilesX - 5;
             using (var clayProg = new ProgressLogger(Max + Max2 + Max3 + Max4, "Adding clay"))
@@ -556,62 +725,81 @@ namespace Terraria_Server.WorldMod
                     }
                     clayProg.Value++;
                 }
-            }			
+            }		
+        }
 
-			var MaxRandomHoles = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0015);
-			using (var prog = new ProgressLogger(MaxRandomHoles - 1, "Making random holes"))
-				for (int i = 0; i < MaxRandomHoles; i++)
-				{
-					prog.Value = i;
+        public static void MakeRandomHoles()
+        {
+            var MaxRandomHoles = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0015);
 
-					int type = -1;
-					if (WorldModify.genRand.Next(5) == 0)
-					{
-						type = -2;
-					}
-					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, Main.maxTilesY), (double)WorldModify.genRand.Next(2, 5), WorldModify.genRand.Next(2, 20), type, false, 0f, 0f, false, true);
-					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, Main.maxTilesY), (double)WorldModify.genRand.Next(8, 15), WorldModify.genRand.Next(7, 30), type, false, 0f, 0f, false, true);
-				}
+            using (var prog = new ProgressLogger(MaxRandomHoles - 1, "Making random holes"))
+            {
+                for (int i = 0; i < MaxRandomHoles; i++)
+                {
+                    prog.Value = i;
 
-			var MaxSmallHoles = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 3E-05);
-			using (var prog = new ProgressLogger(MaxSmallHoles - 1, "Generating small caves"))
-				for (int i = 0; i < MaxSmallHoles; i++)
-				{
-					prog.Value = i;
+                    int type = -1;
+                    if (WorldModify.genRand.Next(5) == 0)
+                    {
+                        type = -2;
+                    }
+                    TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, Main.maxTilesY), (double)WorldModify.genRand.Next(2, 5), WorldModify.genRand.Next(2, 20), type, false, 0f, 0f, false, true);
+                    TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, Main.maxTilesY), (double)WorldModify.genRand.Next(8, 15), WorldModify.genRand.Next(7, 30), type, false, 0f, 0f, false, true);
+                }
+            }
+        }
 
-					if (rockLayer <= (double)Main.maxTilesY)
-					{
-						int type2 = -1;
-						if (WorldModify.genRand.Next(6) == 0)
-						{
-							type2 = -2;
-						}
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)terrarainMaxY, (int)rockLayer + 1), (double)WorldModify.genRand.Next(5, 15), WorldModify.genRand.Next(30, 200), type2, false, 0f, 0f, false, true);
-					}
-				}
+        public static void GenerateSmallCaves()
+        {
+            var MaxSmallHoles = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 3E-05);
+            using (var prog = new ProgressLogger(MaxSmallHoles - 1, "Generating small caves"))
+            {
+                for (int i = 0; i < MaxSmallHoles; i++)
+                {
+                    prog.Value = i;
 
-			var MaxLargeCaves = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.00015);
-			using (var prog = new ProgressLogger(MaxLargeCaves - 1, "Generating large caves"))
-				for (int i = 0; i < MaxLargeCaves; i++)
-				{
-					prog.Value = i;
+                    if (rockLayer <= (double)Main.maxTilesY)
+                    {
+                        int type2 = -1;
+                        if (WorldModify.genRand.Next(6) == 0)
+                        {
+                            type2 = -2;
+                        }
+                        TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)terrarainMaxY, (int)rockLayer + 1), (double)WorldModify.genRand.Next(5, 15), WorldModify.genRand.Next(30, 200), type2, false, 0f, 0f, false, true);
+                    }
+                }
+            }
+        }
 
-					if (rockLayer <= (double)Main.maxTilesY)
-					{
+        public static void GenerateLargeCaves()
+        {
+            var MaxLargeCaves = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.00015);
+            using (var prog = new ProgressLogger(MaxLargeCaves - 1, "Generating large caves"))
+            {
+                for (int i = 0; i < MaxLargeCaves; i++)
+                {
+                    prog.Value = i;
+
+                    if (rockLayer <= (double)Main.maxTilesY)
+                    {
                         //Potential cave type definition
-						int type3 = -1;
-						if (WorldModify.genRand.Next(10) == 0)
-						{
-							type3 = -2;
-						}
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)rockLayer, Main.maxTilesY), (double)WorldModify.genRand.Next(6, 20), WorldModify.genRand.Next(50, 300), type3, false, 0f, 0f, false, true);
-					}
-				}
+                        int type3 = -1;
+                        if (WorldModify.genRand.Next(10) == 0)
+                        {
+                            type3 = -2;
+                        }
+                        TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)rockLayer, Main.maxTilesY), (double)WorldModify.genRand.Next(6, 20), WorldModify.genRand.Next(50, 300), type3, false, 0f, 0f, false, true);
+                    }
+                }
+            }
+        }
 
-            Max = (int)((double)Main.maxTilesX * 0.0025);
-            Max2 = (int)((double)Main.maxTilesX * 0.0007);
-            Max3 = (int)((double)Main.maxTilesX * 0.0003);
-            Max4 = (int)((double)Main.maxTilesX * 0.0004);
+        public static void GenerateSurfaceCaves()
+        {
+            var Max = (int)((double)Main.maxTilesX * 0.0025);
+            var Max2 = (int)((double)Main.maxTilesX * 0.0007);
+            var Max3 = (int)((double)Main.maxTilesX * 0.0003);
+            var Max4 = (int)((double)Main.maxTilesX * 0.0004);
             var Max5 = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002);
             using (var surfaceCaveProg = new ProgressLogger(Max + Max2 + Max3 + Max4 + Max5, "Generating surface caves"))
             {
@@ -704,14 +892,17 @@ namespace Terraria_Server.WorldMod
                 }
                 surfaceCaveProg.Value++;
             }
+        }
 
-			using (var jungleprog = new ProgressLogger(100, "Generating jungle"))
+        public static void GenerateJungle(int direction)
+        {
+        	using (var jungleprog = new ProgressLogger(100, "Generating jungle"))
 			{
 				float jungleSize = (float)(Main.maxTilesX / 4200);
 				jungleSize *= 1.5f;
 				int posX = 0;
 				float sizeModifier = (float)WorldModify.genRand.Next(15, 30) * 0.01f;
-				if (Direction == -1)
+				if (direction == -1)
 				{
 					sizeModifier = 1f - sizeModifier;
 					posX = (int)((float)Main.maxTilesX * sizeModifier);
@@ -725,7 +916,7 @@ namespace Terraria_Server.WorldMod
 				posY += WorldModify.genRand.Next((int)(-100f * jungleSize), (int)(101f * jungleSize));
 				int section1X = posX;
 				int section1Y = posY;
-				TileRunner(posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(Direction * 3), 0f, false, true);
+				TileRunner(posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * 3), 0f, false, true);
 
 				jungleprog.Value = 15;
 
@@ -743,7 +934,7 @@ namespace Terraria_Server.WorldMod
 				posY += WorldModify.genRand.Next((int)(-150f * jungleSize), (int)(151f * jungleSize));
 				int section3X = posX;
 				int section3Y = posY;
-				TileRunner(posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(Direction * -3), 0f, false, true);
+				TileRunner(posX, posY, (double)WorldModify.genRand.Next((int)(250f * jungleSize), (int)(500f * jungleSize)), WorldModify.genRand.Next(50, 150), 59, false, (float)(direction * -3), 0f, false, true);
 
 				jungleprog.Value = 45;
 
@@ -916,9 +1107,12 @@ namespace Terraria_Server.WorldMod
 					}
 				}
 			}
+        }
 
-			numIslandHouses = 0;
-			houseCount = 0;
+        public static void GenerateFloatingIslands()
+        {
+            numIslandHouses = 0;
+            houseCount = 0;
 
             using (var fiProg = new ProgressLogger(WorldModify.ficount, "Generating floating islands"))
             {
@@ -975,10 +1169,13 @@ namespace Terraria_Server.WorldMod
                     }
                     fiProg.Value++;
                 }
-            }			
-            
-            Max = Main.maxTilesX / 300;
-            Max2 = Main.maxTilesX;
+            }
+        }
+
+        public static void AddMushroomPatches()
+        {
+            var Max = Main.maxTilesX / 300;
+            var Max2 = Main.maxTilesX;
             using (var mushProg = new ProgressLogger(Max + Max2, "Adding mushroom patches"))
             {
                 for (int i = 0; i < Max; i++)
@@ -1000,8 +1197,13 @@ namespace Terraria_Server.WorldMod
                     mushProg.Value++;
                 }
             }
-			
-            Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001);
+
+
+        }
+
+        public static void PlaceMudInDirt(double num7)
+        {
+            var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001);
             using (var mudProg = new ProgressLogger(Max, "Placing mud in the dirt"))
             {
                 for (int i = 0; i < Max; i++)
@@ -1009,91 +1211,95 @@ namespace Terraria_Server.WorldMod
                     TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(2, 6), WorldModify.genRand.Next(2, 40), 59, false, 0f, 0f, false, true);
                     mudProg.Value++;
                 }
-            }			
+            }
+        }
 
-			{ // shinies
-				double tiles = (double)(Main.maxTilesX * Main.maxTilesY);
-				var num109max = (int)(tiles * 6E-05);
-				var num110max = (int)(tiles * 8E-05);
-				var num111max = (int)(tiles * 0.0002);
-				var num112max = (int)(tiles * 3E-05);
-				var num113max = (int)(tiles * 8E-05);
-				var num114max = (int)(tiles * 0.0002);
-				var num115max = (int)(tiles * 3E-05);
-				var num116max = (int)(tiles * 0.00017);
-				var num117max = (int)(tiles * 0.00017);
-				var num118max = (int)(tiles * 0.00012);
-				var num119max = (int)(tiles * 0.00012);
-				var num120max = (int)(tiles * 2E-05);
-				using (var prog = new ProgressLogger(num109max + num110max + num111max + num112max + num113max
-					+ num114max + num115max + num116max + num117max + num118max + num119max + num120max - 12, "Adding shinies"))
+        public static void AddShinies(double num7)
+    	{ // shinies
+			double tiles = (double)(Main.maxTilesX * Main.maxTilesY);
+			var num109max = (int)(tiles * 6E-05);
+			var num110max = (int)(tiles * 8E-05);
+			var num111max = (int)(tiles * 0.0002);
+			var num112max = (int)(tiles * 3E-05);
+			var num113max = (int)(tiles * 8E-05);
+			var num114max = (int)(tiles * 0.0002);
+			var num115max = (int)(tiles * 3E-05);
+			var num116max = (int)(tiles * 0.00017);
+			var num117max = (int)(tiles * 0.00017);
+			var num118max = (int)(tiles * 0.00012);
+			var num119max = (int)(tiles * 0.00012);
+			var num120max = (int)(tiles * 2E-05);
+			using (var prog = new ProgressLogger(num109max + num110max + num111max + num112max + num113max
+				+ num114max + num115max + num116max + num117max + num118max + num119max + num120max - 12, "Adding shinies"))
+			{
+				int total = 0;
+
+				for (int i = 0; i < num109max; i++)
 				{
-					int total = 0;
-
-					for (int i = 0; i < num109max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)terrarainMaxY, (int)worldSurface), (double)WorldModify.genRand.Next(3, 6), WorldModify.genRand.Next(2, 6), 7, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num110max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, (int)rockLayer), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 7), 7, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num111max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 7, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num112max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)terrarainMaxY, (int)worldSurface), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(2, 5), 6, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num113max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, (int)rockLayer), (double)WorldModify.genRand.Next(3, 6), WorldModify.genRand.Next(3, 6), 6, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num114max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 6, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num115max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, (int)rockLayer), (double)WorldModify.genRand.Next(3, 6), WorldModify.genRand.Next(3, 6), 9, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num116max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num117max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(0, (int)terrarainMaxY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num118max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 8), WorldModify.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num119max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(0, (int)terrarainMaxY - 20), (double)WorldModify.genRand.Next(4, 8), WorldModify.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
-					}
-					for (int i = 0; i < num120max; i++)
-					{
-						prog.Value = total++;
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(2, 4), WorldModify.genRand.Next(3, 6), 22, false, 0f, 0f, false, true);
-					}
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)terrarainMaxY, (int)worldSurface), (double)WorldModify.genRand.Next(3, 6), WorldModify.genRand.Next(2, 6), 7, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num110max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, (int)rockLayer), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(3, 7), 7, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num111max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 7, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num112max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)terrarainMaxY, (int)worldSurface), (double)WorldModify.genRand.Next(3, 7), WorldModify.genRand.Next(2, 5), 6, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num113max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, (int)rockLayer), (double)WorldModify.genRand.Next(3, 6), WorldModify.genRand.Next(3, 6), 6, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num114max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 6, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num115max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)worldSurface, (int)rockLayer), (double)WorldModify.genRand.Next(3, 6), WorldModify.genRand.Next(3, 6), 9, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num116max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num117max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(0, (int)terrarainMaxY), (double)WorldModify.genRand.Next(4, 9), WorldModify.genRand.Next(4, 8), 9, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num118max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(4, 8), WorldModify.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num119max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(0, (int)terrarainMaxY - 20), (double)WorldModify.genRand.Next(4, 8), WorldModify.genRand.Next(4, 8), 8, false, 0f, 0f, false, true);
+				}
+				for (int i = 0; i < num120max; i++)
+				{
+					prog.Value = total++;
+					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next((int)num7, Main.maxTilesY), (double)WorldModify.genRand.Next(2, 4), WorldModify.genRand.Next(3, 6), 22, false, 0f, 0f, false, true);
 				}
 			}
+		}
 
-            Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001);
+        public static void AddWebs()
+        {
+            var Max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.001);
             using (var webProg = new ProgressLogger(Max, "Adding webs"))
             {
                 for (int caveInt = 0; caveInt < Max; caveInt++)
@@ -1136,384 +1342,365 @@ namespace Terraria_Server.WorldMod
                     }
                     webProg.Value++;
                 }
-            }			
+            }
+        }
 
-			var num138max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002);
-            using (var uwprog = new ProgressLogger(((Main.maxTilesX * 5) - 10 + num138max) + 
+        public static void CreateUnderworld()
+        {
+            var num138max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002);
+            using (var uwprog = new ProgressLogger(((Main.maxTilesX * 5) - 10 + num138max) +
                 (int)(Main.maxTilesX * 2.85), "Creating the underworld"))
-			{
-				var uwtotal = 0;
-				int posY = Main.maxTilesY - WorldModify.genRand.Next(150, 190);
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
-				{
-					uwprog.Value = (uwtotal++);
-					posY += WorldModify.genRand.Next(-3, 4);
-					if (posY < Main.maxTilesY - 190)
-					{
-						posY = Main.maxTilesY - 190;
-					}
-					if (posY > Main.maxTilesY - 160)
-					{
-						posY = Main.maxTilesY - 160;
-					}
-					for (int tileY = posY - 20 - WorldModify.genRand.Next(3); tileY < Main.maxTilesY; tileY++)
-					{
-						if (tileY >= posY)
-						{
-							Main.tile.At(tileX, tileY).SetActive(false);
-							Main.tile.At(tileX, tileY).SetLava(false);
-							Main.tile.At(tileX, tileY).SetLiquid(0);
-						}
-						else
-						{
-							Main.tile.At(tileX, tileY).SetType(57);
-						}
-					}
-				}
-				int lavaPosY = Main.maxTilesY - WorldModify.genRand.Next(40, 70);
-				for (int tileX = 10; tileX < Main.maxTilesX - 10; tileX++)
-				{
-					uwprog.Value = (uwtotal++);
-					lavaPosY += WorldModify.genRand.Next(-10, 11);
-					if (lavaPosY > Main.maxTilesY - 60)
-					{
-						lavaPosY = Main.maxTilesY - 60;
-					}
-					if (lavaPosY < Main.maxTilesY - 100)
-					{
-						lavaPosY = Main.maxTilesY - 120;
-					}
-					for (int tileY = lavaPosY; tileY < Main.maxTilesY - 10; tileY++)
-					{
-						if (!Main.tile.At(tileX, tileY).Active)
-						{
-							Main.tile.At(tileX, tileY).SetLava(true);
-							Main.tile.At(tileX, tileY).SetLiquid(255);
-						}
-					}
-				}
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
-				{
-					uwprog.Value = (uwtotal++);
-					if (WorldModify.genRand.Next(50) == 0)
-					{
-						int tileY = Main.maxTilesY - 65;
-						while (!Main.tile.At(tileX, tileY).Active && tileY > Main.maxTilesY - 135)
-						{
-							tileY--;
-						}
-						TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), tileY + WorldModify.genRand.Next(20, 50), (double)WorldModify.genRand.Next(15, 20), 1000, 57, true, 0f, (float)WorldModify.genRand.Next(1, 3), true, true);
-					}
-				}
+            {
+                var uwtotal = 0;
+                int posY = Main.maxTilesY - WorldModify.genRand.Next(150, 190);
+                for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+                {
+                    uwprog.Value = (uwtotal++);
+                    posY += WorldModify.genRand.Next(-3, 4);
+                    if (posY < Main.maxTilesY - 190)
+                    {
+                        posY = Main.maxTilesY - 190;
+                    }
+                    if (posY > Main.maxTilesY - 160)
+                    {
+                        posY = Main.maxTilesY - 160;
+                    }
+                    for (int tileY = posY - 20 - WorldModify.genRand.Next(3); tileY < Main.maxTilesY; tileY++)
+                    {
+                        if (tileY >= posY)
+                        {
+                            Main.tile.At(tileX, tileY).SetActive(false);
+                            Main.tile.At(tileX, tileY).SetLava(false);
+                            Main.tile.At(tileX, tileY).SetLiquid(0);
+                        }
+                        else
+                        {
+                            Main.tile.At(tileX, tileY).SetType(57);
+                        }
+                    }
+                }
+                int lavaPosY = Main.maxTilesY - WorldModify.genRand.Next(40, 70);
+                for (int tileX = 10; tileX < Main.maxTilesX - 10; tileX++)
+                {
+                    uwprog.Value = (uwtotal++);
+                    lavaPosY += WorldModify.genRand.Next(-10, 11);
+                    if (lavaPosY > Main.maxTilesY - 60)
+                    {
+                        lavaPosY = Main.maxTilesY - 60;
+                    }
+                    if (lavaPosY < Main.maxTilesY - 100)
+                    {
+                        lavaPosY = Main.maxTilesY - 120;
+                    }
+                    for (int tileY = lavaPosY; tileY < Main.maxTilesY - 10; tileY++)
+                    {
+                        if (!Main.tile.At(tileX, tileY).Active)
+                        {
+                            Main.tile.At(tileX, tileY).SetLava(true);
+                            Main.tile.At(tileX, tileY).SetLiquid(255);
+                        }
+                    }
+                }
+                for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+                {
+                    uwprog.Value = (uwtotal++);
+                    if (WorldModify.genRand.Next(50) == 0)
+                    {
+                        int tileY = Main.maxTilesY - 65;
+                        while (!Main.tile.At(tileX, tileY).Active && tileY > Main.maxTilesY - 135)
+                        {
+                            tileY--;
+                        }
+                        TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), tileY + WorldModify.genRand.Next(20, 50), (double)WorldModify.genRand.Next(15, 20), 1000, 57, true, 0f, (float)WorldModify.genRand.Next(1, 3), true, true);
+                    }
+                }
 
-				Liquid.QuickWater(-2, -1, -1, uwprog);
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
-				{
-					uwprog.Value = (uwtotal++);
+                Liquid.QuickWater(-2, -1, -1, uwprog);
+                for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+                {
+                    uwprog.Value = (uwtotal++);
 
-					if (WorldModify.genRand.Next(13) == 0)
-					{
-						int tileY = Main.maxTilesY - 65;
-						while ((Main.tile.At(tileX, tileY).Liquid > 0 || Main.tile.At(tileX, tileY).Active) && tileY > Main.maxTilesY - 140)
-						{
-							tileY--;
-						}
-						TileRunner(tileX, tileY - WorldModify.genRand.Next(2, 5), (double)WorldModify.genRand.Next(5, 30), 1000, 57, true, 0f, (float)WorldModify.genRand.Next(1, 3), true, true);
-						float num136 = (float)WorldModify.genRand.Next(1, 3);
-						if (WorldModify.genRand.Next(3) == 0)
-						{
-							num136 *= 0.5f;
-						}
-						if (WorldModify.genRand.Next(2) == 0)
-						{
-							TileRunner(tileX, tileY - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num136)), (int)((float)WorldModify.genRand.Next(10, 15) * num136), 57, true, 1f, 0.3f, false, true);
-						}
-						if (WorldModify.genRand.Next(2) == 0)
-						{
-							num136 = (float)WorldModify.genRand.Next(1, 3);
-							TileRunner(tileX, tileY - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num136)), (int)((float)WorldModify.genRand.Next(10, 15) * num136), 57, true, -1f, 0.3f, false, true);
-						}
-						TileRunner(tileX + WorldModify.genRand.Next(-10, 10), tileY + WorldModify.genRand.Next(-10, 10), (double)WorldModify.genRand.Next(5, 15), WorldModify.genRand.Next(5, 10), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
-						if (WorldModify.genRand.Next(3) == 0)
-						{
-							TileRunner(tileX + WorldModify.genRand.Next(-10, 10), tileY + WorldModify.genRand.Next(-10, 10), (double)WorldModify.genRand.Next(10, 30), WorldModify.genRand.Next(10, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
-						}
-						if (WorldModify.genRand.Next(5) == 0)
-						{
-							TileRunner(tileX + WorldModify.genRand.Next(-15, 15), tileY + WorldModify.genRand.Next(-15, 10), (double)WorldModify.genRand.Next(15, 30), WorldModify.genRand.Next(5, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
-						}
-					}
-				}
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
-				{
-					uwprog.Value = (uwtotal++);
-					if (!Main.tile.At(tileX, Main.maxTilesY - 145).Active)
-					{
-						Main.tile.At(tileX, Main.maxTilesY - 145).SetLiquid(255);
-						Main.tile.At(tileX, Main.maxTilesY - 145).SetLava(true);
-					}
-					if (!Main.tile.At(tileX, Main.maxTilesY - 144).Active)
-					{
-						Main.tile.At(tileX, Main.maxTilesY - 144).SetLiquid(255);
-						Main.tile.At(tileX, Main.maxTilesY - 144).SetLava(true);
-					}
-				}
-				for (int i = 0; i < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002); i++)
-				{
-					uwprog.Value = (uwtotal++);
-					TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(Main.maxTilesY - 140,
-                        Main.maxTilesY), (double)WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(3, 8), 58, false, 
+                    if (WorldModify.genRand.Next(13) == 0)
+                    {
+                        int tileY = Main.maxTilesY - 65;
+                        while ((Main.tile.At(tileX, tileY).Liquid > 0 || Main.tile.At(tileX, tileY).Active) && tileY > Main.maxTilesY - 140)
+                        {
+                            tileY--;
+                        }
+                        TileRunner(tileX, tileY - WorldModify.genRand.Next(2, 5), (double)WorldModify.genRand.Next(5, 30), 1000, 57, true, 0f, (float)WorldModify.genRand.Next(1, 3), true, true);
+                        float num136 = (float)WorldModify.genRand.Next(1, 3);
+                        if (WorldModify.genRand.Next(3) == 0)
+                        {
+                            num136 *= 0.5f;
+                        }
+                        if (WorldModify.genRand.Next(2) == 0)
+                        {
+                            TileRunner(tileX, tileY - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num136)), (int)((float)WorldModify.genRand.Next(10, 15) * num136), 57, true, 1f, 0.3f, false, true);
+                        }
+                        if (WorldModify.genRand.Next(2) == 0)
+                        {
+                            num136 = (float)WorldModify.genRand.Next(1, 3);
+                            TileRunner(tileX, tileY - WorldModify.genRand.Next(2, 5), (double)((int)((float)WorldModify.genRand.Next(5, 15) * num136)), (int)((float)WorldModify.genRand.Next(10, 15) * num136), 57, true, -1f, 0.3f, false, true);
+                        }
+                        TileRunner(tileX + WorldModify.genRand.Next(-10, 10), tileY + WorldModify.genRand.Next(-10, 10), (double)WorldModify.genRand.Next(5, 15), WorldModify.genRand.Next(5, 10), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
+                        if (WorldModify.genRand.Next(3) == 0)
+                        {
+                            TileRunner(tileX + WorldModify.genRand.Next(-10, 10), tileY + WorldModify.genRand.Next(-10, 10), (double)WorldModify.genRand.Next(10, 30), WorldModify.genRand.Next(10, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
+                        }
+                        if (WorldModify.genRand.Next(5) == 0)
+                        {
+                            TileRunner(tileX + WorldModify.genRand.Next(-15, 15), tileY + WorldModify.genRand.Next(-15, 10), (double)WorldModify.genRand.Next(15, 30), WorldModify.genRand.Next(5, 20), -2, false, (float)WorldModify.genRand.Next(-1, 3), (float)WorldModify.genRand.Next(-1, 3), false, true);
+                        }
+                    }
+                }
+                for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+                {
+                    uwprog.Value = (uwtotal++);
+                    if (!Main.tile.At(tileX, Main.maxTilesY - 145).Active)
+                    {
+                        Main.tile.At(tileX, Main.maxTilesY - 145).SetLiquid(255);
+                        Main.tile.At(tileX, Main.maxTilesY - 145).SetLava(true);
+                    }
+                    if (!Main.tile.At(tileX, Main.maxTilesY - 144).Active)
+                    {
+                        Main.tile.At(tileX, Main.maxTilesY - 144).SetLiquid(255);
+                        Main.tile.At(tileX, Main.maxTilesY - 144).SetLava(true);
+                    }
+                }
+                for (int i = 0; i < (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.002); i++)
+                {
+                    uwprog.Value = (uwtotal++);
+                    TileRunner(WorldModify.genRand.Next(0, Main.maxTilesX), WorldModify.genRand.Next(Main.maxTilesY - 140,
+                        Main.maxTilesY), (double)WorldModify.genRand.Next(3, 8), WorldModify.genRand.Next(3, 8), 58, false,
                         0f, 0f, false, true);
-				}
-			}
+                }
+            }
+        }
 
-			AddHellHouses();
-			int waterBodyMax = WorldModify.genRand.Next(2, (int)((double)Main.maxTilesX * 0.005));
+        public static void AddWaterBodies()
+        {
+            int waterBodyMax = WorldModify.genRand.Next(2, (int)((double)Main.maxTilesX * 0.005));
 
-			using (var prog = new ProgressLogger(waterBodyMax - 1, "Adding water bodies"))
-				for (int num140 = 0; num140 < waterBodyMax; num140++)
-				{
-					prog.Value = num140;
+            using (var prog = new ProgressLogger(waterBodyMax - 1, "Adding water bodies"))
+            {
+                for (int num140 = 0; num140 < waterBodyMax; num140++)
+                {
+                    prog.Value = num140;
 
-					int tileX = WorldModify.genRand.Next(300, Main.maxTilesX - 300);
-					while (tileX > Main.maxTilesX / 2 - 50 && tileX < Main.maxTilesX / 2 + 50)
-					{
-						tileX = WorldModify.genRand.Next(300, Main.maxTilesX - 300);
-					}
-					int tileY = (int)terrarainMaxY - 20;
-					while (!Main.tile.At(tileX, tileY).Active)
-					{
-						tileY++;
-					}
-					Lakinater(tileX, tileY);
-				}
+                    int tileX = WorldModify.genRand.Next(300, Main.maxTilesX - 300);
+                    while (tileX > Main.maxTilesX / 2 - 50 && tileX < Main.maxTilesX / 2 + 50)
+                    {
+                        tileX = WorldModify.genRand.Next(300, Main.maxTilesX - 300);
+                    }
+                    int tileY = (int)terrarainMaxY - 20;
+                    while (!Main.tile.At(tileX, tileY).Active)
+                    {
+                        tileY++;
+                    }
+                    Lakinater(tileX, tileY);
+                }
+            }
+        }
 
-			int x = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.05), (int)((double)Main.maxTilesX * 0.2)); //Left?
-			int x2 = WorldModify.genRand.Next((int)((double)Main.maxTilesX * 0.8), (int)((double)Main.maxTilesX * 0.95)); //Right?
-			int y = 0;
+        public static void MakeWorldEvil()
+        {
+            int evilSegment = 0;
 
-			if (numDungeons >= 2) //Custom Dungeons (0 allowed?)
-			{
-				numDungeons = 2; //Limt dungeons at 2, May not fit?
-			}
-			else //1 dungeon
-			{
-				if (Direction != -1)
-				{
-					x = x2; //X axis = right
-				}
-			}
+            using (var prog = new ProgressLogger(100, "Making the world evil"))
+            {
+                while ((double)evilSegment < (double)Main.maxTilesX * 0.00045)
+                {
+                    float num145 = (float)((double)evilSegment / ((double)Main.maxTilesX * 0.00045));
 
-			for (int dnum = 0; dnum < numDungeons; dnum++)
-			{
-				y = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldModify.genRand.Next(-200, 200); //Generate a custon Y each time
-				if (dnum == 1)
-				{
-					//num9 = direction
-					x = ((x == x2) ? x : x2); //we want the opposite of the original
-				}
-				MakeDungeon(x, y, 41, 7);
-			}
+                    prog.Value = (int)(num145 * 100f);
 
-			if (Direction != -1)
-			{
-				Direction = 1;
-			}
-
-			int evilSegment = 0;
-
-			using (var prog = new ProgressLogger(100, "Making the world evil"))
-			{
-				while ((double)evilSegment < (double)Main.maxTilesX * 0.00045)
-				{
-					float num145 = (float)((double)evilSegment / ((double)Main.maxTilesX * 0.00045));
-
-					prog.Value = (int)(num145 * 100f);
-
-					bool flag8 = false;
-					int chasmX = 0;
-					int chasmStartX = 0;
-					int chasmEndX = 0;
-					while (!flag8)
-					{
-						int jungleLength = 0;
-						flag8 = true;
-						int MaxTileX_d2 = Main.maxTilesX / 2;
-						int cOutlier = 200;
-						chasmX = WorldModify.genRand.Next(320, Main.maxTilesX - 320);
-						chasmStartX = chasmX - WorldModify.genRand.Next(200) - 100;
-						chasmEndX = chasmX + WorldModify.genRand.Next(200) + 100;
-						if (chasmStartX < 285)
-						{
-							chasmStartX = 285;
-						}
-						if (chasmEndX > Main.maxTilesX - 285)
-						{
-							chasmEndX = Main.maxTilesX - 285;
-						}
+                    bool flag8 = false;
+                    int chasmX = 0;
+                    int chasmStartX = 0;
+                    int chasmEndX = 0;
+                    while (!flag8)
+                    {
+                        int jungleLength = 0;
+                        flag8 = true;
+                        int MaxTileX_d2 = Main.maxTilesX / 2;
+                        int cOutlier = 200;
+                        chasmX = WorldModify.genRand.Next(320, Main.maxTilesX - 320);
+                        chasmStartX = chasmX - WorldModify.genRand.Next(200) - 100;
+                        chasmEndX = chasmX + WorldModify.genRand.Next(200) + 100;
+                        if (chasmStartX < 285)
+                        {
+                            chasmStartX = 285;
+                        }
+                        if (chasmEndX > Main.maxTilesX - 285)
+                        {
+                            chasmEndX = Main.maxTilesX - 285;
+                        }
                         if (chasmX > MaxTileX_d2 - cOutlier && chasmX < MaxTileX_d2 + cOutlier)
-						{
-							flag8 = false;
-						}
+                        {
+                            flag8 = false;
+                        }
                         if (chasmStartX > MaxTileX_d2 - cOutlier && chasmStartX < MaxTileX_d2 + cOutlier)
-						{
-							flag8 = false;
-						}
+                        {
+                            flag8 = false;
+                        }
                         if (chasmEndX > MaxTileX_d2 - cOutlier && chasmEndX < MaxTileX_d2 + cOutlier)
-						{
-							flag8 = false;
-						}
-						for (int tileX = chasmStartX; tileX < chasmEndX; tileX++)
-						{
-							for (int tileY = 0; tileY < (int)Main.worldSurface; tileY += 5)
-							{
-								if (Main.tile.At(tileX, tileY).Active && Main.tileDungeon[(int)Main.tile.At(tileX, tileY).Type])
-								{
-									flag8 = false;
-									break;
-								}
-								if (!flag8)
-								{
-									break;
-								}
-							}
-						}
-						if (jungleLength < 200 && JungleX > chasmStartX && JungleX < chasmEndX)
-						{
-							jungleLength++;
-							flag8 = false;
-						}
-					}
-					int tilePass = 0;
-					for (int tileX = chasmStartX; tileX < chasmEndX; tileX++)
-					{
-						if (tilePass > 0)
-						{
-							tilePass--;
-						}
-						if (tileX == chasmX || tilePass == 0)
-						{
-							int tileY = (int)terrarainMaxY;
-							while ((double)tileY < Main.worldSurface - 1.0)
-							{
-								if (Main.tile.At(tileX, tileY).Active || Main.tile.At(tileX, tileY).Wall > 0)
-								{
-									if (tileX == chasmX)
-									{
-										tilePass = 20;
-										ChasmRunner(tileX, tileY, WorldModify.genRand.Next(150) + 150, true);
-									}
-									if (WorldModify.genRand.Next(35) == 0 && tilePass == 0)
-									{
-										tilePass = 30;
+                        {
+                            flag8 = false;
+                        }
+                        for (int tileX = chasmStartX; tileX < chasmEndX; tileX++)
+                        {
+                            for (int tileY = 0; tileY < (int)Main.worldSurface; tileY += 5)
+                            {
+                                if (Main.tile.At(tileX, tileY).Active && Main.tileDungeon[(int)Main.tile.At(tileX, tileY).Type])
+                                {
+                                    flag8 = false;
+                                    break;
+                                }
+                                if (!flag8)
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                        if (jungleLength < 200 && JungleX > chasmStartX && JungleX < chasmEndX)
+                        {
+                            jungleLength++;
+                            flag8 = false;
+                        }
+                    }
+                    int tilePass = 0;
+                    for (int tileX = chasmStartX; tileX < chasmEndX; tileX++)
+                    {
+                        if (tilePass > 0)
+                        {
+                            tilePass--;
+                        }
+                        if (tileX == chasmX || tilePass == 0)
+                        {
+                            int tileY = (int)terrarainMaxY;
+                            while ((double)tileY < Main.worldSurface - 1.0)
+                            {
+                                if (Main.tile.At(tileX, tileY).Active || Main.tile.At(tileX, tileY).Wall > 0)
+                                {
+                                    if (tileX == chasmX)
+                                    {
+                                        tilePass = 20;
+                                        ChasmRunner(tileX, tileY, WorldModify.genRand.Next(150) + 150, true);
+                                    }
+                                    if (WorldModify.genRand.Next(35) == 0 && tilePass == 0)
+                                    {
+                                        tilePass = 30;
                                         ChasmRunner(tileX, tileY, WorldModify.genRand.Next(50) + 50, true);
-									}
-									break;
-								}
-								else
-								{
-									tileY++;
-								}
-							}
-						}
-						int tileYCheck = (int)terrarainMaxY;
-						while ((double)tileYCheck < Main.worldSurface - 1.0)
-						{
-							if (Main.tile.At(tileX, tileYCheck).Active)
-							{
-								int resetY = tileYCheck + WorldModify.genRand.Next(10, 14);
-								for (int tileY = tileYCheck; tileY < resetY; tileY++)
-								{
-									if ((Main.tile.At(tileX, tileY).Type == 59 || Main.tile.At(tileX, tileY).Type == 60) && tileX >= chasmStartX + WorldModify.genRand.Next(5) && tileX < chasmEndX - WorldModify.genRand.Next(5))
-									{
-										Main.tile.At(tileX, tileY).SetType(0);
-									}
-								}
-								break;
-							}
-							tileYCheck++;
-						}
-					}
-					double chasmTop = Main.worldSurface + 40.0;
-					for (int chasmCycle = chasmStartX; chasmCycle < chasmEndX; chasmCycle++)
-					{
-						chasmTop += (double)WorldModify.genRand.Next(-2, 3);
-						if (chasmTop < Main.worldSurface + 30.0)
-						{
-							chasmTop = Main.worldSurface + 30.0;
-						}
-						if (chasmTop > Main.worldSurface + 50.0)
-						{
-							chasmTop = Main.worldSurface + 50.0;
-						}
-						int tileX = chasmCycle;
-						bool flag9 = false;
-						int tileY = (int)terrarainMaxY;
-						while ((double)tileY < chasmTop)
-						{
-							if (Main.tile.At(tileX, tileY).Active)
-							{
-								if (Main.tile.At(tileX, tileY).Type == 53 && tileX >= chasmStartX + WorldModify.genRand.Next(5) && tileX <= chasmEndX - WorldModify.genRand.Next(5))
-								{
-									Main.tile.At(tileX, tileY).SetType(0);
-								}
-								if (Main.tile.At(tileX, tileY).Type == 0 && (double)tileY < Main.worldSurface - 1.0 && !flag9)
-								{
-									WorldModify.SpreadGrass(tileX, tileY, 0, 23, true);
-								}
-								flag9 = true;
-								if (Main.tile.At(tileX, tileY).Type == 1 && tileX >= chasmStartX + WorldModify.genRand.Next(5) && tileX <= chasmEndX - WorldModify.genRand.Next(5))
-								{
-									Main.tile.At(tileX, tileY).SetType(25);
-								}
-								if (Main.tile.At(tileX, tileY).Type == 2)
-								{
-									Main.tile.At(tileX, tileY).SetType(23);
-								}
-							}
-							tileY++;
-						}
-					}
-					for (int secondChasmCycle = chasmStartX; secondChasmCycle < chasmEndX; secondChasmCycle++)
-					{
-						for (int cycleBeforeWater = 0; cycleBeforeWater < Main.maxTilesY - 50; cycleBeforeWater++)
-						{
-							if (Main.tile.At(secondChasmCycle, cycleBeforeWater).Active && Main.tile.At(secondChasmCycle, cycleBeforeWater).Type == 31)
-							{
-								int sectionStartX = secondChasmCycle - 13;
-								int sectionEndX = secondChasmCycle + 13;
+                                    }
+                                    break;
+                                }
+                                else
+                                {
+                                    tileY++;
+                                }
+                            }
+                        }
+                        int tileYCheck = (int)terrarainMaxY;
+                        while ((double)tileYCheck < Main.worldSurface - 1.0)
+                        {
+                            if (Main.tile.At(tileX, tileYCheck).Active)
+                            {
+                                int resetY = tileYCheck + WorldModify.genRand.Next(10, 14);
+                                for (int tileY = tileYCheck; tileY < resetY; tileY++)
+                                {
+                                    if ((Main.tile.At(tileX, tileY).Type == 59 || Main.tile.At(tileX, tileY).Type == 60) && tileX >= chasmStartX + WorldModify.genRand.Next(5) && tileX < chasmEndX - WorldModify.genRand.Next(5))
+                                    {
+                                        Main.tile.At(tileX, tileY).SetType(0);
+                                    }
+                                }
+                                break;
+                            }
+                            tileYCheck++;
+                        }
+                    }
+                    double chasmTop = Main.worldSurface + 40.0;
+                    for (int chasmCycle = chasmStartX; chasmCycle < chasmEndX; chasmCycle++)
+                    {
+                        chasmTop += (double)WorldModify.genRand.Next(-2, 3);
+                        if (chasmTop < Main.worldSurface + 30.0)
+                        {
+                            chasmTop = Main.worldSurface + 30.0;
+                        }
+                        if (chasmTop > Main.worldSurface + 50.0)
+                        {
+                            chasmTop = Main.worldSurface + 50.0;
+                        }
+                        int tileX = chasmCycle;
+                        bool flag9 = false;
+                        int tileY = (int)terrarainMaxY;
+                        while ((double)tileY < chasmTop)
+                        {
+                            if (Main.tile.At(tileX, tileY).Active)
+                            {
+                                if (Main.tile.At(tileX, tileY).Type == 53 && tileX >= chasmStartX + WorldModify.genRand.Next(5) && tileX <= chasmEndX - WorldModify.genRand.Next(5))
+                                {
+                                    Main.tile.At(tileX, tileY).SetType(0);
+                                }
+                                if (Main.tile.At(tileX, tileY).Type == 0 && (double)tileY < Main.worldSurface - 1.0 && !flag9)
+                                {
+                                    WorldModify.SpreadGrass(tileX, tileY, 0, 23, true);
+                                }
+                                flag9 = true;
+                                if (Main.tile.At(tileX, tileY).Type == 1 && tileX >= chasmStartX + WorldModify.genRand.Next(5) && tileX <= chasmEndX - WorldModify.genRand.Next(5))
+                                {
+                                    Main.tile.At(tileX, tileY).SetType(25);
+                                }
+                                if (Main.tile.At(tileX, tileY).Type == 2)
+                                {
+                                    Main.tile.At(tileX, tileY).SetType(23);
+                                }
+                            }
+                            tileY++;
+                        }
+                    }
+                    for (int secondChasmCycle = chasmStartX; secondChasmCycle < chasmEndX; secondChasmCycle++)
+                    {
+                        for (int cycleBeforeWater = 0; cycleBeforeWater < Main.maxTilesY - 50; cycleBeforeWater++)
+                        {
+                            if (Main.tile.At(secondChasmCycle, cycleBeforeWater).Active && Main.tile.At(secondChasmCycle, cycleBeforeWater).Type == 31)
+                            {
+                                int sectionStartX = secondChasmCycle - 13;
+                                int sectionEndX = secondChasmCycle + 13;
                                 //Terrain minus water?
-								int tMwStartX = cycleBeforeWater - 13;
-								int tMwEndX = cycleBeforeWater + 13;
-								for (int tileX = sectionStartX; tileX < sectionEndX; tileX++)
-								{
-									if (tileX > 10 && tileX < Main.maxTilesX - 10)
-									{
-										for (int tileY = tMwStartX; tileY < tMwEndX; tileY++)
-										{
-											if (Math.Abs(tileX - secondChasmCycle) + Math.Abs(tileY - cycleBeforeWater) < 9 + WorldModify.genRand.Next(11) && WorldModify.genRand.Next(3) != 0 && Main.tile.At(tileX, tileY).Type != 31)
-											{
-												Main.tile.At(tileX, tileY).SetActive(true);
-												Main.tile.At(tileX, tileY).SetType(25);
-												if (Math.Abs(tileX - secondChasmCycle) <= 1 && Math.Abs(tileY - cycleBeforeWater) <= 1)
-												{
-													Main.tile.At(tileX, tileY).SetActive(false);
-												}
-											}
-											if (Main.tile.At(tileX, tileY).Type != 31 && Math.Abs(tileX - secondChasmCycle) <= 2 + WorldModify.genRand.Next(3) && Math.Abs(tileY - cycleBeforeWater) <= 2 + WorldModify.genRand.Next(3))
-											{
-												Main.tile.At(tileX, tileY).SetActive(false);
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-					evilSegment++;
-				}
-			}
+                                int tMwStartX = cycleBeforeWater - 13;
+                                int tMwEndX = cycleBeforeWater + 13;
+                                for (int tileX = sectionStartX; tileX < sectionEndX; tileX++)
+                                {
+                                    if (tileX > 10 && tileX < Main.maxTilesX - 10)
+                                    {
+                                        for (int tileY = tMwStartX; tileY < tMwEndX; tileY++)
+                                        {
+                                            if (Math.Abs(tileX - secondChasmCycle) + Math.Abs(tileY - cycleBeforeWater) < 9 + WorldModify.genRand.Next(11) && WorldModify.genRand.Next(3) != 0 && Main.tile.At(tileX, tileY).Type != 31)
+                                            {
+                                                Main.tile.At(tileX, tileY).SetActive(true);
+                                                Main.tile.At(tileX, tileY).SetType(25);
+                                                if (Math.Abs(tileX - secondChasmCycle) <= 1 && Math.Abs(tileY - cycleBeforeWater) <= 1)
+                                                {
+                                                    Main.tile.At(tileX, tileY).SetActive(false);
+                                                }
+                                            }
+                                            if (Main.tile.At(tileX, tileY).Type != 31 && Math.Abs(tileX - secondChasmCycle) <= 2 + WorldModify.genRand.Next(3) && Math.Abs(tileY - cycleBeforeWater) <= 2 + WorldModify.genRand.Next(3))
+                                            {
+                                                Main.tile.At(tileX, tileY).SetActive(false);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    evilSegment++;
+                }
+            }
+        }
 
+        public static void GenerateMountainCaves()
+        {
             using (var mountainProg = new ProgressLogger(numMCaves, "Generating mountain caves"))
             {
                 for (int cave = 0; cave < numMCaves; cave++)
@@ -1525,11 +1712,14 @@ namespace Terraria_Server.WorldMod
                     mountainProg.Value++;
                 }
             }
-			
-			int startTilePreserve = 0;
-			int inactiveTileY = 0;
-			int inactiveTX = 20;
-			int inactiveTleX = Main.maxTilesX - 20;
+        }
+
+        public static void CreateBeaches(int direction)
+        {
+            int startTilePreserve = 0;
+            int inactiveTileY = 0;
+            int inactiveTX = 20;
+            int inactiveTleX = Main.maxTilesX - 20;
 
             using (var beachProg = new ProgressLogger(2, "Creating Beaches on either side"))
             {
@@ -1541,7 +1731,7 @@ namespace Terraria_Server.WorldMod
                     {
                         beachMinimumX = 0;
                         startTileX = WorldModify.genRand.Next(125, 200) + 50;
-                        if (Direction == 1) //Right
+                        if (direction == 1) //Right
                         {
                             startTileX = 275;
                         }
@@ -1660,7 +1850,7 @@ namespace Terraria_Server.WorldMod
                     {
                         beachMinimumX = Main.maxTilesX - WorldModify.genRand.Next(125, 200) - 50;
                         startTileX = Main.maxTilesX;
-                        if (Direction == -1)
+                        if (direction == -1)
                         {
                             beachMinimumX = Main.maxTilesX - 275;
                         }
@@ -1783,8 +1973,11 @@ namespace Terraria_Server.WorldMod
                     inactiveTileY++;
                 }
                 inactiveTileY++;
-            }			
+            }
+        }
 
+        public static void AddGems()
+        {
             using (var genProg = new ProgressLogger(68, "Adding Gems"))
             {
                 for (int Type = 63; Type <= 68; Type++)
@@ -1825,127 +2018,144 @@ namespace Terraria_Server.WorldMod
                             tileX = WorldModify.genRand.Next(0, Main.maxTilesX);
                             tileY = WorldModify.genRand.Next((int)Main.worldSurface, Main.maxTilesY);
                         }
-                        TileRunner(tileX, tileY, (double)WorldModify.genRand.Next(2, 6), WorldModify.genRand.Next(3, 7), 
+                        TileRunner(tileX, tileY, (double)WorldModify.genRand.Next(2, 6), WorldModify.genRand.Next(3, 7),
                             Type, false, 0f, 0f, false, true);
                         num193++;
                     }
                 } // end gems
             }
-			
-			using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Gravitating sand"))
-				for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
-				{
-					prog.Value = tileX;
 
-					for (int sTileY = Main.maxTilesY - 5; sTileY > 0; sTileY--)
-					{
-						if (Main.tile.At(tileX, sTileY).Active && Main.tile.At(tileX, sTileY).Type == 53)
-						{
-							int tileY = sTileY;
-							while (!Main.tile.At(tileX, tileY + 1).Active && tileY < Main.maxTilesY - 5)
-							{
-								Main.tile.At(tileX, tileY + 1).SetActive(true);
-								Main.tile.At(tileX, tileY + 1).SetType(53);
-								tileY++;
-							}
-						}
-					}
-				}
+        }
 
-			using (var prog = new ProgressLogger(Main.maxTilesX - 7, "Cleaning up dirt backgrounds"))
-			{
-				for (int tileX = 3; tileX < Main.maxTilesX - 3; tileX++)
-				{
-					prog.Value = tileX - 3;
+        public static void GravitateSand()
+        {
+            using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Gravitating sand"))
+            {
+                for (int tileX = 0; tileX < Main.maxTilesX; tileX++)
+                {
+                    prog.Value = tileX;
 
-					bool flag10 = true;
-					int tileY = 0;
-					while ((double)tileY < Main.worldSurface)
-					{
-						if (flag10)
-						{
-							if (Main.tile.At(tileX, tileY).Wall == 2)
-							{
-								Main.tile.At(tileX, tileY).SetWall(0);
-							}
-							if (Main.tile.At(tileX, tileY).Type != 53)
-							{
-								if (Main.tile.At(tileX - 1, tileY).Wall == 2)
-								{
-									Main.tile.At(tileX - 1, tileY).SetWall(0);
-								}
-								if (Main.tile.At(tileX - 2, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
-								{
-									Main.tile.At(tileX - 2, tileY).SetWall(0);
-								}
-								if (Main.tile.At(tileX - 3, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
-								{
-									Main.tile.At(tileX - 3, tileY).SetWall(0);
-								}
-								if (Main.tile.At(tileX + 1, tileY).Wall == 2)
-								{
-									Main.tile.At(tileX + 1, tileY).SetWall(0);
-								}
-								if (Main.tile.At(tileX + 2, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
-								{
-									Main.tile.At(tileX + 2, tileY).SetWall(0);
-								}
-								if (Main.tile.At(tileX + 3, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
-								{
-									Main.tile.At(tileX + 3, tileY).SetWall(0);
-								}
-								if (Main.tile.At(tileX, tileY).Active)
-								{
-									flag10 = false;
-								}
-							}
-						}
-						else if (Main.tile.At(tileX, tileY).Wall == 0 && Main.tile.At(tileX, tileY + 1).Wall == 0 && Main.tile.At(tileX, tileY + 2).Wall == 0 && Main.tile.At(tileX, tileY + 3).Wall == 0 && Main.tile.At(tileX, tileY + 4).Wall == 0 && Main.tile.At(tileX - 1, tileY).Wall == 0 && Main.tile.At(tileX + 1, tileY).Wall == 0 && Main.tile.At(tileX - 2, tileY).Wall == 0 && Main.tile.At(tileX + 2, tileY).Wall == 0 && !Main.tile.At(tileX, tileY).Active && !Main.tile.At(tileX, tileY + 1).Active && !Main.tile.At(tileX, tileY + 2).Active && !Main.tile.At(tileX, tileY + 3).Active)
-						{
-							flag10 = true;
-						}
-						tileY++;
-					}
-				}
-			} // end cleaning up
+                    for (int sTileY = Main.maxTilesY - 5; sTileY > 0; sTileY--)
+                    {
+                        if (Main.tile.At(tileX, sTileY).Active && Main.tile.At(tileX, sTileY).Type == 53)
+                        {
+                            int tileY = sTileY;
+                            while (!Main.tile.At(tileX, tileY + 1).Active && tileY < Main.maxTilesY - 5)
+                            {
+                                Main.tile.At(tileX, tileY + 1).SetActive(true);
+                                Main.tile.At(tileX, tileY + 1).SetType(53);
+                                tileY++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			var MaxAltar = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05);
-			using (var prog = new ProgressLogger(MaxAltar - 1, "Placing altars"))
-				for (int i = 0; i < MaxAltar; i++)
-				{
-					prog.Value = i;
+        public static void CleanUpDirtBackgrounds()
+        {
+            using (var prog = new ProgressLogger(Main.maxTilesX - 7, "Cleaning up dirt backgrounds"))
+            {
+                for (int tileX = 3; tileX < Main.maxTilesX - 3; tileX++)
+                {
+                    prog.Value = tileX - 3;
 
-					//bool flag11 = false;
-					int maxAltar = 0;
-					while (true)
-					{
-						int tileX = WorldModify.genRand.Next(1, Main.maxTilesX);
-						int tileY = (int)(worldSurface + 20.0);
-						WorldModify.Place3x2(tileX, tileY, 26);
-						if (Main.tile.At(tileX, tileY).Type == 26)
-						{
-							//flag11 = true;
+                    bool flag10 = true;
+                    int tileY = 0;
+                    while ((double)tileY < Main.worldSurface)
+                    {
+                        if (flag10)
+                        {
+                            if (Main.tile.At(tileX, tileY).Wall == 2)
+                            {
+                                Main.tile.At(tileX, tileY).SetWall(0);
+                            }
+                            if (Main.tile.At(tileX, tileY).Type != 53)
+                            {
+                                if (Main.tile.At(tileX - 1, tileY).Wall == 2)
+                                {
+                                    Main.tile.At(tileX - 1, tileY).SetWall(0);
+                                }
+                                if (Main.tile.At(tileX - 2, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
+                                {
+                                    Main.tile.At(tileX - 2, tileY).SetWall(0);
+                                }
+                                if (Main.tile.At(tileX - 3, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
+                                {
+                                    Main.tile.At(tileX - 3, tileY).SetWall(0);
+                                }
+                                if (Main.tile.At(tileX + 1, tileY).Wall == 2)
+                                {
+                                    Main.tile.At(tileX + 1, tileY).SetWall(0);
+                                }
+                                if (Main.tile.At(tileX + 2, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
+                                {
+                                    Main.tile.At(tileX + 2, tileY).SetWall(0);
+                                }
+                                if (Main.tile.At(tileX + 3, tileY).Wall == 2 && WorldModify.genRand.Next(2) == 0)
+                                {
+                                    Main.tile.At(tileX + 3, tileY).SetWall(0);
+                                }
+                                if (Main.tile.At(tileX, tileY).Active)
+                                {
+                                    flag10 = false;
+                                }
+                            }
+                        }
+                        else if (Main.tile.At(tileX, tileY).Wall == 0 && Main.tile.At(tileX, tileY + 1).Wall == 0 && Main.tile.At(tileX, tileY + 2).Wall == 0 && Main.tile.At(tileX, tileY + 3).Wall == 0 && Main.tile.At(tileX, tileY + 4).Wall == 0 && Main.tile.At(tileX - 1, tileY).Wall == 0 && Main.tile.At(tileX + 1, tileY).Wall == 0 && Main.tile.At(tileX - 2, tileY).Wall == 0 && Main.tile.At(tileX + 2, tileY).Wall == 0 && !Main.tile.At(tileX, tileY).Active && !Main.tile.At(tileX, tileY + 1).Active && !Main.tile.At(tileX, tileY + 2).Active && !Main.tile.At(tileX, tileY + 3).Active)
+                        {
+                            flag10 = true;
+                        }
+                        tileY++;
+                    }
+                }
+            } // end cleaning up
+        }
+
+        public static void PlaceAltars()
+        {
+            var MaxAltar = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2E-05);
+            using (var prog = new ProgressLogger(MaxAltar - 1, "Placing altars"))
+            {
+                for (int i = 0; i < MaxAltar; i++)
+                {
+                    prog.Value = i;
+
+                    //bool flag11 = false;
+                    int maxAltar = 0;
+                    while (true)
+                    {
+                        int tileX = WorldModify.genRand.Next(1, Main.maxTilesX);
+                        int tileY = (int)(worldSurface + 20.0);
+                        WorldModify.Place3x2(tileX, tileY, 26);
+                        if (Main.tile.At(tileX, tileY).Type == 26)
+                        {
+                            //flag11 = true;
                             break;
-						}
-						else
-						{
-							maxAltar++;
-							if (maxAltar >= 10000)
-							{
-								//flag11 = true;
+                        }
+                        else
+                        {
+                            maxAltar++;
+                            if (maxAltar >= 10000)
+                            {
+                                //flag11 = true;
                                 break;
-							}
-						}
-					}
-				}
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+        public static void SettleLiquids()
+        {
             //Ugly but whatever. Fix laters. minor.
-            Max = Main.maxTilesX - 400;
-            Max2 = (Main.maxTilesX - 1) * 2;
-            Max3 = (int)((100 + Main.maxTilesX + Max + Max2 + (int)(Main.maxTilesX * 2.85)) * 1.65);
-            Max4 = (int)(Max3 * 0.573);
+            var Max = Main.maxTilesX - 400;
+            var Max2 = (Main.maxTilesX - 1) * 2;
+            var Max3 = (int)((100 + Main.maxTilesX + Max + Max2 + (int)(Main.maxTilesX * 2.85)) * 1.65);
+            var Max4 = (int)(Max3 * 0.573);
             using (var prog = new ProgressLogger(Max4 + Max3, "Settling liquids"))
-			{
+            {
                 for (int tilePosX = 0; tilePosX < Main.maxTilesX; tilePosX++)
                 {
                     int tileX = tilePosX;
@@ -1997,132 +2207,150 @@ namespace Terraria_Server.WorldMod
                     prog.Value++;
                 }
 
-				Liquid.QuickWater(3, -1, -1, prog);
+                Liquid.QuickWater(3, -1, -1, prog);
                 WorldModify.WaterCheck(prog);
-				int liquidLeft = 0;
-				Liquid.quickSettle = true;
-				while (liquidLeft < 10)
-				{
-					int liquidAmount = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-					liquidLeft++;
-					float preserver = 0f;
-					while (Liquid.numLiquid > 0)
-					{
-						float liquidLeftO = (float)(liquidAmount - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)liquidAmount;
-						if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > liquidAmount)
-						{
-							liquidAmount = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
-						}
-						if (liquidLeftO > preserver)
-						{
-							preserver = liquidLeftO;
-						}
-						else
-						{
-							liquidLeftO = preserver;
-						}
-						if (liquidLeft == 1)
-						{
-							prog.Value = (int)(liquidLeftO * 100f / 3f + 33f);
-						}
-						if (liquidLeft <= 10)
-						{
-						    Liquid.UpdateLiquid();
-						}
-					}
-					WorldModify.WaterCheck(prog);
+                int liquidLeft = 0;
+                Liquid.quickSettle = true;
+                while (liquidLeft < 10)
+                {
+                    int liquidAmount = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                    liquidLeft++;
+                    float preserver = 0f;
+                    while (Liquid.numLiquid > 0)
+                    {
+                        float liquidLeftO = (float)(liquidAmount - (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer)) / (float)liquidAmount;
+                        if (Liquid.numLiquid + LiquidBuffer.numLiquidBuffer > liquidAmount)
+                        {
+                            liquidAmount = Liquid.numLiquid + LiquidBuffer.numLiquidBuffer;
+                        }
+                        if (liquidLeftO > preserver)
+                        {
+                            preserver = liquidLeftO;
+                        }
+                        else
+                        {
+                            liquidLeftO = preserver;
+                        }
+                        if (liquidLeft == 1)
+                        {
+                            prog.Value = (int)(liquidLeftO * 100f / 3f + 33f);
+                        }
+                        if (liquidLeft <= 10)
+                        {
+                            Liquid.UpdateLiquid();
+                        }
+                    }
+                    WorldModify.WaterCheck(prog);
 
-					prog.Value = (int)((float)liquidLeft * 10f / 3f + 66f);
-				}
-				Liquid.quickSettle = false;
-			} // end settling
+                    prog.Value = (int)((float)liquidLeft * 10f / 3f + 66f);
+                }
+                Liquid.quickSettle = false;
+            } // end settling
+        }
 
-			var num218max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2.2E-05);
-			using (var prog = new ProgressLogger(num218max - 1, "Placing life crystals"))
-				for (int num218 = 0; num218 < num218max; num218++)
-				{
-					prog.Value = num218;
-					bool flag12 = false;
-					int num220 = 0;
-					while (!flag12)
-					{
-						if (AddLifeCrystal(WorldModify.genRand.Next(1, Main.maxTilesX), WorldModify.genRand.Next((int)(worldSurface + 20.0), Main.maxTilesY)))
-						{
-							flag12 = true;
-						}
-						else
-						{
-							num220++;
-							if (num220 >= 10000)
-							{
-								flag12 = true;
-							}
-						}
-					}
-				}
+        public static void PlaceLifeCrystals()
+        {
+            var num218max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 2.2E-05);
+            using (var prog = new ProgressLogger(num218max - 1, "Placing life crystals"))
+            {
+                for (int num218 = 0; num218 < num218max; num218++)
+                {
+                    prog.Value = num218;
+                    bool flag12 = false;
+                    int num220 = 0;
+                    while (!flag12)
+                    {
+                        if (AddLifeCrystal(WorldModify.genRand.Next(1, Main.maxTilesX), WorldModify.genRand.Next((int)(worldSurface + 20.0), Main.maxTilesY)))
+                        {
+                            flag12 = true;
+                        }
+                        else
+                        {
+                            num220++;
+                            if (num220 >= 10000)
+                            {
+                                flag12 = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			var num221max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 1.7E-05);
-			using (var prog = new ProgressLogger(num221max - 1, "Hiding treasure"))
-				for (int num221 = 0; num221 < num221max; num221++)
-				{
-					prog.Value = num221;
-					bool flag13 = false;
-					int num223 = 0;
-					while (!flag13)
-					{
-						int num224 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
-						int num225 = WorldModify.genRand.Next((int)(worldSurface + 20.0), Main.maxTilesY - 20);
-						while (Main.tile.At(num224, num225).Wall > 0)
-						{
-							num224 = WorldModify.genRand.Next(1, Main.maxTilesX);
-							num225 = WorldModify.genRand.Next((int)(worldSurface + 20.0), Main.maxTilesY - 20);
-						}
-						if (AddBuriedChest(num224, num225, 0, false))
-						{
-							flag13 = true;
-						}
-						else
-						{
-							num223++;
-							if (num223 >= 5000)
-							{
-								flag13 = true;
-							}
-						}
-					}
-				}
+        public static void HideTreasure()
+        {
+            var num221max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 1.7E-05);
+            using (var prog = new ProgressLogger(num221max - 1, "Hiding treasure"))
+            {
+                for (int num221 = 0; num221 < num221max; num221++)
+                {
+                    prog.Value = num221;
+                    bool flag13 = false;
+                    int num223 = 0;
+                    while (!flag13)
+                    {
+                        int num224 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+                        int num225 = WorldModify.genRand.Next((int)(worldSurface + 20.0), Main.maxTilesY - 20);
+                        while (Main.tile.At(num224, num225).Wall > 0)
+                        {
+                            num224 = WorldModify.genRand.Next(1, Main.maxTilesX);
+                            num225 = WorldModify.genRand.Next((int)(worldSurface + 20.0), Main.maxTilesY - 20);
+                        }
+                        if (AddBuriedChest(num224, num225, 0, false))
+                        {
+                            flag13 = true;
+                        }
+                        else
+                        {
+                            num223++;
+                            if (num223 >= 5000)
+                            {
+                                flag13 = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
-			var num226max = (int)((double)Main.maxTilesX * 0.005);
-			using (var prog = new ProgressLogger(num226max - 1, "Hiding more treasure"))
-				for (int num226 = 0; num226 < num226max; num226++)
-				{
-					prog.Value = num226;
-					bool flag14 = false;
-					int num228 = 0;
-					while (!flag14)
-					{
-						int num229 = WorldModify.genRand.Next(300, Main.maxTilesX - 300);
-						int num230 = WorldModify.genRand.Next((int)terrarainMaxY, (int)Main.worldSurface);
-						bool flag15 = false;
-						if (Main.tile.At(num229, num230).Wall == 2)
-						{
-							flag15 = true;
-						}
-						if (flag15 && AddBuriedChest(num229, num230, 0, true))
-						{
-							flag14 = true;
-						}
-						else
-						{
-							num228++;
-							if (num228 >= 3000)
-							{
-								flag14 = true;
-							}
-						}
-					}
-				}
+        public static void HideMoreTreasure()
+        {
+            var num226max = (int)((double)Main.maxTilesX * 0.005);
+            using (var prog = new ProgressLogger(num226max - 1, "Hiding more treasure"))
+            {
+                for (int num226 = 0; num226 < num226max; num226++)
+                {
+                    prog.Value = num226;
+                    bool flag14 = false;
+                    int num228 = 0;
+                    while (!flag14)
+                    {
+                        int num229 = WorldModify.genRand.Next(300, Main.maxTilesX - 300);
+                        int num230 = WorldModify.genRand.Next((int)terrarainMaxY, (int)Main.worldSurface);
+                        bool flag15 = false;
+                        if (Main.tile.At(num229, num230).Wall == 2)
+                        {
+                            flag15 = true;
+                        }
+                        if (flag15 && AddBuriedChest(num229, num230, 0, true))
+                        {
+                            flag14 = true;
+                        }
+                        else
+                        {
+                            num228++;
+                            if (num228 >= 3000)
+                            {
+                                flag14 = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
+        public static void HideJungleTreasure()
+        {
             var num238max = numJChests;
             using (var prog = new ProgressLogger(num238max - 1, "Hiding jungle treasure"))
             {
@@ -2160,11 +2388,14 @@ namespace Terraria_Server.WorldMod
                     }
                 }
             }
-			
+        }
+
+        public static void HideWaterTreasure()
+        {
             //Water Treasure
-			float num235 = (float)(Main.maxTilesX / 4200);
-			int num236 = 0;
-			int num237 = 0;
+            float num235 = (float)(Main.maxTilesX / 4200);
+            int num236 = 0;
+            int num237 = 0;
             using (var prog = new ProgressLogger(100, "Hiding water treasure"))
             {
                 while ((float)num237 < 10f * num235)
@@ -2199,400 +2430,401 @@ namespace Terraria_Server.WorldMod
                     num237++;
                 }
             }
+        }
 
-            if(numIslandHouses > 0) 
+        public static void AddIslandHouses()
+        {
+            if (numIslandHouses > 0)
+            {
                 ProgramLog.Log("Adding island houses");
-			for (int num240 = 0; num240 < numIslandHouses; num240++)
-			{
-				IslandHouse(fihX[num240], fihY[num240]);
-			}
+                for (int num240 = 0; num240 < numIslandHouses; num240++)
+                {
+                    IslandHouse(fihX[num240], fihY[num240]);
+                }
+            }
+        }
 
-			var num241max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008);
-			using (var prog = new ProgressLogger(num241max - 1, "Placing breakables"))
-			{
-				for (int num241 = 0; num241 < num241max; num241++)
-				{
-					float num242 = (float)((double)num241 / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008));
+        public static void PlaceBreakables()
+        {
+            var num241max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008);
+            using (var prog = new ProgressLogger(num241max - 1, "Placing breakables"))
+            {
+                for (int num241 = 0; num241 < num241max; num241++)
+                {
+                    float num242 = (float)((double)num241 / ((double)(Main.maxTilesX * Main.maxTilesY) * 0.0008));
 
-					prog.Value = num241;
+                    prog.Value = num241;
 
-					bool flag17 = false;
-					int num243 = 0;
-					while (!flag17)
-					{
-						int num244 = WorldModify.genRand.Next((int)worldSurface, Main.maxTilesY - 10);
-						if ((double)num242 > 0.93)
-						{
-							num244 = Main.maxTilesY - 150;
-						}
-						else if ((double)num242 > 0.75)
-						{
-							num244 = (int)terrarainMaxY;
-						}
-						int num245 = WorldModify.genRand.Next(1, Main.maxTilesX);
-						bool flag18 = false;
-						for (int num246 = num244; num246 < Main.maxTilesY; num246++)
-						{
-							if (!flag18)
-							{
-								if (Main.tile.At(num245, num246).Active && Main.tileSolid[(int)Main.tile.At(num245, num246).Type] && !Main.tile.At(num245, num246 - 1).Lava)
-								{
-									flag18 = true;
-								}
-							}
-							else
-							{
-								if (WorldModify.PlacePot(num245, num246, 28))
-								{
-									flag17 = true;
-									break;
-								}
-								num243++;
-								if (num243 >= 10000)
-								{
-									flag17 = true;
-									break;
-								}
-							}
-						}
-					}
-				}
-			} // end breakables
+                    bool flag17 = false;
+                    int num243 = 0;
+                    while (!flag17)
+                    {
+                        int num244 = WorldModify.genRand.Next((int)worldSurface, Main.maxTilesY - 10);
+                        if ((double)num242 > 0.93)
+                        {
+                            num244 = Main.maxTilesY - 150;
+                        }
+                        else if ((double)num242 > 0.75)
+                        {
+                            num244 = (int)terrarainMaxY;
+                        }
+                        int num245 = WorldModify.genRand.Next(1, Main.maxTilesX);
+                        bool flag18 = false;
+                        for (int num246 = num244; num246 < Main.maxTilesY; num246++)
+                        {
+                            if (!flag18)
+                            {
+                                if (Main.tile.At(num245, num246).Active && Main.tileSolid[(int)Main.tile.At(num245, num246).Type] && !Main.tile.At(num245, num246 - 1).Lava)
+                                {
+                                    flag18 = true;
+                                }
+                            }
+                            else
+                            {
+                                if (WorldModify.PlacePot(num245, num246, 28))
+                                {
+                                    flag17 = true;
+                                    break;
+                                }
+                                num243++;
+                                if (num243 >= 10000)
+                                {
+                                    flag17 = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            } // end breakables
+        }
 
-			var num247max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0001);
-			using (var prog = new ProgressLogger(num247max - 1, "Placing hellforges"))
-			{
-				for (int num247 = 0; num247 < num247max; num247++)
-				{
-					prog.Value = num247;
+        public static void PlaceHellforges()
+        {
+            var num247max = (int)((double)(Main.maxTilesX * Main.maxTilesY) * 0.0001);
+            using (var prog = new ProgressLogger(num247max - 1, "Placing hellforges"))
+            {
+                for (int num247 = 0; num247 < num247max; num247++)
+                {
+                    prog.Value = num247;
 
-					bool flag19 = false;
-					int num249 = 0;
-					while (!flag19)
-					{
-						int num250 = WorldModify.genRand.Next(1, Main.maxTilesX);
-						int num251 = WorldModify.genRand.Next(Main.maxTilesY - 250, Main.maxTilesY - 5);
-						try
-						{
-							if (Main.tile.At(num250, num251).Wall == 13)
-							{
-								while (!Main.tile.At(num250, num251).Active)
-								{
-									num251++;
-								}
-								num251--;
-								WorldModify.PlaceTile(num250, num251, 77, false, false, -1, 0);
-								if (Main.tile.At(num250, num251).Type == 77)
-								{
-									flag19 = true;
-								}
-								else
-								{
-									num249++;
-									if (num249 >= 10000)
-									{
-										flag19 = true;
-									}
-								}
-							}
-						}
-						catch
-						{
-						}
-					}
-				}
-			} // end hellforges
+                    bool flag19 = false;
+                    int num249 = 0;
+                    while (!flag19)
+                    {
+                        int num250 = WorldModify.genRand.Next(1, Main.maxTilesX);
+                        int num251 = WorldModify.genRand.Next(Main.maxTilesY - 250, Main.maxTilesY - 5);
+                        try
+                        {
+                            if (Main.tile.At(num250, num251).Wall == 13)
+                            {
+                                while (!Main.tile.At(num250, num251).Active)
+                                {
+                                    num251++;
+                                }
+                                num251--;
+                                WorldModify.PlaceTile(num250, num251, 77, false, false, -1, 0);
+                                if (Main.tile.At(num250, num251).Type == 77)
+                                {
+                                    flag19 = true;
+                                }
+                                else
+                                {
+                                    num249++;
+                                    if (num249 >= 10000)
+                                    {
+                                        flag19 = true;
+                                    }
+                                }
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            } // end hellforges
+        }
 
-			ProgramLog.Log("Spreading grass...");
-			for (int num252 = 0; num252 < Main.maxTilesX; num252++)
-			{
-				int num48 = num252;
-				bool flag20 = true;
-				int num253 = 0;
-				while ((double)num253 < Main.worldSurface - 1.0)
-				{
-					if (Main.tile.At(num48, num253).Active)
-					{
-						if (flag20 && Main.tile.At(num48, num253).Type == 0)
-						{
-							WorldModify.SpreadGrass(num48, num253, 0, 2, true);
-						}
-						if ((double)num253 > worldSurface)
-						{
-							break;
-						}
-						flag20 = false;
-					}
-					else if (Main.tile.At(num48, num253).Wall == 0)
-					{
-						flag20 = true;
-					}
-					num253++;
-				}
-			}
+        public static void SpreadGrass()
+        {
+            ProgramLog.Log("Spreading grass...");
+            for (int num252 = 0; num252 < Main.maxTilesX; num252++)
+            {
+                int num48 = num252;
+                bool flag20 = true;
+                int num253 = 0;
+                while ((double)num253 < Main.worldSurface - 1.0)
+                {
+                    if (Main.tile.At(num48, num253).Active)
+                    {
+                        if (flag20 && Main.tile.At(num48, num253).Type == 0)
+                        {
+                            WorldModify.SpreadGrass(num48, num253, 0, 2, true);
+                        }
+                        if ((double)num253 > worldSurface)
+                        {
+                            break;
+                        }
+                        flag20 = false;
+                    }
+                    else if (Main.tile.At(num48, num253).Wall == 0)
+                    {
+                        flag20 = true;
+                    }
+                    num253++;
+                }
+            }
+        }
 
-			ProgramLog.Log("Growing cacti...");
-			for (int num254 = 5; num254 < Main.maxTilesX - 5; num254++)
-			{
-				if (WorldModify.genRand.Next(8) == 0)
-				{
-					int num255 = 0;
-					while ((double)num255 < Main.worldSurface - 1.0)
-					{
-						if (Main.tile.At(num254, num255).Active && Main.tile.At(num254, num255).Type == 53 && !Main.tile.At(num254, num255 - 1).Active && Main.tile.At(num254, num255 - 1).Wall == 0)
-						{
-							if (num254 < 250 || num254 > Main.maxTilesX - 250)
-							{
-								if (Main.tile.At(num254, num255 - 2).Liquid == 255 && Main.tile.At(num254, num255 - 3).Liquid == 255 && Main.tile.At(num254, num255 - 4).Liquid == 255)
-								{
-									WorldModify.PlaceTile(num254, num255 - 1, 81, true, false, -1, 0);
-								}
-							}
-							else if (num254 > 400 && num254 < Main.maxTilesX - 400)
-							{
-								WorldModify.PlantCactus(num254, num255);
-							}
-						}
-						num255++;
-					}
-				}
-			} // end cacti
-			int num256 = 5;
-			bool flag21 = true;
-			while (flag21)
-			{
-				int num257 = Main.maxTilesX / 2 + WorldModify.genRand.Next(-num256, num256 + 1);
-				for (int num258 = 0; num258 < Main.maxTilesY; num258++)
-				{
-					if (Main.tile.At(num257, num258).Active)
-					{
-						Main.spawnTileX = num257;
-						Main.spawnTileY = num258;
-						Main.tile.At(num257, num258 - 1).SetLighted(true);
-						break;
-					}
-				}
-				flag21 = false;
-				num256++;
-				if ((double)Main.spawnTileY > Main.worldSurface)
-				{
-					flag21 = true;
-				}
-				if (Main.tile.At(Main.spawnTileX, Main.spawnTileY - 1).Liquid > 0)
-				{
-					flag21 = true;
-				}
-			}
-			int num259 = 10;
-			while ((double)Main.spawnTileY > Main.worldSurface)
-			{
-				int num260 = WorldModify.genRand.Next(Main.maxTilesX / 2 - num259, Main.maxTilesX / 2 + num259);
-				for (int num261 = 0; num261 < Main.maxTilesY; num261++)
-				{
-					if (Main.tile.At(num260, num261).Active)
-					{
-						Main.spawnTileX = num260;
-						Main.spawnTileY = num261;
-						Main.tile.At(num260, num261 - 1).SetLighted(true);
-						break;
-					}
-				}
-				num259++;
-			}
-			int GuideIndex = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
-			Main.npcs[GuideIndex].homeTileX = Main.spawnTileX;
-			Main.npcs[GuideIndex].homeTileY = Main.spawnTileY;
-			Main.npcs[GuideIndex].direction = 1;
-			Main.npcs[GuideIndex].homeless = true;
+        public static void GrowCacti()
+        {
+            ProgramLog.Log("Growing cacti...");
+            for (int num254 = 5; num254 < Main.maxTilesX - 5; num254++)
+            {
+                if (WorldModify.genRand.Next(8) == 0)
+                {
+                    int num255 = 0;
+                    while ((double)num255 < Main.worldSurface - 1.0)
+                    {
+                        if (Main.tile.At(num254, num255).Active && Main.tile.At(num254, num255).Type == 53 && !Main.tile.At(num254, num255 - 1).Active && Main.tile.At(num254, num255 - 1).Wall == 0)
+                        {
+                            if (num254 < 250 || num254 > Main.maxTilesX - 250)
+                            {
+                                if (Main.tile.At(num254, num255 - 2).Liquid == 255 && Main.tile.At(num254, num255 - 3).Liquid == 255 && Main.tile.At(num254, num255 - 4).Liquid == 255)
+                                {
+                                    WorldModify.PlaceTile(num254, num255 - 1, 81, true, false, -1, 0);
+                                }
+                            }
+                            else if (num254 > 400 && num254 < Main.maxTilesX - 400)
+                            {
+                                WorldModify.PlantCactus(num254, num255);
+                            }
+                        }
+                        num255++;
+                    }
+                }
+            } // end cacti
+        }
 
-			ProgramLog.Log("Planting sunflowers...");
-			int num263 = 0;
-			while ((double)num263 < (double)Main.maxTilesX * 0.002)
-			{
-				int num264 = 0;
-				int num265 = 0;
-				int arg_5A6F_0 = Main.maxTilesX / 2;
-				int num266 = WorldModify.genRand.Next(Main.maxTilesX);
-				num264 = num266 - WorldModify.genRand.Next(10) - 7;
-				num265 = num266 + WorldModify.genRand.Next(10) + 7;
-				if (num264 < 0)
-				{
-					num264 = 0;
-				}
-				if (num265 > Main.maxTilesX - 1)
-				{
-					num265 = Main.maxTilesX - 1;
-				}
-				for (int num267 = num264; num267 < num265; num267++)
-				{
-					int num268 = 1;
-					while ((double)num268 < Main.worldSurface - 1.0)
-					{
-						if (Main.tile.At(num267, num268).Type == 2 && Main.tile.At(num267, num268).Active && !Main.tile.At(num267, num268 - 1).Active)
-						{
-							WorldModify.PlaceTile(num267, num268 - 1, 27, true, false, -1, 0);
-						}
-						if (Main.tile.At(num267, num268).Active)
-						{
-							break;
-						}
-						num268++;
-					}
-				}
-				num263++;
-			} // end sunflowers
 
-			ProgramLog.Log("Planting trees...");
-			int num269 = 0;
-			while ((double)num269 < (double)Main.maxTilesX * 0.003)
-			{
-				int num270 = WorldModify.genRand.Next(50, Main.maxTilesX - 50);
-				int num271 = WorldModify.genRand.Next(25, 50);
-				for (int num272 = num270 - num271; num272 < num270 + num271; num272++)
-				{
-					int num273 = 20;
-					while ((double)num273 < Main.worldSurface)
-					{
-						GrowEpicTree(num272, num273);
-						num273++;
-					}
-				}
-				num269++;
-			}
-			AddTrees();
+        public static void PlaceGuide()
+        {
+            int GuideIndex = NPC.NewNPC(Main.spawnTileX * 16, Main.spawnTileY * 16, 22, 0);
+            Main.npcs[GuideIndex].homeTileX = Main.spawnTileX;
+            Main.npcs[GuideIndex].homeTileY = Main.spawnTileY;
+            Main.npcs[GuideIndex].direction = 1;
+            Main.npcs[GuideIndex].homeless = true;
+        }
 
-			ProgramLog.Log("Planting herbs...");
-			for (int num274 = 0; num274 < Main.maxTilesX * 2; num274++)
-			{
-				WorldModify.PlantAlch();
-			}
+        public static void PlantSunflowers()
+        {
+            ProgramLog.Log("Planting sunflowers...");
+            int num263 = 0;
+            while ((double)num263 < (double)Main.maxTilesX * 0.002)
+            {
+                int num264 = 0;
+                int num265 = 0;
+                int arg_5A6F_0 = Main.maxTilesX / 2;
+                int num266 = WorldModify.genRand.Next(Main.maxTilesX);
+                num264 = num266 - WorldModify.genRand.Next(10) - 7;
+                num265 = num266 + WorldModify.genRand.Next(10) + 7;
+                if (num264 < 0)
+                {
+                    num264 = 0;
+                }
+                if (num265 > Main.maxTilesX - 1)
+                {
+                    num265 = Main.maxTilesX - 1;
+                }
+                for (int num267 = num264; num267 < num265; num267++)
+                {
+                    int num268 = 1;
+                    while ((double)num268 < Main.worldSurface - 1.0)
+                    {
+                        if (Main.tile.At(num267, num268).Type == 2 && Main.tile.At(num267, num268).Active && !Main.tile.At(num267, num268 - 1).Active)
+                        {
+                            WorldModify.PlaceTile(num267, num268 - 1, 27, true, false, -1, 0);
+                        }
+                        if (Main.tile.At(num267, num268).Active)
+                        {
+                            break;
+                        }
+                        num268++;
+                    }
+                }
+                num263++;
+            } // end sunflowers
+        }
 
-			ProgramLog.Log("Planting weeds...");
-			AddPlants();
-			for (int num275 = 0; num275 < Main.maxTilesX; num275++)
-			{
-				for (int num276 = 0; num276 < Main.maxTilesY; num276++)
-				{
-					if (Main.tile.At(num275, num276).Active)
-					{
-						if (num276 >= (int)Main.worldSurface && Main.tile.At(num275, num276).Type == 70 && !Main.tile.At(num275, num276 - 1).Active)
-						{
-							WorldModify.GrowShroom(num275, num276);
-							if (!Main.tile.At(num275, num276 - 1).Active)
-							{
-								WorldModify.PlaceTile(num275, num276 - 1, 71, true, false, -1, 0);
-							}
-						}
-						if (Main.tile.At(num275, num276).Type == 60 && !Main.tile.At(num275, num276 - 1).Active)
-						{
-							WorldModify.PlaceTile(num275, num276 - 1, 61, true, false, -1, 0);
-						}
-					}
-				}
-			}
+        public static void PlantTrees()
+        {
+            ProgramLog.Log("Planting trees...");
+            int num269 = 0;
+            while ((double)num269 < (double)Main.maxTilesX * 0.003)
+            {
+                int num270 = WorldModify.genRand.Next(50, Main.maxTilesX - 50);
+                int num271 = WorldModify.genRand.Next(25, 50);
+                for (int num272 = num270 - num271; num272 < num270 + num271; num272++)
+                {
+                    int num273 = 20;
+                    while ((double)num273 < Main.worldSurface)
+                    {
+                        GrowEpicTree(num272, num273);
+                        num273++;
+                    }
+                }
+                num269++;
+            }
 
-			ProgramLog.Log("Growing vines...");
-			for (int num277 = 0; num277 < Main.maxTilesX; num277++)
-			{
-				int num278 = 0;
-				int num279 = 0;
-				while ((double)num279 < Main.worldSurface)
-				{
-					if (num278 > 0 && !Main.tile.At(num277, num279).Active)
-					{
-						Main.tile.At(num277, num279).SetActive(true);
-						Main.tile.At(num277, num279).SetType(52);
-						num278--;
-					}
-					else
-					{
-						num278 = 0;
-					}
-					if (Main.tile.At(num277, num279).Active && Main.tile.At(num277, num279).Type == 2 && WorldModify.genRand.Next(5) < 3)
-					{
-						num278 = WorldModify.genRand.Next(1, 10);
-					}
-					num279++;
-				}
-				num278 = 0;
-				for (int num280 = 0; num280 < Main.maxTilesY; num280++)
-				{
-					if (num278 > 0 && !Main.tile.At(num277, num280).Active)
-					{
-						Main.tile.At(num277, num280).SetActive(true);
-						Main.tile.At(num277, num280).SetType(62);
-						num278--;
-					}
-					else
-					{
-						num278 = 0;
-					}
-					if (Main.tile.At(num277, num280).Active && Main.tile.At(num277, num280).Type == 60 && WorldModify.genRand.Next(5) < 3)
-					{
-						num278 = WorldModify.genRand.Next(1, 10);
-					}
-				}
-			}
+            AddTrees();
+        }
 
-			ProgramLog.Log("Planting flowers...");
-			int num281 = 0;
-			while ((double)num281 < (double)Main.maxTilesX * 0.005)
-			{
-				int num282 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
-				int num283 = WorldModify.genRand.Next(5, 15);
-				int num284 = WorldModify.genRand.Next(15, 30);
-				int num285 = 1;
-				while ((double)num285 < Main.worldSurface - 1.0)
-				{
-					if (Main.tile.At(num282, num285).Active)
-					{
-						for (int num286 = num282 - num283; num286 < num282 + num283; num286++)
-						{
-							for (int num287 = num285 - num284; num287 < num285 + num284; num287++)
-							{
-								if (Main.tile.At(num286, num287).Type == 3 || Main.tile.At(num286, num287).Type == 24)
-								{
-									Main.tile.At(num286, num287).SetFrameX((short)(WorldModify.genRand.Next(6, 8) * 18));
-								}
-							}
-						}
-						break;
-					}
-					num285++;
-				}
-				num281++;
-			}
+        public static void PlantHerbs()
+        {
+            ProgramLog.Log("Planting herbs...");
+            for (int num274 = 0; num274 < Main.maxTilesX * 2; num274++)
+            {
+                WorldModify.PlantAlch();
+            }
+        }
 
-			ProgramLog.Log("Planting mushrooms...");
-			int num288 = 0;
-			while ((double)num288 < (double)Main.maxTilesX * 0.002)
-			{
-				int num289 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
-				int num290 = WorldModify.genRand.Next(4, 10);
-				int num291 = WorldModify.genRand.Next(15, 30);
-				int num292 = 1;
-				while ((double)num292 < Main.worldSurface - 1.0)
-				{
-					if (Main.tile.At(num289, num292).Active)
-					{
-						for (int num293 = num289 - num290; num293 < num289 + num290; num293++)
-						{
-							for (int num294 = num292 - num291; num294 < num292 + num291; num294++)
-							{
-								if (Main.tile.At(num293, num294).Type == 3 || Main.tile.At(num293, num294).Type == 24)
-								{
-									Main.tile.At(num293, num294).SetFrameX(144);
-								}
-							}
-						}
-						break;
-					}
-					num292++;
-				}
-				num288++;
-			}
-			WorldModify.gen = false;
-		}
+        public static void PlantWeeds()
+        {
+            ProgramLog.Log("Planting weeds...");
+            AddPlants();
+            for (int num275 = 0; num275 < Main.maxTilesX; num275++)
+            {
+                for (int num276 = 0; num276 < Main.maxTilesY; num276++)
+                {
+                    if (Main.tile.At(num275, num276).Active)
+                    {
+                        if (num276 >= (int)Main.worldSurface && Main.tile.At(num275, num276).Type == 70 && !Main.tile.At(num275, num276 - 1).Active)
+                        {
+                            WorldModify.GrowShroom(num275, num276);
+                            if (!Main.tile.At(num275, num276 - 1).Active)
+                            {
+                                WorldModify.PlaceTile(num275, num276 - 1, 71, true, false, -1, 0);
+                            }
+                        }
+                        if (Main.tile.At(num275, num276).Type == 60 && !Main.tile.At(num275, num276 - 1).Active)
+                        {
+                            WorldModify.PlaceTile(num275, num276 - 1, 61, true, false, -1, 0);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void GrowVines()
+        {
+            ProgramLog.Log("Growing vines...");
+            for (int num277 = 0; num277 < Main.maxTilesX; num277++)
+            {
+                int num278 = 0;
+                int num279 = 0;
+                while ((double)num279 < Main.worldSurface)
+                {
+                    if (num278 > 0 && !Main.tile.At(num277, num279).Active)
+                    {
+                        Main.tile.At(num277, num279).SetActive(true);
+                        Main.tile.At(num277, num279).SetType(52);
+                        num278--;
+                    }
+                    else
+                    {
+                        num278 = 0;
+                    }
+                    if (Main.tile.At(num277, num279).Active && Main.tile.At(num277, num279).Type == 2 && WorldModify.genRand.Next(5) < 3)
+                    {
+                        num278 = WorldModify.genRand.Next(1, 10);
+                    }
+                    num279++;
+                }
+                num278 = 0;
+                for (int num280 = 0; num280 < Main.maxTilesY; num280++)
+                {
+                    if (num278 > 0 && !Main.tile.At(num277, num280).Active)
+                    {
+                        Main.tile.At(num277, num280).SetActive(true);
+                        Main.tile.At(num277, num280).SetType(62);
+                        num278--;
+                    }
+                    else
+                    {
+                        num278 = 0;
+                    }
+                    if (Main.tile.At(num277, num280).Active && Main.tile.At(num277, num280).Type == 60 && WorldModify.genRand.Next(5) < 3)
+                    {
+                        num278 = WorldModify.genRand.Next(1, 10);
+                    }
+                }
+            }
+        }
+
+        public static void PlantFlowers()
+        {
+            ProgramLog.Log("Planting flowers...");
+            int num281 = 0;
+            while ((double)num281 < (double)Main.maxTilesX * 0.005)
+            {
+                int num282 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+                int num283 = WorldModify.genRand.Next(5, 15);
+                int num284 = WorldModify.genRand.Next(15, 30);
+                int num285 = 1;
+                while ((double)num285 < Main.worldSurface - 1.0)
+                {
+                    if (Main.tile.At(num282, num285).Active)
+                    {
+                        for (int num286 = num282 - num283; num286 < num282 + num283; num286++)
+                        {
+                            for (int num287 = num285 - num284; num287 < num285 + num284; num287++)
+                            {
+                                if (Main.tile.At(num286, num287).Type == 3 || Main.tile.At(num286, num287).Type == 24)
+                                {
+                                    Main.tile.At(num286, num287).SetFrameX((short)(WorldModify.genRand.Next(6, 8) * 18));
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    num285++;
+                }
+                num281++;
+            }
+        }
+
+        public static void PlantMushrooms()
+        {
+            ProgramLog.Log("Planting mushrooms...");
+            int num288 = 0;
+            while ((double)num288 < (double)Main.maxTilesX * 0.002)
+            {
+                int num289 = WorldModify.genRand.Next(20, Main.maxTilesX - 20);
+                int num290 = WorldModify.genRand.Next(4, 10);
+                int num291 = WorldModify.genRand.Next(15, 30);
+                int num292 = 1;
+                while ((double)num292 < Main.worldSurface - 1.0)
+                {
+                    if (Main.tile.At(num289, num292).Active)
+                    {
+                        for (int num293 = num289 - num290; num293 < num289 + num290; num293++)
+                        {
+                            for (int num294 = num292 - num291; num294 < num292 + num291; num294++)
+                            {
+                                if (Main.tile.At(num293, num294).Type == 3 || Main.tile.At(num293, num294).Type == 24)
+                                {
+                                    Main.tile.At(num293, num294).SetFrameX(144);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                    num292++;
+                }
+                num288++;
+            }
+        }
 
         public static bool AddBuriedChest(int i, int j, int contain = 0, bool notNearOtherChests = false, int Style = -1)
 		{
