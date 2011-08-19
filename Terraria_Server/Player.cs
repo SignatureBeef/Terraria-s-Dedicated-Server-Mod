@@ -14,48 +14,111 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
+	/// <summary>
+	/// Player class.  Controls all player variables and interactions
+	/// </summary>
 	public class Player : BaseEntity, ISender
     {
         private const int MAX_INVENTORY = 44;
         private const int MAX_HEALTH = 400;
         private const int MAX_MANA = 360;
 
+		/// <summary>
+		/// Whether this player is using TDCM
+		/// </summary>
         public bool HasClientMod = false;
 
+		/// <summary>
+		/// String representation of this player's IP address
+		/// </summary>
         private String ipAddress = null;
+		/// <summary>
+		/// Whether to allow this player to destroy their bed or not
+		/// </summary>
         private bool bedDestruction = false;
 
         public bool enemySpawns;
         public int heldProj = -1;
         public bool killGuide;
+		/// <summary>
+		/// Current buff types applied to the player
+		/// </summary>
         public int[] buffType = new int[10];
+		/// <summary>
+		/// Time left of buffs applied to the player
+		/// </summary>
         public int[] buffTime = new int[10];
         
+		/// <summary>
+		/// Whether the player is playing in hardcore mode
+		/// </summary>
         [Obsolete("Replaced by difficulty setting in 1.0.6")]
         public bool hardCore;
+		/// <summary>
+		/// Whether last death was caused by pvp interaction
+		/// </summary>
 		public bool pvpDeath;
+		/// <summary>
+		/// Whether player is currently in a dungeon zone
+		/// </summary>
 		public bool zoneDungeon;
+		/// <summary>
+		/// Whether player is currently in a corruption zone
+		/// </summary>
 		public bool zoneEvil;
+		/// <summary>
+		/// Whether player is currently in a meteor zone
+		/// </summary>
 		public bool zoneMeteor;
+		/// <summary>
+		/// Whether player is currently in a jungle zone
+		/// </summary>
 		public bool zoneJungle;
+		/// <summary>
+		/// Whether player is wearing bone armor
+		/// </summary>
 		public bool boneArmor;
 		public int townNPCs;
+		/// <summary>
+		/// Current speed and direction
+		/// </summary>
         public Vector2 Velocity;
+		/// <summary>
+		/// Speed and direction at last update
+		/// </summary>
         public Vector2 oldVelocity;
 		public double headFrameCounter;
 		public double bodyFrameCounter;
 		public double legFrameCounter;
+		/// <summary>
+		/// Whether player is currently immune to damage
+		/// </summary>
 		public bool immune;
+		/// <summary>
+		/// Immunity time left
+		/// </summary>
 		public int immuneTime;
 		public int immuneAlphaDirection;
 		public int immuneAlpha;
+		/// <summary>
+		/// Team player currently belongs to
+		/// </summary>
 		public int team;
+		/// <summary>
+		/// Player's currently entered chat text
+		/// </summary>
 		public String chatText = "";
 		public int sign = -1;
+		/// <summary>
+		/// Time left for chat window visibility
+		/// </summary>
 		public int chatShowTime;
 		public int activeNPCs;
 		public bool mouseInterface;
 		public int changeItem = -1;
+		/// <summary>
+		/// Currently held/selected item index
+		/// </summary>
 		public int selectedItemIndex;
 		public Item[] armor = new Item[11];
 		public int itemAnimation;
@@ -66,10 +129,22 @@ namespace Terraria_Server
 		public int itemHeight;
 		public Vector2 itemLocation;
 		public int breathCD;
+		/// <summary>
+		/// Maximum player breath
+		/// </summary>
 		public int breathMax = 200;
+		/// <summary>
+		/// Current breath left
+		/// </summary>
 		public int breath = 200;
 		public String setBonus = "";
+		/// <summary>
+		/// Player inventory array
+		/// </summary>
 		public Item[] inventory = new Item[MAX_INVENTORY];
+		/// <summary>
+		/// Player's piggy bank array
+		/// </summary>
 		public Item[] bank = new Item[Chest.MAX_ITEMS];
 		public float headRotation;
 		public float bodyRotation;
@@ -189,13 +264,15 @@ namespace Terraria_Server
 		public int talkNPC = -1;
 		public int fallStart;
 		public int slowCount;
-		
-		// Plugins can keep per-player state in here, using their object or name as a key
-		// The collection is synchronized
+
+		/// <summary>
+		/// Per-player plugin states, using object or name as key
+		/// </summary>
 		public readonly System.Collections.Hashtable PluginData;
 		
-		// null if no authentication plugin is running or the user is a guest,
-		// otherwise filled with the account or character name
+		/// <summary>
+		/// Account or character name player is authenticated as. Null if no authentication plugin is running or user is guest
+		/// </summary>
 		public string AuthenticatedAs { get; set; }
 		
 		public string DisconnectReason { get; set; }
@@ -208,6 +285,9 @@ namespace Terraria_Server
         public int TeleSpawnX { get; set; }
         public int TeleSpawnY { get; set; }
         
+		/// <summary>
+		/// Whether the player is male or not
+		/// </summary>
 		public bool Male { get; set; }
 		public byte Difficulty { get; set; }
 		
@@ -218,7 +298,13 @@ namespace Terraria_Server
 		
 		private float maxRegenDelay;
 		
+		/// <summary>
+		/// Second piggy bank array
+		/// </summary>
 		public Item[] bank2 = new Item [Chest.MAX_ITEMS];
+		/// <summary>
+		/// Ammo slots array
+		/// </summary>
 		public Item[] ammo = new Item[4];
 		
 		public int meleeCrit { get; set; }
@@ -242,8 +328,14 @@ namespace Terraria_Server
 		public float magicDamage { get; set; }
 		public float moveSpeed { get; set; }
 		
+		/// <summary>
+		/// Whether player is using a light orb
+		/// </summary>
 		public bool lightOrb { get; set; }
 		
+		/// <summary>
+		/// Player class constructor
+		/// </summary>
         public Player()
 		{
             Width = 20;
@@ -307,16 +399,35 @@ namespace Terraria_Server
 			moveSpeed = 1f;
 		}
 		
+		/// <summary>
+		/// Sends player a message
+		/// </summary>
+		/// <param name="Message">Message string</param>
+		/// <param name="A">Alpha color value</param>
+		/// <param name="R">Red color value</param>
+		/// <param name="G">Green color value</param>
+		/// <param name="B">Blue color value</param>
         public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, A, R, G, B);
         }
 
+		/// <summary>
+		/// Sends player a message with specified color instead of individual values
+		/// </summary>
+		/// <param name="Message">Message string</param>
+		/// <param name="chatColour">Color to send message with</param>
         public void sendMessage(String Message, Color chatColour)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, 255, chatColour.R, chatColour.G, chatColour.B);
         }
 
+		/// <summary>
+		/// Heals specified player
+		/// </summary>
+		/// <param name="healAmount">Amount to heal</param>
+		/// <param name="overrider">.</param>
+		/// <param name="remoteClient">.</param>
         public void HealEffect(int healAmount, bool overrider = false, int remoteClient = -1)
 		{
             if (overrider || (this.whoAmi == Main.myPlayer))
@@ -325,6 +436,12 @@ namespace Terraria_Server
 			}
 		}
 
+		/// <summary>
+		/// Restores mana
+		/// </summary>
+		/// <param name="manaAmount">Amount to restore</param>
+		/// <param name="overrider">.</param>
+		/// <param name="remoteClient">.</param>
         public void ManaEffect(int manaAmount, bool overrider = false, int remoteClient = -1)
 		{
 			if (overrider || (this.whoAmi == Main.myPlayer))
@@ -333,6 +450,13 @@ namespace Terraria_Server
 			}
 		}
 		
+		/// <summary>
+		/// Finds closest player to a position
+		/// </summary>
+		/// <param name="Position">Center of search area</param>
+		/// <param name="Width">Width of search area</param>
+		/// <param name="Height">Height of search area</param>
+		/// <returns>Found player index</returns>
         public static byte FindClosest(Vector2 Position, int Width, int Height)
 		{
 			byte result = 0;
@@ -356,6 +480,12 @@ namespace Terraria_Server
 			return result;
 		}
 		
+		/// <summary>
+		/// Adds buff to player
+		/// </summary>
+		/// <param name="type">Type of buff</param>
+		/// <param name="time">Buff time</param>
+		/// <param name="quiet">Whether to announce</param>
 		public void AddBuff(int type, int time, bool quiet = true)
 		{
 			int num = -1;
@@ -402,6 +532,10 @@ namespace Terraria_Server
 			this.buffTime[num] = time;
 		}
 		
+		/// <summary>
+		/// Removes buff from player
+		/// </summary>
+		/// <param name="b">Name of buff to remove</param>
 		public void DelBuff(int b)
 		{
 			this.buffTime[b] = 0;
@@ -421,6 +555,11 @@ namespace Terraria_Server
 			}
 		}
 		
+		/// <summary>
+		/// Add buff to npc
+		/// </summary>
+		/// <param name="type">Tyep of buff</param>
+		/// <param name="npc">NPC to add to</param>
 		public void StatusNPC (int type, NPC npc)
 		{
 			if (type == 121)
@@ -461,6 +600,12 @@ namespace Terraria_Server
 				}
 			}
 		}
+
+		/// <summary>
+		/// Add buff to other player
+		/// </summary>
+		/// <param name="type">Type of buff to add</param>
+		/// <param name="player">Player to buff</param>
 		public void StatusPvP(int type, Player player)
 		{
 			if (type == 121)
@@ -502,6 +647,9 @@ namespace Terraria_Server
 			}
 		}
 		
+		/// <summary>
+		/// Creates ghost of player
+		/// </summary>
 		public void Ghost()
 		{
 			this.immune = false;
@@ -636,6 +784,9 @@ namespace Terraria_Server
 		}
 		
 		// factored out of UpdatePlayer
+		/// <summary>
+		/// Applies buffs added to player
+		/// </summary>
 		public void ApplyBuffs ()
 		{
 			for (int l = 0; l < 10; l++)
@@ -782,6 +933,10 @@ namespace Terraria_Server
 			}
 		}
 		
+		/// <summary>
+		/// Update player values
+		/// </summary>
+		/// <param name="i">Index of player to update</param>
 		public void UpdatePlayer(int i)
 		{
             try
@@ -2227,6 +2382,12 @@ namespace Terraria_Server
             }
 		}
 		
+		/// <summary>
+		/// Gives money for selling an item
+		/// </summary>
+		/// <param name="price">Value of item</param>
+		/// <param name="stack">Number sold</param>
+		/// <returns></returns>
         public bool SellItem(int price, int stack)
 		{
 			if (price <= 0)
@@ -2401,6 +2562,11 @@ namespace Terraria_Server
 			return true;
 		}
 		
+		/// <summary>
+		/// Buy item
+		/// </summary>
+		/// <param name="price">cost of item</param>
+		/// <returns>Whether item was bought</returns>
         public bool BuyItem(int price)
 		{
 			if (price == 0)
@@ -2893,6 +3059,9 @@ namespace Terraria_Server
 			}
 		}
 		
+		/// <summary>
+		/// Spawns player
+		/// </summary>
         public void Spawn()
 		{
 //			if (this.whoAmi == Main.myPlayer)
@@ -2971,6 +3140,16 @@ namespace Terraria_Server
 			}
 		}
 
+		/// <summary>
+		/// Hurts player
+		/// </summary>
+		/// <param name="Damage">Damage to do</param>
+		/// <param name="hitDirection">Direction of attack</param>
+		/// <param name="pvp">Whether attack is PvP</param>
+		/// <param name="quiet">Whether to announce</param>
+		/// <param name="deathText">Text to display upon death</param>
+		/// <param name="crit">Whether the hit is critical</param>
+		/// <returns>Damage done</returns>
         public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, String deathText = " was slain...", bool crit = false)
         {
             if (!this.immune)
@@ -3039,6 +3218,9 @@ namespace Terraria_Server
             return 0.0;
         }
 
+		/// <summary>
+		/// Drops coins, used upon death
+		/// </summary>
         public void DropCoins()
         {
             for (int i = 0; i < MAX_INVENTORY; i++)
@@ -3061,6 +3243,13 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Kills player
+		/// </summary>
+		/// <param name="dmg">Damage done</param>
+		/// <param name="hitDirection">Direction of attack</param>
+		/// <param name="pvp">Whether the attack was PvP</param>
+		/// <param name="deathText">Text to display upon death</param>
         public void KillMe(double dmg, int hitDirection, bool pvp = false, String deathText = " was slain...")
         {
             if ((Main.myPlayer == this.whoAmi))
@@ -3110,6 +3299,11 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Checks for space for an item
+		/// </summary>
+		/// <param name="newItem">Item to check space for</param>
+		/// <returns>True if there's room, false if not</returns>
         public bool ItemSpace(Item newItem)
 		{
 			if (newItem.Type == 58)
@@ -3142,6 +3336,10 @@ namespace Terraria_Server
 			return false;
 		}
 		
+		/// <summary>
+		/// Updates players coins values
+		/// </summary>
+		/// <param name="inventoryIndex">Index of coin to update</param>
         public void DoCoins(int inventoryIndex)
 		{
             Item item = inventory[inventoryIndex];
@@ -3164,6 +3362,12 @@ namespace Terraria_Server
 		}
 		
 		// client-side
+		/// <summary>
+		/// Gets all available ammo for item to put as ammo number.  Client-side
+		/// </summary>
+		/// <param name="plr">Player index</param>
+		/// <param name="newItem">Item to check for</param>
+		/// <returns>.</returns>
 		public Item FillAmmo(int plr, Item newItem)
 		{
 			for (int i = 0; i < 4; i++)
@@ -3196,6 +3400,12 @@ namespace Terraria_Server
 			return newItem;
 		}
 		
+		/// <summary>
+		/// Pick up item.  Client-side
+		/// </summary>
+		/// <param name="plr">Player index</param>
+		/// <param name="newItem">Item to pick up</param>
+		/// <returns>Item picked up.  Returns default if not picked up</returns>
 		public Item GetItem(int plr, Item newItem)
 		{
 			Item item = newItem;
@@ -4356,46 +4566,10 @@ namespace Terraria_Server
                 }
             }
         }
-
-        public Color GetImmuneAlpha(Color newColor)
-		{
-			float num = (float)(255 - this.immuneAlpha) / 255f;
-			if (this.shadow > 0f)
-			{
-				num *= 1f - this.shadow;
-			}
-			int r = (int)((float)newColor.R * num);
-			int g = (int)((float)newColor.G * num);
-			int b = (int)((float)newColor.B * num);
-			int num2 = (int)((float)newColor.A * num);
-			if (num2 < 0)
-			{
-				num2 = 0;
-			}
-			if (num2 > 255)
-			{
-				num2 = 255;
-			}
-			return new Color(r, g, b, num2);
-		}
 		
-        public Color GetDeathAlpha(Color newColor)
-		{
-			int r = (int)newColor.R + (int)((double)this.immuneAlpha * 0.9);
-			int g = (int)newColor.G + (int)((double)this.immuneAlpha * 0.5);
-			int b = (int)newColor.B + (int)((double)this.immuneAlpha * 0.5);
-			int num = (int)newColor.A + (int)((double)this.immuneAlpha * 0.4);
-			if (num < 0)
-			{
-				num = 0;
-			}
-			if (num > 255)
-			{
-				num = 255;
-			}
-			return new Color(r, g, b, num);
-		}
-		
+		/// <summary>
+		/// Death drop.  Probably outdated.  Client-side
+		/// </summary>
         public void DropItems()
 		{
 			for (int i = 0; i < MAX_INVENTORY; i++)
@@ -4418,11 +4592,19 @@ namespace Terraria_Server
 			}
 		}
 		
+		/// <summary>
+		/// Clones player values
+		/// </summary>
+		/// <returns>Cloned player</returns>
         public override object Clone()
 		{
 			return base.MemberwiseClone();
 		}
 		
+		/// <summary>
+		/// Creates a player clone
+		/// </summary>
+		/// <returns>Cloned player</returns>
         public object clientClone()
 		{
 			Player player = new Player();
@@ -4506,6 +4688,12 @@ namespace Terraria_Server
 			return false;
 		}
 		
+		/// <summary>
+		/// Checks whether location is suitable for assigning to spawn
+		/// </summary>
+		/// <param name="x">X value of location</param>
+		/// <param name="y">Y value of location</param>
+		/// <returns>True if location can be set as spawn</returns>
         public static bool CheckSpawn(int x, int y)
 		{
 			if (x < 10 || x > Main.maxTilesX - 10 || y < 10 || y > Main.maxTilesX - 10)
@@ -4553,6 +4741,11 @@ namespace Terraria_Server
 //			}
 //		}
 		
+		/// <summary>
+		/// Changes player's spawn point
+		/// </summary>
+		/// <param name="x">New X spawn coordinate</param>
+		/// <param name="y">New Y spawn coordinate</param>
         public void ChangeSpawn(int x, int y)
 		{
 			SpawnX = x;
@@ -4594,6 +4787,12 @@ namespace Terraria_Server
 //			this.spY[0] = y;
 		}
 
+		/// <summary>
+		/// Checks whether player is carrying specified item
+		/// TODO: include checking inside piggy banks
+		/// </summary>
+		/// <param name="Type">Item type to check for</param>
+		/// <returns>True if player is carrying, false if not</returns>
         public bool HasItem(int Type)
         {
             for (int i = 0; i < MAX_INVENTORY; i++)
@@ -4606,6 +4805,14 @@ namespace Terraria_Server
             return false;
         }
 		
+		/// <summary>
+		/// Get death message string of standard death reason
+		/// </summary>
+		/// <param name="plr">Player index</param>
+		/// <param name="npc">NPC type</param>
+		/// <param name="proj">Projectile type</param>
+		/// <param name="other">0 = fall, 1 = drown, 2 = lava</param>
+		/// <returns></returns>
         public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
         {
             String result = "";
@@ -4690,26 +4897,26 @@ namespace Terraria_Server
                 if (proj >= 0 && Main.projectile[proj].Name != "")
                 {
                     result = String.Concat(new String[]
-			{
-				text, 
-				" by ", 
-				Main.players[plr].Name, 
-				"'s ", 
-				Main.projectile[proj].Name, 
-				"."
-			});
+					{
+						text, 
+						" by ", 
+						Main.players[plr].Name, 
+						"'s ", 
+						Main.projectile[proj].Name, 
+						"."
+					});
                 }
                 else
                 {
                     result = String.Concat(new String[]
-			{
-				text, 
-				" by ", 
-				Main.players[plr].Name, 
-				"'s ", 
-				Main.players[plr].inventory[Main.players[plr].selectedItemIndex].Name, 
-				"."
-			});
+					{
+						text, 
+						" by ", 
+						Main.players[plr].Name, 
+						"'s ", 
+						Main.players[plr].inventory[Main.players[plr].selectedItemIndex].Name, 
+						"."
+					});
                 }
             }
             else
@@ -4842,11 +5049,18 @@ namespace Terraria_Server
             return result;
         }
 
+		/// <summary>
+		/// Gets current server slot player is assigned to
+		/// </summary>
         public ServerSlot Slot
         {
             get { return Netplay.slots[this.whoAmi]; }
         }
 
+		/// <summary>
+		/// Kicks player
+		/// </summary>
+		/// <param name="Reason">Reason for kick</param>
         public void Kick(String Reason = null)
         {
             String message = "You have been Kicked from this Server.";
@@ -4859,6 +5073,9 @@ namespace Terraria_Server
             Netplay.slots[whoAmi].Kick (message);
         }
 
+		/// <summary>
+		/// Get/Set for player's IP address
+		/// </summary>
         public String IPAddress
         {
             get
@@ -4871,6 +5088,9 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Player's position in tile coordinate format
+		/// </summary>
         public Vector2 TileLocation
         {
             get
@@ -4884,6 +5104,9 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Player's position
+		/// </summary>
         public Vector2 Location
         {
             get
@@ -4895,6 +5118,9 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Get/Set for allowing bed destruction
+		/// </summary>
         public bool AllowBedDestroy
         {
             get
@@ -4907,6 +5133,12 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Teleports player to specified location
+		/// </summary>
+		/// <param name="tileX">X coordinate to teleport to</param>
+		/// <param name="tileY">Y coordinate to teleport to</param>
+		/// <returns>True on success, false on failure</returns>
 		public bool teleportTo (float tileX, float tileY) //FIXME: armor against race conditions
 		{
 			if (Main.players[whoAmi] != this)
@@ -5059,11 +5291,21 @@ namespace Terraria_Server
 			return true;
 		}
 
+		/// <summary>
+		/// Teleports player to specified player
+		/// </summary>
+		/// <param name="player">Player to teleport to</param>
         public void teleportTo(Player player)
         {
             this.teleportTo(player.Position.X, player.Position.Y);
         }
 
+		/// <summary>
+		/// Gets a player's server password
+		/// </summary>
+		/// <param name="PlayerName">Player's name</param>
+		/// <param name="Server">Current server instance</param>
+		/// <returns>Password string</returns>
         public static String GetPlayerPassword(String PlayerName, Server Server)
         {
             foreach (String listee in Server.OpList.WhiteList)
@@ -5083,6 +5325,9 @@ namespace Terraria_Server
             return null;
         }
 
+		/// <summary>
+		/// Sets player's password
+		/// </summary>
         public String Password
         {
             get
@@ -5091,6 +5336,12 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Checks player's op status
+		/// </summary>
+		/// <param name="Name">Player's name</param>
+		/// <param name="Server">Server instance to check</param>
+		/// <returns>True if op, false if not</returns>
         public static bool isInOpList(String Name, Server Server)
         {
             foreach (String listee in Server.OpList.WhiteList)
@@ -5110,11 +5361,18 @@ namespace Terraria_Server
             return false;
         }
 
+		/// <summary>
+		/// Easy call for op check
+		/// </summary>
+		/// <returns>True if op, false if not</returns>
         public bool isInOpList()
         {
             return Player.isInOpList(this.Name, Program.server);            
         }
 
+		/// <summary>
+		/// Gets players op password
+		/// </summary>
         public String GetOpListKey
         {
             get
@@ -5123,6 +5381,11 @@ namespace Terraria_Server
             }
         }
 
+		/// <summary>
+		/// Checks whether player is hacking health or mana
+		/// TODO: add other hack checks?
+		/// </summary>
+		/// <returns></returns>
         public bool HasHackedData()
         {
             if (!Program.properties.HackedData)

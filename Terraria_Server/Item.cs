@@ -8,7 +8,7 @@ using Terraria_Server.WorldMod;
 namespace Terraria_Server
 {
 	/// <summary>
-	/// Items
+	/// Items class.  Controls all items, item interactions and item changes.
 	/// </summary>
 	public class Item : BaseEntity
 	{
@@ -20,25 +20,52 @@ namespace Terraria_Server
 		/// ProjectileType of ammo used when Item used.
 		/// </summary>
 		public ProjectileType Ammo;
+		/// <summary>
+		/// Whether the item is automatically reused if player is holding mouse button
+		/// </summary>
 		public bool AutoReuse;
+		/// <summary>
+		/// Type of axe this item is.  0 means not an axe
+		/// </summary>
 		public int Axe;
 		/// <summary>
 		/// Whether the item is currently being grabbed
 		/// </summary>
 		public bool BeingGrabbed;
 		public int BodySlot = -1;
+		/// <summary>
+		/// Amount of time this buff effect lasts
+		/// </summary>
 		public int BuffTime;
+		/// <summary>
+		/// Type of buff this item gives.  Values currently unknown
+		/// </summary>
 		public int BuffType;
 		public bool Buy;
 		public bool Channel;
+		/// <summary>
+		/// Whether item is consumable
+		/// </summary>
 		public bool Consumable;
+		/// <summary>
+		/// Tile "type" this item creates when used
+		/// </summary>
 		public int CreateTile;
+		/// <summary>
+		/// Wall "type" this item creates when used
+		/// </summary>
 		public int CreateWall;
+		/// <summary>
+		/// Damage done by this item
+		/// </summary>
 		public int Damage;
 		/// <summary>
 		/// Defense added by this item
 		/// </summary>
 		public int Defense;
+		/// <summary>
+		/// Type of hammer.  0 means not a hammer
+		/// </summary>
 		public int Hammer;
 		public int HeadSlot;
 		/// <summary>
@@ -55,12 +82,18 @@ namespace Terraria_Server
 		/// Knockback provided by this item
 		/// </summary>
 		public float KnockBack;
+		/// <summary>
+		/// Whether item is currently in lava
+		/// </summary>
 		public bool LavaWet;
 		public int LegSlot;
 		/// <summary>
 		/// Amount of life regeneration provided by this item
 		/// </summary>
 		public int LifeRegen;
+		/// <summary>
+		/// Whether item is magical or not
+		/// </summary>
 		public bool Magic;
 		/// <summary>
 		/// Mana required to use this item
@@ -78,6 +111,9 @@ namespace Terraria_Server
 		/// Whether this is a melee item or not
 		/// </summary>
 		public bool Melee;
+		/// <summary>
+		/// Amount of time before item can be grabbed
+		/// </summary>
 		public int NoGrabDelay;
 		public bool NoMelee;
 		/// <summary>
@@ -93,15 +129,28 @@ namespace Terraria_Server
 		/// </summary>
 		public int OwnIgnore = -1;
 		public int OwnTime;
+		/// <summary>
+		/// Type of pick this item is.  0 means not a pick
+		/// </summary>
 		public int Pick;
 		public int PlaceStyle;
 		/// <summary>
 		/// Whether item is a potion
 		/// </summary>
 		public bool Potion;
+		/// <summary>
+		/// Whether item is ranged or not
+		/// </summary>
 		public bool Ranged;
+		/// <summary>
+		/// Rarity level of item
+		/// </summary>
 		public int Rare;
 		public int Release;
+		/// <summary>
+		/// Scale this item is to be created at.  
+		/// Affects everything from drawing size to health to damage dealt
+		/// </summary>
 		public float Scale;
 		/// <summary>
 		/// Projectile this item shoots
@@ -117,17 +166,35 @@ namespace Terraria_Server
 		/// </summary>
 		public int Stack;
 		public int TileBoost;
+		/// <summary>
+		/// String representing hovering tool tip
+		/// </summary>
 		public String ToolTip;
+		/// <summary>
+		/// Secondary tool tip string
+		/// </summary>
 		public String ToolTip2;
 		/// <summary>
 		/// Essentially the same as Ammo
 		/// </summary>
 		public ProjectileType UseAmmo;
+		/// <summary>
+		/// The time an animation of use takes
+		/// </summary>
 		public int UseAnimation;
 		public int UseStyle;
+		/// <summary>
+		/// Time the item takes to use
+		/// </summary>
 		public int UseTime;
 		public bool UseTurn;
+		/// <summary>
+		/// Currency value in Terraria economy
+		/// </summary>
 		public int Value;
+		/// <summary>
+		/// Speed and direction of item
+		/// </summary>
 		public Vector2 Velocity;
 		/// <summary>
 		/// Whether the item is currently wet
@@ -344,8 +411,8 @@ namespace Terraria_Server
 		/// <param name="Width">Width of new item</param>
 		/// <param name="Height">Height of new item</param>
 		/// <param name="type">New item type</param>
-		/// <param name="stack">How big of a stack to create</param>
-		/// <param name="noBroadcast">Whether to broadcast item creation or not</param>
+		/// <param name="stack">How big of a stack to create. Default 1</param>
+		/// <param name="noBroadcast">Whether to broadcast item creation or not. Default false</param>
 		/// <returns>New item index value</returns>
 		public static int NewItem(int X, int Y, int Width, int Height, int type, int stack = 1, bool noBroadcast = false)
 		{

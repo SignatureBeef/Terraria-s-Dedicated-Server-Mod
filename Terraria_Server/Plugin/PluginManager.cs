@@ -21,6 +21,9 @@ namespace Terraria_Server.Plugin
         private Dictionary<String, Plugin> plugins;
         private Server server;
         
+		/// <summary>
+		/// Server's plugin list
+		/// </summary>
         public Dictionary<String, Plugin> Plugins
         {
             get { return plugins; }

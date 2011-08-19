@@ -257,8 +257,16 @@ namespace Terraria_Server.Plugin
             return false;
         }
         
+		/// <summary>
+		/// Plugin's internal command list
+		/// </summary>
         internal Dictionary<string, CommandInfo> commands = new Dictionary<string, CommandInfo> ();
         
+		/// <summary>
+		/// Adds new command to the server's command list
+		/// </summary>
+		/// <param name="prefix">Command text</param>
+		/// <returns>New Command</returns>
         protected CommandInfo AddCommand (string prefix)
         {
             if (commands.ContainsKey (prefix)) throw new ApplicationException ("AddCommand: duplicate command: " + prefix);
