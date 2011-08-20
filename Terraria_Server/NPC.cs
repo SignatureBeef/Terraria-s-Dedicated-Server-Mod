@@ -5435,29 +5435,33 @@ namespace Terraria_Server
                                             npc.HitEffect(0, 10.0);
                                             npc.Active = false;
                                         }
-                                        if (npc.Type == 13 || npc.Type == 14 || npc.Type == 15)
+                                        if (npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD || npc.type == NPCType.N14_EATER_OF_WORLDS_BODY || npc.type == NPCType.N15_EATER_OF_WORLDS_TAIL)
                                         {
+                                            //If this segment has no segment before or after it, DIE!
                                             if (!Main.npcs[(int)npc.ai[1]].Active && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
                                                 npc.life = 0;
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 13 && !Main.npcs[(int)npc.ai[0]].Active)
+                                            //If we are a head connected to nothing, DIE!
+                                            if (npc.type == NPCType.N13_EATER_OF_WORLDS_HEAD && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
                                                 npc.life = 0;
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 15 && !Main.npcs[(int)npc.ai[1]].Active)
+                                            //If we are a tail connected to nothing, DIE!
+                                            if (npc.type == NPCType.N15_EATER_OF_WORLDS_TAIL && !Main.npcs[(int)npc.ai[1]].Active)
                                             {
                                                 npc.life = 0;
                                                 npc.HitEffect(0, 10.0);
                                                 npc.Active = false;
                                             }
-                                            if (npc.Type == 14 && !Main.npcs[(int)npc.ai[1]].Active)
+                                            //If the next segment forward has died, become a head
+                                            if (npc.type == NPCType.N14_EATER_OF_WORLDS_BODY && !Main.npcs[(int)npc.ai[1]].Active)
                                             {
-                                                npc.Type = 13;
+                                                npc.type = NPCType.N13_EATER_OF_WORLDS_HEAD;
                                                 int num52 = npc.whoAmI;
                                                 float num53 = (float)npc.life / (float)npc.lifeMax;
                                                 float num54 = npc.ai[0];
@@ -5471,14 +5475,17 @@ namespace Terraria_Server
                                                 npc.netUpdate = true;
                                                 npc.whoAmI = num52;
                                             }
-                                            if (npc.Type == 14 && !Main.npcs[(int)npc.ai[0]].Active)
+                                            //If the next segment behind us has died, become a tail
+                                            if (npc.type == NPCType.N14_EATER_OF_WORLDS_BODY && !Main.npcs[(int)npc.ai[0]].Active)
                                             {
+                                                npc.type = NPCType.N15_EATER_OF_WORLDS_TAIL;
                                                 int num55 = npc.whoAmI;
                                                 float num56 = (float)npc.life / (float)npc.lifeMax;
                                                 float num57 = npc.ai[1];
                                                 //npc.SetDefaults(npc.Type, -1f);
                                                 //npc = Registries.NPC.Create(npc.Type);
                                                 Registries.NPC.SetDefaults (npc, 14); //FIXME: remember to tweak
+                                                npc.Active = true;
                                                 npc.life = (int)((float)npc.lifeMax * num56);
                                                 npc.ai[1] = num57;
                                                 npc.TargetClosest(true);
@@ -5490,7 +5497,9 @@ namespace Terraria_Server
                                                 bool flag6 = true;
                                                 for (int l = 0; l < 1000; l++)
                                                 {
-                                                    if (Main.npcs[l].Active && (Main.npcs[l].Type == 13 || Main.npcs[l].Type == 14 || Main.npcs[l].Type == 15))
+                                                    if (Main.npcs[l].Active && ( Main.npcs[l].type == NPCType.N13_EATER_OF_WORLDS_HEAD || 
+                                                                                 Main.npcs[l].type == NPCType.N14_EATER_OF_WORLDS_BODY ||
+                                                                                 Main.npcs[l].type == NPCType.N15_EATER_OF_WORLDS_TAIL ))
                                                     {
                                                         flag6 = false;
                                                         break;
