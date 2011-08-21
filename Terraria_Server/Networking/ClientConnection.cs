@@ -119,7 +119,14 @@ namespace Terraria_Server.Networking
 				FreeSectionBuffer (buf);
 			}
 		}
+
+#if TEST_COMPRESSION
+		public bool myClient = false;
 		
+		static long _compressed = 0;
+		static long _uncompressed = 0;
+#endif
+
 		protected override ArraySegment<byte> SerializeMessage (Message msg)
 		{
 			switch (msg.kind)
@@ -131,14 +138,35 @@ namespace Terraria_Server.Networking
 					var sX = (msg.param >> 16) * 200;
 					var sY = (msg.param & 0xffff) * 150;
 					
+#if TEST_COMPRESSION
+					int uncompressed = 0;
+#endif
+					
 					for (int y = sY; y < sY + 150; y++)
 					{
-						buf.SendTileRow (200, sX, y);
+#if TEST_COMPRESSION
+						if (myClient)
+						{
+							uncompressed += buf.TileRowSize (200, sX, y);
+							buf.TileRowCompressed (200, sX, y);
+						}
+						else
+#endif
+							buf.SendTileRow (200, sX, y);
+						
 					}
+					
+#if TEST_COMPRESSION
+					if (uncompressed > 0)
+					{
+						var c = System.Threading.Interlocked.Add (ref _compressed, buf.Written);
+						var u = System.Threading.Interlocked.Add (ref _uncompressed, uncompressed);
+						ProgramLog.Debug.Log ("Total section compression ratio: {2:0.00}% ({0:0.0}MB -> {1:0.0}MB)", u/1024.0/1024.0, c/1024.0/1024.0, c * 100.0 / u);
+					}
+#endif
 					
 					sectionBuffer = buf;
 					//ProgramLog.Debug.Log ("{0} @ {1}: Sending section ({2}, {3}) of {4} bytes.", RemoteAddress, assignedSlot, sX, sY, buf.Segment.Count);
-					//System.Threading.Thread.Sleep (100);
 					
 					return buf.Segment;
 				}

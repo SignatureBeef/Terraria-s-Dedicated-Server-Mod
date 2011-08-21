@@ -42,6 +42,14 @@ namespace Terraria_Server.Messages
             if (slot.state == SlotState.CONNECTED)
             {
                 String version = Encoding.ASCII.GetString(readBuffer, start + 1, length - 1);
+#if TEST_COMPRESSION
+                if ((version == "Terraria" + Statics.CURRENT_TERRARIA_RELEASE + "undead"))
+                {
+                    ProgramLog.Debug.Log ("{0} @ {1}: Undead's client detected.", slot.remoteAddress, whoAmI);
+                    slot.conn.myClient = true;
+                }
+                else
+#endif
                 if (!(version == "Terraria" + Statics.CURRENT_TERRARIA_RELEASE))
                 {
                     if (version.Length > 30) version = version.Substring (0, 30);

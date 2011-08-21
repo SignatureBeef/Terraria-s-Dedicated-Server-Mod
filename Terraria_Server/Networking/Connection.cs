@@ -152,6 +152,11 @@ namespace Terraria_Server.Networking
 			}
 		}
 		
+#if BANDWIDTH_ANALYSIS
+		public static int[] packetsPerMessage = new int [255];
+		public static long[] bytesPerMessage = new long [255];
+#endif
+		
 		protected bool SendMore (SocketAsyncEventArgsExt args)
 		{
 			try
@@ -170,6 +175,34 @@ namespace Terraria_Server.Networking
 							
 							var data = (byte[]) msg.content;
 							args.SetBuffer (data, 0, data.Length);
+
+#if TRACE_PACKETS
+							int read = 0;
+							var sb = new System.Text.StringBuilder ();
+							while (read < data.Length - 4)
+							{
+								sb.AppendFormat ("{0}({1}), ", BitConverter.ToInt32(data, read), (Packet)data[read+4]);
+								read += BitConverter.ToInt32(data, read) + 4;
+							}
+							ProgramLog.Debug.Log ("Sending chunk of {0}: {1}", data.Length, sb);
+#endif
+						
+#if BANDWIDTH_ANALYSIS
+							int read = 0;
+							while (read < data.Length - 4)
+							{
+								var len = BitConverter.ToInt32(data, read);
+								var id = data[read+4];
+								
+								lock (packetsPerMessage)
+								{
+									packetsPerMessage[id] += 1;
+									bytesPerMessage[id] += len + 4;
+								}
+								
+								read += BitConverter.ToInt32(data, read) + 4;
+							}
+#endif
 							BytesSent += data.Length;
 							queued = socket.SendAsync (args);
 							break;
@@ -181,6 +214,34 @@ namespace Terraria_Server.Networking
 							
 							var data = SerializeMessage (msg);
 							args.SetBuffer (data.Array, data.Offset, data.Count);
+
+#if TRACE_PACKETS
+							int read = 0;
+							var sb = new System.Text.StringBuilder ();
+							while (read < data.Count - 4)
+							{
+								sb.AppendFormat ("{0}({1}), ", BitConverter.ToInt32(data.Array, data.Offset+read), (Packet)data.Array[data.Offset+read+4]);
+								read += BitConverter.ToInt32(data.Array, data.Offset + read) + 4;
+							}
+							ProgramLog.Debug.Log ("Sending custom chunk of {0}: {1}", data.Count, sb);
+#endif
+
+#if BANDWIDTH_ANALYSIS
+							int read = 0;
+							while (read < data.Count - 4)
+							{
+								var len = BitConverter.ToInt32(data.Array, data.Offset+read);
+								var id = data.Array[data.Offset+read+4];
+								
+								lock (packetsPerMessage)
+								{
+									packetsPerMessage[id] += 1;
+									bytesPerMessage[id] += len + 4;
+								}
+								
+								read += BitConverter.ToInt32(data.Array, data.Offset + read) + 4;
+							}
+#endif
 							BytesSent += data.Count;
 							try
 							{

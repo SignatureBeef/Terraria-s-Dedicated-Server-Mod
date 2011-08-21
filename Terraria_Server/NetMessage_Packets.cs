@@ -198,7 +198,158 @@ namespace Terraria_Server
 		{
 			Tile (Main.tile.At (x, y).Data);
 		}
+
 		
+#if TEST_COMPRESSION
+		private int TileSize (TileData tile)
+		{
+			int count = 1;
+			
+			var active = tile.Active;
+			var wall   = tile.Wall;
+			var liquid = tile.Liquid;
+			
+			if (active)
+			{
+				var type = tile.Type;
+				
+				count += 1;
+				
+				if (Main.tileFrameImportant [type])
+				{
+					count += 4;
+				}
+			}
+			
+			if (wall > 0)
+			{
+				count += 1;
+			}
+			
+			if (liquid > 0)
+			{
+				count += 2;
+			}
+			
+			return count;
+		}
+		
+		private byte CompressedTileFlags (TileData tile, TileData last)
+		{
+			byte flags = 0;
+			
+			var active = tile.Active;
+			var type   = tile.Type;
+
+			if (active != last.Active)        flags |= 1;
+			if (tile.Lighted != last.Lighted) flags |= 2;
+			if (tile.Wall != last.Wall)       flags |= 4;
+			if (tile.Liquid != last.Liquid)   flags |= 8;
+			if (tile.Lava != last.Lava)       flags |= 16;
+			if (active)
+			{
+				if (last.Type != type) flags |= 32;
+				 
+				if (Main.tileFrameImportant [type] && (last.FrameX != tile.FrameX || last.FrameY != tile.FrameY))
+				{
+					flags |= 64;
+				}
+			}
+			
+			return flags;
+		}
+		
+		private void CompressedTileBody (byte flags, TileData tile)
+		{
+			Byte (flags);
+			
+			var type   = tile.Type;
+			var wall   = tile.Wall;
+			var liquid = tile.Liquid;
+			
+			if (tile.Active)
+			{
+				if ((flags & 32) != 0)
+				{
+					Byte (type);
+				}
+				
+				if ((flags & 64) != 0)
+				{
+					Short (tile.FrameX);
+					Short (tile.FrameY);
+				}
+			}
+			
+			if ((flags & 4) != 0)
+			{
+				Byte (wall);
+			}
+			
+			if ((flags & 8) != 0)
+			{
+				Byte (liquid);
+			}
+		}
+		
+		public void TileRowCompressed (int numColumns, int firstColumn, int row)
+		{
+			Begin (Packet.TILE_ROW_COMPRESSED);
+			
+			Short (numColumns);
+			Int (firstColumn);
+			Int (row);
+			
+			TileData last = default(TileData);
+			int run = 0;
+			
+			for (int col = firstColumn; col < firstColumn + numColumns; col++)
+			{
+				var tile = Main.tile.At (col, row).Data;
+				
+				byte flags = CompressedTileFlags (tile, last);
+				if (flags != 0)
+				{
+					while (run > 0)
+					{
+						int count = Math.Min (run, 127);
+						Byte (count | 128);
+						run -= count;
+					}
+					
+					CompressedTileBody (flags, tile);
+					
+					last = tile;
+				}
+				else
+				{
+					run += 1;
+				}
+			}
+			
+			while (run > 0)
+			{
+				int count = Math.Min (run, 127);
+				Byte (count | 128);
+				run -= count;
+			}
+			
+			End ();
+		}
+
+		public int TileRowSize (int numColumns, int firstColumn, int row)
+		{
+			int count = 5 + 2 + 4 + 4;
+			
+			for (int col = firstColumn; col < firstColumn + numColumns; col++)
+			{
+				count += TileSize (Main.tile.At (col, row).Data);
+			}
+			
+			return count;
+		}
+#endif
+
 		public void SendTileRow (int numColumns, int firstColumn, int row)
 		{
 			Begin (Packet.SEND_TILE_ROW);

@@ -83,6 +83,8 @@ namespace Terraria_Server
 		
 		public static int SendData (int packetId, int remoteClient = -1, int ignoreClient = -1, String text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
 		{
+			if (!Netplay.anyClients) return 0;
+			
 			try
 			{
 				var msg = PrepareThreadInstance();
@@ -434,7 +436,15 @@ namespace Terraria_Server
 			int num = (size - 1) / 2;
 			float x = tileX - num;
 			float y = tileY - num;
-			NetMessage.SendData(20, whoAmi, -1, "", size, x, y, 0f);
+			NetMessage.SendData (20, whoAmi, -1, "", size, x, y, 0f);
+		}
+		
+		public static void SendTileSquare (int whoAmi, int x, int y, int size, bool centered)
+		{
+			if (centered)
+				SendTileSquare (whoAmi, x, y, size);
+			else
+				NetMessage.SendData (20, whoAmi, -1, "", size, x, y, 0f);
 		}
 		
 		public static void SendSection(int whoAmi, int sectionX, int sectionY)
@@ -617,9 +627,7 @@ namespace Terraria_Server
 
 		public static void SendWater(int x, int y)
 		{
-			var msg = NetMessage.PrepareThreadInstance();
-			msg.FlowLiquid (x, y);
-			var bytes = msg.Output;
+			byte[] bytes = null;
 			
 			for (int i = 0; i < 255; i++)
 			{
@@ -627,18 +635,24 @@ namespace Terraria_Server
 				{
 					int X = x / 200;
 					int Y = y / 150;
-                    if (X < (Main.maxTilesX / 200) && Y < (Main.maxTilesY / 150))
-                    {
-                        if (Netplay.slots[i].tileSection[X, Y])
-                        {
-                            Netplay.slots[i].Send(bytes);
-                        }
-                    }
-                    else
-                    {
-                        ProgramLog.Error.Log("Water Index out of Bounds:");
-                        ProgramLog.Error.Log(string.Format("X: {0} Y: {1}, Axis: {2}, {3}", X, Y, Main.maxTilesX, Main.maxTilesY));
-                    }
+					if (X < (Main.maxTilesX / 200) && Y < (Main.maxTilesY / 150))
+					{
+						if (Netplay.slots[i].tileSection[X, Y])
+						{
+							if (bytes == null)
+							{
+								var msg = NetMessage.PrepareThreadInstance();
+								msg.FlowLiquid (x, y);
+								bytes = msg.Output;
+							}
+							Netplay.slots[i].Send(bytes);
+						}
+					}
+					else
+					{
+						ProgramLog.Error.Log("Water Index out of Bounds:");
+						ProgramLog.Error.Log(string.Format("X: {0} Y: {1}, Axis: {2}, {3}", X, Y, Main.maxTilesX, Main.maxTilesY));
+					}
 				}
 			}
 		}
