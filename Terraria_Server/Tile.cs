@@ -21,6 +21,7 @@ namespace Terraria_Server
 
 		public void SetData (TileData value)
 		{
+			//if (Netplay.anyClients && value.type == 53 && Main.tile.data [x, y].type != 53) Logging.ProgramLog.Debug.Log (System.Environment.StackTrace);
 			Main.tile.data [x, y] = value;
 		}
 
@@ -54,6 +55,7 @@ namespace Terraria_Server
 		
 		public void SetType (byte value)
 		{
+			//if (Netplay.anyClients && value == 53) Logging.ProgramLog.Debug.Log (System.Environment.StackTrace);
 			Main.tile.data [x, y].type = value;
 		}
 
@@ -66,33 +68,6 @@ namespace Terraria_Server
 			Main.tile.data [x, y].wall = value;
 		}
 
-		public byte WallFrameX {
-			get { return Main.tile.data [x, y].wallFrameX; }
-		}
-		
-		public void SetWallFrameX (byte value)
-		{
-			Main.tile.data [x, y].wallFrameX = value;
-		}
-
-		public byte WallFrameY {
-			get { return Main.tile.data [x, y].wallFrameY; }
-		}
-
-		public void SetWallFrameY (byte value)
-		{
-			Main.tile.data [x, y].wallFrameY = value;
-		}
-
-		public byte WallFrameNumber {
-			get { return Main.tile.data [x, y].wallFrameNumber; }
-		}
-		
-		public void SetWallFrameNumber (byte value)
-		{
-			Main.tile.data [x, y].wallFrameNumber = value;
-		}
-
 		public byte Liquid {
 			get { return Main.tile.data [x, y].liquid; }
 		}
@@ -100,6 +75,11 @@ namespace Terraria_Server
 		public void SetLiquid (byte value)
 		{
 			Main.tile.data [x, y].liquid = value;
+		}
+		
+		public void AddLiquid (int value)
+		{
+			Main.tile.data [x, y].liquid = (byte) (Main.tile.data [x, y].liquid + value);
 		}
 
 		public bool CheckingLiquid {
@@ -146,6 +126,11 @@ namespace Terraria_Server
 		{
 			Main.tile.data [x, y].frameX = value;
 		}
+		
+		public void AddFrameX (int value)
+		{
+			Main.tile.data [x, y].frameX = (short) (Main.tile.data [x, y].frameX + value);
+		}
 
 		public short FrameY {
 			get { return Main.tile.data [x, y].frameY; }
@@ -154,6 +139,11 @@ namespace Terraria_Server
 		public void SetFrameY (short value)
 		{
 			Main.tile.data [x, y].frameY = value;
+		}
+		
+		public void AddFrameY (int value)
+		{
+			Main.tile.data [x, y].frameY = (short) (Main.tile.data [x, y].frameY + value);
 		}
 	}
 	
@@ -174,9 +164,6 @@ namespace Terraria_Server
 		internal short frameY;
 		internal byte type;
 		internal byte wall;
-		internal byte wallFrameX;
-		internal byte wallFrameY;
-		internal byte wallFrameNumber;
 		internal byte liquid;
 		internal byte frameNumber;
 		internal TileFlags flags;
@@ -285,33 +272,6 @@ namespace Terraria_Server
 			}
 			set {
 				wall = value;
-			}
-		}
-
-		public byte WallFrameNumber {
-			get {
-				return this.wallFrameNumber;
-			}
-			set {
-				wallFrameNumber = value;
-			}
-		}
-
-		public byte WallFrameX {
-			get {
-				return this.wallFrameX;
-			}
-			set {
-				wallFrameX = value;
-			}
-		}
-
-		public byte WallFrameY {
-			get {
-				return this.wallFrameY;
-			}
-			set {
-				wallFrameY = value;
 			}
 		}
 	}
