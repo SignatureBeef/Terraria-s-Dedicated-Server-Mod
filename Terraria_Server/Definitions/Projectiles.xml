@@ -126,6 +126,7 @@
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <ignoreWater>true</ignoreWater>
+    <tileCollide>false</tileCollide>
   </Projectile>
   <Projectile>
     <Name>Vile Powder</Name>
