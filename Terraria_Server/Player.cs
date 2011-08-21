@@ -284,6 +284,7 @@ namespace Terraria_Server
         
         public int TeleSpawnX { get; set; }
         public int TeleSpawnY { get; set; }
+        public int TeleRetries { get; set; }
         
 		/// <summary>
 		/// Whether the player is male or not
@@ -5132,32 +5133,60 @@ namespace Terraria_Server
                 bedDestruction = value;
             }
         }
-
 		/// <summary>
 		/// Teleports player to specified location
 		/// </summary>
-		/// <param name="tileX">X coordinate to teleport to</param>
-		/// <param name="tileY">Y coordinate to teleport to</param>
+		/// <param name="tx">X pixel coordinate to teleport to</param>
+		/// <param name="ty">Y pixel coordinate to teleport to</param>
 		/// <returns>True on success, false on failure</returns>
-		public bool teleportTo (float tileX, float tileY) //FIXME: armor against race conditions
+		public bool Teleport (float tx, float ty)
+		{
+			return Teleport ((int) (tx / 16), (int) (ty / 16));
+		}
+		
+		[Obsolete("Renamed to Player.Teleport")]
+		public bool teleportTo (float tx, float ty)
+		{
+			return Teleport ((int) (tx / 16), (int) (ty / 16));
+		}
+		
+		private int teleportInProgress;
+		
+		public void TeleportDone ()
+		{
+			TeleRetries = 0;
+			TeleSpawnX = -1;
+			TeleSpawnY = -1;
+			System.Threading.Interlocked.CompareExchange (ref this.teleportInProgress, 0, 1);
+		}
+		
+		public bool Teleport (int tx, int ty)
+		{
+			return Teleport (tx, ty, false);
+		}
+		
+		internal bool Teleport (int tx, int ty, bool retrying)
 		{
 			if (Main.players[whoAmi] != this)
 			{
 				ProgramLog.Error.Log ("Attempt to teleport inactive player {0}.", Name ?? IPAddress);
 				return false;
 			}
-			            
-			int tx = (int) (tileX / 16);
-			int ty = (int) (tileY / 16);
+			
+			if (!retrying && System.Threading.Interlocked.CompareExchange (ref this.teleportInProgress, 1, 0) != 0)
+			{
+				ProgramLog.Error.Log ("Teleportation of player {0} already in progress.", Name ?? IPAddress);
+				return false;
+			}
 			
 			if (tx < 0 || ty < 0 || tx >= Main.maxTilesX || ty >= Main.maxTilesY)
 			{
 				ProgramLog.Error.Log ("Attempt to teleport player {0} to invalid location: {1}, {2}.", Name ?? IPAddress, tx, ty);
 				return false;
 			}
-		
+			
 			PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
-			playerEvent.ToLocation = new Vector2(tileX, tileY);
+			playerEvent.ToLocation = new Vector2 (tx * 16, ty * 16);
 			playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
 			playerEvent.Sender = this;
 			Program.server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
@@ -5244,12 +5273,29 @@ namespace Terraria_Server
 			msg.Broadcast ();
 			msg.Clear ();
 			
-			if (changeSpawn)
+			int left = 0;
+			int right = -1;
+			if (changeSpawn && oy > 1)
 			{
 				// invalidate player's bed temporarily
-				var data = Main.tile.At (ox, oy).Data;
-				data.Active = false;
-				msg.SingleTileSquare (ox, oy, data);
+				// we used to kill a tile under the bed, but that could cause
+				// side-effects, like killing objects hanging from the ceiling below
+				
+				left = Math.Max (0, ox - 4);
+				right = Math.Min (ox + 4, Main.maxTilesX);
+				
+				while (left < Main.maxTilesX && Main.tile.At (left, oy - 1).Type != 79) left += 1;
+				while (right > 0 && Main.tile.At (right, oy - 1).Type != 79) right -= 1;
+				
+				for (int x = left; x <= right; x++)
+				{
+					var data = Main.tile.At (x, oy - 1).Data;
+					data.Active = false;
+					msg.SingleTileSquare (x, oy - 1, data);
+					data = Main.tile.At (x, oy - 2).Data;
+					data.Active = false;
+					msg.SingleTileSquare (x, oy - 2, data);
+				}
 			}
 			
 			// change the global spawn point
@@ -5268,16 +5314,10 @@ namespace Terraria_Server
 //			msg.Send (whoAmi);
 //			msg.Clear ();
 			
-			if (changeSpawn)
+			if (changeSpawn && oy > 1)
 			{
 				// restore player's bed
 				msg.TileSquare (1, ox, oy);
-				
-				int left = Math.Max (0, ox - 4);
-				int right = Math.Min (ox + 4, Main.maxTilesX);
-				
-				while (left < Main.maxTilesX && Main.tile.At (left, oy - 1).Type != 79) left += 1;
-				while (right > 0 && Main.tile.At (right, oy - 1).Type != 79) right -= 1;
 				
 				if (right - left >= 0 && oy >= 2)
 					msg.TileSquare (right - left + 1, left, oy - 2);
@@ -5295,10 +5335,16 @@ namespace Terraria_Server
 		/// Teleports player to specified player
 		/// </summary>
 		/// <param name="player">Player to teleport to</param>
-        public void teleportTo(Player player)
-        {
-            this.teleportTo(player.Position.X, player.Position.Y);
-        }
+		public bool Teleport (Player player)
+		{
+			return Teleport ((int) (player.Position.X / 16), (int) (player.Position.Y / 16));
+		}
+		
+		[Obsolete("Renamed to Player.Teleport")]
+		public void teleportTo (Player player)
+		{
+			Teleport ((int) (player.Position.X / 16), (int) (player.Position.Y / 16));
+		}
 
 		/// <summary>
 		/// Gets a player's server password

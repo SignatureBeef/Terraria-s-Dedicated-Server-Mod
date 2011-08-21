@@ -105,6 +105,19 @@ namespace Terraria_Server.Commands
 			}
 
 			sender.sendMessage(string.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
+
+#if BANDWIDTH_ANALYSIS
+			var sb = new System.Text.StringBuilder ();
+			for (int i = 0; i < 255; i++)
+			{
+				var p = Networking.Connection.packetsPerMessage [i];
+				var b = Networking.Connection.bytesPerMessage [i];
+				if (p > 0)
+					sb.AppendFormat ("{0}({1}p, {2}B), ", (Packet)i, p, b);
+			}
+			
+			sender.sendMessage (sb.ToString());
+#endif
 		}
 
 		/// <summary>
@@ -724,9 +737,13 @@ namespace Terraria_Server.Commands
 				
 				if (args.Count == 0)
 				{
-					subject.teleportTo (Main.spawnTileX, Main.spawnTileY);
+					if (subject.Teleport (Main.spawnTileX, Main.spawnTileY))
+					{
 					
-					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to spawn."), true);
+						Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to spawn."), true);
+					}
+					else
+						sender.sendMessage ("Teleportation failed.");
 					return;
 				}
 			}
@@ -741,10 +758,14 @@ namespace Terraria_Server.Commands
 					return;
 				}
 
-				subject.teleportTo (target);
+				if (subject.Teleport (target))
+				{
 
-				Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
-					target.Name, ". {", sender.Name, "}"), true);
+					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+						target.Name, ". {", sender.Name, "}"), true);
+				}
+				else
+					sender.sendMessage ("Teleportation failed.");
 				return;
 			}
 			
@@ -755,10 +776,13 @@ namespace Terraria_Server.Commands
 			{
 				if (args.TryParseOne (out target))
 				{
-					subject.teleportTo (target);
-	
-					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
-						target.Name, ". {", sender.Name, "}"), true);
+					if (subject.Teleport (target))
+					{
+						Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+							target.Name, ". {", sender.Name, "}"), true);
+					}
+					else
+						sender.sendMessage ("Teleportation failed.");
 				}
 				else
 					sender.sendMessage ("Target player not found.");
@@ -774,10 +798,13 @@ namespace Terraria_Server.Commands
 						return;
 					}
 					
-					subject.teleportTo (x, y);
-
-					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
-						x, ":", y, ". {", sender.Name, "}"), true);
+					if (subject.Teleport (x, y))
+					{
+						Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+							x, ":", y, ". {", sender.Name, "}"), true);
+					}
+					else
+						sender.sendMessage ("Teleportation failed.");
 				}
 				else
 					throw new CommandError ("Invalid coordinates.");

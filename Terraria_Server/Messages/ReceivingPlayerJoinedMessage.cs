@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Terraria_Server.Logging;
+
 namespace Terraria_Server.Messages
 {
     public class ReceivingPlayerJoinedMessage : IMessage
@@ -39,6 +41,8 @@ namespace Terraria_Server.Messages
             num += 4;
             player.Spawn();
             
+            //ProgramLog.Debug.Log ("sx: {0}, sy: {1}, tx: {2}, ty: {3}", player.SpawnX, player.SpawnY, player.TeleSpawnX, player.TeleSpawnY);
+            
             if (Netplay.slots[whoAmI].state >= SlotState.SENDING_TILES)
             {
                 if (Netplay.slots[whoAmI].state == SlotState.SENDING_TILES)
@@ -49,14 +53,30 @@ namespace Terraria_Server.Messages
                 else
                 {
                     var msg = NetMessage.PrepareThreadInstance ();
-                    if (player.SpawnX == -1 && player.SpawnY == -1 && player.TeleSpawnX != -1)
+                    if (player.TeleSpawnX != -1 && player.SpawnX == -1 && player.SpawnY == -1)
                     {
                         msg.ReceivingPlayerJoined (whoAmI, player.TeleSpawnX, player.TeleSpawnY);
-                        player.TeleSpawnX = -1;
-                        player.TeleSpawnY = -1;
+                    }
+                    else if (player.TeleSpawnX != -1 && (player.SpawnX != player.TeleSpawnX || player.SpawnY != player.TeleSpawnY))
+                    {
+                        if (player.TeleRetries < 3)
+                        {
+                            ProgramLog.Debug.Log ("Player teleported to bed, retrying.");
+                            player.TeleRetries += 1;
+                            player.Teleport (player.TeleSpawnX, player.TeleSpawnY, true);
+                            return;
+                        }
+                        else
+                        {
+                            ProgramLog.Debug.Log ("Player teleported to bed, giving up.");
+                            msg.ReceivingPlayerJoined (whoAmI);
+                        }
                     }
                     else
                         msg.ReceivingPlayerJoined (whoAmI);
+
+                    player.TeleportDone ();
+
                     msg.BroadcastExcept (whoAmI);
                 }
             }
