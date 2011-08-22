@@ -18,10 +18,19 @@ namespace Terraria_Server.Messages
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
             int playerIndex = whoAmI;
+            var slot = Netplay.slots [whoAmI];
 
             String chat = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5).Trim();
             
-            var slot = Netplay.slots [whoAmI];
+            foreach (var c in chat)
+            {
+                if (c < 32 || c > 126)
+                {
+                    slot.Kick ("Invalid characters in chat message.");
+                    return;
+                }
+            }
+            
             if (slot.state < SlotState.PLAYING)
             {
                 if (chat != "/playing")
