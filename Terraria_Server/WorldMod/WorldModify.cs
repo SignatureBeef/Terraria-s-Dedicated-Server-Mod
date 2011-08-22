@@ -2703,7 +2703,9 @@ namespace Terraria_Server.WorldMod
                 }
                 else
                 {
-                    if (!Main.tile.At(i, y + 1).Active || !Main.tileSolid[(int)Main.tile.At(i, y + 1).Type])
+                    if (!Main.tile.At(i, y + 1).Active || (
+                        !Main.tileSolid[(int)Main.tile.At(i, y + 1).Type] && 
+                        !Main.tileTable[(int)Main.tile.At(i, y + 1).Type]))
                     {
                         flag = false;
                     }
