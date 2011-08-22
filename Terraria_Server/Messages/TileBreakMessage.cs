@@ -33,6 +33,8 @@ namespace Terraria_Server.Messages
 
             bool placed = false;
             bool wall = false;
+            
+            //Logging.ProgramLog.Debug.Log ("TileBreak({0}s, {4}a, {1}t) @ {2}, {3}", style, tileType, x, y, tileAction);
 			
 			if (x < 0 || y < 0 || x >= Main.maxTilesX || y >= Main.maxTilesY)
 			{
@@ -71,9 +73,11 @@ namespace Terraria_Server.Messages
                     tile.Wall = tileType;
                     break;
             }
+            
+            var player = Main.players[whoAmI];
 
             PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
-            tileEvent.Sender = Main.players[whoAmI];
+            tileEvent.Sender = player;
             tileEvent.Tile = tile;
             tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
             tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;
@@ -108,7 +112,18 @@ namespace Terraria_Server.Messages
                     WorldModify.KillTile(x, y, failFlag, false, false);
                     break;
                 case 1:
-                    WorldModify.PlaceTile(x, y, (int)tileType, false, true, -1, style);
+                    WorldModify.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style);
+                    
+                    if (tileType == 15 && player.direction == 1)
+                    {
+                        Main.tile.At(x, y).AddFrameX (18);
+                        Main.tile.At(x, y - 1).AddFrameX (18);
+                    }
+                    else if (tileType == 106)
+                    {
+                        WorldModify.SquareTileFrame (x, y, true);
+                    }
+                    
                     break;
                 case 2:
                     WorldModify.KillWall(x, y, failFlag);

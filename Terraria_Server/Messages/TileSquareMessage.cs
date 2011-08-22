@@ -13,6 +13,11 @@ namespace Terraria_Server.Messages
         {
             return Packet.TILE_SQUARE;
         }
+        
+#if IGNORE_TILE_SQUARE
+        static long sameTiles = 0;
+        static long diffTiles = 0;
+#endif
 
         public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
         {
@@ -22,6 +27,102 @@ namespace Terraria_Server.Messages
             num = start + 11;
             var slot = Netplay.slots[whoAmI];
             
+#if IGNORE_TILE_SQUARE
+            if (size > 7)
+            {
+                Logging.ProgramLog.Debug.Log ("{0}: Ignoring tile square of size {1}", whoAmI, size);
+                return;
+            }
+            
+            bool different = false;
+            for (int x = left; x < left + (int)size; x++)
+            {
+                for (int y = top; y < top + (int)size; y++)
+                {
+                    TileData tile = Main.tile.At(x, y).Data;
+
+                    byte b9 = readBuffer[num++];
+
+                    bool wasActive = tile.Active;
+
+                    tile.Active = ((b9 & 1) == 1);
+                    different |= tile.Active != wasActive;
+
+                    if ((b9 & 2) == 2)
+                    {
+                        different |= tile.Lighted == false;
+                        tile.Lighted = true;
+                    }
+
+                    if (tile.Active)
+                    {
+                        int wasType = (int)tile.Type;
+                        tile.Type = readBuffer[num++];
+                        
+                        different |= tile.Type != wasType;
+                        
+                        short framex = tile.FrameX;
+                        short framey = tile.FrameY;
+
+                        if (tile.Type >= Main.MAX_TILE_SETS)
+                        {
+                            slot.Kick ("Invalid tile received from client.");
+                            return;
+                        }
+                        
+                        if (Main.tileFrameImportant[(int)tile.Type])
+                        {
+                            framex = BitConverter.ToInt16(readBuffer, num);
+                            num += 2;
+                            framey = BitConverter.ToInt16(readBuffer, num);
+                            num += 2;
+                        }
+                        else if (!wasActive || (int)tile.Type != wasType)
+                        {
+                            framex = -1;
+                            framey = -1;
+                        }
+                        
+                        different |= (framex != tile.FrameX) || (framey != tile.FrameY);
+                    }
+
+                    if ((b9 & 4) == 4)
+                    {
+                        different |= tile.Wall == 0;
+                        different |= tile.Wall != readBuffer[num++];
+                    }
+
+                    if ((b9 & 8) == 8)
+                    {
+                        // TODO: emit a liquid event
+                        different |= tile.Liquid != readBuffer[num++];
+                        different |= (tile.Lava ? 1 : 0) != readBuffer[num++];
+                    }
+                    
+                    if (different)
+                    {
+                        break;
+                    }
+				}
+			}
+            
+            //Logging.ProgramLog.Debug.Log ("TileSquare({0}): {1}", size, different);
+            if (different)
+            {
+                System.Threading.Interlocked.Add (ref diffTiles, size);
+                if (size != 3)
+                    Logging.ProgramLog.Debug.Log ("{0}: TileSquare({1}): {2:0.0} ({3})", whoAmI, size, diffTiles * 100.0 / (sameTiles + diffTiles), diffTiles);
+            }
+            else
+            {
+                System.Threading.Interlocked.Add (ref sameTiles, size);
+                //Logging.ProgramLog.Debug.Log ("{0}: same TileSquare({1}): {2:0.0} ({3})", whoAmI, size, diffTiles * 100.0 / (sameTiles + diffTiles), diffTiles);
+            }
+
+            if (different) NetMessage.SendTileSquare (whoAmI, left, top, size, false);
+            return;
+#endif
+                        
             for (int x = left; x < left + (int)size; x++)
             {
                 for (int y = top; y < top + (int)size; y++)
