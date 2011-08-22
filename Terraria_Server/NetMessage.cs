@@ -458,41 +458,6 @@ namespace Terraria_Server
 				}
 				catch (NullReferenceException) {}
 			}
-			return;
-
-			/*try
-			{
-				var msg = NetMessage.PrepareThreadInstance();
-
-				if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
-				{
-					Netplay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
-					int num = sectionX * 200;
-					int num2 = sectionY * 150;
-					for (int i = num2; i < num2 + 150; i++)
-					{
-						//NetMessage.SendData(10, whoAmi, -1, "", 200, (float)num, (float)i, 0f);
-						msg.Clear ();
-						msg.SendTileRow (200, num, i);
-//						if (msg.Written >= 16384)
-//						{
-//							Netplay.slots[whoAmi].Send (msg.Output);
-//							msg.Clear ();
-//						}
-						Netplay.slots[whoAmi].Send (msg.Output); // tried sending as one big message, but it didn't work
-					}
-					
-					//Console.WriteLine ("SendSection: {0} bytes", ts.stream.Position);
-					//Netplay.slots[whoAmi].Send (ts.buffer, 0, (int)ts.stream.Position);
-				}
-				
-//				if (msg.Written > 0)
-//					Netplay.slots[whoAmi].Send (msg.Output); // tried sending as one big message, but it didn't work
-				
-			}
-			catch
-			{
-			}*/
 		}
 		
 		public static void Broadcast (byte[] bytes)
