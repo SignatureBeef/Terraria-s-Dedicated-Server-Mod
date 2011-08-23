@@ -294,6 +294,17 @@ namespace Terraria_Server.Commands
                 .WithHelpText("          plugin enable <plugin>")
                 .WithHelpText("          plugin disable <plugin>")
                 .Calls(Commands.ManagePlugins);
+
+            AddCommand("spawnboss")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Summon a Boss to the world. <Any Combination>")
+                .WithDescription("  (No if no player is entered it will be a random online player)")
+                .WithDescription("  (-night is mainly for Eye of Cthulu, but will set time to night for any Boss.)")
+                .WithHelpText("Usage:    spawnboss -<eye, skeletron, eater, kingslime>")
+                .WithHelpText("          spawnboss -eye -night")
+                .WithHelpText("          spawnboss -eater -eye...")
+                .WithHelpText("          spawnboss <boss> -player <name>")
+                .Calls(Commands.SummonBoss);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;

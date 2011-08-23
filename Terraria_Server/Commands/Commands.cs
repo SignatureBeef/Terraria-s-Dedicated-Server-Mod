@@ -1469,5 +1469,85 @@ namespace Terraria_Server.Commands
 				}
 			}
 		}
-	}
+
+        public static void SummonBoss(Server server, ISender sender, ArgumentList args)
+        {
+            Boolean EoW = args.TryPop("-eater");
+            Boolean EyeOC = args.TryPop("-eye");
+            Boolean Skeletron = args.TryPop("-skeletron");
+            Boolean KingSlime = args.TryPop("-kingslime");
+            Boolean NightOverride = args.TryPop("-night");
+
+            Player player = null;
+            if (sender is Player)
+            {
+                player = sender as Player;
+            }
+            else
+            {
+                if (Netplay.anyClients)
+                {
+                    String PlayerName;
+                    if (args.TryParseOne<String>("-player", out PlayerName))
+                    {
+                        player = server.GetPlayerByName(PlayerName);
+                    }
+                    else
+                    {
+                        //Find Random
+                        int plr = Main.rand.Next(0, Networking.ClientConnection.All.Count - 1); //Get Random PLayer
+                        player = Main.players[plr];
+                    }
+                    if (player == null)
+                    {
+                        throw new CommandError("There was an issue finding a/the player.");
+                    }
+                }
+                else
+                {
+                    throw new CommandError("There is no Online Players to spawn near.");
+                }
+            }
+
+            int BossId = -1;
+            if (EoW)
+            {
+                BossId = (int)NPCType.N13_EATER_OF_WORLDS_HEAD;
+            }
+            if (EyeOC)
+            {
+                BossId = (int)NPCType.N04_EYE_OF_CTHULU;
+                if (Main.dayTime && !NightOverride)
+                    throw new CommandError("This boss needs to be summoned in night time, Please override with -night");
+            }
+            if (Skeletron)
+            {
+                BossId = (int)NPCType.N35_SKELETRON_HEAD;
+            }
+            if (KingSlime)
+            {
+                BossId = (int)NPCType.N50_KING_SLIME;
+            }
+
+            if (BossId != -1)
+            {
+                if (NightOverride) //Mainly for eye
+                {
+                    server.World.setTime(16200.0, false, false);
+                    NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
+                }
+
+                Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+                int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
+                server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColour.Purple, true);
+                if (!(sender is ConsoleSender))
+                    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
+            }
+            else
+            {
+                throw new CommandError("You have no specified a Boss.");
+            }
+        }
+    
+    }
 }
