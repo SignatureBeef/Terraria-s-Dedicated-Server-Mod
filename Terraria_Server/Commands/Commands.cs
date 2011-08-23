@@ -1545,7 +1545,7 @@ namespace Terraria_Server.Commands
             }
             else
             {
-                throw new CommandError("You have no specified a Boss.");
+                throw new CommandError("You have not specified a Boss.");
             }
         }
     
