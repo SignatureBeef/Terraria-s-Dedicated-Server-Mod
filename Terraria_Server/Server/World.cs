@@ -95,6 +95,7 @@ namespace Terraria_Server
                     Main.dayTime = false;
                 }
             }
+            Main.bloodMoon = !Main.dayTime;
         }
 
         public int MaxTilesY

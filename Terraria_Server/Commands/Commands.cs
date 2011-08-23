@@ -457,13 +457,11 @@ namespace Terraria_Server.Commands
 					case "day":
 						{
 							server.World.setTime(13500.0);
-                            Main.bloodMoon = false;
 							break;
 						}
 					case "dawn":
 						{
                             server.World.setTime(0);
-                            Main.bloodMoon = false;
 							break;
 						}
 					case "dusk":
