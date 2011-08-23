@@ -661,10 +661,14 @@ namespace Terraria_Server.Commands
 			{
 				throw new CommandError("Too many arguments. NPC and player names with spaces require quotes.");
 			}
-			else if (args.Count == 3)
-			{
-				player = args.GetOnlinePlayer(2);
-			}
+            else if (sender is ConsoleSender && args.Count <= 2)
+            {
+                throw new CommandError("As console you need to specify the player to spawn near.");
+            }
+            else if (args.Count == 3)
+            {
+                player = args.GetOnlinePlayer(2);
+            }
 
 			String npcName = args.GetString(1).ToLower().Trim();
 
