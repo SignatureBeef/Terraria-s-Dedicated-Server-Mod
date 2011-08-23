@@ -1472,10 +1472,11 @@ namespace Terraria_Server.Commands
 
         public static void SummonBoss(Server server, ISender sender, ArgumentList args)
         {
-            Boolean EoW = args.TryPop("-eater");
-            Boolean EyeOC = args.TryPop("-eye");
-            Boolean Skeletron = args.TryPop("-skeletron");
-            Boolean KingSlime = args.TryPop("-kingslime");
+            //Come to think of it now, It may be 1 boss at a time -_-
+            Boolean EoW = args.TryPop("eater");
+            Boolean EyeOC = args.TryPop("eye");
+            Boolean Skeletron = args.TryPop("skeletron");
+            Boolean KingSlime = args.TryPop("kingslime");
             Boolean NightOverride = args.TryPop("-night");
 
             Player player = null;
@@ -1509,27 +1510,28 @@ namespace Terraria_Server.Commands
                 }
             }
 
-            int BossId = -1;
+            List<Int32> Bosses = new List<Int32>();
             if (EoW)
             {
-                BossId = (int)NPCType.N13_EATER_OF_WORLDS_HEAD;
+                Bosses.Add((int)NPCType.N13_EATER_OF_WORLDS_HEAD);
             }
             if (EyeOC)
             {
-                BossId = (int)NPCType.N04_EYE_OF_CTHULU;
                 if (Main.dayTime && !NightOverride)
                     throw new CommandError("This boss needs to be summoned in night time, Please override with -night");
+
+                Bosses.Add((int)NPCType.N04_EYE_OF_CTHULU);
             }
             if (Skeletron)
             {
-                BossId = (int)NPCType.N35_SKELETRON_HEAD;
+                Bosses.Add((int)NPCType.N35_SKELETRON_HEAD);
             }
             if (KingSlime)
             {
-                BossId = (int)NPCType.N50_KING_SLIME;
+                Bosses.Add((int)NPCType.N50_KING_SLIME);
             }
 
-            if (BossId != -1)
+            if (Bosses.Count > 0)
             {
                 if (NightOverride) //Mainly for eye
                 {
@@ -1537,17 +1539,19 @@ namespace Terraria_Server.Commands
                     NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
                 }
 
-                Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
-                int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
-                server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColour.Purple, true);
-                if (!(sender is ConsoleSender))
-                    ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
+                foreach (Int32 BossId in Bosses)
+                {
+                    Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
+                    int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
+                    server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColour.Purple, true);
+                    if (!(sender is ConsoleSender))
+                        ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
+                }
             }
             else
             {
                 throw new CommandError("You have not specified a Boss.");
-            }
-        }
-    
+            }            
+        }    
     }
 }
