@@ -47,7 +47,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Commands.cs" />
+    <Compile Include="Commands\PluginCommands.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="TDSMPlugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -9,6 +9,7 @@ using Terraria_Server.Plugin;
 using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Logging;
+using TDSMPlugin.Commands;
 
 namespace TDSMExamplePlugin
 {
@@ -35,7 +36,7 @@ namespace TDSMExamplePlugin
             Description = "Plugin Example for TDSM.";
             Author = "DeathCradle";
             Version = "1";
-            TDSMBuild = 29; //Current Release - Working
+            TDSMBuild = 32; //You put here the release this plugin was made/build for.
 
             plugin = this;
 
@@ -46,7 +47,7 @@ namespace TDSMExamplePlugin
             //setup a new properties file
             properties = new Properties(pluginFolder + Path.DirectorySeparatorChar + "tdsmplugin.properties");
             properties.Load();
-            //properties.pushData(); //Creates default values if needed. [Out-Dated]
+            properties.pushData(); //Creates default values if needed. [Out-Dated]
             properties.Save();
 
             //read properties data
@@ -67,7 +68,7 @@ namespace TDSMExamplePlugin
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("A Command Example for TDSM")
                 .WithHelpText("Usage:   /tdsmpluginexample")
-                .Calls(TDSMExamplePlugin.Commands.Commands.ExampleCommand);
+                .Calls(PluginCommands.ExampleCommand);
 
             Main.stopSpawns = !spawningAllowed;
             if (Main.stopSpawns)
