@@ -68,8 +68,29 @@ namespace Terraria_Server.Plugin
         {
             try
             {
-            	Type type = typeof(Plugin);
-                foreach (Type messageType in Assembly.LoadFrom(pluginPath).GetTypes()
+				Assembly assembly = null;
+				Type type = typeof(Plugin);
+				using (FileStream fs = File.Open(pluginPath, FileMode.Open))
+				{
+
+					using (MemoryStream ms = new MemoryStream())
+					{
+
+						byte[] buffer = new byte[1024];
+
+						int read = 0;
+
+						while ((read = fs.Read(buffer, 0, 1024)) > 0)
+
+							ms.Write(buffer, 0, read);
+
+						assembly = Assembly.Load(ms.ToArray());
+
+					}
+
+				}
+
+                foreach (Type messageType in assembly.GetTypes()
 	                .Where(x => type.IsAssignableFrom(x) && x != type))
 	            {
                     if (!messageType.IsAbstract)
@@ -103,17 +124,17 @@ namespace Terraria_Server.Plugin
         /// Reloads all plugins currently running on the server
         /// </summary>
         public void ReloadPlugins() {
-            DisablePlugins();
+			DisablePlugins();
 
             foreach (String file in Directory.GetFiles(pluginPath))
             {
                 FileInfo fileInfo = new FileInfo(file);
                 if (fileInfo.Extension.ToLower().Equals(".dll"))
                 {
-                    Plugin plugin = loadPlugin(file);
+					Plugin plugin = loadPlugin(file);
                     if (plugin != null)
                     {
-                    	plugins.Add(plugin.Name.ToLower().Trim(), plugin);
+						plugins.Add(plugin.Name.ToLower().Trim(), plugin);
                     }
                 }
             }
