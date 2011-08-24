@@ -120,7 +120,6 @@ namespace Terraria_Server
 
 				ParseArgs(args);
 
-//#if (DEBUG == false) //I'll comment this for each release, Updates are annoying when testing :3
 				try
 				{
 					if (UpdateManager.performProcess())
@@ -137,7 +136,6 @@ namespace Terraria_Server
 				{
 					ProgramLog.Log (e, "Error updating");
 				}
-//#endif
 				
 				LoadMonitor.Start ();
 				
@@ -586,6 +584,61 @@ namespace Terraria_Server
 							{
 								Platform.Type = Platform.PlatformType.LINUX;
 							}
+						}
+						catch
+						{
+
+						}
+					}
+					else if (commandMessage.Equals("-hackeddata"))
+					{
+						try
+						{
+							properties.HackedData = Convert.ToBoolean(args[i + 1]);
+						}
+						catch
+						{
+
+						}
+					}
+					else if (commandMessage.Equals("-rconip"))
+					{
+						try
+						{
+							properties.RConBindAddress = args[i + 1];
+						}
+						catch
+						{
+
+						}
+					}
+					else if (commandMessage.Equals("-rconsalt"))
+					{
+						try
+						{
+							properties.RConHashNonce = args[i + 1];
+						}
+						catch
+						{
+
+						}
+					}
+					else if (commandMessage.Equals("-rotatelog"))
+					{
+						try
+						{
+							properties.LogRotation = Convert.ToBoolean(args[i + 1]);
+						}
+						catch
+						{
+
+						}
+					}
+					else if (commandMessage.Equals("-spawnnpcmax"))
+					{
+						try
+						{
+							properties.SpawnNPCMax = Convert.ToInt16(args[i + 1]);
 						}
 						catch
 						{

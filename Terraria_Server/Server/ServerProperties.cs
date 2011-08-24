@@ -412,6 +412,10 @@ namespace Terraria_Server
 				Program.properties.setValue ("rcon-hash-nonce", val);
 				return val;
 			}
+			set
+			{
+				Program.properties.setValue("rcon-hash-nonce", value);
+			}
 		}
 		
 		public bool LogRotation
