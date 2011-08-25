@@ -18,7 +18,7 @@ namespace TDSMExamplePlugin
         /*
          * @Developers
          * 
-         * Plugins need to be in .NET 3.5
+         * Plugins need to be in .NET 4.0
          * Otherwise TDSM will be unable to load it. 
          * 
          * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
