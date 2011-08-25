@@ -263,6 +263,20 @@ namespace Terraria_Server
                 NPC.defaultSpawnRate = value;
                 NPC.spawnRate = value;
             }
-        }        
+        }
+
+        public Boolean isValidLocation(Vector2 point)
+        {
+            if (point != null)
+                if (point.X <= Main.maxTilesX && point.X >= 0)
+                {
+                    if (point.Y <= Main.maxTilesY && point.Y >= 0)
+                    {
+                        return true;
+                    }
+                }
+
+            return false;
+        }
     }
 }

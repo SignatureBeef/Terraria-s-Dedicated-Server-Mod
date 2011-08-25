@@ -9,6 +9,8 @@ using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions.Tile;
 using Terraria_Server;
+using System.IO;
+using Regions.Region;
 
 namespace Regions
 {
@@ -16,6 +18,24 @@ namespace Regions
     {
         public const Int32 SelectorItem = 0;
 
+        public static String RegionsFolder
+        {
+            get
+            {
+                return Statics.PluginPath + Path.DirectorySeparatorChar + "Regions";
+            }
+        }
+
+        public static String DataFolder
+        {
+            get
+            {
+                return RegionsFolder + Path.DirectorySeparatorChar + "Data";
+            }
+        }
+
+        public static Properties rProperties { get; set; }
+        public static RegionManager regionManager { get; set; }
         public static Vector2[] mousePoints = { new Vector2(0, 0), new Vector2(0, 0) };
         private static Boolean SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
 
@@ -27,11 +47,21 @@ namespace Regions
             base.Version = "0.1";
             base.TDSMBuild = 32;
 
-            AddCommand("region select")
+            if (!Directory.Exists(RegionsFolder))
+                Directory.CreateDirectory(RegionsFolder);
+
+            rProperties = new Properties(RegionsFolder + Path.DirectorySeparatorChar + "regions.properties");
+            rProperties.Load();
+            rProperties.pushData();
+            rProperties.Save();
+
+            regionManager = new RegionManager(DataFolder);
+
+            AddCommand("region")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:    region select")
-                .WithDescription("Turn on the Selectin Tool Mode")
-                .Calls(Commands.SelectionToolToggle);
+                .WithDescription("Region Management.")
+                .Calls(Commands.Region);
 
             //registerHook(Hooks.PLAYER_KEYPRESS); 
             registerHook(Hooks.PLAYER_TILECHANGE);

@@ -47,8 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
+    <Compile Include="Properties.cs" />
     <Compile Include="Regions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Region\Region.cs" />
+    <Compile Include="Region\RegionManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Terraria_Server\Terraria_Server.csproj">
@@ -56,9 +59,7 @@
       <Name>Terraria_Server</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Regions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
