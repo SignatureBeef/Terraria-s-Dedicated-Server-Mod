@@ -1,0 +1,5 @@
+E:\TDSM_Git\Regions\bin\Debug\Regions.exe
+E:\TDSM_Git\Regions\bin\Debug\Regions.pdb
+E:\TDSM_Git\Regions\obj\x86\Debug\ResolveAssemblyReference.cache
+E:\TDSM_Git\Regions\obj\x86\Debug\Regions.exe
+E:\TDSM_Git\Regions\obj\x86\Debug\Regions.pdb
