@@ -1,5 +1,8 @@
-E:\TDSM_Git\Regions\bin\Debug\Regions.exe
 E:\TDSM_Git\Regions\bin\Debug\Regions.pdb
 E:\TDSM_Git\Regions\obj\x86\Debug\ResolveAssemblyReference.cache
-E:\TDSM_Git\Regions\obj\x86\Debug\Regions.exe
 E:\TDSM_Git\Regions\obj\x86\Debug\Regions.pdb
+E:\TDSM_Git\Regions\bin\Debug\Regions.dll
+E:\TDSM_Git\Regions\bin\Debug\Terraria_Server.exe
+E:\TDSM_Git\Regions\bin\Debug\Terraria_Server.pdb
+E:\TDSM_Git\Regions\bin\Debug\Terraria_Server.xml
+E:\TDSM_Git\Regions\obj\x86\Debug\Regions.dll

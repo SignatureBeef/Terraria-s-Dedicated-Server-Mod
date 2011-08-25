@@ -10,7 +10,7 @@ namespace Regions
 {
     public class Regions : Plugin
     {
-        public void Load()
+        public override void Load()
         {
             base.Name = "Regions";
             base.Description = "A region plguin for TDSM";
@@ -25,12 +25,12 @@ namespace Regions
                 .Calls(Commands.SelectionToolToggle);
         }
 
-        public void Enable()
+        public override void Enable()
         {
             ProgramLog.Log("Regions for TDSM #" + base.TDSMBuild + " enabled.");
         }
 
-        public void Disable()
+        public override void Disable()
         {
             ProgramLog.Log("Regions disabled.");
         }
