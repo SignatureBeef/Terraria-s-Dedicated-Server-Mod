@@ -12,6 +12,7 @@ namespace Regions.Region
         public String Name { get; set; }
         public String Description = "";
 
+        public Boolean Restricted = false; //restrict from Ops
         public List<String> UserList = new List<String>();
 
         /* In tile format (/16) */
@@ -125,13 +126,17 @@ namespace Regions.Region
         /// </summary>
         /// <param name="point">Point to check.</param>
         /// <returns>True upon success</returns>
-        public Boolean HasPoint(Vector2 point)
+        public Boolean HasPoint(Vector2 point,Boolean toTile = false)
         {
-            Rectangle pRect = new Rectangle((int)point.X, (int)point.Y, 1, 1);
+            int inX = (toTile) ? (int)(point.X / 16) : (int)point.X;
+            int inY = (toTile) ? (int)(point.Y / 16) : (int)point.Y;
+            Rectangle pRect = new Rectangle(inX, inY, 1, 1);
+
             int x = GetSmallestX;
             int y = (int)((Point1.X == x) ? Point1.Y : Point2.Y);
             int width = (int)(Point2.X - Point1.X);
             int height = (int)(Point2.Y - Point1.Y);
+
             return pRect.Intersects(new Rectangle(x, y, width, height));
         }
 
@@ -152,8 +157,9 @@ namespace Regions.Region
                 "description: {1}\n" +
                 "point1: {2},{3}\n" +
                 "point2: {4},{5}\n" +
-                "users: {6}\n",
-                Name, Description, Point1.X, Point1.Y, Point2.X, Point2.Y, UserListToString());
+                "users: {6}\n" +
+                "restricted: {7}",
+                Name, Description, Point1.X, Point1.Y, Point2.X, Point2.Y, UserListToString(), Restricted);
         }
     }
 }

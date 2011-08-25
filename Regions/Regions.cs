@@ -88,7 +88,11 @@ namespace Regions
             public override void onPlayerTileChange(PlayerTileChangeEvent Event)
             {
                 if(Event.Sender is Player) {
-                    if (Event.Action == TileAction.PLACED && Event.TileType == TileType.BLOCK && (int)Event.Tile.Type == SelectorItem)
+
+                    var player = Event.Sender as Player;
+
+                    if (Event.Action == TileAction.PLACED && Event.TileType == TileType.BLOCK && (int)Event.Tile.Type == SelectorItem
+                        && Selection.isInSelectionlist(player))
                     {
                         Event.Cancelled = true;
                         SelectorPos = !SelectorPos;
@@ -98,9 +102,24 @@ namespace Regions
                         else
                             mousePoints[1] = Event.Position;
 
-                        (Event.Sender as Player).sendMessage(string.Format("You have selected block at {0},{1}, {2} position", 
+                        player.sendMessage(string.Format("You have selected block at {0},{1}, {2} position", 
                             Event.Position.X, Event.Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColour.Green);
+                        return;
                     }
+
+                    foreach (Region.Region rgn in regionManager.Regions)
+                    {
+                        if (rgn.HasPoint(Event.Position, true))
+                        {
+                            if (rgn.Restricted && player.Op || !rgn.ContainsUser(player.Name))
+                            {
+                                Event.Cancelled = true;
+                                player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                                return;
+                            }
+                        }
+                    }
+
                 }
             }
 

@@ -52,6 +52,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Region\Region.cs" />
     <Compile Include="Region\RegionManager.cs" />
+    <Compile Include="Region\Selection.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Terraria_Server\Terraria_Server.csproj">
