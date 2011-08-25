@@ -26,7 +26,7 @@ namespace Regions.Region
             {
                 Tiles.Clear();
 
-                /* Get Mins/Maxs and convert to tile format */
+                /* Get Mins/Maxs (Already in tile format, / 16)*/
                 int XHighest = (int)Math.Max(Point1.X, Point2.X);
                 int XLowest = (int)Math.Min(Point1.X, Point2.X);
                 int YHighest = (int)Math.Max(Point1.Y, Point2.Y);
