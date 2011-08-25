@@ -14,7 +14,7 @@ namespace Regions.Region
 
         public List<String> UserList = new List<String>();
 
-        /* In tile format (*16) */
+        /* In tile format (/16) */
         public Vector2 Point1 { get; set; }
         public Vector2 Point2 { get; set; }
 

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Terraria_Server.Logging;
 using System.IO;
+using Terraria_Server.Misc;
 
 namespace Regions.Region
 {
@@ -55,5 +56,72 @@ namespace Regions.Region
             return false;
         }
 
+        public Region LoadRegion(String location)
+        {
+            Region region = null;
+
+            String Name = "";
+            String Description = "";
+            Vector2 Point1 = default(Vector2);
+            Vector2 Point2 = default(Vector2);
+            List<String> Users = new List<String>();
+
+            foreach (String line in File.ReadAllLines(location))
+            {
+                if(line.Contains(":"))
+                {
+                    String key = line.Split(':')[0];
+                    switch (key)
+                    {
+                        case "name":
+                            {
+                                Name = line.Remove(0, line.IndexOf(":")).Trim();
+                                break;
+                            }
+                        case "decription":
+                            {
+                                Description = line.Remove(0, line.IndexOf(":")).Trim();
+                                break;
+                            }
+                        case "point1":
+                            {
+                                String[] xy = line.Remove(0, line.IndexOf(":")).Trim().Split(',');
+                                float x, y;
+                                if (!(float.TryParse(xy[0], out x) && float.TryParse(xy[1], out y)))
+                                    Point1 = default(Vector2);
+                                else
+                                    Point2 = new Vector2(x, y);
+                                break;
+                            }
+                        case "point2":
+                            {
+                                String[] xy = line.Remove(0, line.IndexOf(":")).Trim().Split(',');
+                                float x, y;
+                                if (!(float.TryParse(xy[0], out x) && float.TryParse(xy[1], out y)))
+                                    Point2 = default(Vector2);
+                                else
+                                    Point2 = new Vector2(x, y);
+                                break;
+                            }
+                        case "users":
+                            {
+                                String userlist = line.Remove(0, line.IndexOf(":")).Trim();
+                                Users = userlist.Split(' ').ToList<String>();
+                                break;
+                            }
+                        default: continue;
+                    }
+                }
+            }
+
+            region = new Region();
+            region.Name = Name;
+            region.Description = Description;
+            region.Point1 = Point1;
+            region.Point2 = Point2;
+            region.UserList = Users;
+            
+            return region.IsValidRegion() ? region : null;
+        }
     }
 }

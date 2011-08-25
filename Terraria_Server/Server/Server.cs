@@ -265,9 +265,9 @@ namespace Terraria_Server
             }
         }
 
-        public Boolean isValidLocation(Vector2 point)
+        public Boolean isValidLocation(Vector2 point, Boolean defaultResist = true)
         {
-            if (point != null)
+            if (point != null && (defaultResist) ? (point != default(Vector2)) : true)
                 if (point.X <= Main.maxTilesX && point.X >= 0)
                 {
                     if (point.Y <= Main.maxTilesY && point.Y >= 0)
