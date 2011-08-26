@@ -335,7 +335,7 @@ namespace Terraria_Server.WorldMod
 
 			for (int dnum = 0; dnum < numDungeons; dnum++)
 			{
-				y = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldModify.genRand.Next(-200, 200); //Generate a custon Y each time
+				y = (int)((Main.rockLayer + (double)Main.maxTilesY) / 2.0) + WorldModify.genRand.Next(-200, 200); //Generate a custom Y each time
 				if (dnum == 1)
 				{
 					//num9 = direction

@@ -11,6 +11,7 @@ using Terraria_Server.Definitions.Tile;
 using Terraria_Server;
 using System.IO;
 using Regions.Region;
+using Terraria_Server.Definitions;
 
 namespace Regions
 {
@@ -156,7 +157,7 @@ namespace Regions
 
             public override void onDoorStateChange(DoorStateChangeEvent Event)
             {
-                if (Event.Sender is Player)
+                if (Event.Opener == DoorOpener.PLAYER) /* Event.Sender is Player */
                 {
                     var player = Event.Sender as Player;
 

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Permissions
 {
-	class Node
+	public class Node
 	{
 		private String stringNode;
 

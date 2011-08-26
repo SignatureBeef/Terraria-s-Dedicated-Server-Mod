@@ -22,6 +22,7 @@ namespace Terraria_Server
         private const int MAX_INVENTORY = 44;
         private const int MAX_HEALTH = 400;
         private const int MAX_MANA = 360;
+        private const int MAX_ITEMS = 255;
 
 		/// <summary>
 		/// Whether this player is using TDCM
@@ -4805,7 +4806,93 @@ namespace Terraria_Server
             }
             return false;
         }
-		
+
+
+        /// <summary>
+        /// Get death message string of falling related causes.
+        /// </summary>
+        /// <returns></returns>
+        public static String GetDeathMessageForGround() {
+            String deathMessage = "";
+            int randomMessage = Main.rand.Next(5);
+
+            switch (randomMessage)
+            {
+                case 0:
+                    deathMessage = " fell to their death.";
+                    break;
+                case 1:
+                    deathMessage = " faceplanted the ground.";
+                    break;
+                case 2:
+                    deathMessage = " fell victim to gravity.";
+                    break;
+                case 3:
+                    deathMessage = " left a small crater.";
+                    break;
+                case 4:
+                    deathMessage = " didn't bounce.";
+                    break;
+            }
+
+            return deathMessage;
+        }
+
+
+        /// <summary>
+        /// Get death message string of water related causes.
+        /// </summary>
+        /// <returns></returns>
+        public static String GetDeathMessageForWater() {
+            String deathMessage = "";
+            int randomMessage = Main.rand.Next(4);
+
+            switch (randomMessage)
+            {
+                case 0:
+                    deathMessage = " forgot to breathe.";
+                    break;
+                case 1:
+                    deathMessage = " is sleeping with the fish.";
+                    break;
+                case 2:
+                    deathMessage = " drowned.";
+                    break;
+                case 3:
+                    deathMessage = " is shark food.";
+                    break;
+            }
+
+            return deathMessage;
+        }
+
+        /// <summary>
+        /// Get death message string of lava related causes.
+        /// </summary>
+        /// <returns></returns>
+        public static String GetDeathMessageForLava() {
+            String deathMessage = "";
+            int randomMessage = Main.rand.Next(4);
+
+            switch (randomMessage)
+            {
+                case 0:
+                    deathMessage = " got melted.";
+                    break;
+                case 1:
+                    deathMessage = " was incinerated.";
+                    break;
+                case 2:
+                    deathMessage = " tried to swim in lava.";
+                    break;
+                case 3:
+                    deathMessage = " likes to play in magma.";
+                    break;
+            }
+
+            return deathMessage;
+        }
+
 		/// <summary>
 		/// Get death message string of standard death reason
 		/// </summary>
@@ -4816,238 +4903,79 @@ namespace Terraria_Server
 		/// <returns></returns>
         public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
         {
-            String result = "";
-            int num = Main.rand.Next(11);
-            String text = "";
-            if (num == 0)
+            String deathMessage = "";
+            int randomDeath = Main.rand.Next(11);
+            String deathText = "";
+
+            switch (randomDeath)
             {
-                text = " was slain";
+                case 0 :
+                    deathText = " was slain";
+                    break;
+                case 1 :
+                    deathText = " was eviscerated";
+                    break;
+                case 2 :
+                    deathText = " was murdered";
+                    break;
+                case 3 :
+                    deathText = "'s face was torn off";
+                    break;
+                case 4 :
+                    deathText = "'s entrails were ripped out";
+                    break;
+                case 5 :
+                    deathText = " was destroyed";
+                    break;
+                case 6 :
+                    deathText = "'s skull was crushed";
+                    break;
+                case 7 :
+                    deathText = " got massacred";
+                    break;
+                case 8 :
+                    deathText = " got impaled";
+                    break;
+                case 9 :
+                    deathText = " was torn in half";
+                    break;
+                case 10 :
+                    deathText = " was decapitated";
+                    break;
             }
-            else
-            {
-                if (num == 1)
-                {
-                    text = " was eviscerated";
-                }
-                else
-                {
-                    if (num == 2)
-                    {
-                        text = " was murdered";
-                    }
-                    else
-                    {
-                        if (num == 3)
-                        {
-                            text = "'s face was torn off";
-                        }
-                        else
-                        {
-                            if (num == 4)
-                            {
-                                text = "'s entrails were ripped out";
-                            }
-                            else
-                            {
-                                if (num == 5)
-                                {
-                                    text = " was destroyed";
-                                }
-                                else
-                                {
-                                    if (num == 6)
-                                    {
-                                        text = "'s skull was crushed";
-                                    }
-                                    else
-                                    {
-                                        if (num == 7)
-                                        {
-                                            text = " got massacred";
-                                        }
-                                        else
-                                        {
-                                            if (num == 8)
-                                            {
-                                                text = " got impaled";
-                                            }
-                                            else
-                                            {
-                                                if (num == 9)
-                                                {
-                                                    text = " was torn in half";
-                                                }
-                                                else
-                                                {
-                                                    if (num == 10)
-                                                    {
-                                                        text = " was decapitated";
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+
             if (plr >= 0 && plr < 255)
             {
                 if (proj >= 0 && Main.projectile[proj].Name != "")
-                {
-                    result = String.Concat(new String[]
-					{
-						text, 
-						" by ", 
-						Main.players[plr].Name, 
-						"'s ", 
-						Main.projectile[proj].Name, 
-						"."
-					});
-                }
+                    deathMessage = string.Format("{0} by {1}'s {2}.", deathText, Main.players[plr].Name, Main.projectile[proj].Name);
                 else
-                {
-                    result = String.Concat(new String[]
-					{
-						text, 
-						" by ", 
-						Main.players[plr].Name, 
-						"'s ", 
-						Main.players[plr].inventory[Main.players[plr].selectedItemIndex].Name, 
-						"."
-					});
-                }
+                    deathMessage = string.Format("{0} by {1}'s {2}.", deathText, Main.players[plr].Name, Main.players[plr].inventory[Main.players[plr].selectedItemIndex].Name);                    
             }
-            else
+            else if (npc >= 0 && Main.npcs[npc].Name != "")
+                deathMessage = string.Format("{0} by {1}.", deathText,Main.npcs[npc].Name);
+
+            else if (proj >= 0 && Main.projectile[proj].Name != "")
+                deathMessage = string.Format("{0} by {1}.", deathText, Main.projectile[proj].Name);
+
+            else if (other >= 0)
             {
-                if (npc >= 0 && Main.npcs[npc].Name != "")
+                switch (other)
                 {
-                    result = text + " by " + Main.npcs[npc].Name + ".";
-                }
-                else
-                {
-                    if (proj >= 0 && Main.projectile[proj].Name != "")
-                    {
-                        result = text + " by " + Main.projectile[proj].Name + ".";
-                    }
-                    else
-                    {
-                        if (other >= 0)
-                        {
-                            if (other == 0)
-                            {
-                                int num2 = Main.rand.Next(5);
-                                if (num2 == 0)
-                                {
-                                    result = " fell to their death.";
-                                }
-                                else
-                                {
-                                    if (num2 == 1)
-                                    {
-                                        result = " faceplanted the ground.";
-                                    }
-                                    else
-                                    {
-                                        if (num2 == 2)
-                                        {
-                                            result = " fell victim to gravity.";
-                                        }
-                                        else
-                                        {
-                                            if (num2 == 3)
-                                            {
-                                                result = " left a small crater.";
-                                            }
-                                            else
-                                            {
-                                                if (num2 == 4)
-                                                {
-                                                    result = " didn't bounce.";
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                if (other == 1)
-                                {
-                                    int num3 = Main.rand.Next(4);
-                                    if (num3 == 0)
-                                    {
-                                        result = " forgot to breathe.";
-                                    }
-                                    else
-                                    {
-                                        if (num3 == 1)
-                                        {
-                                            result = " is sleeping with the fish.";
-                                        }
-                                        else
-                                        {
-                                            if (num3 == 2)
-                                            {
-                                                result = " drowned.";
-                                            }
-                                            else
-                                            {
-                                                if (num3 == 3)
-                                                {
-                                                    result = " is shark food.";
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    if (other == 2)
-                                    {
-                                        int num4 = Main.rand.Next(4);
-                                        if (num4 == 0)
-                                        {
-                                            result = " got melted.";
-                                        }
-                                        else
-                                        {
-                                            if (num4 == 1)
-                                            {
-                                                result = " was incinerated.";
-                                            }
-                                            else
-                                            {
-                                                if (num4 == 2)
-                                                {
-                                                    result = " tried to swim in lava.";
-                                                }
-                                                else
-                                                {
-                                                    if (num4 == 3)
-                                                    {
-                                                        result = " likes to play in magma.";
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (other == 3)
-                                        {
-                                            result = text + ".";
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    case 0:
+                        deathMessage = GetDeathMessageForGround();
+                        break;
+                    case 1:
+                        deathMessage = GetDeathMessageForWater();
+                        break;
+                    case 2:
+                        deathMessage = GetDeathMessageForLava();
+                        break;
+                    case 3:
+                        deathMessage = deathText + ".";
+                        break;
                 }
             }
-            return result;
+            return deathMessage;
         }
 
 		/// <summary>
@@ -5436,10 +5364,13 @@ namespace Terraria_Server
         {
             if (!Program.properties.HackedData)
             {
-                if (statMana > MAX_MANA || statManaMax > MAX_MANA ||
-                    statLife > MAX_HEALTH || statLifeMax > MAX_HEALTH)
-                {
+                if (statMana > MAX_MANA || statManaMax > MAX_MANA || statLife > MAX_HEALTH || statLifeMax > MAX_HEALTH)
                     return true;
+
+                foreach (Item item in inventory)
+                {
+                    if (item.Stack > MAX_ITEMS)
+                        return true;
                 }
             }
             return false;
