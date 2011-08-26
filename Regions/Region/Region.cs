@@ -111,6 +111,30 @@ namespace Regions.Region
             }
         }
 
+        public Vector2 GetSmallestPoint()
+        {
+            //int x = GetSmallestX;
+            //return (Point1.X == x) ? Point1 : Point2;
+            return (Point1 < Point2) ? Point1 : Point2;
+        }
+
+        public Vector2 GetLargestPoint()
+        {
+            return (Point1 > Point2) ? Point1 : Point2;
+            //int x = GetBiggestX;
+            //return (Point1.X == x) ? Point1 : Point2;
+            /* TODO?
+             *  
+             *  return (Point1 <= Point2) ? Point1 : Point2; //5sec write up, Yet to test with Y
+             * 
+             */
+        }
+
+        public Vector2 GetOppositePoint(Vector2 point)
+        {
+            return (point == Point1) ? Point2 : Point1;
+        }
+
         /// <summary>
         /// Tries to find if a tile is within the region.
         /// </summary>
@@ -122,22 +146,42 @@ namespace Regions.Region
         }
 
         /// <summary>
+        /// Tries to find if a tile is within the region.
+        /// </summary>
+        /// <param name="tile>Tile to find in the region.</param>
+        /// <returns>True on find</returns>
+        public Boolean HasTile(TileData tile)
+        {
+            foreach (TileRef tileRef in GetTiles)
+            {
+                if (tileRef.Data.Equals(tile))
+                    return true;
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Tries to find if a point is within the region.
         /// </summary>
         /// <param name="point">Point to check.</param>
-        /// <returns>True upon success</returns>
+        /// <returns>True upon success</returns>        
         public Boolean HasPoint(Vector2 point,Boolean toTile = false)
         {
             int inX = (toTile) ? (int)(point.X / 16) : (int)point.X;
             int inY = (toTile) ? (int)(point.Y / 16) : (int)point.Y;
-            Rectangle pRect = new Rectangle(inX, inY, 1, 1);
+            //Rectangle pRect = new Rectangle(inX, inY, 1, 1);
 
-            int x = GetSmallestX;
-            int y = (int)((Point1.X == x) ? Point1.Y : Point2.Y);
-            int width = (int)(Point2.X - Point1.X);
-            int height = (int)(Point2.Y - Point1.Y);
+            //int x = GetSmallestX;
+            //int y = (int)((Point1.X == x) ? Point1.Y : Point2.Y);
+            //int width = (int)(Point1.X - Point2.X);
+            //int height = (int)(Point2.Y - Point1.Y);
 
-            return pRect.Intersects(new Rectangle(x, y, width, height));
+            Vector2 left = GetSmallestPoint();
+            Vector2 right = GetLargestPoint();
+            int maxY = (int)Math.Max(left.Y, right.Y);
+            int minY = (int)Math.Min(left.Y, right.Y);
+
+            return (inX >= (int)left.X && inX <= (int)right.X && inY >= minY && inY <= maxY);
         }
 
         public String UserListToString()
@@ -150,7 +194,7 @@ namespace Regions.Region
             return users.Trim();
         }
 
-        public String ToString()
+        public override String ToString()
         {
             return string.Format(
                 "name: {0}\n" +

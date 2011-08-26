@@ -72,6 +72,7 @@ namespace Regions
                         rgn.Description = Desc;
                         rgn.Point1 = regionAxis[0];
                         rgn.Point2 = regionAxis[1];
+                        rgn.Restricted = Restrict;
 
                         if (rgn.IsValidRegion())
                         {

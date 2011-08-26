@@ -22,7 +22,15 @@ namespace Regions.Region
             if (isInSelectionlist(player) && selectionPlayers.TryGetValue(player.Name, out selections))
                 return selections;
             else
-                return null;                
+                return null;
+        }
+
+        public static void SetSelection(Player player, Vector2[] selection)
+        {
+            if (isInSelectionlist(player))
+                selectionPlayers.Remove(player.Name);
+
+            selectionPlayers.Add(player.Name, selection);
         }
 
     }

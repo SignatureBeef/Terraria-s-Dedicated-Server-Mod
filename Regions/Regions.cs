@@ -36,7 +36,7 @@ namespace Regions
 
         public static Properties rProperties { get; set; }
         public static RegionManager regionManager { get; set; }
-        public static Vector2[] mousePoints = { new Vector2(0, 0), new Vector2(0, 0) };
+        //public static Vector2[] mousePoints = { new Vector2(0, 0), new Vector2(0, 0) };
         private static Boolean SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
 
         public override void Load()
@@ -97,19 +97,23 @@ namespace Regions
                         Event.Cancelled = true;
                         SelectorPos = !SelectorPos;
 
+                        Vector2[] mousePoints = Selection.GetSelection(player);
                         if (!SelectorPos)
                             mousePoints[0] = Event.Position;
                         else
                             mousePoints[1] = Event.Position;
+
+                        Selection.SetSelection(player, mousePoints);
 
                         player.sendMessage(string.Format("You have selected block at {0},{1}, {2} position", 
                             Event.Position.X, Event.Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColour.Green);
                         return;
                     }
 
+
                     foreach (Region.Region rgn in regionManager.Regions)
                     {
-                        if (rgn.HasPoint(Event.Position, true))
+                        if (rgn.HasPoint(Event.Position))
                         {
                             if (rgn.Restricted && player.Op || !rgn.ContainsUser(player.Name))
                             {
