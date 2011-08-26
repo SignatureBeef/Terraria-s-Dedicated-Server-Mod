@@ -1283,7 +1283,7 @@ namespace Terraria_Server.WorldMod
 			return result;
 		}
 
-		public static bool CloseDoor(int i, int j, bool forced = false, DoorOpener opener = DoorOpener.SERVER, ISender sender = null)
+		public static bool CloseDoor(int x, int y, bool forced = false, DoorOpener opener = DoorOpener.SERVER, ISender sender = null)
 		{
 			if (sender == null)
 			{
@@ -1292,54 +1292,55 @@ namespace Terraria_Server.WorldMod
 
 			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
 			doorEvent.Sender = sender;
-			doorEvent.X = i;
-			doorEvent.Y = j;
+			doorEvent.X = x;
+			doorEvent.Y = y;
 			doorEvent.Direction = 1;
 			doorEvent.Opener = opener;
 			doorEvent.isOpened = forced;
 			Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
 			if (doorEvent.Cancelled)
 			{
-				return true;
+                NetMessage.SendData(19, -1, -1, "", 0, (float)x, (float)y, 0); //Inform the client of the update
+				return false;
 			}
 
 			int num = 0;
-			int num2 = i;
-			int num3 = j;
+			int num2 = x;
+			int num3 = y;
 			
-			int frameX = (int)Main.tile.At(i, j).FrameX;
-			int frameY = (int)Main.tile.At(i, j).FrameY;
+			int frameX = (int)Main.tile.At(x, y).FrameX;
+			int frameY = (int)Main.tile.At(x, y).FrameY;
 			if (frameX == 0)
 			{
-				num2 = i;
+				num2 = x;
 				num = 1;
 			}
 			else if (frameX == 18)
 			{
-				num2 = i - 1;
+				num2 = x - 1;
 				num = 1;
 			}
 			else if (frameX == 36)
 			{
-				num2 = i + 1;
+				num2 = x + 1;
 				num = -1;
 			}
 			else if (frameX == 54)
 			{
-				num2 = i;
+				num2 = x;
 				num = -1;
 			}
 			if (frameY == 0)
 			{
-				num3 = j;
+				num3 = y;
 			}
 			else if (frameY == 18)
 			{
-				num3 = j - 1;
+				num3 = y - 1;
 			}
 			else if (frameY == 36)
 			{
-				num3 = j - 2;
+				num3 = y - 2;
 			}
 			int num4 = num2;
 			if (num == -1)
@@ -1398,7 +1399,8 @@ namespace Terraria_Server.WorldMod
 			Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
 			if (doorEvent.Cancelled)
 			{
-				return true;
+                NetMessage.SendData(19, -1, -1, "", 1, (float)x, (float)y, 0); //Inform the client of the update
+				return false;
 			}
 
 			int num = 0;
