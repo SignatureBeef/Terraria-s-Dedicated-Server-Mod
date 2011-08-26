@@ -7938,7 +7938,7 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            bool flag5 = WorldModify.OpenDoor(num4, num5, npc.direction);
+                            bool flag5 = WorldModify.OpenDoor(num4, num5, npc.direction, false, DoorOpener.NPC);
                             if (!flag5)
                             {
                                 npc.ai[3] = (float)num3;
@@ -9394,7 +9394,7 @@ namespace Terraria_Server
                     }
                     if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
                     {
-                        bool flag12 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false);
+                        bool flag12 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false, DoorOpener.NPC);
                         if (flag12)
                         {
                             npc.closeDoor = false;
@@ -9446,7 +9446,7 @@ namespace Terraria_Server
 
                         if (npc.townNPC && Main.tile.At(num80, num81 - 2).Active && Main.tile.At(num80, num81 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                         {
-                            bool flag13 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction);
+                            bool flag13 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction, false, DoorOpener.NPC);
                             if (flag13)
                             {
                                 npc.closeDoor = true;
@@ -9457,7 +9457,7 @@ namespace Terraria_Server
                                 npc.ai[1] += 80f;
                                 return;
                             }
-                            if (WorldModify.OpenDoor(num80, num81 - 2, -npc.direction))
+                            if (WorldModify.OpenDoor(num80, num81 - 2, -npc.direction, false, DoorOpener.NPC))
                             {
                                 npc.closeDoor = true;
                                 npc.doorX = num80;

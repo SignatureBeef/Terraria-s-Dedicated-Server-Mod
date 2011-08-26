@@ -1290,6 +1290,9 @@ namespace Terraria_Server.WorldMod
 				sender = new ConsoleSender ();
 			}
 
+            if (Program.properties.NPCDoorOpenCancel && opener == DoorOpener.NPC)
+                return false;
+
 			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
 			doorEvent.Sender = sender;
 			doorEvent.X = x;
@@ -1387,7 +1390,10 @@ namespace Terraria_Server.WorldMod
 			if (sender == null)
 			{
 				sender = new ConsoleSender();
-			}
+            }
+
+            if (Program.properties.NPCDoorOpenCancel && opener == DoorOpener.NPC)
+                return false;
 
 			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
 			doorEvent.Sender = sender;
