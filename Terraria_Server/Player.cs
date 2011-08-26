@@ -564,43 +564,25 @@ namespace Terraria_Server
 		/// <param name="npc">NPC to add to</param>
 		public void StatusNPC (int type, NPC npc)
 		{
-			if (type == 121)
-			{
-				if (Main.rand.Next(2) == 0)
-				{
-					npc.AddBuff(24, 180, false);
-					return;
-				}
-			}
-			else
-			{
-				if (type == 122)
-				{
+            switch (type)
+            {
+                case 121:
+				    if (Main.rand.Next(2) == 0)
+                        npc.AddBuff(24, 180, false);
+                    return;
+                case 122:
 					if (Main.rand.Next(10) == 0)
-					{
-						npc.AddBuff(24, 180, false);
-						return;
-					}
-				}
-				else
-				{
-					if (type == 190)
-					{
-						if (Main.rand.Next(4) == 0)
-						{
-							npc.AddBuff(20, 420, false);
-							return;
-						}
-					}
-					else
-					{
-						if (type == 217 && Main.rand.Next(5) == 0)
-						{
-							npc.AddBuff(24, 180, false);
-						}
-					}
-				}
-			}
+                        npc.AddBuff(24, 180, false);
+                    return;
+                case 190:
+                    if (Main.rand.Next(4) == 0)
+                        npc.AddBuff(20, 420, false);
+                    return;
+                case 217:
+                    if(Main.rand.Next(5) == 0)
+                        npc.AddBuff(24, 180, false);
+                    return;
+            }
 		}
 
 		/// <summary>
@@ -610,43 +592,25 @@ namespace Terraria_Server
 		/// <param name="player">Player to buff</param>
 		public void StatusPvP(int type, Player player)
 		{
-			if (type == 121)
-			{
-				if (Main.rand.Next(2) == 0)
-				{
-					player.AddBuff(24, 180, false);
-					return;
-				}
-			}
-			else
-			{
-				if (type == 122)
-				{
-					if (Main.rand.Next(10) == 0)
-					{
-						player.AddBuff(24, 180, false);
-						return;
-					}
-				}
-				else
-				{
-					if (type == 190)
-					{
-						if (Main.rand.Next(4) == 0)
-						{
-							player.AddBuff(20, 420, false);
-							return;
-						}
-					}
-					else
-					{
-						if (type == 217 && Main.rand.Next(5) == 0)
-						{
-							player.AddBuff(24, 180, false);
-						}
-					}
-				}
-			}
+            switch (type)
+            {
+                case 121:
+                    if (Main.rand.Next(2) == 0)
+                        player.AddBuff(24, 180, false);
+                    return;
+                case 122:
+                    if (Main.rand.Next(10) == 0)
+                        player.AddBuff(24, 180, false);
+                    return;
+                case 190:
+                    if (Main.rand.Next(4) == 0)
+                        player.AddBuff(20, 420, false);
+                    return;
+                case 217:
+                    if (Main.rand.Next(5) == 0)
+                        player.AddBuff(24, 180, false);
+                    return;
+            }
 		}
 		
 		/// <summary>
@@ -674,32 +638,27 @@ namespace Terraria_Server
 					this.Velocity.Y = -3f;
 				}
 			}
-			else
+			else if (this.controlDown)
 			{
-				if (this.controlDown)
+				if (this.Velocity.Y < 0f)
 				{
-					if (this.Velocity.Y < 0f)
-					{
-						this.Velocity.Y = this.Velocity.Y * 0.9f;
-					}
-					this.Velocity.Y = this.Velocity.Y + 0.1f;
-					if (this.Velocity.Y > 3f)
-					{
-						this.Velocity.Y = 3f;
-					}
+					this.Velocity.Y = this.Velocity.Y * 0.9f;
 				}
-				else
+				this.Velocity.Y = this.Velocity.Y + 0.1f;
+				if (this.Velocity.Y > 3f)
 				{
-					if ((double)this.Velocity.Y < -0.1 || (double)this.Velocity.Y > 0.1)
-					{
-						this.Velocity.Y = this.Velocity.Y * 0.9f;
-					}
-					else
-					{
-						this.Velocity.Y = 0f;
-					}
+					this.Velocity.Y = 3f;
 				}
 			}
+			else if ((double)this.Velocity.Y < -0.1 || (double)this.Velocity.Y > 0.1)
+			{
+				this.Velocity.Y = this.Velocity.Y * 0.9f;
+			}
+			else
+			{
+				this.Velocity.Y = 0f;
+			}
+
 			if (this.controlLeft && !this.controlRight)
 			{
 				if (this.Velocity.X > 0f)
@@ -712,32 +671,27 @@ namespace Terraria_Server
 					this.Velocity.X = -3f;
 				}
 			}
-			else
+			else if (this.controlRight && !this.controlLeft)
 			{
-				if (this.controlRight && !this.controlLeft)
+				if (this.Velocity.X < 0f)
 				{
-					if (this.Velocity.X < 0f)
-					{
-						this.Velocity.X = this.Velocity.X * 0.9f;
-					}
-					this.Velocity.X = this.Velocity.X + 0.1f;
-					if (this.Velocity.X > 3f)
-					{
-						this.Velocity.X = 3f;
-					}
+					this.Velocity.X = this.Velocity.X * 0.9f;
 				}
-				else
+				this.Velocity.X = this.Velocity.X + 0.1f;
+				if (this.Velocity.X > 3f)
 				{
-					if ((double)this.Velocity.X < -0.1 || (double)this.Velocity.X > 0.1)
-					{
-						this.Velocity.X = this.Velocity.X * 0.9f;
-					}
-					else
-					{
-						this.Velocity.X = 0f;
-					}
+					this.Velocity.X = 3f;
 				}
 			}
+			else if ((double)this.Velocity.X < -0.1 || (double)this.Velocity.X > 0.1)
+			{
+				this.Velocity.X = this.Velocity.X * 0.9f;
+			}
+			else
+			{
+				this.Velocity.X = 0f;
+			}
+
 			this.Position += this.Velocity;
 			this.ghostFrameCounter++;
 			if (this.Velocity.X < 0f)
@@ -4638,56 +4592,6 @@ namespace Terraria_Server
 				}
 			}
 			return player;
-		}
-		
-        private static void EncryptFile(String inputFile, String outputFile)
-		{
-			String s = "h3y_gUyZ";
-			UnicodeEncoding unicodeEncoding = new UnicodeEncoding();
-			byte[] bytes = unicodeEncoding.GetBytes(s);
-			FileStream fileStream = new FileStream(outputFile, FileMode.Create);
-			RijndaelManaged rijndaelManaged = new RijndaelManaged();
-			CryptoStream cryptoStream = new CryptoStream(fileStream, rijndaelManaged.CreateEncryptor(bytes, bytes), CryptoStreamMode.Write);
-			FileStream fileStream2 = new FileStream(inputFile, FileMode.Open);
-			int num;
-			while ((num = fileStream2.ReadByte()) != -1)
-			{
-				cryptoStream.WriteByte((byte)num);
-			}
-			fileStream2.Close();
-			cryptoStream.Close();
-			fileStream.Close();
-		}
-		
-        private static bool DecryptFile(String inputFile, String outputFile)
-		{
-			String s = "h3y_gUyZ";
-			UnicodeEncoding unicodeEncoding = new UnicodeEncoding();
-			byte[] bytes = unicodeEncoding.GetBytes(s);
-			FileStream fileStream = new FileStream(inputFile, FileMode.Open);
-			RijndaelManaged rijndaelManaged = new RijndaelManaged();
-			CryptoStream cryptoStream = new CryptoStream(fileStream, rijndaelManaged.CreateDecryptor(bytes, bytes), CryptoStreamMode.Read);
-			FileStream fileStream2 = new FileStream(outputFile, FileMode.Create);
-
-			try
-			{
-				int num;
-				while ((num = cryptoStream.ReadByte()) != -1)
-				{
-					fileStream2.WriteByte((byte)num);
-				}
-				fileStream2.Close();
-				cryptoStream.Close();
-				fileStream.Close();
-			}
-			catch
-			{
-				fileStream2.Close();
-				fileStream.Close();
-				File.Delete(outputFile);
-				return true;
-			}
-			return false;
 		}
 		
 		/// <summary>
