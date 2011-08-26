@@ -36,7 +36,6 @@ namespace Regions
 
         public static Properties rProperties { get; set; }
         public static RegionManager regionManager { get; set; }
-        //public static Vector2[] mousePoints = { new Vector2(0, 0), new Vector2(0, 0) };
         private static Boolean SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
 
         public override void Load()
@@ -63,8 +62,9 @@ namespace Regions
                 .WithDescription("Region Management.")
                 .Calls(Commands.Region);
 
-            //registerHook(Hooks.PLAYER_KEYPRESS); 
             registerHook(Hooks.PLAYER_TILECHANGE);
+            registerHook(Hooks.PLAYER_FLOWLIQUID);
+            registerHook(Hooks.PLAYER_PROJECTILE);
         }
 
         public override void Enable()
@@ -78,13 +78,7 @@ namespace Regions
         }
         
         #region Events
-
-            //public override void onPlayerKeyPress(PlayerKeyPressEvent Event)
-            //{
-            //    if(Event.MouseClicked)
-            //        Event.
-            //}
-
+        
             public override void onPlayerTileChange(PlayerTileChangeEvent Event)
             {
                 if(Event.Sender is Player) {
@@ -115,7 +109,7 @@ namespace Regions
                     {
                         if (rgn.HasPoint(Event.Position))
                         {
-                            if (rgn.Restricted && player.Op || !rgn.ContainsUser(player.Name))
+                            if (rgn.Restricted && player.Op || !player.Op && !rgn.ContainsUser(player.Name))
                             {
                                 Event.Cancelled = true;
                                 player.sendMessage("You cannot edit this area!", ChatColour.Red);
@@ -124,6 +118,38 @@ namespace Regions
                         }
                     }
 
+                }
+            }
+
+            public override void onPlayerFlowLiquid(PlayerFlowLiquidEvent Event)
+            {
+                foreach (Region.Region rgn in regionManager.Regions)
+                {
+                    if (rgn.HasPoint(Event.Position))
+                    {
+                        if (rgn.Restricted && Event.Player.Op || !rgn.ContainsUser(Event.Player.Name))
+                        {
+                            Event.Cancelled = true;
+                            Event.Player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            public override void onPlayerProjectileUse(PlayerProjectileEvent Event)
+            {
+                foreach (Region.Region rgn in regionManager.Regions)
+                {
+                    if (rgn.HasPoint(Event.Projectile.Position / 16))
+                    {
+                        if (rgn.Restricted && Event.Player.Op || !rgn.ContainsUser(Event.Player.Name))
+                        {
+                            Event.Cancelled = true;
+                            Event.Player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                            return;
+                        }
+                    }
                 }
             }
 

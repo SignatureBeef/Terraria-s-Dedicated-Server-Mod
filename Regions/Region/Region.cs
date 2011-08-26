@@ -15,7 +15,7 @@ namespace Regions.Region
         public Boolean Restricted = false; //restrict from Ops
         public List<String> UserList = new List<String>();
 
-        /* In tile format (/16) */
+        /* In tile format (playerpos / 16) */
         public Vector2 Point1 { get; set; }
         public Vector2 Point2 { get; set; }
 
@@ -113,21 +113,12 @@ namespace Regions.Region
 
         public Vector2 GetSmallestPoint()
         {
-            //int x = GetSmallestX;
-            //return (Point1.X == x) ? Point1 : Point2;
             return (Point1 < Point2) ? Point1 : Point2;
         }
 
         public Vector2 GetLargestPoint()
         {
             return (Point1 > Point2) ? Point1 : Point2;
-            //int x = GetBiggestX;
-            //return (Point1.X == x) ? Point1 : Point2;
-            /* TODO?
-             *  
-             *  return (Point1 <= Point2) ? Point1 : Point2; //5sec write up, Yet to test with Y
-             * 
-             */
         }
 
         public Vector2 GetOppositePoint(Vector2 point)
@@ -169,15 +160,9 @@ namespace Regions.Region
         {
             int inX = (toTile) ? (int)(point.X / 16) : (int)point.X;
             int inY = (toTile) ? (int)(point.Y / 16) : (int)point.Y;
-            //Rectangle pRect = new Rectangle(inX, inY, 1, 1);
-
-            //int x = GetSmallestX;
-            //int y = (int)((Point1.X == x) ? Point1.Y : Point2.Y);
-            //int width = (int)(Point1.X - Point2.X);
-            //int height = (int)(Point2.Y - Point1.Y);
 
             Vector2 left = GetSmallestPoint();
-            Vector2 right = GetLargestPoint();
+            Vector2 right = GetLargestPoint(); /* GetOppositePoint() */
             int maxY = (int)Math.Max(left.Y, right.Y);
             int minY = (int)Math.Min(left.Y, right.Y);
 

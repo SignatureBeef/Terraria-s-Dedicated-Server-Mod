@@ -15,5 +15,19 @@ namespace Terraria_Server.Events
         /// Projectile instance for the Event
         /// </summary>
         public Projectile Projectile { get; set; }
+
+        /// <summary>
+        /// Projectile instance for the Event
+        /// </summary>
+        public Player Player
+        {
+            get
+            {
+                return Sender as Player;
+            } set
+            {
+                Sender = value;
+            }
+        }
     }
 }
