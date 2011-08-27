@@ -13,6 +13,7 @@ namespace Regions.Region
         public String Description = "";
 
         public Boolean Restricted = false; //restrict from Ops
+        public Boolean RestrictedNPCs = false;
         public List<String> UserList = new List<String>();
 
         /* In tile format (playerpos / 16) */
@@ -187,8 +188,9 @@ namespace Regions.Region
                 "point1: {2},{3}\n" +
                 "point2: {4},{5}\n" +
                 "users: {6}\n" +
-                "restricted: {7}",
-                Name, Description, Point1.X, Point1.Y, Point2.X, Point2.Y, UserListToString(), Restricted);
+                "restricted: {7}" +
+                "npcrestrict: {8}",
+                Name, Description, Point1.X, Point1.Y, Point2.X, Point2.Y, UserListToString(), Restricted, RestrictedNPCs);
         }
     }
 }

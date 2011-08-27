@@ -48,9 +48,10 @@ namespace Regions
             {
                 String Name = "";
                 String Desc = "";
-                Boolean Restrict = false;
+                Boolean Restrict = args.TryPop("-res");
+                Boolean RestrictNPC = args.TryPop("-npcres");
                 
-                if (args.TryParseThree<String, String, Boolean>("-name", out Name, "-desc", out Desc, "-res", out Restrict)
+                if (args.TryParseTwo<String, String>("-name", out Name, "-desc", out Desc)
                     && Name.Trim().Length > 0)
                 {
                     var player = sender as Player;
@@ -64,6 +65,7 @@ namespace Regions
                         rgn.Point1 = regionAxis[0];
                         rgn.Point2 = regionAxis[1];
                         rgn.Restricted = Restrict;
+                        rgn.RestrictedNPCs = RestrictNPC;
 
                         if (rgn.IsValidRegion())
                         {

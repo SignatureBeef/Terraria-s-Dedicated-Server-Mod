@@ -157,23 +157,33 @@ namespace Regions
 
             public override void onDoorStateChange(DoorStateChangeEvent Event)
             {
-                if (Event.Opener == DoorOpener.PLAYER) /* Event.Sender is Player */
-                {
+
                     var player = Event.Sender as Player;
 
                     foreach (Region.Region rgn in regionManager.Regions)
                     {
                         if (rgn.HasPoint(new Vector2(Event.X, Event.Y)))
                         {
-                            if (rgn.Restricted && player.Op || !player.Op && !rgn.ContainsUser(player.Name))
+                            if (Event.Opener == DoorOpener.PLAYER)
                             {
-                                Event.Cancelled = true;
-                                player.sendMessage("You cannot edit this area!", ChatColour.Red);
-                                return;
+                                if (rgn.Restricted && player.Op || !player.Op && !rgn.ContainsUser(player.Name))
+                                {
+                                    Event.Cancelled = true;
+                                    player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                                    return;
+                                }
+                            }
+                            else if (Event.Opener == DoorOpener.NPC)
+                            {
+                                if (rgn.RestrictedNPCs)
+                                {
+                                    Event.Cancelled = true;
+                                    player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                                    return;
+                                }
                             }
                         }
-                    }
-                }                
+                    }            
             }
 
         #endregion

@@ -70,6 +70,7 @@ namespace Regions.Region
             Vector2 Point2 = default(Vector2);
             List<String> Users = new List<String>();
             Boolean Restricted = false;
+            Boolean RestrictedNPCs = false;
 
             foreach (String line in File.ReadAllLines(location))
             {
@@ -123,6 +124,14 @@ namespace Regions.Region
                                     Restricted = restrict;
                                 break;
                             }
+                        case "npcrestrict":
+                            {
+                                String restricted = line.Remove(0, line.IndexOf(":") + 1).Trim();
+                                Boolean restrict;
+                                if (Boolean.TryParse(restricted, out restrict))
+                                    RestrictedNPCs = restrict;
+                                break;
+                            }
                         default: continue;
                     }
                 }
@@ -134,6 +143,7 @@ namespace Regions.Region
             region.Point2 = Point2;
             region.UserList = Users;
             region.Restricted = Restricted;
+            region.RestrictedNPCs = RestrictedNPCs;
 
             return region.IsValidRegion() ? region : null;
         }
