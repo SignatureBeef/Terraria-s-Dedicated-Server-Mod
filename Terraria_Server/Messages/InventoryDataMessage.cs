@@ -41,6 +41,12 @@ namespace Terraria_Server.Messages
                         player.armor[inventorySlot - 44] = item;
                     }
 
+                    if (Program.server.RejectedItemsContains(itemName) ||
+                        Program.server.RejectedItemsContains(item.Type.ToString()))
+                    {
+                        player.Kick((itemName.Length > 0) ? itemName : item.Type + " is not allowed on this server.");
+                    }
+
                     NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);
                 }
             }

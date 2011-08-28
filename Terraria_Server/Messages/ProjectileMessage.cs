@@ -80,7 +80,7 @@ namespace Terraria_Server.Messages
             playerEvent.Sender = Main.players[whoAmI];
             playerEvent.Projectile = projectile;
             Program.server.PluginManager.processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
-            if (playerEvent.Cancelled)
+            if (playerEvent.Cancelled || !Program.properties.AllowExplosions)
             {
                 // erase the projectile client-side
                 projectile.Position.X = -1000;

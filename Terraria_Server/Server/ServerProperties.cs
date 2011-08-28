@@ -21,6 +21,7 @@ namespace Terraria_Server
         private const String DEFAULT_PID_FILE = "";
         private const bool DEFAULT_SIMPLE_LOOP = false;
         private const bool DEFAULT_HACKED_DATA = false;
+        private const bool DEFAULT_ALLOW_EXPLOSIONS = true;
 
         private const String AUTOMATIC_UPDATES = "allowupdates";
         private const String DUNGEON_AMOUNT = "opt-numdungeons";
@@ -42,6 +43,8 @@ namespace Terraria_Server
         private const String PID_FILE = "pid-file";
         private const String SIMPLE_LOOP = "simple-loop";
         private const String HACKED_DATA = "hackeddata";
+        private const String ALLOW_EXPLOSIONS = "explosions";
+        private const String REJECT_ITEMS = "rejectplayeritems";
 
         public ServerProperties(String propertiesPath) : base(propertiesPath) { }
 
@@ -70,6 +73,8 @@ namespace Terraria_Server
             temp = RConHashNonce;
             temp = LogRotation;
             temp = SpawnNPCMax;
+            temp = AllowExplosions;
+            temp = RejectedItems;
         }
 
         public int MaxPlayers
@@ -426,8 +431,20 @@ namespace Terraria_Server
 		
 		public int SpawnNPCMax
 		{
-			get { return Program.properties.getValue ("spawnnpc-max", 100); }
-			set { Program.properties.setValue ("spawnnpc-max", value); }
+			get { return getValue ("spawnnpc-max", 100); }
+			set { setValue ("spawnnpc-max", value); }
+		}
+		
+		public bool AllowExplosions
+		{
+            get { return getValue(ALLOW_EXPLOSIONS, DEFAULT_ALLOW_EXPLOSIONS); }
+            set { setValue(ALLOW_EXPLOSIONS, value); }
+		}
+		
+		public String RejectedItems
+		{
+            get { return getValue(REJECT_ITEMS, ""); }
+            set { setValue(REJECT_ITEMS, value); }
 		}
 		
     }

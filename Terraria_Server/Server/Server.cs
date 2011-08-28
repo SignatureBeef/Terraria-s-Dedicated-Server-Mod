@@ -13,6 +13,7 @@ namespace Terraria_Server
     public class Server : Main
     {
         private PluginManager pluginManager = null;
+        public List<String> RejectedItems = null;
         
         private World world = null;
 
@@ -30,6 +31,16 @@ namespace Terraria_Server
             BanList.Load();
             OpList = new DataRegister(myOpList);
             OpList.Load();
+
+            RejectedItems = new List<String>();
+            String[] rejItem = Program.properties.RejectedItems.Split(',');
+            for (int i = 0; i < rejItem.Length; i++)
+            {
+                if (rejItem[i].Trim().Length > 0)
+                {
+                    RejectedItems.Add(rejItem[i].Trim());
+                }
+            }
         }
 
         // Summary:
@@ -276,6 +287,21 @@ namespace Terraria_Server
                     }
                 }
 
+            return false;
+        }
+
+        public Boolean RejectedItemsContains(String item)
+        {
+            if (item != null)
+            {
+                foreach (String rItem in RejectedItems)
+                {
+                    if (rItem.Trim().Replace(" ", "") == item.Trim().Replace(" ", ""))
+                    {
+                        return true;
+                    }
+                }
+            }
             return false;
         }
     }
