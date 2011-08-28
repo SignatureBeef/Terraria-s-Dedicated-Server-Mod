@@ -128,10 +128,17 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Reload(Server server, ISender sender, ArgumentList args)
 		{
-			args.ParseNone();
+			Boolean parseData = args.TryPop("-data");
 
 			server.notifyOps("Reloading plugins.", true);
 			server.PluginManager.ReloadPlugins();
+
+            if (parseData)
+            {
+                server.notifyOps("Reloading properties.", true);
+                Program.properties.Save();
+                Program.properties.Load();
+            }
 
 			return;
 		}
