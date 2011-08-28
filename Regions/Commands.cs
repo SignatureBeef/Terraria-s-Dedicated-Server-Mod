@@ -21,6 +21,22 @@ namespace Regions
             {
                 Create(server, sender, args);
             }
+            else if (args.TryPop("user"))
+            {
+                Boolean add = args.TryPop("add");
+                Boolean remove = args.TryPop("remove");
+
+                if (add)
+                    AddUser(server, sender, args);
+                else if (remove)
+                    RemoveUser(server, sender, args);
+                else
+                    sender.sendMessage("Please review your command", 255, 255, 0, 0);
+            }
+            else if (args.TryPop("list"))
+            {
+                List(server, sender, args);
+            }
         }
 
         public static void SelectionToolToggle(Server server, ISender sender, ArgumentList args)
@@ -90,6 +106,71 @@ namespace Regions
                     throw new CommandError("You have not specified certain arguments");
                 }
             }
+        }
+
+        public static void List(Server server, ISender sender, ArgumentList args)
+        {
+            for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+            {
+                sender.sendMessage(string.Format("Slot {0} : {1} [ {2} ] ({3},{4})", i, Regions.regionManager.Regions[i].Name, 
+                    Regions.regionManager.Regions[i].Description,
+                        Regions.regionManager.Regions[i].Point1.X, Regions.regionManager.Regions[i].Point1.Y), 
+                        255, 255, 0, 0);
+            }
+        }
+
+        public static void AddUser(Server server, ISender sender, ArgumentList args)
+        {
+            String User, IP;
+            Int32 Slot;
+
+            args.TryParseOne<String>("-ip", out IP); //Eh
+
+            //IP or name?
+            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot))
+            {
+                String[] exceptions = new String[2];
+                if (User.Length > 0)
+                {
+                    exceptions[0] = User;
+                }
+                if (IP != null && IP.Length > 0)
+                {
+                    exceptions[1] = IP;
+                }
+
+                Region.Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                        region = Regions.regionManager.Regions[i];
+                        break;
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                //List<String> users = new List<String>();
+                int usersAdded = 0;
+                foreach (String toInflate in exceptions)
+                {
+                    if (toInflate != null)
+                        foreach (String inflatee in toInflate.Split(','))
+                        {
+                            region.UserList.Add(inflatee);
+                            usersAdded++;
+                        }
+                }
+
+                sender.sendMessage(string.Format("{0} users were added to {1}", usersAdded, region.Name), 
+                    255, 0, 255, 0); //Green
+
+            }
+        }
+
+        public static void RemoveUser(Server server, ISender sender, ArgumentList args)
+        {
+
         }
     }
 }

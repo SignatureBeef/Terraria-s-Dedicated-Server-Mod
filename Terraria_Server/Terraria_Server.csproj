@@ -135,7 +135,6 @@
     <Compile Include="Events\PlayerPvPChangeEvent.cs" />
     <Compile Include="Events\PlayerTeleportEvent.cs" />
     <Compile Include="Events\TimeChangedEvent.cs" />
-    <Compile Include="Lighting.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\ClientModMessage.cs" />

@@ -162,5 +162,27 @@ namespace Regions.Region
             }
             return rgns;
         }
+
+        public Boolean ContainsRegion(String name)
+        {
+            foreach (Region rgn in Regions)
+            {
+                if (rgn.Name.ToLower().Equals(name.ToLower()))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public Region GetRegion(String name)
+        {
+            foreach (Region rgn in Regions)
+            {
+                if (rgn.Name.ToLower().Equals(name.ToLower()))
+                    return rgn;
+            }
+
+            return null;
+        }
     }
 }
