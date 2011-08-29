@@ -1046,7 +1046,9 @@ namespace Terraria_Server.Commands
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
 		public static void NPCSpawns(Server server, ISender sender, ArgumentList args)
-		{
+        {
+            args.ParseNone();
+
 			Main.stopSpawns = !Main.stopSpawns;
             sender.sendMessage("NPC Spawning is now " + ((Main.stopSpawns) ? "off" : "on") + "!");
 		}
@@ -1606,7 +1608,18 @@ namespace Terraria_Server.Commands
                     throw new CommandError("No item/id provided with your command");
                 }
             }
+            String prop = String.Join(",", server.RejectedItems);
+            Program.properties.RejectedItems = prop;
+            Program.properties.Save();
         }
-    
+
+        public static void Explosions(Server server, ISender sender, ArgumentList args)
+        {
+            args.ParseNone();
+
+            Program.properties.AllowExplosions = !Program.properties.AllowExplosions;
+            sender.sendMessage("Explosions are now " + ((Program.properties.AllowExplosions) ? "allowed" : "disabled") + "!");
+            Program.properties.Save();
+        }
     }
 }

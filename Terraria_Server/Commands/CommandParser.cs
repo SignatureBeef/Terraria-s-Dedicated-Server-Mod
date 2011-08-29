@@ -311,6 +311,12 @@ namespace Terraria_Server.Commands
                 .WithDescription("Add or remove an item form the whitelist.")
                 .WithHelpText("Usage:    itemrej -add/-remove <id:name>")
                 .Calls(Commands.ItemRejection);
+
+            AddCommand("explosions")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Toggle the allowing of explosions for the server.")
+                .WithHelpText("Usage:    explosions")
+                .Calls(Commands.Explosions);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;
