@@ -63,9 +63,9 @@ namespace Terraria_Server.Networking
 		//SocketAsyncEventArgsExt kickArgs = new SocketAsyncEventArgsExt ();
 		protected byte[] recvBuffer;
 		protected int    recvBytes;
-		protected volatile SocketError error = SocketError.Success;
 		protected Timer timeout;
 		protected volatile int closed = 0;
+		protected volatile int error = 0;
 		
 		internal volatile bool kicking = false;
 		internal volatile bool sending = false;
@@ -97,12 +97,12 @@ namespace Terraria_Server.Networking
 		
 		public bool Active
 		{
-			get { return error == SocketError.Success && socket.Connected; }
+			get { return closed == 0 && error == (int)SocketError.Success && socket.Connected; }
 		}
 		
 		public SocketError Error
 		{
-			get { return error; }
+			get { return closed == 1 ? SocketError.ConnectionAborted : (SocketError) error; }
 		}
 		
 		public EndPoint RemoteEndPoint { get; protected set; }
@@ -476,17 +476,23 @@ namespace Terraria_Server.Networking
 			
 			if (timeout != null)
 			{
-				try
-				{
-					timeout.Dispose ();
-				} catch {}
+				var timer = Interlocked.CompareExchange (ref this.timeout, null, this.timeout);
 				
-				timeout = null;
+				if (timer != null)
+				{
+					try
+					{
+						timer.Dispose ();
+					} catch {}
+				}
 			}
 			
-			if (error != SocketError.Success) return;
+#pragma warning disable 420
+			if (Interlocked.CompareExchange (ref this.error, (int)err, (int)SocketError.Success) != (int)SocketError.Success)
+				return;
+#pragma warning restore 420
 			
-			error = err;
+			Close (err);
 			
 			try
 			{
@@ -494,37 +500,16 @@ namespace Terraria_Server.Networking
 			}
 			catch (SocketException) {}
 			catch (ObjectDisposedException) {}
-			
-//			if (! sending)
-//				try
-//				{
-//					sendArgs.Dispose();
-//					sendArgs = null;
-//				} catch {}
-//			
-//			if (! receiving)
-//				try
-//				{
-//					recvArgs.Dispose();
-//					recvArgs = null;
-//				} catch {}
-//			
-//			if (! kicking)
-//				try
-//				{
-//					kickArgs.Dispose();
-//					kickArgs = null;
-//				} catch {}
-//			
-			
-			Close (error);
 		}
 		
 		void Close (SocketError error)
 		{
 			kicking = true;
-			var closed = Interlocked.Exchange (ref this.closed, 1);
-			if (closed > 0) return;
+			
+#pragma warning disable 420
+			if (Interlocked.CompareExchange (ref this.closed, 1, 0) != 0)
+				return;
+#pragma warning restore 420
 			
 			try
 			{
