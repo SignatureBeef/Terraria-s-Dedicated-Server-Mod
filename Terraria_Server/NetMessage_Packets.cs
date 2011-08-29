@@ -200,7 +200,7 @@ namespace Terraria_Server
 		}
 
 		
-#if TEST_COMPRESSION
+//#if TEST_COMPRESSION
 		private int TileSize (TileData tile)
 		{
 			int count = 1;
@@ -348,7 +348,7 @@ namespace Terraria_Server
 			
 			return count;
 		}
-#endif
+//#endif
 
 		public void SendTileRow (int numColumns, int firstColumn, int row)
 		{

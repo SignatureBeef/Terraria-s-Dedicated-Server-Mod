@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNSAFE;TEST_COMPRESSION;IGNORE_TILE_SQUARE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNSAFE;IGNORE_TILE_SQUARE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -266,6 +266,7 @@
     <Compile Include="Misc\CloningExtensions.cs" />
     <Compile Include="Messages\MessageHandler.cs" />
     <Compile Include="Networking\SlotManager.cs" />
+    <Compile Include="Messages\DisconnectMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
