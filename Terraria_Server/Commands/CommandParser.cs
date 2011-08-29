@@ -305,6 +305,12 @@ namespace Terraria_Server.Commands
                 .WithHelpText("          spawnboss -eater -eye...")
                 .WithHelpText("          spawnboss <boss> -player <name>")
                 .Calls(Commands.SummonBoss);
+
+            AddCommand("itemrej")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithDescription("Add or remove an item form the whitelist.")
+                .WithHelpText("Usage:    itemrej -add/-remove <id:name>")
+                .Calls(Commands.ItemRejection);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;

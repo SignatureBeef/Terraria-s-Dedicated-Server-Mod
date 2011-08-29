@@ -494,9 +494,7 @@ namespace Terraria_Server.Commands
 							{
 								time += 54000.0;
 							}
-							time = time / 86400.0 * 24.0;
-							double num2 = 7.5; //stuffs me at this stage
-							time = time - num2 - 12.0;
+							time = (time / 86400.0 * 24.0) - 19.5;
 							if (time < 0.0)
 							{
 								time += 24.0;
@@ -505,6 +503,7 @@ namespace Terraria_Server.Commands
 							{
 								AP = "PM";
 							}
+
 							int Hours = (int)time;
 							double Minutes = time - (double)Hours;
 							String MinuteString = (Minutes * 60.0).ToString();
@@ -524,6 +523,7 @@ namespace Terraria_Server.Commands
 							{
 								MinuteString = MinuteString.Substring(0, 2);
 							}
+
 							sender.sendMessage("Current Time: " + Hours + ":" + MinuteString + " " + AP);
 							return;
 						}
@@ -750,7 +750,6 @@ namespace Terraria_Server.Commands
 				{
 					if (subject.Teleport (Main.spawnTileX, Main.spawnTileY))
 					{
-					
 						Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to spawn."), true);
 					}
 					else
@@ -901,8 +900,7 @@ namespace Terraria_Server.Commands
 
 				server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
 				server.OpList.addException(player + ":" + Password, true, player.Length + 1);
-
-
+                
 				if (!server.OpList.Save())
 				{
 					server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
@@ -1050,15 +1048,7 @@ namespace Terraria_Server.Commands
 		public static void NPCSpawns(Server server, ISender sender, ArgumentList args)
 		{
 			Main.stopSpawns = !Main.stopSpawns;
-
-			if (Main.stopSpawns)
-			{
-				sender.sendMessage("NPC Spawning is now off!");
-			}
-			else
-			{
-				sender.sendMessage("NPC Spawning is now on!");
-			}
+            sender.sendMessage("NPC Spawning is now " + ((Main.stopSpawns) ? "off" : "on") + "!");
 		}
 
 		/// <summary>
@@ -1115,8 +1105,10 @@ namespace Terraria_Server.Commands
 		{
 			server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
 			Statics.keepRunning = true;
+
 			server.StopServer();
 			while (Statics.serverStarted) { Thread.Sleep(10); }
+
 			ProgramLog.Log("Starting the Server");
 			server.Initialize();
 			WorldIO.loadWorld();
@@ -1477,6 +1469,12 @@ namespace Terraria_Server.Commands
 			}
 		}
 
+        /// <summary>
+        /// Summon a Boss
+        /// </summary>
+        /// <param name="server">Current Server instance</param>
+        /// <param name="sender">Sending player</param>
+        /// <param name="args">Arguments sent with command</param>
         public static void SummonBoss(Server server, ISender sender, ArgumentList args)
         {
             //Come to think of it now, It may be 1 boss at a time -_-
@@ -1559,6 +1557,56 @@ namespace Terraria_Server.Commands
             {
                 throw new CommandError("You have not specified a Boss.");
             }            
-        }    
+        }
+
+        public static void ItemRejection(Server server, ISender sender, ArgumentList args)
+        {
+            Boolean Add = args.TryPop("-add");
+            Boolean Remove = args.TryPop("-remove");
+
+            if (Add)
+            {
+                String exception;
+                if (args.TryParseOne<String>("-add", out exception))
+                {
+                    if (!server.RejectedItems.Contains(exception))
+                    {
+                        server.RejectedItems.Add(exception);
+                        sender.sendMessage(exception + " was added to the Item Rejection list!");
+                        return;
+                    }
+                    else
+                    {
+                        throw new CommandError("That item already exists in the list.");
+                    }
+                }
+                else
+                {
+                    throw new CommandError("No item/id provided with your command");
+                }
+            }
+            if (Remove)
+            {
+                String exception;
+                if (args.TryParseOne<String>("-remove", out exception))
+                {
+                    if (server.RejectedItems.Contains(exception))
+                    {
+                        server.RejectedItems.Add(exception);
+                        sender.sendMessage(exception + " was removed from the Item Rejection list!");
+                        return;
+                    }
+                    else
+                    {
+                        throw new CommandError("That item already does not exist in the list.");
+                    }
+                }
+                else
+                {
+                    throw new CommandError("No item/id provided with your command");
+                }
+            }
+        }
+    
     }
 }
