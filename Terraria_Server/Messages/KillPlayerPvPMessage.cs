@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
@@ -6,15 +6,16 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
-    public class KillPlayerPvPMessage : IMessage
+    public class KillPlayerPvPMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.KILL_PLAYER_PVP;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
+            int start = num - 1;
             int playerIndex = readBuffer[num++];
             
             if (playerIndex != whoAmI)

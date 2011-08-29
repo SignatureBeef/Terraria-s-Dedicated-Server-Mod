@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Terraria_Server.Misc;
+
 namespace Terraria_Server.Commands
 {
     public interface ISender
@@ -11,4 +13,27 @@ namespace Terraria_Server.Commands
         bool Op { get; set; }
         void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f);
     }
+    
+	public static class ISenderExtensions
+	{
+		public static void Message (this ISender recpt, int sender, string message)
+		{
+			recpt.sendMessage (message, sender);
+		}
+		
+		public static void Message (this ISender recpt, int sender, Color color, string message)
+		{
+			recpt.sendMessage (message, sender, color.R, color.G, color.B);
+		}
+		
+		public static void Message (this ISender recpt, int sender, string fmt, params object[] args)
+		{
+			recpt.sendMessage (string.Format (fmt, args), sender);
+		}
+		
+		public static void Message (this ISender recpt, int sender, Color color, string fmt, params object[] args)
+		{
+			recpt.sendMessage (string.Format (fmt, args), sender, color.R, color.G, color.B);
+		}
+	}
 }

@@ -407,7 +407,14 @@ namespace Terraria_Server.Networking
 						if (left <= 0) return;
 						
 						argz.SetBuffer (recvBuffer, recvBytes, left);
-						receiving = socket.ReceiveAsync (argz);
+						try
+						{
+							receiving = socket.ReceiveAsync (argz);
+						}
+						catch (ObjectDisposedException)
+						{
+							receiving = false;
+						}
 						
 						if (receiving) bytes = argz.BytesTransferred;
 					}

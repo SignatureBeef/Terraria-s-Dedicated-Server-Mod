@@ -2,14 +2,20 @@ using System;
 
 namespace Terraria_Server.Messages
 {
-    public class RequestTileMessage : IMessage
+    public class RequestTileMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+		public RequestTileMessage ()
+		{
+			IgnoredStates = SlotState.ACCEPTED | SlotState.PLAYER_AUTH;
+			ValidStates = SlotState.SENDING_WORLD;
+		}
+
+        public override Packet GetPacket()
         {
             return Packet.REQUEST_TILE_BLOCK;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int num8 = BitConverter.ToInt32(readBuffer, num);
             num += 4;

@@ -6,14 +6,14 @@ using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
-    public class FlowLiquidMessage : IMessage
+    public class FlowLiquidMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.FLOW_LIQUID;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;

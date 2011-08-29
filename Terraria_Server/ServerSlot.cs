@@ -14,17 +14,23 @@ namespace Terraria_Server
 		SHUTDOWN = 1,        // the client's socket is being shut down unconditionally
 		KICK = 2,            // the client is being kicked, disconnect him after sending him all remaining data
 
-		VACANT = 4,          //                this socket has no client and is available
-		CONNECTED = 8,       // previously 0,  the client socket has been accepted
-		SERVER_AUTH = 16,    //           -1,  the client has been asked for a server password
-		ACCEPTED = 32,       //            1,  the client has successfully authenticated
-		PLAYER_AUTH = 64,    //                the client has been asked for a character password
-		SENDING_WORLD = 128, //            2,  the client requested world info
-		SENDING_TILES = 256, //            3,  the client requested tiles
-		PLAYING = 512,       //            10
+		VACANT = 4,           //                this socket has no client and is available
+		CONNECTED = 8,        // previously 0,  the client socket has been accepted
+		SERVER_AUTH = 16,     //           -1,  the client has been asked for a server password
+		ACCEPTED = 32,        //            1,  the client has successfully authenticated
+		PLAYER_AUTH = 64,     //                the client has been asked for a character password
+		QUEUED = 128,         //                the client is waiting for a free slot
+		ASSIGNING_SLOT = 256,     //                the client has been assigned a slot after waiting
+		SENDING_WORLD = 512,  //            2,  the client requested world info
+		SENDING_TILES = 1024, //            3,  the client requested tiles
+		PLAYING = 2048,       //            10
 		
 		// composites
-		DISCONNECTING = 3,   // SHUTDOWN or KICK
+		DISCONNECTING = KICK | SHUTDOWN,
+		// before a slot is assigned (whoAmI is invalid)
+		UNASSIGNED = KICK | SHUTDOWN | VACANT | CONNECTED | SERVER_AUTH | ACCEPTED | PLAYER_AUTH | QUEUED,
+		
+		ALL = 4095,
 	}
 
 	public class ServerSlot
@@ -52,7 +58,6 @@ namespace Terraria_Server
 		public volatile string remoteAddress;
 		public bool[,] tileSection = new bool[Main.maxTilesX / 200, Main.maxTilesY / 150];
 		public String statusText = "";
-		public int timeOut;
 		public bool announced;
 		public String name = "Anonymous";
 		public String oldName = "";
@@ -64,12 +69,6 @@ namespace Terraria_Server
 		public float spamAddBlockMax = 100f;
 		public float spamDelBlockMax = 500f;
 		public float spamWaterMax = 50f;
-		
-		public byte[] readBuffer;
-		
-		private volatile Queue<byte[]> writeQueue;
-		//private ProgramThread  writeThread;
-		private AutoResetEvent writeSignal;
 		
 		public bool Connected
 		{
@@ -92,8 +91,6 @@ namespace Terraria_Server
 		
 		public ServerSlot ()
 		{
-			writeQueue = new Queue<byte[]> ();
-			writeSignal = new AutoResetEvent (false);
 			state = SlotState.VACANT;
 		}
 		
@@ -181,7 +178,6 @@ namespace Terraria_Server
 				Main.players[this.whoAmI] = new Player();
 			}
 			
-			this.timeOut = 0; // TODO: move to connection
 			this.statusCount = 0;
 			this.statusMax = 0;
 			this.statusText2 = "";
@@ -221,25 +217,7 @@ namespace Terraria_Server
 			
 			if (conn == null) return;
 			
-			//ProgramLog.Log ("ServerSlot.Send");
 			conn.Send (data);
-	
-//			lock (writeQueue)
-//			{
-//				if (writeThread == null)
-//				{
-//					writeThread = new ProgramThread (string.Format ("W{0:000}", whoAmI), this.WriteThread);
-//					writeThread.Start ();
-//				}
-//
-//				writeQueue.Enqueue (data);
-//			}
-//			writeSignal.Set ();
-		}
-		
-		public void Signal ()
-		{
-			writeSignal.Set ();
 		}
 
 		public void Send (byte[] data, int offset, int length)
@@ -254,132 +232,8 @@ namespace Terraria_Server
 			var copy = new byte [length];
 			Array.Copy (data, offset, copy, 0, length);
 			
-			//ProgramLog.Log ("ServerSlot.Send");
 			conn.Send (copy);
-	
-//			lock (writeQueue)
-//			{
-//				if (writeThread == null)
-//				{
-//					writeThread = new ProgramThread (string.Format ("W{0:000}", whoAmI), this.WriteThread);
-//					writeThread.Start ();
-//				}
-//
-//				writeQueue.Enqueue (copy);
-//			}
-//			writeSignal.Set ();
 		}
 
-//		const int WRITE_THREAD_BATCH_SIZE = 32;
-//		internal void WriteThread ()
-//		{
-//			//Thread.CurrentThread.Name = string.Format ("W{0:000}", whoAmI);
-//			
-//			byte[][] list = new byte[WRITE_THREAD_BATCH_SIZE][];
-//			while (true)
-//			{
-//				bool kill = false;
-//				var queue = writeQueue;
-//				var socket = this.socket;
-//				var remoteAddress = this.remoteAddress;
-//				int items = 0;
-//				
-//				try
-//				{
-//					bool kick = false;
-//					
-//					lock (queue)
-//					{
-//						while (queue.Count > 0)
-//						{
-//							list[items++] = queue.Dequeue();
-//							if (items == WRITE_THREAD_BATCH_SIZE) break;
-//						}
-//						
-//						kick = (state == SlotState.KICK) && (writeQueue.Count == 0);
-//					}
-//					
-//					if (state == SlotState.SHUTDOWN)
-//					{
-//						kill = true;
-//						writeSignal.WaitOne (250);
-//					}
-//					else if (items == 0)
-//					{
-//						writeSignal.WaitOne (1000);
-//						continue;
-//					}
-//					
-//					SocketError error = SocketError.Success;
-//					
-//					try
-//					{
-//						for (int i = 0; i < items; i++)
-//						{
-//							int count = 0;
-//							int size = list[i].Length;
-//							while (size - count > 0)
-//								count += socket.Send (list[i], count, size - count, 0, out error);
-//							
-//							if (error != SocketError.Success) break;
-//							
-//							NetMessage.buffer[this.whoAmI].spamCount--;
-//							if (this.statusMax > 0)
-//							{
-//								this.statusCount++;
-//							}
-//						}
-//					}
-//					finally
-//					{
-//						for (int i = 0; i < items; i++)
-//							list[i] = null;
-//						
-//						if (error != SocketError.Success)
-//						{
-//							ProgramLog.Debug.Log ("{0}: error while sending ({1})", remoteAddress, error);
-//							kill = true;
-//						}
-//						else if (kick)
-//						{
-//							Thread.Sleep (250);
-//							kill = true;
-//						}
-//					}
-//				}
-//				catch (SocketException e)
-//				{
-//					ProgramLog.Debug.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
-//					kill = true;
-//				}
-//				catch (ObjectDisposedException e)
-//				{
-//					ProgramLog.Debug.Log ("{0}: exception while sending ({1})", remoteAddress, e.Message);
-//					kill = true;
-//				}
-//				catch (Exception e)
-//				{
-//					ProgramLog.Log (e, "Exception within WriteThread of slot " + whoAmI);
-//				}
-//				
-//				if (kill)
-//				{
-//					lock (queue)
-//					{
-//						if (queue.Count > 0)
-//							queue.Clear ();
-//					}
-//
-//					for (int i = 0; i < items; i++)
-//						list[i] = null;
-//					
-//					//socket.SafeShutdown ();
-//					socket.SafeClose();
-//					
-//					var deadClients = Netplay.deadClients;
-//					lock (deadClients) deadClients.Enqueue (socket);
-//				}
-//			}
-//		}
 	}
 }

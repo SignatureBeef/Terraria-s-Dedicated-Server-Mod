@@ -1,16 +1,16 @@
-﻿using System;
+using System;
 
 namespace Terraria_Server.Messages
 {
-    public class NPCTalkMessage : IMessage
+    public class NPCTalkMessage : SlotMessageHandler
     {
 
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.NPC_TALK;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int playerIndex = whoAmI;
 

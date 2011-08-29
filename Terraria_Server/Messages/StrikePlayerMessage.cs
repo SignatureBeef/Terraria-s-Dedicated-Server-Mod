@@ -1,17 +1,18 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace Terraria_Server.Messages
 {
-    public class StrikePlayerMessage : IMessage
+    public class StrikePlayerMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.STRIKE_PLAYER;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
+            int start = num - 1;
             int playerIndex = (int)readBuffer[num++];
             Player player = Main.players[playerIndex];
             if (whoAmI != playerIndex && (!player.hostile || !Main.players[whoAmI].hostile))

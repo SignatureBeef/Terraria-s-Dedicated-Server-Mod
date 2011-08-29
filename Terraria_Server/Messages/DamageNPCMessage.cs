@@ -2,14 +2,14 @@
 
 namespace Terraria_Server.Messages
 {
-    public class DamageNPCMessage : IMessage
+    public class DamageNPCMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.DAMAGE_NPC;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             short npcIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;

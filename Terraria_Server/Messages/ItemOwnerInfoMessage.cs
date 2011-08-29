@@ -2,14 +2,14 @@
 
 namespace Terraria_Server.Messages
 {
-    public class ItemOwnerInfoMessage : IMessage
+    public class ItemOwnerInfoMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.ITEM_OWNER_INFO;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             short itemIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;

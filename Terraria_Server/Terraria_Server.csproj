@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -39,7 +39,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNSAFE</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNSAFE;TEST_COMPRESSION;IGNORE_TILE_SQUARE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RegisterForComInterop>False</RegisterForComInterop>
@@ -143,7 +143,6 @@
     <Compile Include="Messages\EnterZoneMessage.cs" />
     <Compile Include="Messages\FlowLiquidMessage.cs" />
     <Compile Include="Messages\HealMessage.cs" />
-    <Compile Include="Messages\IMessage.cs" />
     <Compile Include="Messages\InventoryDataMessage.cs" />
     <Compile Include="Messages\ItemInfoMessage.cs" />
     <Compile Include="Messages\ItemOwnerInfoMessage.cs" />
@@ -265,6 +264,8 @@
     <Compile Include="Messages\NPCAddBuffMessage.cs" />
     <Compile Include="Messages\PlayerAddBuffMessage.cs" />
     <Compile Include="Misc\CloningExtensions.cs" />
+    <Compile Include="Messages\MessageHandler.cs" />
+    <Compile Include="Networking\SlotManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

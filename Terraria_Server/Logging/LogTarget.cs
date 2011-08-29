@@ -218,7 +218,7 @@ namespace Terraria_Server.Logging
 			catch (Exception e)
 			{
 				if (! passExceptions)
-					Console.WriteLine (e.ToString());
+					Console.Error.WriteLine (e.ToString());
 				else
 					throw;
 			}
@@ -307,7 +307,7 @@ namespace Terraria_Server.Logging
 			}
 			catch (Exception e)
 			{
-				Console.WriteLine (e.ToString());
+				Console.Error.WriteLine (e.ToString());
 			}
 			
 			try

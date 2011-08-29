@@ -294,6 +294,12 @@ namespace Terraria_Server.Commands
                 .WithHelpText("          plugin enable <plugin>")
                 .WithHelpText("          plugin disable <plugin>")
                 .Calls(Commands.ManagePlugins);
+            
+            AddCommand("q")
+                .WithAccessLevel (AccessLevel.OP)
+                .WithDescription ("List connections waiting in queues.")
+                .WithHelpText ("Usage:    q")
+                .Calls (Terraria_Server.Networking.SlotManager.QCommand);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;

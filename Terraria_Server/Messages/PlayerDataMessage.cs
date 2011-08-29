@@ -6,38 +6,101 @@ using Terraria_Server.Misc;
 using Terraria_Server;
 using Terraria_Server.Events;
 using Terraria_Server.Logging;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server.Messages
 {
-    class PlayerDataMessage : IMessage
+    class PlayerDataMessage : MessageHandler
     {
+		public PlayerDataMessage ()
+		{
+			//IgnoredStates |= SlotState.ASSIGNING_SLOT;
+			ValidStates = SlotState.ACCEPTED | SlotState.ASSIGNING_SLOT |
+				/* this so that we can have a custom error message */
+				SlotState.SENDING_WORLD | SlotState.SENDING_TILES | SlotState.PLAYING;
+		}
 
         private const int MAX_HAIR_ID = 36;
 
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.PLAYER_DATA;
         }
+        
+		static string GetName (ClientConnection conn, byte[] readBuffer, int num, int len)
+		{
+			string name;
+			
+			try
+			{
+				name = Encoding.ASCII.GetString (readBuffer, num, len).Trim();
+			}
+			catch (ArgumentException)
+			{
+				conn.Kick ("Invalid name: contains non-ASCII characters.");
+				return null;
+			}
+			
+			if (name.Length > 20)
+			{
+				conn.Kick ("Invalid name: longer than 20 characters.");
+				return null;
+			}
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+			if (name == "")
+			{
+				conn.Kick ("Invalid name: whitespace or empty.");
+				return null;
+			}
+			
+			foreach (char c in name)
+			{
+				if (c < 32 || c > 126)
+				{
+					conn.Kick ("Invalid name: contains non-printable characters.");
+					return null;
+				}
+			}
+			
+			if (name.Contains (" " + " "))
+			{
+				conn.Kick ("Invalid name: contains double spaces.");
+				return null;
+			}
+			
+			return name;
+		}
+        
+        public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
-            if (whoAmI == Main.myPlayer)
-            {
-                return;
-            }
-
-            var slot = Netplay.slots[whoAmI];
-            var player = Main.players[whoAmI];
+			int start = num - 1;
+			
+			if (conn.State == SlotState.ASSIGNING_SLOT)
+			{
+				// TODO: verify that data didn't change.
+				int who = conn.SlotIndex;
+				NetMessage.SendData (4, -1, who, conn.Player.Name, who);
+				return;
+			}
+			
+			if (conn.Player != null)
+			{
+				conn.Kick ("Player data sent twice.");
+				return;
+			}
+			
+			var player = new Player ();
+			conn.Player = player;
+			player.Connection = conn;
+			player.IPAddress = conn.RemoteAddress;
             
-            bool firstTime = player.Name == null;
-
             int hairId = (int)readBuffer[start + 2];
             if (hairId >= MAX_HAIR_ID)
             {
                 hairId = 0;
             }
 
-            player.whoAmi = whoAmI;
+            player.whoAmi = -1;
             player.hair = hairId;
             player.Male = readBuffer[start + 3] == 1;
             
@@ -51,109 +114,67 @@ namespace Terraria_Server.Messages
             num = setColor(player.pantsColor, num, readBuffer);
             num = setColor(player.shoeColor, num, readBuffer);
 
-            if (firstTime)
-                player.Difficulty = readBuffer[num++];
+            player.Difficulty = readBuffer[num++];
             
-            string newName;
-            
-			try
-			{
-				newName = Encoding.ASCII.GetString(readBuffer, num, length - num + start).Trim();
-			}
-			catch (ArgumentException)
-			{
-				slot.Kick ("Invalid name: contains non-ASCII characters.");
-				return;
-			}
+			string name = GetName (conn, readBuffer, num, length - num + start);
+			if (name == null) return;
 			
-			if (! firstTime)
-			{
-				if (player.Name != newName)
-				{
-					slot.Kick ("Attempt to change name during session.");
-				}
-				return;
-					
-			}
+			player.Name = name;
 			
-			player.Name = newName;
-			
-			if (player.Name.Length > 20)
-			{
-				slot.Kick ("Invalid name: longer than 20 characters.");
-				return;
-			}
-
-			string address = slot.remoteAddress.Split(':')[0];
+			string address = conn.RemoteAddress.Split(':')[0];
 			
 			if (Program.server.BanList.containsException (address) || Program.server.BanList.containsException (player.Name))
 			{
-				ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", newName);
-				slot.Kick ("You are banned from this server.");
+				ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", name);
+				conn.Kick ("You are banned from this server.");
 				return;
 			}
-
-			if (player.Name == "")
-			{
-				slot.Kick ("Invalid name: whitespace or empty.");
-				return;
-			}
-			
-			foreach (char c in player.Name)
-			{
-				if (c < 32 || c > 126)
-				{
-					slot.Kick ("Invalid name: contains non-printable characters.");
-					return;
-				}
-			}
-			
-			if (player.Name.Contains (" " + " "))
-			{
-				slot.Kick ("Invalid name: contains double spaces.");
-				return;
-			}
-			
-			Netplay.slots[whoAmI].oldName = player.Name;
-			Netplay.slots[whoAmI].name = player.Name;
 
 			var loginEvent = new PlayerLoginEvent();
-			loginEvent.Slot = slot;
+			//loginEvent.Slot = slot;
 			loginEvent.Sender = player;
 			Program.server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_QUERY, loginEvent);
 			
 			if (loginEvent.Action == PlayerLoginAction.REJECT)
 			{
-				if ((slot.state & SlotState.DISCONNECTING) == 0)
-					slot.Kick ("Rejected by server.");
+				if ((conn.State & SlotState.DISCONNECTING) == 0)
+					conn.Kick ("Rejected by server.");
 				return;
 			}
 			else if (loginEvent.Action == PlayerLoginAction.ASK_PASS)
 			{
-				slot.state = SlotState.PLAYER_AUTH;
-				NetMessage.SendData (37, whoAmI, -1, "");
+				conn.State = SlotState.PLAYER_AUTH;
+				
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.PasswordRequest ();
+				conn.Send (msg.Output);
+
 				return;
 			}
 			else // PlayerLoginAction.ACCEPT
 			{
 				// don't allow replacing connections for guests, but do for registered users
-				if (slot.state < SlotState.PLAYING)
+				if (conn.State < SlotState.PLAYING)
 				{
-					var name = player.Name.ToLower();
-					int count = 0;
+					var lname = player.Name.ToLower();
+
 					foreach (var otherPlayer in Main.players)
 					{
 						var otherSlot = Netplay.slots[otherPlayer.whoAmi];
-						if (count++ != whoAmI && otherPlayer.Name != null
-							&& name == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
+						if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
 						{
-							slot.Kick ("A \"" + otherPlayer.Name + "\" is already on this server.");
+							conn.Kick ("A \"" + otherPlayer.Name + "\" is already on this server.");
 							return;
 						}
 					}
 				}
 				
-				NetMessage.SendData (4, -1, whoAmI, player.Name, whoAmI);
+				conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
+				
+				// and now decide whether to queue the connection
+				//SlotManager.Schedule (conn, (int)loginEvent.Priority);
+				
+				//NetMessage.SendData (4, -1, -1, player.Name, whoAmI);
 			}
         }
 

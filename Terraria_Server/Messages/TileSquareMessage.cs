@@ -7,9 +7,9 @@ using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
-    public class TileSquareMessage : IMessage
+    public class TileSquareMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.TILE_SQUARE;
         }
@@ -19,12 +19,12 @@ namespace Terraria_Server.Messages
         static long diffTiles = 0;
 #endif
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
-            short size = BitConverter.ToInt16(readBuffer, start + 1);
-            int left = BitConverter.ToInt32(readBuffer, start + 3);
-            int top = BitConverter.ToInt32(readBuffer, start + 7);
-            num = start + 11;
+            short size = BitConverter.ToInt16(readBuffer, num);
+            int left = BitConverter.ToInt32(readBuffer, num + 2);
+            int top = BitConverter.ToInt32(readBuffer, num + 6);
+            num += 10;
             var slot = Netplay.slots[whoAmI];
             
 #if IGNORE_TILE_SQUARE
@@ -33,6 +33,8 @@ namespace Terraria_Server.Messages
                 Logging.ProgramLog.Debug.Log ("{0}: Ignoring tile square of size {1}", whoAmI, size);
                 return;
             }
+            
+            //Logging.ProgramLog.Debug.Log ("{0}: TILE_SQUARE at {1}, {2}", whoAmI, left, top);
             
             bool different = false;
             for (int x = left; x < left + (int)size; x++)
@@ -220,7 +222,7 @@ namespace Terraria_Server.Messages
             }
 
             WorldModify.RangeFrame(left, top, left + (int)size, top + (int)size);
-            NetMessage.SendData((int)bufferData, -1, whoAmI, "", (int)size, (float)left, (float)top);
+            NetMessage.SendData(Packet.TILE_SQUARE, -1, whoAmI, "", (int)size, (float)left, (float)top);
         }
     }
 }

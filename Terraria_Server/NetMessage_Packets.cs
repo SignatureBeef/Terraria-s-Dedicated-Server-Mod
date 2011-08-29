@@ -248,9 +248,9 @@ namespace Terraria_Server
 			if (tile.Lava != last.Lava)       flags |= 16;
 			if (active)
 			{
-				if (last.Type != type) flags |= 32;
+				if (last.Type != type || (flags & 1) != 0) flags |= 32;
 				 
-				if (Main.tileFrameImportant [type] && (last.FrameX != tile.FrameX || last.FrameY != tile.FrameY))
+				if (Main.tileFrameImportant [type] && (last.FrameX != tile.FrameX || last.FrameY != tile.FrameY || (flags & 1) != 0))
 				{
 					flags |= 64;
 				}

@@ -550,14 +550,14 @@ namespace Terraria_Server
 
             for (int i = 0; i < 255; i++)
             {
-                if (Netplay.slots[i].state >= SlotState.CONNECTED)
-                {
-                    Netplay.slots[i].timeOut++;
-                    if (/*!Main.stopTimeOuts && */Netplay.slots[i].timeOut > 60 * Main.timeOut)
-                    {
-                        Netplay.slots[i].Kick ("Timed out.");
-                    }
-                }
+//                if (Netplay.slots[i].state >= SlotState.CONNECTED)
+//                {
+//                    //Netplay.slots[i].timeOut++;
+//                    if (/*!Main.stopTimeOuts && */Netplay.slots[i].timeOut > 60 * Main.timeOut)
+//                    {
+//                        Netplay.slots[i].Kick ("Timed out.");
+//                    }
+//                }
 
                 Player player = Main.players[i];
                 if (player.Active)

@@ -6,14 +6,19 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
-    public class ClientModMessage : IMessage
+    public class ClientModMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+		public ClientModMessage ()
+		{
+			ValidStates = SlotState.SENDING_TILES | SlotState.PLAYING;
+		}
+		
+        public override Packet GetPacket()
         {
             return Packet.CLIENT_MOD;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             var player = Main.players[whoAmI];
             player.HasClientMod = true;

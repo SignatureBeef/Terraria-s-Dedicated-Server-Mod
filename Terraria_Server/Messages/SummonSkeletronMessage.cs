@@ -2,14 +2,14 @@
 
 namespace Terraria_Server.Messages
 {
-    public class SummonSkeletronMessage : IMessage
+    public class SummonSkeletronMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.SUMMON_SKELETRON;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int player = readBuffer[num++]; //TODO: maybe check for forgery
             byte action = readBuffer[num];

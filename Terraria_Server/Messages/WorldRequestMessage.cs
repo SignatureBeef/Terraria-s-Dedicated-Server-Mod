@@ -3,18 +3,34 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Terraria_Server.Networking;
+
 namespace Terraria_Server.Messages
 {
-    public class WorldRequestMessage : IMessage
+    public class WorldRequestMessage : MessageHandler
     {
-        public Packet GetPacket()
+		public WorldRequestMessage ()
+		{
+			IgnoredStates = SlotState.PLAYER_AUTH;
+			ValidStates = SlotState.ACCEPTED | SlotState.ASSIGNING_SLOT;
+		}
+
+        public override Packet GetPacket()
         {
             return Packet.WORLD_REQUEST;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
-            if (Netplay.slots[whoAmI].state == SlotState.ACCEPTED)
+            if (conn.State == SlotState.ACCEPTED)
+            {
+                SlotManager.Schedule (conn, conn.Queue);
+                return;
+            }
+            
+            int whoAmI = conn.SlotIndex;
+
+            if (Netplay.slots[whoAmI].state == SlotState.ASSIGNING_SLOT)
             {
                 Netplay.slots[whoAmI].state = SlotState.SENDING_WORLD;
             }

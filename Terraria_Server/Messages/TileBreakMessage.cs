@@ -10,14 +10,14 @@ using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
-    public class TileBreakMessage : IMessage
+    public class TileBreakMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.TILE_BREAK;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             var slot = Netplay.slots[whoAmI];
             

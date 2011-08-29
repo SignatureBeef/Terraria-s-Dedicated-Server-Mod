@@ -1,17 +1,17 @@
-﻿using System;
+using System;
 using Terraria_Server.Plugin;
 using Terraria_Server.Events;
 
 namespace Terraria_Server.Messages
 {
-    public class PlayerPvPChangeMessage : IMessage
+    public class PlayerPvPChangeMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.PLAYER_PVP_CHANGE;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int playerIndex = readBuffer[num];
             

@@ -7,14 +7,19 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
-    public class ReceivingPlayerJoinedMessage : IMessage
+    public class ReceivingPlayerJoinedMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+		public ReceivingPlayerJoinedMessage ()
+		{
+			ValidStates = SlotState.SENDING_TILES | SlotState.PLAYING;
+		}
+
+        public override Packet GetPacket()
         {
             return Packet.RECEIVING_PLAYER_JOINED;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int playerIndex = readBuffer[num];
             

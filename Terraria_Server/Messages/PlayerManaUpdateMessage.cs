@@ -1,16 +1,21 @@
-﻿using System;
+using System;
 
 namespace Terraria_Server.Messages
 {
-    public class PlayerManaUpdateMessage : IMessage
+    public class PlayerManaUpdateMessage : SlotMessageHandler
     {
+		public PlayerManaUpdateMessage ()
+		{
+			IgnoredStates = SlotState.ACCEPTED | SlotState.PLAYER_AUTH;
+			ValidStates = SlotState.ASSIGNING_SLOT | SlotState.PLAYING;
+		}
 
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.PLAYER_MANA_UPDATE;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int playerIndex = readBuffer[num];
             

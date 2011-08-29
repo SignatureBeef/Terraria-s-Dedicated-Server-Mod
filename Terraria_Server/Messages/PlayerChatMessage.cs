@@ -5,49 +5,57 @@ using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server.Messages
 {
-    public class PlayerChatMessage : IMessage
+    public class PlayerChatMessage : MessageHandler
     {
-        public Packet GetPacket()
+		public PlayerChatMessage ()
+		{
+			ValidStates = SlotState.CONNECTED | SlotState.PLAYING;
+		}
+		
+        public override Packet GetPacket()
         {
             return Packet.PLAYER_CHAT;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
-            int playerIndex = whoAmI;
-            var slot = Netplay.slots [whoAmI];
-
-            String chat = Encoding.ASCII.GetString(readBuffer, start + 5, length - 5).Trim();
+            String chat = Encoding.ASCII.GetString(readBuffer, num + 4, length - 5).Trim();
             
             foreach (var c in chat)
             {
                 if (c < 32 || c > 126)
                 {
-                    slot.Kick ("Invalid characters in chat message.");
+                    conn.Kick ("Invalid characters in chat message.");
                     return;
                 }
             }
             
-            if (slot.state < SlotState.PLAYING)
+            if (conn.State < SlotState.PLAYING)
             {
                 if (chat != "/playing")
                 {
-                    ProgramLog.Debug.Log ("{0}: sent message PLAYER_CHAT in state {1}.", slot.remoteAddress, slot.state);
-                    slot.Kick ("Invalid operation at this state.");
+                    ProgramLog.Debug.Log ("{0}: sent message PLAYER_CHAT in state {1}.", conn.RemoteAddress, conn.State);
+                    conn.Kick ("Invalid operation at this state.");
                 }
                 else
                 {
                     ProgramLog.Debug.Log ("Replying to early online player query.");
-                    NetMessage.SendData (25, whoAmI, -1,
-                        string.Concat ("Current players: ",
+                    var msg = NetMessage.PrepareThreadInstance ();
+                    msg.PlayerChat (255, string.Concat ("Current players: ",
                             string.Join (", ", from p in Server.players where p.Active select p.Name), "."),
-                        255, 255, 240, 20);
+                            255, 240, 20);
+                    conn.Send (msg.Output);
                 }
                 return;
             }
+            
+            int whoAmI = conn.SlotIndex;
+            int playerIndex = whoAmI;
+            //var slot = Netplay.slots[whoAmI];
 
             if (chat.Length > 0)
             {
@@ -77,10 +85,15 @@ namespace Terraria_Server.Messages
                 Color chatColour = ChatColour.White;
                 if (Main.players[playerIndex].Op)
                 {
-                    chatColour = ChatColour.SteelBlue;
-                } else if (Main.players[playerIndex].hardCore)
+                    chatColour = ChatColour.LightSteelBlue;
+                }
+                else if (Main.players[playerIndex].Difficulty == 1)
                 {
-                    chatColour = new Color(238, 160, 238);
+                    chatColour = ChatColour.BlanchedAlmond;
+                }
+                else if (Main.players[playerIndex].Difficulty == 2)
+                {
+                    chatColour = ChatColour.Tomato;
                 }
                 NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, chat, playerIndex, chatColour.R, chatColour.G, chatColour.B);
                 ProgramLog.Chat.Log ("<" + Main.players[playerIndex].Name + "> " + chat);

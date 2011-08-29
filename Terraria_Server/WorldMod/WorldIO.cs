@@ -446,6 +446,8 @@ namespace Terraria_Server.WorldMod
 										if (binaryReader.ReadBoolean())
 										{
 											Main.tile.At(j, k).SetWall(binaryReader.ReadByte());
+//											if (Main.tile.At(j, k).Wall == 7)
+//												Main.tile.At(j, k).SetWall (17);
 										}
 										if (binaryReader.ReadBoolean())
 										{

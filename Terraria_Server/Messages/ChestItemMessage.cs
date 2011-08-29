@@ -5,15 +5,16 @@ using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages
 {
-    public class ChestItemMessage : IMessage
+    public class ChestItemMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.CHEST_ITEM;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
+            int start = num - 1;
             int chestIndex = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
             int contentsIndex = (int)readBuffer[num++];
