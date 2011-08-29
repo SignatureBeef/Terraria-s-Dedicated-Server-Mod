@@ -145,10 +145,6 @@ namespace Terraria_Server.Networking
 				sendQueue.Enqueue (new Message { content = bytes, kind = Message.KICK });
 				
 				SendMore (null);
-//				if (sending == false)
-//				{
-//					sending = SendMore (null);
-//				}
 			}
 		}
 		

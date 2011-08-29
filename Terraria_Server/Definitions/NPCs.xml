@@ -1090,82 +1090,65 @@
 		<Width>24</Width>
 	</NPC>
   <NPC>
-    <Width>51</Width>
-    <Height>51</Height>
-    <active>true</active>
+    <Name>Spike Ball</Name>
+    <Width>34</Width>
+    <Height>34</Height>
     <Type>70</Type>
     <aiStyle>20</aiStyle>
-    <timeLeft>750</timeLeft>
     <damage>32</damage>
     <defense>100</defense>
-    <soundHit>1</soundHit>
-    <soundKilled>1</soundKilled>
     <lifeMax>100</lifeMax>
-    <Name>Spike Ball</Name>
     <scale>1.5</scale>
     <knockBackResist>0</knockBackResist>
-    <oldTarget>255</oldTarget>
     <noGravity>true</noGravity>
     <noTileCollide>true</noTileCollide>
     <dontTakeDamage>true</dontTakeDamage>
+    <slots>0.3</slots>
   </NPC>
   <NPC>
-    <Width>45</Width>
-    <Height>30</Height>
-    <active>true</active>
+    <Name>Dungeon Slime</Name>
+    <Width>36</Width>
+    <Height>24</Height>
     <Type>71</Type>
     <aiStyle>1</aiStyle>
-    <timeLeft>750</timeLeft>
     <damage>30</damage>
     <defense>7</defense>
-    <soundHit>1</soundHit>
-    <soundKilled>1</soundKilled>
     <lifeMax>150</lifeMax>
-    <Name>Dungeon Slime</Name>
     <alpha>60</alpha>
     <scale>1.25</scale>
     <knockBackResist>0.6</knockBackResist>
-    <oldTarget>255</oldTarget>
     <value>150</value>
-		<PoisonImmunity>true</PoisonImmunity>
+    <slots>2</slots>
+	<PoisonImmunity>true</PoisonImmunity>
   </NPC>
   <NPC>
-    <Width>40</Width>
-    <Height>40</Height>
-    <active>true</active>
+    <Name>Blazing Wheel</Name>
+    <Width>34</Width>
+    <Height>34</Height>
     <Type>72</Type>
     <aiStyle>21</aiStyle>
-    <timeLeft>750</timeLeft>
     <damage>24</damage>
     <defense>100</defense>
-    <soundHit>1</soundHit>
-    <soundKilled>1</soundKilled>
     <lifeMax>100</lifeMax>
-    <Name>Blazing Wheel</Name>
     <alpha>100</alpha>
     <scale>1.2</scale>
     <knockBackResist>0</knockBackResist>
-    <oldTarget>255</oldTarget>
     <noGravity>true</noGravity>
     <behindTiles>true</behindTiles>
     <dontTakeDamage>true</dontTakeDamage>
+    <slots>0.3</slots>
   </NPC>
   <NPC>
-    <Width>17</Width>
-    <Height>37</Height>
-    <active>true</active>
+    <Name>Goblin Scout</Name>
+    <Width>18</Width>
+    <Height>40</Height>
     <Type>73</Type>
     <aiStyle>3</aiStyle>
-    <timeLeft>750</timeLeft>
     <damage>20</damage>
     <defense>6</defense>
-    <soundHit>1</soundHit>
-    <soundKilled>1</soundKilled>
     <lifeMax>80</lifeMax>
-    <Name>Goblin Scout</Name>
     <scale>0.95</scale>
     <knockBackResist>0.7</knockBackResist>
-    <oldTarget>255</oldTarget>
     <value>200</value>
   </NPC>
 </ArrayOfNPC>
