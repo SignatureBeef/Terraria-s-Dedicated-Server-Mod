@@ -206,8 +206,7 @@ namespace Terraria_Server
 			
 			try
 			{
-				var conn = new Networking.ClientConnection (client, -1);
-				conn.State = SlotState.CONNECTED;
+				var conn = new Networking.ClientConnection (client, -1); //ignore the warning
 			}
 			catch (SocketException)
 			{

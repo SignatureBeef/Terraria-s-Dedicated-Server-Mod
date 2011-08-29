@@ -19,7 +19,7 @@ namespace Terraria_Server.Networking
 //		int    sideBytes;
 //		int    sideLength;
 		
-		volatile SlotState state = SlotState.VACANT;
+		volatile SlotState state = SlotState.CONNECTED;
 		
 		static Stopwatch time = new Stopwatch ();
 		
