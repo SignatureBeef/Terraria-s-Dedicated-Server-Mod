@@ -5,6 +5,7 @@ using System.Text;
 
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
+using System.Collections;
 
 namespace Terraria_Server.Plugin
 {

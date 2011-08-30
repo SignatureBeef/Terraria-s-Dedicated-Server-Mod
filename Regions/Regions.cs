@@ -18,6 +18,7 @@ namespace Regions
     public class Regions : Plugin
     {
         public const Int32 SelectorItem = 0;
+        public static Boolean UsingPermissions = false;
 
         public static String RegionsFolder
         {
@@ -26,7 +27,6 @@ namespace Regions
                 return Statics.PluginPath + Path.DirectorySeparatorChar + "Regions";
             }
         }
-
         public static String DataFolder
         {
             get
@@ -67,6 +67,10 @@ namespace Regions
             registerHook(Hooks.PLAYER_FLOWLIQUID);
             registerHook(Hooks.PLAYER_PROJECTILE);
             registerHook(Hooks.DOOR_STATECHANGE);
+
+            UsingPermissions = isRunningPermissions();
+            if (UsingPermissions)
+                Log("Using Permissions.");
         }
 
         public override void Enable()
@@ -77,6 +81,11 @@ namespace Regions
         public override void Disable()
         {
             ProgramLog.Log("Regions disabled.");
+        }
+
+        public static void Log(String fmt, params object[] args)
+        {
+            ProgramLog.Log(fmt, args);
         }
         
         #region Events
@@ -186,6 +195,17 @@ namespace Regions
             }
 
         #endregion
+
+        public static Boolean isRunningPermissions()
+        {
+            foreach (Plugin plugin in Program.server.PluginManager.Plugins.Values)
+            {
+                if (plugin.Name == "TDSMPermissions")
+                    return plugin.Enabled;
+            }
+
+            return false;
+        }
 
     }
 }

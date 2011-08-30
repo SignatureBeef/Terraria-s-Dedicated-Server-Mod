@@ -171,8 +171,11 @@ namespace Regions
                 }
 
                 if (usersAdded > 0)
+                {
                     sender.sendMessage(string.Format("{0} users were added to {1}", usersAdded, region.Name),
                         255, 0, 255, 0);
+                    Regions.Log(sender.Name + " created region {0} with {1} user/s", region.Name, usersAdded);
+                }
                 else
                     throw new CommandError("A user was not able to be added to a Region.");
             }
