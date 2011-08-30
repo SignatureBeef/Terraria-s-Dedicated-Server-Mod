@@ -19,6 +19,14 @@ namespace Regions
             }
             else if (args.TryPop("create"))
             {
+                if(sender is Player)
+                {
+                    if(Selection.isInSelectionlist(sender as Player))
+                    {
+                        sender.sendMessage("Please finish the region selection first!", 255);
+                        return;
+                    }
+                }
                 Create(server, sender, args);
             }
             else if (args.TryPop("user"))
@@ -31,7 +39,7 @@ namespace Regions
                 else if (remove)
                     RemoveUser(server, sender, args);
                 else
-                    sender.sendMessage("Please review your command", 255, 255, 0, 0);
+                    throw new CommandError("Please review your command.");
             }
             else if (args.TryPop("list"))
             {
@@ -121,10 +129,10 @@ namespace Regions
 
         public static void AddUser(Server server, ISender sender, ArgumentList args)
         {
-            String User, IP;
+            String User = "", IP = "";
             Int32 Slot;
 
-            args.TryParseOne<String>("-ip", out IP); //Eh
+            args.TryParseOne<String>("-ip", out IP); //Optional
 
             //IP or name?
             if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot))
@@ -134,7 +142,7 @@ namespace Regions
                 {
                     exceptions[0] = User;
                 }
-                if (IP != null && IP.Length > 0)
+                if (IP.Length > 0)
                 {
                     exceptions[1] = IP;
                 }
@@ -144,7 +152,7 @@ namespace Regions
                 {
                     if (Slot == i)
                         region = Regions.regionManager.Regions[i];
-                        break;
+                    break;
                 }
 
                 if (region == null)
@@ -162,15 +170,69 @@ namespace Regions
                         }
                 }
 
-                sender.sendMessage(string.Format("{0} users were added to {1}", usersAdded, region.Name), 
-                    255, 0, 255, 0); //Green
-
+                if (usersAdded > 0)
+                    sender.sendMessage(string.Format("{0} users were added to {1}", usersAdded, region.Name),
+                        255, 0, 255, 0);
+                else
+                    throw new CommandError("A user was not able to be added to a Region.");
             }
+            else
+                throw new CommandError("Invalid arguments, Please review your command.");
         }
 
         public static void RemoveUser(Server server, ISender sender, ArgumentList args)
         {
+            String User = "", IP = "";
+            Int32 Slot;
 
+            args.TryParseOne<String>("-ip", out IP); //Optional
+
+            //IP or name?
+            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot))
+            {
+                String[] exceptions = new String[2];
+                if (User.Length > 0)
+                {
+                    exceptions[0] = User;
+                }
+                if (IP.Length > 0)
+                {
+                    exceptions[1] = IP;
+                }
+
+                Region.Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                        region = Regions.regionManager.Regions[i];
+                    break;
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                int usersRemoved = 0;
+                foreach (String toInflate in exceptions)
+                {
+                    if (toInflate != null)
+                        foreach (String inflatee in toInflate.Split(','))
+                        {
+                            if (region.UserList.Contains(inflatee))
+                            {
+                                region.UserList.Add(inflatee);
+                                usersRemoved++;
+                            }
+                        }
+                }
+
+                if (usersRemoved > 0)
+                    sender.sendMessage(string.Format("{0} users were added to {1}", usersRemoved, region.Name),
+                        255, 0, 255, 0);
+                else
+                    throw new CommandError("A user was not able to be removed from a Region.");
+            }
+            else
+                throw new CommandError("Invalid arguments, Please review your command.");
         }
     }
 }

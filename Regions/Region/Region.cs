@@ -180,6 +180,11 @@ namespace Regions.Region
             return users.Trim();
         }
 
+        public Boolean IsRestrictedForUser(Player player)
+        {
+            return (Restricted && player.Op || !player.Op && !ContainsUser(player.Name) && !ContainsUser(player.IPAddress));
+        }
+
         public override String ToString()
         {
             return string.Format(

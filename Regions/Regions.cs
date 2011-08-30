@@ -111,7 +111,7 @@ namespace Regions
                     {
                         if (rgn.HasPoint(Event.Position))
                         {
-                            if (rgn.Restricted && player.Op || !player.Op && !rgn.ContainsUser(player.Name))
+                            if (rgn.IsRestrictedForUser(player))
                             {
                                 Event.Cancelled = true;
                                 player.sendMessage("You cannot edit this area!", ChatColour.Red);
@@ -129,7 +129,7 @@ namespace Regions
                 {
                     if (rgn.HasPoint(Event.Position))
                     {
-                        if (rgn.Restricted && Event.Player.Op || !Event.Player.Op && !rgn.ContainsUser(Event.Player.Name))
+                        if (rgn.IsRestrictedForUser(Event.Player))
                         {
                             Event.Cancelled = true;
                             Event.Player.sendMessage("You cannot edit this area!", ChatColour.Red);
@@ -145,7 +145,7 @@ namespace Regions
                 {
                     if (rgn.HasPoint(Event.Projectile.Position / 16))
                     {
-                        if (rgn.Restricted && Event.Player.Op || !Event.Player.Op && !rgn.ContainsUser(Event.Player.Name))
+                        if (rgn.IsRestrictedForUser(Event.Player))
                         {
                             Event.Cancelled = true;
                             Event.Player.sendMessage("You cannot edit this area!", ChatColour.Red);
@@ -166,7 +166,7 @@ namespace Regions
                         {
                             if (Event.Opener == DoorOpener.PLAYER)
                             {
-                                if (rgn.Restricted && player.Op || !player.Op && !rgn.ContainsUser(player.Name))
+                                if (rgn.IsRestrictedForUser(player))
                                 {
                                     Event.Cancelled = true;
                                     player.sendMessage("You cannot edit this area!", ChatColour.Red);
@@ -178,7 +178,6 @@ namespace Regions
                                 if (rgn.RestrictedNPCs)
                                 {
                                     Event.Cancelled = true;
-                                    player.sendMessage("You cannot edit this area!", ChatColour.Red);
                                     return;
                                 }
                             }
