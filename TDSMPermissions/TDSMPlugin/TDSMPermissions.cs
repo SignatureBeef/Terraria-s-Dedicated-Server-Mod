@@ -2,20 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.IO;
+
 using Terraria_Server;
-using Terraria_Server.Plugin;
 using Terraria_Server.Commands;
 using Terraria_Server.Events;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
-using TDSMPermissions.Commands;
 using Terraria_Server.Permissions;
-using YaTools.Yaml;
+using Terraria_Server.Plugin;
+
+using TDSMPermissions.Commands;
 using TDSMPermissions.Definitions;
 
-using Newtonsoft.Json;
+using YaTools.Yaml;
 
 namespace TDSMPermissions
 {
@@ -249,12 +249,19 @@ namespace TDSMPermissions
 						return;
 				}
 				bool toggle;
+				String tokenText;
 				if (sc.TokenText.Contains('-'))
+				{
 					toggle = false;
+					tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
+				}
 				else
+				{
 					toggle = true;
-				currentGroup.permissions.Add(sc.TokenText.Substring(1, sc.TokenText.Length - 1), toggle);
-				ProgramLog.Debug.Log("Node " + sc.TokenText + " added with " + toggle + " status");
+					tokenText = sc.TokenText;
+				}
+				currentGroup.permissions.Add(tokenText, toggle);
+				ProgramLog.Debug.Log("Node " + tokenText + " added with " + toggle + " status");
 			}
 			groups.Add(currentGroup);
 		}
