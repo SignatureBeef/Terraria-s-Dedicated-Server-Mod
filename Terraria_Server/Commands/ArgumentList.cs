@@ -64,7 +64,7 @@ namespace Terraria_Server.Commands
 				return val;
 			}
 			
-			throw new CommandError ("An integer number was expected for argument {0}.", at);
+			throw new CommandError ("An integer number was expected for argument {0}.", at + 1);
 		}
 		
 		public bool TryGetInt (int at, out int val)
@@ -86,7 +86,7 @@ namespace Terraria_Server.Commands
 				return val;
 			}
 			
-			throw new CommandError ("A number was expected for argument {0}.", at);
+			throw new CommandError ("A number was expected for argument {0}.", at + 1);
 		}
 		
 		public bool TryGetDouble (int at, out double val)
@@ -106,7 +106,7 @@ namespace Terraria_Server.Commands
 			if (TryGetDuration (at, out val))
 				return val;
 			
-			throw new CommandError ("A duration was expected for argument {0}.", at);
+			throw new CommandError ("A duration was expected for argument {0}.", at + 1);
 		}
 		
 		public bool TryGetDuration (int at, out TimeSpan val)
@@ -186,7 +186,7 @@ namespace Terraria_Server.Commands
 				return val;
 			}
 			
-			throw new CommandError ("An boolean value was expected for argument {0}.", at);
+			throw new CommandError ("An boolean value was expected for argument {0}.", at + 1);
 		}
 		
 		public bool TryGetBool (int at, out bool val)
@@ -208,7 +208,7 @@ namespace Terraria_Server.Commands
 			if (player != null)
 				return player;
 			
-			throw new CommandError ("A connected player's name was expected for argument {0}.", at);
+			throw new CommandError ("A connected player's name was expected for argument {0}.", at + 1);
 		}
 		
 		public bool TryGetOnlinePlayer (int at, out Player val)

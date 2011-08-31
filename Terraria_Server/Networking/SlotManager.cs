@@ -9,16 +9,48 @@ namespace Terraria_Server.Networking
 {
 	public static class SlotManager
 	{
+		const int MAX_SLOTS = 254;
+		
 		static Queue[] queues = new Queue [4];
+		
 		static int maxSlots;
 		static int overlimitSlots;
-		static int otherSlotsInUse;
+		static int privSlotsInUse;
+		
+		static bool[] isPrivileged = new bool [MAX_SLOTS];
+		
 		static Stack<int> freeSlots = new Stack<int> (); // those configured by Main.maxNetplayers
-		static Stack<int> otherFreeSlots = new Stack<int> (); // those left over
+		static Stack<int> privFreeSlots = new Stack<int> (); // those left over
+		
+		static ClientConnection[] handovers = new ClientConnection [MAX_SLOTS];
+		
 		static object syncRoot = new object();
+		
+		public static int MaxSlots
+		{
+			get { return maxSlots; }
+		}
+		
+		public static int OverlimitSlots
+		{
+			get { return overlimitSlots; }
+		}
+		
+		public static bool IsPrivileged (int id)
+		{
+			return isPrivileged[id];
+		}
 		
 		public static void Initialize (int maxSlots, int overlimitSlots = 0)
 		{
+			if (maxSlots < 1) maxSlots = 1;
+			else if (maxSlots > MAX_SLOTS) maxSlots = MAX_SLOTS;
+			
+			if (overlimitSlots < 0) overlimitSlots = 0;
+			else if (overlimitSlots > maxSlots) overlimitSlots = maxSlots;
+			
+			ProgramLog.Log ("Initializing slot manager for {0}+{1} players.", maxSlots, overlimitSlots);
+			
 			lock (syncRoot)
 			{
 				for (int i = maxSlots - 1; i >= 0; i--)
@@ -28,15 +60,99 @@ namespace Terraria_Server.Networking
 				
 				for (int i = 253; i >= maxSlots; i--)
 				{
-					otherFreeSlots.Push (i);
+					isPrivileged[i] = true;
+					privFreeSlots.Push (i);
 				}
+			
+				for (int q = 0; q < 4; q++) queues[q] = new Queue ();
+				
+				privSlotsInUse = 0;
+				SlotManager.maxSlots = maxSlots;
+				SlotManager.overlimitSlots = overlimitSlots;
+			}
+		}
+		
+		public static int ChangeLimits (int newMaxSlots, int newOverlimitSlots)
+		{
+			if (newMaxSlots < 1) newMaxSlots = 1;
+			else if (newMaxSlots > MAX_SLOTS) newMaxSlots = MAX_SLOTS;
+			
+			if (newOverlimitSlots < 0) newOverlimitSlots = 0;
+			
+			Stack<int> newSlots = new Stack<int> ();
+			
+			lock (syncRoot)
+			{
+				int diff = newMaxSlots - maxSlots;
+				maxSlots = newMaxSlots;
+				
+				if (diff > 0)
+				{
+					for (int i = 0; i < diff; i++)
+					{
+						if (privFreeSlots.Count > 0)
+						{
+							var id = privFreeSlots.Pop ();
+							//freeSlots.Push (id);
+							newSlots.Push (id);
+							isPrivileged[id] = false;
+						}
+						else
+						{
+							maxSlots -= diff - i;
+						}
+					}
+				}
+				else if (diff < 0)
+				{
+					for (int i = 0; i < -diff; i++) // remove some free slots
+					{
+						if (freeSlots.Count > 0)
+						{
+							var id = freeSlots.Pop ();
+							//privFreeSlots.Push (id);
+							newSlots.Push (id);
+							isPrivileged[id] = true;
+							privSlotsInUse += 1; // this gets decremented from FreeSlot
+							diff += 1;
+							
+						}
+						else
+							break;
+					}
+					
+					if (diff < 0) // mark some used slots privileged
+					{
+						for (int i = 0; i < MAX_SLOTS; i++)
+						{
+							int id = (MAX_SLOTS + maxSlots - i) % MAX_SLOTS;
+							
+							if (! isPrivileged[id])
+							{
+								isPrivileged[id] = true;
+								privSlotsInUse += 1;
+								diff += 1;
+								if (diff == 0) break;
+							}
+						}
+					}
+					
+					if (diff < 0)
+					{
+						maxSlots -= diff;
+					}
+				}
+				
+				overlimitSlots = Math.Min (maxSlots, newOverlimitSlots);
 			}
 			
-			for (int q = 0; q < 4; q++) queues[q] = new Queue ();
+			while (newSlots.Count > 0)
+			{
+				var id = newSlots.Pop ();
+				FreeSlot (id);
+			}
 			
-			otherSlotsInUse = 0;
-			SlotManager.maxSlots = maxSlots;
-			SlotManager.overlimitSlots = overlimitSlots;
+			return maxSlots;
 		}
 		
 		public static int Schedule (ClientConnection conn, int priority)
@@ -72,22 +188,43 @@ namespace Terraria_Server.Networking
 			return id;
 		}
 		
+		public static bool HandoverSlot (ClientConnection src, ClientConnection dst)
+		{
+			int id = src.SlotIndex;
+			
+			if (id < 0 || id > 253) return false;
+			
+			lock (syncRoot)
+			{
+				handovers[id] = dst;
+				
+				// in case the connection dies during the operation
+				if (src.SlotIndex != id)
+				{
+					handovers[id] = null;
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
 		static int AssignSlotOrQueue (ClientConnection conn, int queue)
 		{
 			int id = -1;
 
 			if (queue == 3)
 			{
-				if (otherFreeSlots.Count > 0)
+				if (privFreeSlots.Count > 0)
 				{
 					// use other slots for highest priority connections first
-					id = otherFreeSlots.Pop ();
-					otherSlotsInUse += 1;
+					id = privFreeSlots.Pop ();
+					privSlotsInUse += 1;
 				}
 				else if (freeSlots.Count > 0)
 					id = freeSlots.Pop ();
 			}
-			else if (freeSlots.Count > 0 && freeSlots.Count > (otherSlotsInUse - overlimitSlots))
+			else if (freeSlots.Count > 0 && freeSlots.Count > (privSlotsInUse - overlimitSlots))
 				id = freeSlots.Pop ();
 			
 			if (id == -1)
@@ -109,7 +246,7 @@ namespace Terraria_Server.Networking
 			return -2;
 		}
 		
-		public static bool AssignSlot (ClientConnection conn, int id)
+		static bool AssignSlot (ClientConnection conn, int id)
 		{
 			if (! conn.AssignSlot (id))
 				return false;
@@ -135,7 +272,7 @@ namespace Terraria_Server.Networking
 		
 		static ClientConnection FindForSlot (int id)
 		{
-			if (id >= maxSlots)
+			if (isPrivileged[id])
 			{
 				while (queues[3].Count > 0) // a loop against race conds, if connection already died, try another
 				{
@@ -166,10 +303,10 @@ namespace Terraria_Server.Networking
 		
 		static void PushSlot (int id)
 		{
-			if (id >= maxSlots)
+			if (isPrivileged[id])
 			{
-				otherFreeSlots.Push (id);
-				otherSlotsInUse = Math.Max (0, otherSlotsInUse - 1);
+				privFreeSlots.Push (id);
+				privSlotsInUse = Math.Max (0, privSlotsInUse - 1);
 			}
 			else
 				freeSlots.Push (id);
@@ -184,8 +321,25 @@ namespace Terraria_Server.Networking
 			
 			lock (syncRoot)
 			{
-				assignedTo = FindForSlot (id);
+				if (handovers[id] != null)
+				{
+					assignedTo = handovers[id];
+					handovers[id] = null;
+					
+					if (! AssignSlot (assignedTo, id))
+					{
+						assignedTo = null;
+						ProgramLog.Debug.Log ("Slot {0} handover failed.", id);
+					}
+					else
+						ProgramLog.Debug.Log ("Slot {0} handover successful.", id);
+				}
 				
+				if (assignedTo == null)
+				{
+					assignedTo = FindForSlot (id);
+				}
+					
 				if (assignedTo == null)
 				{
 					PushSlot (id);
@@ -193,7 +347,7 @@ namespace Terraria_Server.Networking
 					
 					// this is for when a privileged slot is freed, but no privileged clients are waiting
 					// so we check if we have an unprivileged slot to use
-					if (id >= maxSlots && (freeSlots.Count > 0 && freeSlots.Count > (otherSlotsInUse - overlimitSlots)))
+					if (isPrivileged[id] && (freeSlots.Count > 0 && freeSlots.Count > (privSlotsInUse - overlimitSlots)))
 					{
 						id = freeSlots.Pop ();
 						assignedTo = FindForSlot (id);
@@ -214,6 +368,7 @@ namespace Terraria_Server.Networking
 			assignedTo.Send (msg.Output);
 		}
 		
+		// TODO: optimize
 		public static void RemoveFromQueues (ClientConnection conn)
 		{
 			lock (syncRoot)
@@ -225,8 +380,7 @@ namespace Terraria_Server.Networking
 			}
 		}
 		
-		const string waitingMessagePrefix = "Waiting for free slot... (You are";
-		const string waitingMessageSuffix = "in line)\n";
+		const string waitingMessage = "Waiting for free slot... (You are {0}{1} in line)\n";
 		
 		internal static string WaitingMessage (ClientConnection conn)
 		{
@@ -240,27 +394,64 @@ namespace Terraria_Server.Networking
 			
 			if (i <= 0) i = 1;
 			
+			string suffix = "th";
+			
+			switch (i % 10)
+			{
+				case 1:
+					suffix = "st";
+					break;
+				
+				case 2:
+					suffix = "nd";
+					break;
+					
+				case 3:
+					suffix = "rd";
+					break;
+			}
+			
 			switch (i % 100)
 			{
 				case 11:
 				case 12:
 				case 13:
-					return string.Format ("{1} {0}th {2}", i, waitingMessagePrefix, waitingMessageSuffix);
+					suffix = "th";
+					break;
 			}
 			
-			switch (i % 10)
+			return string.Format (waitingMessage, i, suffix);
+		}
+		
+		internal static void MaxPlayersCommand (Server server, ISender sender, ArgumentList args)
+		{
+			int maxp = -1;
+			int overl = -1;
+			
+			if (args.TryGetInt (0, out maxp) && (maxp < 1 || maxp > MAX_SLOTS))
 			{
-				case 1:
-					return string.Format ("{1} {0}st {2}", i, waitingMessagePrefix, waitingMessageSuffix);
-				
-				case 2:
-					return string.Format ("{1} {0}nd {2}", i, waitingMessagePrefix, waitingMessageSuffix);
-				
-				case 3:
-					return string.Format ("{1} {0}rd {2}", i, waitingMessagePrefix, waitingMessageSuffix);
+				sender.Message (255, "Max numbers of players must be in range 1 .. {0}", MAX_SLOTS);
+				return;
 			}
 			
-			return string.Format ("{1} {0}th {2}", i, waitingMessagePrefix, waitingMessageSuffix);
+			if (args.Count > 1)
+			{
+				overl = args.GetInt (1);
+				if (overl < 0 || overl > maxp)
+				{
+					sender.Message (255, "Number of overlimit slots must be in range 0 .. <max player count>");
+					return;
+				}
+			}
+			
+			int result = maxSlots;
+			if (maxp >= 0 || overl >= 0)
+			{
+				result = ChangeLimits (maxp < 0 ? maxSlots : maxp, overl < 0 ? overlimitSlots : overl);
+				server.notifyOps (string.Format ("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.Name));
+			}
+			
+			sender.Message (255, ChatColour.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);
 		}
 		
 		internal static void QCommand (Server server, ISender sender, ArgumentList args)

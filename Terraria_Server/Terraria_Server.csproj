@@ -267,6 +267,7 @@
     <Compile Include="Messages\MessageHandler.cs" />
     <Compile Include="Networking\SlotManager.cs" />
     <Compile Include="Messages\DisconnectMessage.cs" />
+    <Compile Include="Misc\ArrayDeque.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

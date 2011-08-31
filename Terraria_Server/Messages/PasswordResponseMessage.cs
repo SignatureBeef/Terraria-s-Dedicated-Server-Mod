@@ -60,7 +60,10 @@ namespace Terraria_Server.Messages
 				else // PlayerLoginAction.ACCEPT
 				{
 					var lower = name.ToLower();
-					int count = 0;
+					bool reserved = false;
+					
+					conn.Queue = (int)loginEvent.Priority;
+					
 					foreach (var otherPlayer in Main.players)
 					{
 						//var otherSlot = Netplay.slots[otherPlayer.whoAmi];
@@ -70,14 +73,20 @@ namespace Terraria_Server.Messages
 							&& otherConn != null
 							&& otherConn.State >= SlotState.CONNECTED)
 						{
+							if (! reserved)
+							{
+								reserved = SlotManager.HandoverSlot (otherConn, conn);
+							}
 							otherConn.Kick ("Replaced by new connection.");
 						}
 					}
 
 					//conn.State = SlotState.SENDING_WORLD;
 					
-					conn.Queue = (int)loginEvent.Priority;
-					SlotManager.Schedule (conn, conn.Queue);
+					if (! reserved) // reserved slots get assigned immediately during the kick
+					{
+						SlotManager.Schedule (conn, conn.Queue);
+					}
 					
 					//NetMessage.SendData (4, -1, whoAmI, name, whoAmI); // broadcast player data now
 					

@@ -294,6 +294,13 @@ namespace Terraria_Server.Commands
                 .WithHelpText("          plugin enable <plugin>")
                 .WithHelpText("          plugin disable <plugin>")
                 .Calls(Commands.ManagePlugins);
+
+            AddCommand("maxplayers")
+                .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
+                .WithDescription ("Set the maximum number of player slots.")
+                .WithHelpText ("Usage:    maxplayers <num> - set the max number of slots")
+                .WithHelpText ("          maxplayers <num> <num> - also set the number of overlimit slots")
+                .Calls (Terraria_Server.Networking.SlotManager.MaxPlayersCommand);
             
             AddCommand("q")
                 .WithAccessLevel (AccessLevel.OP)

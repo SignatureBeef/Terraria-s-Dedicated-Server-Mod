@@ -12,6 +12,7 @@ using Terraria_Server.RemoteConsole;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Definitions;
 using Terraria_Server.Plugin;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server.Commands
 {
@@ -103,21 +104,23 @@ namespace Terraria_Server.Commands
 				if (!item.Active) continue;
 				items += 1;
 			}
-
-			sender.sendMessage(string.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
-
-#if BANDWIDTH_ANALYSIS
-			var sb = new System.Text.StringBuilder ();
-			for (int i = 0; i < 255; i++)
-			{
-				var p = Networking.Connection.packetsPerMessage [i];
-				var b = Networking.Connection.bytesPerMessage [i];
-				if (p > 0)
-					sb.AppendFormat ("{0}({1}p, {2}B), ", (Packet)i, p, b);
-			}
 			
-			sender.sendMessage (sb.ToString());
-#endif
+			sender.sendMessage(string.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
+			//long diff = Connection.TotalOutgoingBytesUnbuffered - Connection.TotalOutgoingBytes;
+			//sender.sendMessage(string.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}, bytes saved: {5:0.0}K ({6:0.0}%)", npcs, unpcs, projs, uprojs, items, diff, diff * 100.0 / Connection.TotalOutgoingBytesUnbuffered));
+
+//#if BANDWIDTH_ANALYSIS
+//			var sb = new System.Text.StringBuilder ();
+//			for (int i = 0; i < 255; i++)
+//			{
+//				var p = Networking.Connection.packetsPerMessage [i];
+//				var b = Networking.Connection.bytesPerMessage [i];
+//				if (p > 0)
+//					sb.AppendFormat ("{0}({1}p, {2}B), ", (Packet)i, p, b);
+//			}
+//			
+//			sender.sendMessage (sb.ToString());
+//#endif
 		}
 
 		/// <summary>
@@ -181,7 +184,7 @@ namespace Terraria_Server.Commands
 			if (on > 0)
 				os = "Ops: " + string.Join(", ", ops);
 
-			sender.sendMessage(string.Concat(os, ps, " (", on + pn, "/", Main.maxNetplayers, ")"), 255, 255, 240, 20);
+			sender.sendMessage(string.Concat(os, ps, " (", on + pn, "/", SlotManager.MaxSlots, ")"), 255, 255, 240, 20);
 		}
 
 		/// <summary>
@@ -1152,7 +1155,7 @@ namespace Terraria_Server.Commands
 					if (!(sender is Player && player.Op))
 						addr = slot.remoteAddress;
 
-					var msg = string.Format("slot {0}: {1}, {2}{3}", i, slot.state, addr, name);
+					var msg = string.Format("slot {4}{0}: {1}, {2}{3}", i, slot.state, addr, name, SlotManager.IsPrivileged(i) ? "*" : "");
 
 					if (pinfo && player != null)
 					{
@@ -1170,7 +1173,7 @@ namespace Terraria_Server.Commands
 					sender.sendMessage(msg);
 				}
 			}
-			sender.sendMessage(string.Format("{0}/{1} slots occupied.", k, Main.maxNetplayers));
+			sender.sendMessage(string.Format("{0}/{1} slots occupied.", k, SlotManager.MaxSlots));
 		}
 
 		/// <summary>

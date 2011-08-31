@@ -35,7 +35,7 @@ namespace Terraria_Server
         public const int maxInventory = 44;
         public const double dayLength = 54000.0;
         public static bool stopSpawns = false;
-		public static bool ignoreErrors = false;
+		public static bool ignoreErrors = true;
 		public static bool webProtect = false;
 		private static bool webAuth = false;
 		public static float leftWorld = 0f;
@@ -46,7 +46,8 @@ namespace Terraria_Server
 		public static int maxTilesY = (int)Main.bottomWorld / 16 + 1;
 		public static int maxSectionsX = Main.maxTilesX / 200;
 		public static int maxSectionsY = Main.maxTilesY / 150;
-		public static int maxNetplayers = 255;
+		[Obsolete("Replaced by SlotManager.MaxSlots")]
+		public static int maxNetplayers = 254;
 		public static int dungeonX;
 		public static int dungeonY;
 		public static Liquid[] liquid = new Liquid[Liquid.resLiquid];
@@ -507,7 +508,7 @@ namespace Terraria_Server
                 //NetMessage.SyncPlayers();
                 Main.NetplayCounter = 0;
             }
-            for (int i = 0; i < Main.maxNetplayers; i++)
+            for (int i = 0; i < 255; i++)
             {
                 if (Main.players[i].Active && Netplay.slots[i].state >= SlotState.CONNECTED)
                 {
@@ -600,6 +601,16 @@ namespace Terraria_Server
                             }
                         }
                     }
+                    else
+                    {
+                        var conn = player.Connection;
+                        if (conn != null) conn.Flush ();
+                    }
+                }
+                else
+                {
+	                var conn = player.Connection;
+	                if (conn != null) conn.Flush ();
                 }
             }
         }
@@ -954,6 +965,11 @@ namespace Terraria_Server
 		{
 			int count = 0;
 			
+			int timeUpdateErrors = 0;
+			int worldUpdateErrors = 0;
+			int invasionUpdateErrors = 0;
+			int serverUpdateErrors = 0;
+			
 			var start = s.Elapsed;
 			foreach(Player player in Main.players)
 			{
@@ -967,6 +983,8 @@ namespace Terraria_Server
 					
 					ProgramLog.Log (e, string.Format ("Player update error, slot={0}, address={1}, name={2}",
 						player.whoAmi, player.IPAddress, player.Name != null ? string.Concat ('"', player.Name, '"') : "<null>"));
+					
+					player.Kick ("Server malfunction, please reconnect.");
 				}
 				count++;
 			}
@@ -997,7 +1015,9 @@ namespace Terraria_Server
 						var npc = Main.npcs[i];
 						ProgramLog.Log (e, string.Format ("NPC update error, id={0}, type={1}, name={2}",
 						i, npc.Type, npc.Name));
+						
 						Main.npcs[i] = Registries.NPC.Default;
+						Main.npcs[i].netUpdate = true;
 					}
 				}
 				
@@ -1056,10 +1076,11 @@ namespace Terraria_Server
 			try
 			{
 				Main.UpdateTime ();
+				timeUpdateErrors = 0;
 			}
 			catch (Exception e)
 			{
-				if (! Main.ignoreErrors) throw;
+				if (++timeUpdateErrors >= 5 || ! Main.ignoreErrors) throw;
 				
 				ProgramLog.Log (e, "Time update error");
 				Main.checkForSpawns = 0;
@@ -1070,10 +1091,11 @@ namespace Terraria_Server
 			try
 			{
 				WorldModify.UpdateWorld ();
+				worldUpdateErrors = 0;
 			}
 			catch (Exception e)
 			{
-				if (! Main.ignoreErrors) throw;
+				if (++worldUpdateErrors >= 5 || ! Main.ignoreErrors) throw;
 				
 				ProgramLog.Log (e, "World update error");
 			}
@@ -1083,10 +1105,11 @@ namespace Terraria_Server
 			try
 			{
 				Main.UpdateInvasion ();
+				invasionUpdateErrors = 0;
 			}
 			catch (Exception e)
 			{
-				if (! Main.ignoreErrors) throw;
+				if (++invasionUpdateErrors >= 5 || ! Main.ignoreErrors) throw;
 				
 				ProgramLog.Log (e, "Invasion update error");
 			}
@@ -1096,10 +1119,11 @@ namespace Terraria_Server
 			try
 			{
 				Main.UpdateServer ();
+				serverUpdateErrors = 0;
 			}
 			catch (Exception e)
 			{
-				if (! Main.ignoreErrors) throw;
+				if (++serverUpdateErrors >= 5 || ! Main.ignoreErrors) throw;
 				
 				ProgramLog.Log (e, "Server update error");
 			}

@@ -108,7 +108,12 @@ namespace Terraria_Server.Networking
 		
 		public bool AssignSlot (int id)
 		{
-			return Interlocked.CompareExchange (ref assignedSlot, id, -1) == -1;
+			if (Interlocked.CompareExchange (ref assignedSlot, id, -1) == -1)
+			{
+				txBuffer = new byte [16384];
+				return true;
+			}
+			return false;
 		}
 		
 //		public void ProcessSideBuffer ()
@@ -195,7 +200,7 @@ namespace Terraria_Server.Networking
 		{
 			switch (msg.kind)
 			{
-				case 3:
+				case 10:
 				{
 					// TODO: optimize further
 					var buf = TakeSectionBuffer ();
@@ -349,7 +354,7 @@ namespace Terraria_Server.Networking
 		
 		public void SendSection (int x, int y)
 		{
-			Send (new Message { kind = 3, param = (x << 16) | (y & 0xffff) });
+			Send (new Message { kind = 10, param = (x << 16) | (y & 0xffff) });
 		}
 		
 		static Stack<NetMessage> sectionPool = new Stack<NetMessage> ();

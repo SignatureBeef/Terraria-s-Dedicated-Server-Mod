@@ -7,6 +7,7 @@ using Terraria_Server.Events;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server
 {
@@ -408,17 +409,44 @@ namespace Terraria_Server
 		
 		public void Broadcast ()
 		{
+// this alt version copies the message to each player's tx buffer
+//			for (int k = 0; k < 255; k++)
+//			{
+//				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
+//				{
+//					NetMessage.buffer[k].spamCount++;
+//					Send (k);
+//				}
+//			}
+
 			Broadcast (Output);
 		}
 		
 		public void BroadcastExcept (int i)
 		{
+// this alt version copies the message to each player's tx buffer
+//			for (int k = 0; k < 255; k++)
+//			{
+//				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected && k != i)
+//				{
+//					NetMessage.buffer[k].spamCount++;
+//					Send (k);
+//				}
+//			}
+			
 			BroadcastExcept (Output, i);
 		}
 		
 		public void Send (int i)
 		{
-			Netplay.slots[i].Send (Output);
+			var conn = Netplay.slots[i].conn;
+			if (conn != null)
+				conn.CopyAndSend (Segment);
+		}
+		
+		public void Send (ClientConnection conn)
+		{
+			conn.CopyAndSend (Segment);
 		}
 		
 		public static void OnPlayerJoined (int plr)
