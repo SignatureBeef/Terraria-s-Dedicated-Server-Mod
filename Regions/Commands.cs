@@ -153,8 +153,10 @@ namespace Regions
                 for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
+                    {
                         region = Regions.regionManager.Regions[i];
-                    break;
+                        break;
+                    }
                 }
 
                 if (region == null)
@@ -208,8 +210,10 @@ namespace Regions
                 for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
+                    {
                         region = Regions.regionManager.Regions[i];
-                    break;
+                        break;
+                    }
                 }
 
                 if (region == null)

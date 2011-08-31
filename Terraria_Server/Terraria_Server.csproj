@@ -180,7 +180,7 @@
     <Compile Include="Definitions\Tile\TileAction.cs" />
     <Compile Include="Definitions\Tile\TileType.cs" />
     <Compile Include="Collections\Registry.cs" />
-    <Compile Include="Misc\ChatColour.cs" />
+    <Compile Include="Misc\ChatColor.cs" />
     <Compile Include="Permissions\Node.cs" />
     <Compile Include="Server\LoadMonitor.cs" />
     <Compile Include="Shops\ArmsDealerShop.cs" />

@@ -33,7 +33,7 @@ namespace TDSMPlugin.Commands
                         Platform = "Windows";
                         break;
                 }
-                (sender as Player).sendMessage("TDSM Plugin Example, Running OS: " + Platform, ChatColour.DarkGreen);
+                (sender as Player).sendMessage("TDSM Plugin Example, Running OS: " + Platform, ChatColor.DarkGreen);
 
 
             }                

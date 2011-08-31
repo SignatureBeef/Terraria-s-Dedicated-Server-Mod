@@ -236,7 +236,7 @@ namespace TDSMPermissions
 			//while (sc.NextToken() != Token.TextContent)
 			//{ }
 			//color = GetChatColour(sc.TokenText);
-			currentGroup.SetGroupInfo(Default, Prefix, Suffix, ChatColour.Tan);
+			currentGroup.SetGroupInfo(Default, Prefix, Suffix, ChatColor.Tan);
 		}
 
 		private void ProcessPermissions()
