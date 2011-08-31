@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDSMPlugin", "TDSMPlugin\TD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Regions", "Regions\Regions.csproj", "{E4501BF5-0BD1-4F38-B09B-1DFD9C9A2085}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDSMPermissions", "TDSMPermissions\TDSMPlugin\TDSMPermissions.csproj", "{59C00003-40C8-4AB6-914A-AF0499BF82F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDSMPermissions", "TDSMPermissions\TDSMPermissions\TDSMPermissions.csproj", "{59C00003-40C8-4AB6-914A-AF0499BF82F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
