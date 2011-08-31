@@ -44,7 +44,7 @@ namespace Terraria_Server.Messages
                     if (Program.server.RejectedItemsContains(itemName) ||
                         Program.server.RejectedItemsContains(item.Type.ToString()))
                     {
-                        player.Kick((itemName.Length > 0) ? itemName : item.Type + " is not allowed on this server.");
+                        player.Kick(((itemName.Length > 0) ? itemName : item.Type.ToString()) + " is not allowed on this server.");
                     }
 
                     NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);

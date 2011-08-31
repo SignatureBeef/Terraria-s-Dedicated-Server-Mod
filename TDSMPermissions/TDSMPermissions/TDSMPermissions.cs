@@ -63,6 +63,11 @@ namespace TDSMPermissions
 			//properties.pushData(); //Creates default values if needed. [Out-Dated]
 			//properties.Save();
 
+            foreach (Object obj in base.Server.PluginManager.Libraries.Values)
+            {
+                ProgramLog.Log(obj.ToString());
+            }
+
             //read properties data
 			Node.isPermittedImpl = this.isPermitted;
 			LoadPerms();

@@ -94,7 +94,7 @@ namespace Terraria_Server
 				if (! Program.updateThread.IsAlive) Program.updateThread.Start();
 				Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
 				Program.tConsole.WriteLine("Loading Plugins...");
-				Program.server.PluginManager.LoadPlugins();
+				Program.server.PluginManager.LoadAllPlugins();
 				Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.PluginManager.PluginList.Count.ToString());
 				Statics.serverStarted = true;
 			}

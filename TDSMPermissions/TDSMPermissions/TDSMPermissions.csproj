@@ -49,13 +49,8 @@
       <HintPath>..\..\Terraria_Server\bin\Debug\Terraria_Server.exe</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="YaTools.Abstract.Net4">
-      <HintPath>.\YaTools.Abstract.Net4.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="YaTools.Yaml.Core.Net4">
       <HintPath>.\YaTools.Yaml.Core.Net4.dll</HintPath>
-      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>

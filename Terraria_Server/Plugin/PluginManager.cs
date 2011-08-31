@@ -18,37 +18,59 @@ namespace Terraria_Server.Plugin
     public class PluginManager
     {
         private String pluginPath = String.Empty;
+        private String libraryPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
+        private Dictionary<String, Object> libraries;
         private Server server;
-        
-		/// <summary>
-		/// Server's plugin list
-		/// </summary>
+
+        /// <summary>
+        /// Server's plugin list
+        /// </summary>
         public Dictionary<String, Plugin> Plugins
         {
             get { return plugins; }
+        }
+        /// <summary>
+        /// Server's plugin list
+        /// </summary>
+        public Dictionary<String, Object> Libraries
+        {
+            get { return libraries; }
         }
         
         /// <summary>
         /// PluginManager class constructor
         /// </summary>
         /// <param name="pluginPath">Path to plugin directory</param>
+        /// <param name="libraryPath">Path to library directory</param>
         /// <param name="server">Current Server instance</param>
-        public PluginManager(String pluginPath, Server server)
+        public PluginManager(String pluginPath, String libraryPath, Server server)
         {
             this.pluginPath = pluginPath;
+            this.libraryPath = libraryPath;
             this.server = server;
 
             plugins = new Dictionary<String, Plugin>();
+            libraries = new Dictionary<String, Object>();
         }
 
         /// <summary>
         /// Initializes Plugin (Loads) and Checks for Out of Date Plugins.
         /// </summary>
-        public void LoadPlugins()
+        public void LoadAllPlugins()
         {
-            ReloadPlugins();
+            LoadLibraries();
+            LoadPlugins();
 
+            CheckPlugins();
+
+            ServerPluginsLoaded tdsmEvent = new ServerPluginsLoaded();
+            tdsmEvent.PluginManager = this;
+            processHook(Hooks.PLUGINS_LOADED, tdsmEvent);
+        }
+
+        public void CheckPlugins()
+        {
             foreach (Plugin plugin in plugins.Values)
             {
                 if (plugin.TDSMBuild != Statics.BUILD)
@@ -56,6 +78,60 @@ namespace Terraria_Server.Plugin
                     ProgramLog.Admin.Log("[WARNING] Plugin Build Incorrect: " + plugin.Name); //Admin's responsibility.
                 }
             }
+        }
+
+        public Object LoadLib(String Path, Type type)
+        {
+            try
+            {
+                Assembly assembly = null;
+                using (FileStream fs = File.Open(Path, FileMode.Open))
+                {
+
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+
+                        byte[] buffer = new byte[1024];
+
+                        int read = 0;
+
+                        while ((read = fs.Read(buffer, 0, 1024)) > 0)
+                            ms.Write(buffer, 0, read);
+
+                        assembly = Assembly.Load(ms.ToArray());
+
+                    }
+
+                }
+
+                //some libs crash at GetTypes, Gotta fix (Should we load assembly or Initialize?)
+
+                foreach (Type messageType in assembly.GetTypes()
+                .Where(x => type.IsAssignableFrom(x) && x != type))
+                {
+                    if (!messageType.IsAbstract)
+                    {
+                        Object lib = (Object)Activator.CreateInstance(messageType);
+                        if (lib == null)
+                        {
+                            throw new Exception("Could not Instantiate Library");
+                        }
+                        else
+                        {
+                            return lib;
+                        }
+                    }
+                }                
+                
+            }
+            catch (Exception exception)
+            {
+                ProgramLog.Log("Error Loading Library '" + Path + "'.");
+                ProgramLog.Log("Library Load Exception '" + Path + "' : "
+                    + exception.ToString());
+            }
+
+            return null;
         }
                 
         /// <summary>
@@ -68,46 +144,17 @@ namespace Terraria_Server.Plugin
         {
             try
             {
-				Assembly assembly = null;
-				Type type = typeof(Plugin);
-				using (FileStream fs = File.Open(pluginPath, FileMode.Open))
-				{
-
-					using (MemoryStream ms = new MemoryStream())
-					{
-
-						byte[] buffer = new byte[1024];
-
-						int read = 0;
-
-						while ((read = fs.Read(buffer, 0, 1024)) > 0)
-
-							ms.Write(buffer, 0, read);
-
-						assembly = Assembly.Load(ms.ToArray());
-
-					}
-
-				}
-
-                foreach (Type messageType in assembly.GetTypes()
-	                .Where(x => type.IsAssignableFrom(x) && x != type))
-	            {
-                    if (!messageType.IsAbstract)
-                    {
-                        Plugin plugin = (Plugin)Activator.CreateInstance(messageType);
-                        if (plugin == null)
-                        {
-                            throw new Exception("Could not Instantiate");
-                        }
-                        else
-                        {
-                            plugin.Server = server;
-                            plugin.Load();
-                            return plugin;
-                        }
-                    }
-	            }
+                Plugin plugin = (Plugin)LoadLib(pluginPath, typeof(Plugin));
+                if (plugin == null)
+                {
+                    throw new Exception("Could not Instantiate");
+                }
+                else
+                {
+                    plugin.Server = server;
+                    plugin.Load();
+                    return plugin;
+                }
             }
             catch (Exception exception)
             {
@@ -120,25 +167,46 @@ namespace Terraria_Server.Plugin
             return null;
         }
 
-        /// <summary>
-        /// Reloads all plugins currently running on the server
-        /// </summary>
-        public void ReloadPlugins() {
-			DisablePlugins();
-
+        public void LoadPlugins()
+        {
             foreach (String file in Directory.GetFiles(pluginPath))
             {
                 FileInfo fileInfo = new FileInfo(file);
                 if (fileInfo.Extension.ToLower().Equals(".dll"))
                 {
-					Plugin plugin = loadPlugin(file);
+                    Plugin plugin = loadPlugin(file);
                     if (plugin != null)
                     {
-						plugins.Add(plugin.Name.ToLower().Trim(), plugin);
+                        plugins.Add(plugin.Name.ToLower().Trim(), plugin);
                     }
                 }
             }
-            EnablePlugins();
+        }
+
+        public void LoadLibraries()
+        {
+            foreach (String file in Directory.GetFiles(libraryPath))
+            {
+                FileInfo fileInfo = new FileInfo(file);
+                if (fileInfo.Extension.ToLower().Equals(".dll"))
+                {
+                    Object library = (Object)LoadLib(file, typeof(Object));
+                    if (library != null)
+                    {
+                        libraries.Add(fileInfo.Name, library);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Reloads all plugins currently running on the server
+        /// </summary>
+        public void ReloadPlugins()
+        {
+            DisablePlugins();
+
+            LoadAllPlugins();
         }
 
         /// <summary>
@@ -173,6 +241,7 @@ namespace Terraria_Server.Plugin
             }
 
             plugins.Clear();
+            libraries.Clear();
         }
         
         /// <summary>
@@ -361,6 +430,10 @@ namespace Terraria_Server.Plugin
 
                             case Hooks.TIME_CHANGED:
                                 plugin.onTimeChange((TimeChangedEvent)hookEvent);
+                                break;
+
+                            case Hooks.PLUGINS_LOADED:
+                                plugin.onServerPluginsLoaded((ServerPluginsLoaded)hookEvent);
                                 break;
                         }
                     }

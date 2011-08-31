@@ -20,7 +20,6 @@ namespace Terraria_Server
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
 		public static TConsole tConsole = null;
-		//private static int preserve = 0;
 
 		public static Server server;
 
@@ -333,9 +332,9 @@ namespace Terraria_Server
 			try
 			{
 				CreateDirectory(Statics.WorldPath);
-				//CreateDirectory(Statics.PlayerPath);
-				CreateDirectory(Statics.PluginPath);
-				CreateDirectory(Statics.DataPath);
+                CreateDirectory(Statics.PluginPath);
+                CreateDirectory(Statics.DataPath);
+                CreateDirectory(Statics.LibrariesPath);
 			}
 			catch (Exception exception)
 			{

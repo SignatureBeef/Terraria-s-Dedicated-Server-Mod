@@ -835,33 +835,26 @@ namespace Terraria_Server.Commands
 			if (sender is Player)
 			{
 				Player player = ((Player)sender);
+                Player subject;
 
-				// /tp <player> <toplayer>
-				if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
-				{
-					Player toplayer = Program.server.GetPlayerByName(args[0].Trim());
+                if (args.TryPopOne(out subject))
+                {
+                    if (subject == null)
+                    {
+                        sender.sendMessage("Could not find a Player on the Server");
+                        return;
+                    }
 
-					if (toplayer == null)
-					{
-						sender.sendMessage("Could not find a Player on the Server");
-						return;
-					}
+                    subject.Teleport(player);
 
-					toplayer.teleportTo(player);
-
-					Program.server.notifyOps("Teleported " + toplayer.Name + " to " +
-						player.Name + " {" + sender.Name + "}", true);
-
-					return;
-				}
+                    Program.server.notifyOps("Teleported " + subject.Name + " to " +
+                        player.Name + " {" + sender.Name + "}", true);
+                }
 			}
 			else
 			{
-				goto ERROR;
+                throw new CommandError("Only a player can call this command!");
 			}
-
-		ERROR:
-			sender.sendMessage("Command Error!");
 		}
 
 		/// <summary>
@@ -1588,12 +1581,17 @@ namespace Terraria_Server.Commands
                     throw new CommandError("That item already does not exist in the list.");
                 }
             }
+            else if (args.TryPop("-clear"))
+            {
+                server.RejectedItems.Clear();
+                sender.sendMessage("Item Rejection list has been cleared!");
+            }
             else
             {
                 throw new CommandError("No item/id provided with your command");
             }
             Program.properties.RejectedItems = String.Join(",", server.RejectedItems);
-            Program.properties.Save();
+            Program.properties.Save(false);
         }
 
         public static void Explosions(Server server, ISender sender, ArgumentList args)

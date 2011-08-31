@@ -38,5 +38,6 @@ namespace Terraria_Server.Plugin
         PLAYER_FLOWLIQUID,
         PLAYER_CHESTBREAK,
         TIME_CHANGED,
+        PLUGINS_LOADED
     }
 }

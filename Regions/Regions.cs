@@ -12,6 +12,7 @@ using Terraria_Server;
 using System.IO;
 using Regions.Region;
 using Terraria_Server.Definitions;
+using Terraria_Server.Permissions;
 
 namespace Regions
 {
@@ -38,9 +39,7 @@ namespace Regions
         public static Properties rProperties { get; set; }
         public static RegionManager regionManager { get; set; }
         private static Boolean SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
-
-        public static TDSMPermissions.TDSMPermissions permissionsPlugin;
-
+        
         public override void Load()
         {
             base.Name = "Regions";
@@ -73,6 +72,8 @@ namespace Regions
             UsingPermissions = isRunningPermissions();
             if (UsingPermissions)
                 Log("Using Permissions.");
+            else
+                Log("No Permissions System Found, Using Internal User System");
         }
 
         public override void Enable()
@@ -200,21 +201,14 @@ namespace Regions
 
         public static Boolean isRunningPermissions()
         {
-            foreach (Plugin plugin in Program.server.PluginManager.Plugins.Values)
-            {
-                if (plugin.Name == "TDSMPermissions")
-                    permissionsPlugin = (TDSMPermissions.TDSMPermissions)plugin;
-                    return plugin.Enabled;
-            }
-
-            return false;
+            return Terraria_Server.Permissions.Node.isPermittedImpl != null;
         }
 
-        public static Boolean IsRestrictedForUser(Player player, Region.Region region)
+        public static Boolean IsRestrictedForUser(Player player, Region.Region region, Node node)
         {
             if (UsingPermissions)
             {
-                return permissionsPlugin.isPermitted(null, player);
+                return Terraria_Server.Permissions.Node.isPermittedImpl(node, player);
             }
 
             return region.IsRestrictedForUser(player);

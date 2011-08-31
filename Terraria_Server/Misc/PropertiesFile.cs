@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Collections.Generic;
 using System;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server.Misc
 {
@@ -52,7 +53,18 @@ namespace Terraria_Server.Misc
             }
         }
 
+        /* This is for Plugins, Because they are referenced to the old one
+         * Other words: To avoid Plugin breaks.
+         * 
+         * [Changed for Commands needing to save properties and Log is spammed]
+         */
+        [Obsolete("Out of date, new Parameters added")] 
         public void Save()
+        {
+            Save(true);
+        }
+
+        public void Save(Boolean log = true)
         {
             var tmpName = propertiesPath + ".tmp" + (uint) (DateTime.UtcNow.Ticks % uint.MaxValue);
             var writer = new StreamWriter (tmpName);
@@ -68,19 +80,22 @@ namespace Terraria_Server.Misc
             {
                 writer.Close();
             }
-            
-            try
+
+            if (log)
             {
-                File.Replace (tmpName, propertiesPath, null, true);
-                Program.tConsole.WriteLine ("Saved file \"{0}\".", propertiesPath);
-            }
-            catch (IOException e)
-            {
-                Program.tConsole.WriteLine ("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
-            }
-            catch (SystemException e)
-            {
-                Program.tConsole.WriteLine ("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
+                try
+                {
+                    File.Replace(tmpName, propertiesPath, null, true);
+                    ProgramLog.Log("Saved file \"{0}\".", propertiesPath);
+                }
+                catch (IOException e)
+                {
+                    ProgramLog.Log("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
+                }
+                catch (SystemException e)
+                {
+                    ProgramLog.Log("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
+                }
             }
             
         }

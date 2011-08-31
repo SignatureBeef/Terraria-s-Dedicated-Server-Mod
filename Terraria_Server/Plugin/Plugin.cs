@@ -229,6 +229,12 @@ namespace Terraria_Server.Plugin
         public virtual void onTimeChange(TimeChangedEvent Event) { }
 
         /// <summary>
+        /// Hook method for when the Server finishes loading Plugins
+        /// </summary>
+        /// <param name="Event">ServerPluginsLoaded info</param>
+        public virtual void onServerPluginsLoaded(ServerPluginsLoaded Event) { }
+
+        /// <summary>
         /// Hash list of all hooks currently registered by the plugin
         /// </summary>
         internal HashSet<Hooks> pluginHooks = new HashSet<Hooks>();

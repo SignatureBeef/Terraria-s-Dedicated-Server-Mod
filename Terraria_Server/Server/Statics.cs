@@ -5,13 +5,14 @@ namespace Terraria_Server
 {
     public static class Statics
     {
-        public const int BUILD = 31;
+        public const int BUILD = 32;
         public const int CURRENT_TERRARIA_RELEASE = 22;
         public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 
         private const String WORLDS = "Worlds";
         private const String PLUGINS = "Plugins";
         private const String DATA = "Data";
+        private const String LIBRARIES = "Libs";
 
         public static bool cmdMessages = true;
         public static bool keepRunning = false;
@@ -34,6 +35,14 @@ namespace Terraria_Server
             get
             {
                 return SavePath + Path.DirectorySeparatorChar + PLUGINS;
+            }
+        }
+
+        public static String LibrariesPath
+        {
+            get
+            {
+                return SavePath + Path.DirectorySeparatorChar + PLUGINS + Path.DirectorySeparatorChar + LIBRARIES;
             }
         }
 

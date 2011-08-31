@@ -24,7 +24,7 @@ namespace Terraria_Server
             Main.maxNetplayers = PlayerCap;
             world = World;
             world.Server = this;
-            pluginManager = new PluginManager(Statics.PluginPath, this);
+            pluginManager = new PluginManager(Statics.PluginPath, Statics.LibrariesPath, this);
             WhiteList = new DataRegister(myWhiteList);
             WhiteList.Load();
             BanList = new DataRegister(myBanList);
