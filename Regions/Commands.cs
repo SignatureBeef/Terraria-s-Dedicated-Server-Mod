@@ -13,6 +13,7 @@ namespace Regions
     {
         public static void Region(Server server, ISender sender, ArgumentList args)
         {
+            /* Meh [START] */
             if (args.TryPop("select"))
             {
                 SelectionToolToggle(server, sender, args);
@@ -45,6 +46,7 @@ namespace Regions
             {
                 List(server, sender, args);
             }
+            /* Meh [END] */
         }
 
         public static void SelectionToolToggle(Server server, ISender sender, ArgumentList args)
@@ -55,12 +57,12 @@ namespace Regions
                 if (Selection.isInSelectionlist(player))
                 {
                     Selection.selectionPlayers.Remove(player.Name);
-                    player.sendMessage("You have turned off the Selection Tool", ChatColour.Red);
+                    player.sendMessage("You have turned off the Selection Tool", ChatColor.Red);
                 }
                 else
                 {
                     Selection.selectionPlayers.Add(player.Name, new Vector2[] { default(Vector2), default(Vector2) });
-                    player.sendMessage("You have turned on the Selection Tool", ChatColour.Green);
+                    player.sendMessage("You have turned on the Selection Tool", ChatColor.Green);
                 }
             }
 
@@ -95,18 +97,18 @@ namespace Regions
                         {
                             Regions.regionManager.Regions.Add(rgn);
                             if(Regions.regionManager.SaveRegion(rgn))
-                                player.sendMessage("Region '" + Name + "' was successfully created.", ChatColour.Green);
+                                player.sendMessage("Region '" + Name + "' was successfully created.", ChatColor.Green);
                             else
-                                player.sendMessage("There was an issue while saving the region", ChatColour.Red);
+                                player.sendMessage("There was an issue while saving the region", ChatColor.Red);
                         }
                         else
                         {
-                            player.sendMessage("There was an issue while creating the region", ChatColour.Red);
+                            player.sendMessage("There was an issue while creating the region", ChatColor.Red);
                         }
                     }
                     else
                     {
-                        player.sendMessage("You need to select a region first!", ChatColour.Red);
+                        player.sendMessage("You need to select a region first!", ChatColor.Red);
                     }
                 }
                 else
@@ -158,7 +160,6 @@ namespace Regions
                 if (region == null)
                     throw new CommandError("Specified Region Slot was incorrect.");
 
-                //List<String> users = new List<String>();
                 int usersAdded = 0;
                 foreach (String toInflate in exceptions)
                 {

@@ -39,6 +39,8 @@ namespace Regions
         public static RegionManager regionManager { get; set; }
         private static Boolean SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
 
+        public static TDSMPermissions.TDSMPermissions permissionsPlugin;
+
         public override void Load()
         {
             base.Name = "Regions";
@@ -111,7 +113,7 @@ namespace Regions
                         Selection.SetSelection(player, mousePoints);
 
                         player.sendMessage(string.Format("You have selected block at {0},{1}, {2} position", 
-                            Event.Position.X, Event.Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColour.Green);
+                            Event.Position.X, Event.Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColor.Green);
                         return;
                     }
 
@@ -123,7 +125,7 @@ namespace Regions
                             if (rgn.IsRestrictedForUser(player))
                             {
                                 Event.Cancelled = true;
-                                player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                                player.sendMessage("You cannot edit this area!", ChatColor.Red);
                                 return;
                             }
                         }
@@ -141,7 +143,7 @@ namespace Regions
                         if (rgn.IsRestrictedForUser(Event.Player))
                         {
                             Event.Cancelled = true;
-                            Event.Player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                            Event.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                             return;
                         }
                     }
@@ -157,7 +159,7 @@ namespace Regions
                         if (rgn.IsRestrictedForUser(Event.Player))
                         {
                             Event.Cancelled = true;
-                            Event.Player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                            Event.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                             return;
                         }
                     }
@@ -178,7 +180,7 @@ namespace Regions
                                 if (rgn.IsRestrictedForUser(player))
                                 {
                                     Event.Cancelled = true;
-                                    player.sendMessage("You cannot edit this area!", ChatColour.Red);
+                                    player.sendMessage("You cannot edit this area!", ChatColor.Red);
                                     return;
                                 }
                             }
@@ -201,11 +203,21 @@ namespace Regions
             foreach (Plugin plugin in Program.server.PluginManager.Plugins.Values)
             {
                 if (plugin.Name == "TDSMPermissions")
+                    permissionsPlugin = (TDSMPermissions.TDSMPermissions)plugin;
                     return plugin.Enabled;
             }
 
             return false;
         }
 
+        public static Boolean IsRestrictedForUser(Player player, Region.Region region)
+        {
+            if (UsingPermissions)
+            {
+                return permissionsPlugin.isPermitted(null, player);
+            }
+
+            return region.IsRestrictedForUser(player);
+        }
     }
 }

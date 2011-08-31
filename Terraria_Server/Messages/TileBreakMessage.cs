@@ -85,10 +85,10 @@ namespace Terraria_Server.Messages
             Program.server.PluginManager.processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
             if (tileEvent.Cancelled)
             {
-                int sectionX = Netplay.GetSectionX(Main.spawnTileX);
-                int sectionY = Netplay.GetSectionY(Main.spawnTileY);
-                NetMessage.SendSection(whoAmI, sectionX, sectionY);
-                //NetMessage.SendTileSquare(whoAmI, x, y, 1);
+                //if (!Main.tileFrameImportant[tile.Type])
+                    NetMessage.SendTileSquare(whoAmI, x, y, 1);
+                //else
+                    //Insert some method to handle annoying data here
                 return;
             }
            

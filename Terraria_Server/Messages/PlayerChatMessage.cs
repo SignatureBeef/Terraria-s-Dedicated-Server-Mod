@@ -74,10 +74,10 @@ namespace Terraria_Server.Messages
                     }
                 }
 
-                Color chatColour = ChatColour.White;
+                Color chatColour = ChatColor.White;
                 if (Main.players[playerIndex].Op)
                 {
-                    chatColour = ChatColour.SteelBlue;
+                    chatColour = ChatColor.SteelBlue;
                 } else if (Main.players[playerIndex].hardCore)
                 {
                     chatColour = new Color(238, 160, 238);

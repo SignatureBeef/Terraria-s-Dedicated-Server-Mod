@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Terraria_Server.Misc
 {
-    public struct ChatColour
+    public struct ChatColor //Changed from ChatColour due to Australians being over ran by US & EU in IRC D:
     {
         //Automatically Generated Via a Custom Program to read Predefined System Colours.
         public static Color Transparent = new Color(255, 255, 255);

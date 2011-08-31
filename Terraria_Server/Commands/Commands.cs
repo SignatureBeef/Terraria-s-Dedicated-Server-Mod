@@ -910,7 +910,7 @@ namespace Terraria_Server.Commands
 				Player playerInstance = server.GetPlayerByName(player);
 				if (playerInstance != null)
 				{
-					playerInstance.sendMessage("You are now OP!", ChatColour.Green);
+					playerInstance.sendMessage("You are now OP!", ChatColor.Green);
                     playerInstance.Op = true;
                     if (playerInstance.HasClientMod)
                     {
@@ -966,7 +966,7 @@ namespace Terraria_Server.Commands
                         playerInstance.Op = false;
                     }
 
-					playerInstance.sendMessage("You have been De-Opped!.", ChatColour.Green);
+					playerInstance.sendMessage("You have been De-Opped!.", ChatColor.Green);
 				}
 			}
 			else
@@ -992,7 +992,7 @@ namespace Terraria_Server.Commands
 					if (player.Password.Equals(Password))
 					{
 						player.Op = true;
-						player.sendMessage("Successfully Logged in as OP.", ChatColour.DarkGreen);
+						player.sendMessage("Successfully Logged in as OP.", ChatColor.DarkGreen);
 
                         if (player.HasClientMod)
                         {
@@ -1001,12 +1001,12 @@ namespace Terraria_Server.Commands
 					}
 					else
 					{
-						player.sendMessage("Incorrect OP Password.", ChatColour.DarkRed);
+						player.sendMessage("Incorrect OP Password.", ChatColor.DarkRed);
 					}
 				}
 				else
 				{
-					player.sendMessage("You need to be Assigned OP Privledges.", ChatColour.DarkRed);
+					player.sendMessage("You need to be Assigned OP Privledges.", ChatColor.DarkRed);
 				}
 			}
 		}
@@ -1025,7 +1025,7 @@ namespace Terraria_Server.Commands
 				if (sender.Op)
 				{
                     player.Op = false;
-                    player.sendMessage("Successfully Logged Out.", ChatColour.DarkRed);
+                    player.sendMessage("Successfully Logged Out.", ChatColor.DarkRed);
 
                     if (player.HasClientMod)
                     {
@@ -1034,7 +1034,7 @@ namespace Terraria_Server.Commands
 				}
 				else
 				{
-                    player.sendMessage("You need to be Assigned OP Privledges.", ChatColour.DarkRed);
+                    player.sendMessage("You need to be Assigned OP Privledges.", ChatColor.DarkRed);
 				}
 			}
 		}
@@ -1550,7 +1550,7 @@ namespace Terraria_Server.Commands
                 {
                     Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
                     int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
-                    server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColour.Purple, true);
+                    server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColor.Purple, true);
                     if (!(sender is ConsoleSender))
                         ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
                 }
@@ -1563,53 +1563,36 @@ namespace Terraria_Server.Commands
 
         public static void ItemRejection(Server server, ISender sender, ArgumentList args)
         {
-            Boolean Add = args.TryPop("-add");
-            Boolean Remove = args.TryPop("-remove");
-
-            if (Add)
+            String exception;
+            if (args.TryParseOne<String>("-add", out exception))
             {
-                String exception;
-                if (args.TryParseOne<String>("-add", out exception))
+                if (!server.RejectedItems.Contains(exception))
                 {
-                    if (!server.RejectedItems.Contains(exception))
-                    {
-                        server.RejectedItems.Add(exception);
-                        sender.sendMessage(exception + " was added to the Item Rejection list!");
-                        return;
-                    }
-                    else
-                    {
-                        throw new CommandError("That item already exists in the list.");
-                    }
+                    server.RejectedItems.Add(exception);
+                    sender.sendMessage(exception + " was added to the Item Rejection list!");
                 }
                 else
                 {
-                    throw new CommandError("No item/id provided with your command");
+                    throw new CommandError("That item already exists in the list.");
                 }
             }
-            if (Remove)
+            else if (args.TryParseOne<String>("-remove", out exception))
             {
-                String exception;
-                if (args.TryParseOne<String>("-remove", out exception))
+                if (server.RejectedItems.Contains(exception))
                 {
-                    if (server.RejectedItems.Contains(exception))
-                    {
-                        server.RejectedItems.Add(exception);
-                        sender.sendMessage(exception + " was removed from the Item Rejection list!");
-                        return;
-                    }
-                    else
-                    {
-                        throw new CommandError("That item already does not exist in the list.");
-                    }
+                    server.RejectedItems.Remove(exception);
+                    sender.sendMessage(exception + " was removed from the Item Rejection list!");
                 }
                 else
                 {
-                    throw new CommandError("No item/id provided with your command");
+                    throw new CommandError("That item already does not exist in the list.");
                 }
             }
-            String prop = String.Join(",", server.RejectedItems);
-            Program.properties.RejectedItems = prop;
+            else
+            {
+                throw new CommandError("No item/id provided with your command");
+            }
+            Program.properties.RejectedItems = String.Join(",", server.RejectedItems);
             Program.properties.Save();
         }
 
