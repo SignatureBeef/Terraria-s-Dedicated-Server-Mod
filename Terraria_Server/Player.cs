@@ -11,6 +11,7 @@ using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
+using System.Net;
 
 namespace Terraria_Server
 {
@@ -33,6 +34,15 @@ namespace Terraria_Server
 		/// String representation of this player's IP address
 		/// </summary>
         private String ipAddress = null;
+
+        public IPAddress IpAddress
+        {
+            get
+            {
+                return System.Net.IPAddress.Parse(ipAddress);
+            }
+        }
+
 		/// <summary>
 		/// Whether to allow this player to destroy their bed or not
 		/// </summary>

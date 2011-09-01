@@ -136,6 +136,7 @@ namespace Terraria_Server.Plugin
                     if (plugin != null)
                     {
                         plugins.Add(plugin.Name.ToLower().Trim(), plugin);
+                        plugin.Enabled = true;
                     }
                 }
             }
