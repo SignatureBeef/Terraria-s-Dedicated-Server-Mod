@@ -16,6 +16,7 @@ using TDSMPermissions.Commands;
 using TDSMPermissions.Definitions;
 
 using YaTools.Yaml;
+using System.Reflection;
 
 namespace TDSMPermissions
 {
@@ -32,6 +33,8 @@ namespace TDSMPermissions
 
         public Properties properties;
 		public String pluginFolder;
+        public String permissionsYML;
+
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
@@ -39,7 +42,9 @@ namespace TDSMPermissions
 		private List<Group> groups = new List<Group>();
 		private Group currentGroup;
 		public string defaultGroup;
-		private YamlScanner sc;
+        private YamlScanner sc;
+
+        //private Assembly YamlAssembly;
 
 		private bool inGroups = false;
 
@@ -54,19 +59,19 @@ namespace TDSMPermissions
             plugin = this;
 
             pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSMPermissions";
+            permissionsYML = pluginFolder + Path.DirectorySeparatorChar + "permissions.yml";
+
             //Create folder if it doesn't exist
             CreateDirectory(pluginFolder);
+
+            if (!File.Exists(permissionsYML))
+                File.Create(permissionsYML).Close();
 
             //setup a new properties file
 			//properties = new Properties(pluginFolder + Path.DirectorySeparatorChar + "tdsmplugin.properties");
 			//properties.Load();
 			//properties.pushData(); //Creates default values if needed. [Out-Dated]
 			//properties.Save();
-
-            foreach (Object obj in base.Server.PluginManager.Libraries.Values)
-            {
-                ProgramLog.Log(obj.ToString());
-            }
 
             //read properties data
 			Node.isPermittedImpl = this.isPermitted;
@@ -75,7 +80,7 @@ namespace TDSMPermissions
 
         public override void Enable()
         {
-            Program.tConsole.WriteLine(base.Name + " enabled.");
+            ProgramLog.Log(base.Name + " enabled.");
             //Register Hooks
 
             //Add Commands
@@ -83,15 +88,17 @@ namespace TDSMPermissions
 
         public override void Disable()
         {
-            Program.tConsole.WriteLine(base.Name + " disabled.");
+            ProgramLog.Log(base.Name + " disabled.");
         }
 
 		public void LoadPerms()
 		{
 			Token to;
-			TextReader re = File.OpenText(pluginFolder + Path.DirectorySeparatorChar + "permissions.yml");
-			sc = new YamlScanner();
-			sc.SetSource(re);
+            TextReader re = File.OpenText(permissionsYML);
+            
+            sc = new YamlScanner();
+            sc.SetSource(re);
+
 			while ((to = sc.NextToken()) != Token.EndOfStream)
 			{
 				switch (to)

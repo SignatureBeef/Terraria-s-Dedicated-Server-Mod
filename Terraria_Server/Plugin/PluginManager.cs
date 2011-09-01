@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Reflection.Emit;
 
 using Terraria_Server.Logging;
+using System.Threading;
 
 namespace Terraria_Server.Plugin
 {
@@ -20,7 +21,6 @@ namespace Terraria_Server.Plugin
         private String pluginPath = String.Empty;
         private String libraryPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
-        private Dictionary<String, Object> libraries;
         private Server server;
 
         /// <summary>
@@ -29,13 +29,6 @@ namespace Terraria_Server.Plugin
         public Dictionary<String, Plugin> Plugins
         {
             get { return plugins; }
-        }
-        /// <summary>
-        /// Server's plugin list
-        /// </summary>
-        public Dictionary<String, Object> Libraries
-        {
-            get { return libraries; }
         }
         
         /// <summary>
@@ -51,7 +44,6 @@ namespace Terraria_Server.Plugin
             this.server = server;
 
             plugins = new Dictionary<String, Plugin>();
-            libraries = new Dictionary<String, Object>();
         }
 
         /// <summary>
@@ -59,7 +51,6 @@ namespace Terraria_Server.Plugin
         /// </summary>
         public void LoadAllPlugins()
         {
-            LoadLibraries();
             LoadPlugins();
 
             CheckPlugins();
@@ -82,53 +73,36 @@ namespace Terraria_Server.Plugin
 
         public Object LoadLib(String Path, Type type)
         {
-            try
+            Assembly assembly = null;
+            using (FileStream fs = File.Open(Path, FileMode.Open))
             {
-                Assembly assembly = null;
-                using (FileStream fs = File.Open(Path, FileMode.Open))
+                using (MemoryStream ms = new MemoryStream())
                 {
+                    byte[] buffer = new byte[1024];
 
-                    using (MemoryStream ms = new MemoryStream())
-                    {
+                    int read = 0;
 
-                        byte[] buffer = new byte[1024];
+                    while ((read = fs.Read(buffer, 0, 1024)) > 0)
+                        ms.Write(buffer, 0, read);
 
-                        int read = 0;
-
-                        while ((read = fs.Read(buffer, 0, 1024)) > 0)
-                            ms.Write(buffer, 0, read);
-
-                        assembly = Assembly.Load(ms.ToArray());
-
-                    }
-
+                    assembly = Assembly.Load(ms.ToArray());
                 }
-
-                //some libs crash at GetTypes, Gotta fix (Should we load assembly or Initialize?)
-
-                foreach (Type messageType in assembly.GetTypes()
-                .Where(x => type.IsAssignableFrom(x) && x != type))
-                {
-                    if (!messageType.IsAbstract)
-                    {
-                        Object lib = (Object)Activator.CreateInstance(messageType);
-                        if (lib == null)
-                        {
-                            throw new Exception("Could not Instantiate Library");
-                        }
-                        else
-                        {
-                            return lib;
-                        }
-                    }
-                }                
-                
             }
-            catch (Exception exception)
+            
+            foreach (Type messageType in assembly.GetTypes().Where(x => type.IsAssignableFrom(x) && x != type))
             {
-                ProgramLog.Log("Error Loading Library '" + Path + "'.");
-                ProgramLog.Log("Library Load Exception '" + Path + "' : "
-                    + exception.ToString());
+                if (!messageType.IsAbstract)
+                {
+                    Object lib = (Object)Activator.CreateInstance(messageType);
+                    if (lib == null)
+                    {
+                        throw new Exception("Could not Instantiate Library");
+                    }
+                    else
+                    {
+                        return lib;
+                    }
+                }
             }
 
             return null;
@@ -140,7 +114,7 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="pluginPath">Path to plugin</param>
         /// <returns>Instance of the successfully loaded plugin, otherwise null</returns>
-        public Plugin loadPlugin(String pluginPath)
+        public Plugin LoadPlugin(String pluginPath)
         {
             try
             {
@@ -174,26 +148,10 @@ namespace Terraria_Server.Plugin
                 FileInfo fileInfo = new FileInfo(file);
                 if (fileInfo.Extension.ToLower().Equals(".dll"))
                 {
-                    Plugin plugin = loadPlugin(file);
+                    Plugin plugin = LoadPlugin(file);
                     if (plugin != null)
                     {
                         plugins.Add(plugin.Name.ToLower().Trim(), plugin);
-                    }
-                }
-            }
-        }
-
-        public void LoadLibraries()
-        {
-            foreach (String file in Directory.GetFiles(libraryPath))
-            {
-                FileInfo fileInfo = new FileInfo(file);
-                if (fileInfo.Extension.ToLower().Equals(".dll"))
-                {
-                    Object library = (Object)LoadLib(file, typeof(Object));
-                    if (library != null)
-                    {
-                        libraries.Add(fileInfo.Name, library);
                     }
                 }
             }
@@ -241,7 +199,6 @@ namespace Terraria_Server.Plugin
             }
 
             plugins.Clear();
-            libraries.Clear();
         }
         
         /// <summary>

@@ -9,6 +9,7 @@ using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.WorldMod;
+using System.Security.Policy;
 
 namespace Terraria_Server
 {
@@ -25,6 +26,8 @@ namespace Terraria_Server
 
 		public static void Main(String[] args)
 		{
+            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
+
 			Thread.CurrentThread.Name = "Main";
             try
             {
@@ -327,22 +330,29 @@ namespace Terraria_Server
 			RemoteConsole.RConServer.Stop ();
 		}
 
+        public static Assembly AssemblyResolve(object obj, ResolveEventArgs handler)
+        {
+//((obj as AppDomain).SetupInformation as AppDomainSetup).PrivateBinPath = Statics.LibrariesPath;
+
+            return typeof(Program).Assembly;
+        }
+
 		private static bool SetupPaths()
 		{
-			try
-			{
-				CreateDirectory(Statics.WorldPath);
+            try
+            {
+                CreateDirectory(Statics.WorldPath);
                 CreateDirectory(Statics.PluginPath);
                 CreateDirectory(Statics.DataPath);
                 CreateDirectory(Statics.LibrariesPath);
-			}
-			catch (Exception exception)
-			{
-				ProgramLog.Log (exception);
-				ProgramLog.Log ("Press any key to continue...");
-				Console.ReadKey(true);
-				return false;
-			}
+            }
+            catch (Exception exception)
+            {
+                ProgramLog.Log(exception);
+                ProgramLog.Log("Press any key to continue...");
+                Console.ReadKey(true);
+                return false;
+            }
 
 			CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt");
 			CreateFile(Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt");
