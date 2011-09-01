@@ -2,7 +2,7 @@ using System;
 
 namespace Terraria_Server
 {
-    public class LiquidBuffer
+    public struct LiquidBuffer
     {
         public const int maxLiquidBuffer = 10000;
         public static int numLiquidBuffer;

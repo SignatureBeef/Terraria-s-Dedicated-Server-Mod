@@ -45,6 +45,8 @@ namespace Terraria_Server.WorldMod
 		public static bool stopDrops = false;
 		public static bool noLiquidCheck = false;
 		
+		public static object playerEditLock = new object();
+		
 		[ThreadStatic]
 		static Random threadRand;
 		

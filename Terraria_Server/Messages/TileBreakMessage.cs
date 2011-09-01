@@ -105,24 +105,26 @@ namespace Terraria_Server.Messages
 			{
 				failFlag = true;
 			}
-
+			
+			lock (WorldModify.playerEditLock)
             switch (tileAction)
             {
                 case 0:
                     WorldModify.KillTile(x, y, failFlag, false, false);
                     break;
                 case 1:
-                    WorldModify.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style);
-                    
-                    if (tileType == 15 && player.direction == 1)
-                    {
-                        Main.tile.At(x, y).AddFrameX (18);
-                        Main.tile.At(x, y - 1).AddFrameX (18);
-                    }
-                    else if (tileType == 106)
-                    {
-                        WorldModify.SquareTileFrame (x, y, true);
-                    }
+                    if (WorldModify.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style))
+					{
+						if (tileType == 15 && player.direction == 1)
+						{
+							Main.tile.At(x, y).AddFrameX (18);
+							Main.tile.At(x, y - 1).AddFrameX (18);
+						}
+						else if (tileType == 106)
+						{
+							WorldModify.SquareTileFrame (x, y, true);
+						}
+					}
                     
                     break;
                 case 2:

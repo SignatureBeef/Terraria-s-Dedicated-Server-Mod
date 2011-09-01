@@ -226,14 +226,7 @@ namespace Terraria_Server
                     Statics.IsActive = false;
 				}
 			}
-			if (Main.rand == null)
-			{
-				Main.rand = new Random((int)DateTime.Now.Ticks);
-			}
-			if (WorldModify.genRand == null)
-			{
-				WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
-			}
+
 			int num = Main.rand.Next(5);
 
             Main.tileShine[6] = 1150;
