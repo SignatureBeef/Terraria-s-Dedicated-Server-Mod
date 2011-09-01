@@ -26,8 +26,6 @@ namespace Terraria_Server
 
 		public static void Main(String[] args)
 		{
-            AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(AssemblyResolve);
-
 			Thread.CurrentThread.Name = "Main";
             try
             {
@@ -329,13 +327,6 @@ namespace Terraria_Server
 			
 			RemoteConsole.RConServer.Stop ();
 		}
-
-        public static Assembly AssemblyResolve(object obj, ResolveEventArgs handler)
-        {
-//((obj as AppDomain).SetupInformation as AppDomainSetup).PrivateBinPath = Statics.LibrariesPath;
-
-            return typeof(Program).Assembly;
-        }
 
 		private static bool SetupPaths()
 		{
