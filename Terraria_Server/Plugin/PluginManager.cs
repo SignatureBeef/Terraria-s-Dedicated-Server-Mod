@@ -2,13 +2,10 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Collections.Generic;
 using Terraria_Server.Events;
-using System.Diagnostics;
-using System.Reflection.Emit;
 
 using Terraria_Server.Logging;
-using System.Threading;
+using System.Collections.Generic;
 
 namespace Terraria_Server.Plugin
 {

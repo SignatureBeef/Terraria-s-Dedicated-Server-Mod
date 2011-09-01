@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 using Terraria_Server;
-using Terraria_Server.Commands;
-using Terraria_Server.Events;
-using Terraria_Server.Logging;
 using Terraria_Server.Misc;
-using Terraria_Server.Permissions;
 using Terraria_Server.Plugin;
-
-using TDSMPermissions.Commands;
+using Terraria_Server.Logging;
+using Terraria_Server.Permissions;
 using TDSMPermissions.Definitions;
 
 using YaTools.Yaml;
-using System.Reflection;
 
 namespace TDSMPermissions
 {
@@ -43,8 +36,6 @@ namespace TDSMPermissions
 		private Group currentGroup;
 		public string defaultGroup;
         private YamlScanner sc;
-
-        //private Assembly YamlAssembly;
 
 		private bool inGroups = false;
 
@@ -262,7 +253,7 @@ namespace TDSMPermissions
 				}
 				bool toggle;
 				String tokenText;
-				if (sc.TokenText.Contains('-'))
+				if (sc.TokenText.Contains("-"))
 				{
 					toggle = false;
 					tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
