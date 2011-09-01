@@ -56,16 +56,6 @@ namespace Terraria_Server
 		
 		public static void ServerLoop ()
 		{
-			if (Main.rand == null)
-			{
-				Main.rand = new Random((int)DateTime.Now.Ticks);
-			}
-			if (WorldModify.genRand == null)
-			{
-				WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
-			}
-		
-			Main.myPlayer = 255;
 			Main.players[255].whoAmi = 255;
 			Netplay.serverIP = IPAddress.Parse(serverSIP);
 			Netplay.serverListenIP = Netplay.serverIP;
@@ -106,7 +96,7 @@ namespace Terraria_Server
 			
 			var serverSock = Netplay.tcpListener.Server;
 			
-			try // TODO: clean up sometime, error handling too spread out
+			try
 			{
 				while (!Netplay.disconnect)
 				{
@@ -215,46 +205,6 @@ namespace Terraria_Server
 			}
 			
 			return true;
-			
-//			for (int i = 0; i < 255; i++)
-//			{
-//				if (slots[i].state == SlotState.VACANT)
-//				{
-//					ProgramLog.Users.Log ("{0} is connecting on slot {1}...", addr, i);
-//					try
-//					{
-//						AcceptSlot (i, client, addr);
-//					}
-//					catch (SocketException)
-//					{
-//						client.SafeClose ();
-//			
-//						ProgramLog.Users.Log ("{0} disconnected.", addr);
-//						
-//						return -1;
-//					}
-//					return i;
-//				}
-//			}
-			
-//			client.SafeClose ();
-//
-//			ProgramLog.Users.Log ("{0} dropped, no slots left.", addr);
-//			
-//			return -1;
-		}
-		
-		static void AcceptSlot (int id, Socket client, string remoteAddress)
-		{
-			var slot = slots[id];
-			slot.remoteAddress = remoteAddress;
-			Main.players[id].IPAddress = remoteAddress;
-			slot.conn = new Networking.ClientConnection (client, id);
-			slot.state = SlotState.CONNECTED;
-			//slot.socket = client;
-			//if (slot.readBuffer == null) slot.readBuffer = new byte[1024];
-			//if (NetMessage.buffer[id].readBuffer == null) NetMessage.buffer[id].readBuffer = new byte [MessageBuffer.BUFFER_MAX];
-			ProgramLog.Debug.Log ("Slot {1} assigned to {0}.", remoteAddress, id);
 		}
 		
 		static string HandleSocketException (Exception e)
@@ -298,51 +248,11 @@ namespace Terraria_Server
 				while (disconnect) Thread.Sleep (100);
 			}
 		}
-
-		public static bool SetIP(String newIP)
-		{
-			try
-			{
-				Netplay.serverIP = IPAddress.Parse(newIP);
-			}
-			catch
-			{
-				return false;
-			}
-			return true;
-		}
-		
-		public static bool SetIP2(String newIP)
-		{
-			try
-			{
-				IPHostEntry hostEntry = Dns.GetHostEntry(newIP);
-				IPAddress[] addressList = hostEntry.AddressList;
-				for (int i = 0; i < addressList.Length; i++)
-				{
-					if (addressList[i].AddressFamily == AddressFamily.InterNetwork)
-					{
-						Netplay.serverIP = addressList[i];
-						return true;
-					}
-				}
-			}
-			catch
-			{
-			}
-			return false;
-		}
 		
 		public static void Init()
 		{
 			for (int i = 0; i < 256; i++)
 			{
-				if (NetMessage.buffer[i] == null)
-					NetMessage.buffer[i] = new MessageBuffer();
-					
-				//NetMessage.buffer[i].whoAmI = i;
-				//NetMessage.buffer[i].Reset (); // slot reset calls that anyway
-
 				if (Netplay.slots[i] == null)
 					Netplay.slots[i] = new ServerSlot();
 				

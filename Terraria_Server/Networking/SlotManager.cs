@@ -17,12 +17,12 @@ namespace Terraria_Server.Networking
 		static int overlimitSlots;
 		static int privSlotsInUse;
 		
-		static bool[] isPrivileged = new bool [MAX_SLOTS];
+		static bool[] isPrivileged = new bool [MAX_SLOTS + 1];
 		
 		static Stack<int> freeSlots = new Stack<int> (); // those configured by Main.maxNetplayers
 		static Stack<int> privFreeSlots = new Stack<int> (); // those left over
 		
-		static ClientConnection[] handovers = new ClientConnection [MAX_SLOTS];
+		static ClientConnection[] handovers = new ClientConnection [MAX_SLOTS + 1];
 		
 		static object syncRoot = new object();
 		
@@ -58,7 +58,7 @@ namespace Terraria_Server.Networking
 					freeSlots.Push (i);
 				}
 				
-				for (int i = 253; i >= maxSlots; i--)
+				for (int i = MAX_SLOTS; i >= maxSlots; i--)
 				{
 					isPrivileged[i] = true;
 					privFreeSlots.Push (i);
@@ -79,7 +79,7 @@ namespace Terraria_Server.Networking
 			
 			if (newOverlimitSlots < 0) newOverlimitSlots = 0;
 			
-			Stack<int> newSlots = new Stack<int> ();
+			var newSlots = new Stack<int> ();
 			
 			lock (syncRoot)
 			{
@@ -192,7 +192,7 @@ namespace Terraria_Server.Networking
 		{
 			int id = src.SlotIndex;
 			
-			if (id < 0 || id > 253) return false;
+			if (id < 0 || id > MAX_SLOTS) return false;
 			
 			lock (syncRoot)
 			{

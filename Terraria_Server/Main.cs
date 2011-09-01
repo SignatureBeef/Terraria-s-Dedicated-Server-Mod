@@ -114,7 +114,7 @@ namespace Terraria_Server
 		public static int screenWidth = 800;
 		public static int screenHeight = 600;
 		public static bool playerInventory = false;
-		public static int myPlayer = 0;
+		public const int myPlayer = 255;
 		public static Player[] players = new Player[MAX_PLAYERS+1];
 		public static int spawnTileX;
 		public static int spawnTileY;

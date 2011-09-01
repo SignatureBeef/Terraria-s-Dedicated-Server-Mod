@@ -70,7 +70,6 @@ namespace Terraria_Server
 			lenAt = 0;
 			sink.Position = 0;
 		}
-		public static MessageBuffer[] buffer = new MessageBuffer[257];
 
 		public static void BootPlayer(int plr, String msg)
 		{
@@ -388,7 +387,6 @@ namespace Terraria_Server
 			{
 				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
 				{
-					NetMessage.buffer[k].spamCount++;
 					Netplay.slots[k].Send (bytes);
 				}
 			}
@@ -401,7 +399,6 @@ namespace Terraria_Server
 			{
 				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected && k != i)
 				{
-					NetMessage.buffer[k].spamCount++;
 					Netplay.slots[k].Send (bytes);
 				}
 			}

@@ -284,7 +284,7 @@ namespace Terraria_Server.Networking
 					{
 //						var slot = assignedSlot;
 //						if (slot >= 0)
-						Terraria_Server.Messages.MessageBuffer.GetData (this, readBuffer, processed + 4, msgLen - 4);
+						Terraria_Server.Messages.MessageDispatcher.Dispatch (this, readBuffer, processed + 4, msgLen - 4);
 //						else
 //							return;
 

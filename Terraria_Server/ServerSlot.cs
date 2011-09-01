@@ -35,8 +35,6 @@ namespace Terraria_Server
 
 	public class ServerSlot
 	{
-		//public volatile Socket socket;
-		//public volatile SlotState state;
 		public volatile ClientConnection conn;
 		
 		public SlotState state
@@ -186,19 +184,8 @@ namespace Terraria_Server
 			this.conn = null;
 			
 			this.SpamClear();
-			NetMessage.buffer[this.whoAmI].Reset();
 			
 			conn = null;
-			//socket.SafeClose ();
-		}
-		
-		public void ServerWriteCallBack(IAsyncResult ar)
-		{
-			NetMessage.buffer[this.whoAmI].spamCount--;
-			if (this.statusMax > 0)
-			{
-				this.statusCount++;
-			}
 		}
 		
 		public void Kick (string reason)
@@ -229,10 +216,7 @@ namespace Terraria_Server
 			
 			if (conn == null) return;
 			
-			var copy = new byte [length];
-			Array.Copy (data, offset, copy, 0, length);
-			
-			conn.Send (copy);
+			conn.CopyAndSend (new ArraySegment<byte> (data, offset, length));
 		}
 
 	}

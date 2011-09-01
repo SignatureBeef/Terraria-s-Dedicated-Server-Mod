@@ -240,7 +240,6 @@
     <Compile Include="WorldMod\WorldGen.cs" />
     <Compile Include="WorldMod\WorldIO.cs" />
     <Compile Include="WorldMod\WorldModify.cs" />
-    <Compile Include="Messages\messageBuffer.cs" />
     <Compile Include="NetPlay.cs" />
     <Compile Include="ServerSlot.cs" />
     <Compile Include="NetMessage_Packets.cs" />
@@ -268,6 +267,7 @@
     <Compile Include="Networking\SlotManager.cs" />
     <Compile Include="Messages\DisconnectMessage.cs" />
     <Compile Include="Misc\ArrayDeque.cs" />
+    <Compile Include="Messages\MessageDispatcher.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
