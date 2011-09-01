@@ -67,43 +67,6 @@ namespace Terraria_Server.Plugin
                 }
             }
         }
-
-        public Object LoadLib(String Path, Type type)
-        {
-            Assembly assembly = null;
-            using (FileStream fs = File.Open(Path, FileMode.Open))
-            {
-                using (MemoryStream ms = new MemoryStream())
-                {
-                    byte[] buffer = new byte[1024];
-
-                    int read = 0;
-
-                    while ((read = fs.Read(buffer, 0, 1024)) > 0)
-                        ms.Write(buffer, 0, read);
-
-                    assembly = Assembly.Load(ms.ToArray());
-                }
-            }
-            
-            foreach (Type messageType in assembly.GetTypes().Where(x => type.IsAssignableFrom(x) && x != type))
-            {
-                if (!messageType.IsAbstract)
-                {
-                    Object lib = (Object)Activator.CreateInstance(messageType);
-                    if (lib == null)
-                    {
-                        throw new Exception("Could not Instantiate Library");
-                    }
-                    else
-                    {
-                        return lib;
-                    }
-                }
-            }
-
-            return null;
-        }
                 
         /// <summary>
         /// Load the plugin located at the specified path.
@@ -111,27 +74,51 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="pluginPath">Path to plugin</param>
         /// <returns>Instance of the successfully loaded plugin, otherwise null</returns>
-        public Plugin LoadPlugin(String pluginPath)
+        public Plugin LoadPlugin(String PluginPath)
         {
             try
             {
-                Plugin plugin = (Plugin)LoadLib(pluginPath, typeof(Plugin));
-                if (plugin == null)
+                Assembly assembly = null;
+                Type type = typeof(Plugin);
+
+                using (FileStream fs = File.Open(PluginPath, FileMode.Open))
                 {
-                    throw new Exception("Could not Instantiate");
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        byte[] buffer = new byte[1024];
+
+                        int read = 0;
+
+                        while ((read = fs.Read(buffer, 0, 1024)) > 0)
+                            ms.Write(buffer, 0, read);
+
+                        assembly = Assembly.Load(ms.ToArray());
+                    }
                 }
-                else
+
+                foreach (Type messageType in assembly.GetTypes().Where(x => type.IsAssignableFrom(x) && x != type))
                 {
-                    plugin.Server = server;
-                    plugin.Load();
-                    return plugin;
+                    if (!messageType.IsAbstract)
+                    {
+                        Plugin plugin = (Plugin)Activator.CreateInstance(messageType);
+                        if (plugin == null)
+                        {
+                            throw new Exception("Could not Instantiate Library");
+                        }
+                        else
+                        {
+                            plugin.Server = server;
+                            plugin.Load();
+                            return plugin;
+                        }
+                    }
                 }
             }
             catch (Exception exception)
             {
                 //Plugin Errors aren't our issue really, so .Error.Log Shouldn't be needed.
-                ProgramLog.Log("Error Loading Plugin '" + pluginPath + "'. Is it up to Date?");
-                ProgramLog.Log("Plugin Load Exception '" + pluginPath + "' : "
+                ProgramLog.Log("Error Loading Plugin '" + PluginPath + "'. Is it up to Date?");
+                ProgramLog.Log("Plugin Load Exception '" + PluginPath + "' : "
                     + exception.ToString());
             }
 

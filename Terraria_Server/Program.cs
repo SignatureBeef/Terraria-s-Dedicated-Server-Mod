@@ -336,6 +336,8 @@ namespace Terraria_Server
                 CreateDirectory(Statics.PluginPath);
                 CreateDirectory(Statics.DataPath);
                 CreateDirectory(Statics.LibrariesPath);
+
+                AppDomain.CurrentDomain.AppendPrivatePath(Statics.LibrariesPath); //For Mono, The config setting doesn't fucking work.
             }
             catch (Exception exception)
             {
