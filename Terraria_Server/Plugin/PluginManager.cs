@@ -72,7 +72,7 @@ namespace Terraria_Server.Plugin
         /// Load the plugin located at the specified path.
         /// This only loads one plugin.
         /// </summary>
-        /// <param name="pluginPath">Path to plugin</param>
+        /// <param name="PluginPath">Path to plugin</param>
         /// <returns>Instance of the successfully loaded plugin, otherwise null</returns>
         public Plugin LoadPlugin(String PluginPath)
         {
@@ -136,10 +136,11 @@ namespace Terraria_Server.Plugin
                     if (plugin != null)
                     {
                         plugins.Add(plugin.Name.ToLower().Trim(), plugin);
-                        plugin.Enabled = true;
                     }
                 }
             }
+
+            EnablePlugins();
         }
 
         /// <summary>
