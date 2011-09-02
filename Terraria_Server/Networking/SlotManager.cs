@@ -444,6 +444,9 @@ namespace Terraria_Server.Networking
 				}
 			}
 			
+			int oldmax = maxSlots;
+			int oldover = overlimitSlots;
+			
 			int result = maxSlots;
 			if (maxp >= 0 || overl >= 0)
 			{
@@ -452,6 +455,13 @@ namespace Terraria_Server.Networking
 			}
 			
 			sender.Message (255, ChatColor.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);
+			
+			if (oldmax != maxSlots || oldover != overlimitSlots)
+			{
+				Program.properties.MaxPlayers = maxSlots;
+				Program.properties.OverlimitSlots = overlimitSlots;
+				Program.properties.Save (true);
+			}
 		}
 		
 		internal static void QCommand (Server server, ISender sender, ArgumentList args)
