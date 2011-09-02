@@ -10,6 +10,7 @@ using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server.WorldMod
 {
@@ -78,48 +79,94 @@ namespace Terraria_Server.WorldMod
 			}
 			WorldModify.lastMaxTilesX = Main.maxTilesX;
 			WorldModify.lastMaxTilesY = Main.maxTilesY;
-
-			Server.tile = new TileCollection(Main.maxTilesX, Main.maxTilesY);
-
-			using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Resetting game objects"))
-				for (int k = 0; k < Main.maxTilesX; k++)
-				{
-					prog.Value = k;
-					for (int l = 0; l < Main.maxTilesY; l++)
+			
+			if (Server.tile == null || Server.tile.SizeX != Main.maxTilesX || Server.tile.SizeY != Main.maxTilesY)
+			{
+				Server.tile = null;
+				GC.Collect ();
+				Server.tile = new TileCollection(Main.maxTilesX, Main.maxTilesY);
+			}
+			else
+			{
+				using (var prog = new ProgressLogger(Main.maxTilesX - 1, "Clearing world tiles"))
+					for (int k = 0; k < Main.maxTilesX; k++)
 					{
-						Main.tile.CreateTileAt(k, l);
+						prog.Value = k;
+						for (int l = 0; l < Main.maxTilesY; l++)
+						{
+							Main.tile.CreateTileAt(k, l);
+// for testing
+//							if ((l == 25 || l == 26) && k > 4000 && k < 5000)
+//							{
+//								Main.tile.At(k, l).SetLiquid (250);
+//								Liquid.AddWater (k, l);
+//							}
+						}
 					}
+			}
+			
+			using (var prog = new ProgressLogger(12212 + Liquid.resLiquid - 1, "Resetting game objects"))
+			{
+				for (int num3 = 0; num3 < 200; num3++)
+				{
+					Main.item[num3] = null;
 				}
+				prog.Value++;
+				
+				for (int num4 = 0; num4 < 1000; num4++)
+				{
+					Main.npcs[num4] = null;
+					Main.projectile[num4] = null;
+					Main.chest[num4] = null;
+					Main.sign[num4] = null;
+				}
+				prog.Value++;
+				
+//				for (int num8 = 0; num8 < Liquid.resLiquid; num8++)
+//				{
+//					Main.liquid[num8] = null;
+//				}
+//				prog.Value++;
+				
+//				for (int num9 = 0; num9 < 10000; num9++)
+//				{
+//					Main.liquidBuffer[num9] = null;
+//				}
+//				prog.Value += 10;
+				
+				GC.Collect ();
+				prog.Value += 10;
 
-			for (int num3 = 0; num3 < 200; num3++)
-			{
-				Main.item[num3] = new Item();
-			}
-			for (int num4 = 0; num4 < 1000; num4++)
-			{
-				Main.npcs[num4] = new NPC();
-			}
-			for (int num5 = 0; num5 < 1000; num5++)
-			{
-				Main.projectile[num5] = new Projectile();
-			}
-			for (int num6 = 0; num6 < 1000; num6++)
-			{
-				Main.chest[num6] = null;
-			}
-			for (int num7 = 0; num7 < 1000; num7++)
-			{
-				Main.sign[num7] = null;
-			}
-			for (int num8 = 0; num8 < Liquid.resLiquid; num8++)
-			{
-				Main.liquid[num8] = new Liquid();
-			}
-			for (int num9 = 0; num9 < 10000; num9++)
-			{
-				Main.liquidBuffer[num9] = new LiquidBuffer();
+				for (int num3 = 0; num3 < 200; num3++)
+				{
+					Main.item[num3] = new Item();
+					prog.Value++;
+				}
+				for (int num4 = 0; num4 < 1000; num4++)
+				{
+					Main.npcs[num4] = new NPC();
+					prog.Value++;
+				}
+				for (int num5 = 0; num5 < 1000; num5++)
+				{
+					Main.projectile[num5] = new Projectile();
+					prog.Value++;
+				}
+				for (int num8 = 0; num8 < Liquid.resLiquid; num8++)
+				{
+					Main.liquid[num8] = new Liquid();
+					prog.Value++;
+				}
+				for (int num9 = 0; num9 < 10000; num9++)
+				{
+					Main.liquidBuffer[num9] = new LiquidBuffer();
+					prog.Value++;
+				}
 			}
 			setWorldSize();
+			
+			LiquidUpdateBuffer.Initialize (Main.maxSectionsX, Main.maxSectionsY);
+			
 			worldCleared = true;
 		}
 
@@ -359,10 +406,6 @@ namespace Terraria_Server.WorldMod
 
 		public static void loadWorld()
 		{
-			if (WorldModify.genRand == null)
-			{
-				WorldModify.genRand = new Random((int)DateTime.Now.Ticks);
-			}
 			using (FileStream fileStream = new FileStream(Program.server.World.SavePath, FileMode.Open))
 			{
 				using (BinaryReader binaryReader = new BinaryReader(fileStream))
@@ -446,6 +489,8 @@ namespace Terraria_Server.WorldMod
 										if (binaryReader.ReadBoolean())
 										{
 											Main.tile.At(j, k).SetWall(binaryReader.ReadByte());
+//											if (Main.tile.At(j, k).Wall == 7)
+//												Main.tile.At(j, k).SetWall (17);
 										}
 										if (binaryReader.ReadBoolean())
 										{

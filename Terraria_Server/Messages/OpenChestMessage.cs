@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,14 +8,14 @@ using Terraria_Server.Events;
 
 namespace Terraria_Server.Messages
 {
-    public class OpenChestMessage : IMessage
+    public class OpenChestMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.OPEN_CHEST;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;

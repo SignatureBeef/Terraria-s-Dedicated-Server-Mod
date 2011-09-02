@@ -6,8 +6,12 @@ namespace Terraria_Server
 {
     public class Collision
     {
+        [ThreadStatic]
         public static bool up;
+        
+        [ThreadStatic]
         public static bool down;
+        
         public static bool CanHit(Vector2 Position1, int Width1, int Height1, Vector2 Position2, int Width2, int Height2)
         {
             int entityX = (int)((Position1.X + (float)(Width1 / 2)) / 16f);

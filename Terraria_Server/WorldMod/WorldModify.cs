@@ -9,6 +9,7 @@ using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server.WorldMod
 {
@@ -45,6 +46,8 @@ namespace Terraria_Server.WorldMod
 		public static bool stopDrops = false;
 		public static bool noLiquidCheck = false;
 		
+		public static object playerEditLock = new object();
+		
 		[ThreadStatic]
 		static Random threadRand;
 		
@@ -62,7 +65,11 @@ namespace Terraria_Server.WorldMod
 		}
 		
 		public static String statusText = "";
+		
+		// not sure about this, but sure looks like it was supposed to be thread static
+		[ThreadStatic]
 		private static bool destroyObject = false;
+		
 		public static int spawnDelay = 0;
 		public static int spawnNPC = 0;
 		public static int maxRoomTiles = 1900;
@@ -5116,7 +5123,22 @@ namespace Terraria_Server.WorldMod
 			Liquid.skipCount++;
 			if (Liquid.skipCount > 1)
 			{
-				Liquid.UpdateLiquid();
+				bool buffer = false;
+				if (Program.properties.BufferLiquidUpdates)
+					NetMessage.UseLiquidUpdateBuffer = buffer = true;
+				
+				try
+				{
+					Liquid.UpdateLiquid();
+				}
+				finally
+				{
+					if (buffer)
+					{
+						NetMessage.UseLiquidUpdateBuffer = false;
+						LiquidUpdateBuffer.FlushQueue ();
+					}
+				}
 				Liquid.skipCount = 0;
 			}
 			float num = 3E-05f;

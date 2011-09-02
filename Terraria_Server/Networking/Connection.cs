@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Threading;
 
 using Terraria_Server.Logging;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Networking
 {
@@ -18,6 +19,7 @@ namespace Terraria_Server.Networking
 			
 			public const int BYTES = 0;
 			public const int KICK = 1;
+			public const int SEGMENT = 2;
 		}
 		
 		protected class SocketAsyncEventArgsExt : SocketAsyncEventArgs
@@ -57,15 +59,22 @@ namespace Terraria_Server.Networking
 		}
 		
 		Socket socket;
-		Queue<Message> sendQueue = new Queue<Message> ();
-		//SocketAsyncEventArgsExt sendArgs = new SocketAsyncEventArgsExt ();
-		//SocketAsyncEventArgsExt recvArgs = new SocketAsyncEventArgsExt ();
-		//SocketAsyncEventArgsExt kickArgs = new SocketAsyncEventArgsExt ();
+		ArrayDeque<Message> sendQueue = new ArrayDeque<Message> ();
+		
 		protected byte[] recvBuffer;
 		protected int    recvBytes;
-		protected volatile SocketError error = SocketError.Success;
 		protected Timer timeout;
 		protected volatile int closed = 0;
+		protected volatile int error = 0;
+		
+		// TODO: maybe move these to ServerSlot
+		protected byte[] txBuffer;    // buffer for copying messages into
+		protected int    txHead;      // first byte used in buffer
+		protected int    txCount;     // number of bytes used in buffer
+		protected int    txPrepared;  // number of bytes from buffer put into txList
+		protected int    txListBytes; // number of bytes in txList elements
+		// list of array segments to send at once
+		protected List<ArraySegment<byte>> txList = new List<ArraySegment<byte>> ();
 		
 		internal volatile bool kicking = false;
 		internal volatile bool sending = false;
@@ -76,33 +85,21 @@ namespace Terraria_Server.Networking
 			get { return sendQueue.Count; }
 		}
 		
-//			lock (sectionUpdatesLock)
-//				if (sectionUpdates == null || sectionUpdates.GetLength(0) <= Main.maxTilesX/200 || sectionUpdates.GetLength(1) <= Main.maxTilesY/150)
-//				{
-//					sectionUpdates = new byte [Main.maxTilesX / 200 + 1, Main.maxTilesY / 150 + 1][];
-//				}
-//			
-
-		
 		public Connection (Socket sock)
 		{
 			socket = sock;
 			RemoteEndPoint = socket.RemoteEndPoint;
 			RemoteAddress = RemoteEndPoint.ToString();
-			
-//			sendArgs.Done += this.SendCompleted;
-//			recvArgs.Done += this.ReceiveCompleted;
-//			kickArgs.Done += this.KickCompleted;
 		}
 		
 		public bool Active
 		{
-			get { return error == SocketError.Success && socket.Connected; }
+			get { return closed == 0 && error == (int)SocketError.Success && socket.Connected; }
 		}
 		
 		public SocketError Error
 		{
-			get { return error; }
+			get { return closed == 1 ? SocketError.ConnectionAborted : (SocketError) error; }
 		}
 		
 		public EndPoint RemoteEndPoint { get; protected set; }
@@ -111,9 +108,60 @@ namespace Terraria_Server.Networking
 		public int BytesQueued   { get; private set; }
 		public int BytesReceived { get; private set; }
 		
+//		public static long TotalOutgoingBytes { get { return totalBytesBuffered; } }
+//		public static long TotalOutgoingBytesUnbuffered { get { return totalBytesUnbuffered; } }
+		
+		static long totalBytesBuffered;
+		static long totalBytesUnbuffered;
+		
 		public virtual void Send (byte[] bytes)
 		{
 			Send (new Message { content = bytes });
+		}
+		
+		public virtual void CopyAndSend (ArraySegment<byte> segment)
+		{
+			lock (sendQueue)
+			{
+				if (kicking) return;
+				
+				if (txBuffer == null || segment.Count > txBuffer.Length - txCount)
+				{
+					var bytes = new byte [segment.Count];
+					Array.Copy (segment.Array, segment.Offset, bytes, 0, segment.Count);
+					sendQueue.PushBack (new Message { content = bytes });
+				}
+				else
+				{
+					int offset = (txHead + txCount) % txBuffer.Length;
+					int first = Math.Min (segment.Count, txBuffer.Length - offset);
+					
+					Array.Copy (segment.Array, segment.Offset, txBuffer, offset, first);
+					if (first < segment.Count) //wraparound
+					{
+						Array.Copy (segment.Array, segment.Offset + first, txBuffer, 0, segment.Count - first);
+					}
+					//ProgramLog.Debug.Log ("Using {0}, {1}", offset, segment.Count);
+					
+					if (sendQueue.Count > 0 && sendQueue.PeekBack().kind == Message.SEGMENT)
+					{
+						// coalesce
+						var old = sendQueue.PeekBack();
+						sendQueue.ReplaceBack (new Message { kind = Message.SEGMENT, param = old.param + segment.Count });
+					}
+					else
+					{
+						sendQueue.PushBack (new Message { kind = Message.SEGMENT, param = segment.Count });
+					}
+					
+					txCount += segment.Count;
+				}
+				
+				if (sending == false)
+				{
+					sending = SendMore (null);
+				}
+			}
 		}
 		
 		protected void Send (Message message)
@@ -123,7 +171,7 @@ namespace Terraria_Server.Networking
 			{
 				if (kicking) return;
 				
-				sendQueue.Enqueue (message);
+				sendQueue.PushBack (message);
 				
 				if (sending == false)
 				{
@@ -142,121 +190,113 @@ namespace Terraria_Server.Networking
 				kicking = true;
 
 				sendQueue.Clear ();
-				sendQueue.Enqueue (new Message { content = bytes, kind = Message.KICK });
+				sendQueue.PushBack (new Message { content = bytes, kind = Message.KICK });
 				
 				SendMore (null);
-//				if (sending == false)
-//				{
-//					sending = SendMore (null);
-//				}
 			}
 		}
 		
-#if BANDWIDTH_ANALYSIS
-		public static int[] packetsPerMessage = new int [255];
-		public static long[] bytesPerMessage = new long [255];
-#endif
+//		protected int flushCounter = 0;
 		
-		protected bool SendMore (SocketAsyncEventArgsExt args)
+		public void Flush () // TODO: add different priorities to messages indicating how fast the should be flushed
 		{
+//			flushCounter += 1;
+//			if (flushCounter < 5) return;
+//			flushCounter = 0;
+			
+			lock (sendQueue)
+			{
+				if (! sending && txListBytes > 0)
+					sending = SendMore (null, true);
+			}
+		}
+		
+//#if BANDWIDTH_ANALYSIS
+//		public static int[] packetsPerMessage = new int [255];
+//		public static long[] bytesPerMessage = new long [255];
+//#endif
+		
+		protected bool SendMore (SocketAsyncEventArgsExt args, bool flush = false)
+		{
+			flush |= txBuffer == null;
+			
 			try
 			{
 				var queued = false;
+				var escape = false;
 				
-				while (sendQueue.Count > 0 && !queued)
+				while (sendQueue.Count > 0 && txListBytes < 2880 && !escape)
 				{
-					var msg = sendQueue.Dequeue();
+					var msg = sendQueue.PopFront();
 					
 					switch (msg.kind)
 					{
 						case Message.BYTES:
 						{
-							if (args == null) args = sendPool.Take(this);
-							
 							var data = (byte[]) msg.content;
-							args.SetBuffer (data, 0, data.Length);
-
-#if TRACE_PACKETS
-							int read = 0;
-							var sb = new System.Text.StringBuilder ();
-							while (read < data.Length - 4)
-							{
-								sb.AppendFormat ("{0}({1}), ", BitConverter.ToInt32(data, read), (Packet)data[read+4]);
-								read += BitConverter.ToInt32(data, read) + 4;
-							}
-							ProgramLog.Debug.Log ("Sending chunk of {0}: {1}", data.Length, sb);
-#endif
+							txList.Add (new ArraySegment<byte> (data));
+							txListBytes += data.Length;
+							//ProgramLog.Debug.Log ("{1}: Adding bytes {0}", data.Length, Thread.CurrentThread.IsThreadPoolThread);
+							break;
+						}
 						
-#if BANDWIDTH_ANALYSIS
-							int read = 0;
-							while (read < data.Length - 4)
+						case Message.SEGMENT:
+						{
+							var len = msg.param;
+							var txc = txList.Count;
+							int wraparound = 0;
+							
+							if (txc > 0 && txList[txc - 1].Array == txBuffer)
 							{
-								var len = BitConverter.ToInt32(data, read);
-								var id = data[read+4];
+								var seg = txList[txc - 1];
+								var nlen = seg.Count + len;
+								var nseg = new ArraySegment<byte> (txBuffer, seg.Offset, Math.Min (nlen, txBuffer.Length - seg.Offset));
 								
-								lock (packetsPerMessage)
-								{
-									packetsPerMessage[id] += 1;
-									bytesPerMessage[id] += len + 4;
-								}
+								//ProgramLog.Debug.Log ("{5}: Coalescing {0}, {1} and {2}, {3} [{4}]", seg.Offset, seg.Count, (txHead + txPrepared) % txBuffer.Length, len, nseg.Count, Thread.CurrentThread.IsThreadPoolThread);
 								
-								read += BitConverter.ToInt32(data, read) + 4;
+								txList[txc - 1] = nseg;
+								
+								wraparound = nlen - nseg.Count;
 							}
-#endif
-							BytesSent += data.Length;
-							queued = socket.SendAsync (args);
+							else
+							{
+								var offset = (txHead + txPrepared) % txBuffer.Length;
+								
+								//ProgramLog.Debug.Log ("{2}: Adding segment {0}, {1}", offset, len, Thread.CurrentThread.IsThreadPoolThread);
+								
+								var nseg = new ArraySegment<byte> (txBuffer, offset, Math.Min (len, txBuffer.Length - offset));
+								txList.Add (nseg);
+								
+								wraparound = len - nseg.Count;
+							}
+							
+							if (wraparound > 0)
+							{
+								txList.Add (new ArraySegment<byte> (txBuffer, 0, wraparound));
+							}
+							
+							txPrepared += len;
+							txListBytes += len;
+
 							break;
 						}
 						
 						default:
 						{
-							if (args == null) args = sendPool.Take(this);
-							
 							var data = SerializeMessage (msg);
-							args.SetBuffer (data.Array, data.Offset, data.Count);
-
-#if TRACE_PACKETS
-							int read = 0;
-							var sb = new System.Text.StringBuilder ();
-							while (read < data.Count - 4)
-							{
-								sb.AppendFormat ("{0}({1}), ", BitConverter.ToInt32(data.Array, data.Offset+read), (Packet)data.Array[data.Offset+read+4]);
-								read += BitConverter.ToInt32(data.Array, data.Offset + read) + 4;
-							}
-							ProgramLog.Debug.Log ("Sending custom chunk of {0}: {1}", data.Count, sb);
-#endif
-
-#if BANDWIDTH_ANALYSIS
-							int read = 0;
-							while (read < data.Count - 4)
-							{
-								var len = BitConverter.ToInt32(data.Array, data.Offset+read);
-								var id = data.Array[data.Offset+read+4];
-								
-								lock (packetsPerMessage)
-								{
-									packetsPerMessage[id] += 1;
-									bytesPerMessage[id] += len + 4;
-								}
-								
-								read += BitConverter.ToInt32(data.Array, data.Offset + read) + 4;
-							}
-#endif
-							BytesSent += data.Count;
-							try
-							{
-								queued = socket.SendAsync (args);
-							}
-							finally
-							{
-								if (! queued) MessageSendCompleted ();
-							}
+							txList.Add (data);
+							txListBytes += data.Count;
+							//ProgramLog.Debug.Log ("{1}: Adding custom {0}", data.Count, Thread.CurrentThread.IsThreadPoolThread);
+							escape = true;
 							break;
 						}
 						
 						case Message.KICK:
 						{
 							if (! queued && args != null && args.conn != null) sendPool.Put (args);
+							
+							txList.Clear ();
+							txListBytes = 0;
 							
 							var kickArgs = kickPool.Take (this);
 							
@@ -273,12 +313,54 @@ namespace Terraria_Server.Networking
 									KickCompleted (kickArgs);
 								}
 							}
-							queued = false;
-							break;
+							
+							return false;
 						}
 					}
 				}
-						
+				
+				if (escape) flush = true;
+				
+				if (txListBytes >= 1450 || (txListBytes > 0 && flush))
+				{
+					if (args == null) args = sendPool.Take(this);
+					
+					if (txList.Count > 1)
+					{
+						args.SetBuffer (null, 0, 0);
+						args.BufferList = txList;
+					}
+					else
+					{
+						var seg = txList[0];
+						args.BufferList = null;
+						args.SetBuffer (seg.Array, seg.Offset, seg.Count);
+					}
+					
+//					var o = 0;
+//					for (int i = 0; i < txList.Count; i++)
+//						o += 40 * (1 + txList[i].Count / 1460) + txList[i].Count;
+//					
+					var n = 40 * (1 + txListBytes / 1460) + txListBytes;
+//					Interlocked.Add (ref totalBytesBuffered, (long)n);
+//					Interlocked.Add (ref totalBytesUnbuffered, (long)o);
+					
+					BytesSent += n;
+					
+					try
+					{
+						queued = socket.SendAsync (args);
+					}
+					finally
+					{
+						if (! queued)
+						{
+							TxListClear ();
+							if (escape) MessageSendCompleted ();
+						}
+					}
+				}
+				
 				return queued;
 			}
 			catch (SocketException e)
@@ -291,6 +373,27 @@ namespace Terraria_Server.Networking
 			}
 			
 			return false;
+		}
+		
+		protected void TxListClear ()
+		{
+			//ProgramLog.Debug.Log ("Cleaning up txList of {0} ({1} bytes)", txList.Count, txListBytes);
+			for (int i = 0; i < txList.Count; i++)
+			{
+				var seg = txList[i];
+				if (seg.Array == txBuffer)
+				{
+					var count = seg.Count;
+					//ProgramLog.Debug.Log ("Freeing {0} ({2}), {1}", txHead, count, txList[i].Offset);
+					txHead = (txHead + count) % txBuffer.Length;
+					txCount -= count;
+					txPrepared -= count;
+					if (txPrepared < 0 || txCount < 0) ProgramLog.Error.Log ("{0} {1}", txCount, txPrepared);
+				}
+			}
+			if (txCount == 0) txHead = 0;
+			txList.Clear ();
+			txListBytes = 0;
 		}
 		
 		// a place where subclasses may cleanup after sending a custom message,
@@ -325,7 +428,9 @@ namespace Terraria_Server.Networking
 				}
 				else
 				{
-					if (argz.BytesTransferred < argz.Count) throw new ApplicationException ("Unexpected short write.");
+// seems this doesn't even do what I thought it did on mono
+//					if (argz.BytesTransferred != txListBytes)
+//						ProgramLog.Error.Log ("Unexpected write count to {0} ({1} < {2})", RemoteAddress, argz.BytesTransferred, txListBytes);
 					
 					lock (sendQueue)
 					{
@@ -335,6 +440,8 @@ namespace Terraria_Server.Networking
 							sending = false;
 							return;
 						}
+						
+						TxListClear ();
 						
 						sending = SendMore (argz);
 						if (! sending && argz.conn != null) sendPool.Put (argz);
@@ -407,7 +514,14 @@ namespace Terraria_Server.Networking
 						if (left <= 0) return;
 						
 						argz.SetBuffer (recvBuffer, recvBytes, left);
-						receiving = socket.ReceiveAsync (argz);
+						try
+						{
+							receiving = socket.ReceiveAsync (argz);
+						}
+						catch (ObjectDisposedException)
+						{
+							receiving = false;
+						}
 						
 						if (receiving) bytes = argz.BytesTransferred;
 					}
@@ -469,17 +583,23 @@ namespace Terraria_Server.Networking
 			
 			if (timeout != null)
 			{
-				try
-				{
-					timeout.Dispose ();
-				} catch {}
+				var timer = Interlocked.CompareExchange (ref this.timeout, null, this.timeout);
 				
-				timeout = null;
+				if (timer != null)
+				{
+					try
+					{
+						timer.Dispose ();
+					} catch {}
+				}
 			}
 			
-			if (error != SocketError.Success) return;
+#pragma warning disable 420
+			if (Interlocked.CompareExchange (ref this.error, (int)err, (int)SocketError.Success) != (int)SocketError.Success)
+				return;
+#pragma warning restore 420
 			
-			error = err;
+			Close (err);
 			
 			try
 			{
@@ -487,37 +607,16 @@ namespace Terraria_Server.Networking
 			}
 			catch (SocketException) {}
 			catch (ObjectDisposedException) {}
-			
-//			if (! sending)
-//				try
-//				{
-//					sendArgs.Dispose();
-//					sendArgs = null;
-//				} catch {}
-//			
-//			if (! receiving)
-//				try
-//				{
-//					recvArgs.Dispose();
-//					recvArgs = null;
-//				} catch {}
-//			
-//			if (! kicking)
-//				try
-//				{
-//					kickArgs.Dispose();
-//					kickArgs = null;
-//				} catch {}
-//			
-			
-			Close (error);
 		}
 		
 		void Close (SocketError error)
 		{
 			kicking = true;
-			var closed = Interlocked.Exchange (ref this.closed, 1);
-			if (closed > 0) return;
+			
+#pragma warning disable 420
+			if (Interlocked.CompareExchange (ref this.closed, 1, 0) != 0)
+				return;
+#pragma warning restore 420
 			
 			try
 			{
@@ -568,6 +667,8 @@ namespace Terraria_Server.Networking
 					ProgramLog.Error.Log ("{0} freed twice.", typeof(T).Name);
 					return;
 				}
+				
+				args.BufferList = null;
 				
 				args.conn = null;
 				lock (this) Push ((T) args);

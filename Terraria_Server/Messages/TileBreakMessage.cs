@@ -10,14 +10,14 @@ using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
 {
-    public class TileBreakMessage : IMessage
+    public class TileBreakMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.TILE_BREAK;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             var slot = Netplay.slots[whoAmI];
             
@@ -108,24 +108,26 @@ namespace Terraria_Server.Messages
 			{
 				failFlag = true;
 			}
-
+			
+			lock (WorldModify.playerEditLock)
             switch (tileAction)
             {
                 case 0:
                     WorldModify.KillTile(x, y, failFlag, false, false);
                     break;
                 case 1:
-                    WorldModify.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style);
-                    
-                    if (tileType == 15 && player.direction == 1)
-                    {
-                        Main.tile.At(x, y).AddFrameX (18);
-                        Main.tile.At(x, y - 1).AddFrameX (18);
-                    }
-                    else if (tileType == 106)
-                    {
-                        WorldModify.SquareTileFrame (x, y, true);
-                    }
+                    if (WorldModify.PlaceTile(x, y, (int)tileType, false, true, whoAmI, style))
+					{
+						if (tileType == 15 && player.direction == 1)
+						{
+							Main.tile.At(x, y).AddFrameX (18);
+							Main.tile.At(x, y - 1).AddFrameX (18);
+						}
+						else if (tileType == 106)
+						{
+							WorldModify.SquareTileFrame (x, y, true);
+						}
+					}
                     
                     break;
                 case 2:

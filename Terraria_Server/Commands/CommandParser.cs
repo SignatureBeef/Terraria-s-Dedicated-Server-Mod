@@ -317,6 +317,19 @@ namespace Terraria_Server.Commands
                 .WithDescription("Toggle the allowing of explosions for the server.")
                 .WithHelpText("Usage:    explosions")
                 .Calls(Commands.Explosions);
+
+            AddCommand("maxplayers")
+                .WithAccessLevel (AccessLevel.REMOTE_CONSOLE)
+                .WithDescription ("Set the maximum number of player slots.")
+                .WithHelpText ("Usage:    maxplayers <num> - set the max number of slots")
+                .WithHelpText ("          maxplayers <num> <num> - also set the number of overlimit slots")
+                .Calls (Terraria_Server.Networking.SlotManager.MaxPlayersCommand);
+            
+            AddCommand("q")
+                .WithAccessLevel (AccessLevel.OP)
+                .WithDescription ("List connections waiting in queues.")
+                .WithHelpText ("Usage:    q")
+                .Calls (Terraria_Server.Networking.SlotManager.QCommand);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;

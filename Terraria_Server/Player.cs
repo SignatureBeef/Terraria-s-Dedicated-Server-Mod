@@ -12,6 +12,7 @@ using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
 using System.Net;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server
 {
@@ -287,6 +288,8 @@ namespace Terraria_Server
 		public string AuthenticatedAs { get; set; }
 		
 		public string DisconnectReason { get; set; }
+		
+		public ClientConnection Connection { get; internal set; }
 
         public bool Op { get; set; }
         
@@ -4434,6 +4437,8 @@ namespace Terraria_Server
 				this.itemTime = selectedItem.UseTime;
 				if (Main.invasionType == 0)
 				{
+					ProgramLog.Users.Log ("{0} @ {1}: Invasion triggered by {2}.", IPAddress, whoAmi, Name);
+					NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned an invasion!"), 255, 255, 128, 150);
 					Main.invasionDelay = 0;
 					Main.StartInvasion();
 				}
@@ -4473,10 +4478,14 @@ namespace Terraria_Server
                 {
                     if (selectedItem.Type == 43 && !Main.dayTime)
                     {
+						ProgramLog.Users.Log ("{0} @ {1}: Eye of Cthulhu summoned by {2}.", IPAddress, whoAmi, Name);
+						NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned the Eye of Cthulhu!"), 255, 255, 128, 150);
                         NPC.SpawnOnPlayer(Main.players[i], i, 4);
                     }
                     else if (selectedItem.Type == 70 && zoneEvil)
                     {
+						ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", IPAddress, whoAmi, Name);
+						NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
                         NPC.SpawnOnPlayer(Main.players[i], i, 13);
                     }
                 }
@@ -4895,26 +4904,37 @@ namespace Terraria_Server
 		/// <summary>
 		/// Gets current server slot player is assigned to
 		/// </summary>
-        public ServerSlot Slot
-        {
-            get { return Netplay.slots[this.whoAmi]; }
-        }
+		public ServerSlot Slot
+		{
+			get
+			{
+				var whoAmi = this.whoAmi;
+				if (whoAmi >= 0)
+					return Netplay.slots [whoAmi];
+				else
+					return null;
+			}
+		}
 
 		/// <summary>
 		/// Kicks player
 		/// </summary>
 		/// <param name="Reason">Reason for kick</param>
-        public void Kick(String Reason = null)
-        {
-            String message = "You have been Kicked from this Server.";
-
-            if (Reason != null)
-            {
-                message = Reason;
-            }
-
-            Netplay.slots[whoAmi].Kick (message);
-        }
+		public void Kick (string reason = null)
+		{
+			var conn = Connection;
+			if (conn != null)
+			{
+				var message = "You have been Kicked from this Server.";
+				
+				if (reason != null)
+				{
+				    message = reason;
+				}
+				
+				conn.Kick (message);
+			}
+		}
 
 		/// <summary>
 		/// Get/Set for player's IP address

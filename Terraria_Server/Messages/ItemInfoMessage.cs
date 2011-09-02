@@ -6,15 +6,16 @@ using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages
 {
-    public class ItemInfoMessage : IMessage
+    public class ItemInfoMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.ITEM_INFO;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
+            int start = num - 1;
             short itemIndex = BitConverter.ToInt16(readBuffer, num);
             num += 2;
             float num39 = BitConverter.ToSingle(readBuffer, num);

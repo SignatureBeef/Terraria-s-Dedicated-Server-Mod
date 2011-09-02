@@ -7,6 +7,7 @@ using Terraria_Server.Events;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server
 {
@@ -69,7 +70,6 @@ namespace Terraria_Server
 			lenAt = 0;
 			sink.Position = 0;
 		}
-		public static MessageBuffer[] buffer = new MessageBuffer[257];
 
 		public static void BootPlayer(int plr, String msg)
 		{
@@ -351,86 +351,6 @@ namespace Terraria_Server
 			return 0;
 		}
 		
-		public static void CheckBytes (int i)
-		{
-			var msgBuf = NetMessage.buffer[i];
-			CheckBytes (i, msgBuf.readBuffer, ref msgBuf.totalData, ref msgBuf.messageLength);
-		}
-		
-		public static void CheckBytes (int i, byte[] readBuffer, ref int totalData, ref int msgLen)
-		{
-			var msgBuf = NetMessage.buffer[i];
-			var slot = Netplay.slots[i];
-			int processed = 0;
-			
-			if (totalData >= 4)
-			{
-				if (msgLen == 0)
-				{
-					msgLen = BitConverter.ToInt32 (readBuffer, 0) + 4;
-					
-					if (msgLen <= 4 || msgLen > 4096)
-					{
-						slot.Kick ("Client sent invalid network message (" + msgLen + ")");
-						msgLen = 0;
-					}
-				}
-				while (totalData >= msgLen + processed && msgLen > 0)
-				{
-					if (slot.state == SlotState.PLAYER_AUTH && msgLen > 4
-						&& (Packet) readBuffer[processed + 4] != Packet.PASSWORD_RESPONSE)
-					{
-						// put player packets aside until password response
-						
-						if (readBuffer == msgBuf.sideBuffer)
-							throw new Exception ("Sidebuffer reads shouldn't be done during USER_AUTH.");
-						
-						if (msgBuf.sideBufferBytes + msgLen > 4096)
-						{
-							slot.Kick ("Player data too big.");
-							return;
-						}
-						
-						if (msgBuf.sideBuffer == null) msgBuf.sideBuffer = new byte [4096];
-						
-						Buffer.BlockCopy (readBuffer, processed, msgBuf.sideBuffer, msgBuf.sideBufferBytes, msgLen);
-						
-						msgBuf.sideBufferBytes += msgLen;
-					}
-					else
-						msgBuf.GetData (readBuffer, processed + 4, msgLen - 4);
-
-					processed += msgLen;
-					if (totalData - processed >= 4)
-					{
-						msgLen = BitConverter.ToInt32 (readBuffer, processed) + 4;
-						
-						if (msgLen <= 4 || msgLen > 4096)
-						{
-							slot.Kick ("Client sent invalid network message (" + msgLen + ")");
-							msgLen = 0;
-						}
-					}
-					else
-					{
-						msgLen = 0;
-					}
-				}
-				if (processed == totalData)
-				{
-					totalData = 0;
-				}
-				else
-				{
-					if (processed > 0)
-					{
-						Buffer.BlockCopy (readBuffer, processed, readBuffer, 0, totalData - processed);
-						totalData -= processed;
-					}
-				}
-			}
-		}
-		
 		public static void SendTileSquare(int whoAmi, int tileX, int tileY, int size)
 		{
 			int num = (size - 1) / 2;
@@ -467,7 +387,6 @@ namespace Terraria_Server
 			{
 				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
 				{
-					NetMessage.buffer[k].spamCount++;
 					Netplay.slots[k].Send (bytes);
 				}
 			}
@@ -480,7 +399,6 @@ namespace Terraria_Server
 			{
 				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected && k != i)
 				{
-					NetMessage.buffer[k].spamCount++;
 					Netplay.slots[k].Send (bytes);
 				}
 			}
@@ -488,17 +406,44 @@ namespace Terraria_Server
 		
 		public void Broadcast ()
 		{
+// this alt version copies the message to each player's tx buffer
+//			for (int k = 0; k < 255; k++)
+//			{
+//				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
+//				{
+//					NetMessage.buffer[k].spamCount++;
+//					Send (k);
+//				}
+//			}
+
 			Broadcast (Output);
 		}
 		
 		public void BroadcastExcept (int i)
 		{
+// this alt version copies the message to each player's tx buffer
+//			for (int k = 0; k < 255; k++)
+//			{
+//				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected && k != i)
+//				{
+//					NetMessage.buffer[k].spamCount++;
+//					Send (k);
+//				}
+//			}
+			
 			BroadcastExcept (Output, i);
 		}
 		
 		public void Send (int i)
 		{
-			Netplay.slots[i].Send (Output);
+			var conn = Netplay.slots[i].conn;
+			if (conn != null)
+				conn.CopyAndSend (Segment);
+		}
+		
+		public void Send (ClientConnection conn)
+		{
+			conn.CopyAndSend (Segment);
 		}
 		
 		public static void OnPlayerJoined (int plr)
@@ -589,9 +534,37 @@ namespace Terraria_Server
 			Event.Sender = player;
 			Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
 		}
-
+		
+		[ThreadStatic]
+		static bool useLiquidUpdateBuffer;
+		
+		[ThreadStatic]
+		static bool disableLiquidUpdates;
+		
+		// only meant to be used from the update thread
+		internal static bool UseLiquidUpdateBuffer
+		{
+			get { return useLiquidUpdateBuffer; }
+			set { useLiquidUpdateBuffer = value; }
+		}
+		
+		// only meant to be used from the update thread
+		internal static bool DisableLiquidUpdates
+		{
+			get { return disableLiquidUpdates; }
+			set { disableLiquidUpdates = value; }
+		}
+		
 		public static void SendWater(int x, int y)
 		{
+			if (disableLiquidUpdates) return;
+			
+			if (useLiquidUpdateBuffer)
+			{
+				LiquidUpdateBuffer.QueueUpdate (x, y);
+				return;
+			}
+			
 			byte[] bytes = null;
 			
 			for (int i = 0; i < 255; i++)

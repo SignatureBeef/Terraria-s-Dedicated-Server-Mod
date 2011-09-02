@@ -2,76 +2,101 @@ using System;
 using System.Text;
 using Terraria_Server;
 using Terraria_Server.Events;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server.Messages
 {
-    public class PasswordResponseMessage : IMessage
+    public class PasswordResponseMessage : MessageHandler
     {
-        public Packet GetPacket()
+		public PasswordResponseMessage ()
+		{
+			ValidStates = SlotState.SERVER_AUTH | SlotState.PLAYER_AUTH;
+		}
+    
+        public override Packet GetPacket()
         {
             return Packet.PASSWORD_RESPONSE;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
+            int start = num - 1;
             String password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             
-			var slot = Netplay.slots[whoAmI];
-            
-			if (slot.state == SlotState.SERVER_AUTH)
+			if (conn.State == SlotState.SERVER_AUTH)
 			{
 				if (password == Netplay.password)
 				{
-					slot.state = SlotState.ACCEPTED;
-					NetMessage.SendData (3, whoAmI);
+					conn.State = SlotState.ACCEPTED;
+					
+					var msg = NetMessage.PrepareThreadInstance ();
+					msg.ConnectionResponse (253);
+					conn.Send (msg.Output);
+					
 					return;
 				}
-				slot.Kick ("Incorrect server password.");
+				conn.Kick ("Incorrect server password.");
 			}
-			else if (slot.state == SlotState.PLAYER_AUTH)
+			else if (conn.State == SlotState.PLAYER_AUTH)
 			{
-				var name = Main.players[whoAmI].Name ?? "";
+				var name = conn.Player.Name ?? "";
 
 				var loginEvent = new PlayerLoginEvent();
-				loginEvent.Slot = slot;
-				loginEvent.Sender = Main.players[whoAmI];
+				loginEvent.Sender = conn.Player;
 				loginEvent.Password = password;
 				Program.server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_REPLY, loginEvent);
 				
 				if (loginEvent.Action == PlayerLoginAction.REJECT)
 				{
-					if ((slot.state & SlotState.DISCONNECTING) == 0)
-						slot.Kick ("Incorrect password for user: " + (name ?? ""));
+					if ((conn.State & SlotState.DISCONNECTING) == 0)
+						conn.Kick ("Incorrect password for user: " + (name ?? ""));
 				}
 				else if (loginEvent.Action == PlayerLoginAction.ASK_PASS)
 				{
-					NetMessage.SendData (37, whoAmI, -1, "");
+					var msg = NetMessage.PrepareThreadInstance ();
+					msg.PasswordRequest ();
+					conn.Send (msg.Output);
 				}
 				else // PlayerLoginAction.ACCEPT
 				{
 					var lower = name.ToLower();
-					int count = 0;
+					bool reserved = false;
+					
+					conn.Queue = (int)loginEvent.Priority;
+					
 					foreach (var otherPlayer in Main.players)
 					{
-						var otherSlot = Netplay.slots[otherPlayer.whoAmi];
-						if (count++ != whoAmI && otherPlayer.Name != null
-							&& lower == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
+						//var otherSlot = Netplay.slots[otherPlayer.whoAmi];
+						var otherConn = otherPlayer.Connection;
+						if (otherPlayer.Name != null
+							&& lower == otherPlayer.Name.ToLower()
+							&& otherConn != null
+							&& otherConn.State >= SlotState.CONNECTED)
 						{
-							otherSlot.Kick ("Replaced by new connection.");
+							if (! reserved)
+							{
+								reserved = SlotManager.HandoverSlot (otherConn, conn);
+							}
+							otherConn.Kick ("Replaced by new connection.");
 						}
 					}
 
-					slot.state = SlotState.SENDING_WORLD;
+					//conn.State = SlotState.SENDING_WORLD;
 					
-					NetMessage.SendData (4, -1, whoAmI, name, whoAmI); // broadcast player data now
+					if (! reserved) // reserved slots get assigned immediately during the kick
+					{
+						SlotManager.Schedule (conn, conn.Queue);
+					}
+					
+					//NetMessage.SendData (4, -1, whoAmI, name, whoAmI); // broadcast player data now
 					
 					// replay packets from side buffer
-					slot.conn.ProcessSideBuffer ();
+					//conn.conn.ProcessSideBuffer ();
 					//var buf = NetMessage.buffer[whoAmI];
 					//NetMessage.CheckBytes (whoAmI, buf.sideBuffer, ref buf.sideBufferBytes, ref buf.sideBufferMsgLen);
 					//buf.ResetSideBuffer ();
 					
-					NetMessage.SendData (7, whoAmI); // continue with world data
+					//NetMessage.SendData (7, whoAmI); // continue with world data
 				}
 			}
 		}

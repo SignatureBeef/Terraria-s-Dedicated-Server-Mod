@@ -2,14 +2,14 @@ using System;
 
 namespace Terraria_Server.Messages
 {
-	public class NPCAddBuffMessage : IMessage
+	public class NPCAddBuffMessage : SlotMessageHandler
 	{
-		public Packet GetPacket()
+		public override Packet GetPacket()
 		{
 			return Packet.NPC_ADD_BUFF;
 		}
 	
-		public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+		public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
 		{
 			var npcId = BitConverter.ToInt16 (readBuffer, num); num += 2;
 			var type = readBuffer[num++];

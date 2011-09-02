@@ -1,15 +1,15 @@
-﻿using System;
+using System;
 
 namespace Terraria_Server.Messages
 {
-    public class PlayerChestUpdate : IMessage
+    public class PlayerChestUpdate : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.PLAYER_CHEST_UPDATE;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int inventoryIndex = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;

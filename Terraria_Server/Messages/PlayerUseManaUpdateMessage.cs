@@ -1,18 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
 namespace Terraria_Server.Messages
 {
-    public class PlayerUseManaUpdateMessage : IMessage
+    public class PlayerUseManaUpdateMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.PLAYER_USE_MANA_UPDATE;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             int playerIndex = readBuffer[num];
             

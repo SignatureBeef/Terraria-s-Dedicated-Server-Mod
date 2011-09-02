@@ -3,14 +3,14 @@ using Terraria_Server.Shops;
 
 namespace Terraria_Server.Messages
 {
-	public class ChestUnlockMessage : IMessage
+	public class ChestUnlockMessage : SlotMessageHandler
 	{
-		public Packet GetPacket()
+		public override Packet GetPacket()
 		{
 			return Packet.CHEST_UNLOCK;
 		}
 	
-		public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+		public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
 		{
 			byte playerId = readBuffer[num++];
 			

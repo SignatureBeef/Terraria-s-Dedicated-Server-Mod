@@ -3,14 +3,14 @@ using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
 {
-	public class PlayerAddBuffMessage : IMessage
+	public class PlayerAddBuffMessage : SlotMessageHandler
 	{
-		public Packet GetPacket()
+		public override Packet GetPacket()
 		{
 			return Packet.PLAYER_ADD_BUFF;
 		}
 	
-		public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+		public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
 		{
 			var playerId = readBuffer[num++];
 			var type = readBuffer[num++];

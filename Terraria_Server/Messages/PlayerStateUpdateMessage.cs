@@ -9,14 +9,14 @@ using Terraria_Server.Definitions;
 
 namespace Terraria_Server.Messages
 {
-    public class PlayerStateUpdateMessage : IMessage
+    public class PlayerStateUpdateMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.PLAYER_STATE_UPDATE;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
             if (readBuffer[num++] != whoAmI)
             {

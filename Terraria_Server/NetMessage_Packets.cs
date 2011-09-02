@@ -200,7 +200,7 @@ namespace Terraria_Server
 		}
 
 		
-#if TEST_COMPRESSION
+//#if TEST_COMPRESSION
 		private int TileSize (TileData tile)
 		{
 			int count = 1;
@@ -248,9 +248,9 @@ namespace Terraria_Server
 			if (tile.Lava != last.Lava)       flags |= 16;
 			if (active)
 			{
-				if (last.Type != type) flags |= 32;
+				if (last.Type != type || (flags & 1) != 0) flags |= 32;
 				 
-				if (Main.tileFrameImportant [type] && (last.FrameX != tile.FrameX || last.FrameY != tile.FrameY))
+				if (Main.tileFrameImportant [type] && (last.FrameX != tile.FrameX || last.FrameY != tile.FrameY || (flags & 1) != 0))
 				{
 					flags |= 64;
 				}
@@ -348,7 +348,7 @@ namespace Terraria_Server
 			
 			return count;
 		}
-#endif
+//#endif
 
 		public void SendTileRow (int numColumns, int firstColumn, int row)
 		{

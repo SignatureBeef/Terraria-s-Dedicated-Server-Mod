@@ -19,7 +19,7 @@ namespace Terraria_Server
         private const bool DEFAULT_WHITE_LIST = false;
         private const String DEFAULT_WORLD = "world1.wld";
         private const String DEFAULT_PID_FILE = "";
-        private const bool DEFAULT_SIMPLE_LOOP = false;
+        private const bool DEFAULT_SIMPLE_LOOP = true;
         private const bool DEFAULT_HACKED_DATA = false;
         private const bool DEFAULT_ALLOW_EXPLOSIONS = true;
 
@@ -73,8 +73,13 @@ namespace Terraria_Server
             temp = RConHashNonce;
             temp = LogRotation;
             temp = SpawnNPCMax;
+<<<<<<< HEAD
             temp = AllowExplosions;
             temp = RejectedItems;
+=======
+            temp = OverlimitSlots;
+            temp = BufferLiquidUpdates;
+>>>>>>> e6bd2dc6ad0ee889dc82a8c134a65eb5b7ea05b8
         }
 
         public int MaxPlayers
@@ -399,14 +404,14 @@ namespace Terraria_Server
         
 		public string RConBindAddress
 		{
-			get { return Program.properties.getValue ("rcon-bind-address", "127.0.0.1:7023"); }
-			set { Program.properties.setValue ("rcon-bind-address", value); }
+			get { return getValue ("rcon-bind-address", "127.0.0.1:7023"); }
+			set { setValue ("rcon-bind-address", value); }
 		}
 		
 		public string RConHashNonce
 		{
 			get {
-				var val = Program.properties.getValue ("rcon-hash-nonce");
+				var val = getValue ("rcon-hash-nonce");
 				if (val != null)
 					return val;
 				
@@ -414,7 +419,7 @@ namespace Terraria_Server
 				(new Random ((int) DateTime.Now.Ticks)).NextBytes (bytes);
 				val = string.Format ("rcon_{0:x2}{1:x2}{2:x2}{3:x2}", bytes[0], bytes[1], bytes[2], bytes[3]);
 				
-				Program.properties.setValue ("rcon-hash-nonce", val);
+				setValue ("rcon-hash-nonce", val);
 				return val;
 			}
 			set
@@ -425,8 +430,8 @@ namespace Terraria_Server
 		
 		public bool LogRotation
 		{
-			get { return Program.properties.getValue ("log-rotation", true); }
-			set { Program.properties.setValue ("log-rotation", value); }
+			get { return getValue ("log-rotation", true); }
+			set { setValue ("log-rotation", value); }
 		}
 		
 		public int SpawnNPCMax
@@ -445,6 +450,18 @@ namespace Terraria_Server
 		{
             get { return getValue(REJECT_ITEMS, ""); }
             set { setValue(REJECT_ITEMS, value); }
+		}
+		
+		public int OverlimitSlots
+		{
+			get { return getValue ("overlimit-slots", 1); }
+			set { setValue ("overlimit-slots", value); }
+		}
+		
+		public bool BufferLiquidUpdates
+		{
+			get { return getValue ("buffer-liquid-updates", false); }
+			set { setValue ("buffer-liquid-updates", value); }
 		}
 		
     }

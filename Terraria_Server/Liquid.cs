@@ -4,7 +4,7 @@ using Terraria_Server.WorldMod;
 
 namespace Terraria_Server
 {
-    public class Liquid
+    public struct Liquid //let's hope the change to struct doesn't break anything
     {
         public static int skipCount = 0;
         public static int stuckCount = 0;
@@ -106,7 +106,7 @@ namespace Terraria_Server
                                         num12 = (int)b;
                                     }
                                     TileRef expr_25A = Main.tile.At(num9, num10 + 1);
-                                    expr_25A.SetLiquid ((byte) (expr_25A.Liquid + (byte)num12));
+                                    expr_25A.AddLiquid ((byte)num12);
                                     b -= (byte)num12;
                                     if (b <= 0)
                                     {
@@ -229,7 +229,7 @@ namespace Terraria_Server
                     b = Main.tile.At(this.x, this.y).Liquid;
                 }
                 TileRef expr_16F = Main.tile.At(this.x, this.y);
-                expr_16F.SetLiquid ((byte) (expr_16F.Liquid - b));
+                expr_16F.AddLiquid (-b);
             }
 
             if (Main.tile.At(this.x, this.y).Liquid == 0)
@@ -279,9 +279,9 @@ namespace Terraria_Server
                     num = (float)Main.tile.At(this.x, this.y).Liquid;
                 }
                 TileRef expr_42E = Main.tile.At(this.x, this.y);
-                expr_42E.SetLiquid ((byte) (expr_42E.Liquid - (byte)num));
+                expr_42E.AddLiquid (- (byte)num);
                 TileRef expr_455 = Main.tile.At(this.x, this.y + 1);
-                expr_455.SetLiquid ((byte) (expr_455.Liquid + (byte)num));
+                expr_455.AddLiquid (+ (byte)num);
                 Main.tile.At(this.x, this.y + 1).SetLava (Main.tile.At(this.x, this.y).Lava);
                 Liquid.AddWater(this.x, this.y + 1);
                 Main.tile.At(this.x, this.y + 1).SetSkipLiquid (true);
@@ -737,6 +737,11 @@ namespace Terraria_Server
 
                 if (Liquid.panicMode)
                 {
+                    try
+                    {
+                        Terraria_Server.Networking.LiquidUpdateBuffer.ClearQueue ();
+                        NetMessage.DisableLiquidUpdates = true;
+                    
                     int num = 0;
                     while (Liquid.panicY >= 3 && num < 5)
                     {
@@ -748,7 +753,8 @@ namespace Terraria_Server
                             ProgramLog.Log ("Water has been settled.");
                             Liquid.panicCounter = 0;
                             Liquid.panicMode = false;
-                            WorldModify.WaterCheck();
+                            using (var prog = new ProgressLogger (Main.maxTilesX - 2, "Performing water check"))
+                                WorldModify.WaterCheck (prog);
                             for (int i = 0; i < 255; i++)
                             {
                                 for (int j = 0; j < Main.maxSectionsX; j++)
@@ -762,6 +768,12 @@ namespace Terraria_Server
                         }
                     }
                     return;
+                    
+                    }
+                    finally
+                    {
+                        NetMessage.DisableLiquidUpdates = false;
+                    }
                 }
             }
 

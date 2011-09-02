@@ -1,6 +1,8 @@
 using System;
 using System.Net.Sockets;
 using System.Collections.Generic;
+using System.Threading;
+using System.Diagnostics;
 
 using Terraria_Server.Logging;
 
@@ -11,38 +13,86 @@ namespace Terraria_Server.Networking
 		int assignedSlot = -1;
 		int messageLength = 0;
 		int indexInAll = -1;
+		new volatile int timeout = 0;
 		
-		byte[] sideBuffer;
-		int    sideBytes;
-		int    sideLength;
+//		byte[] sideBuffer;
+//		int    sideBytes;
+//		int    sideLength;
 		
-		volatile SlotState state = SlotState.VACANT;
+		volatile SlotState state = SlotState.CONNECTED;
+		
+		static Stopwatch time = new Stopwatch ();
 		
 		public SlotState State
 		{
 			get { return state; }
-			set { state = value; }
+			set
+			{
+				state = value;
+				if (state == SlotState.PLAYING)
+				{
+					joinedAt = time.Elapsed;
+				}
+			}
+		}
+		
+		TimeSpan connectedAt;
+		TimeSpan joinedAt;
+		
+		public TimeSpan Age
+		{
+			get
+			{
+				return time.Elapsed - connectedAt;
+			}
+		}
+		
+		public TimeSpan PlayTime
+		{
+			get
+			{
+				if (joinedAt != default(TimeSpan))
+					return time.Elapsed - joinedAt;
+				else
+					return TimeSpan.FromSeconds (0);
+			}
 		}
 		
 		public int SlotIndex
 		{
 			get { return assignedSlot; }
-			internal set { assignedSlot = value; }
 		}
+		
+		public int Queue { get; internal set; }
+		public int IndexInQueue { get; internal set; }
+		
+		public Player Player { get; set; }
+		
+		public int CompressionVersion { get; set; }
 		
 		public static List<ClientConnection> All { get; private set; }
 		
 		static ClientConnection ()
 		{
+			time.Start();
+			
 			All = new List<ClientConnection> ();
+			
+			var thread = new ProgramThread ("TmoL", TimeoutLoop);
+			thread.IsBackground = true;
+			thread.Start ();
 		}
 		
 		public ClientConnection (Socket socket, int slot) : base(socket)
 		{
 			//var buf = NetMessage.buffer[id];
 			//socket.SendBufferSize = 128000;
-			assignedSlot = slot;
+			connectedAt = time.Elapsed;
+			
+			if (slot >= 0) AssignSlot (slot);
+			
 			socket.LingerState = new LingerOption (true, 10);
+			
 			lock (All)
 			{
 				indexInAll = All.Count;
@@ -56,13 +106,23 @@ namespace Terraria_Server.Networking
 			base.Send (bytes);
 		}
 		
-		public void ProcessSideBuffer ()
+		public bool AssignSlot (int id)
 		{
-			DecodeMessages (sideBuffer, ref sideBytes, ref sideLength);
-			sideBuffer = null;
-			sideBytes = 0;
-			sideLength = 0;
+			if (Interlocked.CompareExchange (ref assignedSlot, id, -1) == -1)
+			{
+				txBuffer = new byte [16384];
+				return true;
+			}
+			return false;
 		}
+		
+//		public void ProcessSideBuffer ()
+//		{
+//			DecodeMessages (sideBuffer, ref sideBytes, ref sideLength);
+//			sideBuffer = null;
+//			sideBytes = 0;
+//			sideLength = 0;
+//		}
 		
 		protected override void ProcessRead ()
 		{
@@ -81,14 +141,27 @@ namespace Terraria_Server.Networking
 		
 		protected override void HandleClosure (SocketError err)
 		{
-			if (assignedSlot >= 0)
+			state = SlotState.SHUTDOWN;
+			
+			var slot = Interlocked.Exchange (ref assignedSlot, -2);
+			if (slot >= 0)
 			{
-				ProgramLog.Users.Log ("{0} @ {1}: connection closed ({2}).", RemoteAddress, assignedSlot, err);
-				Netplay.slots[assignedSlot].Reset ();
-				assignedSlot = -1;
+				ProgramLog.Users.Log ("{0} @ {1}: connection closed ({2}).", RemoteAddress, slot, err);
+				SlotManager.FreeSlot (slot);
+				//Netplay.slots[slot].Reset ();
 			}
 			else
+			{
+				SlotManager.RemoveFromQueues (this);
 				ProgramLog.Users.Log ("{0}: connection closed ({1}).", RemoteAddress, err);
+			}
+			
+			var player = Player;
+			if (player != null)
+			{
+				player.Connection = null;
+				player.Active = false;
+			}
 			
 			FreeSectionBuffer ();
 			
@@ -120,50 +193,40 @@ namespace Terraria_Server.Networking
 			}
 		}
 
-#if TEST_COMPRESSION
-		public bool myClient = false;
-		
 		static long _compressed = 0;
 		static long _uncompressed = 0;
-#endif
 
 		protected override ArraySegment<byte> SerializeMessage (Message msg)
 		{
 			switch (msg.kind)
 			{
-				case 3:
+				case 10:
 				{
 					// TODO: optimize further
 					var buf = TakeSectionBuffer ();
 					var sX = (msg.param >> 16) * 200;
 					var sY = (msg.param & 0xffff) * 150;
 					
-#if TEST_COMPRESSION
 					int uncompressed = 0;
-#endif
 					
 					for (int y = sY; y < sY + 150; y++)
 					{
-#if TEST_COMPRESSION
-						if (myClient)
+						if (CompressionVersion == 1)
 						{
 							uncompressed += buf.TileRowSize (200, sX, y);
 							buf.TileRowCompressed (200, sX, y);
 						}
 						else
-#endif
 							buf.SendTileRow (200, sX, y);
 						
 					}
 					
-#if TEST_COMPRESSION
 					if (uncompressed > 0)
 					{
 						var c = System.Threading.Interlocked.Add (ref _compressed, buf.Written);
 						var u = System.Threading.Interlocked.Add (ref _uncompressed, uncompressed);
 						ProgramLog.Debug.Log ("Total section compression ratio: {2:0.00}% ({0:0.0}MB -> {1:0.0}MB)", u/1024.0/1024.0, c/1024.0/1024.0, c * 100.0 / u);
 					}
-#endif
 					
 					sectionBuffer = buf;
 					//ProgramLog.Debug.Log ("{0} @ {1}: Sending section ({2}, {3}) of {4} bytes.", RemoteAddress, assignedSlot, sX, sY, buf.Segment.Count);
@@ -198,6 +261,7 @@ namespace Terraria_Server.Networking
 				}
 				while (totalData >= msgLen + processed && msgLen > 0)
 				{
+					/*
 					if (state == SlotState.PLAYER_AUTH && msgLen > 4
 						&& (Packet) readBuffer[processed + 4] != Packet.PASSWORD_RESPONSE)
 					{
@@ -216,12 +280,15 @@ namespace Terraria_Server.Networking
 						sideBytes += msgLen;
 					}
 					else
+					*/
 					{
-						var slot = assignedSlot;
-						if (slot >= 0)
-							NetMessage.buffer[slot].GetData (readBuffer, processed + 4, msgLen - 4);
-						else
-							return;
+//						var slot = assignedSlot;
+//						if (slot >= 0)
+						Terraria_Server.Messages.MessageDispatcher.Dispatch (this, readBuffer, processed + 4, msgLen - 4);
+//						else
+//							return;
+
+						timeout = 0;
 						
 						if (kicking) return;
 					}
@@ -261,6 +328,10 @@ namespace Terraria_Server.Networking
 
 		public void Kick (string reason, bool announce = true)
 		{
+			if (kicking) return;
+			
+			state = SlotState.KICK;
+			
 			if (announce)
 			{
 				if (assignedSlot >= 0)
@@ -278,14 +349,12 @@ namespace Terraria_Server.Networking
 				var msg = NetMessage.PrepareThreadInstance ();
 				msg.Disconnect (reason);
 				KickAfter (msg.Output);
-
-				state = SlotState.KICK;
 			}
 		}
 		
 		public void SendSection (int x, int y)
 		{
-			Send (new Message { kind = 3, param = (x << 16) | (y & 0xffff) });
+			Send (new Message { kind = 10, param = (x << 16) | (y & 0xffff) });
 		}
 		
 		static Stack<NetMessage> sectionPool = new Stack<NetMessage> ();
@@ -309,6 +378,53 @@ namespace Terraria_Server.Networking
 			buf.Clear();
 			lock (sectionPool)
 				sectionPool.Push (buf);
+		}
+		
+		public void ResetTimeout ()
+		{
+			timeout = 0;
+		}
+		
+		static void TimeoutLoop ()
+		{
+			var conns = new List<ClientConnection> ();
+			var msg = NetMessage.PrepareThreadInstance ();
+			
+			while (true)
+			{
+				Thread.Sleep (5000);
+				
+				lock (All) conns.AddRange (All);
+				
+				foreach (var conn in conns)
+				{
+					conn.timeout += 5;
+					
+					if (conn.State == SlotState.QUEUED)
+					{
+						if (conn.timeout >= Main.timeOut / 2)
+						{
+							msg.Clear ();
+							msg.SendTileLoading (1, SlotManager.WaitingMessage (conn));
+							conn.Send (msg.Output);
+							conn.timeout = 0;
+						}
+					}
+					else if (conn.timeout >= Main.timeOut)
+					{
+						try
+						{
+							conn.Kick ("Timed out.");
+						}
+						catch (Exception e)
+						{
+							ProgramLog.Log (e, "Exception in timeout thread");
+						}
+					}
+				}
+				
+				conns.Clear ();
+			}
 		}
 	}
 }

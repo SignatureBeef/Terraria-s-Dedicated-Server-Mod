@@ -1,19 +1,20 @@
-﻿using System;
+using System;
 using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 
 namespace Terraria_Server.Messages
 {
-    public class WriteSignMessage : IMessage
+    public class WriteSignMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+        public override Packet GetPacket()
         {
             return Packet.WRITE_SIGN;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
+            int start = num - 1;
             int signIndex = (int)BitConverter.ToInt16(readBuffer, num);
             num += 2;
             int x = BitConverter.ToInt32(readBuffer, num);

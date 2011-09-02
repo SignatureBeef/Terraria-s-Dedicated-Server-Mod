@@ -1,19 +1,25 @@
-﻿using System;
+using System;
 using System.Text;
 using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages
 {
-    public class InventoryDataMessage : IMessage
+    public class InventoryDataMessage : SlotMessageHandler
     {
-        public Packet GetPacket()
+		public InventoryDataMessage ()
+		{
+			IgnoredStates = SlotState.ACCEPTED | SlotState.PLAYER_AUTH;
+			ValidStates = SlotState.ASSIGNING_SLOT | SlotState.PLAYING;
+		}
+
+        public override Packet GetPacket()
         {
             return Packet.INVENTORY_DATA;
         }
 
-        public void Process(int start, int length, int num, int whoAmI, byte[] readBuffer, byte bufferData)
+        public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
-            int playerIndex = readBuffer[start + 1];
+            int playerIndex = readBuffer[num++];
             
             if (playerIndex != whoAmI)
             {
@@ -28,9 +34,9 @@ namespace Terraria_Server.Messages
                 Player player = Main.players[playerIndex];
                 lock (player)
                 {
-                    int inventorySlot = (int)readBuffer[start + 2];
-                    int stack = (int)readBuffer[start + 3];
-                    String itemName = Encoding.ASCII.GetString(readBuffer, start + 4, length - 4);
+                    int inventorySlot = (int)readBuffer[num++];
+                    int stack = (int)readBuffer[num++];
+                    String itemName = Encoding.ASCII.GetString (readBuffer, num, length - 4);
                     Item item = Registries.Item.Create(itemName, stack);
                     if (inventorySlot < 44)
                     {
