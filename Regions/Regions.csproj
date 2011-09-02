@@ -55,10 +55,6 @@
     <Compile Include="Region\Selection.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TDSMPermissions\TDSMPermissions\TDSMPermissions.csproj">
-      <Project>{59C00003-40C8-4AB6-914A-AF0499BF82F9}</Project>
-      <Name>TDSMPermissions</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Terraria_Server\Terraria_Server.csproj">
       <Project>{6B42E70C-75CD-410B-9D4A-3EA75B6F5176}</Project>
       <Name>Terraria_Server</Name>
