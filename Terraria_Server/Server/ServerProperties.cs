@@ -73,13 +73,10 @@ namespace Terraria_Server
             temp = RConHashNonce;
             temp = LogRotation;
             temp = SpawnNPCMax;
-<<<<<<< HEAD
             temp = AllowExplosions;
             temp = RejectedItems;
-=======
             temp = OverlimitSlots;
             temp = BufferLiquidUpdates;
->>>>>>> e6bd2dc6ad0ee889dc82a8c134a65eb5b7ea05b8
         }
 
         public int MaxPlayers

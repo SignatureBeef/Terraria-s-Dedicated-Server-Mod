@@ -451,7 +451,7 @@ namespace Terraria_Server.Networking
 				server.notifyOps (string.Format ("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.Name));
 			}
 			
-			sender.Message (255, ChatColour.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);
+			sender.Message (255, ChatColor.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);
 		}
 		
 		internal static void QCommand (Server server, ISender sender, ArgumentList args)
@@ -468,7 +468,7 @@ namespace Terraria_Server.Networking
 					
 					if (queue.Count > 0)
 					{
-						sender.Message (255, ChatColour.Snow, "Queued with priority {0}:", q);
+						sender.Message (255, ChatColor.Snow, "Queued with priority {0}:", q);
 						
 						for (int i = 0; i < queue.count; i++)
 						{
@@ -477,7 +477,7 @@ namespace Terraria_Server.Networking
 							
 							if (conn != null)
 							{
-								sender.Message (255, ChatColour.Beige, "  {0}. {1} from {2}", c, conn.Player.Name, conn.RemoteAddress);
+								sender.Message (255, ChatColor.Beige, "  {0}. {1} from {2}", c, conn.Player.Name, conn.RemoteAddress);
 								c += 1;
 							}
 						}
