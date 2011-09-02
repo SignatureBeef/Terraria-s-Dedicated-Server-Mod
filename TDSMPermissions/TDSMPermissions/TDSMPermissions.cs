@@ -73,6 +73,7 @@ namespace TDSMPermissions
         {
             ProgramLog.Log(base.Name + " enabled.");
             //Register Hooks
+			registerHook(Hooks.PLAYER_PRELOGIN);
 
             //Add Commands
         }
@@ -81,6 +82,11 @@ namespace TDSMPermissions
         {
             ProgramLog.Log(base.Name + " disabled.");
         }
+
+		//public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
+		//{
+		//    base.onPlayerPreLogin(Event);
+		//}
 
 		public void LoadPerms()
 		{
@@ -143,6 +149,11 @@ namespace TDSMPermissions
 								case "permissions":
 									{
 										ProcessPermissions();
+										break;
+									}
+								case "inheritance":
+									{
+										ProcessInheritance();
 										break;
 									}
 								default:
@@ -240,6 +251,25 @@ namespace TDSMPermissions
 			//{ }
 			//color = GetChatColour(sc.TokenText);
 			currentGroup.SetGroupInfo(Default, Prefix, Suffix, ChatColor.Tan);
+		}
+
+		private void ProcessInheritance()
+		{
+			while (sc.NextToken() != Token.TextContent)
+			{
+				if (sc.Token == Token.Outdent)
+					return;
+			}
+			if (sc.TokenText == "permissions")
+			{
+				ProcessPermissions();
+				return;
+			}
+			while (sc.Token != Token.Outdent)
+			{
+				if (sc.Token == Token.TextContent)
+					currentGroup.Inherits.Add(sc.TokenText);
+			}
 		}
 
 		private void ProcessPermissions()

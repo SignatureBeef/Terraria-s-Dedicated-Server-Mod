@@ -24,5 +24,12 @@ namespace Terraria_Server.Permissions
 
 		// this is only for the permissions plugin to set
 		public static Func<Node, Player, bool> isPermittedImpl;
+
+		public void AddNode(String node)
+		{
+			ActiveNodes.Add(node);
+		}
+
+		public static List<String> ActiveNodes;
 	}
 }

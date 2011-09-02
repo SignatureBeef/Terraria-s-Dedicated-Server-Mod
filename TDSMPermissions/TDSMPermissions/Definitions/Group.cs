@@ -17,6 +17,7 @@ namespace TDSMPermissions.Definitions
 			public Color color;
 		}
 
+		public List<String> Inherits;
 		public _GroupInfo GroupInfo;
 		public String Name;
 		public Dictionary<String, bool> permissions;
