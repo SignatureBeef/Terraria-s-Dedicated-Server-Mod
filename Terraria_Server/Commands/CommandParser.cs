@@ -330,6 +330,12 @@ namespace Terraria_Server.Commands
                 .WithDescription ("List connections waiting in queues.")
                 .WithHelpText ("Usage:    q")
                 .Calls (Terraria_Server.Networking.SlotManager.QCommand);
+            
+            AddCommand ("refresh")
+                .WithAccessLevel (AccessLevel.PLAYER)
+                .WithDescription ("Redownload the area around you from the server.")
+                .WithHelpText ("Usage:    refresh")
+                .Calls (Commands.Refresh);
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;

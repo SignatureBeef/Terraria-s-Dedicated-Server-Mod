@@ -1605,5 +1605,35 @@ namespace Terraria_Server.Commands
             sender.sendMessage("Explosions are now " + ((Program.properties.AllowExplosions) ? "allowed" : "disabled") + "!");
             Program.properties.Save();
         }
+        
+		public static void Refresh (Server server, ISender sender, ArgumentList args)
+		{
+			args.ParseNone ();
+			
+			var player = sender as Player;
+			
+			if (player == null)
+			{
+				sender.Message (255, "This is a player command.");
+				return;
+			}
+			
+			if (player.whoAmi < 0) return;
+			
+			if (! player.Op)
+			{
+				var diff = DateTime.Now - player.LastCostlyCommand;
+				
+				if (diff < TimeSpan.FromSeconds (30))
+				{
+					sender.Message (255, "You must wait {0:0} more seconds before using this command.", diff.TotalSeconds);
+					return;
+				}
+				
+				player.LastCostlyCommand = DateTime.Now;
+			}
+			
+			NetMessage.SendTileSquare (player.whoAmi, (int) (player.Position.X/16), (int) (player.Position.Y/16), 32);
+		}
     }
 }

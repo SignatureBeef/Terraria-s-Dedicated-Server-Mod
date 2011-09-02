@@ -300,6 +300,10 @@ namespace Terraria_Server
         public int TeleSpawnY { get; set; }
         public int TeleRetries { get; set; }
         
+        // this is used for commands that cost a lot of cpu or bandwidth
+        // to enforce a time period between uses
+        public DateTime LastCostlyCommand { get; set; }
+        
 		/// <summary>
 		/// Whether the player is male or not
 		/// </summary>
