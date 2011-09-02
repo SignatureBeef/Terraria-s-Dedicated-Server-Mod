@@ -77,6 +77,7 @@ namespace Terraria_Server
             temp = RejectedItems;
             temp = OverlimitSlots;
             temp = BufferLiquidUpdates;
+            temp = StopUpdatesWhenEmpty;
         }
 
         public int MaxPlayers
@@ -461,5 +462,10 @@ namespace Terraria_Server
 			set { setValue ("buffer-liquid-updates", value); }
 		}
 		
+		public bool StopUpdatesWhenEmpty
+		{
+			get { return getValue ("stop-updates-when-empty", true); }
+			set { setValue ("stop-updates-when-empty", value); }
+		}
     }
 }

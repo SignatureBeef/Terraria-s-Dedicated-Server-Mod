@@ -669,6 +669,8 @@ namespace Terraria_Server
 				{
 					Server.rand = new Random((int)DateTime.Now.Ticks);
 				}
+				
+				bool hibernate = properties.StopUpdatesWhenEmpty;
 	
 				if (properties.SimpleLoop)
 				{
@@ -695,7 +697,7 @@ namespace Terraria_Server
 						else
 							nextUpdate = now + updateTime;
 	
-						if (Netplay.anyClients)
+						if (Netplay.anyClients || (hibernate == false))
 						{
 							var start = s.Elapsed;
 							server.Update (s);
@@ -725,7 +727,7 @@ namespace Terraria_Server
 						{
 							leftOver = 1000.0;
 						}
-						if (Netplay.anyClients)
+						if (Netplay.anyClients || (hibernate == false))
 						{
 							server.Update (stopwatch);
 						}
@@ -736,7 +738,7 @@ namespace Terraria_Server
 							if (num10 > 1)
 							{
 								Thread.Sleep(num10);
-								if (!Netplay.anyClients)
+								if (hibernate && !Netplay.anyClients)
 								{
 									leftOver = 0.0;
 									Thread.Sleep(10);
