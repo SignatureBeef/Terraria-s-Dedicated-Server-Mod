@@ -534,9 +534,37 @@ namespace Terraria_Server
 			Event.Sender = player;
 			Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
 		}
-
+		
+		[ThreadStatic]
+		static bool useLiquidUpdateBuffer;
+		
+		[ThreadStatic]
+		static bool disableLiquidUpdates;
+		
+		// only meant to be used from the update thread
+		internal static bool UseLiquidUpdateBuffer
+		{
+			get { return useLiquidUpdateBuffer; }
+			set { useLiquidUpdateBuffer = value; }
+		}
+		
+		// only meant to be used from the update thread
+		internal static bool DisableLiquidUpdates
+		{
+			get { return disableLiquidUpdates; }
+			set { disableLiquidUpdates = value; }
+		}
+		
 		public static void SendWater(int x, int y)
 		{
+			if (disableLiquidUpdates) return;
+			
+			if (useLiquidUpdateBuffer)
+			{
+				LiquidUpdateBuffer.QueueUpdate (x, y);
+				return;
+			}
+			
 			byte[] bytes = null;
 			
 			for (int i = 0; i < 255; i++)

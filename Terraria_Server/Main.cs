@@ -211,11 +211,6 @@ namespace Terraria_Server
 		public static int maxItemUpdates = 10;
 		public static bool autoPass = false;
 		
-        public void SetNetplayers(int mPlayers)
-		{
-			Main.maxNetplayers = mPlayers;
-		}
-				
         public void Initialize()
 		{
 			if (Main.webProtect)

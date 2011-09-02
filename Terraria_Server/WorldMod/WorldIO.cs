@@ -10,6 +10,7 @@ using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
+using Terraria_Server.Networking;
 
 namespace Terraria_Server.WorldMod
 {
@@ -94,6 +95,12 @@ namespace Terraria_Server.WorldMod
 						for (int l = 0; l < Main.maxTilesY; l++)
 						{
 							Main.tile.CreateTileAt(k, l);
+// for testing
+//							if ((l == 25 || l == 26) && k > 4000 && k < 5000)
+//							{
+//								Main.tile.At(k, l).SetLiquid (250);
+//								Liquid.AddWater (k, l);
+//							}
 						}
 					}
 			}
@@ -157,6 +164,9 @@ namespace Terraria_Server.WorldMod
 				}
 			}
 			setWorldSize();
+			
+			LiquidUpdateBuffer.Initialize (Main.maxSectionsX, Main.maxSectionsY);
+			
 			worldCleared = true;
 		}
 

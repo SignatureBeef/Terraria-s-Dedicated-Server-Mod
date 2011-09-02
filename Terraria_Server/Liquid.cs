@@ -737,6 +737,11 @@ namespace Terraria_Server
 
                 if (Liquid.panicMode)
                 {
+                    try
+                    {
+                        Terraria_Server.Networking.LiquidUpdateBuffer.ClearQueue ();
+                        NetMessage.DisableLiquidUpdates = true;
+                    
                     int num = 0;
                     while (Liquid.panicY >= 3 && num < 5)
                     {
@@ -748,7 +753,8 @@ namespace Terraria_Server
                             ProgramLog.Log ("Water has been settled.");
                             Liquid.panicCounter = 0;
                             Liquid.panicMode = false;
-                            WorldModify.WaterCheck();
+                            using (var prog = new ProgressLogger (Main.maxTilesX - 2, "Performing water check"))
+                                WorldModify.WaterCheck (prog);
                             for (int i = 0; i < 255; i++)
                             {
                                 for (int j = 0; j < Main.maxSectionsX; j++)
@@ -762,6 +768,12 @@ namespace Terraria_Server
                         }
                     }
                     return;
+                    
+                    }
+                    finally
+                    {
+                        NetMessage.DisableLiquidUpdates = false;
+                    }
                 }
             }
 
