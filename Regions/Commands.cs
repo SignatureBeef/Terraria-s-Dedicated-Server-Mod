@@ -14,37 +14,65 @@ namespace Regions
         public static void Region(Server server, ISender sender, ArgumentList args)
         {
             /* Meh [START] */
-            if (args.TryPop("select"))
+            try
             {
-                SelectionToolToggle(server, sender, args);
-            }
-            else if (args.TryPop("create"))
-            {
-                if(sender is Player)
+                if (args.TryPop("select"))
                 {
-                    if(Selection.isInSelectionlist(sender as Player))
-                    {
-                        sender.sendMessage("Please finish the region selection first!", 255);
-                        return;
-                    }
+                    SelectionToolToggle(server, sender, args);
                 }
-                Create(server, sender, args);
-            }
-            else if (args.TryPop("user"))
-            {
-                Boolean add = args.TryPop("add");
-                Boolean remove = args.TryPop("remove");
+                else if (args.TryPop("create"))
+                {
+                    if (sender is Player)
+                    {
+                        if (Selection.isInSelectionlist(sender as Player))
+                        {
+                            sender.sendMessage("Please finish the region selection first!", 255);
+                            return;
+                        }
+                    }
+                    Create(server, sender, args);
+                }
+                else if (args.TryPop("user"))
+                {
+                    Boolean add = args.TryPop("add");
+                    Boolean remove = args.TryPop("remove");
 
-                if (add)
-                    AddUser(server, sender, args);
-                else if (remove)
-                    RemoveUser(server, sender, args);
+                    if (add)
+                        AddUser(server, sender, args);
+                    else if (remove)
+                        RemoveUser(server, sender, args);
+                    else
+                        throw new CommandError("Please review your command.");
+                }
+                else if (args.TryPop("list"))
+                {
+                    List(server, sender, args);
+                }
                 else
-                    throw new CommandError("Please review your command.");
-            }
-            else if (args.TryPop("list"))
-            {
-                List(server, sender, args);
+                {
+                    sender.sendMessage("Region Commands: select, create, user, list.", 255);
+                }
+            } catch(CommandError e) {
+                switch (args[0])
+                {
+                    //case "select":
+                    //    break;
+                    case "create":
+                        sender.sendMessage("'region create': Creates a new Region.", 255);
+                        sender.sendMessage("'region create' paremeters: -name <name> -desc <description>", 255);
+                        sender.sendMessage("              (To restrict newplayers add -res)", 255);
+                        sender.sendMessage("               (To restrict NPCs add -npcres)", 255);
+                        break;
+                    case "user":
+                        sender.sendMessage("'region user': Adds or Removes users from a Region Slot.", 255);
+                        sender.sendMessage("'region user' paremeters: -name <name> -slot <region slot>", 255);
+                        sender.sendMessage("              (To allow by ip use -ip instead of -name)", 255);
+                        break;
+                    //case "list":
+                    //    break;
+                    default :
+                        throw e; //Unknown Error or an command with no args
+                }
             }
             /* Meh [END] */
         }
@@ -134,10 +162,11 @@ namespace Regions
             String User = "", IP = "";
             Int32 Slot;
 
-            args.TryParseOne<String>("-ip", out IP); //Optional
+            //args.TryParseOne<String>("-ip", out IP); //Optional
 
             //IP or name?
-            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot))
+            if (args.TryParseTwo<String, Int32>("-name", out User, "-slot", out Slot) || 
+                args.TryParseTwo<String, Int32>("-ip", out User, "-slot", out Slot))
             {
                 String[] exceptions = new String[2];
                 if (User.Length > 0)

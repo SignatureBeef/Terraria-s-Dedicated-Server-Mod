@@ -139,7 +139,6 @@ namespace Terraria_Server.Commands
             if (parseData)
             {
                 server.notifyOps("Reloading properties.", true);
-                Program.properties.Save();
                 Program.properties.Load();
             }
 
