@@ -46,10 +46,11 @@ namespace Terraria_Server.Messages
             }
             else if (type == (int)ProjectileType.HARPOON)
             {
-                if (damage == 99)
-                    ProgramLog.Debug.Log ("{0} sent a HARPOON projectile with damage 99.", Main.players[whoAmI].Name);
-                //Netplay.slots[whoAmI].Kick("Harpoon hack detected.");
-                return;
+                if (Math.Abs (vX) + Math.Abs (vY) < 1e-4) // ideally, we'd want to figure out all projectiles that never have 0 velocity
+                {
+                    Netplay.slots[whoAmI].Kick ("Harpoon cheat detected.");
+                    return;
+                }
             }
 
             float[] aiInfo = new float[Projectile.MAX_AI];
