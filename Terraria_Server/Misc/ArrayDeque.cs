@@ -17,6 +17,8 @@ namespace Terraria_Server.Misc
 		
 		public int Count { get { return count; } }
 		
+		public int Capacity { get { return array.Length; } }
+		
 		public T this [int index]
 		{
 			get

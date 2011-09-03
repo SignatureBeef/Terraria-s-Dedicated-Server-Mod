@@ -196,6 +196,7 @@ namespace Terraria_Server
 			
 			try
 			{
+				ProgramLog.Users.Log ("{0} is connecting...", addr);
 				var conn = new Networking.ClientConnection (client, -1); //ignore the warning
 			}
 			catch (SocketException)
