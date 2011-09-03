@@ -807,7 +807,7 @@ namespace Terraria_Server.Commands
 				{
 					if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
 					{
-						sender.sendMessage (string.Format ("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX, Main.maxTilesY));
+						sender.sendMessage (string.Format ("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX - 1, Main.maxTilesY - 1));
 						return;
 					}
 					

@@ -1324,11 +1324,10 @@ namespace Terraria_Server
                                             Vector2 vector2;
                                             vector2.X = (float)(l * 16);
                                             vector2.Y = (float)(m * 16);
-#if IGNORE_TILE_SQUARE
-                                            if (this.Position.X + (float)this.Width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.Height > vector2.Y && this.Position.Y < vector2.Y + 16f && /*Main.myPlayer == this.Owner && */Main.tile.At(l, m).Active)
-#else
-                                            if (this.Position.X + (float)this.Width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.Height > vector2.Y && this.Position.Y < vector2.Y + 16f && Main.myPlayer == this.Owner && Main.tile.At(l, m).Active)
-#endif
+
+                                            if (this.Position.X + (float)this.Width > vector2.X && this.Position.X < vector2.X + 16f && this.Position.Y + (float)this.Height > vector2.Y && this.Position.Y < vector2.Y + 16f
+                                                && (Program.properties.TileSquareMessages != "accept" || Main.myPlayer == this.Owner)
+                                                && Main.tile.At(l, m).Active)
                                             {
                                                 if (Main.tile.At(l, m).Type == 23)
                                                 {

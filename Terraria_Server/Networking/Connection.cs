@@ -293,7 +293,7 @@ namespace Terraria_Server.Networking
 						
 						case Message.KICK:
 						{
-							if (! queued && args != null && args.conn != null) sendPool.Put (args);
+							if ((! queued) && (! sending) && args != null && args.conn != null) sendPool.Put (args);
 							
 							txList.Clear ();
 							txListBytes = 0;
@@ -428,10 +428,6 @@ namespace Terraria_Server.Networking
 				}
 				else
 				{
-// seems this doesn't even do what I thought it did on mono
-//					if (argz.BytesTransferred != txListBytes)
-//						ProgramLog.Error.Log ("Unexpected write count to {0} ({1} < {2})", RemoteAddress, argz.BytesTransferred, txListBytes);
-					
 					lock (sendQueue)
 					{
 						if (kicking)
@@ -562,7 +558,7 @@ namespace Terraria_Server.Networking
 					kickPool.Put (argz);
 				}
 				
-				kicking = false;
+//				kicking = false;
 			}
 			catch (Exception e)
 			{

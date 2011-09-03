@@ -80,6 +80,7 @@ namespace Terraria_Server
             temp = StopUpdatesWhenEmpty;
             temp = MaxRespawnTime;
             temp = HardcoreDeathAction;
+            temp = TileSquareMessages;
         }
 
         public int MaxPlayers
@@ -476,10 +477,18 @@ namespace Terraria_Server
 			set { setValue ("max-respawn-time", value); }
 		}
 		
+		// TODO: cache this somehow so we weren't doing string comparisons
 		public string HardcoreDeathAction
 		{
 			get { return getValue ("hardcore-death-action", "none"); }
 			set { setValue ("hardcore-death-action", value); }
+		}
+		
+		// TODO: cache this somehow so we weren't doing string comparisons
+		public string TileSquareMessages
+		{
+			get { return getValue ("tile-square-messages", "ignore"); }
+			set { setValue ("tile-square-messages", value); }
 		}
     }
 }
