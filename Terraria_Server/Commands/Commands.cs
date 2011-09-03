@@ -1626,7 +1626,7 @@ namespace Terraria_Server.Commands
 				
 				if (diff < TimeSpan.FromSeconds (30))
 				{
-					sender.Message (255, "You must wait {0:0} more seconds before using this command.", diff.TotalSeconds);
+					sender.Message (255, "You must wait {0:0} more seconds before using this command.", 30.0 - diff.TotalSeconds);
 					return;
 				}
 				

@@ -1367,12 +1367,18 @@ namespace Terraria_Server
 								this.statLife = this.statLifeMax;
 							}
 						}
+						
 						while (this.lifeRegenCount <= -120)
 						{
 							this.lifeRegenCount += 120;
 							this.statLife--;
+#if FALSE
 							if (this.statLife <= 0)
 							{
+								// I think this is meant to be client-side
+								// all other calls to KillMe are client initiated
+								// The stock server does it, but it might be causing problems
+
 								if (this.poisoned)
 								{
 									this.KillMe(10.0, 0, false, " couldn't find the antidote");
@@ -1385,6 +1391,9 @@ namespace Terraria_Server
 									}
 								}
 							}
+#else
+							if (statLife < 0) statLife = 0;
+#endif
 						}
 						this.manaRegenCount += this.manaRegen;
 						while (this.manaRegenCount >= 120)
@@ -2331,6 +2340,20 @@ namespace Terraria_Server
 							this.respawnTimer--;
 							return;
 						}
+						
+						var action = Program.properties.HardcoreDeathAction;
+						if (action == "respawn")
+						{
+							this.respawnTimer = int.MaxValue;
+							this.Respawn ();
+							return;
+						}
+						else if (action == "kick")
+						{
+							Kick ("Rest in peace.");
+							return;
+						}
+						
 						if (this.whoAmi == Main.myPlayer)
 						{
 							this.ghost = true;
@@ -2340,9 +2363,11 @@ namespace Terraria_Server
 					else
 					{
 						this.respawnTimer--;
-						if (this.respawnTimer <= 0 && Main.myPlayer == this.whoAmi)
+						if (this.respawnTimer <= 0 && Program.properties.MaxRespawnTime > 0)
 						{
-							this.Spawn();
+							this.respawnTimer = int.MaxValue;
+							this.Respawn ();
+							//this.Spawn();
 							return;
 						}
 					}
@@ -3262,7 +3287,11 @@ namespace Terraria_Server
             this.legVelocity.X = (float)Main.rand.Next(-20, 21) * 0.1f + (float)(2 * hitDirection);
 
             this.dead = true;
-            this.respawnTimer = 600;
+            var t = Program.properties.MaxRespawnTime;
+            if (t > 0)
+                this.respawnTimer = 60 * t;
+            else
+                this.respawnTimer = 600;
             this.immuneAlpha = 0;
             NetMessage.SendData(25, -1, -1, this.Name + deathText, 255, 225f, 25f, 25f);
 
@@ -5024,6 +5053,22 @@ namespace Terraria_Server
 			TeleSpawnX = -1;
 			TeleSpawnY = -1;
 			System.Threading.Interlocked.CompareExchange (ref this.teleportInProgress, 0, 1);
+		}
+		
+		public bool Respawn ()
+		{
+			if (Main.players[whoAmi] != this) return false;
+			if (System.Threading.Interlocked.CompareExchange (ref this.teleportInProgress, 1, 0) != 0) return false;
+			
+			TeleSpawnX = -1;
+			TeleSpawnY = -1;
+			TeleRetries = 0;
+			
+			var msg = NetMessage.PrepareThreadInstance ();
+			msg.ReceivingPlayerJoined (whoAmi);
+			msg.Send (whoAmi);
+			
+			return true;
 		}
 		
 		public bool Teleport (int tx, int ty)

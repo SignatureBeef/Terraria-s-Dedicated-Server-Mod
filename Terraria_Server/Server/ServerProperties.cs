@@ -78,6 +78,8 @@ namespace Terraria_Server
             temp = OverlimitSlots;
             temp = BufferLiquidUpdates;
             temp = StopUpdatesWhenEmpty;
+            temp = MaxRespawnTime;
+            temp = HardcoreDeathAction;
         }
 
         public int MaxPlayers
@@ -466,6 +468,18 @@ namespace Terraria_Server
 		{
 			get { return getValue ("stop-updates-when-empty", true); }
 			set { setValue ("stop-updates-when-empty", value); }
+		}
+		
+		public int MaxRespawnTime
+		{
+			get { return getValue ("max-respawn-time", 0); }
+			set { setValue ("max-respawn-time", value); }
+		}
+		
+		public string HardcoreDeathAction
+		{
+			get { return getValue ("hardcore-death-action", "none"); }
+			set { setValue ("hardcore-death-action", value); }
 		}
     }
 }

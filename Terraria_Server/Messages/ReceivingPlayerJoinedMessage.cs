@@ -48,6 +48,8 @@ namespace Terraria_Server.Messages
             
             //ProgramLog.Debug.Log ("sx: {0}, sy: {1}, tx: {2}, ty: {3}", player.SpawnX, player.SpawnY, player.TeleSpawnX, player.TeleSpawnY);
             
+            player.respawnTimer = int.MaxValue;
+            
             if (Netplay.slots[whoAmI].state >= SlotState.SENDING_TILES)
             {
                 if (Netplay.slots[whoAmI].state == SlotState.SENDING_TILES)
