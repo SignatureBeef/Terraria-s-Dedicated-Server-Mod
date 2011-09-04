@@ -58,9 +58,9 @@ namespace Regions
                     Boolean remove = args.TryPop("remove");
 
                     if (add)
-                        AddUser(server, sender, args);
+                        AddProjectile(server, sender, args);
                     else if (remove)
-                        RemoveUser(server, sender, args);
+                        RemoveProjectile(server, sender, args);
                     else
                         throw new CommandError("Please review your command.");
                 }
@@ -83,6 +83,10 @@ namespace Regions
                         sender.sendMessage("'region user': Adds or Removes users from a Region Slot.", 255);
                         sender.sendMessage("'region user' paremeters: -name <name> -slot <region slot>", 255);
                         sender.sendMessage("              (To allow by ip use -ip instead of -name)", 255);
+                        break;
+                    case "projectile":
+                        sender.sendMessage("'region projectile': Adds or Removes users from a Region Slot.", 255);
+                        sender.sendMessage("'region projectile' paremeters: add:remove -proj <id:name:*> -slot <region slot>", 255);
                         break;
                     //case "list":
                     //    break;
