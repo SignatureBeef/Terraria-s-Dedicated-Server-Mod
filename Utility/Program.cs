@@ -13,7 +13,7 @@ namespace Terraria_Utilities
      */
     class Program
     {
-        private const String WELCOME_MESSAGE = "This application exists to provide utility functionality for breaking "
+        private const string WELCOME_MESSAGE = "This application exists to provide utility functionality for breaking "
             + "down the\nTerraria Server. Please be aware that many of the facilities existing within\nthis application "
             + "will quickly become outdated and are not intended for long\nterm usage.\n\nPlease enter the namespace "
             + "of the existing utilty you would like to run.";

@@ -16,10 +16,10 @@ namespace Terraria_Utilities.Serialize
     {
         private Type baseType;
         private object baseObject;
-        private String[] ignoreFields;
+        private string[] ignoreFields;
         private bool skipName;
 
-        public DiffSerializer(Type baseType, String[] ignoreFields = null, bool skipName = false)
+        public DiffSerializer(Type baseType, string[] ignoreFields = null, bool skipName = false)
         {
             this.baseType = baseType;
             baseObject = Activator.CreateInstance(baseType);
@@ -50,7 +50,7 @@ namespace Terraria_Utilities.Serialize
         {
             if (ignoreFields != null)
             {
-                foreach (String ignoreField in ignoreFields)
+                foreach (string ignoreField in ignoreFields)
                 {
                     if (member.Name.Equals(ignoreField))
                     {
@@ -61,7 +61,7 @@ namespace Terraria_Utilities.Serialize
             return false;
         }
 
-        private void Process(XmlDictionaryWriter writer, object nodeValue, object baseValue, String name, Type type)
+        private void Process(XmlDictionaryWriter writer, object nodeValue, object baseValue, string name, Type type)
         {
             if (nodeValue != null && !nodeValue.Equals(baseValue))
             {

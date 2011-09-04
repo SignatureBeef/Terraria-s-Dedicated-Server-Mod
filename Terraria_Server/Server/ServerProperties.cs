@@ -7,46 +7,46 @@ namespace Terraria_Server
     public class ServerProperties : PropertiesFile
     {
         private const bool DEFAULT_AUTOMATIC_UPDATES = false;
-        private const String DEFAULT_GREETING = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
-        private const String DEFAULT_MAP_SIZE = "small";
+        private const string DEFAULT_GREETING = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
+        private const string DEFAULT_MAP_SIZE = "small";
         private const int DEFAULT_MAX_PLAYERS = 8;
         private const bool DEFAULT_NPC_DOOR_OPEN_CANCEL = false;
         private const int DEFAULT_PORT = 7777;
-        private const String DEFAULT_SEED = "-1";
-        private const String DEFAULT_SERVER_IP = "0.0.0.0";
+        private const string DEFAULT_SEED = "-1";
+        private const string DEFAULT_SERVER_IP = "0.0.0.0";
         private const bool DEFAULT_USE_CUSTOM_TILES = false;
         private const bool DEFAULT_USE_CUSTOM_GEN_OPTS = false;
         private const bool DEFAULT_WHITE_LIST = false;
-        private const String DEFAULT_WORLD = "world1.wld";
-        private const String DEFAULT_PID_FILE = "";
+        private const string DEFAULT_WORLD = "world1.wld";
+        private const string DEFAULT_PID_FILE = "";
         private const bool DEFAULT_SIMPLE_LOOP = true;
         private const bool DEFAULT_HACKED_DATA = false;
         private const bool DEFAULT_ALLOW_EXPLOSIONS = true;
 
-        private const String AUTOMATIC_UPDATES = "allowupdates";
-        private const String DUNGEON_AMOUNT = "opt-numdungeons";
-        private const String FLOATING_ISLAND_AMOUNT = "opt-num-floating-islands";
-        private const String GREETING = "greeting";
-        private const String MAP_SIZE = "opt-mapsize";
-        private const String MAX_PLAYERS = "maxplayers";
-        private const String MAX_TILES_X = "opt-maxtilesx";
-        private const String MAX_TILES_Y = "opt-maxtilesy";
-        private const String NPC_DOOR_OPEN_CANCEL = "npc-cancelopendoor";
-        private const String PASSWORD = "server-password";
-        private const String PORT = "port";
-        private const String SEED = "opt-seed";
-        private const String SERVER_IP = "serverip";
-        private const String USE_CUSTOM_TILES = "opt-usecustomtiles";
-        private const String USE_CUSTOM_GEN_OPTS = "opt-custom-worldgen";
-        private const String WHITE_LIST = "whitelist";
-        private const String WORLD_PATH = "worldpath";
-        private const String PID_FILE = "pid-file";
-        private const String SIMPLE_LOOP = "simple-loop";
-        private const String HACKED_DATA = "hackeddata";
-        private const String ALLOW_EXPLOSIONS = "explosions";
-        private const String REJECT_ITEMS = "rejectplayeritems";
+        private const string AUTOMATIC_UPDATES = "allowupdates";
+        private const string DUNGEON_AMOUNT = "opt-numdungeons";
+        private const string FLOATING_ISLAND_AMOUNT = "opt-num-floating-islands";
+        private const string GREETING = "greeting";
+        private const string MAP_SIZE = "opt-mapsize";
+        private const string MAX_PLAYERS = "maxplayers";
+        private const string MAX_TILES_X = "opt-maxtilesx";
+        private const string MAX_TILES_Y = "opt-maxtilesy";
+        private const string NPC_DOOR_OPEN_CANCEL = "npc-cancelopendoor";
+        private const string PASSWORD = "server-password";
+        private const string PORT = "port";
+        private const string SEED = "opt-seed";
+        private const string SERVER_IP = "serverip";
+        private const string USE_CUSTOM_TILES = "opt-usecustomtiles";
+        private const string USE_CUSTOM_GEN_OPTS = "opt-custom-worldgen";
+        private const string WHITE_LIST = "whitelist";
+        private const string WORLD_PATH = "worldpath";
+        private const string PID_FILE = "pid-file";
+        private const string SIMPLE_LOOP = "simple-loop";
+        private const string HACKED_DATA = "hackeddata";
+        private const string ALLOW_EXPLOSIONS = "explosions";
+        private const string REJECT_ITEMS = "rejectplayeritems";
 
-        public ServerProperties(String propertiesPath) : base(propertiesPath) { }
+        public ServerProperties(string propertiesPath) : base(propertiesPath) { }
 
         public void pushData()
         {
@@ -108,7 +108,7 @@ namespace Terraria_Server
             }
         }
 
-        public String Greeting
+        public string Greeting
         {
             get
             {
@@ -120,7 +120,7 @@ namespace Terraria_Server
             }
         }
 
-        public String ServerIP
+        public string ServerIP
         {
             get
             {
@@ -132,7 +132,7 @@ namespace Terraria_Server
             }
         }
 
-        public String WorldPath
+        public string WorldPath
         {
             get
             {
@@ -144,11 +144,11 @@ namespace Terraria_Server
             }
         }
 
-        public String Password
+        public string Password
         {
             get
             {
-                return getValue(PASSWORD, String.Empty);
+                return getValue(PASSWORD, string.Empty);
             }
             set
             {
@@ -156,7 +156,7 @@ namespace Terraria_Server
             }
         }
 
-        public String Seed
+        public string Seed
         {
             get
             {
@@ -193,7 +193,7 @@ namespace Terraria_Server
             }
         }
 
-        private int getValue(String key, World.MAP_SIZE mapSize)
+        private int getValue(string key, World.MAP_SIZE mapSize)
         {
             return getValue(key, (int)mapSize);
         }
@@ -212,7 +212,7 @@ namespace Terraria_Server
 
         public int[] getMapSizes()
         {
-            String CustomTiles = base.getValue(MAP_SIZE);
+            string CustomTiles = base.getValue(MAP_SIZE);
 
             if (CustomTiles == null)
             {
@@ -239,11 +239,11 @@ namespace Terraria_Server
             }
         }
 
-        public String MapSize
+        public string MapSize
         {
             get
             {
-                String CustomTiles = getValue(MAP_SIZE, DEFAULT_MAP_SIZE);
+                string CustomTiles = getValue(MAP_SIZE, DEFAULT_MAP_SIZE);
                 if (CustomTiles == null)
                 {
                     return "small";
@@ -368,7 +368,7 @@ namespace Terraria_Server
             }
         }
 
-        public String PIDFile
+        public string PIDFile
         {
             get
             {
@@ -419,7 +419,7 @@ namespace Terraria_Server
 				
 				var bytes = new byte [4];
 				(new Random ((int) DateTime.Now.Ticks)).NextBytes (bytes);
-				val = string.Format ("rcon_{0:x2}{1:x2}{2:x2}{3:x2}", bytes[0], bytes[1], bytes[2], bytes[3]);
+				val = String.Format ("rcon_{0:x2}{1:x2}{2:x2}{3:x2}", bytes[0], bytes[1], bytes[2], bytes[3]);
 				
 				setValue ("rcon-hash-nonce", val);
 				return val;
@@ -447,8 +447,8 @@ namespace Terraria_Server
             get { return getValue(ALLOW_EXPLOSIONS, DEFAULT_ALLOW_EXPLOSIONS); }
             set { setValue(ALLOW_EXPLOSIONS, value); }
 		}
-		
-		public String RejectedItems
+
+        public string RejectedItems
 		{
             get { return getValue(REJECT_ITEMS, ""); }
             set { setValue(REJECT_ITEMS, value); }

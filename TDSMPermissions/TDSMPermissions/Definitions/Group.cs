@@ -12,23 +12,23 @@ namespace TDSMPermissions.Definitions
 		public struct _GroupInfo
 		{
 			public bool Default;
-			public String Prefix;
-			public String Suffix;
+            public string Prefix;
+            public string Suffix;
 			public Color color;
 		}
 
 		public List<String> Inherits;
 		public _GroupInfo GroupInfo;
-		public String Name;
-		public Dictionary<String, bool> permissions;
+        public string Name;
+		public Dictionary<String, Boolean> permissions;
 
-		public Group(String name)
+        public Group(string name)
 		{
 			Name = name;
-			permissions = new Dictionary<String, bool>();
+			permissions = new Dictionary<String, Boolean>();
 		}
 
-		public void SetGroupInfo(bool Default, String prefix, String suffix, Color color)
+        public void SetGroupInfo(bool Default, string prefix, string suffix, Color color)
 		{
 			GroupInfo.Default = Default;
 			GroupInfo.Prefix = prefix;

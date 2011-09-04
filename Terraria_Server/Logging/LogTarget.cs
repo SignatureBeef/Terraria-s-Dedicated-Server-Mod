@@ -172,7 +172,7 @@ namespace Terraria_Server.Logging
 							if (entry.arg == -1) // new one
 							{
 								progs.Add (prog);
-								str = string.Format ("{0}: started.", prog.Message);
+								str = String.Format ("{0}: started.", prog.Message);
 							}
 							else if (entry.arg == -2) // finished one
 							{
@@ -201,7 +201,7 @@ namespace Terraria_Server.Logging
 					backspace = 0;
 					foreach (var prog in progs)
 					{
-						var str = string.Format ("[ {0} ] ", prog.Format());
+						var str = String.Format ("[ {0} ] ", prog.Format());
 						backspace += str.Length;
 						writer.Write (str);
 					}
@@ -288,7 +288,7 @@ namespace Terraria_Server.Logging
 							
 							if (entry.arg == -1) // new one
 							{
-								str = string.Format ("{0}: started.", prog.Message);
+								str = String.Format ("{0}: started.", prog.Message);
 							}
 							else if (entry.arg == -2) // finished one
 							{

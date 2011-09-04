@@ -133,7 +133,7 @@ namespace Terraria_Server.Networking
 			}
 			catch (Exception e)
 			{
-				ProgramLog.Log (e, string.Format ("Error processing read from client {0} @ {1}", RemoteAddress, assignedSlot));
+				ProgramLog.Log (e, String.Format ("Error processing read from client {0} @ {1}", RemoteAddress, assignedSlot));
 				Kick ("Server malfunction, please reconnect.");
 			}
 			//ProgramLog.Log ("After read (total={0}).", recvBytes);

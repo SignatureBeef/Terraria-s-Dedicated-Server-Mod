@@ -94,7 +94,7 @@ namespace Terraria_Server.Networking
 		{
 			socket = sock;
 			RemoteEndPoint = socket.RemoteEndPoint;
-			RemoteAddress = RemoteEndPoint.ToString();
+            RemoteAddress = RemoteEndPoint.ToString();
 		}
 		
 		public bool Active
@@ -345,7 +345,7 @@ namespace Terraria_Server.Networking
 						
 						case Message.KICK:
 						{
-							if ((! queued) && (! sending) && args != null && args.conn != null) sendPool.Put (args);
+							if ((! queued) /*&& (! sending)*/ && args != null && args.conn != null) sendPool.Put (args);
 							
 							//txList.Clear ();
 							//txListBytes = 0;
@@ -478,12 +478,12 @@ namespace Terraria_Server.Networking
 				{
 					lock (sendQueue)
 					{
-						if (kicking)
-						{
-							sendPool.Put (argz);
-							sending = false;
-							return;
-						}
+//						if (kicking)
+//						{
+//							sendPool.Put (argz);
+//							sending = false;
+//							return;
+//						}
 						
 						TxListClear ();
 						

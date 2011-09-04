@@ -4,6 +4,6 @@ namespace Terraria_Server.Events
 {
     public class PlayerDeathEvent : BasePlayerEvent
     {
-        public String DeathMessage { get; set; }
+        public string DeathMessage { get; set; }
     }
 }

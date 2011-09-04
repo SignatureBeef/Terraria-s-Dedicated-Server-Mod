@@ -9,9 +9,9 @@ namespace Terraria_Server.Commands
 {
     public interface ISender
     {
-        String Name { get; }
+        string Name { get; }
         bool Op { get; set; }
-        void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f);
+        void sendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f);
     }
     
 	public static class ISenderExtensions
@@ -28,12 +28,12 @@ namespace Terraria_Server.Commands
 		
 		public static void Message (this ISender recpt, int sender, string fmt, params object[] args)
 		{
-			recpt.sendMessage (string.Format (fmt, args), sender);
+			recpt.sendMessage (String.Format (fmt, args), sender);
 		}
 		
 		public static void Message (this ISender recpt, int sender, Color color, string fmt, params object[] args)
 		{
-			recpt.sendMessage (string.Format (fmt, args), sender, color.R, color.G, color.B);
+			recpt.sendMessage (String.Format (fmt, args), sender, color.R, color.G, color.B);
 		}
 	}
 }

@@ -6,21 +6,21 @@ namespace Terraria_Server.Misc
 {
     public class DataRegister
     {
-        public DataRegister(String Location)
+        public DataRegister(string Location)
         {
             FilePath = Location;
         }
 
         public ArrayList WhiteList { get; set; }
 
-        public String FilePath { get; set; }
+        public string FilePath { get; set; }
 
-        public bool containsException(String exception)
+        public bool containsException(string exception)
         {
             return WhiteList.Contains(exception.Trim().ToLower());
         }
 
-        public void addException(String exception, bool filter = false, int filterLength = -1)
+        public void addException(string exception, bool filter = false, int filterLength = -1)
         {
             if (!WhiteList.Contains(exception.Trim().ToLower()))
             {
@@ -36,7 +36,7 @@ namespace Terraria_Server.Misc
             }
         }
 
-        public bool removeException(String exception)
+        public bool removeException(string exception)
         {
             bool removed = false;
             if (WhiteList.Contains(exception.Trim().ToLower()))
@@ -53,7 +53,7 @@ namespace Terraria_Server.Misc
             for (int i = 0; i < WhiteList.Count; i++)
             {
                 bool contained = false;
-                String exception = WhiteList[i].ToString();
+                string exception = WhiteList[i].ToString();
 
                 if (exception.Length > filterLength)
                 {
@@ -83,10 +83,10 @@ namespace Terraria_Server.Misc
 
             if (File.Exists(FilePath))
             {
-                String[] list = File.ReadAllLines(FilePath);
+                string[] list = File.ReadAllLines(FilePath);
                 if (list != null)
                 {
-                    foreach (String listee in list)
+                    foreach (string listee in list)
                     {
                         if (listee != null && listee.Trim().ToLower().Length > 0)
                         {

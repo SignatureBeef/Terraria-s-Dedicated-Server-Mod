@@ -41,7 +41,7 @@ namespace Terraria_Server.Events
             }
         }
 
-        public Double GetTime
+        public double GetTime
         {
             get
             {

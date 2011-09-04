@@ -10,11 +10,36 @@ namespace Regions
 {
     public class Properties : PropertiesFile
     {
-        public Properties(String propertiesPath) : base(propertiesPath) { }
+        public Properties(string propertiesPath) : base(propertiesPath) { }
 
         public void pushData()
         {
-            //object temp = null;
-        }        
+            object temp = SelectionToolID;
+        }
+
+        /*public List<String> BlockedProjectiles
+        {
+            get
+            {
+                //return getValue("blockedprojectiles", "28,29,37").Split(',').ToList<String>();
+                return getValue("blockedprojectiles", "*").Split(',').ToList<String>();
+            }
+            set
+            {
+                setValue("blockedprojectiles", String.Join(",", value.ToArray()));
+            }
+        }*/
+
+        public int SelectionToolID
+        {
+            get
+            {
+                return getValue("selectionblockid", 0);
+            }
+            set
+            {
+                setValue("selectionblockid", value);
+            }
+        }
     }
 }

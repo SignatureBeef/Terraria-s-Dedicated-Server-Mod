@@ -184,7 +184,7 @@ namespace Terraria_Server
 				if (value == "") return;
 				
 				int i;
-				if (int.TryParse (value, out i))
+				if (Int32.TryParse (value, out i))
 				{
 					var saveName = Name;
 					Registries.NPC.SetDefaults (this, i);
@@ -5737,7 +5737,7 @@ namespace Terraria_Server
 
                 int npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
                 Main.npcs[npcIndex].target = playerIndex;
-                String str = Main.npcs[npcIndex].Name;
+                string str = Main.npcs[npcIndex].Name;
                 if (Main.npcs[npcIndex].type == NPCType.N13_EATER_OF_WORLDS_HEAD)
                 {
                     str = "Eater of Worlds";
@@ -6865,7 +6865,7 @@ namespace Terraria_Server
 		/// Gets chat information based off of environment
 		/// </summary>
 		/// <returns>String to display in chat bubble</returns>
-        public String GetChat()
+        public string GetChat()
         {
             bool merchantActive = false;
             bool nurseActive = false;
@@ -6911,7 +6911,7 @@ namespace Terraria_Server
 						break;
                 }
             }
-            String result = "";
+            string result = "";
 			switch (this.type)
 			{
 				case NPCType.N17_MERCHANT:

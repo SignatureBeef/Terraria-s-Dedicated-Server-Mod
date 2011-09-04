@@ -170,9 +170,9 @@ namespace Terraria_Server.WorldMod
 			worldCleared = true;
 		}
 
-		public static Boolean saveWorld(String savePath, bool resetTime = false)
+        public static bool saveWorld(string savePath, bool resetTime = false)
 		{
-			Boolean success = true;
+            bool success = true;
 
 			if (savePath == null)
 			{
@@ -204,7 +204,7 @@ namespace Terraria_Server.WorldMod
 
 					Stopwatch stopwatch = new Stopwatch();
 					stopwatch.Start();
-					String tempPath = savePath + ".sav";
+                    string tempPath = savePath + ".sav";
 					using (FileStream fileStream = new FileStream(tempPath, FileMode.Create))
 					{
 						using (BinaryWriter binaryWriter = new BinaryWriter(fileStream))
@@ -355,7 +355,7 @@ namespace Terraria_Server.WorldMod
 							if (File.Exists(savePath))
 							{
 								ProgramLog.Log("Backing up world file...");
-								String destFileName = savePath + ".bak";
+                                string destFileName = savePath + ".bak";
 								File.Copy(savePath, destFileName, true);
 								try
 								{
@@ -514,7 +514,7 @@ namespace Terraria_Server.WorldMod
 										int stack = binaryReader.ReadByte();
 										if (stack > 0)
 										{
-											String defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
+                                            string defaults = Item.VersionName(binaryReader.ReadString(), Terraria_Release);
 											Main.chest[l].contents[m] = Registries.Item.Create(defaults, stack);
 										}
 									}
@@ -524,7 +524,7 @@ namespace Terraria_Server.WorldMod
 							{
 								if (binaryReader.ReadBoolean())
 								{
-									String text = binaryReader.ReadString();
+                                    string text = binaryReader.ReadString();
 									int num3 = binaryReader.ReadInt32();
 									int num4 = binaryReader.ReadInt32();
 									if (Main.tile.At(num3, num4).Active && (Main.tile.At(num3, num4).Type == 55 || Main.tile.At(num3, num4).Type == 85))
@@ -540,7 +540,7 @@ namespace Terraria_Server.WorldMod
 							int num5 = 0;
 							while (flag)
 							{
-								String NPCName = binaryReader.ReadString();
+                                string NPCName = binaryReader.ReadString();
 								Main.npcs[num5] = Registries.NPC.Create(NPCName);
 								Main.npcs[num5].Position.X = binaryReader.ReadSingle();
 								Main.npcs[num5].Position.Y = binaryReader.ReadSingle();
@@ -553,7 +553,7 @@ namespace Terraria_Server.WorldMod
 							if (Terraria_Release >= 7)
 							{
 								bool flag2 = binaryReader.ReadBoolean();
-								String a = binaryReader.ReadString();
+                                string a = binaryReader.ReadString();
 								int num6 = binaryReader.ReadInt32();
 								if (!flag2 || !(a == Main.worldName) || num6 != Main.worldID)
 								{

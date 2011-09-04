@@ -6,39 +6,39 @@ using Terraria_Server.Logging;
 using System.IO;
 using Terraria_Server.Misc;
 
-namespace Regions.Region
+namespace Regions.RegionWork
 {
     public class RegionManager
     {
         public List<Region> Regions { get; set; }
-        private String SaveFolder { get; set; }
+        private string SaveFolder { get; set; }
 
-        public RegionManager(String saveFolder)
+        public RegionManager(string saveFolder)
         {
             SaveFolder = saveFolder;
 
             if (!Directory.Exists(saveFolder))
                 Directory.CreateDirectory(saveFolder);
 
-            ProgramLog.Log("Loading Regions.");
+            ProgramLog.Plugin.Log("Loading Regions.");
             Regions = LoadRegions(saveFolder);
-            ProgramLog.Log("Loaded {0} Regions.", Regions.Count);
+            ProgramLog.Plugin.Log("Loaded {0} Regions.", Regions.Count);
         }
 
-        public Boolean SaveRegion(Region region)
+        public bool SaveRegion(Region region)
         {
             FileStream fs = null;
             try
             {
                 if (region != null && region.IsValidRegion())
                 {
-                    String file = SaveFolder + Path.DirectorySeparatorChar + region.Name + ".rgn";
+                    string file = SaveFolder + Path.DirectorySeparatorChar + region.Name + ".rgn";
 
                     if (File.Exists(file))
                         File.Delete(file);
 
                     fs = File.Open(file, FileMode.CreateNew);
-                    String toWrite = region.ToString();
+                    string toWrite = region.ToString();
                     fs.Write(ASCIIEncoding.ASCII.GetBytes(toWrite), 0, toWrite.Length);
                     fs.Flush();
                     fs.Close();
@@ -60,23 +60,24 @@ namespace Regions.Region
             return false;
         }
 
-        public Region LoadRegion(String location)
+        public Region LoadRegion(string location)
         {
             Region region = new Region();
 
-            String Name = "";
-            String Description = "";
+            string Name = "";
+            string Description = "";
             Vector2 Point1 = default(Vector2);
             Vector2 Point2 = default(Vector2);
             List<String> Users = new List<String>();
-            Boolean Restricted = false;
-            Boolean RestrictedNPCs = false;
+            List<String> Projectiles = new List<String>();
+            bool Restricted = false;
+            bool RestrictedNPCs = false;
 
-            foreach (String line in File.ReadAllLines(location))
+            foreach (string line in File.ReadAllLines(location))
             {
                 if (line.Contains(":"))
                 {
-                    String key = line.Split(':')[0];
+                    string key = line.Split(':')[0];
                     switch (key)
                     {
                         case "name":
@@ -91,7 +92,7 @@ namespace Regions.Region
                             }
                         case "point1":
                             {
-                                String[] xy = line.Remove(0, line.IndexOf(":") + 1).Trim().Split(',');
+                                string[] xy = line.Remove(0, line.IndexOf(":") + 1).Trim().Split(',');
                                 float x, y;
                                 if (!(float.TryParse(xy[0], out x) && float.TryParse(xy[1], out y)))
                                     Point1 = default(Vector2);
@@ -101,7 +102,7 @@ namespace Regions.Region
                             }
                         case "point2":
                             {
-                                String[] xy = line.Remove(0, line.IndexOf(":") + 1).Trim().Split(',');
+                                string[] xy = line.Remove(0, line.IndexOf(":") + 1).Trim().Split(',');
                                 float x, y;
                                 if (!(float.TryParse(xy[0], out x) && float.TryParse(xy[1], out y)))
                                     Point2 = default(Vector2);
@@ -111,23 +112,30 @@ namespace Regions.Region
                             }
                         case "users":
                             {
-                                String userlist = line.Remove(0, line.IndexOf(":") + 1).Trim();
+                                string userlist = line.Remove(0, line.IndexOf(":") + 1).Trim();
                                 if(userlist.Length > 0)
                                     Users = userlist.Split(' ').ToList<String>();
                                 break;
                             }
+                        case "projectiles":
+                            {
+                                string userlist = line.Remove(0, line.IndexOf(":") + 1).Trim();
+                                if(userlist.Length > 0)
+                                    Projectiles = userlist.Split(' ').ToList<String>();
+                                break;
+                            }
                         case "restricted":
                             {
-                                String restricted = line.Remove(0, line.IndexOf(":") + 1).Trim();
-                                Boolean restrict;
+                                string restricted = line.Remove(0, line.IndexOf(":") + 1).Trim();
+                                bool restrict;
                                 if (Boolean.TryParse(restricted, out restrict))
                                     Restricted = restrict;
                                 break;
                             }
                         case "npcrestrict":
                             {
-                                String restricted = line.Remove(0, line.IndexOf(":") + 1).Trim();
-                                Boolean restrict;
+                                string restricted = line.Remove(0, line.IndexOf(":") + 1).Trim();
+                                bool restrict;
                                 if (Boolean.TryParse(restricted, out restrict))
                                     RestrictedNPCs = restrict;
                                 break;
@@ -142,16 +150,17 @@ namespace Regions.Region
             region.Point1 = Point1;
             region.Point2 = Point2;
             region.UserList = Users;
+            region.ProjectileList = Projectiles;
             region.Restricted = Restricted;
             region.RestrictedNPCs = RestrictedNPCs;
 
             return region.IsValidRegion() ? region : null;
         }
 
-        public List<Region> LoadRegions(String folder)
+        public List<Region> LoadRegions(string folder)
         {
             List<Region> rgns = new List<Region>();
-            foreach (String file in Directory.GetFiles(folder))
+            foreach (string file in Directory.GetFiles(folder))
             {
                 if (file.ToLower().EndsWith(".rgn"))
                 {
@@ -163,7 +172,7 @@ namespace Regions.Region
             return rgns;
         }
 
-        public Boolean ContainsRegion(String name)
+        public bool ContainsRegion(string name)
         {
             foreach (Region rgn in Regions)
             {
@@ -174,7 +183,7 @@ namespace Regions.Region
             return false;
         }
 
-        public Region GetRegion(String name)
+        public Region GetRegion(string name)
         {
             foreach (Region rgn in Regions)
             {

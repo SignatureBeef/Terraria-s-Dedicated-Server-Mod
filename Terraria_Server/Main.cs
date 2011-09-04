@@ -53,8 +53,8 @@ namespace Terraria_Server
 		public static Liquid[] liquid = new Liquid[Liquid.resLiquid];
 		public static LiquidBuffer[] liquidBuffer = new LiquidBuffer[10000];
 		public static bool dedServ = true;
-		public static String statusText = "";
-		public static String worldName = "";
+        public static string statusText = "";
+        public static string worldName = "";
 		public static int worldID;
 		public static double worldSurface;
 		public static double rockLayer;
@@ -119,8 +119,8 @@ namespace Terraria_Server
 		public static int spawnTileX;
 		public static int spawnTileY;
 		public static bool editSign = false;
-		public static String signText = "";
-		public static String npcChatText = "";
+        public static string signText = "";
+        public static string npcChatText = "";
 		public Chest[] shops = new Chest[6];
 		public static int invasionType = 0;
 		public static double invasionX = 0.0;
@@ -427,7 +427,7 @@ namespace Terraria_Server
 			{
 				return;
 			}
-			String text = "";
+            string text = "";
 			if (Main.invasionSize <= 0)
 			{
 				text = "The goblin army has been defeated!";
@@ -906,7 +906,7 @@ namespace Terraria_Server
 		{
 			try
 			{
-				String requestUriString = "";
+                string requestUriString = "";
 				StringBuilder StringBuilder = new StringBuilder();
 				byte[] array = new byte[8192];
 				HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(requestUriString);
@@ -918,12 +918,12 @@ namespace Terraria_Server
 					num = responseStream.Read(array, 0, array.Length);
 					if (num != 0)
 					{
-						String @String = Encoding.ASCII.GetString(array, 0, num);
+                        string @String = Encoding.ASCII.GetString(array, 0, num);
 						StringBuilder.Append(@String);
 					}
 				}
 				while (num > 0);
-				String a = StringBuilder.ToString();
+                string a = StringBuilder.ToString();
 				if (a == "")
 				{
 					Main.webAuth = true;
@@ -969,7 +969,7 @@ namespace Terraria_Server
 				{
 					if (! Main.ignoreErrors) throw;
 					
-					ProgramLog.Log (e, string.Format ("Player update error, slot={0}, address={1}, name={2}",
+					ProgramLog.Log (e, String.Format ("Player update error, slot={0}, address={1}, name={2}",
 						player.whoAmi, player.IPAddress, player.Name != null ? string.Concat ('"', player.Name, '"') : "<null>"));
 					
 					player.Kick ("Server malfunction, please reconnect.");
@@ -1001,7 +1001,7 @@ namespace Terraria_Server
 						if (! Main.ignoreErrors) throw;
 						
 						var npc = Main.npcs[i];
-						ProgramLog.Log (e, string.Format ("NPC update error, id={0}, type={1}, name={2}",
+						ProgramLog.Log (e, String.Format ("NPC update error, id={0}, type={1}, name={2}",
 						i, npc.Type, npc.Name));
 						
 						Main.npcs[i] = Registries.NPC.Default;
@@ -1027,7 +1027,7 @@ namespace Terraria_Server
 						if (! Main.ignoreErrors) throw;
 						
 						var proj = Main.projectile[i];
-						ProgramLog.Log (e, string.Format ("Projectile update error, i={0}, id={1}, owner={2}, type={3}",
+						ProgramLog.Log (e, String.Format ("Projectile update error, i={0}, id={1}, owner={2}, type={3}",
 							i, proj.identity, proj.Owner, proj.Type));
 						Main.projectile[i] = new Projectile();
 					}
@@ -1051,7 +1051,7 @@ namespace Terraria_Server
 						if (! Main.ignoreErrors) throw;
 						
 						var item = Main.item[i];
-						ProgramLog.Log (e, string.Format ("Projectile update error, i={0}, type={1}, owner={2}, stack={3}",
+						ProgramLog.Log (e, String.Format ("Projectile update error, i={0}, type={1}, owner={2}, stack={3}",
 							i, item.Type, item.Owner, item.Stack));
 						Main.item[i] = new Item();
 					}

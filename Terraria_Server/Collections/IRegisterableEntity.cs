@@ -8,7 +8,7 @@ namespace Terraria_Server.Collections
     public interface IRegisterableEntity : ICloneable
     {
         int Type { get; set; }
-        String Name { get; set; }
+        string Name { get; set; }
         bool Active { get; set; }
     }
 }

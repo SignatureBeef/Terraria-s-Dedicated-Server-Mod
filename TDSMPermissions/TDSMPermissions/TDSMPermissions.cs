@@ -25,8 +25,8 @@ namespace TDSMPermissions
          */
 
         public Properties properties;
-		public String pluginFolder;
-        public String permissionsYML;
+        public string pluginFolder;
+        public string permissionsYML;
 
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
@@ -157,7 +157,7 @@ namespace TDSMPermissions
 
 		private void ProcessIndent()
 		{
-			String tokenText = sc.TokenText;
+            string tokenText = sc.TokenText;
 			if (sc.NextToken() == Token.IndentSpaces)
 				tokenText += sc.TokenText;
 			if (tokenText == "    ")
@@ -179,8 +179,8 @@ namespace TDSMPermissions
 		private void ProcessInfo()
 		{
 			bool Default;
-			String Prefix;
-			String Suffix;
+            string Prefix;
+            string Suffix;
 			Color color;
 			while (sc.TokenText != "default")
 			{
@@ -249,7 +249,7 @@ namespace TDSMPermissions
 						return;
 				}
 				bool toggle;
-				String tokenText;
+                string tokenText;
 				if (sc.TokenText.Contains("-"))
 				{
 					toggle = false;

@@ -7,6 +7,6 @@ namespace Terraria_Server.Events
 {
     public class MessageEvent : CancellableEvent
     {
-        public String Message { get; set; }
+        public string Message { get; set; }
     }
 }

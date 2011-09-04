@@ -7,12 +7,12 @@ namespace Terraria_Server.Permissions
 {
 	public class Node
 	{
-		private String stringNode;
+        private string stringNode;
 
 		// these are stable APIs
 		public string Path { get { return stringNode; } }
 
-		public Node FromPath(String node)
+        public Node FromPath(string node)
 		{
 			return new Node { stringNode = node };
 		}
@@ -25,7 +25,7 @@ namespace Terraria_Server.Permissions
 		// this is only for the permissions plugin to set
 		public static Func<Node, Player, bool> isPermittedImpl;
 
-		public void AddNode(String node)
+        public void AddNode(string node)
 		{
 			ActiveNodes.Add(node);
 		}

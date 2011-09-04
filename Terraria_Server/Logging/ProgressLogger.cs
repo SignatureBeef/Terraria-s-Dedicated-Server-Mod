@@ -64,16 +64,16 @@ namespace Terraria_Server.Logging
 			
 			if (ms < 1000)
 			{
-				return string.Format ("{0:0}ms", ms);
+				return String.Format ("{0:0}ms", ms);
 			}
 			else if (ms < 61000)
 			{
-				return string.Format ("{0:0.000}s", ms / 1000.0);
+				return String.Format ("{0:0.000}s", ms / 1000.0);
 			}
 			else if (ms < 3600 * 1000)
 			{
 				int x = (int)ms;
-				return string.Format ("{0}m {1}s", x / 60000, (x % 60000) / 1000);
+				return String.Format ("{0}m {1}s", x / 60000, (x % 60000) / 1000);
 			}
 			else
 				return ts.ToString();
@@ -84,18 +84,18 @@ namespace Terraria_Server.Logging
 			if (done)
 			{
 				if (verbose)
-					return string.Format ("{0}: done in {1}.", Message, PrettyTimeSpan (RunningTime));
+					return String.Format ("{0}: done in {1}.", Message, PrettyTimeSpan (RunningTime));
 				else
-					return string.Format ("{0}: done.", Message);
+					return String.Format ("{0}: done.", Message);
 			}
 			
 			if (value == -1) value = current;
 			
 			double percent = value * 100.0 / Max;
 			if (verbose)
-				return string.Format ("{0}: {1:0.0}% ({2}/{3})", Message, percent, value, Max);
+				return String.Format ("{0}: {1:0.0}% ({2}/{3})", Message, percent, value, Max);
 			else
-				return string.Format ("{0}: {1:0.0}%", Message, percent);
+				return String.Format ("{0}: {1:0.0}%", Message, percent);
 		}
 		
 		public void Dispose ()

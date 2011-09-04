@@ -21,7 +21,7 @@ namespace Terraria_Server.Messages
         public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
             int start = num - 1;
-            String password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            string password = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             
 			if (conn.State == SlotState.SERVER_AUTH)
 			{

@@ -7,7 +7,7 @@ namespace Terraria_Server.Events
 {
     public class PlayerEditSignEvent : CancellableEvent
     {
-        public String Text { get; set; }
+        public string Text { get; set; }
         public Sign Sign { get; set; }
         public Player Player
         {

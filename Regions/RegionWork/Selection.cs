@@ -5,13 +5,13 @@ using System.Text;
 using Terraria_Server;
 using Terraria_Server.Misc;
 
-namespace Regions.Region
+namespace Regions.RegionWork
 {
     public class Selection
     {
         public static Dictionary<String, Vector2[]> selectionPlayers = new Dictionary<String, Vector2[]>();
 
-        public static Boolean isInSelectionlist(Player player)
+        public static bool isInSelectionlist(Player player)
         {
             return selectionPlayers.ContainsKey(player.Name);
         }

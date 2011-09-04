@@ -32,7 +32,7 @@ namespace Terraria_Server.Messages
             num += 2;
             byte pvpFlag = readBuffer[num++];
 
-            String deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            string deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             bool pvp = (pvpFlag != 0);
 
             var player = Main.players[playerIndex];

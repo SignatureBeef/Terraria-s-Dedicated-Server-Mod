@@ -50,15 +50,15 @@ namespace Terraria_Server
 		}
 		
 		public int whoAmI;
-		public String statusText2;
+        public string statusText2;
 		public int statusCount;
 		public int statusMax;
 		public volatile string remoteAddress;
 		public bool[,] tileSection = new bool[Main.maxTilesX / 200, Main.maxTilesY / 150];
-		public String statusText = "";
+        public string statusText = "";
 		public bool announced;
-		public String name = "Anonymous";
-		public String oldName = "";
+        public string name = "Anonymous";
+        public string oldName = "";
 		public float spamProjectile;
 		public float spamAddBlock;
 		public float spamDelBlock;

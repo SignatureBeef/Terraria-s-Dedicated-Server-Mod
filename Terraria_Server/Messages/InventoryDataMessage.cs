@@ -36,7 +36,7 @@ namespace Terraria_Server.Messages
                 {
                     int inventorySlot = (int)readBuffer[num++];
                     int stack = (int)readBuffer[num++];
-                    String itemName = Encoding.ASCII.GetString (readBuffer, num, length - 4);
+                    string itemName = Encoding.ASCII.GetString(readBuffer, num, length - 4);
                     Item item = Registries.Item.Create(itemName, stack);
                     if (inventorySlot < 44)
                     {

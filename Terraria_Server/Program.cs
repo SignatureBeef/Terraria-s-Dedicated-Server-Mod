@@ -15,7 +15,7 @@ namespace Terraria_Server
 {
 	public class Program
 	{
-		public const String VERSION_NUMBER = "v1.0.6.1";
+        public const string VERSION_NUMBER = "v1.0.6.1";
 
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
@@ -24,12 +24,12 @@ namespace Terraria_Server
 
 		public static Server server;
 
-		public static void Main(String[] args)
+        public static void Main(string[] args)
 		{
 			Thread.CurrentThread.Name = "Main";
             try
             {
-				String MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_TERRARIA_RELEASE + "}) #"
+                string MODInfo = "Terraria's Dedicated Server Mod. (" + VERSION_NUMBER + " {" + Statics.CURRENT_TERRARIA_RELEASE + "}) #"
 					+ Statics.BUILD;
 				try
 				{
@@ -75,10 +75,10 @@ namespace Terraria_Server
 				var logFile = Statics.DataPath + Path.DirectorySeparatorChar + "server.log";
 				ProgramLog.OpenLogFile (logFile);
 
-				String PIDFile = properties.PIDFile.Trim();
+                string PIDFile = properties.PIDFile.Trim();
 				if (PIDFile.Length > 0)
 				{
-					String ProcessUID = Process.GetCurrentProcess().Id.ToString();
+                    string ProcessUID = Process.GetCurrentProcess().Id.ToString();
 					bool Issue = false;
 					if (File.Exists(PIDFile))
 					{
@@ -151,7 +151,7 @@ namespace Terraria_Server
 				using (var prog = new ProgressLogger (1, "Loading projectile definitions"))
 					Collections.Registries.Projectile.Load (Collections.Registries.PROJECTILE_FILE);
 
-				String worldFile = properties.WorldPath;
+                string worldFile = properties.WorldPath;
 				FileInfo file = new FileInfo(worldFile);
 
 				if (!file.Exists)
@@ -169,7 +169,7 @@ namespace Terraria_Server
 					}
 					ProgramLog.Log ("Generating World '{0}'", worldFile);
 
-					String seed = properties.Seed;
+                    string seed = properties.Seed;
 					if (seed == "-1")
 					{
 						seed = new Random().Next(100).ToString();
@@ -275,7 +275,7 @@ namespace Terraria_Server
 				{
 					try
 					{
-						String line = Console.ReadLine().Trim();
+                        string line = Console.ReadLine().Trim();
 						if (line.Length > 0)
 						{
 							commandParser.ParseConsoleCommand(line, server);
@@ -354,7 +354,7 @@ namespace Terraria_Server
 			return true;
 		}
 
-		private static void CreateDirectory(String dirPath)
+        private static void CreateDirectory(string dirPath)
 		{
 			if (!Directory.Exists(dirPath))
 			{
@@ -362,7 +362,7 @@ namespace Terraria_Server
 			}
 		}
 
-		private static bool CreateFile(String filePath)
+        private static bool CreateFile(string filePath)
 		{
 			if (!File.Exists(filePath))
 			{
@@ -389,14 +389,14 @@ namespace Terraria_Server
 			properties.Save();
 		}
 
-		public static void ParseArgs(String[] args)
+        public static void ParseArgs(string[] args)
 		{
 			if (args != null && args.Length > 0)
 			{
 				for (int i = 0; i < args.Length; i++)
 				{
 					if (i == (args.Length - 1)) { break; }
-					String commandMessage = args[i].ToLower().Trim();
+                    string commandMessage = args[i].ToLower().Trim();
 					// 0 for Ops
 					if (commandMessage.Equals("-ignoremessages:0"))
 					{

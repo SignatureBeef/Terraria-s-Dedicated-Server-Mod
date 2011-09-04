@@ -38,7 +38,7 @@ namespace Terraria_Server.Messages
 
             NetMessage.SendData(30, -1, whoAmI, "", playerIndex);
 
-            String message;
+            string message;
             if(player.hostile)
             {
                 message = " has enabled PvP!";

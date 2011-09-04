@@ -187,7 +187,7 @@ namespace Terraria_Server
 			}
 			return result;
 		}
-		public override String ToString()
+        public override string ToString()
 		{
 			CultureInfo currentCulture = CultureInfo.CurrentCulture;
 			return String.Format(currentCulture, "{{X:{0} Y:{1} Width:{2} Height:{3}}}", new object[]

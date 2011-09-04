@@ -31,7 +31,7 @@ namespace Terraria_Server.Messages
 //                return;
 //            }
 
-            String clientName = conn.RemoteAddress.Split(':')[0];
+            string clientName = conn.RemoteAddress.Split(':')[0];
 //
 //            if (Program.server.BanList.containsException(clientName))
 //            {
@@ -47,7 +47,7 @@ namespace Terraria_Server.Messages
 
             if (conn.State == SlotState.CONNECTED)
             {
-                String version = Encoding.ASCII.GetString(readBuffer, num, length - 1);
+                string version = Encoding.ASCII.GetString(readBuffer, num, length - 1);
                 if (!(version == "Terraria" + Statics.CURRENT_TERRARIA_RELEASE))
                 {
                     if (version.Length > 30) version = version.Substring (0, 30);
