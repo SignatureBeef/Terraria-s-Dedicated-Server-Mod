@@ -33,9 +33,13 @@ namespace TDSMPermissions
         public bool explosivesAllowed = false;
         public static TDSMPermissions plugin;
 		private List<Group> groups = new List<Group>();
+		private Dictionary<String, List<String>> users;
 		private Group currentGroup;
 		public string defaultGroup;
         private YamlScanner sc;
+		private bool inUsers;
+		private String currentUser;
+		private List<String> userNodes;
 
 		private bool inGroups = false;
 
@@ -96,51 +100,16 @@ namespace TDSMPermissions
             sc = new YamlScanner();
             sc.SetSource(re);
 
+			inUsers = false;
+
 			while ((to = sc.NextToken()) != Token.EndOfStream)
 			{
 				switch (to)
 				{
-					//case Token.BeginningOfStream:
-					//case Token.BlockMappingBegin:
-					//case Token.LeadingWhiteSpace:
-					//case Token.PlainScalar:
-					//case Token.ImplicitKey:
-					//case Token.Newline:
-					//case Token.EscapeWhiteSpace:
-					//case Token.Directive:
-					//case Token.DirectivesEnd:
-					//case Token.BlockSeqBegin:
-					//case Token.BlockKeyIndicator:
-					//case Token.FlowKeyIndicator:
-					//case Token.OpenBrace:
-					//case Token.CloseBrace:
-					//case Token.OpenBracket:
-					//case Token.CloseBracket:
-					//case Token.PlainEnd:
-					//case Token.NoOp:
-					//case Token.Comment:
-					//case Token.EmptyLine:
-					//case Token.Anchor:
-					//case Token.Alias:
-					//case Token.At:
-					//case Token.Backtick:
-					//case Token.Tag:
-					//case Token.Literal:
-					//case Token.Folded:
-					//    break;
 					case Token.TextContent:
 						{
 							switch (sc.TokenText)
 							{
-								//case "groups":
-								//    {
-								//        while (sc.NextToken() != Token.TextContent)
-								//        {
-								//        }
-								//        currentGroup = new Group(sc.TokenText);
-								//        ProgramLog.Debug.Log("Group name: " + currentGroup.Name);
-								//        break;
-								//    }
 								case "info":
 									{
 										ProcessInfo();
@@ -154,6 +123,10 @@ namespace TDSMPermissions
 								case "inheritance":
 									{
 										ProcessInheritance();
+										break;
+									}
+								case "groups":
+									{
 										break;
 									}
 								default:
@@ -180,20 +153,6 @@ namespace TDSMPermissions
 						break;
 				}
 			}
-			//foreach (Group g in groups)
-			//{
-			//    ProgramLog.Debug.Log("Group info for group " + g.Name + ":");
-			//    ProgramLog.Debug.Log("Default: " + g.GroupInfo.Default);
-			//    ProgramLog.Debug.Log("Prefix: " + g.GroupInfo.Prefix);
-			//    ProgramLog.Debug.Log("Suffix: " + g.GroupInfo.Suffix);
-			//    ProgramLog.Debug.Log("Permissions:");
-			//    foreach (String p in g.permissions.Keys)
-			//    {
-			//        bool value;
-			//        g.permissions.TryGetValue(p, out value);
-			//        ProgramLog.Debug.Log(p + ": " + value);
-			//    }
-			//}
 		}
 
 		private void ProcessIndent()
@@ -206,8 +165,14 @@ namespace TDSMPermissions
 				while (sc.NextToken() != Token.TextContent)
 				{
 				}
-				currentGroup = new Group(sc.TokenText);
-				ProgramLog.Debug.Log("Group name: " + currentGroup.Name);
+				if (!inUsers)
+				{
+					currentGroup = new Group(sc.TokenText);
+				}
+				else
+				{
+					currentUser = sc.TokenText;
+				}
 			}
 		}
 
@@ -249,7 +214,7 @@ namespace TDSMPermissions
 			//ProgramLog.Debug.Log("Color token found");
 			//while (sc.NextToken() != Token.TextContent)
 			//{ }
-			//color = GetChatColour(sc.TokenText);
+			//color = GetChatColor(sc.TokenText);
 			currentGroup.SetGroupInfo(Default, Prefix, Suffix, ChatColor.Tan);
 		}
 
@@ -268,7 +233,9 @@ namespace TDSMPermissions
 			while (sc.Token != Token.Outdent)
 			{
 				if (sc.Token == Token.TextContent)
+				{
 					currentGroup.Inherits.Add(sc.TokenText);
+				}
 			}
 		}
 
@@ -293,7 +260,14 @@ namespace TDSMPermissions
 					toggle = true;
 					tokenText = sc.TokenText;
 				}
-				currentGroup.permissions.Add(tokenText, toggle);
+				if (!inUsers)
+				{
+					currentGroup.permissions.Add(tokenText, toggle);
+				}
+				else
+				{
+					userNodes.Add(tokenText);
+				}
 				ProgramLog.Debug.Log("Node " + tokenText + " added with " + toggle + " status");
 			}
 			groups.Add(currentGroup);
