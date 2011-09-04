@@ -49,7 +49,7 @@
   <ItemGroup>
     <Compile Include="Commands\PluginCommands.cs" />
     <Compile Include="Properties.cs" />
-    <Compile Include="TDSMPlugin.cs" />
+    <Compile Include="TDSM_Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

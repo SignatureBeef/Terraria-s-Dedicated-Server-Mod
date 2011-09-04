@@ -1,18 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using Terraria_Server.Plugin;
-using Terraria_Server.Commands;
-using Terraria_Server.Logging;
-using Terraria_Server.Events;
-using Terraria_Server.Misc;
-using Terraria_Server.Definitions.Tile;
+using System.Collections.Generic;
+
 using Terraria_Server;
-using System.IO;
-using Regions.RegionWork;
+using Terraria_Server.Misc;
+using Terraria_Server.Plugin;
+using Terraria_Server.Events;
+using Terraria_Server.Logging;
+using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
 using Terraria_Server.Permissions;
+using Terraria_Server.Definitions.Tile;
+
+using Regions.RegionWork;
 using Regions.Nodes;
 
 namespace Regions
@@ -53,7 +55,7 @@ namespace Regions
             base.Description = "A region plugin for TDSM";
             base.Author = "DeathCradle";
             base.Version = "1";
-            base.TDSMBuild = 32;
+            base.TDSMBuild = 33;
 
             if (!Directory.Exists(RegionsFolder))
                 Directory.CreateDirectory(RegionsFolder);
@@ -91,7 +93,7 @@ namespace Regions
             TilePlace       = new TilePlace     ().GetNode();
             ProjectileUse   = new ProjectileUse ().GetNode();
 
-            ProgramLog.Log("Regions for TDSM #{0} enabled.", base.TDSMBuild);
+            ProgramLog.Plugin.Log("Regions for TDSM #{0} enabled.", base.TDSMBuild);
         }
 
         public override void Disable()
@@ -101,7 +103,7 @@ namespace Regions
 
         public static void Log(String fmt, params object[] args)
         {
-            ProgramLog.Plugin.Log(fmt, args);
+            ProgramLog.Plugin.Log("[Regions] " + fmt, args);
         }
         
         #region Events

@@ -323,9 +323,16 @@ namespace Regions
                 }
 
                 if (Count > 0)
-                    sender.sendMessage(string.Join("{0} projectiles were blocked in Region '{1}'",
-                        ((projectiles.Equals("*")) ? "All" : Count.ToString()), region.Name),
-                        255, 0, 255);
+                {
+                    if (Regions.regionManager.SaveRegion(region))
+                    {
+                        String Proj = (projectiles == "*") ? "All" : Count.ToString();
+                        sender.sendMessage(string.Join("{0} projectiles were blocked in Region '{1}'", Proj, region.Name),
+                            255, 0, 255);
+                    }
+                    else
+                        sender.sendMessage(string.Join("Failed to save Region '{0}'", region.Name));
+                }
                 else
                     sender.sendMessage(string.Join("No projectiles specified to add to Region '{0}'", region.Name));
             }
@@ -368,9 +375,16 @@ namespace Regions
                 }
 
                 if (Count > 0)
-                    sender.sendMessage(string.Join("{0} projectiles were unblocked in Region '{1}'", 
-                        ((projectiles.Equals("*")) ? "All" : Count.ToString()), region.Name),
-                        255, 0, 255);
+                {
+                    if (Regions.regionManager.SaveRegion(region))
+                    {
+                        String Proj = (projectiles == "*") ? "All" : Count.ToString();
+                        sender.sendMessage(string.Join("{0} projectiles were unblocked in Region '{1}'", Proj, region.Name),
+                            255, 0, 255);
+                    }
+                    else
+                        sender.sendMessage(string.Join("Failed to save Region '{0}'", region.Name));
+                }
                 else
                     sender.sendMessage(string.Join("No projectiles specified to remove from Region '{0}'", region.Name));
             }
