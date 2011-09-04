@@ -21,7 +21,7 @@ namespace Regions
 {
     public class Regions : Plugin
     {
-        public const Int32 SelectorItem = 0;
+        public static Int32 SelectorItem = 0;
         public static Boolean UsingPermissions = false;
 
         public static String RegionsFolder
@@ -64,6 +64,8 @@ namespace Regions
             rProperties.Load();
             rProperties.pushData();
             rProperties.Save();
+
+            SelectorItem = rProperties.SelectionToolID;
 
             regionManager = new RegionManager(DataFolder);
 

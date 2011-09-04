@@ -29,5 +29,17 @@ namespace Regions
                 setValue("blockedprojectiles", string.Join(",", value.ToArray()));
             }
         }*/
+
+        public Int32 SelectionToolID
+        {
+            get
+            {
+                return getValue("selectionblockid", 0);
+            }
+            set
+            {
+                setValue("selectionblockid", value);
+            }
+        }
     }
 }
