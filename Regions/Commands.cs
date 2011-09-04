@@ -40,11 +40,14 @@ namespace Regions
                 {
                     Boolean add = args.TryPop("add");
                     Boolean remove = args.TryPop("remove");
+                    Boolean clear = args.TryPop("clear");
 
                     if (add)
                         AddUser(server, sender, args);
                     else if (remove)
                         RemoveUser(server, sender, args);
+                    else if (clear)
+                        ClearRegion(server, sender, args);
                     else
                         throw new CommandError("Please review your command.");
                 }
@@ -56,11 +59,14 @@ namespace Regions
                 {
                     Boolean add = args.TryPop("add");
                     Boolean remove = args.TryPop("remove");
+                    Boolean clear = args.TryPop("clear");
 
                     if (add)
                         AddProjectile(server, sender, args);
                     else if (remove)
                         RemoveProjectile(server, sender, args);
+                    else if (clear)
+                        ClearProjectiles(server, sender, args);
                     else
                         throw new CommandError("Please review your command.");
                 }
@@ -80,13 +86,13 @@ namespace Regions
                         sender.sendMessage("               (To restrict NPCs add -npcres)", 255);
                         break;
                     case "user":
-                        sender.sendMessage("'region user': Adds or Removes users from a Region Slot.", 255);
-                        sender.sendMessage("'region user' paremeters: -name <name> -slot <region slot>", 255);
+                        sender.sendMessage("'region user': Adds, Removes or Clears users from a Region Slot.", 255);
+                        sender.sendMessage("'region user' paremeters: add:remove:clear -name <name> -slot <region slot>", 255);
                         sender.sendMessage("              (To allow by ip use -ip instead of -name)", 255);
                         break;
                     case "projectile":
-                        sender.sendMessage("'region projectile': Adds or Removes users from a Region Slot.", 255);
-                        sender.sendMessage("'region projectile' paremeters: add:remove -proj <id:name:*> -slot <region slot>", 255);
+                        sender.sendMessage("'region projectile': Adds, Removes or Clears users from a Region Slot.", 255);
+                        sender.sendMessage("'region projectile' paremeters: add:remove:clear -proj <id:name:*> -slot <region slot>", 255);
                         break;
                     //case "list":
                     //    break;
@@ -173,7 +179,7 @@ namespace Regions
                 sender.sendMessage(string.Format("Slot {0} : {1} [ {2} ] ({3},{4})", i, Regions.regionManager.Regions[i].Name, 
                     Regions.regionManager.Regions[i].Description,
                         Regions.regionManager.Regions[i].Point1.X, Regions.regionManager.Regions[i].Point1.Y), 
-                        255, 255, 0, 0);
+                        255, 255);
             }
         }
 
@@ -224,9 +230,14 @@ namespace Regions
 
                 if (usersAdded > 0)
                 {
-                    sender.sendMessage(string.Format("{0} users were added to {1}", usersAdded, region.Name),
-                        255, 0, 255, 0);
-                    Regions.Log(sender.Name + " created region {0} with {1} user/s", region.Name, usersAdded);
+                    if (Regions.regionManager.SaveRegion(region))
+                    {
+                        sender.sendMessage(string.Format("{0} users were added to {1}", usersAdded, region.Name),
+                        255, 0, 255);
+                        Regions.Log(sender.Name + " created region {0} with {1} user/s", region.Name, usersAdded);
+                    }
+                    else
+                        sender.sendMessage(string.Join("Failed to save Region '{0}'", region.Name));
                 }
                 else
                     throw new CommandError("A user was not able to be added to a Region.");
@@ -283,8 +294,15 @@ namespace Regions
                 }
 
                 if (usersRemoved > 0)
-                    sender.sendMessage(string.Format("{0} users were added to {1}", usersRemoved, region.Name),
-                        255, 0, 255, 0);
+                {
+                    if (Regions.regionManager.SaveRegion(region))
+                    {
+                        sender.sendMessage(string.Format("{0} users were added to {1}", usersRemoved, region.Name),
+                        255, 0, 255);
+                    }
+                    else
+                        sender.sendMessage(string.Join("Failed to save Region '{0}'", region.Name));
+                }                   
                 else
                     throw new CommandError("A user was not able to be removed from a Region.");
             }
@@ -390,6 +408,66 @@ namespace Regions
             }
             else
                 throw new CommandError("Please review your command");
+        }
+
+        public static void ClearRegion(Server server, ISender sender, ArgumentList args)
+        {
+            Int32 Slot;
+            if (args.TryParseOne<Int32>("-slot", out Slot))
+            {
+                Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                    {
+                        region = Regions.regionManager.Regions[i];
+                        break;
+                    }
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                region.UserList.Clear();
+                if (Regions.regionManager.SaveRegion(region))
+                {
+                    sender.sendMessage(string.Join("Successfully cleared Players from Region '{0}'", region.Name), 255, 0, 255);
+                }
+                else
+                    sender.sendMessage(string.Join("Failed to save Region '{0}'", region.Name));
+            }
+            else
+                throw new CommandError("Invalid arguments, Please review your command.");
+        }
+
+        public static void ClearProjectiles(Server server, ISender sender, ArgumentList args)
+        {
+            Int32 Slot;
+            if (args.TryParseOne<Int32>("-slot", out Slot))
+            {
+                Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                    {
+                        region = Regions.regionManager.Regions[i];
+                        break;
+                    }
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                region.ProjectileList.Clear();
+                if (Regions.regionManager.SaveRegion(region))
+                {
+                    sender.sendMessage(string.Join("Successfully cleared Projectiles from Region '{0}'", region.Name), 255, 0, 255);
+                }
+                else
+                    sender.sendMessage(string.Join("Failed to save Region '{0}'", region.Name));
+            }
+            else
+                throw new CommandError("Invalid arguments, Please review your command.");
         }
     }
 }
