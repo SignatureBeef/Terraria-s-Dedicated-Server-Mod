@@ -11,6 +11,9 @@ namespace Terraria_Server.Networking
 {
 	public abstract class Connection
 	{
+		
+		static readonly int ARRAY_OBJECT_OVERHEAD = 4 + 3 * IntPtr.Size; // value for mono
+		
 		protected struct Message
 		{
 			public int kind;
@@ -21,6 +24,8 @@ namespace Terraria_Server.Networking
 			public const int KICK = 1;
 			public const int SEGMENT = 2;
 		}
+		
+		static readonly int MESSAGE_SIZE = 4 + 4 + IntPtr.Size;
 		
 		protected class SocketAsyncEventArgsExt : SocketAsyncEventArgs
 		{
@@ -105,8 +110,20 @@ namespace Terraria_Server.Networking
 		public EndPoint RemoteEndPoint { get; protected set; }
 		public string   RemoteAddress  { get; protected set; }
 		public int BytesSent     { get; private set; }
-		public int BytesQueued   { get; private set; }
 		public int BytesReceived { get; private set; }
+		
+		protected int queueSize;
+		
+		// amount of memory used for the send queue of this connection
+		// including the messages and the queue itself
+		// excluding custom messages like sections and txbuffer
+		public int QueueSize
+		{
+			get
+			{
+				return queueSize + MESSAGE_SIZE * sendQueue.Capacity;
+			}
+		}
 		
 //		public static long TotalOutgoingBytes { get { return totalBytesBuffered; } }
 //		public static long TotalOutgoingBytesUnbuffered { get { return totalBytesUnbuffered; } }
@@ -121,6 +138,9 @@ namespace Terraria_Server.Networking
 		
 		public virtual void CopyAndSend (ArraySegment<byte> segment)
 		{
+			if (CheckQuota () == false)
+				return;
+
 			lock (sendQueue)
 			{
 				if (kicking) return;
@@ -130,6 +150,7 @@ namespace Terraria_Server.Networking
 					var bytes = new byte [segment.Count];
 					Array.Copy (segment.Array, segment.Offset, bytes, 0, segment.Count);
 					sendQueue.PushBack (new Message { content = bytes });
+					queueSize += segment.Count + ARRAY_OBJECT_OVERHEAD;
 				}
 				else
 				{
@@ -155,6 +176,7 @@ namespace Terraria_Server.Networking
 					}
 					
 					txCount += segment.Count;
+					queueSize += segment.Count;
 				}
 				
 				if (sending == false)
@@ -167,11 +189,19 @@ namespace Terraria_Server.Networking
 		protected void Send (Message message)
 		{
 			//Logging.ProgramLog.Log ("Queue {0}.", bytes.Length);
+			if (CheckQuota () == false)
+				return;
+			
 			lock (sendQueue)
 			{
 				if (kicking) return;
 				
 				sendQueue.PushBack (message);
+				
+				if (message.kind == Message.BYTES)
+				{
+					queueSize += ((byte[]) message.content).Length + ARRAY_OBJECT_OVERHEAD;
+				}
 				
 				if (sending == false)
 				{
@@ -179,6 +209,19 @@ namespace Terraria_Server.Networking
 				}
 			}
 			//Logging.ProgramLog.Log ("End queue.", bytes.Length);
+		}
+		
+		bool CheckQuota ()
+		{
+			if (queueSize >= Program.properties.SendQueueQuota * 1024)
+			{
+				// this is an awful hack but I was in a hurry
+				var cc = (ClientConnection) this;
+				cc.Kick ("Not enough bandwidth or timed out.");
+				return false;
+			}
+			
+			return true;
 		}
 		
 		public void KickAfter (byte[] bytes)
@@ -191,8 +234,15 @@ namespace Terraria_Server.Networking
 
 				sendQueue.Clear ();
 				sendQueue.PushBack (new Message { content = bytes, kind = Message.KICK });
+				queueSize = 0;
 				
-				SendMore (null);
+				timeout = new Timer (Timeout, null, 15000, 0);
+				Close (SocketError.ConnectionAborted);
+				
+				if (sending == false)
+				{
+					sending = SendMore (null);
+				}
 			}
 		}
 		
@@ -236,6 +286,7 @@ namespace Terraria_Server.Networking
 							var data = (byte[]) msg.content;
 							txList.Add (new ArraySegment<byte> (data));
 							txListBytes += data.Length;
+							queueSize -= data.Length + ARRAY_OBJECT_OVERHEAD;
 							//ProgramLog.Debug.Log ("{1}: Adding bytes {0}", data.Length, Thread.CurrentThread.IsThreadPoolThread);
 							break;
 						}
@@ -277,6 +328,7 @@ namespace Terraria_Server.Networking
 							
 							txPrepared += len;
 							txListBytes += len;
+							queueSize -= len;
 
 							break;
 						}
@@ -293,16 +345,12 @@ namespace Terraria_Server.Networking
 						
 						case Message.KICK:
 						{
-							if ((! queued) && (! sending) && args != null && args.conn != null) sendPool.Put (args);
+							if ((! queued) /*&& (! sending)*/ && args != null && args.conn != null) sendPool.Put (args);
 							
-							txList.Clear ();
-							txListBytes = 0;
+							//txList.Clear ();
+							//txListBytes = 0;
 							
 							var kickArgs = kickPool.Take (this);
-							
-							Close (SocketError.ConnectionAborted);
-							
-							if (timeout == null) timeout = new Timer (Timeout, null, 10000, 0);
 							
 							var data = (byte[]) msg.content;
 							kickArgs.SetBuffer (data, 0, data.Length);
@@ -430,12 +478,12 @@ namespace Terraria_Server.Networking
 				{
 					lock (sendQueue)
 					{
-						if (kicking)
-						{
-							sendPool.Put (argz);
-							sending = false;
-							return;
-						}
+//						if (kicking)
+//						{
+//							sendPool.Put (argz);
+//							sending = false;
+//							return;
+//						}
 						
 						TxListClear ();
 						
@@ -544,7 +592,6 @@ namespace Terraria_Server.Networking
 					}
 					else
 					{
-						if (timeout == null) timeout = new Timer (Timeout, null, 10000, 0);
 						if (! socket.DisconnectAsync (argz))
 						{
 							kickPool.Put (argz);
@@ -603,6 +650,9 @@ namespace Terraria_Server.Networking
 			}
 			catch (SocketException) {}
 			catch (ObjectDisposedException) {}
+			
+			//TxListClear ();
+			//txBuffer = null;
 		}
 		
 		void Close (SocketError error)

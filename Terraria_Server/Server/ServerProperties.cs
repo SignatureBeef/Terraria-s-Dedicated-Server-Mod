@@ -81,6 +81,7 @@ namespace Terraria_Server
             temp = MaxRespawnTime;
             temp = HardcoreDeathAction;
             temp = TileSquareMessages;
+            temp = SendQueueQuota;
         }
 
         public int MaxPlayers
@@ -489,6 +490,12 @@ namespace Terraria_Server
 		{
 			get { return getValue ("tile-square-messages", "ignore"); }
 			set { setValue ("tile-square-messages", value); }
+		}
+		
+		public int SendQueueQuota
+		{
+			get { return getValue ("send-queue-quota", 1024); }
+			set { setValue ("send-queue-quota", value); }
 		}
     }
 }
