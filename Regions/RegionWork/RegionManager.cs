@@ -6,7 +6,7 @@ using Terraria_Server.Logging;
 using System.IO;
 using Terraria_Server.Misc;
 
-namespace Regions.Region
+namespace Regions.RegionWork
 {
     public class RegionManager
     {
@@ -20,9 +20,9 @@ namespace Regions.Region
             if (!Directory.Exists(saveFolder))
                 Directory.CreateDirectory(saveFolder);
 
-            ProgramLog.Log("Loading Regions.");
+            ProgramLog.Plugin.Log("Loading Regions.");
             Regions = LoadRegions(saveFolder);
-            ProgramLog.Log("Loaded {0} Regions.", Regions.Count);
+            ProgramLog.Plugin.Log("Loaded {0} Regions.", Regions.Count);
         }
 
         public Boolean SaveRegion(Region region)

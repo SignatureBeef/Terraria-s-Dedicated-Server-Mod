@@ -5,7 +5,7 @@ using System.Text;
 using Terraria_Server;
 using Terraria_Server.Misc;
 
-namespace Regions.Region
+namespace Regions.RegionWork
 {
     public class Selection
     {

@@ -14,7 +14,20 @@ namespace Regions
 
         public void pushData()
         {
-            //object temp = null;
-        }        
+            object temp = BlockedProjectiles;
+        }
+
+        public List<String> BlockedProjectiles
+        {
+            get
+            {
+                //return getValue("blockedprojectiles", "28,29,37").Split(',').ToList<String>();
+                return getValue("blockedprojectiles", "*").Split(',').ToList<String>();
+            }
+            set
+            {
+                setValue("blockedprojectiles", string.Join(",", value.ToArray()));
+            }
+        }
     }
 }

@@ -5,7 +5,7 @@ using System.Text;
 using Terraria_Server.Commands;
 using Terraria_Server;
 using Terraria_Server.Misc;
-using Regions.Region;
+using Regions.RegionWork;
 
 namespace Regions
 {
@@ -113,7 +113,7 @@ namespace Regions
                     {
                         Vector2[] regionAxis = Selection.GetSelection(player);
 
-                        Region.Region rgn = new Region.Region();
+                        Region rgn = new Region();
                         rgn.Name = Name;
                         rgn.Description = Desc;
                         rgn.Point1 = regionAxis[0];
@@ -178,7 +178,7 @@ namespace Regions
                     exceptions[1] = IP;
                 }
 
-                Region.Region region = null;
+                Region region = null;
                 for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
@@ -235,7 +235,7 @@ namespace Regions
                     exceptions[1] = IP;
                 }
 
-                Region.Region region = null;
+                Region region = null;
                 for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
                 {
                     if (Slot == i)
