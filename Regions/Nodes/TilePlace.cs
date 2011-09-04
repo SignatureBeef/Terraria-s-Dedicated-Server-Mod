@@ -8,7 +8,7 @@ namespace Regions.Nodes
 {
     public class TilePlace : Node
     {
-        public const String Node = "regions.tileplace";
+        public const string Node = "regions.tileplace";
 
         public Node GetNode()
         {

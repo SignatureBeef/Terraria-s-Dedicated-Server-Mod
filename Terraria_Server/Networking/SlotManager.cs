@@ -420,7 +420,7 @@ namespace Terraria_Server.Networking
 					break;
 			}
 			
-			return string.Format (waitingMessage, i, suffix);
+			return String.Format (waitingMessage, i, suffix);
 		}
 		
 		internal static void MaxPlayersCommand (Server server, ISender sender, ArgumentList args)
@@ -451,7 +451,7 @@ namespace Terraria_Server.Networking
 			if (maxp >= 0 || overl >= 0)
 			{
 				result = ChangeLimits (maxp < 0 ? maxSlots : maxp, overl < 0 ? overlimitSlots : overl);
-				server.notifyOps (string.Format ("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.Name));
+				server.notifyOps (String.Format ("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.Name));
 			}
 			
 			sender.Message (255, ChatColor.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);

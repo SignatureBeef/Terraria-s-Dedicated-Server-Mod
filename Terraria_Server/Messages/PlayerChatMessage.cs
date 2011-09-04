@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
 
         public override void Process (ClientConnection conn, byte[] readBuffer, int length, int num)
         {
-            String chat = Encoding.ASCII.GetString(readBuffer, num + 4, length - 5).Trim();
+            string chat = Encoding.ASCII.GetString(readBuffer, num + 4, length - 5).Trim();
             
             foreach (var c in chat)
             {
@@ -46,7 +46,7 @@ namespace Terraria_Server.Messages
                     ProgramLog.Debug.Log ("Replying to early online player query.");
                     var msg = NetMessage.PrepareThreadInstance ();
                     msg.PlayerChat (255, string.Concat ("Current players: ",
-                            string.Join (", ", from p in Server.players where p.Active select p.Name), "."),
+                            String.Join (", ", from p in Server.players where p.Active select p.Name), "."),
                             255, 240, 20);
                     conn.Send (msg.Output);
                 }
@@ -100,7 +100,7 @@ namespace Terraria_Server.Messages
             }
         }
 
-        private bool ProcessMessage(MessageEvent messageEvent, String text, Hooks hook, int whoAmI)
+        private bool ProcessMessage(MessageEvent messageEvent, string text, Hooks hook, int whoAmI)
         {
             messageEvent.Message = text;
             messageEvent.Sender = Main.players[whoAmI];

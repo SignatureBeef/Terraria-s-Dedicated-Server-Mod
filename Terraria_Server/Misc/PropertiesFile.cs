@@ -11,15 +11,15 @@ namespace Terraria_Server.Misc
         private const char EQUALS = '=';
 
         private Dictionary<String, String> propertiesMap;
-        
-        private String propertiesPath = String.Empty;
+
+        private string propertiesPath = String.Empty;
 		
 		public int Count
 		{
 			get { return propertiesMap.Count; }
 		}
-		
-        public PropertiesFile(String propertiesPath)
+
+        public PropertiesFile(string propertiesPath)
         {
             propertiesMap = new Dictionary<String, String>();
             this.propertiesPath = propertiesPath;
@@ -36,7 +36,7 @@ namespace Terraria_Server.Misc
             StreamReader reader = new StreamReader(propertiesPath);
             try
             {
-                String line;
+                string line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     line = line.Trim();
@@ -64,7 +64,7 @@ namespace Terraria_Server.Misc
             Save(true);
         }
 
-        public void Save(Boolean log = true)
+        public void Save(bool log = true)
         {
             var tmpName = propertiesPath + ".tmp" + (uint) (DateTime.UtcNow.Ticks % uint.MaxValue);
             var writer = new StreamWriter (tmpName);
@@ -100,7 +100,7 @@ namespace Terraria_Server.Misc
             
         }
 
-        public String getValue(String key)
+        public string getValue(string key)
         {
             if (propertiesMap.ContainsKey(key))
             {
@@ -109,9 +109,9 @@ namespace Terraria_Server.Misc
             return null;
         }
 
-        public String getValue(String key, String defaultValue)
+        public string getValue(string key, string defaultValue)
         {
-            String value = getValue(key);
+            string value = getValue(key);
             if (value == null || value.Trim().Length < 0)
             {
                 setValue(key, defaultValue);
@@ -120,10 +120,10 @@ namespace Terraria_Server.Misc
             return value;
         }
 
-        public int getValue(String key, int defaultValue)
+        public int getValue(string key, int defaultValue)
         {
             int result;
-            if (int.TryParse(getValue(key), out result))
+            if (Int32.TryParse(getValue(key), out result))
             {
                 return result;
             }
@@ -132,10 +132,10 @@ namespace Terraria_Server.Misc
             return defaultValue;
         }
 
-        public bool getValue(String key, bool defaultValue)
+        public bool getValue(string key, bool defaultValue)
         {
             bool result;
-            if (bool.TryParse(getValue(key), out result))
+            if (Boolean.TryParse(getValue(key), out result))
             {
                 return result;
             }
@@ -144,17 +144,17 @@ namespace Terraria_Server.Misc
             return defaultValue;
         }
 
-        public void setValue(String key, String value)
+        public void setValue(string key, string value)
         {
             propertiesMap[key] = value;
         }
 
-        protected void setValue(String key, int value)
+        protected void setValue(string key, int value)
         {
             setValue(key, value.ToString());
         }
 
-        protected void setValue(String key, bool value)
+        protected void setValue(string key, bool value)
         {
             setValue(key, value.ToString());
         }

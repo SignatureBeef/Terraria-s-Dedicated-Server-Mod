@@ -6,7 +6,7 @@ namespace Terraria_Server.Commands
 	public class CommandError : ApplicationException
 	{
 		public CommandError (string message) : base (message) {}
-		public CommandError (string fmt, params object[] args) : base (string.Format (fmt, args)) {}
+		public CommandError (string fmt, params object[] args) : base (String.Format (fmt, args)) {}
 	}
 
 	public class ArgumentList : List<string>
@@ -59,7 +59,7 @@ namespace Terraria_Server.Commands
 			if (at >= Count) throw new CommandError ("Too few arguments given.");
 			
 			int val;
-			if (int.TryParse (this[at], out val))
+			if (Int32.TryParse (this[at], out val))
 			{
 				return val;
 			}
@@ -73,7 +73,7 @@ namespace Terraria_Server.Commands
 		
 			if (at >= Count) return false;
 			
-			return int.TryParse (this[at], out val);
+			return Int32.TryParse (this[at], out val);
 		}
 		
 		public double GetDouble (int at)
@@ -81,7 +81,7 @@ namespace Terraria_Server.Commands
 			if (at >= Count) throw new CommandError ("Too few arguments given.");
 			
 			double val;
-			if (double.TryParse (this[at], out val))
+			if (Double.TryParse (this[at], out val))
 			{
 				return val;
 			}
@@ -95,7 +95,7 @@ namespace Terraria_Server.Commands
 		
 			if (at >= Count) return false;
 			
-			return double.TryParse (this[at], out val);
+			return Double.TryParse (this[at], out val);
 		}
 		
 		public TimeSpan GetDuration (int at)
@@ -166,7 +166,7 @@ namespace Terraria_Server.Commands
 				str = str.Substring (0, str.Length - 2);
 			}
 			
-			if (double.TryParse (str, out value))
+			if (Double.TryParse (str, out value))
 			{
 				val = TimeSpan.FromSeconds (value * scale);
 				return true;

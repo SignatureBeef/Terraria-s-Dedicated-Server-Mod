@@ -9,10 +9,10 @@ namespace Terraria_Server
         public const int CURRENT_TERRARIA_RELEASE = 22;
         public static string CURRENT_TERRARIA_RELEASE_STR = CURRENT_TERRARIA_RELEASE.ToString();
 
-        private const String WORLDS = "Worlds";
-        private const String PLUGINS = "Plugins";
-        private const String DATA = "Data";
-        private const String LIBRARIES = "Libs";
+        private const string WORLDS = "Worlds";
+        private const string PLUGINS = "Plugins";
+        private const string DATA = "Data";
+        private const string LIBRARIES = "Libs";
 
         public static bool cmdMessages = true;
         public static bool keepRunning = false;
@@ -20,9 +20,9 @@ namespace Terraria_Server
         public static volatile bool IsActive = false;
         public static volatile bool serverStarted = false;
 
-        public static String SavePath = Environment.CurrentDirectory;
+        public static string SavePath = Environment.CurrentDirectory;
 
-        public static String WorldPath
+        public static string WorldPath
         {
             get
             {
@@ -30,7 +30,7 @@ namespace Terraria_Server
             }
         }
 
-        public static String PluginPath
+        public static string PluginPath
         {
             get
             {
@@ -38,7 +38,7 @@ namespace Terraria_Server
             }
         }
 
-        public static String LibrariesPath
+        public static string LibrariesPath
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Terraria_Server
             }
         }
 
-        public static String DataPath
+        public static string DataPath
         {
             get
             {

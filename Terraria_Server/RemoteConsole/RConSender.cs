@@ -21,7 +21,7 @@ namespace Terraria_Server.RemoteConsole
 		
 		public override string Name
 		{
-			get { return string.Format ("{0}@CONSOLE", Client.Name); }
+			get { return String.Format ("{0}@CONSOLE", Client.Name); }
 		}
 	}
 }

@@ -27,7 +27,7 @@ namespace Terraria_Server.Commands
         /// <param name="R">Red text color value</param>
         /// <param name="G">Green text color value</param>
         /// <param name="B">Blue text color value</param>
-        public virtual void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public virtual void sendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
             ProgramLog.Console.Print (Message);
         }

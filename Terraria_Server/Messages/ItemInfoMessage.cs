@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
             num += 4;
             byte stackSize = readBuffer[num++];
 
-            String String4 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            string String4 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
             Item item = Main.item[(int)itemIndex];
             

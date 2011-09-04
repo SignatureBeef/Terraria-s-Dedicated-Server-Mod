@@ -71,7 +71,7 @@ namespace Terraria_Server.Messages
 					}
 					else if (state != SlotState.PLAYING) // this is what stock would do
 					{
-						conn.Kick (string.Format ("Message not understood ({0}).", pkt));
+						conn.Kick (String.Format ("Message not understood ({0}).", pkt));
 					}
 				}
 			}
@@ -79,9 +79,9 @@ namespace Terraria_Server.Messages
 			{
 				string pkt = "invalid packet";
 				if (readBuffer.Length > start)
-					pkt = string.Format ("packet {0}", (Packet)readBuffer[start]);
+					pkt = String.Format ("packet {0}", (Packet)readBuffer[start]);
 
-				ProgramLog.Log (e, string.Format ("Exception handling {0} of length {1} from {2}",
+				ProgramLog.Log (e, String.Format ("Exception handling {0} of length {1} from {2}",
 					pkt, length, conn.RemoteAddress));
 					
 				conn.Kick ("Server malfunction, please reconnect.");

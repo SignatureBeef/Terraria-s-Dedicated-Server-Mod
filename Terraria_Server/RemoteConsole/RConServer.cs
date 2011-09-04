@@ -32,7 +32,7 @@ namespace Terraria_Server.RemoteConsole
 				var bytes = new byte [8];
 				(new Random ((int) DateTime.Now.Ticks)).NextBytes (bytes);
 				
-				string password = string.Format ("{0:x2}{1:x2}-{2:x2}{3:x2}-{4:x2}{5:x2}-{6:x2}{7:x2}",
+				string password = String.Format ("{0:x2}{1:x2}-{2:x2}{3:x2}-{4:x2}{5:x2}-{6:x2}{7:x2}",
 					bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]);
 				string login = "Owner";
 				ProgramLog.Admin.Log ("The rcon login database was empty, a new user \"{1}\" has been created with password: {0}", password, login);
@@ -310,7 +310,7 @@ namespace Terraria_Server.RemoteConsole
 			
 			try
 			{
-				addr = socket.RemoteEndPoint.ToString();
+                addr = socket.RemoteEndPoint.ToString();
 			}
 			catch (Exception) {}
 			
@@ -392,7 +392,7 @@ namespace Terraria_Server.RemoteConsole
 			{
 				foreach (var rcon in clients)
 				{
-					sender.sendMessage (string.Format ("{0} {1}", rcon.Id, rcon.state));
+					sender.sendMessage (String.Format ("{0} {1}", rcon.Id, rcon.state));
 				}
 			}
 			else if (args.Count == 1 && args.GetString(0) == "load")

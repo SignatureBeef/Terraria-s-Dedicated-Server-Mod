@@ -22,9 +22,9 @@ namespace Terraria_Server
 		public static IPAddress serverListenIP;
 		public static IPAddress serverIP;
 		public static int serverPort = 7777;
-		public static String serverSIP = "0.0.0.0";
+        public static string serverSIP = "0.0.0.0";
 		public static bool disconnect = false;
-		public static String password = "";
+        public static string password = "";
 		public static bool spamCheck = false;
 		public static bool ServerUp = false;
 		public static bool anyClients = false;

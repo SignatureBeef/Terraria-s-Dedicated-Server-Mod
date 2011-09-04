@@ -34,7 +34,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// String representation of this player's IP address
 		/// </summary>
-        private String ipAddress = null;
+        private string ipAddress = null;
 
         public IPAddress IpAddress
         {
@@ -119,7 +119,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Player's currently entered chat text
 		/// </summary>
-		public String chatText = "";
+        public string chatText = "";
 		public int sign = -1;
 		/// <summary>
 		/// Time left for chat window visibility
@@ -149,7 +149,7 @@ namespace Terraria_Server
 		/// Current breath left
 		/// </summary>
 		public int breath = 200;
-		public String setBonus = "";
+        public string setBonus = "";
 		/// <summary>
 		/// Player inventory array
 		/// </summary>
@@ -426,7 +426,7 @@ namespace Terraria_Server
 		/// <param name="R">Red color value</param>
 		/// <param name="G">Green color value</param>
 		/// <param name="B">Blue color value</param>
-        public void sendMessage(String Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
+        public void sendMessage(string Message, int A = 255, float R = 255f, float G = 0f, float B = 0f)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, A, R, G, B);
         }
@@ -436,7 +436,7 @@ namespace Terraria_Server
 		/// </summary>
 		/// <param name="Message">Message string</param>
 		/// <param name="chatColour">Color to send message with</param>
-        public void sendMessage(String Message, Color chatColour)
+        public void sendMessage(string Message, Color chatColour)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, whoAmi, -1, Message, 255, chatColour.R, chatColour.G, chatColour.B);
         }
@@ -2344,7 +2344,7 @@ namespace Terraria_Server
 						var action = Program.properties.HardcoreDeathAction;
 						if (action == "respawn")
 						{
-							this.respawnTimer = int.MaxValue;
+							this.respawnTimer = Int32.MaxValue;
 							this.Respawn ();
 							return;
 						}
@@ -2365,7 +2365,7 @@ namespace Terraria_Server
 						this.respawnTimer--;
 						if (this.respawnTimer <= 0 && Program.properties.MaxRespawnTime > 0)
 						{
-							this.respawnTimer = int.MaxValue;
+							this.respawnTimer = Int32.MaxValue;
 							this.Respawn ();
 							//this.Spawn();
 							return;
@@ -3148,7 +3148,7 @@ namespace Terraria_Server
 		/// <param name="deathText">Text to display upon death</param>
 		/// <param name="crit">Whether the hit is critical</param>
 		/// <returns>Damage done</returns>
-        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, String deathText = " was slain...", bool crit = false)
+        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, string deathText = " was slain...", bool crit = false)
         {
             if (!this.immune)
             {
@@ -3248,7 +3248,7 @@ namespace Terraria_Server
 		/// <param name="hitDirection">Direction of attack</param>
 		/// <param name="pvp">Whether the attack was PvP</param>
 		/// <param name="deathText">Text to display upon death</param>
-        public void KillMe(double dmg, int hitDirection, bool pvp = false, String deathText = " was slain...")
+        public void KillMe(double dmg, int hitDirection, bool pvp = false, string deathText = " was slain...")
         {
             if ((Main.myPlayer == this.whoAmi))
             {
@@ -4768,8 +4768,9 @@ namespace Terraria_Server
         /// Get death message string of falling related causes.
         /// </summary>
         /// <returns></returns>
-        public static String GetDeathMessageForGround() {
-            String deathMessage = "";
+        public static string GetDeathMessageForGround()
+        {
+            string deathMessage = "";
             int randomMessage = Main.rand.Next(5);
 
             switch (randomMessage)
@@ -4799,8 +4800,9 @@ namespace Terraria_Server
         /// Get death message string of water related causes.
         /// </summary>
         /// <returns></returns>
-        public static String GetDeathMessageForWater() {
-            String deathMessage = "";
+        public static string GetDeathMessageForWater()
+        {
+            string deathMessage = "";
             int randomMessage = Main.rand.Next(4);
 
             switch (randomMessage)
@@ -4826,8 +4828,9 @@ namespace Terraria_Server
         /// Get death message string of lava related causes.
         /// </summary>
         /// <returns></returns>
-        public static String GetDeathMessageForLava() {
-            String deathMessage = "";
+        public static string GetDeathMessageForLava()
+        {
+            string deathMessage = "";
             int randomMessage = Main.rand.Next(4);
 
             switch (randomMessage)
@@ -4857,11 +4860,11 @@ namespace Terraria_Server
 		/// <param name="proj">Projectile type</param>
 		/// <param name="other">0 = fall, 1 = drown, 2 = lava</param>
 		/// <returns></returns>
-        public static String getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
+        public static string getDeathMessage(int plr = -1, int npc = -1, int proj = -1, int other = -1)
         {
-            String deathMessage = "";
+            string deathMessage = "";
             int randomDeath = Main.rand.Next(11);
-            String deathText = "";
+            string deathText = "";
 
             switch (randomDeath)
             {
@@ -4903,15 +4906,15 @@ namespace Terraria_Server
             if (plr >= 0 && plr < 255)
             {
                 if (proj >= 0 && Main.projectile[proj].Name != "")
-                    deathMessage = string.Format("{0} by {1}'s {2}.", deathText, Main.players[plr].Name, Main.projectile[proj].Name);
+                    deathMessage = String.Format("{0} by {1}'s {2}.", deathText, Main.players[plr].Name, Main.projectile[proj].Name);
                 else
-                    deathMessage = string.Format("{0} by {1}'s {2}.", deathText, Main.players[plr].Name, Main.players[plr].inventory[Main.players[plr].selectedItemIndex].Name);                    
+                    deathMessage = String.Format("{0} by {1}'s {2}.", deathText, Main.players[plr].Name, Main.players[plr].inventory[Main.players[plr].selectedItemIndex].Name);                    
             }
             else if (npc >= 0 && Main.npcs[npc].Name != "")
-                deathMessage = string.Format("{0} by {1}.", deathText,Main.npcs[npc].Name);
+                deathMessage = String.Format("{0} by {1}.", deathText,Main.npcs[npc].Name);
 
             else if (proj >= 0 && Main.projectile[proj].Name != "")
-                deathMessage = string.Format("{0} by {1}.", deathText, Main.projectile[proj].Name);
+                deathMessage = String.Format("{0} by {1}.", deathText, Main.projectile[proj].Name);
 
             else if (other >= 0)
             {
@@ -4972,7 +4975,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Get/Set for player's IP address
 		/// </summary>
-        public String IPAddress
+        public string IPAddress
         {
             get
             {
@@ -5263,13 +5266,13 @@ namespace Terraria_Server
 		/// <param name="PlayerName">Player's name</param>
 		/// <param name="Server">Current server instance</param>
 		/// <returns>Password string</returns>
-        public static String GetPlayerPassword(String PlayerName, Server Server)
+        public static string GetPlayerPassword(string PlayerName, Server Server)
         {
-            foreach (String listee in Server.OpList.WhiteList)
+            foreach (string listee in Server.OpList.WhiteList)
             {
                 if (listee != null && listee.Trim().ToLower().Length > 0)
                 {
-                    String userPass = listee.Trim().ToLower();
+                    string userPass = listee.Trim().ToLower();
                     if (userPass.Contains(":"))
                     {
                         if (userPass.Split(':')[0] == PlayerName.Trim().ToLower())
@@ -5285,7 +5288,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Sets player's password
 		/// </summary>
-        public String Password
+        public string Password
         {
             get
             {
@@ -5299,13 +5302,13 @@ namespace Terraria_Server
 		/// <param name="Name">Player's name</param>
 		/// <param name="Server">Server instance to check</param>
 		/// <returns>True if op, false if not</returns>
-        public static bool isInOpList(String Name, Server Server)
+        public static bool isInOpList(string Name, Server Server)
         {
-            foreach (String listee in Server.OpList.WhiteList)
+            foreach (string listee in Server.OpList.WhiteList)
             {
                 if (listee != null && listee.Trim().ToLower().Length > 0)
                 {
-                    String userPass = listee.Trim().ToLower();
+                    string userPass = listee.Trim().ToLower();
                     if (userPass.Contains(":"))
                     {
                         if (userPass.Split(':')[0] == Name.Trim().ToLower())
@@ -5330,7 +5333,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Gets players op password
 		/// </summary>
-        public String GetOpListKey
+        public string GetOpListKey
         {
             get
             {

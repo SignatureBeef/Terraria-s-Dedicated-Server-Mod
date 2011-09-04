@@ -14,7 +14,7 @@ namespace Terraria_Server.Collections
         protected Dictionary<int, List<T>> typeLookup = new Dictionary<int, List<T>>();
         protected Dictionary<string, T> nameLookup = new Dictionary<string, T>();
 
-        protected String DEFINITIONS = "Terraria_Server.Definitions.";
+        protected string DEFINITIONS = "Terraria_Server.Definitions.";
 
         private readonly T defaultValue;
 
@@ -116,7 +116,7 @@ namespace Terraria_Server.Collections
             throw new ApplicationException ("Registry.SetDefaults(T, string): type '" + name + "' not found.");
         }
 
-        public T Create(String name)
+        public T Create(string name)
         {
             T t;
             if (nameLookup.TryGetValue(name, out t))
@@ -127,7 +127,7 @@ namespace Terraria_Server.Collections
         }
 
 
-        public T FindClass(String name)
+        public T FindClass(string name)
         {
             List<T> values;
             foreach (int type in typeLookup.Keys)

@@ -19,14 +19,14 @@ namespace TDSMPlugin.Commands
             {
                 sender.sendMessage(sender.Name + " Argument: " + arg);
                 sender.sendMessage(
-                        string.Join("    {0} v{1}", TDSM_Plugin.tdsmPlugin.Name, TDSM_Plugin.tdsmPlugin.Version)
+                        String.Join("    {0} v{1}", TDSM_Plugin.tdsmPlugin.Name, TDSM_Plugin.tdsmPlugin.Version)
                     );
             }
             else
             {
                 //For new people, I would not really expect you to understand the following.
                 //If needed I can simplify this down...
-                String Platform = Terraria_Server.Definitions.Platform.Type.ToString();
+                string Platform = Terraria_Server.Definitions.Platform.Type.ToString();
                 switch (Terraria_Server.Definitions.Platform.Type)
                 {
                     case Terraria_Server.Definitions.Platform.PlatformType.LINUX:

@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
             int currentTeam = player.team;
             
             Party party = Party.NONE;
-            String joinMessage = "";
+            string joinMessage = "";
             switch (teamIndex)
             {
                 case 1:

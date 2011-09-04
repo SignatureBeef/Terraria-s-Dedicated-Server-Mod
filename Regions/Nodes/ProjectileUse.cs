@@ -8,7 +8,7 @@ namespace Regions.Nodes
 {
     public class ProjectileUse : Node
     {
-        public const String Node = "regions.projectileuse";
+        public const string Node = "regions.projectileuse";
 
         public Node GetNode()
         {

@@ -8,7 +8,7 @@ namespace Regions.Nodes
 {
     public class DoorChange : Node
     {
-        public const String Node = "regions.doorchange";
+        public const string Node = "regions.doorchange";
 
         public Node GetNode()
         {

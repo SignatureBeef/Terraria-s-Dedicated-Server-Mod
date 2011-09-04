@@ -22,7 +22,7 @@ namespace Terraria_Server.Messages
             int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
 
-            String SignText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            string SignText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 
             Sign sign = new Sign();
             sign.x = x;

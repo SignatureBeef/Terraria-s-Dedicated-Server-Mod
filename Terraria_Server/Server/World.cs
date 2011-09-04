@@ -39,7 +39,7 @@ namespace Terraria_Server
             UpdateWorldCoords(false);
         }
 
-        public String Name { get; set; }
+        public string Name { get; set; }
 
         public Server Server { get; set; }
 
@@ -47,7 +47,7 @@ namespace Terraria_Server
 
         public int Id { get; set; }
 
-        public String SavePath { get; set; }
+        public string SavePath { get; set; }
 
         public int MaxSectionsY { get; set; }
 

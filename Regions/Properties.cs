@@ -10,7 +10,7 @@ namespace Regions
 {
     public class Properties : PropertiesFile
     {
-        public Properties(String propertiesPath) : base(propertiesPath) { }
+        public Properties(string propertiesPath) : base(propertiesPath) { }
 
         public void pushData()
         {
@@ -26,11 +26,11 @@ namespace Regions
             }
             set
             {
-                setValue("blockedprojectiles", string.Join(",", value.ToArray()));
+                setValue("blockedprojectiles", String.Join(",", value.ToArray()));
             }
         }*/
 
-        public Int32 SelectionToolID
+        public int SelectionToolID
         {
             get
             {

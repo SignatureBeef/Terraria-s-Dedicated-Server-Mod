@@ -18,19 +18,19 @@ namespace Terraria_Server.Plugin
         /// <summary>
         /// Name of the plugin
         /// </summary>
-        public String Name { get; set; }
+        public string Name { get; set; }
         /// <summary>
         /// Plugin description
         /// </summary>
-        public String Description { get; set; }
+        public string Description { get; set; }
         /// <summary>
         /// Plugin author
         /// </summary>
-        public String Author { get; set; }
+        public string Author { get; set; }
         /// <summary>
         /// Plugin version
         /// </summary>
-        public String Version { get; set; }
+        public string Version { get; set; }
         /// <summary>
         /// Latest compatible TDSM build
         /// </summary>

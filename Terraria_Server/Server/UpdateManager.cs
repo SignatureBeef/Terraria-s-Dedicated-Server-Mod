@@ -12,10 +12,10 @@ namespace Terraria_Server
     
     public class UpdateManager
     {
-        public static String UpdateList     = "http://update.tdsm.org/updatelist.txt";
-        public static String UpdateLink     = "http://update.tdsm.org/Terraria_Server.exe"; //Still hosted by Olympus, <3 Olympus Gaming! Check em out some time ;)
-        public static String UpdateInfo     = "http://update.tdsm.org/buildinfo.txt";
-        public static String UpdateMDBLink  = "http://update.tdsm.org/Terraria_Server.exe.mdb";
+        public static string UpdateList = "http://update.tdsm.org/updatelist.txt";
+        public static string UpdateLink = "http://update.tdsm.org/Terraria_Server.exe"; //Still hosted by Olympus, <3 Olympus Gaming! Check em out some time ;)
+        public static string UpdateInfo = "http://update.tdsm.org/buildinfo.txt";
+        public static string UpdateMDBLink = "http://update.tdsm.org/Terraria_Server.exe.mdb";
 
         public static int MAX_UPDATES = 2;
 
@@ -24,8 +24,8 @@ namespace Terraria_Server
             try
             {
                 ProgramLog.Log ("Attempting to retreive Build Info...");
-                String buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim();
-                String toString = "comments: ";
+                string buildInfo = new System.Net.WebClient().DownloadString(UpdateInfo).Trim();
+                string toString = "comments: ";
                 if (buildInfo.ToLower().Contains(toString))
                 {
                     buildInfo = buildInfo.Remove(0, buildInfo.ToLower().IndexOf(toString.ToLower()) + toString.Length).Trim().Replace("<br/>", "\n"); //This is also used for the forums, so easy use here ;D
@@ -41,27 +41,27 @@ namespace Terraria_Server
             }
         }
 
-        public static String getUpdateList()
+        public static string getUpdateList()
         {
             return new System.Net.WebClient().DownloadString(UpdateList).Trim();
         }
 
-        private static String uList = "";
+        private static string uList = "";
         public static bool isUptoDate()
         {
-            String updateList = getUpdateList();
+            string updateList = getUpdateList();
             //b-r
             if (updateList.Contains("b"))
 			{
 				try
 				{
-					String updateBuild = "";
+                    string updateBuild = "";
 					for (int i = 1; i < updateList.Length; i++)
 					{
 						updateBuild += updateList[i];
 					}
 					int updateBuildNum = Int32.Parse(updateBuild);
-					String myBuild = "b" + Statics.BUILD.ToString();
+                    string myBuild = "b" + Statics.BUILD.ToString();
 					uList = updateList;
 					return Statics.BUILD >= updateBuildNum;
 				}
@@ -72,7 +72,7 @@ namespace Terraria_Server
             return false;
         }
 
-        public static bool performUpdate(String DownloadLink, String savePath, String backupPath, String myFile, int Update)
+        public static bool performUpdate(string DownloadLink, string savePath, string backupPath, string myFile, int Update)
         {
             if (File.Exists(savePath)) //No download conflict, Please :3 (Looks at Mono)
             {
@@ -145,7 +145,7 @@ namespace Terraria_Server
 
                 printUpdateInfo();
 
-                String myFile = System.AppDomain.CurrentDomain.FriendlyName;
+                string myFile = System.AppDomain.CurrentDomain.FriendlyName;
 
                 performUpdate(UpdateLink, "Terraria_Server.upd", "Terraria_Server.bak", myFile, 1);
                 performUpdate(UpdateMDBLink, "Terraria_Server.upd.mdb", "Terraria_Server.bak.mdb", myFile + ".mdb", 2);
@@ -183,7 +183,7 @@ namespace Terraria_Server
         }
 
         //Seems Mono had an issue when files were overwriting.
-        public static bool MoveFile(String Location, String Destination)
+        public static bool MoveFile(string Location, string Destination)
         {
             if (File.Exists(Destination))
             {

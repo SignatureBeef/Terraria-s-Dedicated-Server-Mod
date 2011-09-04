@@ -86,11 +86,11 @@ namespace Terraria_Server.WorldMod
 		}
 
         //Works to what is needed.
-        public static Int32 asciiInt32(String input)
+        public static int asciiInt32(string input)
         {
             System.Text.Encoding ascii = System.Text.Encoding.ASCII;
             Byte[] encodedBytes = ascii.GetBytes(input);
-            Int32 ret = 0;
+            int ret = 0;
             foreach (Byte b in encodedBytes)
             {
                 ret += (int)b;
@@ -98,9 +98,9 @@ namespace Terraria_Server.WorldMod
             return ret;
         }
 
-        public static void GenerateWorld(String Seed)
+        public static void GenerateWorld(string Seed)
         {
-            Int32 seed = -1;
+            int seed = -1;
             try
             {
                 seed = asciiInt32(Seed);

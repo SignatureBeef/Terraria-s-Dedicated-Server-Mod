@@ -12,13 +12,13 @@ namespace Terraria_Server
 //		private StreamWriter streamWriter = null;
 //		private Platform.PlatformType platformType;
 
-		public TConsole(String serverLog, Platform.PlatformType platformType)
+        public TConsole(string serverLog, Platform.PlatformType platformType)
 		{
 //			streamWriter = new StreamWriter(serverLog);
 //			this.platformType = platformType;
 		}
 
-		public void WriteLine(String Line)
+        public void WriteLine(string Line)
 		{
 			ProgramLog.Log (Line);
 		}

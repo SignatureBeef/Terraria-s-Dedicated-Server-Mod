@@ -9,11 +9,11 @@ namespace Regions.RegionWork
 {
     public class Region
     {
-        public String Name { get; set; }
-        public String Description = "";
+        public string Name { get; set; }
+        public string Description = "";
 
-        public Boolean Restricted = false; //restrict from Ops
-        public Boolean RestrictedNPCs = false;
+        public bool Restricted = false; //restrict from Ops
+        public bool RestrictedNPCs = false;
         public List<String> UserList = new List<String>();
         public List<String> ProjectileList = new List<String>();
 
@@ -47,16 +47,16 @@ namespace Regions.RegionWork
             }
         }
 
-        public Boolean IsValidRegion()
+        public bool IsValidRegion()
         {
-            Boolean LocationCheck = Program.server.isValidLocation(Point1) && Program.server.isValidLocation(Point2);
-            Boolean NameCheck = Name != null && Name.Trim().Length > 0;
+            bool LocationCheck = Program.server.isValidLocation(Point1) && Program.server.isValidLocation(Point2);
+            bool NameCheck = Name != null && Name.Trim().Length > 0;
             return NameCheck && LocationCheck;
         }
 
-        public Boolean ContainsUser(String key)
+        public bool ContainsUser(string key)
         {
-            foreach (String internalKey in UserList)
+            foreach (string internalKey in UserList)
             {
                 if (internalKey.Equals(key))
                     return true;
@@ -65,9 +65,9 @@ namespace Regions.RegionWork
             return false;
         }
 
-        public Boolean ContainsProjectile(String key)
+        public bool ContainsProjectile(string key)
         {
-            foreach (String internalKey in ProjectileList)
+            foreach (string internalKey in ProjectileList)
             {
                 if (internalKey.Equals(key))
                     return true;
@@ -144,7 +144,7 @@ namespace Regions.RegionWork
         /// </summary>
         /// <param name="tile>Tile to find in the region.</param>
         /// <returns>True on find</returns>
-        public Boolean HasTile(TileRef tile)
+        public bool HasTile(TileRef tile)
         {
             return GetTiles.Contains(tile);
         }
@@ -154,7 +154,7 @@ namespace Regions.RegionWork
         /// </summary>
         /// <param name="tile>Tile to find in the region.</param>
         /// <returns>True on find</returns>
-        public Boolean HasTile(TileData tile)
+        public bool HasTile(TileData tile)
         {
             foreach (TileRef tileRef in GetTiles)
             {
@@ -169,7 +169,7 @@ namespace Regions.RegionWork
         /// </summary>
         /// <param name="point">Point to check.</param>
         /// <returns>True upon success</returns>        
-        public Boolean HasPoint(Vector2 point,Boolean toTile = false)
+        public bool HasPoint(Vector2 point, bool toTile = false)
         {
             int inX = (toTile) ? (int)(point.X / 16) : (int)point.X;
             int inY = (toTile) ? (int)(point.Y / 16) : (int)point.Y;
@@ -182,30 +182,24 @@ namespace Regions.RegionWork
             return (inX >= (int)left.X && inX <= (int)right.X && inY >= minY && inY <= maxY);
         }
 
-        public String UserListToString()
+        public string UserListToString()
         {
-            /*String users = "";
-            foreach (String user in UserList)
-            {
-                users += user + " ";
-            }
-            return users.Trim();*/
-            return string.Join(" ", UserList.ToArray()).Trim();
+            return String.Join(" ", UserList.ToArray()).Trim();
         }
 
-        public String ProjectileListToString()
+        public string ProjectileListToString()
         {
-            return string.Join(" ", ProjectileList.ToArray()).Trim();
+            return String.Join(" ", ProjectileList.ToArray()).Trim();
         }
 
-        public Boolean IsRestrictedForUser(Player player)
+        public bool IsRestrictedForUser(Player player)
         {
             return (Restricted && player.Op || !player.Op && !ContainsUser(player.Name) && !ContainsUser(player.IPAddress));
         }
 
-        public override String ToString()
+        public override string ToString()
         {
-            return string.Format(
+            return String.Format(
                 "name: {0}\n" +
                 "description: {1}\n" +
                 "point1: {2},{3}\n" +

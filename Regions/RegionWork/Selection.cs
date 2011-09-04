@@ -11,7 +11,7 @@ namespace Regions.RegionWork
     {
         public static Dictionary<String, Vector2[]> selectionPlayers = new Dictionary<String, Vector2[]>();
 
-        public static Boolean isInSelectionlist(Player player)
+        public static bool isInSelectionlist(Player player)
         {
             return selectionPlayers.ContainsKey(player.Name);
         }

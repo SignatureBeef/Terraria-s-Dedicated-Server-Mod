@@ -20,7 +20,7 @@ namespace Terraria_Server.Messages
             int contentsIndex = (int)readBuffer[num++];
             int stackSize = (int)readBuffer[num++];
 
-            String String8 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            string String8 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
             
             if (Main.chest[chestIndex] == null)
             {

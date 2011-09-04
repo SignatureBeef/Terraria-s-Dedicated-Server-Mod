@@ -94,7 +94,7 @@ namespace Terraria_Server.Networking
 		{
 			socket = sock;
 			RemoteEndPoint = socket.RemoteEndPoint;
-			RemoteAddress = RemoteEndPoint.ToString();
+            RemoteAddress = RemoteEndPoint.ToString();
 		}
 		
 		public bool Active

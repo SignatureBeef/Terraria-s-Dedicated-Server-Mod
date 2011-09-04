@@ -15,8 +15,8 @@ namespace Terraria_Server.Plugin
     /// </summary>
     public class PluginManager
     {
-        private String pluginPath = String.Empty;
-        private String libraryPath = String.Empty;
+        private string pluginPath = String.Empty;
+        private string libraryPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
         private Server server;
 
@@ -34,7 +34,7 @@ namespace Terraria_Server.Plugin
         /// <param name="pluginPath">Path to plugin directory</param>
         /// <param name="libraryPath">Path to library directory</param>
         /// <param name="server">Current Server instance</param>
-        public PluginManager(String pluginPath, String libraryPath, Server server)
+        public PluginManager(string pluginPath, string libraryPath, Server server)
         {
             this.pluginPath = pluginPath;
             this.libraryPath = libraryPath;
@@ -74,7 +74,7 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="PluginPath">Path to plugin</param>
         /// <returns>Instance of the successfully loaded plugin, otherwise null</returns>
-        public Plugin LoadPlugin(String PluginPath)
+        public Plugin LoadPlugin(string PluginPath)
         {
             try
             {
@@ -127,7 +127,7 @@ namespace Terraria_Server.Plugin
 
         public void LoadPlugins()
         {
-            foreach (String file in Directory.GetFiles(pluginPath))
+            foreach (string file in Directory.GetFiles(pluginPath))
             {
                 FileInfo fileInfo = new FileInfo(file);
                 if (fileInfo.Extension.ToLower().Equals(".dll"))
@@ -192,9 +192,9 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="name">Plugin name</param>
         /// <returns>Returns true on plugin successfully Enabling</returns>
-        public bool EnablePlugin(String name)
+        public bool EnablePlugin(string name)
         {
-        	String cleanedName = name.ToLower().Trim();
+            string cleanedName = name.ToLower().Trim();
         	if(plugins.ContainsKey(cleanedName))
         	{
 	        	Plugin plugin = plugins[cleanedName];
@@ -210,9 +210,9 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="name">Name of plugin</param>
         /// <returns>Returns true on plugin successfully Disabling</returns>
-        public bool DisablePlugin(String name)
+        public bool DisablePlugin(string name)
         {
-        	String cleanedName = name.ToLower().Trim();
+            string cleanedName = name.ToLower().Trim();
         	if(plugins.ContainsKey(cleanedName))
         	{
 	        	Plugin plugin = plugins[cleanedName];
@@ -230,9 +230,9 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="name">Plugin name</param>
         /// <returns>Returns found plugin if successful, otherwise returns null</returns>
-        public Plugin GetPlugin(String name)
+        public Plugin GetPlugin(string name)
         {
-        	String cleanedName = name.ToLower().Trim();
+            string cleanedName = name.ToLower().Trim();
         	if(plugins.ContainsKey(cleanedName))
         	{
         		return plugins[cleanedName];

@@ -10,15 +10,15 @@ namespace Terraria_Utilities.Serialize
 {
     public class Serializer
     {
-        public static readonly String[] ITEM_IGNORE_FIELDS = new String[] { "Active", "Stack", "UseSound", "Owner", "NoUseGraphic", "Alpha", "Color", "Accessory", "Material", "Vanity", "ManaIncrease" };
+        public static readonly string[] ITEM_IGNORE_FIELDS = new string[] { "Active", "Stack", "UseSound", "Owner", "NoUseGraphic", "Alpha", "Color", "Accessory", "Material", "Vanity", "ManaIncrease" };
         public static readonly MethodInfo ITEM_SET_DEFAULTS = typeof(Item).GetMethod("SetDefaults", new Type[] { typeof(int), typeof(bool) });
 
-        public static readonly String[] NPC_IGNORE_FIELDS = new String[] { "immune", "ai", "Active", "direction", "oldtarget", "target", "life" };
-        
-        public static readonly String[] PROJECTILE_IGNORE_FIELDS = new String[] { "ai", "playerImmune", "type", "Active" };
+        public static readonly string[] NPC_IGNORE_FIELDS = new string[] { "immune", "ai", "Active", "direction", "oldtarget", "target", "life" };
+
+        public static readonly string[] PROJECTILE_IGNORE_FIELDS = new string[] { "ai", "playerImmune", "type", "Active" };
         public static readonly MethodInfo PROJECTILE_SET_DEFAULTS = typeof(Projectile).GetMethod("SetDefaults", new Type[] { typeof(ProjectileType) });
 
-        public static void Serialize(Type type, String[] ignoreFields)
+        public static void Serialize(Type type, string[] ignoreFields)
         {
             DiffSerializer serializer = new DiffSerializer(type, ignoreFields);
             FileStream fs = new FileStream(type.Name + "s.xml", FileMode.OpenOrCreate);
@@ -33,7 +33,7 @@ namespace Terraria_Utilities.Serialize
             {
                 object obj = Activator.CreateInstance(type);
                 ITEM_SET_DEFAULTS.Invoke(obj, new object[] { i, false });
-                String value = (String)name.GetValue(obj, null);
+                string value = (String)name.GetValue(obj, null);
                 if (!String.IsNullOrWhiteSpace(value))
                 {
                     serializer.WriteObject(writer, obj);

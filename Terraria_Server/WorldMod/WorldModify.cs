@@ -63,8 +63,8 @@ namespace Terraria_Server.WorldMod
 			{
 			}
 		}
-		
-		public static String statusText = "";
+
+        public static string statusText = "";
 		
 		// not sure about this, but sure looks like it was supposed to be thread static
 		[ThreadStatic]
@@ -1153,7 +1153,7 @@ namespace Terraria_Server.WorldMod
 			}
 		}
 
-		public static Boolean IsValidTreeRootTile(TileRef tile)
+        public static bool IsValidTreeRootTile(TileRef tile)
 		{
 			return (tile.Active && (tile.Type == 2 || tile.Type == 23 || tile.Type == 60));
 		}

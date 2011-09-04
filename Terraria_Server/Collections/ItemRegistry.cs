@@ -10,8 +10,8 @@ namespace Terraria_Server.Collections
 {
     public class ItemRegistry : Registry<Item>
     {
-        private const String ITEMS_BY_NAME = "ItemsByName.xml";
-        private const String ITEM_FILE = "Items.xml";
+        private const string ITEMS_BY_NAME = "ItemsByName.xml";
+        private const string ITEM_FILE = "Items.xml";
 
         public void Load () 
         { 
@@ -43,7 +43,7 @@ namespace Terraria_Server.Collections
             return item;
         }
 
-        public Item Create(String name, int stack = 1)
+        public Item Create(string name, int stack = 1)
         {
             return CloneAndInit(base.Create(name), stack);
         }

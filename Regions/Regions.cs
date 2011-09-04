@@ -21,17 +21,17 @@ namespace Regions
 {
     public class Regions : Plugin
     {
-        public static Int32 SelectorItem = 0;
-        public static Boolean UsingPermissions = false;
+        public static int SelectorItem = 0;
+        public static bool UsingPermissions = false;
 
-        public static String RegionsFolder
+        public static string RegionsFolder
         {
             get
             {
                 return Statics.PluginPath + Path.DirectorySeparatorChar + "Regions";
             }
         }
-        public static String DataFolder
+        public static string DataFolder
         {
             get
             {
@@ -41,7 +41,7 @@ namespace Regions
 
         public static Properties rProperties { get; set; }
         public static RegionManager regionManager { get; set; }
-        private static Boolean SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
+        private static bool SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
 
         public Node DoorChange;
         public Node LiquidFlow;
@@ -103,7 +103,7 @@ namespace Regions
             ProgramLog.Plugin.Log("Regions disabled.");
         }
 
-        public static void Log(String fmt, params object[] args)
+        public static void Log(string fmt, params object[] args)
         {
             ProgramLog.Plugin.Log("[Regions] " + fmt, args);
         }
@@ -133,7 +133,7 @@ namespace Regions
 
                         Selection.SetSelection(player, mousePoints);
 
-                        player.sendMessage(string.Format("You have selected block at {0},{1}, {2} position", 
+                        player.sendMessage(String.Format("You have selected block at {0},{1}, {2} position", 
                             Event.Position.X, Event.Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColor.Green);
                         return;
                     }
@@ -231,12 +231,12 @@ namespace Regions
 
         #endregion
 
-        public static Boolean isRunningPermissions()
+        public static bool isRunningPermissions()
         {
             return Terraria_Server.Permissions.Node.isPermittedImpl != null;
         }
 
-        public static Boolean IsRestrictedForUser(Player player, Region region, Node node)
+        public static bool IsRestrictedForUser(Player player, Region region, Node node)
         {
             if (UsingPermissions)
             {

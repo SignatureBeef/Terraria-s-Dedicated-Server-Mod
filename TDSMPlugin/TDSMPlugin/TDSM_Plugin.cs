@@ -83,7 +83,7 @@ namespace TDSMExamplePlugin
             ProgramLog.Plugin.Log(base.Name + " disabled.");
         }
 
-        public static void Log(String fmt, params object[] args)
+        public static void Log(string fmt, params object[] args)
         {
             ProgramLog.Plugin.Log("[TPlugin] " + fmt, args);
         }

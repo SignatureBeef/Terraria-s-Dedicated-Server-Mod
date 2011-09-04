@@ -66,7 +66,7 @@ namespace Terraria_Server.Logging
 				var dir = Path.GetDirectoryName (absolute);
 				var name = Path.GetFileNameWithoutExtension (path);
 				var ext = Path.GetExtension (path);
-				newpath = Path.Combine (dir, string.Format ("{0}_{1:yyyyMMdd_HHmm}{2}", name, DateTime.Now, ext));
+				newpath = Path.Combine (dir, String.Format ("{0}_{1:yyyyMMdd_HHmm}{2}", name, DateTime.Now, ext));
 			}
 			
 			logFile = new FileOutputTarget (newpath);
@@ -190,12 +190,12 @@ namespace Terraria_Server.Logging
 						var args = (object[]) entry.args;
 						try
 						{
-							text = string.Format (text, args);
+							text = String.Format (text, args);
 						}
 						catch (Exception)
 						{
-							text = string.Format ("<Incorrect log message format string or argument list: message=\"{0}\", args=({1})>",
-								text, string.Join (", ", args));
+							text = String.Format ("<Incorrect log message format string or argument list: message=\"{0}\", args=({1})>",
+								text, String.Join (", ", args));
 						}
 					}
 					
@@ -206,7 +206,7 @@ namespace Terraria_Server.Logging
 					var e = (Exception) entry.message;
 					
 					if (entry.args is string)
-						output.message = string.Format ("{0}:{1}{2}", entry.args, Environment.NewLine, e.ToString());
+						output.message = String.Format ("{0}:{1}{2}", entry.args, Environment.NewLine, e.ToString());
 					else
 						output.message = e.ToString();
 				}
@@ -226,7 +226,7 @@ namespace Terraria_Server.Logging
 //						}
 //						else
 //						{
-//							thread = string.Format ("P{0:000}", nextPoolIndex++);
+//							thread = String.Format ("P{0:000}", nextPoolIndex++);
 //							poolNames[entry.thread] = thread;
 //						}
 					}
@@ -235,7 +235,7 @@ namespace Terraria_Server.Logging
 				}
 				
 				if (entry.thread != null && entry.time != default(DateTime))
-					output.prefix = string.Format ("{0} {1}> ", entry.time, thread);
+					output.prefix = String.Format ("{0} {1}> ", entry.time, thread);
 			}
 			catch (Exception e)
 			{
@@ -346,7 +346,7 @@ namespace Terraria_Server.Logging
 						else if (run > 0)
 						{
 							//System.Console.WriteLine ("sending");
-							last.message = string.Format ("Log message repeated {0} times", run);
+							last.message = String.Format ("Log message repeated {0} times", run);
 							Send (entry.target, last);
 							last = output;
 							run = 0;

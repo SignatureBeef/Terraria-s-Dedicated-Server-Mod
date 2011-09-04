@@ -19,7 +19,7 @@ namespace Terraria_Server
 
         public Server() { }
 
-        public Server(World World, int PlayerCap, String myWhiteList, String myBanList, String myOpList)
+        public Server(World World, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
         {
             Main.maxNetplayers = PlayerCap;
             world = World;
@@ -33,7 +33,7 @@ namespace Terraria_Server
             OpList.Load();
 
             RejectedItems = new List<String>();
-            String[] rejItem = Program.properties.RejectedItems.Split(',');
+            string[] rejItem = Program.properties.RejectedItems.Split(',');
             for (int i = 0; i < rejItem.Length; i++)
             {
                 if (rejItem[i].Trim().Length > 0)
@@ -46,9 +46,9 @@ namespace Terraria_Server
         // Summary:
         //       Gets a specified Online Player
         //       Input name must already be cleaned of spaces
-        public Player GetPlayerByName(String name)
+        public Player GetPlayerByName(string name)
         {
-            String lowercaseName = name.ToLower();
+            string lowercaseName = name.ToLower();
             foreach (Player player in Main.players)
             {
                 if (player.Active && player.Name.ToLower().Equals(lowercaseName))
@@ -81,7 +81,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets/Sets the Server Password
-        public String OpPassword
+        public string OpPassword
         {
             get 
             {
@@ -109,7 +109,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets/Sets the Terraria Binding IP
-        public String ServerIP
+        public string ServerIP
         {
             get 
             {
@@ -137,7 +137,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Send a message to all online OPs
-        public void notifyOps(String Message, bool writeToConsole = true)
+        public void notifyOps(string Message, bool writeToConsole = true)
         {
             if (Statics.cmdMessages)
             {
@@ -157,7 +157,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Sends a Message to all Connected Clients
-        public void notifyAll(String Message, bool writeToConsole = true)
+        public void notifyAll(string Message, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
             if (writeToConsole)
@@ -168,7 +168,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Sends a Message to all Connected Clients
-        public void notifyAll(String Message, Color ChatColour, bool writeToConsole = true)
+        public void notifyAll(string Message, Color ChatColour, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, ChatColour.R, ChatColour.G, ChatColour.B);
             if (writeToConsole)
@@ -276,7 +276,7 @@ namespace Terraria_Server
             }
         }
 
-        public Boolean isValidLocation(Vector2 point, Boolean defaultResist = true)
+        public bool isValidLocation(Vector2 point, bool defaultResist = true)
         {
             if (point != null && (defaultResist) ? (point != default(Vector2)) : true)
                 if (point.X <= Main.maxTilesX && point.X >= 0)
@@ -290,11 +290,11 @@ namespace Terraria_Server
             return false;
         }
 
-        public Boolean RejectedItemsContains(String item)
+        public bool RejectedItemsContains(string item)
         {
             if (item != null)
             {
-                foreach (String rItem in RejectedItems)
+                foreach (string rItem in RejectedItems)
                 {
                     if (rItem.Trim().Replace(" ", "") == item.Trim().Replace(" ", ""))
                     {

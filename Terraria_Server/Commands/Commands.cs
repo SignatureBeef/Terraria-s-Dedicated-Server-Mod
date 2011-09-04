@@ -51,23 +51,23 @@ namespace Terraria_Server.Commands
 			args.ParseNone();
 
 			var process = System.Diagnostics.Process.GetCurrentProcess();
-			sender.sendMessage(string.Format("Virtual memory:  {0:0.0}/{1:0.0}MB",
+			sender.sendMessage(String.Format("Virtual memory:  {0:0.0}/{1:0.0}MB",
 				process.VirtualMemorySize64 / 1024.0 / 1024.0,
 				process.PeakVirtualMemorySize64 / 1024.0 / 1024.0));
-			sender.sendMessage(string.Format("Physical memory: {0:0.0}/{1:0.0}MB",
+			sender.sendMessage(String.Format("Physical memory: {0:0.0}/{1:0.0}MB",
 				process.WorkingSet64 / 1024.0 / 1024.0,
 				process.PeakWorkingSet64 / 1024.0 / 1024.0));
 			var time = process.TotalProcessorTime;
-			sender.sendMessage(string.Format("Total cpu usage:        {0:0.00}% ({1})",
+			sender.sendMessage(String.Format("Total cpu usage:        {0:0.00}% ({1})",
 				100.0 * time.TotalMilliseconds / (DateTime.Now - process.StartTime).TotalMilliseconds, time));
 
 			if (LoadMonitor.LoadLastSecond >= 0)
-				sender.sendMessage(string.Format("Cpu usage last second:  {0:0.00}%", LoadMonitor.LoadLastSecond));
+				sender.sendMessage(String.Format("Cpu usage last second:  {0:0.00}%", LoadMonitor.LoadLastSecond));
 
 			if (LoadMonitor.LoadLastMinute >= 0)
-				sender.sendMessage(string.Format("Cpu usage last minute:  {0:0.00}%", LoadMonitor.LoadLastMinute));
+				sender.sendMessage(String.Format("Cpu usage last minute:  {0:0.00}%", LoadMonitor.LoadLastMinute));
 
-			sender.sendMessage(string.Format("Last world update took: {0:0.000}ms (plr: {1:0.0}ms, npc: {2:0.0}ms, proj: {3:0.0}ms, item: {4:0.0}ms, world: {5:0.0}ms, time: {6:0.0}ms, inva: {7:0.0}ms, serv: {8:0.0}ms)",
+			sender.sendMessage(String.Format("Last world update took: {0:0.000}ms (plr: {1:0.0}ms, npc: {2:0.0}ms, proj: {3:0.0}ms, item: {4:0.0}ms, world: {5:0.0}ms, time: {6:0.0}ms, inva: {7:0.0}ms, serv: {8:0.0}ms)",
 				Program.LastUpdateTime.TotalMilliseconds,
 				Main.LastPlayerUpdateTime.TotalMilliseconds,
 				Main.LastNPCUpdateTime.TotalMilliseconds,
@@ -105,9 +105,9 @@ namespace Terraria_Server.Commands
 				items += 1;
 			}
 			
-			sender.sendMessage(string.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
+			sender.sendMessage(String.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}", npcs, unpcs, projs, uprojs, items));
 			//long diff = Connection.TotalOutgoingBytesUnbuffered - Connection.TotalOutgoingBytes;
-			//sender.sendMessage(string.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}, bytes saved: {5:0.0}K ({6:0.0}%)", npcs, unpcs, projs, uprojs, items, diff, diff * 100.0 / Connection.TotalOutgoingBytesUnbuffered));
+			//sender.sendMessage(String.Format("NPCs: {0}a/{1}u, projectiles: {2}a/{3}u, items: {4}, bytes saved: {5:0.0}K ({6:0.0}%)", npcs, unpcs, projs, uprojs, items, diff, diff * 100.0 / Connection.TotalOutgoingBytesUnbuffered));
 
 //#if BANDWIDTH_ANALYSIS
 //			var sb = new System.Text.StringBuilder ();
@@ -131,7 +131,7 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Reload(Server server, ISender sender, ArgumentList args)
 		{
-			Boolean parseData = args.TryPop("-data");
+			bool parseData = args.TryPop("-data");
 
 			server.notifyOps("Reloading plugins.", true);
 			server.PluginManager.ReloadPlugins();
@@ -156,7 +156,7 @@ namespace Terraria_Server.Commands
 			args.ParseNone();
 
 			var players = from p in Server.players where p.Active select p.Name;
-			sender.sendMessage(string.Concat("Current players: ", string.Join(", ", players), "."), 255, 255, 240, 20);
+			sender.sendMessage(string.Concat("Current players: ", String.Join(", ", players), "."), 255, 255, 240, 20);
 		}
 
 		/// <summary>
@@ -185,10 +185,10 @@ namespace Terraria_Server.Commands
 			string os = "";
 
 			if (pn > 0)
-				ps = (on > 0 ? " | Players: " : "Players: ") + string.Join(", ", players);
+				ps = (on > 0 ? " | Players: " : "Players: ") + String.Join(", ", players);
 
 			if (on > 0)
-				os = "Ops: " + string.Join(", ", ops);
+				os = "Ops: " + String.Join(", ", ops);
 
 			sender.sendMessage(string.Concat(os, ps, " (", on + pn, "/", SlotManager.MaxSlots, ")"), 255, 255, 240, 20);
 		}
@@ -258,16 +258,16 @@ namespace Terraria_Server.Commands
 			{
 				for (int i = 0; i < Program.commandParser.serverCommands.Values.Count; i++)
 				{
-					String Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
+					string Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
 					CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
 					if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
 					{
-						String tab = "\t";
+                        string tab = "\t";
 						if (Key.Length < 8)
 						{
 							tab = "\t\t";
 						}
-						String Message = "\t" + Key + tab + "- " + cmdInfo.description;
+                        string Message = "\t" + Key + tab + "- " + cmdInfo.description;
 						if (sender is Player)
 						{
 							Message = Message.Replace("\t", "");
@@ -304,16 +304,16 @@ namespace Terraria_Server.Commands
 
 							for (int i = selectingPage; i < toPage; i++)
 							{
-								String Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
+                                string Key = Program.commandParser.serverCommands.Keys.ToArray()[i];
 								CommandInfo cmdInfo = Program.commandParser.serverCommands.Values.ToArray()[i];
 								if (CommandParser.CheckAccessLevel(cmdInfo, sender) && !Key.StartsWith("."))
 								{
-									String tab = "\t";
+                                    string tab = "\t";
 									if (Key.Length < 8)
 									{
 										tab = "\t\t";
 									}
-									String Message = "\t" + Key + tab + "- " + cmdInfo.description;
+                                    string Message = "\t" + Key + tab + "- " + cmdInfo.description;
 									if (sender is Player)
 									{
 										Message = Message.Replace("\t", "");
@@ -348,7 +348,7 @@ namespace Terraria_Server.Commands
 		public static void WhiteList(Server server, ISender sender, ArgumentList args)
 		{
 			// /whitelist <add:remove> <player>
-			String Exception, Type = "removed from";
+            string Exception, Type = "removed from";
 			if (args.TryParseOne<String>("-add", out Exception))
 			{
 				Program.server.WhiteList.addException(Exception);
@@ -453,14 +453,14 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Time(Server server, ISender sender, ArgumentList args)
 		{
-			Double Time;
+			double Time;
 			if (args.TryParseOne<Double>("-set", out Time))
 			{
 				server.World.setTime(Time, true);
 			}
 			else
 			{
-				String caseType = args.GetString(0);
+                string caseType = args.GetString(0);
 				switch (caseType)
 				{
 					case "day":
@@ -490,7 +490,7 @@ namespace Terraria_Server.Commands
 						}
 					case "-now":
 						{
-							String AP = "AM";
+                            string AP = "AM";
 							double time = Main.time;
 							if (!Main.dayTime)
 							{
@@ -508,7 +508,7 @@ namespace Terraria_Server.Commands
 
 							int Hours = (int)time;
 							double Minutes = time - (double)Hours;
-							String MinuteString = (Minutes * 60.0).ToString();
+                            string MinuteString = (Minutes * 60.0).ToString();
 							if (Minutes < 10.0)
 							{
 								MinuteString = "0" + MinuteString;
@@ -552,8 +552,8 @@ namespace Terraria_Server.Commands
 			if (args.Count > 2 && args[0] != null && args[1] != null && args[2] != null &&
 				args[0].Trim().Length > 0 && args[1].Trim().Length > 0 && args[2].Trim().Length > 0)
 			{
-				String playerName = args[0].Trim();
-				String itemName = string.Join(" ", args);
+                string playerName = args[0].Trim();
+                string itemName = String.Join(" ", args);
 				itemName = itemName.Remove(0, itemName.IndexOf(" " + args[2]));
 
 				Player player = Program.server.GetPlayerByName(playerName);
@@ -571,7 +571,7 @@ namespace Terraria_Server.Commands
 					{
 						if (items[i].Name != null)
 						{
-							String genItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
+                            string genItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
 							if (genItemName == itemName)
 							{
 								item = items[i];
@@ -679,10 +679,10 @@ namespace Terraria_Server.Commands
                 player = args.GetOnlinePlayer(2);
             }
 
-			String npcName = args.GetString(1).ToLower().Trim();
+            string npcName = args.GetString(1).ToLower().Trim();
 
 			// Get the class id of the npc
-			Int32 realNPCId = 0;
+			int realNPCId = 0;
 			NPC fclass = Registries.NPC.FindClass(npcName);
 			if (fclass.type != Registries.NPC.Default.type)
 			{
@@ -716,7 +716,7 @@ namespace Terraria_Server.Commands
 				throw new CommandError("Expected integer for number to spawn.");
 			}
 
-			String realNPCName = "";
+            string realNPCName = "";
 			for (int i = 0; i < NPCAmount; i++)
 			{
 				Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
@@ -806,7 +806,7 @@ namespace Terraria_Server.Commands
 				{
 					if (x < 0 || x >= Main.maxTilesX || y < 0 || y >= Main.maxTilesY)
 					{
-						sender.sendMessage (string.Format ("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX - 1, Main.maxTilesY - 1));
+						sender.sendMessage (String.Format ("Coordinates out of range of (0, {0}); (0, {1}).", Main.maxTilesX - 1, Main.maxTilesY - 1));
 						return;
 					}
 					
@@ -889,8 +889,8 @@ namespace Terraria_Server.Commands
 		{
 			if (args.Count > 1)
 			{
-				String Password = args[args.Count - 1];
-				String player = string.Join(" ", args);
+                string Password = args[args.Count - 1];
+                string player = String.Join(" ", args);
 				player = player.Remove(player.IndexOf(Password), Password.Length).Trim().ToLower();
 
 				server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
@@ -929,7 +929,7 @@ namespace Terraria_Server.Commands
 		{
 			if (args.Count > 0)
 			{
-				String player = string.Join(" ", args).Trim();
+                string player = String.Join(" ", args).Trim();
 
 				server.notifyOps("De-Opping " + player + " {" + sender.Name + "}", true);
 
@@ -981,7 +981,7 @@ namespace Terraria_Server.Commands
 			if (sender is Player)
 			{
 				Player player = sender as Player;
-				String Password = string.Join(" ", args).Trim();
+                string Password = String.Join(" ", args).Trim();
 				if (player.isInOpList())
 				{
 					if (player.Password.Equals(Password))
@@ -1152,16 +1152,16 @@ namespace Terraria_Server.Commands
 					if (!(sender is Player && player.Op))
 						addr = slot.remoteAddress;
 
-					var msg = string.Format("slot {4}{0}: {1}, {2}{3}", i, slot.state, addr, name, SlotManager.IsPrivileged(i) ? "*" : "");
+					var msg = String.Format("slot {4}{0}: {1}, {2}{3}", i, slot.state, addr, name, SlotManager.IsPrivileged(i) ? "*" : "");
 
 					if (pinfo && player != null)
 					{
-						msg += string.Format(", {0}/{1}hp", player.statLife, player.statLifeMax);
+						msg += String.Format(", {0}/{1}hp", player.statLife, player.statLifeMax);
 					}
 
 					if (dinfo)
 					{
-						msg += string.Format(", {0}{1}{2}, tx:{3:0.0}K, rx:{4:0.0}K, q:{5}, qm:{6:0.0}KB",
+						msg += String.Format(", {0}{1}{2}, tx:{3:0.0}K, rx:{4:0.0}K, q:{5}, qm:{6:0.0}KB",
 							slot.conn.kicking ? "+" : "-", slot.conn.sending ? "+" : "-", slot.conn.receiving ? "+" : "-",
 							slot.conn.BytesSent / 1024.0, slot.conn.BytesReceived / 1024.0,
 							slot.conn.QueueLength,
@@ -1171,7 +1171,7 @@ namespace Terraria_Server.Commands
 					sender.sendMessage(msg);
 				}
 			}
-			sender.sendMessage(string.Format("{0}/{1} slots occupied.", k, SlotManager.MaxSlots));
+			sender.sendMessage(String.Format("{0}/{1} slots occupied.", k, SlotManager.MaxSlots));
 		}
 
 		/// <summary>
@@ -1279,7 +1279,7 @@ namespace Terraria_Server.Commands
 		{
 			if (server.PluginManager.PluginList.Count > 0)
 			{
-				String plugins = "";
+                string plugins = "";
 
 				foreach (Plugin.Plugin plugin in server.PluginManager.PluginList.Values)
 				{
@@ -1317,7 +1317,7 @@ namespace Terraria_Server.Commands
 			 */
 			if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
 			{
-				String command = args[0].Trim();
+                string command = args[0].Trim();
 				args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
 				switch (command)
 				{
@@ -1325,7 +1325,7 @@ namespace Terraria_Server.Commands
 						{
 							if (server.PluginManager.PluginList.Count > 0)
 							{
-								String plugins = "";
+                                string plugins = "";
 
 								foreach (Plugin.Plugin plugin in server.PluginManager.PluginList.Values)
 								{
@@ -1353,7 +1353,7 @@ namespace Terraria_Server.Commands
 								sender.sendMessage("Please review your argument count.");
 							}
 
-							String pluginName = string.Join(" ", args);
+                            string pluginName = String.Join(" ", args);
 
 							if (server.PluginManager.PluginList.Count > 0)
 							{
@@ -1383,7 +1383,7 @@ namespace Terraria_Server.Commands
 								sender.sendMessage("Please review your argument count.");
 							}
 
-							String pluginName = string.Join(" ", args);
+                            string pluginName = String.Join(" ", args);
 
 							if (server.PluginManager.PluginList.Count > 0)
 							{
@@ -1424,7 +1424,7 @@ namespace Terraria_Server.Commands
 								sender.sendMessage("Please review your argument count.");
 							}
 
-							String pluginName = string.Join(" ", args);
+                            string pluginName = String.Join(" ", args);
 
 							if (server.PluginManager.PluginList.Count > 0)
 							{
@@ -1476,11 +1476,11 @@ namespace Terraria_Server.Commands
         public static void SummonBoss(Server server, ISender sender, ArgumentList args)
         {
             //Come to think of it now, It may be 1 boss at a time -_-
-            Boolean EoW = args.TryPop("eater");
-            Boolean EyeOC = args.TryPop("eye");
-            Boolean Skeletron = args.TryPop("skeletron");
-            Boolean KingSlime = args.TryPop("kingslime");
-            Boolean NightOverride = args.TryPop("-night");
+            bool EoW = args.TryPop("eater");
+            bool EyeOC = args.TryPop("eye");
+            bool Skeletron = args.TryPop("skeletron");
+            bool KingSlime = args.TryPop("kingslime");
+            bool NightOverride = args.TryPop("-night");
 
             Player player = null;
             if (sender is Player)
@@ -1491,7 +1491,7 @@ namespace Terraria_Server.Commands
             {
                 if (Netplay.anyClients)
                 {
-                    String PlayerName;
+                    string PlayerName;
                     if (args.TryParseOne<String>("-player", out PlayerName))
                     {
                         player = server.GetPlayerByName(PlayerName);
@@ -1542,7 +1542,7 @@ namespace Terraria_Server.Commands
                     NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
                 }
 
-                foreach (Int32 BossId in Bosses)
+                foreach (int BossId in Bosses)
                 {
                     Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
                     int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
@@ -1559,7 +1559,7 @@ namespace Terraria_Server.Commands
 
         public static void ItemRejection(Server server, ISender sender, ArgumentList args)
         {
-            String exception;
+            string exception;
             if (args.TryParseOne<String>("-add", out exception))
             {
                 if (!server.RejectedItems.Contains(exception))

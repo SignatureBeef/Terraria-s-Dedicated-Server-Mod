@@ -169,11 +169,11 @@ namespace Terraria_Server
 		/// <summary>
 		/// String representing hovering tool tip
 		/// </summary>
-		public String ToolTip;
+        public string ToolTip;
 		/// <summary>
 		/// Secondary tool tip string
 		/// </summary>
-		public String ToolTip2;
+        public string ToolTip2;
 		/// <summary>
 		/// Essentially the same as Ammo
 		/// </summary>
@@ -227,7 +227,7 @@ namespace Terraria_Server
 		/// <param name="oldName">Previous release name of item</param>
 		/// <param name="release">Release version</param>
 		/// <returns>Currently used name for item</returns>
-		public static String VersionName(String oldName, int release)
+        public static string VersionName(string oldName, int release)
 		{
 			if (release <= 4)
 			{

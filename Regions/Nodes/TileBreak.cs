@@ -8,7 +8,7 @@ namespace Regions.Nodes
 {
     public class TileBreak : Node
     {
-        public const String Node = "regions.tilebreak";
+        public const string Node = "regions.tilebreak";
 
         public Node GetNode()
         {

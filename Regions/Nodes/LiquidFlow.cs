@@ -8,7 +8,7 @@ namespace Regions.Nodes
 {
     public class LiquidFlow : Node
     {
-        public const String Node = "regions.liquidflow";
+        public const string Node = "regions.liquidflow";
 
         public Node GetNode()
         {

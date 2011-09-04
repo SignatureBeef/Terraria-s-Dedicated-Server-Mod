@@ -12,11 +12,11 @@ namespace TDSMExamplePlugin
         private const bool DEFAULT_TILE_BREAKAGE = true;
         private const bool DEFAULT_EXPLOSIVES_ALLOWED = true;
 
-        private const String SPAWNING_CANCELLED = "allowspawns";
-        private const String TILE_BREAKAGE = "tilebreakage";
-        private const String EXPLOSIVES_ALLOWED = "allowexplosives";
+        private const string SPAWNING_CANCELLED = "allowspawns";
+        private const string TILE_BREAKAGE = "tilebreakage";
+        private const string EXPLOSIVES_ALLOWED = "allowexplosives";
 
-        public Properties(String propertiesPath) : base(propertiesPath) { }
+        public Properties(string propertiesPath) : base(propertiesPath) { }
 
         public void pushData()
         {
