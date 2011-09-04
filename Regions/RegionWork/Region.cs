@@ -15,6 +15,7 @@ namespace Regions.RegionWork
         public Boolean Restricted = false; //restrict from Ops
         public Boolean RestrictedNPCs = false;
         public List<String> UserList = new List<String>();
+        public List<String> ProjectileList = new List<String>();
 
         /* In tile format (playerpos / 16) */
         public Vector2 Point1 { get; set; }
@@ -56,6 +57,17 @@ namespace Regions.RegionWork
         public Boolean ContainsUser(String key)
         {
             foreach (String internalKey in UserList)
+            {
+                if (internalKey.Equals(key))
+                    return true;
+            }
+
+            return false;
+        }
+
+        public Boolean ContainsProjectile(String key)
+        {
+            foreach (String internalKey in ProjectileList)
             {
                 if (internalKey.Equals(key))
                     return true;
@@ -172,12 +184,18 @@ namespace Regions.RegionWork
 
         public String UserListToString()
         {
-            String users = "";
+            /*String users = "";
             foreach (String user in UserList)
             {
                 users += user + " ";
             }
-            return users.Trim();
+            return users.Trim();*/
+            return string.Join(" ", UserList.ToArray()).Trim();
+        }
+
+        public String ProjectileListToString()
+        {
+            return string.Join(" ", ProjectileList.ToArray()).Trim();
         }
 
         public Boolean IsRestrictedForUser(Player player)
@@ -193,9 +211,10 @@ namespace Regions.RegionWork
                 "point1: {2},{3}\n" +
                 "point2: {4},{5}\n" +
                 "users: {6}\n" +
-                "restricted: {7}" +
-                "npcrestrict: {8}",
-                Name, Description, Point1.X, Point1.Y, Point2.X, Point2.Y, UserListToString(), Restricted, RestrictedNPCs);
+                "projectiles: {7}\n" +
+                "restricted: {8}" +
+                "npcrestrict: {9}",
+                Name, Description, Point1.X, Point1.Y, Point2.X, Point2.Y, UserListToString(), ProjectileListToString(), Restricted, RestrictedNPCs);
         }
     }
 }

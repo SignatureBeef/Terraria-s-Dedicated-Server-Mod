@@ -14,6 +14,7 @@ namespace Regions
         public static void Region(Server server, ISender sender, ArgumentList args)
         {
             /* Meh [START] */
+            String Command = args[0];
             try
             {
                 if (args.TryPop("select"))
@@ -24,9 +25,12 @@ namespace Regions
                 {
                     if (sender is Player)
                     {
-                        if (Selection.isInSelectionlist(sender as Player))
+                        Vector2[] selection = Selection.GetSelection(sender as Player);
+                        if (    selection == null 
+                            || (selection[0] == null || selection[0] == default(Vector2))
+                            || (selection[1] == null || selection[1] == default(Vector2)))
                         {
-                            sender.sendMessage("Please finish the region selection first!", 255);
+                            sender.sendMessage("Please select a region first!", 255);
                             return;
                         }
                     }
@@ -48,12 +52,24 @@ namespace Regions
                 {
                     List(server, sender, args);
                 }
+                else if (args.TryPop("projectile"))
+                {
+                    Boolean add = args.TryPop("add");
+                    Boolean remove = args.TryPop("remove");
+
+                    if (add)
+                        AddUser(server, sender, args);
+                    else if (remove)
+                        RemoveUser(server, sender, args);
+                    else
+                        throw new CommandError("Please review your command.");
+                }
                 else
                 {
                     sender.sendMessage("Region Commands: select, create, user, list.", 255);
                 }
             } catch(CommandError e) {
-                switch (args[0])
+                switch (Command)
                 {
                     //case "select":
                     //    break;
@@ -270,6 +286,92 @@ namespace Regions
             }
             else
                 throw new CommandError("Invalid arguments, Please review your command.");
+        }
+
+        public static void AddProjectile(Server server, ISender sender, ArgumentList args)
+        {
+            String projectiles;
+            Int32 Slot;
+
+            if (args.TryParseTwo<String, Int32>("-proj", out projectiles, "-slot", out Slot))
+            {
+                Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                    {
+                        region = Regions.regionManager.Regions[i];
+                        break;
+                    }
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                int Count = 0;
+                foreach (String proj in projectiles.Split(','))
+                {
+                    if (proj.Trim().Length > 0)
+                    {
+                        region.ProjectileList.Add(proj.Trim().ToLower().Replace(" ", ""));
+                        Count++;
+                    }
+                }
+
+                if (Count > 0)
+                    sender.sendMessage(string.Join("{0} projectiles were blocked in Region '{1}'",
+                        ((projectiles.Equals("*")) ? "All" : Count.ToString()), region.Name),
+                        255, 0, 255);
+                else
+                    sender.sendMessage(string.Join("No projectiles specified to add to Region '{0}'", region.Name));
+            }
+            else
+                throw new CommandError("Please review your command");
+        }
+
+        public static void RemoveProjectile(Server server, ISender sender, ArgumentList args)
+        {
+            String projectiles;
+            Int32 Slot;
+
+            if (args.TryParseTwo<String, Int32>("-proj", out projectiles, "-slot", out Slot))
+            {
+                Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                    {
+                        region = Regions.regionManager.Regions[i];
+                        break;
+                    }
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                int Count = 0;
+                foreach (String proj in projectiles.Split(','))
+                {
+                    if (proj.Trim().Length > 0)
+                    {
+                        String projectile = proj.Trim().ToLower().Replace(" ", "");
+                        while (region.ProjectileList.Contains(projectile))
+                        {
+                            if(region.ProjectileList.Remove(projectile))
+                                Count++;
+                        }
+                    }
+                }
+
+                if (Count > 0)
+                    sender.sendMessage(string.Join("{0} projectiles were unblocked in Region '{1}'", 
+                        ((projectiles.Equals("*")) ? "All" : Count.ToString()), region.Name),
+                        255, 0, 255);
+                else
+                    sender.sendMessage(string.Join("No projectiles specified to remove from Region '{0}'", region.Name));
+            }
+            else
+                throw new CommandError("Please review your command");
         }
     }
 }

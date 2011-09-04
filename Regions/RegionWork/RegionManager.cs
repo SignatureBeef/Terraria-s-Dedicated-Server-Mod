@@ -69,6 +69,7 @@ namespace Regions.RegionWork
             Vector2 Point1 = default(Vector2);
             Vector2 Point2 = default(Vector2);
             List<String> Users = new List<String>();
+            List<String> Projectiles = new List<String>();
             Boolean Restricted = false;
             Boolean RestrictedNPCs = false;
 
@@ -116,6 +117,13 @@ namespace Regions.RegionWork
                                     Users = userlist.Split(' ').ToList<String>();
                                 break;
                             }
+                        case "projectiles":
+                            {
+                                String userlist = line.Remove(0, line.IndexOf(":") + 1).Trim();
+                                if(userlist.Length > 0)
+                                    Projectiles = userlist.Split(' ').ToList<String>();
+                                break;
+                            }
                         case "restricted":
                             {
                                 String restricted = line.Remove(0, line.IndexOf(":") + 1).Trim();
@@ -142,6 +150,7 @@ namespace Regions.RegionWork
             region.Point1 = Point1;
             region.Point2 = Point2;
             region.UserList = Users;
+            region.ProjectileList = Projectiles;
             region.Restricted = Restricted;
             region.RestrictedNPCs = RestrictedNPCs;
 

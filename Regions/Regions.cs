@@ -179,9 +179,9 @@ namespace Regions
                 {
                     if (rgn.HasPoint(Event.Projectile.Position / 16))
                     {
-                        if( rProperties.BlockedProjectiles.Contains("*") ||
-                            rProperties.BlockedProjectiles.Contains(Event.Projectile.Type.ToString()) ||
-                            rProperties.BlockedProjectiles.Contains(Event.Projectile.Name.ToLower().Replace(" ", "")))
+                        if( rgn.ProjectileList.Contains("*") ||
+                            rgn.ProjectileList.Contains(Event.Projectile.Type.ToString()) ||
+                            rgn.ProjectileList.Contains(Event.Projectile.Name.ToLower().Replace(" ", "")))
                         {
                             if (IsRestrictedForUser(Event.Player, rgn, ProjectileUse))
                             {

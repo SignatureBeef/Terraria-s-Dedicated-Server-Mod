@@ -14,10 +14,10 @@ namespace Regions
 
         public void pushData()
         {
-            object temp = BlockedProjectiles;
+            //object temp = BlockedProjectiles;
         }
 
-        public List<String> BlockedProjectiles
+        /*public List<String> BlockedProjectiles
         {
             get
             {
@@ -28,6 +28,6 @@ namespace Regions
             {
                 setValue("blockedprojectiles", string.Join(",", value.ToArray()));
             }
-        }
+        }*/
     }
 }
