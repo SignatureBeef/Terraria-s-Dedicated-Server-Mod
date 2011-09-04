@@ -176,10 +176,9 @@ namespace Regions
         {
             for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
             {
-                sender.sendMessage(String.Format("Slot {0} : {1} [ {2} ] ({3},{4})", i, Regions.regionManager.Regions[i].Name, 
+                sender.Message(255, "Slot {0} : {1} [ {2} ] ({3},{4})", i, Regions.regionManager.Regions[i].Name,
                     Regions.regionManager.Regions[i].Description,
-                        Regions.regionManager.Regions[i].Point1.X, Regions.regionManager.Regions[i].Point1.Y), 
-                        255, 255);
+                        Regions.regionManager.Regions[i].Point1.X, Regions.regionManager.Regions[i].Point1.Y);
             }
         }
 
@@ -237,7 +236,7 @@ namespace Regions
                         Regions.Log(sender.Name + " created region {0} with {1} user/s", region.Name, usersAdded);
                     }
                     else
-                        sender.sendMessage(String.Join("Failed to save Region '{0}'", region.Name));
+                        sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
                 }
                 else
                     throw new CommandError("A user was not able to be added to a Region.");
@@ -301,7 +300,7 @@ namespace Regions
                         255, 0, 255);
                     }
                     else
-                        sender.sendMessage(String.Join("Failed to save Region '{0}'", region.Name));
+                        sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
                 }                   
                 else
                     throw new CommandError("A user was not able to be removed from a Region.");
@@ -345,14 +344,14 @@ namespace Regions
                     if (Regions.regionManager.SaveRegion(region))
                     {
                         string Proj = (projectiles == "*") ? "All" : Count.ToString();
-                        sender.sendMessage(String.Join("{0} projectiles were blocked in Region '{1}'", Proj, region.Name),
+                        sender.sendMessage(String.Format("{0} projectiles were blocked in Region '{1}'", Proj, region.Name),
                             255, 0, 255);
                     }
                     else
-                        sender.sendMessage(String.Join("Failed to save Region '{0}'", region.Name));
+                        sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
                 }
                 else
-                    sender.sendMessage(String.Join("No projectiles specified to add to Region '{0}'", region.Name));
+                    sender.sendMessage(String.Format("No projectiles specified to add to Region '{0}'", region.Name));
             }
             else
                 throw new CommandError("Please review your command");
@@ -397,14 +396,14 @@ namespace Regions
                     if (Regions.regionManager.SaveRegion(region))
                     {
                         string Proj = (projectiles == "*") ? "All" : Count.ToString();
-                        sender.sendMessage(String.Join("{0} projectiles were unblocked in Region '{1}'", Proj, region.Name),
+                        sender.sendMessage(String.Format("{0} projectiles were unblocked in Region '{1}'", Proj, region.Name),
                             255, 0, 255);
                     }
                     else
-                        sender.sendMessage(String.Join("Failed to save Region '{0}'", region.Name));
+                        sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
                 }
                 else
-                    sender.sendMessage(String.Join("No projectiles specified to remove from Region '{0}'", region.Name));
+                    sender.sendMessage(String.Format("No projectiles specified to remove from Region '{0}'", region.Name));
             }
             else
                 throw new CommandError("Please review your command");
@@ -431,10 +430,10 @@ namespace Regions
                 region.UserList.Clear();
                 if (Regions.regionManager.SaveRegion(region))
                 {
-                    sender.sendMessage(String.Join("Successfully cleared Players from Region '{0}'", region.Name), 255, 0, 255);
+                    sender.sendMessage(String.Format("Successfully cleared Players from Region '{0}'", region.Name), 255, 0, 255);
                 }
                 else
-                    sender.sendMessage(String.Join("Failed to save Region '{0}'", region.Name));
+                    sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
             }
             else
                 throw new CommandError("Invalid arguments, Please review your command.");
@@ -461,10 +460,10 @@ namespace Regions
                 region.ProjectileList.Clear();
                 if (Regions.regionManager.SaveRegion(region))
                 {
-                    sender.sendMessage(String.Join("Successfully cleared Projectiles from Region '{0}'", region.Name), 255, 0, 255);
+                    sender.sendMessage(String.Format("Successfully cleared Projectiles from Region '{0}'", region.Name), 255, 0, 255);
                 }
                 else
-                    sender.sendMessage(String.Join("Failed to save Region '{0}'", region.Name));
+                    sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
             }
             else
                 throw new CommandError("Invalid arguments, Please review your command.");
