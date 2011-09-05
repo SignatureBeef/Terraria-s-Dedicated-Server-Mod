@@ -80,22 +80,22 @@ namespace Terraria_Server.Misc
             {
                 writer.Close();
             }
-
-            if (log)
+            
+            try
             {
-                try
-                {
-                    File.Replace(tmpName, propertiesPath, null, true);
+                File.Replace(tmpName, propertiesPath, null, true);
+                if (log)
                     ProgramLog.Log("Saved file \"{0}\".", propertiesPath);
-                }
-                catch (IOException e)
-                {
+            }
+            catch (IOException e)
+            {
+                if (log)
                     ProgramLog.Log("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
-                }
-                catch (SystemException e)
-                {
+            }
+            catch (SystemException e)
+            {
+                if (log)
                     ProgramLog.Log("Save to \"{0}\" failed: {1}", propertiesPath, e.Message);
-                }
             }
             
         }
@@ -147,6 +147,11 @@ namespace Terraria_Server.Misc
         public void setValue(string key, string value)
         {
             propertiesMap[key] = value;
+        }
+
+        public int getValue(string key, World.MAP_SIZE mapSize)
+        {
+            return getValue(key, (int)mapSize);
         }
 
         protected void setValue(string key, int value)

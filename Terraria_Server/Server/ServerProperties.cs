@@ -6,45 +6,71 @@ namespace Terraria_Server
 {
     public class ServerProperties : PropertiesFile
     {
-        private const bool DEFAULT_AUTOMATIC_UPDATES = false;
-        private const string DEFAULT_GREETING = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
-        private const string DEFAULT_MAP_SIZE = "small";
-        private const int DEFAULT_MAX_PLAYERS = 8;
-        private const bool DEFAULT_NPC_DOOR_OPEN_CANCEL = false;
-        private const int DEFAULT_PORT = 7777;
-        private const string DEFAULT_SEED = "-1";
-        private const string DEFAULT_SERVER_IP = "0.0.0.0";
-        private const bool DEFAULT_USE_CUSTOM_TILES = false;
-        private const bool DEFAULT_USE_CUSTOM_GEN_OPTS = false;
-        private const bool DEFAULT_WHITE_LIST = false;
-        private const string DEFAULT_WORLD = "world1.wld";
-        private const string DEFAULT_PID_FILE = "";
-        private const bool DEFAULT_SIMPLE_LOOP = true;
-        private const bool DEFAULT_HACKED_DATA = false;
-        private const bool DEFAULT_ALLOW_EXPLOSIONS = true;
+#region Default Values
+        private const bool      DEFAULT_ALLOW_EXPLOSIONS        = true;
+        private const bool      DEFAULT_AUTOMATIC_UPDATES       = false;
+        private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
+        private const string    DEFAULT_GREETING                = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
+        private const bool      DEFAULT_HACKED_DATA             = false;
+        private const string    DEFAULT_HARDCORE_DEATH_ACTION   = "none";
+        private const bool      DEFAULT_LOG_ROTATION            = true;
+        private const string    DEFAULT_MAP_SIZE                = "small";
+        private const int       DEFAULT_MAX_PLAYERS             = 8;
+        private const int       DEFAULT_MAX_RESPAWNTIME         = 0;
+        private const bool      DEFAULT_NPC_DOOR_OPEN_CANCEL    = false;
+        private const int       DEFAULT_OVERLIMIT_SLOTS         = 1;
+        private const string    DEFAULT_PID_FILE                = "";
+        private const int       DEFAULT_PORT                    = 7777;
+        private const string    DEFAULT_REJECT_ITEMS            = "";
+        private const string    DEFAULT_RCON_BIND_ADDRESS       = "127.0.0.1:7023";
+        private const bool      DEFAULT_SIMPLE_LOOP             = true;
+        private const int       DEFAULT_SEND_QUEUE_QUOTA        = 1024;
+        private const string    DEFAULT_SEED                    = "-1";
+        private const string    DEFAULT_SERVER_IP               = "0.0.0.0";
+        private const int       DEFAULT_SPAWN_NPC_MAX           = 100;
+        private const bool      DEFAULT_STOP_UPDATES_WHEN_EMPTY = true;
+        private const string    DEFAULT_TILESQUARE_MESSAGES     = "ignore";
+        private const bool      DEFAULT_USE_CUSTOM_TILES        = false;
+        private const bool      DEFAULT_USE_CUSTOM_GEN_OPTS     = false;
+        private const bool      DEFAULT_WHITE_LIST              = false;
+        private const string    DEFAULT_WORLD                   = "world1.wld";
+#endregion
 
-        private const string AUTOMATIC_UPDATES = "allowupdates";
-        private const string DUNGEON_AMOUNT = "opt-numdungeons";
-        private const string FLOATING_ISLAND_AMOUNT = "opt-num-floating-islands";
-        private const string GREETING = "greeting";
-        private const string MAP_SIZE = "opt-mapsize";
-        private const string MAX_PLAYERS = "maxplayers";
-        private const string MAX_TILES_X = "opt-maxtilesx";
-        private const string MAX_TILES_Y = "opt-maxtilesy";
-        private const string NPC_DOOR_OPEN_CANCEL = "npc-cancelopendoor";
-        private const string PASSWORD = "server-password";
-        private const string PORT = "port";
-        private const string SEED = "opt-seed";
-        private const string SERVER_IP = "serverip";
-        private const string USE_CUSTOM_TILES = "opt-usecustomtiles";
-        private const string USE_CUSTOM_GEN_OPTS = "opt-custom-worldgen";
-        private const string WHITE_LIST = "whitelist";
-        private const string WORLD_PATH = "worldpath";
-        private const string PID_FILE = "pid-file";
-        private const string SIMPLE_LOOP = "simple-loop";
-        private const string HACKED_DATA = "hackeddata";
-        private const string ALLOW_EXPLOSIONS = "explosions";
-        private const string REJECT_ITEMS = "rejectplayeritems";
+#region Key Values
+        private const string    ALLOW_EXPLOSIONS                = "explosions";
+        private const string    AUTOMATIC_UPDATES               = "allowupdates";
+        private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
+        private const string    DUNGEON_AMOUNT                  = "opt-numdungeons";
+        private const string    FLOATING_ISLAND_AMOUNT          = "opt-num-floating-islands";
+        private const string    GREETING                        = "greeting";
+        private const string    HACKED_DATA                     = "hackeddata";
+        private const string    HARDCORE_DEATH_ACTION           = "hardcore-death-action";
+        private const string    LOG_ROTATION                    = "log-rotation";
+        private const string    MAP_SIZE                        = "opt-mapsize";
+        private const string    MAX_PLAYERS                     = "maxplayers";
+        private const string    MAX_RESPAWNTIME                 = "max-respawn-time";
+        private const string    MAX_TILES_X                     = "opt-maxtilesx";
+        private const string    MAX_TILES_Y                     = "opt-maxtilesy";
+        private const string    NPC_DOOR_OPEN_CANCEL            = "npc-cancelopendoor";
+        private const string    OVERLIMIT_SLOTS                 = "overlimit-slots";
+        private const string    PASSWORD                        = "server-password";
+        private const string    PID_FILE                        = "pid-file";
+        private const string    PORT                            = "port";
+        private const string    REJECT_ITEMS                    = "rejectplayeritems";
+        private const string    RCON_BIND_ADDRESS               = "rcon-bind-address";
+        private const string    RCON_HASH_ONCE                  = "rcon-hash-nonce";
+        private const string    SIMPLE_LOOP                     = "simple-loop";
+        private const string    SEED                            = "opt-seed";
+        private const string    SEND_QUEUE_QUOTA                = "send-queue-quota";
+        private const string    SERVER_IP                       = "serverip";
+        private const string    SPAWN_NPC_MAX                   = "spawnnpc-max";
+        private const string    STOP_UPDATES_WHEN_EMPTY         = "stop-updates-when-empty";
+        private const string    TILESQUARE_MESSAGES             = "tile-square-messages";
+        private const string    USE_CUSTOM_TILES                = "opt-usecustomtiles";
+        private const string    USE_CUSTOM_GEN_OPTS             = "opt-custom-worldgen";
+        private const string    WHITE_LIST                      = "whitelist";
+        private const string    WORLD_PATH                      = "worldpath";
+#endregion
 
         public ServerProperties(string propertiesPath) : base(propertiesPath) { }
 
@@ -193,11 +219,6 @@ namespace Terraria_Server
             }
         }
 
-        private int getValue(string key, World.MAP_SIZE mapSize)
-        {
-            return getValue(key, (int)mapSize);
-        }
-
         public bool UseCustomTiles
         {
             get
@@ -210,7 +231,7 @@ namespace Terraria_Server
             }
         }
 
-        public int[] getMapSizes()
+        public int[] GetMapSizes()
         {
             string CustomTiles = base.getValue(MAP_SIZE);
 
@@ -406,40 +427,40 @@ namespace Terraria_Server
         
 		public string RConBindAddress
 		{
-			get { return getValue ("rcon-bind-address", "127.0.0.1:7023"); }
-			set { setValue ("rcon-bind-address", value); }
+            get { return getValue(RCON_BIND_ADDRESS, DEFAULT_RCON_BIND_ADDRESS); }
+			set { setValue(RCON_BIND_ADDRESS, value); }
 		}
 		
 		public string RConHashNonce
 		{
 			get {
-				var val = getValue ("rcon-hash-nonce");
+                var val = getValue(RCON_HASH_ONCE);
 				if (val != null)
 					return val;
 				
 				var bytes = new byte [4];
 				(new Random ((int) DateTime.Now.Ticks)).NextBytes (bytes);
 				val = String.Format ("rcon_{0:x2}{1:x2}{2:x2}{3:x2}", bytes[0], bytes[1], bytes[2], bytes[3]);
-				
-				setValue ("rcon-hash-nonce", val);
+
+                setValue(RCON_HASH_ONCE, val);
 				return val;
 			}
 			set
 			{
-				Program.properties.setValue("rcon-hash-nonce", value);
+                Program.properties.setValue(RCON_HASH_ONCE, value);
 			}
 		}
 		
 		public bool LogRotation
 		{
-			get { return getValue ("log-rotation", true); }
-			set { setValue ("log-rotation", value); }
+            get { return getValue(LOG_ROTATION, DEFAULT_LOG_ROTATION); }
+            set { setValue(LOG_ROTATION, value); }
 		}
 		
 		public int SpawnNPCMax
 		{
-			get { return getValue ("spawnnpc-max", 100); }
-			set { setValue ("spawnnpc-max", value); }
+            get { return getValue(SPAWN_NPC_MAX, DEFAULT_SPAWN_NPC_MAX); }
+            set { setValue(SPAWN_NPC_MAX, value); }
 		}
 		
 		public bool AllowExplosions
@@ -450,52 +471,52 @@ namespace Terraria_Server
 
         public string RejectedItems
 		{
-            get { return getValue(REJECT_ITEMS, ""); }
+            get { return getValue(REJECT_ITEMS, DEFAULT_REJECT_ITEMS); }
             set { setValue(REJECT_ITEMS, value); }
 		}
 		
 		public int OverlimitSlots
 		{
-			get { return getValue ("overlimit-slots", 1); }
-			set { setValue ("overlimit-slots", value); }
+            get { return getValue(OVERLIMIT_SLOTS, DEFAULT_OVERLIMIT_SLOTS); }
+            set { setValue(OVERLIMIT_SLOTS, value); }
 		}
 		
 		public bool BufferLiquidUpdates
 		{
-			get { return getValue ("buffer-liquid-updates", false); }
-			set { setValue ("buffer-liquid-updates", value); }
+            get { return getValue(BUFFER_LIQUID_UPDATES, DEFAULT_BUFFER_LIQUID_UPDATES); }
+            set { setValue(BUFFER_LIQUID_UPDATES, value); }
 		}
 		
 		public bool StopUpdatesWhenEmpty
 		{
-			get { return getValue ("stop-updates-when-empty", true); }
-			set { setValue ("stop-updates-when-empty", value); }
+            get { return getValue(STOP_UPDATES_WHEN_EMPTY, DEFAULT_STOP_UPDATES_WHEN_EMPTY); }
+            set { setValue(STOP_UPDATES_WHEN_EMPTY, value); }
 		}
 		
 		public int MaxRespawnTime
 		{
-			get { return getValue ("max-respawn-time", 0); }
-			set { setValue ("max-respawn-time", value); }
+            get { return getValue(MAX_RESPAWNTIME, 0); }
+            set { setValue(MAX_RESPAWNTIME, value); }
 		}
 		
 		// TODO: cache this somehow so we weren't doing string comparisons
 		public string HardcoreDeathAction
 		{
-			get { return getValue ("hardcore-death-action", "none"); }
-			set { setValue ("hardcore-death-action", value); }
+            get { return getValue(HARDCORE_DEATH_ACTION, DEFAULT_HARDCORE_DEATH_ACTION); }
+            set { setValue(HARDCORE_DEATH_ACTION, value); }
 		}
 		
 		// TODO: cache this somehow so we weren't doing string comparisons
 		public string TileSquareMessages
 		{
-			get { return getValue ("tile-square-messages", "ignore"); }
-			set { setValue ("tile-square-messages", value); }
+            get { return getValue(TILESQUARE_MESSAGES, DEFAULT_TILESQUARE_MESSAGES); }
+            set { setValue(TILESQUARE_MESSAGES, value); }
 		}
 		
 		public int SendQueueQuota
 		{
-			get { return getValue ("send-queue-quota", 1024); }
-			set { setValue ("send-queue-quota", value); }
+            get { return getValue(SEND_QUEUE_QUOTA, DEFAULT_SEND_QUEUE_QUOTA); }
+            set { setValue(SEND_QUEUE_QUOTA, value); }
 		}
     }
 }

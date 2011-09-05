@@ -176,8 +176,8 @@ namespace Terraria_Server
 						ProgramLog.Log ("Generated seed: {0}", seed);
 					}
 
-					int worldX = properties.getMapSizes()[0];
-					int worldY = properties.getMapSizes()[1];
+					int worldX = properties.GetMapSizes()[0];
+					int worldY = properties.GetMapSizes()[1];
 					if (properties.UseCustomTiles)
 					{
 						int X = properties.MaxTilesX;
@@ -218,8 +218,8 @@ namespace Terraria_Server
 				}
 				
 				// TODO: read map size from world file instead of config
-				int worldXtiles = properties.getMapSizes()[0];
-				int worldYtiles = properties.getMapSizes()[1];
+				int worldXtiles = properties.GetMapSizes()[0];
+				int worldYtiles = properties.GetMapSizes()[1];
 
 				if (properties.UseCustomTiles)
 				{
@@ -647,6 +647,9 @@ namespace Terraria_Server
 
 						}
 					}
+
+                    //explosions
+                    //rejectplayeritems
 				}
 
 				properties.Save();

@@ -72,6 +72,9 @@ namespace Regions
             AddCommand("region")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:    region select")
+                .WithHelpText("                 create")
+                .WithHelpText("                 user")
+                .WithHelpText("                 list")
                 .WithDescription("Region Management.")
                 .Calls(Commands.Region);
 

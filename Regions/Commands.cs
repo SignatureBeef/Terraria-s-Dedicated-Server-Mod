@@ -14,92 +14,94 @@ namespace Regions
         public static void Region(Server server, ISender sender, ArgumentList args)
         {
             /* Meh [START] */
-            string Command = args[0];
-            try
+            string Command;
+            if (args.TryGetString(0, out Command))
             {
-                if (args.TryPop("select"))
+                try
                 {
-                    SelectionToolToggle(server, sender, args);
-                }
-                else if (args.TryPop("create"))
-                {
-                    if (sender is Player)
+                    if (args.TryPop("select"))
                     {
-                        Vector2[] selection = Selection.GetSelection(sender as Player);
-                        if (    selection == null 
-                            || (selection[0] == null || selection[0] == default(Vector2))
-                            || (selection[1] == null || selection[1] == default(Vector2)))
-                        {
-                            sender.sendMessage("Please select a region first!", 255);
-                            return;
-                        }
+                        SelectionToolToggle(server, sender, args);
                     }
-                    Create(server, sender, args);
-                }
-                else if (args.TryPop("user"))
-                {
-                    bool add = args.TryPop("add");
-                    bool remove = args.TryPop("remove");
-                    bool clear = args.TryPop("clear");
+                    else if (args.TryPop("create"))
+                    {
+                        if (sender is Player)
+                        {
+                            Vector2[] selection = Selection.GetSelection(sender as Player);
+                            if (selection == null
+                                || (selection[0] == null || selection[0] == default(Vector2))
+                                || (selection[1] == null || selection[1] == default(Vector2)))
+                            {
+                                sender.sendMessage("Please select a region first!", 255);
+                                return;
+                            }
+                        }
+                        Create(server, sender, args);
+                    }
+                    else if (args.TryPop("user"))
+                    {
+                        bool add = args.TryPop("add");
+                        bool remove = args.TryPop("remove");
+                        bool clear = args.TryPop("clear");
 
-                    if (add)
-                        AddUser(server, sender, args);
-                    else if (remove)
-                        RemoveUser(server, sender, args);
-                    else if (clear)
-                        ClearRegion(server, sender, args);
-                    else
-                        throw new CommandError("Please review your command.");
-                }
-                else if (args.TryPop("list"))
-                {
-                    List(server, sender, args);
-                }
-                else if (args.TryPop("projectile"))
-                {
-                    bool add = args.TryPop("add");
-                    bool remove = args.TryPop("remove");
-                    bool clear = args.TryPop("clear");
+                        if (add)
+                            AddUser(server, sender, args);
+                        else if (remove)
+                            RemoveUser(server, sender, args);
+                        else if (clear)
+                            ClearRegion(server, sender, args);
+                        else
+                            throw new CommandError("Please review your command.");
+                    }
+                    else if (args.TryPop("list"))
+                    {
+                        List(server, sender, args);
+                    }
+                    else if (args.TryPop("projectile"))
+                    {
+                        bool add = args.TryPop("add");
+                        bool remove = args.TryPop("remove");
+                        bool clear = args.TryPop("clear");
 
-                    if (add)
-                        AddProjectile(server, sender, args);
-                    else if (remove)
-                        RemoveProjectile(server, sender, args);
-                    else if (clear)
-                        ClearProjectiles(server, sender, args);
-                    else
-                        throw new CommandError("Please review your command.");
+                        if (add)
+                            AddProjectile(server, sender, args);
+                        else if (remove)
+                            RemoveProjectile(server, sender, args);
+                        else if (clear)
+                            ClearProjectiles(server, sender, args);
+                        else
+                            throw new CommandError("Please review your command.");
+                    }
                 }
-                else
+                catch (CommandError e)
                 {
-                    sender.sendMessage("Region Commands: select, create, user, list.", 255);
+                    switch (Command)
+                    {
+                        //case "select":
+                        //    break;
+                        case "create":
+                            sender.sendMessage("'region create': Creates a new Region.", 255);
+                            sender.sendMessage("'region create' paremeters: -name <name> -desc <description>", 255);
+                            sender.sendMessage("              (To restrict newplayers add -res)", 255);
+                            sender.sendMessage("               (To restrict NPCs add -npcres)", 255);
+                            break;
+                        case "user":
+                            sender.sendMessage("'region user': Adds, Removes or Clears users from a Region Slot.", 255);
+                            sender.sendMessage("'region user' paremeters: add:remove:clear -name <name> -slot <region slot>", 255);
+                            sender.sendMessage("              (To allow by ip use -ip instead of -name)", 255);
+                            break;
+                        case "projectile":
+                            sender.sendMessage("'region projectile': Adds, Removes or Clears users from a Region Slot.", 255);
+                            sender.sendMessage("'region projectile' paremeters: add:remove:clear -proj <id:name:*> -slot <region slot>", 255);
+                            break;
+                        //case "list":
+                        //    break;
+                        default:
+                            throw e; //Unknown Error or an command with no args
+                    }
                 }
-            } catch(CommandError e) {
-                switch (Command)
-                {
-                    //case "select":
-                    //    break;
-                    case "create":
-                        sender.sendMessage("'region create': Creates a new Region.", 255);
-                        sender.sendMessage("'region create' paremeters: -name <name> -desc <description>", 255);
-                        sender.sendMessage("              (To restrict newplayers add -res)", 255);
-                        sender.sendMessage("               (To restrict NPCs add -npcres)", 255);
-                        break;
-                    case "user":
-                        sender.sendMessage("'region user': Adds, Removes or Clears users from a Region Slot.", 255);
-                        sender.sendMessage("'region user' paremeters: add:remove:clear -name <name> -slot <region slot>", 255);
-                        sender.sendMessage("              (To allow by ip use -ip instead of -name)", 255);
-                        break;
-                    case "projectile":
-                        sender.sendMessage("'region projectile': Adds, Removes or Clears users from a Region Slot.", 255);
-                        sender.sendMessage("'region projectile' paremeters: add:remove:clear -proj <id:name:*> -slot <region slot>", 255);
-                        break;
-                    //case "list":
-                    //    break;
-                    default :
-                        throw e; //Unknown Error or an command with no args
-                }
-            }
+            } else
+                sender.sendMessage("Region Commands: select, create, user, list.", 255);            
             /* Meh [END] */
         }
 
