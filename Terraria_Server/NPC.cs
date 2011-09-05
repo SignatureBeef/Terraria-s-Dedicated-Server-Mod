@@ -4948,6 +4948,10 @@ namespace Terraria_Server
                 NPC.noSpawnCycle = false;
                 return;
             }
+
+            if (Main.stopSpawns)
+                return;
+
             bool flag = false;
             bool flag2 = false;
             int num = 0;
@@ -5592,6 +5596,9 @@ namespace Terraria_Server
 		/// <param name="Type">Type of NPC to spawn</param>
         public static void SpawnOnPlayer(Player player, int playerIndex, int Type)
         {
+            if (Main.stopSpawns)
+                return;
+
             bool flag = false;
             int num = 0;
             int num2 = 0;
@@ -5834,6 +5841,9 @@ namespace Terraria_Server
 		
 		public void SetDefaults (int type)
 		{
+            if (Main.stopSpawns)
+                return;
+
 			oldDirection = direction;
 			oldTarget = target;
 			Registries.NPC.SetDefaults (this, type);
@@ -5843,7 +5853,10 @@ namespace Terraria_Server
 		}
 		
 		public void SetDefaults (string type)
-		{
+        {
+            if (Main.stopSpawns)
+                return;
+
 			oldDirection = direction;
 			oldTarget = target;
 			Registries.NPC.SetDefaults (this, type);
@@ -6509,6 +6522,9 @@ namespace Terraria_Server
 		/// </summary>
         public static void SpawnSkeletron()
         {
+            if (Main.stopSpawns)
+                return;
+
             bool flag = true;
             bool flag2 = false;
             Vector2 vector = default(Vector2);

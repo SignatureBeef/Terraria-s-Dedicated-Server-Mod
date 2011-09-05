@@ -679,6 +679,12 @@ namespace Terraria_Server.Commands
                 player = args.GetOnlinePlayer(2);
             }
 
+            if (Main.stopSpawns && args.TryPop("-override"))
+            {
+                sender.sendMessage("NPC Spawning is off, To spawn add \"-override\" to your argument");
+                return;
+            }
+
             string npcName = args.GetString(1).ToLower().Trim();
 
 			// Get the class id of the npc
