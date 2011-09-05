@@ -28,6 +28,7 @@ namespace Terraria_Server
         private const string    DEFAULT_SEED                    = "-1";
         private const string    DEFAULT_SERVER_IP               = "0.0.0.0";
         private const int       DEFAULT_SPAWN_NPC_MAX           = 100;
+        private const bool      DEFAULT_STOP_NPC_SPAWNING       = false;
         private const bool      DEFAULT_STOP_UPDATES_WHEN_EMPTY = true;
         private const string    DEFAULT_TILESQUARE_MESSAGES     = "ignore";
         private const bool      DEFAULT_USE_CUSTOM_TILES        = false;
@@ -64,6 +65,7 @@ namespace Terraria_Server
         private const string    SEND_QUEUE_QUOTA                = "send-queue-quota";
         private const string    SERVER_IP                       = "serverip";
         private const string    SPAWN_NPC_MAX                   = "spawnnpc-max";
+        private const string    STOP_NPC_SPAWNING               = "stop-npc-spawning";
         private const string    STOP_UPDATES_WHEN_EMPTY         = "stop-updates-when-empty";
         private const string    TILESQUARE_MESSAGES             = "tile-square-messages";
         private const string    USE_CUSTOM_TILES                = "opt-usecustomtiles";
@@ -104,6 +106,7 @@ namespace Terraria_Server
             temp = ServerIP;
             temp = SimpleLoop;
             temp = SpawnNPCMax;
+            temp = StopNPCSpawning;
             temp = StopUpdatesWhenEmpty;
             temp = TileSquareMessages;
             temp = UseCustomTiles;
@@ -513,11 +516,17 @@ namespace Terraria_Server
             get { return getValue(TILESQUARE_MESSAGES, DEFAULT_TILESQUARE_MESSAGES); }
             set { setValue(TILESQUARE_MESSAGES, value); }
 		}
-		
-		public int SendQueueQuota
-		{
+
+        public int SendQueueQuota
+        {
             get { return getValue(SEND_QUEUE_QUOTA, DEFAULT_SEND_QUEUE_QUOTA); }
             set { setValue(SEND_QUEUE_QUOTA, value); }
-		}
+        }
+        
+        public bool StopNPCSpawning
+        {
+            get { return getValue(STOP_NPC_SPAWNING, DEFAULT_STOP_NPC_SPAWNING); }
+            set { setValue(STOP_NPC_SPAWNING, value); }
+        }
     }
 }

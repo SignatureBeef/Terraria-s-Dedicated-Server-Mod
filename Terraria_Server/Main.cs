@@ -222,7 +222,7 @@ namespace Terraria_Server
 				}
 			}
 
-			int num = Main.rand.Next(5);
+            Main.stopSpawns = Program.properties.StopNPCSpawning;
 
             Main.tileShine[6] = 1150;
             Main.tileShine[7] = 1100;
