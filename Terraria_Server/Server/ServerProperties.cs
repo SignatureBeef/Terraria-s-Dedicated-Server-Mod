@@ -76,38 +76,39 @@ namespace Terraria_Server
 
         public void pushData()
         {
-            object temp = MaxPlayers;
-            temp = ServerIP;
-            temp = Port;
-            temp = Greeting;
-            temp = WorldPath;
-            temp = Password;
+            object temp = null;
+            temp = AllowExplosions;
             temp = AutomaticUpdates;
-            temp = NPCDoorOpenCancel;
-            temp = Seed;
-            temp = MapSize;
-            temp = UseCustomTiles;
-            temp = MaxTilesX;
-            temp = MaxTilesY;
-            temp = UseCustomGenOpts;
+            temp = BufferLiquidUpdates;
             temp = DungeonAmount;
             temp = FloatingIslandAmount;
-            temp = PIDFile;
-            temp = SimpleLoop;
+            temp = Greeting;
             temp = HackedData;
+            temp = HardcoreDeathAction;
+            temp = LogRotation;
+            temp = MapSize;
+            temp = MaxPlayers;
+            temp = MaxRespawnTime;
+            temp = MaxTilesX;
+            temp = MaxTilesY;
+            temp = NPCDoorOpenCancel;
+            temp = OverlimitSlots;
+            temp = Password;
+            temp = PIDFile;
+            temp = Port;
+            temp = RejectedItems;
             temp = RConBindAddress;
             temp = RConHashNonce;
-            temp = LogRotation;
-            temp = SpawnNPCMax;
-            temp = AllowExplosions;
-            temp = RejectedItems;
-            temp = OverlimitSlots;
-            temp = BufferLiquidUpdates;
-            temp = StopUpdatesWhenEmpty;
-            temp = MaxRespawnTime;
-            temp = HardcoreDeathAction;
-            temp = TileSquareMessages;
+            temp = Seed;
             temp = SendQueueQuota;
+            temp = ServerIP;
+            temp = SimpleLoop;
+            temp = SpawnNPCMax;
+            temp = StopUpdatesWhenEmpty;
+            temp = TileSquareMessages;
+            temp = UseCustomTiles;
+            temp = UseCustomGenOpts;
+            temp = WorldPath;
         }
 
         public int MaxPlayers
