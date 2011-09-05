@@ -1504,7 +1504,7 @@ namespace Terraria_Server.Commands
                     }
                     if (player == null)
                     {
-                        throw new CommandError("There was an issue finding a/the player.");
+                        throw new CommandError("There was an issue finding the player.");
                     }
                 }
                 else

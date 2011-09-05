@@ -71,10 +71,13 @@ namespace Regions
 
             AddCommand("region")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithHelpText("Usage:    region select")
-                .WithHelpText("                 create")
-                .WithHelpText("                 user")
-                .WithHelpText("                 list")
+                .WithHelpText("Usage:    region [select, create, user, list, npcres, opres]")
+                .WithDescription("Region Management.")
+                .Calls(Commands.Region);
+
+            AddCommand("regions")
+                .WithAccessLevel(AccessLevel.OP)
+                .WithHelpText("Usage:    regions [select, create, user, list, npcres, opres]")
                 .WithDescription("Region Management.")
                 .Calls(Commands.Region);
 
@@ -87,7 +90,7 @@ namespace Regions
             if (UsingPermissions)
                 Log("Using Permissions.");
             else
-                Log("No Permissions Found, Using Internal User System");
+                Log("No Permissions Found\nUsing Internal User System");
         }
 
         public override void Enable()
@@ -108,7 +111,10 @@ namespace Regions
 
         public static void Log(string fmt, params object[] args)
         {
-            ProgramLog.Plugin.Log("[Regions] " + fmt, args);
+            foreach (string line in String.Format(fmt, args).Split('\n'))
+            {
+                ProgramLog.Plugin.Log("[Regions] " + line);
+            }
         }
         
         #region Events

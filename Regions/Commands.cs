@@ -72,6 +72,14 @@ namespace Regions
                         else
                             throw new CommandError("Please review your command.");
                     }
+                    else if (args.TryPop("npcres"))
+                    {
+                        ToggleNPCRestrictions(server, sender, args);
+                    }
+                    else if (args.TryPop("opres"))
+                    {
+                        ToggleOPRestrictions(server, sender, args);
+                    }
                 }
                 catch (CommandError e)
                 {
@@ -463,6 +471,68 @@ namespace Regions
                 if (Regions.regionManager.SaveRegion(region))
                 {
                     sender.sendMessage(String.Format("Successfully cleared Projectiles from Region '{0}'", region.Name), 255, 0, 255);
+                }
+                else
+                    sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
+            }
+            else
+                throw new CommandError("Invalid arguments, Please review your command.");
+        }
+
+        public static void ToggleNPCRestrictions(Server server, ISender sender, ArgumentList args)
+        {
+            int Slot;
+            if (args.TryParseOne<Int32>("-slot", out Slot))
+            {
+                Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                    {
+                        region = Regions.regionManager.Regions[i];
+                        break;
+                    }
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                region.RestrictedNPCs = !region.RestrictedNPCs;
+                region.ProjectileList.Clear();
+                if (Regions.regionManager.SaveRegion(region))
+                {
+                    sender.sendMessage(String.Format("NPC Restrictions is now {0} in Region '{1}'", (region.RestrictedNPCs) ? "on" : "off", region.Name), 255, 0, 255);
+                }
+                else
+                    sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
+            }
+            else
+                throw new CommandError("Invalid arguments, Please review your command.");
+        }
+
+        public static void ToggleOPRestrictions(Server server, ISender sender, ArgumentList args)
+        {
+            int Slot;
+            if (args.TryParseOne<Int32>("-slot", out Slot))
+            {
+                Region region = null;
+                for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
+                {
+                    if (Slot == i)
+                    {
+                        region = Regions.regionManager.Regions[i];
+                        break;
+                    }
+                }
+
+                if (region == null)
+                    throw new CommandError("Specified Region Slot was incorrect.");
+
+                region.Restricted = !region.Restricted;
+                region.ProjectileList.Clear();
+                if (Regions.regionManager.SaveRegion(region))
+                {
+                    sender.sendMessage(String.Format("OP Restrictions is now {0} in Region '{1}'", (region.Restricted) ? "on" : "off", region.Name), 255, 0, 255);
                 }
                 else
                     sender.sendMessage(String.Format("Failed to save Region '{0}'", region.Name));
