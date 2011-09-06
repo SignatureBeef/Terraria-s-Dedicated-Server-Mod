@@ -53,10 +53,15 @@ namespace Terraria_Server.Networking
 			
 			lock (syncRoot)
 			{
+				freeSlots.Clear ();
+				
 				for (int i = maxSlots - 1; i >= 0; i--)
 				{
+					isPrivileged[i] = false;
 					freeSlots.Push (i);
 				}
+				
+				privFreeSlots.Clear ();
 				
 				for (int i = MAX_SLOTS; i >= maxSlots; i--)
 				{
