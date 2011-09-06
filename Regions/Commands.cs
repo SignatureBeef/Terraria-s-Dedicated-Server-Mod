@@ -152,8 +152,8 @@ namespace Regions
                         Region rgn = new Region();
                         rgn.Name = Name;
                         rgn.Description = Desc;
-                        rgn.Point1 = regionAxis[0];
-                        rgn.Point2 = regionAxis[1];
+                        rgn.Point1 = regionAxis[0] / 16;
+                        rgn.Point2 = regionAxis[1] / 16;
                         rgn.Restricted = Restrict;
                         rgn.RestrictedNPCs = RestrictNPC;
 

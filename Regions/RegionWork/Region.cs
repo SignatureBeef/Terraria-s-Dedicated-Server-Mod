@@ -21,32 +21,6 @@ namespace Regions.RegionWork
         public Vector2 Point1 { get; set; }
         public Vector2 Point2 { get; set; }
 
-        private List<TileRef> Tiles = new List<TileRef>();
-
-        public List<TileRef> GetTiles
-        {
-            get
-            {
-                Tiles.Clear();
-
-                /* Get Mins/Maxs (Already in tile format, / 16)*/
-                int XHighest = (int)Math.Max(Point1.X, Point2.X);
-                int XLowest = (int)Math.Min(Point1.X, Point2.X);
-                int YHighest = (int)Math.Max(Point1.Y, Point2.Y);
-                int YLowest = (int)Math.Min(Point1.Y, Point2.Y);
-
-                for (int x = XLowest; x < XHighest + 1; x++)
-                {
-                    for (int y = YLowest; y < YHighest + 1; y++)
-                    {
-                        Tiles.Add(Main.tile.At(x, y));
-                    }
-                }
-
-                return Tiles;
-            }
-        }
-
         public bool IsValidRegion()
         {
             bool LocationCheck = Program.server.isValidLocation(Point1) && Program.server.isValidLocation(Point2);
@@ -137,31 +111,6 @@ namespace Regions.RegionWork
         public Vector2 GetOppositePoint(Vector2 point)
         {
             return (point == Point1) ? Point2 : Point1;
-        }
-
-        /// <summary>
-        /// Tries to find if a tile is within the region.
-        /// </summary>
-        /// <param name="tile>Tile to find in the region.</param>
-        /// <returns>True on find</returns>
-        public bool HasTile(TileRef tile)
-        {
-            return GetTiles.Contains(tile);
-        }
-
-        /// <summary>
-        /// Tries to find if a tile is within the region.
-        /// </summary>
-        /// <param name="tile>Tile to find in the region.</param>
-        /// <returns>True on find</returns>
-        public bool HasTile(TileData tile)
-        {
-            foreach (TileRef tileRef in GetTiles)
-            {
-                if (tileRef.Data.Equals(tile))
-                    return true;
-            }
-            return false;
         }
 
         /// <summary>

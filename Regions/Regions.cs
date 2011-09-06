@@ -15,7 +15,6 @@ using Terraria_Server.Permissions;
 using Terraria_Server.Definitions.Tile;
 
 using Regions.RegionWork;
-using Regions.Nodes;
 
 namespace Regions
 {
@@ -94,12 +93,12 @@ namespace Regions
         }
 
         public override void Enable()
-        {
-            DoorChange      = new DoorChange    ().GetNode();
-            LiquidFlow      = new LiquidFlow    ().GetNode();
-            TileBreak       = new TileBreak     ().GetNode();
-            TilePlace       = new TilePlace     ().GetNode();
-            ProjectileUse   = new ProjectileUse ().GetNode();
+        {            
+            DoorChange      = new Node().FromPath("regions.doorchange");
+            LiquidFlow      = new Node().FromPath("regions.liquidflow");
+            TileBreak       = new Node().FromPath("regions.tilebreak");
+            TilePlace       = new Node().FromPath("regions.tileplace");
+            ProjectileUse   = new Node().FromPath("regions.projectileuse");
 
             ProgramLog.Plugin.Log("Regions for TDSM #{0} enabled.", base.TDSMBuild);
         }

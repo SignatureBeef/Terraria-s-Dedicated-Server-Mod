@@ -47,11 +47,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
-    <Compile Include="Nodes\DoorChange.cs" />
-    <Compile Include="Nodes\LiquidFlow.cs" />
-    <Compile Include="Nodes\ProjectileUse.cs" />
-    <Compile Include="Nodes\TileBreak.cs" />
-    <Compile Include="Nodes\TilePlace.cs" />
     <Compile Include="Properties.cs" />
     <Compile Include="Regions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
