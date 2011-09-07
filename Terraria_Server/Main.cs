@@ -5,7 +5,6 @@ using System.Text;
 using System.Net;
 using System.IO;
 using Terraria_Server.Misc;
-using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
@@ -121,7 +120,7 @@ namespace Terraria_Server
 		public static bool editSign = false;
         public static string signText = "";
         public static string npcChatText = "";
-        //public static Chest[] shops = new Chest[6];
+
 		public static int invasionType = 0;
 		public static double invasionX = 0.0;
 		public static int invasionSize = 0;
@@ -352,13 +351,6 @@ namespace Terraria_Server
             {
                 Main.liquidBuffer[num11] = new LiquidBuffer();
             }
-
-            //shops[0] = new Chest();
-            //shops[1] = new MerchantShop();
-            //shops[2] = new ArmsDealerShop();
-            //shops[3] = new DryadShop();
-            //shops[4] = new DemolitionistShop();
-            //shops[5] = new ClothierShop();
 
             Main.teamColor[0] = new Color(255, 255, 255);
             Main.teamColor[1] = new Color(230, 40, 20);

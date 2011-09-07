@@ -1,5 +1,4 @@
 using System;
-using Terraria_Server.Shops;
 
 namespace Terraria_Server.Messages
 {

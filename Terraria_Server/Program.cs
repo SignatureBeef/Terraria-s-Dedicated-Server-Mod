@@ -662,6 +662,7 @@ namespace Terraria_Server
 		{
 			try
 			{
+
                 if (Terraria_Server.Main.rand == null)
 				{
                     Terraria_Server.Main.rand = new Random((int)DateTime.Now.Ticks);

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terraria_Server.Shops;
 using Terraria_Server.Plugin;
 using Terraria_Server.Events;
 

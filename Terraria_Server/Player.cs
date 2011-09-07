@@ -6,7 +6,6 @@ using System.Text;
 using System.IO;
 using System.Security.Cryptography;
 using Terraria_Server.Misc;
-using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;

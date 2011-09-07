@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -183,13 +183,9 @@
     <Compile Include="Misc\ChatColor.cs" />
     <Compile Include="Permissions\Node.cs" />
     <Compile Include="Server\LoadMonitor.cs" />
-    <Compile Include="Shops\ArmsDealerShop.cs" />
-    <Compile Include="Shops\ClothierShop.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
     <Compile Include="Commands\Sender.cs" />
     <Compile Include="Events\PlayerChestOpenEvent.cs" />
-    <Compile Include="Shops\DemolitionistShop.cs" />
-    <Compile Include="Shops\DryadShop.cs" />
     <Compile Include="Events\BasePlayerEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
     <Compile Include="Events\PlayerEditSignEvent.cs" />
@@ -197,11 +193,9 @@
     <Compile Include="Events\PlayerLogoutEvent.cs" />
     <Compile Include="Events\PartyChangeEvent.cs" />
     <Compile Include="Events\PlayerCommandEvent.cs" />
-    <Compile Include="Shops\Chest.cs" />
     <Compile Include="Collision.cs" />
     <Compile Include="Events\PlayerDeathEvent.cs" />
     <Compile Include="Events\PlayerProjectileEvent.cs" />
-    <Compile Include="Shops\MerchantShop.cs" />
     <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Commands.cs" />
     <Compile Include="Commands\CommandParser.cs" />
@@ -233,7 +227,7 @@
     <Compile Include="Server\Packet.cs" />
     <Compile Include="Server\TConsole.cs" />
     <Compile Include="Server\UpdateManager.cs" />
-    <Compile Include="Shops\Shop.cs" />
+    <Compile Include="Chest.cs" />
     <Compile Include="Sign.cs" />
     <Compile Include="Server\Statics.cs" />
     <Compile Include="Misc\Vector2.cs" />
