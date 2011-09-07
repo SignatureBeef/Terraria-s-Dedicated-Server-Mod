@@ -170,7 +170,7 @@ namespace Terraria_Server.Networking
 			
 			for (int i = 0; i < 255; i++)
 			{
-				var slot = Netplay.slots[i];
+				var slot = NetPlay.slots[i];
 				
 				if (slot.state >= SlotState.PLAYING && slot.Connected)
 				{

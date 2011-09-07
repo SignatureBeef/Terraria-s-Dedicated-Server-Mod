@@ -307,7 +307,7 @@ namespace Terraria_Server.RemoteConsole
 			
 			try
 			{
-				Program.commandParser.ParseConsoleCommand (line, Program.server, this.sender);
+				Program.commandParser.ParseConsoleCommand (line, this.sender);
 			}
 			catch (Exception e)
 			{

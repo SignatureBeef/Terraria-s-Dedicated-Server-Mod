@@ -11,7 +11,7 @@ namespace Regions
 {
     public class Commands
     {
-        public static void Region(Server server, ISender sender, ArgumentList args)
+        public static void Region(ISender sender, ArgumentList args)
         {
             /* Meh [START] */
             string Command;
@@ -21,7 +21,7 @@ namespace Regions
                 {
                     if (args.TryPop("select"))
                     {
-                        SelectionToolToggle(server, sender, args);
+                        SelectionToolToggle(sender, args);
                     }
                     else if (args.TryPop("create"))
                     {
@@ -36,7 +36,7 @@ namespace Regions
                                 return;
                             }
                         }
-                        Create(server, sender, args);
+                        Create(sender, args);
                     }
                     else if (args.TryPop("user"))
                     {
@@ -45,17 +45,17 @@ namespace Regions
                         bool clear = args.TryPop("clear");
 
                         if (add)
-                            AddUser(server, sender, args);
+                            AddUser(sender, args);
                         else if (remove)
-                            RemoveUser(server, sender, args);
+                            RemoveUser(sender, args);
                         else if (clear)
-                            ClearRegion(server, sender, args);
+                            ClearRegion(sender, args);
                         else
                             throw new CommandError("Please review your command.");
                     }
                     else if (args.TryPop("list"))
                     {
-                        List(server, sender, args);
+                        List(sender, args);
                     }
                     else if (args.TryPop("projectile"))
                     {
@@ -64,21 +64,21 @@ namespace Regions
                         bool clear = args.TryPop("clear");
 
                         if (add)
-                            AddProjectile(server, sender, args);
+                            AddProjectile(sender, args);
                         else if (remove)
-                            RemoveProjectile(server, sender, args);
+                            RemoveProjectile(sender, args);
                         else if (clear)
-                            ClearProjectiles(server, sender, args);
+                            ClearProjectiles(sender, args);
                         else
                             throw new CommandError("Please review your command.");
                     }
                     else if (args.TryPop("npcres"))
                     {
-                        ToggleNPCRestrictions(server, sender, args);
+                        ToggleNPCRestrictions(sender, args);
                     }
                     else if (args.TryPop("opres"))
                     {
-                        ToggleOPRestrictions(server, sender, args);
+                        ToggleOPRestrictions(sender, args);
                     }
                 }
                 catch (CommandError e)
@@ -113,7 +113,7 @@ namespace Regions
             /* Meh [END] */
         }
 
-        public static void SelectionToolToggle(Server server, ISender sender, ArgumentList args)
+        public static void SelectionToolToggle(ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
@@ -132,7 +132,7 @@ namespace Regions
 
         }
 
-        public static void Create(Server server, ISender sender, ArgumentList args)
+        public static void Create(ISender sender, ArgumentList args)
         {
             if (sender is Player)
             {
@@ -182,7 +182,7 @@ namespace Regions
             }
         }
 
-        public static void List(Server server, ISender sender, ArgumentList args)
+        public static void List(ISender sender, ArgumentList args)
         {
             for (int i = 0; i < Regions.regionManager.Regions.Count; i++)
             {
@@ -192,7 +192,7 @@ namespace Regions
             }
         }
 
-        public static void AddUser(Server server, ISender sender, ArgumentList args)
+        public static void AddUser(ISender sender, ArgumentList args)
         {
             string User = "", IP = "";
             int Slot;
@@ -255,7 +255,7 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void RemoveUser(Server server, ISender sender, ArgumentList args)
+        public static void RemoveUser(ISender sender, ArgumentList args)
         {
             string User = "", IP = "";
             int Slot;
@@ -319,7 +319,7 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void AddProjectile(Server server, ISender sender, ArgumentList args)
+        public static void AddProjectile(ISender sender, ArgumentList args)
         {
             string projectiles;
             int Slot;
@@ -367,7 +367,7 @@ namespace Regions
                 throw new CommandError("Please review your command");
         }
 
-        public static void RemoveProjectile(Server server, ISender sender, ArgumentList args)
+        public static void RemoveProjectile(ISender sender, ArgumentList args)
         {
             string projectiles;
             int Slot;
@@ -419,7 +419,7 @@ namespace Regions
                 throw new CommandError("Please review your command");
         }
 
-        public static void ClearRegion(Server server, ISender sender, ArgumentList args)
+        public static void ClearRegion(ISender sender, ArgumentList args)
         {
             int Slot;
             if (args.TryParseOne<Int32>("-slot", out Slot))
@@ -449,7 +449,7 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void ClearProjectiles(Server server, ISender sender, ArgumentList args)
+        public static void ClearProjectiles(ISender sender, ArgumentList args)
         {
             int Slot;
             if (args.TryParseOne<Int32>("-slot", out Slot))
@@ -479,7 +479,7 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void ToggleNPCRestrictions(Server server, ISender sender, ArgumentList args)
+        public static void ToggleNPCRestrictions(ISender sender, ArgumentList args)
         {
             int Slot;
             if (args.TryParseOne<Int32>("-slot", out Slot))
@@ -510,7 +510,7 @@ namespace Regions
                 throw new CommandError("Invalid arguments, Please review your command.");
         }
 
-        public static void ToggleOPRestrictions(Server server, ISender sender, ArgumentList args)
+        public static void ToggleOPRestrictions(ISender sender, ArgumentList args)
         {
             int Slot;
             if (args.TryParseOne<Int32>("-slot", out Slot))

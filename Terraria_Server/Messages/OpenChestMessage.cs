@@ -26,7 +26,7 @@ namespace Terraria_Server.Messages
             var chestEvent = new PlayerChestOpenEvent();
             chestEvent.Sender = Main.players[whoAmI];
             chestEvent.ID = chestIndex;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_CHEST, chestEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_CHEST, chestEvent);
             if (chestEvent.Cancelled)
             {
                 return;

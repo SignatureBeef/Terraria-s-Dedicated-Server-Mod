@@ -19,7 +19,7 @@ namespace Terraria_Server.Messages
 
         public override void Process (int whoAmI, byte[] readBuffer, int length, int num)
         {
-            var slot = Netplay.slots[whoAmI];
+            var slot = NetPlay.slots[whoAmI];
             
             byte tileAction = readBuffer[num++];
             int x = BitConverter.ToInt32(readBuffer, num);
@@ -82,7 +82,7 @@ namespace Terraria_Server.Messages
             tileEvent.Action = (placed) ? TileAction.PLACED : TileAction.BREAK;
             tileEvent.TileType = (wall) ? TileType.WALL : TileType.BLOCK;
             tileEvent.Position = new Vector2(x, y);
-            Program.server.PluginManager.processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
             if (tileEvent.Cancelled)
             {
                 //if (!Main.tileFrameImportant[tile.Type])
@@ -96,15 +96,15 @@ namespace Terraria_Server.Messages
 			{
 				if (tileAction == 0 || tileAction == 2 || tileAction == 4)
 				{
-					Netplay.slots[whoAmI].spamDelBlock += 1f;
+					NetPlay.slots[whoAmI].spamDelBlock += 1f;
 				}
 				else if (tileAction == 1 || tileAction == 3)
 				{
-					Netplay.slots[whoAmI].spamAddBlock += 1f;
+					NetPlay.slots[whoAmI].spamAddBlock += 1f;
 				}
 			}
 
-			if (!Netplay.slots[whoAmI].tileSection[Netplay.GetSectionX(x), Netplay.GetSectionY(y)])
+			if (!NetPlay.slots[whoAmI].tileSection[NetPlay.GetSectionX(x), NetPlay.GetSectionY(y)])
 			{
 				failFlag = true;
 			}

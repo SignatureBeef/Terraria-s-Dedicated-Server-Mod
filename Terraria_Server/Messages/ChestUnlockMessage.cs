@@ -16,7 +16,7 @@ namespace Terraria_Server.Messages
 			
 			if (playerId != whoAmI)
 			{
-				Netplay.slots[whoAmI].Kick ("Cheating detected (CHEST_UNLOCK forgery).");
+				NetPlay.slots[whoAmI].Kick ("Cheating detected (CHEST_UNLOCK forgery).");
 				return;
 			}
 			

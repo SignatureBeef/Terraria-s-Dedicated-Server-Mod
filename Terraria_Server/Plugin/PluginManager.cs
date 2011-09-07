@@ -18,7 +18,6 @@ namespace Terraria_Server.Plugin
         private string pluginPath = String.Empty;
         private string libraryPath = String.Empty;
         private Dictionary<String, Plugin> plugins;
-        private Server server;
 
         /// <summary>
         /// Server's plugin list
@@ -33,12 +32,10 @@ namespace Terraria_Server.Plugin
         /// </summary>
         /// <param name="pluginPath">Path to plugin directory</param>
         /// <param name="libraryPath">Path to library directory</param>
-        /// <param name="server">Current Server instance</param>
-        public PluginManager(string pluginPath, string libraryPath, Server server)
+        public PluginManager(string pluginPath, string libraryPath)
         {
             this.pluginPath = pluginPath;
             this.libraryPath = libraryPath;
-            this.server = server;
 
             plugins = new Dictionary<String, Plugin>();
         }
@@ -107,7 +104,6 @@ namespace Terraria_Server.Plugin
                         }
                         else
                         {
-                            plugin.Server = server;
                             plugin.Load();
                             return plugin;
                         }

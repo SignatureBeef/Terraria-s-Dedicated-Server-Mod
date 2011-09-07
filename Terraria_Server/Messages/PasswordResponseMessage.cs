@@ -25,7 +25,7 @@ namespace Terraria_Server.Messages
             
 			if (conn.State == SlotState.SERVER_AUTH)
 			{
-				if (password == Netplay.password)
+				if (password == NetPlay.password)
 				{
 					conn.State = SlotState.ACCEPTED;
 					
@@ -44,7 +44,7 @@ namespace Terraria_Server.Messages
 				var loginEvent = new PlayerLoginEvent();
 				loginEvent.Sender = conn.Player;
 				loginEvent.Password = password;
-				Program.server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_REPLY, loginEvent);
+				Server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_REPLY, loginEvent);
 				
 				if (loginEvent.Action == PlayerLoginAction.REJECT)
 				{

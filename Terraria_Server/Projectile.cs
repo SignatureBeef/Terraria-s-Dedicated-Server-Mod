@@ -2088,7 +2088,7 @@ namespace Terraria_Server
                                                                                 //playerEvent.Sign = Main.sign[num80];
                                                                                 //playerEvent.Text = this.miscText;
                                                                                 //playerEvent.isPlayer = false;
-                                                                                //Program.server.PluginManager.processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
+                                                                                //Server.PluginManager.processHook(Hooks.PLAYER_EDITSIGN, playerEvent);
                                                                                 //if (playerEvent.Cancelled)
                                                                                 //{
                                                                                 //    return;

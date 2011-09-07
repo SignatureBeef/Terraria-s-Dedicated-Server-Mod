@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (INVENTORY_DATA forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (INVENTORY_DATA forgery).");
                 return;
             }
         
@@ -47,8 +47,8 @@ namespace Terraria_Server.Messages
                         player.armor[inventorySlot - 44] = item;
                     }
 
-                    if (Program.server.RejectedItemsContains(itemName) ||
-                        Program.server.RejectedItemsContains(item.Type.ToString()))
+                    if (Server.RejectedItemsContains(itemName) ||
+                        Server.RejectedItemsContains(item.Type.ToString()))
                     {
                         player.Kick(((itemName.Length > 0) ? itemName : item.Type.ToString()) + " is not allowed on this server.");
                     }

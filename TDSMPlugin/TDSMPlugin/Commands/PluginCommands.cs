@@ -11,7 +11,7 @@ namespace TDSMPlugin.Commands
 {
     public class PluginCommands
     {
-        public static void ExampleCommand(Server server, ISender sender, ArgumentList args)
+        public static void ExampleCommand(ISender sender, ArgumentList args)
         {
             int arg;
             //if the user enters /tdsmpluginexample -test 1, it will retreive the next value '1' and put into 'arg' as an integer.

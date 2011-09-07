@@ -22,7 +22,7 @@ namespace Terraria_Server.Messages
             byte liquid = readBuffer[num++];
             byte lavaFlag = readBuffer[num]++;
 
-            if (Netplay.spamCheck)
+            if (NetPlay.spamCheck)
             {
                 int playerIndex = whoAmI;
                 Player player = Main.players[playerIndex];
@@ -45,7 +45,7 @@ namespace Terraria_Server.Messages
             ev.Position = new Vector2(x, y);
             ev.Liquid = liquid;
             ev.Lava = lavaFlag == 1;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_FLOWLIQUID, ev);
+            Server.PluginManager.processHook(Hooks.PLAYER_FLOWLIQUID, ev);
             if (ev.Cancelled)
             {
                 var msg = NetMessage.PrepareThreadInstance ();

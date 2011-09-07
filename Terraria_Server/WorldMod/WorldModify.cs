@@ -1307,7 +1307,7 @@ namespace Terraria_Server.WorldMod
 			doorEvent.Direction = 1;
 			doorEvent.Opener = opener;
 			doorEvent.isOpened = forced;
-			Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
+			Server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
 			if (doorEvent.Cancelled)
 			{
                 NetMessage.SendData(19, -1, -1, "", 0, (float)x, (float)y, 0); //Inform the client of the update
@@ -1409,7 +1409,7 @@ namespace Terraria_Server.WorldMod
 			doorEvent.Direction = direction;
 			doorEvent.Opener = opener;
 			doorEvent.isOpened = state;
-			Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
+			Server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
 			if (doorEvent.Cancelled)
 			{
                 NetMessage.SendData(19, -1, -1, "", 1, (float)x, (float)y, 0); //Inform the client of the update

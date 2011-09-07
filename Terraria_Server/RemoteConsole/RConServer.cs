@@ -349,7 +349,7 @@ namespace Terraria_Server.RemoteConsole
 				return null;
 		}
 		
-		internal static void RConCommand (Server dummy, ISender sender, ArgumentList args)
+		internal static void RConCommand (ISender sender, ArgumentList args)
 		{
 			string name;
 			if (args.TryParseOne ("cut", out name))

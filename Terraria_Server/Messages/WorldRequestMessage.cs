@@ -30,9 +30,9 @@ namespace Terraria_Server.Messages
             
             int whoAmI = conn.SlotIndex;
 
-            if (Netplay.slots[whoAmI].state == SlotState.ASSIGNING_SLOT)
+            if (NetPlay.slots[whoAmI].state == SlotState.ASSIGNING_SLOT)
             {
-                Netplay.slots[whoAmI].state = SlotState.SENDING_WORLD;
+                NetPlay.slots[whoAmI].state = SlotState.SENDING_WORLD;
             }
             NetMessage.SendData(7, whoAmI);
         }

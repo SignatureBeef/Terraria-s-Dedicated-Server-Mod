@@ -94,7 +94,7 @@ namespace Terraria_Server
 		
 		public void SpamUpdate()
 		{
-			if (!Netplay.spamCheck)
+			if (!NetPlay.spamCheck)
 			{
 				this.spamProjectile = 0f;
 				this.spamDelBlock = 0f;

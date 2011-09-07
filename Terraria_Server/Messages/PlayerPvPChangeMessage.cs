@@ -17,7 +17,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_PVP_CHANGE forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (PLAYER_PVP_CHANGE forgery).");
                 return;
             }
             
@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
 
             PlayerPvPChangeEvent playerEvent = new PlayerPvPChangeEvent();
             playerEvent.Sender = player;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_PVPCHANGE, playerEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_PVPCHANGE, playerEvent);
             if (playerEvent.Cancelled)
             {
                 return;

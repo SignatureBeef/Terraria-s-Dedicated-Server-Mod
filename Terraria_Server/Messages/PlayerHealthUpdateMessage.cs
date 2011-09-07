@@ -24,7 +24,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_HEALTH_UPDATE forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (PLAYER_HEALTH_UPDATE forgery).");
                 return;
             }
 

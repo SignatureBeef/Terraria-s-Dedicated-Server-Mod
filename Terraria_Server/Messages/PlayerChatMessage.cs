@@ -46,7 +46,7 @@ namespace Terraria_Server.Messages
                     ProgramLog.Debug.Log ("Replying to early online player query.");
                     var msg = NetMessage.PrepareThreadInstance ();
                     msg.PlayerChat (255, string.Concat ("Current players: ",
-                            String.Join (", ", from p in Server.players where p.Active select p.Name), "."),
+                            String.Join (", ", from p in Main.players where p.Active select p.Name), "."),
                             255, 240, 20);
                     conn.Send (msg.Output);
                 }
@@ -104,7 +104,7 @@ namespace Terraria_Server.Messages
         {
             messageEvent.Message = text;
             messageEvent.Sender = Main.players[whoAmI];
-            Program.server.PluginManager.processHook(hook, messageEvent);
+            Server.PluginManager.processHook(hook, messageEvent);
 
             return !messageEvent.Cancelled;
         }

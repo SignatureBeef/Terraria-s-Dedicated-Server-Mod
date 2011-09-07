@@ -36,19 +36,19 @@ namespace Terraria_Server.Messages
             
             if (type > 55)
             {
-                Netplay.slots[whoAmI].Kick ("Invalid projectile.");
+                NetPlay.slots[whoAmI].Kick ("Invalid projectile.");
                 return;
             }
             else if (type == (int)ProjectileType.FEATHER_HARPY || type == (int)ProjectileType.STINGER || type == (int)ProjectileType.SICKLE_DEMON)
             {
-                Netplay.slots[whoAmI].Kick ("Projectile cheat detected.");
+                NetPlay.slots[whoAmI].Kick ("Projectile cheat detected.");
                 return;
             }
             else if (type == (int)ProjectileType.HARPOON)
             {
                 if (Math.Abs (vX) + Math.Abs (vY) < 1e-4) // ideally, we'd want to figure out all projectiles that never have 0 velocity
                 {
-                    Netplay.slots[whoAmI].Kick ("Harpoon cheat detected.");
+                    NetPlay.slots[whoAmI].Kick ("Harpoon cheat detected.");
                     return;
                 }
             }
@@ -65,7 +65,7 @@ namespace Terraria_Server.Messages
             Projectile projectile = Registries.Projectile.Create(type);
             if (!projectile.Active || projectile.type != oldProjectile.type)
             {
-                Netplay.slots[whoAmI].spamProjectile += 1f;
+                NetPlay.slots[whoAmI].spamProjectile += 1f;
             }
 
             projectile.identity = projectileIdentity;
@@ -80,7 +80,7 @@ namespace Terraria_Server.Messages
             PlayerProjectileEvent playerEvent = new PlayerProjectileEvent();
             playerEvent.Sender = Main.players[whoAmI];
             playerEvent.Projectile = projectile;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
             if (playerEvent.Cancelled || (!Program.properties.AllowExplosions && 
                 (   type == (int)ProjectileType.BOMB        /* 28 */ || 
                     type == (int)ProjectileType.DYNAMITE    /* 29 */ ||

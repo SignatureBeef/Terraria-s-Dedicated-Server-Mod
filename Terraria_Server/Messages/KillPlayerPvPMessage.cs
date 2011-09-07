@@ -20,7 +20,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (KILL_PLAYER forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (KILL_PLAYER forgery).");
                 return;
             }
 
@@ -40,7 +40,7 @@ namespace Terraria_Server.Messages
             PlayerDeathEvent pDeath = new PlayerDeathEvent();
             pDeath.DeathMessage = deathText;
             pDeath.Sender = player;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_DEATH, pDeath);
+            Server.PluginManager.processHook(Hooks.PLAYER_DEATH, pDeath);
             if (pDeath.Cancelled)
             {
                 return;

@@ -126,7 +126,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerHurt(PlayerHurtEvent Event) { }
 
         /// <summary>
-        /// Hook method for player joining the server, as they're greeted
+        /// Hook method for player joining the as they're greeted
         /// </summary>
         /// <param name="Event">PlayerLoginEvent info</param>
         public virtual void onPlayerJoin(PlayerLoginEvent Event) { }
@@ -162,7 +162,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerPartyChange(PartyChangeEvent Event) { }
 
         /// <summary>
-        /// Hook method for player's initial connection to the server, before they can start playing
+        /// Hook method for player's initial connection to the before they can start playing
         /// </summary>
         /// <param name="Event">PlayerLoginEvent info</param>
         public virtual void onPlayerPreLogin(PlayerLoginEvent Event) { }
@@ -174,7 +174,7 @@ namespace Terraria_Server.Plugin
         public virtual void onPlayerAuthQuery (PlayerLoginEvent Event) { }
 
         /// <summary>
-        /// Hook method for player's initial connection to the server, before they can start playing
+        /// Hook method for player's initial connection to the before they can start playing
         /// </summary>
         /// <param name="Event">PlayerLoginEvent info</param>
         public virtual void onPlayerAuthReply (PlayerLoginEvent Event) { }

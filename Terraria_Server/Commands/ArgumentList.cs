@@ -202,8 +202,8 @@ namespace Terraria_Server.Commands
 		public Player GetOnlinePlayer (int at)
 		{
 			if (at >= Count) throw new CommandError ("Too few arguments given.");
-			
-			Player player = server.GetPlayerByName (this[at]);
+
+            Player player = Server.GetPlayerByName(this[at]);
 			
 			if (player != null)
 				return player;
@@ -216,8 +216,8 @@ namespace Terraria_Server.Commands
 			val = null;
 			
 			if (at >= Count) return false;
-			
-			val = server.GetPlayerByName (this[at]);
+
+            val = Server.GetPlayerByName(this[at]);
 			
 			if (val != null)
 				return true;
