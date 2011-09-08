@@ -180,7 +180,9 @@
     <Compile Include="Definitions\Tile\TileAction.cs" />
     <Compile Include="Definitions\Tile\TileType.cs" />
     <Compile Include="Collections\Registry.cs" />
+    <Compile Include="Misc\BackupManager.cs" />
     <Compile Include="Misc\ChatColor.cs" />
+    <Compile Include="Misc\ExitException.cs" />
     <Compile Include="Permissions\Node.cs" />
     <Compile Include="Server\LoadMonitor.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
@@ -225,7 +227,6 @@
     <Compile Include="Rectangle.cs" />
     <Compile Include="Server\Server.cs" />
     <Compile Include="Server\Packet.cs" />
-    <Compile Include="Server\TConsole.cs" />
     <Compile Include="Server\UpdateManager.cs" />
     <Compile Include="Chest.cs" />
     <Compile Include="Sign.cs" />

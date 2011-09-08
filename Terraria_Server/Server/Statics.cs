@@ -14,11 +14,11 @@ namespace Terraria_Server
         private const string DATA = "Data";
         private const string LIBRARIES = "Libs";
 
-        public static bool cmdMessages = true;
-        public static bool keepRunning = false;
+        public static bool cmdMessages = false;
+        //public static bool keepRunning = false;
 
-        public static volatile bool IsActive = false;
-        public static volatile bool serverStarted = false;
+        //public static volatile bool IsActive = false;
+        //public static volatile bool serverStarted = false;
 
         public static string SavePath = Environment.CurrentDirectory;
 

@@ -10,12 +10,9 @@ namespace Terraria_Server.Commands
 	}
 
 	public class ArgumentList : List<string>
-	{
-		Server server;
-		
-		public ArgumentList (Server server)
+	{		
+		public ArgumentList ()
 		{
-			this.server = server;
 		}
 		
 		static readonly Dictionary<System.Type, string> typeNames = new Dictionary<System.Type, string> ()

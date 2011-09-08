@@ -83,17 +83,18 @@ namespace Terraria_Server
 			if (!NetPlay.disconnect)
 			{
 				if (! Program.updateThread.IsAlive) Program.updateThread.Start();
-				Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
-				Program.tConsole.WriteLine("Loading Plugins...");
+				ProgramLog.Log("Server started on " + serverSIP + ":" + serverPort.ToString());
+                ProgramLog.Log("Loading Plugins...");
 				Server.PluginManager.LoadAllPlugins();
-				Program.tConsole.WriteLine("Plugins Loaded: " + Server.PluginManager.PluginList.Count.ToString());
-				Statics.serverStarted = true;
+                ProgramLog.Log("Plugins Loaded: " + Server.PluginManager.PluginList.Count.ToString());
+				//Statics.serverStarted = true;
 			}
 			else
 				return;
 			
 			SlotManager.Initialize (Main.maxNetplayers, Program.properties.OverlimitSlots);
-			
+
+            ServerUp = true;
 			var serverSock = NetPlay.tcpListener.Server;
 			
 			try
@@ -168,8 +169,9 @@ namespace Terraria_Server
 				WorldIO.saveWorld(Server.World.SavePath, true);
 				ProgramLog.Error.Log("Saving failed.  Quitting without saving.");
 			}
-			
-			Statics.serverStarted = false;
+
+            ServerUp = false;
+			//Statics.serverStarted = false;
 		}
 		
 		static bool AcceptClient (Socket client)
@@ -234,10 +236,10 @@ namespace Terraria_Server
 
 		public static void StopServer()
 		{
-			Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
-			Program.tConsole.WriteLine("Disabling Plugins");
+			//Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
+            ProgramLog.Log("Disabling Plugins");
 			Server.PluginManager.DisablePlugins();
-			Program.tConsole.WriteLine("Closing Connections...");
+            ProgramLog.Log("Closing Connections...");
 			disconnect = true;
 		}
 		

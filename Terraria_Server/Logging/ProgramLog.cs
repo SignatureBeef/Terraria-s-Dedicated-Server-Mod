@@ -371,7 +371,7 @@ namespace Terraria_Server.Logging
 					tar.Close ();
 				}
 			
-			Statics.IsActive = false;
+			//Statics.IsActive = false;
 			NetPlay.disconnect = true;
 		}
 	}

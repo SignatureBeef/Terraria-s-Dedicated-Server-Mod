@@ -13,6 +13,7 @@ using Terraria_Server.WorldMod;
 using Terraria_Server.Definitions;
 using Terraria_Server.Plugin;
 using Terraria_Server.Networking;
+using System.IO;
 
 namespace Terraria_Server.Commands
 {
@@ -25,18 +26,31 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Exit(ISender sender, ArgumentList args)
 		{
-			if (sender is Player) // || sender is RConSender) //Requested for Rcon Users.
-			{
-				sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
-				return;
-			}
+            int AccessLevel = Program.properties.ExitAccessLevel;
+            if (AccessLevel == -1)
+            {
+                if (sender is Player) // || sender is RConSender) //Requested for Rcon Users.
+                {
+                    sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                    return;
+                }
+            }
+            else
+            {
+                if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
+                {
+                    sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                    return;
+                }
+            }
+
 
 			args.ParseNone();
 
-			Server.notifyOps("Exiting on request.", true);
+			Server.notifyOps("Exiting on request.", false);
 			NetPlay.StopServer();
 
-			return;
+            throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
 		}
 
 		/// <summary>
@@ -1076,17 +1090,17 @@ namespace Terraria_Server.Commands
 		public static void Restart(ISender sender, ArgumentList args)
 		{
             Server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
-			Statics.keepRunning = true;
+			//Statics.keepRunning = true;
 
 			NetPlay.StopServer();
-			while (Statics.serverStarted) { Thread.Sleep(10); }
+			while (NetPlay.ServerUp) { Thread.Sleep(10); }
 
 			ProgramLog.Log("Starting the Server");
 			Main.Initialize();
-			WorldIO.loadWorld();
+			WorldIO.loadWorld(Server.World.SavePath);
 			Program.updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
             NetPlay.StartServer();
-			Statics.keepRunning = false;
+			//Statics.keepRunning = false;
 		}
 
 		/// <summary>

@@ -2374,8 +2374,8 @@ namespace Terraria_Server
             }
             catch (Exception e)
             {
-                Program.tConsole.WriteLine("Error In UpdatePlayer: " + e.Message);
-                Program.tConsole.WriteLine("Stack: " + e.StackTrace);
+                ProgramLog.Log("Error In UpdatePlayer: " + e.Message);
+                ProgramLog.Log("Stack: " + e.StackTrace);
             }
 		}
 		

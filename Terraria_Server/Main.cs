@@ -212,14 +212,14 @@ namespace Terraria_Server
 		
         public static void Initialize()
 		{
-            if (Main.webProtect)
-            {
-                getAuth();
-                while (!Main.webAuth)
-                {
-                    Statics.IsActive = false;
-                }
-            }
+            //if (Main.webProtect)
+            //{
+            //    getAuth();
+            //    while (!Main.webAuth)
+            //    {
+            //        Statics.IsActive = false;
+            //    }
+            //}
 
             Main.stopSpawns = Program.properties.StopNPCSpawning;
 
@@ -640,7 +640,7 @@ namespace Terraria_Server
                     }
                     
                     NetMessage.SendData(7);
-                    WorldIO.saveAndPlay();
+                    WorldIO.SaveWorldThreaded();
 
                     
                     if (Main.rand.Next(15) == 0)

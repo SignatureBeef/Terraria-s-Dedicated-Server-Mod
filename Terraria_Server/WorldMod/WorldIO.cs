@@ -30,15 +30,15 @@ namespace Terraria_Server.WorldMod
 			Main.maxSectionsY = Main.maxTilesY / 150;
 		}
 
-		public static void saveAndPlayCallBack(object threadContext)
-		{
-			saveWorld(Server.World.SavePath, false);
-		}
+        public static void SaveWorldCallback(object threadContext)
+        {
+            saveWorld(Server.World.SavePath, false);
+        }
 
-		public static void saveAndPlay()
-		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(saveAndPlayCallBack), 1);
-		}
+        public static void SaveWorldThreaded()
+        {
+            ThreadPool.QueueUserWorkItem(new WaitCallback(SaveWorldCallback), 1);
+        }
 
 		public static void clearWorld()
 		{
@@ -403,9 +403,9 @@ namespace Terraria_Server.WorldMod
 			return success;
 		}
 
-		public static void loadWorld()
+		public static void loadWorld(string LoadPath)
 		{
-			using (FileStream fileStream = new FileStream(Server.World.SavePath, FileMode.Open))
+			using (FileStream fileStream = new FileStream(LoadPath, FileMode.Open))
 			{
 				using (BinaryReader binaryReader = new BinaryReader(fileStream))
 				{
@@ -630,7 +630,7 @@ namespace Terraria_Server.WorldMod
 			
 			if (Main.worldName == null || Main.worldName == "")
 			{
-				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (Server.World.SavePath);
+				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (LoadPath);
 			}
 		}
 	}

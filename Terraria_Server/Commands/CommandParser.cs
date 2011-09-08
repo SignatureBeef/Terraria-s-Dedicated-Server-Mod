@@ -5,10 +5,11 @@ using Terraria_Server.Plugin;
 using Terraria_Server.Events;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.Logging;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Commands
 {
-    public enum AccessLevel
+    public enum AccessLevel : int
     {
         PLAYER,
         OP,
@@ -392,13 +393,18 @@ namespace Terraria_Server.Commands
                 ParseAndProcess (player, line);
             }
         }
-        
-        public static bool CheckAccessLevel (CommandInfo cmd, ISender sender)
+
+        public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
-            if (sender is Player) return cmd.accessLevel == AccessLevel.PLAYER || (cmd.accessLevel == AccessLevel.OP && sender.Op);
-            if (sender is RConSender) return cmd.accessLevel <= AccessLevel.REMOTE_CONSOLE;
+           return  CheckAccessLevel(cmd.accessLevel, sender);
+        }
+
+        public static bool CheckAccessLevel(AccessLevel acc, ISender sender)
+        {
+            if (sender is Player) return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
+            if (sender is RConSender) return acc <= AccessLevel.REMOTE_CONSOLE;
             if (sender is ConsoleSender) return true;
-            throw new NotImplementedException ("Unexpected ISender implementation");
+            throw new NotImplementedException("Unexpected ISender implementation");
         }
         
         bool FindStringCommand (string prefix, out CommandInfo info)
@@ -457,6 +463,10 @@ namespace Terraria_Server.Commands
                         var rest = firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : ""; 
                         info.stringCallback (sender, rest.Trim());
                     }
+                    catch (ExitException e)
+                    {
+                        throw e;
+                    }
                     catch (CommandError e)
                     {
                         sender.sendMessage (prefix + ": " + e.Message);
@@ -465,7 +475,7 @@ namespace Terraria_Server.Commands
                     return;
                 }
                 
-                var args = new ArgumentList (server);
+                var args = new ArgumentList();
                 var command = Tokenize (line, args);
 
                 if (command != null)
@@ -482,6 +492,10 @@ namespace Terraria_Server.Commands
                         {
                             info.tokenCallback(sender, args);
                         }
+                        catch (ExitException e)
+                        {
+                            throw e;
+                        }
                         catch (CommandError e)
                         {
                             sender.sendMessage(command + ": " + e.Message);
@@ -494,6 +508,10 @@ namespace Terraria_Server.Commands
                         sender.sendMessage("No such command.");
                     }
                 }
+            }
+            catch (ExitException e)
+            {
+                throw e;
             }
             catch (TokenizerException e)
             {

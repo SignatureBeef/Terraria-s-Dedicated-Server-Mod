@@ -10,6 +10,7 @@ using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.WorldMod;
 using System.Security.Policy;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server
 {
@@ -20,7 +21,6 @@ namespace Terraria_Server
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
-		public static TConsole tConsole = null;
 
 		public static Server server;
 
@@ -55,7 +55,6 @@ namespace Terraria_Server
 				}
 				
 				Platform.InitPlatform();
-				tConsole = new TConsole (null, Platform.Type); //dummy
 
 				ProgramLog.Log ("Setting up Properties.");
 				bool propertiesExist = File.Exists("server.properties");
@@ -258,37 +257,44 @@ namespace Terraria_Server
                 Terraria_Server.Main.maxSectionsX = worldXtiles / 200;
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
-                WorldIO.loadWorld();
+                WorldIO.loadWorld(Server.World.SavePath);
 
 				updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 
 				ProgramLog.Log ("Starting the Server");
 				NetPlay.StartServer();
 				
-				Statics.IsActive = true;
-				while (!Statics.serverStarted) { }
+				while (!NetPlay.ServerUp) { }
 
                 commandParser = new CommandParser();
 				ProgramLog.Console.Print ("You can now insert Commands.");
-				
-				while (Statics.IsActive)
+
+                while (NetPlay.ServerUp)
 				{
 					try
 					{
-                        string line = Console.ReadLine().Trim();
+                        string line = Console.ReadLine();
 						if (line.Length > 0)
 						{
 							commandParser.ParseConsoleCommand(line);
 						}
-					}
+                    }
+                    catch (ExitException e)
+                    {
+                        ProgramLog.Log(e.Message);
+                        break;
+                    }
 					catch (Exception e)
 					{
 						ProgramLog.Log (e, "Issue parsing console command");
 					}
 				}
-				while (Statics.serverStarted) { Thread.Sleep(10); }
-				ProgramLog.Log ("Exiting...");
-				Program.tConsole.Close();
+
+                while(WorldModify.saveLock || NetPlay.ServerUp)
+                    Thread.Sleep(100);
+
+                ProgramLog.Log("Exiting...");
+                Thread.Sleep(1000);
             }
             catch (UpdateCompleted)
             {
@@ -318,10 +324,6 @@ namespace Terraria_Server
                 File.Delete(properties.PIDFile.Trim());
             }
 
-			if (Program.tConsole != null)
-			{
-				Program.tConsole.Close();
-			}
 			ProgramLog.Log ("Log end.");
 			ProgramLog.Close();
 			
