@@ -5,10 +5,11 @@ using Terraria_Server.Plugin;
 using Terraria_Server.Events;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.Logging;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Commands
 {
-    public enum AccessLevel
+    public enum AccessLevel : int
     {
         PLAYER,
         OP,
@@ -21,8 +22,8 @@ namespace Terraria_Server.Commands
         internal string description;
         internal List<string> helpText = new List<string> ();
         internal AccessLevel accessLevel = AccessLevel.OP;
-        internal Action<Server, ISender, ArgumentList> tokenCallback;
-        internal Action<Server, ISender, string> stringCallback;
+        internal Action<ISender, ArgumentList> tokenCallback;
+        internal Action<ISender, string> stringCallback;
         
         public CommandInfo WithDescription (string desc)
         {
@@ -42,13 +43,13 @@ namespace Terraria_Server.Commands
             return this;
         }
         
-        public CommandInfo Calls (Action<Server, ISender, ArgumentList> callback)
+        public CommandInfo Calls (Action<ISender, ArgumentList> callback)
         {
             tokenCallback = callback;
             return this;
         }
 
-        public CommandInfo Calls (Action<Server, ISender, string> callback)
+        public CommandInfo Calls (Action<ISender, string> callback)
         {
             stringCallback = callback;
             return this;
@@ -72,18 +73,17 @@ namespace Terraria_Server.Commands
         /// CommandParser constructor
         /// </summary>
         /// <param name="Server">Current Server instance</param>
-        public CommandParser(Server Server)
+        public CommandParser()
         {
-            server = Server;
             serverCommands = new Dictionary<string, CommandInfo> ();
 
             AddCommand("exit")
-                .WithDescription("Stop the server, save the world then exit program.")
+                .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(Commands.Exit);
 
             AddCommand("stop")
-                .WithDescription("Stop the server, save the world then exit program.")
+                .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
                 .Calls(Commands.Exit);
 
@@ -358,7 +358,7 @@ namespace Terraria_Server.Commands
         /// <param name="line">Command to parse</param>
         /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sender of the Command</param>
-		public void ParseConsoleCommand (string line, Server server, ConsoleSender sender = null)
+		public void ParseConsoleCommand (string line, ConsoleSender sender = null)
 		{
 			line = line.Trim();
 		
@@ -370,7 +370,7 @@ namespace Terraria_Server.Commands
 			var ev = new ConsoleCommandEvent ();
 			ev.Sender = sender;
 			ev.Message = line;
-			server.PluginManager.processHook (Hooks.CONSOLE_COMMAND, ev);
+            Server.PluginManager.processHook(Hooks.CONSOLE_COMMAND, ev);
 			if (ev.Cancelled)
 			{
 				return;
@@ -393,20 +393,25 @@ namespace Terraria_Server.Commands
                 ParseAndProcess (player, line);
             }
         }
-        
-        public static bool CheckAccessLevel (CommandInfo cmd, ISender sender)
+
+        public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
-            if (sender is Player) return cmd.accessLevel == AccessLevel.PLAYER || (cmd.accessLevel == AccessLevel.OP && sender.Op);
-            if (sender is RConSender) return cmd.accessLevel <= AccessLevel.REMOTE_CONSOLE;
+           return  CheckAccessLevel(cmd.accessLevel, sender);
+        }
+
+        public static bool CheckAccessLevel(AccessLevel acc, ISender sender)
+        {
+            if (sender is Player) return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
+            if (sender is RConSender) return acc <= AccessLevel.REMOTE_CONSOLE;
             if (sender is ConsoleSender) return true;
-            throw new NotImplementedException ("Unexpected ISender implementation");
+            throw new NotImplementedException("Unexpected ISender implementation");
         }
         
         bool FindStringCommand (string prefix, out CommandInfo info)
         {
             info = null;
-            
-            foreach (var plugin in server.PluginManager.Plugins.Values)
+
+            foreach (var plugin in Server.PluginManager.Plugins.Values)
             {
                 if (plugin.commands.TryGetValue (prefix, out info) && info.stringCallback != null)
                     return true;
@@ -421,8 +426,8 @@ namespace Terraria_Server.Commands
         bool FindTokenCommand (string prefix, out CommandInfo info)
         {
             info = null;
-            
-            foreach (var plugin in server.PluginManager.Plugins.Values)
+
+            foreach (var plugin in Server.PluginManager.Plugins.Values)
             {
                 if (plugin.commands.TryGetValue (prefix, out info) && info.tokenCallback != null)
                     return true;
@@ -456,7 +461,11 @@ namespace Terraria_Server.Commands
                     try
                     {
                         var rest = firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : ""; 
-                        info.stringCallback (server, sender, rest.Trim());
+                        info.stringCallback (sender, rest.Trim());
+                    }
+                    catch (ExitException e)
+                    {
+                        throw e;
                     }
                     catch (CommandError e)
                     {
@@ -466,7 +475,7 @@ namespace Terraria_Server.Commands
                     return;
                 }
                 
-                var args = new ArgumentList (server);
+                var args = new ArgumentList();
                 var command = Tokenize (line, args);
 
                 if (command != null)
@@ -481,7 +490,11 @@ namespace Terraria_Server.Commands
 
                         try
                         {
-                            info.tokenCallback(server, sender, args);
+                            info.tokenCallback(sender, args);
+                        }
+                        catch (ExitException e)
+                        {
+                            throw e;
                         }
                         catch (CommandError e)
                         {
@@ -495,6 +508,10 @@ namespace Terraria_Server.Commands
                         sender.sendMessage("No such command.");
                     }
                 }
+            }
+            catch (ExitException e)
+            {
+                throw e;
             }
             catch (TokenizerException e)
             {

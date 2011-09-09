@@ -259,7 +259,7 @@ namespace Terraria_Server.Networking
 			conn.State = SlotState.ASSIGNING_SLOT;
 			conn.ResetTimeout ();
 			
-			var slot = Netplay.slots[id];
+			var slot = NetPlay.slots[id];
 			slot.remoteAddress = conn.RemoteAddress;
 			slot.conn = conn;
 			
@@ -321,7 +321,7 @@ namespace Terraria_Server.Networking
 		{
 			ClientConnection assignedTo = null;
 			
-			var slot = Netplay.slots[id];
+			var slot = NetPlay.slots[id];
 			slot.Reset ();
 			
 			lock (syncRoot)
@@ -428,7 +428,7 @@ namespace Terraria_Server.Networking
 			return String.Format (waitingMessage, i, suffix);
 		}
 		
-		internal static void MaxPlayersCommand (Server server, ISender sender, ArgumentList args)
+		internal static void MaxPlayersCommand (ISender sender, ArgumentList args)
 		{
 			int maxp = -1;
 			int overl = -1;
@@ -456,7 +456,7 @@ namespace Terraria_Server.Networking
 			if (maxp >= 0 || overl >= 0)
 			{
 				result = ChangeLimits (maxp < 0 ? maxSlots : maxp, overl < 0 ? overlimitSlots : overl);
-				server.notifyOps (String.Format ("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.Name));
+                Server.notifyOps(String.Format("Max player slots changed to {0}+{1}. [{2}]", result, overlimitSlots, sender.Name));
 			}
 			
 			sender.Message (255, ChatColor.SteelBlue, "Max player slots: {0}, overlimit slots: {1}", result, overlimitSlots);
@@ -469,7 +469,7 @@ namespace Terraria_Server.Networking
 			}
 		}
 		
-		internal static void QCommand (Server server, ISender sender, ArgumentList args)
+		internal static void QCommand (ISender sender, ArgumentList args)
 		{
 			args.ParseNone ();
 			

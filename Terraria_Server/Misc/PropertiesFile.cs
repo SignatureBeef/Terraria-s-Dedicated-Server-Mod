@@ -53,17 +53,6 @@ namespace Terraria_Server.Misc
             }
         }
 
-        /* This is for Plugins, Because they are referenced to the old one
-         * Other words: To avoid Plugin breaks.
-         * 
-         * [Changed for Commands needing to save properties and Log is spammed]
-         */
-        [Obsolete("Out of date, new Parameters added")] 
-        public void Save()
-        {
-            Save(true);
-        }
-
         public void Save(bool log = true)
         {
             var tmpName = propertiesPath + ".tmp" + (uint) (DateTime.UtcNow.Ticks % uint.MaxValue);

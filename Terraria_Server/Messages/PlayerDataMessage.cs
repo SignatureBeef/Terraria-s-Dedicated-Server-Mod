@@ -131,7 +131,7 @@ namespace Terraria_Server.Messages
 			{
 				string address = conn.RemoteAddress.Split(':')[0];
 				
-				if (Program.server.BanList.containsException (address) || Program.server.BanList.containsException (data.Name))
+				if (Server.BanList.containsException (address) || Server.BanList.containsException (data.Name))
 				{
 					ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", data.Name);
 					conn.Kick ("You are banned from this server.");
@@ -160,7 +160,7 @@ namespace Terraria_Server.Messages
 
 					foreach (var otherPlayer in Main.players)
 					{
-						var otherSlot = Netplay.slots[otherPlayer.whoAmi];
+						var otherSlot = NetPlay.slots[otherPlayer.whoAmi];
 						if (otherPlayer.Name != null && lname == otherPlayer.Name.ToLower() && otherSlot.state >= SlotState.CONNECTED)
 						{
 							conn.Kick ("A \"" + otherPlayer.Name + "\" is already on this server.");

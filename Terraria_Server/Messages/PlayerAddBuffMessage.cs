@@ -20,7 +20,7 @@ namespace Terraria_Server.Messages
 				|| (playerId != whoAmI && ((type != 20 && type != 24) || time > 600 /*max debuff time*/)))
 			{
 				ProgramLog.Debug.Log ("PLAYER_ADD_BUFF: from={0}, for={1}, type={2}, time={3}", whoAmI, playerId, type, time);
-				Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_ADD_BUFF forgery).");
+				NetPlay.slots[whoAmI].Kick ("Cheating detected (PLAYER_ADD_BUFF forgery).");
 				return;
 			}
 			

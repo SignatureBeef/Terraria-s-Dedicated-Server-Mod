@@ -17,7 +17,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_JOIN_PARTY forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (PLAYER_JOIN_PARTY forgery).");
                 return;
             }
             
@@ -55,7 +55,7 @@ namespace Terraria_Server.Messages
             PartyChangeEvent changeEvent = new PartyChangeEvent();
             changeEvent.PartyType = party;
             changeEvent.Sender = Main.players[whoAmI];
-            Program.server.PluginManager.processHook(Hooks.PLAYER_PARTYCHANGE, changeEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_PARTYCHANGE, changeEvent);
             if (changeEvent.Cancelled)
             {
                 return;

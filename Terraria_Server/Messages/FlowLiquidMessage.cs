@@ -24,7 +24,7 @@ namespace Terraria_Server.Messages
             
             var player = Main.players[whoAmI];
 
-            if (Netplay.spamCheck) // dead code...
+            if (NetPlay.spamCheck) // dead code...
             {
                 int centerX = (int)(player.Position.X + (float)(player.Width / 2));
                 int centerY = (int)(player.Position.Y + (float)(player.Height / 2));

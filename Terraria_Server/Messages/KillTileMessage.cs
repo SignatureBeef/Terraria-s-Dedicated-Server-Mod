@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
                 PlayerChestBreakEvent playerEvent = new PlayerChestBreakEvent();
                 playerEvent.Sender = Main.players[whoAmI];
                 playerEvent.Location = new Vector2(x, y);
-                Program.server.PluginManager.processHook(Hooks.PLAYER_CHESTBREAK, playerEvent);
+                Server.PluginManager.processHook(Hooks.PLAYER_CHESTBREAK, playerEvent);
                 if (playerEvent.Cancelled)
                 {
                     NetMessage.SendTileSquare(whoAmI, x, y, 1);

@@ -25,7 +25,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (RECEIVING_PLAYER_JOINED forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (RECEIVING_PLAYER_JOINED forgery).");
                 return;
             }
 
@@ -50,11 +50,11 @@ namespace Terraria_Server.Messages
             
             player.respawnTimer = Int32.MaxValue;
             
-            if (Netplay.slots[whoAmI].state >= SlotState.SENDING_TILES)
+            if (NetPlay.slots[whoAmI].state >= SlotState.SENDING_TILES)
             {
-                if (Netplay.slots[whoAmI].state == SlotState.SENDING_TILES)
+                if (NetPlay.slots[whoAmI].state == SlotState.SENDING_TILES)
                 {
-                    Netplay.slots[whoAmI].state = SlotState.PLAYING;
+                    NetPlay.slots[whoAmI].state = SlotState.PLAYING;
                     NetMessage.OnPlayerJoined (whoAmI); // this also forwards the message
                 }
                 else

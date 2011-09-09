@@ -1,6 +1,6 @@
 using System;
 
-namespace Terraria_Server.Shops
+namespace Terraria_Server
 {
     public class Chest
     {

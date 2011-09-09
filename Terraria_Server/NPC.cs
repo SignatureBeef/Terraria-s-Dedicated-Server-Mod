@@ -5747,7 +5747,7 @@ namespace Terraria_Server
                 NPCBossSummonEvent npcEvent = new NPCBossSummonEvent();
                 npcEvent.BossType = Type;
                 npcEvent.Sender = Main.players[playerIndex];
-                Program.server.PluginManager.processHook(Hooks.NPC_BOSSSUMMON, npcEvent);
+                Server.PluginManager.processHook(Hooks.NPC_BOSSSUMMON, npcEvent);
                 if (npcEvent.Cancelled)
                 {
                     return;
@@ -5838,7 +5838,7 @@ namespace Terraria_Server
                 Sender sender = new Sender();
                 sender.Op = true;
                 npcEvent.Sender = sender;
-                Program.server.PluginManager.processHook(Hooks.NPC_SPAWN, npcEvent);
+                Server.PluginManager.processHook(Hooks.NPC_SPAWN, npcEvent);
                 if (npcEvent.Cancelled)
                 {
                     return MAX_NPCS;
@@ -6030,7 +6030,7 @@ namespace Terraria_Server
                     Event.Damage = Damage;
                     Event.KnockBack = knockBack;
                     Event.HitDirection = hitDirection;
-                    Program.server.PluginManager.processHook(Plugin.Hooks.NPC_DEATH, Event);
+                    Server.PluginManager.processHook(Plugin.Hooks.NPC_DEATH, Event);
                     if (Event.Cancelled)
                     {
                         return 0.0;
@@ -6322,7 +6322,7 @@ namespace Terraria_Server
                 Sender sender = new Sender();
                 sender.Op = true;
                 npcEvent.Sender = sender;
-                Program.server.PluginManager.processHook(Hooks.NPC_BOSSDEATH, npcEvent);
+                Server.PluginManager.processHook(Hooks.NPC_BOSSDEATH, npcEvent);
             }
             if (Main.rand.Next(6) == 0 && this.lifeMax > 1)
             {

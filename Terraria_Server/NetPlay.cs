@@ -12,7 +12,7 @@ using Terraria_Server.Networking;
 
 namespace Terraria_Server
 {
-	public static class Netplay
+	public static class NetPlay
 	{
 		public const int bufferSize = 1024;
 		public const int maxConnections = 256;
@@ -57,9 +57,9 @@ namespace Terraria_Server
 		public static void ServerLoop ()
 		{
 			Main.players[255].whoAmi = 255;
-			Netplay.serverIP = IPAddress.Parse(serverSIP);
-			Netplay.serverListenIP = Netplay.serverIP;
-			Netplay.disconnect = false;
+			NetPlay.serverIP = IPAddress.Parse(serverSIP);
+			NetPlay.serverListenIP = NetPlay.serverIP;
+			NetPlay.disconnect = false;
 			
 //			for (int i = 0; i < 256; i++)
 //			{
@@ -68,52 +68,53 @@ namespace Terraria_Server
 //				Netplay.slots[i].Reset();
 //			}
 			
-			Netplay.tcpListener = new TcpListener(Netplay.serverListenIP, Netplay.serverPort);
+			NetPlay.tcpListener = new TcpListener(NetPlay.serverListenIP, NetPlay.serverPort);
 			
 			try
 			{
-				Netplay.tcpListener.Start();
+				NetPlay.tcpListener.Start();
 			}
             catch (Exception exception)
 			{
 				Main.statusText = exception.ToString();
-				Netplay.disconnect = true;
+				NetPlay.disconnect = true;
 			}
 			
-			if (!Netplay.disconnect)
+			if (!NetPlay.disconnect)
 			{
 				if (! Program.updateThread.IsAlive) Program.updateThread.Start();
-				Program.tConsole.WriteLine("Server started on " + serverSIP + ":" + serverPort.ToString());
-				Program.tConsole.WriteLine("Loading Plugins...");
-				Program.server.PluginManager.LoadAllPlugins();
-				Program.tConsole.WriteLine("Plugins Loaded: " + Program.server.PluginManager.PluginList.Count.ToString());
-				Statics.serverStarted = true;
+				ProgramLog.Log("Server started on " + serverSIP + ":" + serverPort.ToString());
+                ProgramLog.Log("Loading Plugins...");
+				Server.PluginManager.LoadAllPlugins();
+                ProgramLog.Log("Plugins Loaded: " + Server.PluginManager.PluginList.Count.ToString());
+				//Statics.serverStarted = true;
 			}
 			else
 				return;
 			
 			SlotManager.Initialize (Main.maxNetplayers, Program.properties.OverlimitSlots);
-			
-			var serverSock = Netplay.tcpListener.Server;
+
+            ServerUp = true;
+			var serverSock = NetPlay.tcpListener.Server;
 			
 			try
 			{
-				while (!Netplay.disconnect)
+				while (!NetPlay.disconnect)
 				{
-					Netplay.anyClients = Networking.ClientConnection.All.Count > 0; //clientList.Count > 0;
+					NetPlay.anyClients = Networking.ClientConnection.All.Count > 0; //clientList.Count > 0;
 					
 					serverSock.Poll (500000, SelectMode.SelectRead);
 					
-					if (Netplay.disconnect) break;
+					if (NetPlay.disconnect) break;
 
 					// Accept new clients
-					while (Netplay.tcpListener.Pending())
+					while (NetPlay.tcpListener.Pending())
 					{
-						var client = Netplay.tcpListener.AcceptSocket ();
+						var client = NetPlay.tcpListener.AcceptSocket ();
 						var accepted = AcceptClient (client);
 						if (accepted)
 						{
-							Netplay.anyClients = true;
+							NetPlay.anyClients = true;
 						}
 					}
 				}
@@ -123,7 +124,7 @@ namespace Terraria_Server
 				ProgramLog.Log (e, "ServerLoop terminated with exception");
 			}
 			
-			Netplay.anyClients = false;
+			NetPlay.anyClients = false;
 			
 			try
 			{
@@ -163,13 +164,14 @@ namespace Terraria_Server
 				catch {}
 			}
 			
-			if (false == WorldIO.saveWorld(Program.server.World.SavePath, true))
+			if (false == WorldIO.saveWorld(Server.World.SavePath, true))
 			{
-				WorldIO.saveWorld(Program.server.World.SavePath, true);
+				WorldIO.saveWorld(Server.World.SavePath, true);
 				ProgramLog.Error.Log("Saving failed.  Quitting without saving.");
 			}
-			
-			Statics.serverStarted = false;
+
+            ServerUp = false;
+			//Statics.serverStarted = false;
 		}
 		
 		static bool AcceptClient (Socket client)
@@ -226,7 +228,7 @@ namespace Terraria_Server
 		{
 			if (serverThread == null)
 			{
-				serverThread = new ProgramThread ("Serv", Netplay.ServerLoopLoop);
+				serverThread = new ProgramThread ("Serv", NetPlay.ServerLoopLoop);
 				serverThread.Start();
 			}
 			disconnect = false;
@@ -234,10 +236,10 @@ namespace Terraria_Server
 
 		public static void StopServer()
 		{
-			Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
-			Program.tConsole.WriteLine("Disabling Plugins");
-			Program.server.PluginManager.DisablePlugins();
-			Program.tConsole.WriteLine("Closing Connections...");
+			//Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
+            ProgramLog.Log("Disabling Plugins");
+			Server.PluginManager.DisablePlugins();
+            ProgramLog.Log("Closing Connections...");
 			disconnect = true;
 		}
 		
@@ -254,11 +256,11 @@ namespace Terraria_Server
 		{
 			for (int i = 0; i < 256; i++)
 			{
-				if (Netplay.slots[i] == null)
-					Netplay.slots[i] = new ServerSlot();
+				if (NetPlay.slots[i] == null)
+					NetPlay.slots[i] = new ServerSlot();
 				
-				Netplay.slots[i].whoAmI = i;
-				Netplay.slots[i].Reset ();
+				NetPlay.slots[i].whoAmI = i;
+				NetPlay.slots[i].Reset ();
 			}
 		}
 		

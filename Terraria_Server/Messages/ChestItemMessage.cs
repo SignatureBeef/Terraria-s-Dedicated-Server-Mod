@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 
 namespace Terraria_Server.Messages

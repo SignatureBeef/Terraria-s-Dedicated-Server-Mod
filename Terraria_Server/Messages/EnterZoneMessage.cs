@@ -15,7 +15,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (ENTER_ZONE forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (ENTER_ZONE forgery).");
                 return;
             }
 

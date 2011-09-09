@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Terraria_Server.Misc;
+using Terraria_Server.Commands;
 
 namespace Terraria_Server
 {
@@ -10,6 +11,7 @@ namespace Terraria_Server
         private const bool      DEFAULT_ALLOW_EXPLOSIONS        = true;
         private const bool      DEFAULT_AUTOMATIC_UPDATES       = false;
         private const bool      DEFAULT_BUFFER_LIQUID_UPDATES   = false;
+        private const int       DEFAULT_EXIT_USERS              = -1;
         private const string    DEFAULT_GREETING                = "Welcome to a TDSM Server!@         ~ tdsm.org ~";
         private const bool      DEFAULT_HACKED_DATA             = false;
         private const string    DEFAULT_HARDCORE_DEATH_ACTION   = "none";
@@ -41,6 +43,7 @@ namespace Terraria_Server
         private const string    ALLOW_EXPLOSIONS                = "explosions";
         private const string    AUTOMATIC_UPDATES               = "allowupdates";
         private const string    BUFFER_LIQUID_UPDATES           = "buffer-liquid-updates";
+        private const string    EXIT_USERS                      = "exitaccesslevel";
         private const string    DUNGEON_AMOUNT                  = "opt-numdungeons";
         private const string    FLOATING_ISLAND_AMOUNT          = "opt-num-floating-islands";
         private const string    GREETING                        = "greeting";
@@ -83,6 +86,7 @@ namespace Terraria_Server
             temp = AutomaticUpdates;
             temp = BufferLiquidUpdates;
             temp = DungeonAmount;
+            temp = ExitAccessLevel;
             temp = FloatingIslandAmount;
             temp = Greeting;
             temp = HackedData;
@@ -522,11 +526,17 @@ namespace Terraria_Server
             get { return getValue(SEND_QUEUE_QUOTA, DEFAULT_SEND_QUEUE_QUOTA); }
             set { setValue(SEND_QUEUE_QUOTA, value); }
         }
-        
+
         public bool StopNPCSpawning
         {
             get { return getValue(STOP_NPC_SPAWNING, DEFAULT_STOP_NPC_SPAWNING); }
             set { setValue(STOP_NPC_SPAWNING, value); }
+        }
+
+        public int ExitAccessLevel
+        {
+            get { return getValue(EXIT_USERS, DEFAULT_EXIT_USERS); }
+            set { setValue(EXIT_USERS, value); }
         }
     }
 }

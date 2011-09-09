@@ -20,7 +20,7 @@ namespace Terraria_Server.Messages
         {
             if (readBuffer[num++] != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (PLAYER_STATE_UPDATE forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (PLAYER_STATE_UPDATE forgery).");
                 return;
             }
             
@@ -36,7 +36,7 @@ namespace Terraria_Server.Messages
             playerEvent.Location = data.position;
             playerEvent.Velocity = data.velocity;
             playerEvent.FallStart = fallStart;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_MOVE, playerEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_MOVE, playerEvent);
             if (playerEvent.Cancelled)
             // does this even make sense? authoritative player location is kept client-side
             {
@@ -61,7 +61,7 @@ namespace Terraria_Server.Messages
             playerInteractEvent.KeysPressed = playerKeysPressed;
             playerInteractEvent.MouseClicked = player.controlUseItem;
             playerInteractEvent.FacingDirection = player.direction;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_KEYPRESS, playerInteractEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_KEYPRESS, playerInteractEvent);
             if (playerEvent.Cancelled) // does this even make sense?
             {
                 NetMessage.SendData(13, -1, whoAmI, "", whoAmI);
@@ -70,7 +70,7 @@ namespace Terraria_Server.Messages
             
             data.ApplyKeys (player);
 
-            if (Netplay.slots[whoAmI].state == SlotState.PLAYING)
+            if (NetPlay.slots[whoAmI].state == SlotState.PLAYING)
             {
                 NetMessage.SendData(13, -1, whoAmI, "", whoAmI);
             }

@@ -5,7 +5,6 @@ using System.Text;
 using System.Net;
 using System.IO;
 using Terraria_Server.Misc;
-using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
@@ -121,7 +120,7 @@ namespace Terraria_Server
 		public static bool editSign = false;
         public static string signText = "";
         public static string npcChatText = "";
-		public Chest[] shops = new Chest[6];
+
 		public static int invasionType = 0;
 		public static double invasionX = 0.0;
 		public static int invasionSize = 0;
@@ -211,16 +210,16 @@ namespace Terraria_Server
 		public static int maxItemUpdates = 10;
 		public static bool autoPass = false;
 		
-        public void Initialize()
+        public static void Initialize()
 		{
-			if (Main.webProtect)
-			{
-				this.getAuth();
-				while (!Main.webAuth)
-				{
-                    Statics.IsActive = false;
-				}
-			}
+            //if (Main.webProtect)
+            //{
+            //    getAuth();
+            //    while (!Main.webAuth)
+            //    {
+            //        Statics.IsActive = false;
+            //    }
+            //}
 
             Main.stopSpawns = Program.properties.StopNPCSpawning;
 
@@ -353,20 +352,13 @@ namespace Terraria_Server
                 Main.liquidBuffer[num11] = new LiquidBuffer();
             }
 
-            this.shops[0] = new Chest();
-            this.shops[1] = new MerchantShop();
-            this.shops[2] = new ArmsDealerShop();
-            this.shops[3] = new DryadShop();
-            this.shops[4] = new DemolitionistShop();
-            this.shops[5] = new ClothierShop();
-
             Main.teamColor[0] = new Color(255, 255, 255);
             Main.teamColor[1] = new Color(230, 40, 20);
             Main.teamColor[2] = new Color(20, 200, 30);
             Main.teamColor[3] = new Color(75, 90, 255);
             Main.teamColor[4] = new Color(200, 180, 0);
 
-			Netplay.Init();
+			NetPlay.Init();
 		}
 
         private static void UpdateInvasion()
@@ -463,19 +455,19 @@ namespace Terraria_Server
 
 			if (Main.invasionType == 0 && Main.invasionDelay == 0)
 			{
-				int num = 0;
+				int playerCount = 0;
 				foreach(Player player in Main.players)
 				{
                     if (player.Active && player.statLifeMax >= 200)
 					{
-						num++;
+						playerCount++;
 					}
 				}
 
-				if (num > 0)
+				if (playerCount > 0)
 				{
 					Main.invasionType = 1;
-					Main.invasionSize = 100 + 50 * num;
+					Main.invasionSize = 100 + 50 * playerCount;
 					Main.invasionWarn = 0;
 					if (Main.rand.Next(2) == 0)
 					{
@@ -498,9 +490,9 @@ namespace Terraria_Server
             }
             for (int i = 0; i < 255; i++)
             {
-                if (Main.players[i].Active && Netplay.slots[i].state >= SlotState.CONNECTED)
+                if (Main.players[i].Active && NetPlay.slots[i].state >= SlotState.CONNECTED)
                 {
-                    Netplay.slots[i].SpamUpdate();
+                    NetPlay.slots[i].SpamUpdate();
                 }
             }
             Math.IEEERemainder((double)Main.NetplayCounter, 60.0);
@@ -551,8 +543,8 @@ namespace Terraria_Server
                 Player player = Main.players[i];
                 if (player.Active)
                 {
-                    int sectionX = Netplay.GetSectionX((int)(player.Position.X / 16f));
-                    int sectionY = Netplay.GetSectionY((int)(player.Position.Y / 16f));
+                    int sectionX = NetPlay.GetSectionX((int)(player.Position.X / 16f));
+                    int sectionY = NetPlay.GetSectionY((int)(player.Position.Y / 16f));
                     int num3 = 0;
                     for (int j = sectionX - 1; j < sectionX + 2; j++)
                     {
@@ -560,7 +552,7 @@ namespace Terraria_Server
                         {
                             if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
                             {
-                                if (!Netplay.slots[i].tileSection[j, k])
+                                if (!NetPlay.slots[i].tileSection[j, k])
                                 {
                                     num3++;
                                 }
@@ -572,15 +564,15 @@ namespace Terraria_Server
                     {
                         int num4 = num3 * 150;
                         NetMessage.SendData(9, i, -1, "Receiving tile data", num4);
-                        Netplay.slots[i].statusText2 = "is receiving tile data";
-                        Netplay.slots[i].statusMax += num4;
+                        NetPlay.slots[i].statusText2 = "is receiving tile data";
+                        NetPlay.slots[i].statusMax += num4;
                         for (int j = sectionX - 1; j < sectionX + 2; j++)
                         {
                             for (int k = sectionY - 1; k < sectionY + 2; k++)
                             {
                                 if (j >= 0 && j < Main.maxSectionsX && k >= 0 && k < Main.maxSectionsY)
                                 {
-                                    if (!Netplay.slots[i].tileSection[j, k])
+                                    if (!NetPlay.slots[i].tileSection[j, k])
                                     {
                                         NetMessage.SendSection(i, j, k);
                                         NetMessage.SendData(11, i, -1, "", j, (float)k, (float)j, (float)k);
@@ -608,7 +600,7 @@ namespace Terraria_Server
         {
             Main.time += 1.0;
             
-            Program.server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
+            Server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
 
             if (!Main.dayTime)
             {
@@ -648,7 +640,7 @@ namespace Terraria_Server
                     }
                     
                     NetMessage.SendData(7);
-                    WorldIO.saveAndPlay();
+                    WorldIO.SaveWorldThreaded();
 
                     
                     if (Main.rand.Next(15) == 0)
@@ -902,7 +894,7 @@ namespace Terraria_Server
 			return num;
 		}
 		
-        public void getAuth()
+        public static void getAuth()
 		{
 			try
 			{
@@ -949,7 +941,7 @@ namespace Terraria_Server
 		public static TimeSpan LastInvasionUpdateTime { get; private set; }
 		public static TimeSpan LastServerUpdateTime { get; private set; }
 		
-		public void Update (Stopwatch s)
+		public static void Update (Stopwatch s)
 		{
 			int count = 0;
 			

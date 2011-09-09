@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terraria_Server.Shops;
 using Terraria_Server.Plugin;
 using Terraria_Server.Events;
 
@@ -26,7 +25,7 @@ namespace Terraria_Server.Messages
             var chestEvent = new PlayerChestOpenEvent();
             chestEvent.Sender = Main.players[whoAmI];
             chestEvent.ID = chestIndex;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_CHEST, chestEvent);
+            Server.PluginManager.processHook(Hooks.PLAYER_CHEST, chestEvent);
             if (chestEvent.Cancelled)
             {
                 return;

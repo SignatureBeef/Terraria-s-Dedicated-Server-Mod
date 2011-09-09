@@ -23,7 +23,7 @@ namespace Terraria_Server.Messages
             int left = BitConverter.ToInt32(readBuffer, num + 2);
             int top = BitConverter.ToInt32(readBuffer, num + 6);
             num += 10;
-            var slot = Netplay.slots[whoAmI];
+            var slot = NetPlay.slots[whoAmI];
             
             var setting = Program.properties.TileSquareMessages;
 			if (setting == "rectify")
@@ -215,7 +215,7 @@ namespace Terraria_Server.Messages
                     tileEvent.Action = (tile.Active) ? TileAction.PLACED : TileAction.BREAK; //Not sure of this
                     tileEvent.TileType = (tile.wall == 1) ? TileType.WALL : TileType.BLOCK;
                     tileEvent.Position = new Vector2(x, y);
-                    Program.server.PluginManager.processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
+                    Server.PluginManager.processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
                     if (tileEvent.Cancelled)
                     {
                         NetMessage.SendTileSquare(whoAmI, x, y, 1);

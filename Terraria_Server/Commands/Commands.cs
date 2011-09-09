@@ -13,6 +13,7 @@ using Terraria_Server.WorldMod;
 using Terraria_Server.Definitions;
 using Terraria_Server.Plugin;
 using Terraria_Server.Networking;
+using System.IO;
 
 namespace Terraria_Server.Commands
 {
@@ -21,32 +22,43 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Closes the Server all connections.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Exit(Server server, ISender sender, ArgumentList args)
+		public static void Exit(ISender sender, ArgumentList args)
 		{
-			if (sender is Player) // || sender is RConSender) //Requested for Rcon Users.
-			{
-				sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
-				return;
-			}
+            int AccessLevel = Program.properties.ExitAccessLevel;
+            if (AccessLevel == -1)
+            {
+                if (sender is Player) // || sender is RConSender) //Requested for Rcon Users.
+                {
+                    sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                    return;
+                }
+            }
+            else
+            {
+                if (!CommandParser.CheckAccessLevel((AccessLevel)AccessLevel, sender))
+                {
+                    sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+                    return;
+                }
+            }
+
 
 			args.ParseNone();
 
-			server.notifyOps("Exiting on request.", true);
-			server.StopServer();
+			Server.notifyOps("Exiting on request.", false);
+			NetPlay.StopServer();
 
-			return;
+            throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
 		}
 
 		/// <summary>
 		/// Outputs statistics of the servers performance.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Status(Server server, ISender sender, ArgumentList args)
+		public static void Status(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();
 
@@ -126,19 +138,18 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Reloads Plugins.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Reload(Server server, ISender sender, ArgumentList args)
+		public static void Reload(ISender sender, ArgumentList args)
 		{
 			bool parseData = args.TryPop("-data");
 
-			server.notifyOps("Reloading plugins.", true);
-			server.PluginManager.ReloadPlugins();
+			Server.notifyOps("Reloading plugins.", true);
+			Server.PluginManager.ReloadPlugins();
 
             if (parseData)
             {
-                server.notifyOps("Reloading properties.", true);
+                Server.notifyOps("Reloading properties.", true);
                 Program.properties.Load();
             }
 
@@ -148,29 +159,27 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Prints a Playerlist.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void OldList(Server server, ISender sender, ArgumentList args)
+		public static void OldList(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();
 
-			var players = from p in Server.players where p.Active select p.Name;
+            var players = from p in Main.players where p.Active select p.Name;
 			sender.sendMessage(string.Concat("Current players: ", String.Join(", ", players), "."), 255, 255, 240, 20);
 		}
 
 		/// <summary>
 		/// Prints a player list, Possibly readable by bots.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void List(Server server, ISender sender, ArgumentList args)
+		public static void List(ISender sender, ArgumentList args)
 		{
 			args.ParseNone();
 
-			var players = from p in Server.players where p.Active && !p.Op select p.Name;
-			var ops = from p in Server.players where p.Active && p.Op select p.Name;
+            var players = from p in Main.players where p.Active && !p.Op select p.Name;
+            var ops = from p in Main.players where p.Active && p.Op select p.Name;
 
 			var pn = players.Count();
 			var on = ops.Count();
@@ -196,10 +205,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// 3rd person talking.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="message">Message to send</param>
-		public static void Action(Server server, ISender sender, string message)
+		public static void Action(ISender sender, string message)
 		{
 			ProgramLog.Chat.Log("* " + sender.Name + " " + message);
 			if (sender is Player)
@@ -211,10 +219,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Sends a Server Message to all online Players.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="message">Message to send</param>
-		public static void Say(Server server, ISender sender, string message)
+		public static void Say(ISender sender, string message)
 		{
 			ProgramLog.Chat.Log("<" + sender.Name + "> " + message);
 			if (sender is Player)
@@ -226,33 +233,31 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Executes the world data save routine.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void SaveAll(Server server, ISender sender, ArgumentList args)
+		public static void SaveAll(ISender sender, ArgumentList args)
 		{
-			Program.server.notifyOps("Saving World...", true);
+			Server.notifyOps("Saving World...", true);
 
-			WorldIO.saveWorld(Program.server.World.SavePath, false);
+			WorldIO.saveWorld(Server.World.SavePath, false);
 			while (WorldModify.saveLock)
 			{
 			}
 
-			Program.server.notifyOps("Saving Data...", true);
+			Server.notifyOps("Saving Data...", true);
 
-			Program.server.BanList.Save();
-			Program.server.WhiteList.Save();
+			Server.BanList.Save();
+			Server.WhiteList.Save();
 
-			Program.server.notifyOps("Saving Complete.", true);
+			Server.notifyOps("Saving Complete.", true);
 		}
 
 		/// <summary>
 		/// Sends the help list to the requesting player's chat.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void ShowHelp(Server server, ISender sender, ArgumentList args)
+		public static void ShowHelp(ISender sender, ArgumentList args)
 		{
 			if (args == null || args.Count < 1)
 			{
@@ -329,12 +334,12 @@ namespace Terraria_Server.Commands
 					}
 					catch (Exception)
 					{
-						ShowHelp(server, sender, null);
+						ShowHelp(sender, null);
 					}
 				}
 				else
 				{
-					ShowHelp(server, sender, null);
+					ShowHelp(sender, null);
 				}
 			}
 		}
@@ -342,22 +347,21 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Adds or removes specified player to/from the white list.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void WhiteList(Server server, ISender sender, ArgumentList args)
+		public static void WhiteList(ISender sender, ArgumentList args)
 		{
 			// /whitelist <add:remove> <player>
             string Exception, Type = "removed from";
 			if (args.TryParseOne<String>("-add", out Exception))
 			{
-				Program.server.WhiteList.addException(Exception);
+				Server.WhiteList.addException(Exception);
 				Type = "added to";
 			}
 			else if (args.TryParseOne<String>("-remove", out Exception))
 			{
 
-				Program.server.WhiteList.removeException(Exception);
+				Server.WhiteList.removeException(Exception);
 			}
 			else
 			{
@@ -365,32 +369,31 @@ namespace Terraria_Server.Commands
 				return;
 			}
 
-			Program.server.notifyOps(Exception + " was " + Type + " the Whitelist {" + sender.Name + "}", true);
+			Server.notifyOps(Exception + " was " + Type + " the Whitelist {" + sender.Name + "}", true);
 
-			if (!Program.server.WhiteList.Save())
+			if (!Server.WhiteList.Save())
 			{
-				Program.server.notifyOps("WhiteList Failed to Save due to " + sender.Name + "'s command", true);
+				Server.notifyOps("WhiteList Failed to Save due to " + sender.Name + "'s command", true);
 			}
 		}
 
 		/// <summary>
 		/// Adds a player or ip (Exception) to the ban list.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Ban(Server server, ISender sender, ArgumentList args)
+		public static void Ban(ISender sender, ArgumentList args)
 		{
 			if (args != null && args.Count > 0)
 			{
 				//We now should check to make sure they are off the server...
-				Player banee = Program.server.GetPlayerByName(args[0]);
+				Player banee = Server.GetPlayerByName(args[0]);
 
 				if (banee == null)
 				{
-					foreach (Player player in Program.server.PlayerList)
+					foreach (Player player in Main.players)
 					{
-						var ip = Netplay.slots[player.whoAmi].remoteAddress.Split(':')[0];
+						var ip = NetPlay.slots[player.whoAmi].remoteAddress.Split(':')[0];
 						if (ip == args[0])
 						{
 							banee = player;
@@ -398,20 +401,20 @@ namespace Terraria_Server.Commands
 					}
 				}
 
-				Program.server.BanList.addException(args[0]);
+				Server.BanList.addException(args[0]);
 
 				if (banee != null)
 				{
 					banee.Kick("You have been banned from this Server.");
-					Program.server.BanList.addException(Netplay.slots[banee.whoAmi].
+					Server.BanList.addException(NetPlay.slots[banee.whoAmi].
 						remoteAddress.Split(':')[0]);
 				}
 
 
-				Program.server.notifyOps(args[0] + " has been banned {" + sender.Name + "}", true);
-				if (!Program.server.BanList.Save())
+				Server.notifyOps(args[0] + " has been banned {" + sender.Name + "}", true);
+				if (!Server.BanList.Save())
 				{
-					Program.server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+					Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
 				}
 			}
 			else
@@ -423,20 +426,19 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Removes an exception from the ban list.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void UnBan(Server server, ISender sender, ArgumentList args)
+		public static void UnBan(ISender sender, ArgumentList args)
 		{
 			if (args != null && args.Count > 0)
 			{
-				Program.server.BanList.removeException(args[0]);
+				Server.BanList.removeException(args[0]);
 
-				Program.server.notifyOps(args[0] + " has been unbanned {" + sender.Name + "}", true);
+				Server.notifyOps(args[0] + " has been unbanned {" + sender.Name + "}", true);
 
-				if (!Program.server.BanList.Save())
+				if (!Server.BanList.Save())
 				{
-					Program.server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+					Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
 				}
 			}
 			else
@@ -448,15 +450,14 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Sets the time in the game.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Time(Server server, ISender sender, ArgumentList args)
+		public static void Time(ISender sender, ArgumentList args)
 		{
 			double Time;
 			if (args.TryParseOne<Double>("-set", out Time))
 			{
-				server.World.setTime(Time, true);
+                Server.World.setTime(Time, true);
 			}
 			else
 			{
@@ -465,27 +466,27 @@ namespace Terraria_Server.Commands
 				{
 					case "day":
 						{
-							server.World.setTime(13500.0);
+                            Server.World.setTime(13500.0);
 							break;
 						}
 					case "dawn":
 						{
-                            server.World.setTime(0);
+                            Server.World.setTime(0);
 							break;
 						}
 					case "dusk":
 						{
-							server.World.setTime(0, false, false);
+                            Server.World.setTime(0, false, false);
 							break;
 						}
 					case "noon":
 						{
-							server.World.setTime(27000.0);
+                            Server.World.setTime(27000.0);
 							break;
 						}
 					case "night":
 						{
-							server.World.setTime(16200.0, false, false);
+                            Server.World.setTime(16200.0, false, false);
 							break;
 						}
 					case "-now":
@@ -537,16 +538,15 @@ namespace Terraria_Server.Commands
 				}
 			}
 			NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
-			server.notifyAll("Time set to " + Server.time.ToString() + " by " + sender.Name);
+            Server.notifyAll("Time set to " + Main.time.ToString() + " by " + sender.Name);
 		}
 
 		/// <summary>
 		/// Gives specified item to the specified player.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Give(Server server, ISender sender, ArgumentList args)
+		public static void Give(ISender sender, ArgumentList args)
 		{
 			// /give <player> <stack> <name> 
 			if (args.Count > 2 && args[0] != null && args[1] != null && args[2] != null &&
@@ -556,7 +556,7 @@ namespace Terraria_Server.Commands
                 string itemName = String.Join(" ", args);
 				itemName = itemName.Remove(0, itemName.IndexOf(" " + args[2]));
 
-				Player player = Program.server.GetPlayerByName(playerName);
+				Player player = Server.GetPlayerByName(playerName);
 				if (player != null)
 				{
 					Item[] items = new Item[Main.maxItemTypes];
@@ -637,7 +637,7 @@ namespace Terraria_Server.Commands
 
 						Item.NewItem((int)player.Position.X, (int)player.Position.Y, player.Width, player.Height, itemType, stackSize, false);
 
-						Program.server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.Name + "}", true);
+						Server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.Name + "}", true);
 
 						return;
 					}
@@ -660,10 +660,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Spawns specified NPC type.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void SpawnNPC(Server server, ISender sender, ArgumentList args)
+		public static void SpawnNPC(ISender sender, ArgumentList args)
 		{
 			Player player = sender as Player;
 			if (args.Count > 3)
@@ -724,17 +723,16 @@ namespace Terraria_Server.Commands
 				//Registries.NPC.Alter(Main.npcs[npcIndex], fclass.Name);
 				realNPCName = Main.npcs[npcIndex].Name;
 			}
-			Program.server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
+			Server.notifyOps("Spawned " + NPCAmount.ToString() + " of " +
 					realNPCName + " {" + player.Name + "}", true);
 		}
 
 		/// <summary>
 		/// Teleports player1 to a second specified player's location.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Teleport(Server server, ISender sender, ArgumentList args)
+		public static void Teleport(ISender sender, ArgumentList args)
 		{
 			Player subject;
 			Player target;
@@ -752,7 +750,7 @@ namespace Terraria_Server.Commands
 				{
 					if (subject.Teleport (Main.spawnTileX, Main.spawnTileY))
 					{
-						Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to spawn."), true);
+						Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to spawn."), true);
 					}
 					else
 						sender.sendMessage ("Teleportation failed.");
@@ -773,7 +771,7 @@ namespace Terraria_Server.Commands
 				if (subject.Teleport (target))
 				{
 
-					Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+					Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
 						target.Name, ". {", sender.Name, "}"), true);
 				}
 				else
@@ -790,7 +788,7 @@ namespace Terraria_Server.Commands
 				{
 					if (subject.Teleport (target))
 					{
-						Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+						Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
 							target.Name, ". {", sender.Name, "}"), true);
 					}
 					else
@@ -812,7 +810,7 @@ namespace Terraria_Server.Commands
 					
 					if (subject.Teleport (x, y))
 					{
-						Program.server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
+						Server.notifyOps (string.Concat ("Teleported ", subject.Name, " to ",
 							x, ":", y, ". {", sender.Name, "}"), true);
 					}
 					else
@@ -829,10 +827,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Teleports specified player to sending player's location.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void TeleportHere(Server server, ISender sender, ArgumentList args)
+		public static void TeleportHere(ISender sender, ArgumentList args)
 		{
 			if (sender is Player)
 			{
@@ -849,7 +846,7 @@ namespace Terraria_Server.Commands
 
                     subject.Teleport(player);
 
-                    Program.server.notifyOps("Teleported " + subject.Name + " to " +
+                    Server.notifyOps("Teleported " + subject.Name + " to " +
                         player.Name + " {" + sender.Name + "}", true);
                 }
 			}
@@ -862,10 +859,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Settles water like in the startup routine.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void SettleWater(Server server, ISender sender, ArgumentList args)
+		public static void SettleWater(ISender sender, ArgumentList args)
 		{
 			if (!Liquid.panicMode)
 			{
@@ -882,10 +878,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Sets OP status to a given Player.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void OpPlayer(Server server, ISender sender, ArgumentList args)
+		public static void OpPlayer(ISender sender, ArgumentList args)
 		{
 			if (args.Count > 1)
 			{
@@ -893,16 +888,16 @@ namespace Terraria_Server.Commands
                 string player = String.Join(" ", args);
 				player = player.Remove(player.IndexOf(Password), Password.Length).Trim().ToLower();
 
-				server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
-				server.OpList.addException(player + ":" + Password, true, player.Length + 1);
-                
-				if (!server.OpList.Save())
+                Server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
+                Server.OpList.addException(player + ":" + Password, true, player.Length + 1);
+
+                if (!Server.OpList.Save())
 				{
-					server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                    Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
 					return;
 				}
 
-				Player playerInstance = server.GetPlayerByName(player);
+                Player playerInstance = Server.GetPlayerByName(player);
 				if (playerInstance != null)
 				{
 					playerInstance.sendMessage("You are now OP!", ChatColor.Green);
@@ -922,29 +917,28 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// De-OPs a given Player.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void DeopPlayer(Server server, ISender sender, ArgumentList args)
+		public static void DeopPlayer(ISender sender, ArgumentList args)
 		{
 			if (args.Count > 0)
 			{
                 string player = String.Join(" ", args).Trim();
 
-				server.notifyOps("De-Opping " + player + " {" + sender.Name + "}", true);
+                Server.notifyOps("De-Opping " + player + " {" + sender.Name + "}", true);
 
-				if (Player.isInOpList(player, server))
+				if (Player.isInOpList(player))
 				{
-					Program.server.OpList.removeException(player + ":" + Player.GetPlayerPassword(player, server));
+					Server.OpList.removeException(player + ":" + Player.GetPlayerPassword(player));
 				}
 
-				if (!server.OpList.Save())
+                if (!Server.OpList.Save())
 				{
-					server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                    Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
 					return;
 				}
 
-				Player playerInstance = server.GetPlayerByName(player);
+                Player playerInstance = Server.GetPlayerByName(player);
 				if (playerInstance != null)
                 {
 
@@ -973,10 +967,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Allows Operators to login.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void OpLogin(Server server, ISender sender, ArgumentList args)
+		public static void OpLogin(ISender sender, ArgumentList args)
 		{
 			if (sender is Player)
 			{
@@ -1009,10 +1002,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Allows Operators to logout.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void OpLogout(Server server, ISender sender, ArgumentList args)
+		public static void OpLogout(ISender sender, ArgumentList args)
 		{
 			if (sender is Player)
 			{
@@ -1037,10 +1029,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Enables or disables NPC spawning
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void NPCSpawns(Server server, ISender sender, ArgumentList args)
+		public static void NPCSpawns(ISender sender, ArgumentList args)
         {
             args.ParseNone();
 
@@ -1051,17 +1042,16 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Kicks a given Player from the server
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Kick(Server server, ISender sender, ArgumentList args)
+		public static void Kick(ISender sender, ArgumentList args)
 		{
 			if (args.TryPop("-s"))
 			{
 				int s;
 				args.ParseOne(out s);
 
-				var slot = Netplay.slots[s];
+				var slot = NetPlay.slots[s];
 
 				if (slot.state != SlotState.VACANT)
 				{
@@ -1095,32 +1085,30 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Restarts the server
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Restart(Server server, ISender sender, ArgumentList args)
+		public static void Restart(ISender sender, ArgumentList args)
 		{
-			server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
-			Statics.keepRunning = true;
+            Server.notifyOps("Restarting the Server {" + sender.Name + "}", true);
+			//Statics.keepRunning = true;
 
-			server.StopServer();
-			while (Statics.serverStarted) { Thread.Sleep(10); }
+			NetPlay.StopServer();
+			while (NetPlay.ServerUp) { Thread.Sleep(10); }
 
 			ProgramLog.Log("Starting the Server");
-			server.Initialize();
-			WorldIO.loadWorld();
+			Main.Initialize();
+			WorldIO.loadWorld(Server.World.SavePath);
 			Program.updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
-			server.StartServer();
-			Statics.keepRunning = false;
+            NetPlay.StartServer();
+			//Statics.keepRunning = false;
 		}
 
 		/// <summary>
 		/// Checks the state of a slot.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Slots(Server server, ISender sender, ArgumentList args)
+		public static void Slots(ISender sender, ArgumentList args)
 		{
 			bool dinfo = args.Contains("-d") || args.Contains("-dp") || args.Contains("-pd");
 			bool pinfo = args.Contains("-p") || args.Contains("-dp") || args.Contains("-pd");
@@ -1128,7 +1116,7 @@ namespace Terraria_Server.Commands
 			int k = 0;
 			for (int i = 0; i < 255; i++)
 			{
-				var slot = Netplay.slots[i];
+				var slot = NetPlay.slots[i];
 				var player = Main.players[i];
 
 				if (slot.state != SlotState.VACANT)
@@ -1177,10 +1165,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Purge Server data
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Purge(Server server, ISender sender, ArgumentList args)
+		public static void Purge(ISender sender, ArgumentList args)
 		{
 			var all = args.TryPop("all");
 			var something = false;
@@ -1272,16 +1259,15 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Lists currently enabled plugins.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void ListPlugins(Server server, ISender sender, ArgumentList args)
+		public static void ListPlugins(ISender sender, ArgumentList args)
 		{
-			if (server.PluginManager.PluginList.Count > 0)
+            if (Server.PluginManager.PluginList.Count > 0)
 			{
                 string plugins = "";
 
-				foreach (Plugin.Plugin plugin in server.PluginManager.PluginList.Values)
+                foreach (Plugin.Plugin plugin in Server.PluginManager.PluginList.Values)
 				{
 					if (!plugin.Enabled || plugin.Name.Trim().Length > 0)
 					{
@@ -1303,10 +1289,9 @@ namespace Terraria_Server.Commands
 		/// <summary>
 		/// Enable/disable and get details about specific plugins.
 		/// </summary>
-		/// <param name="server">Current Server instance</param>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void ManagePlugins(Server server, ISender sender, ArgumentList args)
+		public static void ManagePlugins(ISender sender, ArgumentList args)
 		{
 			/*
 			 * Commands:
@@ -1323,11 +1308,11 @@ namespace Terraria_Server.Commands
 				{
 					case "list":
 						{
-							if (server.PluginManager.PluginList.Count > 0)
+                            if (Server.PluginManager.PluginList.Count > 0)
 							{
                                 string plugins = "";
 
-								foreach (Plugin.Plugin plugin in server.PluginManager.PluginList.Values)
+                                foreach (Plugin.Plugin plugin in Server.PluginManager.PluginList.Values)
 								{
 									if (plugin.Name.Trim().Length > 0)
 									{
@@ -1355,9 +1340,9 @@ namespace Terraria_Server.Commands
 
                             string pluginName = String.Join(" ", args);
 
-							if (server.PluginManager.PluginList.Count > 0)
+                            if (Server.PluginManager.PluginList.Count > 0)
 							{
-								Plugin.Plugin fplugin = server.PluginManager.GetPlugin(pluginName);
+                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
 									sender.sendMessage("Plugin Name: " + fplugin.Name);
@@ -1385,14 +1370,14 @@ namespace Terraria_Server.Commands
 
                             string pluginName = String.Join(" ", args);
 
-							if (server.PluginManager.PluginList.Count > 0)
+                            if (Server.PluginManager.PluginList.Count > 0)
 							{
-								Plugin.Plugin fplugin = server.PluginManager.GetPlugin(pluginName);
+                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
 									if (fplugin.Enabled)
 									{
-										if (server.PluginManager.DisablePlugin(fplugin.Name))
+                                        if (Server.PluginManager.DisablePlugin(fplugin.Name))
 										{
 											sender.sendMessage(pluginName + " was disabled!");
 										}
@@ -1426,14 +1411,14 @@ namespace Terraria_Server.Commands
 
                             string pluginName = String.Join(" ", args);
 
-							if (server.PluginManager.PluginList.Count > 0)
+                            if (Server.PluginManager.PluginList.Count > 0)
 							{
-								Plugin.Plugin fplugin = server.PluginManager.GetPlugin(pluginName);
+                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
 									if (!fplugin.Enabled)
 									{
-										if (server.PluginManager.EnablePlugin(fplugin.Name))
+                                        if (Server.PluginManager.EnablePlugin(fplugin.Name))
 										{
 											sender.sendMessage(args[1] + " was enabled!");
 										}
@@ -1470,10 +1455,9 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// Summon a Boss
         /// </summary>
-        /// <param name="server">Current Server instance</param>
         /// <param name="sender">Sending player</param>
         /// <param name="args">Arguments sent with command</param>
-        public static void SummonBoss(Server server, ISender sender, ArgumentList args)
+        public static void SummonBoss(ISender sender, ArgumentList args)
         {
             //Come to think of it now, It may be 1 boss at a time -_-
             bool EoW = args.TryPop("eater");
@@ -1489,12 +1473,12 @@ namespace Terraria_Server.Commands
             }
             else
             {
-                if (Netplay.anyClients)
+                if (NetPlay.anyClients)
                 {
                     string PlayerName;
                     if (args.TryParseOne<String>("-player", out PlayerName))
                     {
-                        player = server.GetPlayerByName(PlayerName);
+                        player = Server.GetPlayerByName(PlayerName);
                     }
                     else
                     {
@@ -1538,7 +1522,7 @@ namespace Terraria_Server.Commands
             {
                 if (NightOverride) //Mainly for eye
                 {
-                    server.World.setTime(16200.0, false, false);
+                    Server.World.setTime(16200.0, false, false);
                     NetMessage.SendData((int)Packet.WORLD_DATA); //Update Data
                 }
 
@@ -1546,7 +1530,7 @@ namespace Terraria_Server.Commands
                 {
                     Vector2 location = World.GetRandomClearTile(((int)player.Position.X / 16), ((int)player.Position.Y / 16), 100, true, 100, 50);
                     int BossSlot = NPC.NewNPC(((int)location.X * 16), ((int)location.Y * 16), BossId);
-                    server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColor.Purple, true);
+                    Server.notifyAll(Main.npcs[BossSlot].Name + " has been been summoned by " + sender.Name, ChatColor.Purple, true);
                     if (!(sender is ConsoleSender))
                         ProgramLog.Log("{0} summoned boss {1} at slot {2}.", sender.Name, Main.npcs[BossSlot].Name, BossSlot);
                 }
@@ -1557,14 +1541,14 @@ namespace Terraria_Server.Commands
             }            
         }
 
-        public static void ItemRejection(Server server, ISender sender, ArgumentList args)
+        public static void ItemRejection(ISender sender, ArgumentList args)
         {
             string exception;
             if (args.TryParseOne<String>("-add", out exception))
             {
-                if (!server.RejectedItems.Contains(exception))
+                if (!Server.RejectedItems.Contains(exception))
                 {
-                    server.RejectedItems.Add(exception);
+                    Server.RejectedItems.Add(exception);
                     sender.sendMessage(exception + " was added to the Item Rejection list!");
                 }
                 else
@@ -1574,9 +1558,9 @@ namespace Terraria_Server.Commands
             }
             else if (args.TryParseOne<String>("-remove", out exception))
             {
-                if (server.RejectedItems.Contains(exception))
+                if (Server.RejectedItems.Contains(exception))
                 {
-                    server.RejectedItems.Remove(exception);
+                    Server.RejectedItems.Remove(exception);
                     sender.sendMessage(exception + " was removed from the Item Rejection list!");
                 }
                 else
@@ -1586,18 +1570,18 @@ namespace Terraria_Server.Commands
             }
             else if (args.TryPop("-clear"))
             {
-                server.RejectedItems.Clear();
+                Server.RejectedItems.Clear();
                 sender.sendMessage("Item Rejection list has been cleared!");
             }
             else
             {
                 throw new CommandError("No item/id provided with your command");
             }
-            Program.properties.RejectedItems = String.Join(",", server.RejectedItems);
+            Program.properties.RejectedItems = String.Join(",", Server.RejectedItems);
             Program.properties.Save(false);
         }
 
-        public static void Explosions(Server server, ISender sender, ArgumentList args)
+        public static void Explosions(ISender sender, ArgumentList args)
         {
             args.ParseNone();
 
@@ -1606,7 +1590,7 @@ namespace Terraria_Server.Commands
             Program.properties.Save();
         }
         
-		public static void Refresh (Server server, ISender sender, ArgumentList args)
+		public static void Refresh (ISender sender, ArgumentList args)
 		{
 			args.ParseNone ();
 			

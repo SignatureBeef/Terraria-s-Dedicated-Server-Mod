@@ -73,7 +73,7 @@ namespace Terraria_Server
 
         public static void BootPlayer(int plr, string msg)
 		{
-			Netplay.slots[plr].Kick (msg);
+			NetPlay.slots[plr].Kick (msg);
 		}
 
         public static int SendData(Packet packet, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
@@ -83,7 +83,7 @@ namespace Terraria_Server
 
         public static int SendData(int packetId, int remoteClient = -1, int ignoreClient = -1, string text = "", int number = 0, float number2 = 0f, float number3 = 0f, float number4 = 0f, int number5 = 0)
 		{
-			if (!Netplay.anyClients) return 0;
+			if (!NetPlay.anyClients) return 0;
 			
 			try
 			{
@@ -336,7 +336,7 @@ namespace Terraria_Server
 //					}
 					
 				}
-				else if (Netplay.slots[remoteClient].Connected)
+				else if (NetPlay.slots[remoteClient].Connected)
 				{
 					msg.Send (remoteClient);
 					//NetMessage.buffer[remoteClient].spamCount++;
@@ -371,10 +371,10 @@ namespace Terraria_Server
 		{
 			if (sectionX >= 0 && sectionY >= 0 && sectionX < Main.maxSectionsX && sectionY < Main.maxSectionsY)
 			{
-				Netplay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
+				NetPlay.slots[whoAmi].tileSection[sectionX, sectionY] = true;
 				try
 				{
-					Netplay.slots[whoAmi].conn.SendSection (sectionX, sectionY);
+					NetPlay.slots[whoAmi].conn.SendSection (sectionX, sectionY);
 				}
 				catch (NullReferenceException) {}
 			}
@@ -385,9 +385,9 @@ namespace Terraria_Server
 			//ProgramLog.Debug.Log ("Broadcast, {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected);
 			for (int k = 0; k < 255; k++)
 			{
-				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected)
+				if (NetPlay.slots[k].state >= SlotState.PLAYING && NetPlay.slots[k].Connected)
 				{
-					Netplay.slots[k].Send (bytes);
+					NetPlay.slots[k].Send (bytes);
 				}
 			}
 		}
@@ -397,9 +397,9 @@ namespace Terraria_Server
 			//ProgramLog.Debug.Log ("BroadcastExcept({2}), {0} {1}", Netplay.slots[0].state, Netplay.slots[0].Connected, i);
 			for (int k = 0; k < 255; k++)
 			{
-				if (Netplay.slots[k].state >= SlotState.PLAYING && Netplay.slots[k].Connected && k != i)
+				if (NetPlay.slots[k].state >= SlotState.PLAYING && NetPlay.slots[k].Connected && k != i)
 				{
-					Netplay.slots[k].Send (bytes);
+					NetPlay.slots[k].Send (bytes);
 				}
 			}
 		}
@@ -436,7 +436,7 @@ namespace Terraria_Server
 		
 		public void Send (int i)
 		{
-			var conn = Netplay.slots[i].conn;
+			var conn = NetPlay.slots[i].conn;
 			if (conn != null)
 				conn.CopyAndSend (Segment);
 		}
@@ -474,13 +474,13 @@ namespace Terraria_Server
 			msg.PlayerChat (255, "Current players: " + list + ".", 255, 240, 20);
 			msg.Send (plr); // send these before the login event, so messages from plugins come after
 			
-			var slot = Netplay.slots[plr];
+			var slot = NetPlay.slots[plr];
 			var player = Main.players[plr];
 			
 			PlayerLoginEvent loginEvent = new PlayerLoginEvent();
 			loginEvent.Slot = slot;
 			loginEvent.Sender = player;
-			Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, loginEvent);
+			Server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, loginEvent);
 			
 			if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (slot.state & SlotState.DISCONNECTING) == 0)
 			{
@@ -532,7 +532,7 @@ namespace Terraria_Server
 			PlayerLogoutEvent Event = new PlayerLogoutEvent();
 			Event.Slot = null;
 			Event.Sender = player;
-			Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
+			Server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
 		}
 		
 		[ThreadStatic]
@@ -569,13 +569,13 @@ namespace Terraria_Server
 			
 			for (int i = 0; i < 255; i++)
 			{
-				if (Netplay.slots[i].state >= SlotState.PLAYING && Netplay.slots[i].Connected)
+				if (NetPlay.slots[i].state >= SlotState.PLAYING && NetPlay.slots[i].Connected)
 				{
 					int X = x / 200;
 					int Y = y / 150;
 					if (X < (Main.maxTilesX / 200) && Y < (Main.maxTilesY / 150))
 					{
-						if (Netplay.slots[i].tileSection[X, Y])
+						if (NetPlay.slots[i].tileSection[X, Y])
 						{
 							if (bytes == null)
 							{
@@ -583,7 +583,7 @@ namespace Terraria_Server
 								msg.FlowLiquid (x, y);
 								bytes = msg.Output;
 							}
-							Netplay.slots[i].Send(bytes);
+							NetPlay.slots[i].Send(bytes);
 						}
 					}
 					else
@@ -625,7 +625,7 @@ namespace Terraria_Server
 			
 			for (int i = 0; i < 255; i++)
 			{
-				if (Netplay.slots[i].state == SlotState.PLAYING)
+				if (NetPlay.slots[i].state == SlotState.PLAYING)
 				{
 					msg.Clear();
 					msg.BuildPlayerUpdate (i);
@@ -636,7 +636,7 @@ namespace Terraria_Server
 			msg.Clear();
 			
 			for (int i = 0; i < 255; i++)
-				if (Netplay.slots[i].state != SlotState.PLAYING)
+				if (NetPlay.slots[i].state != SlotState.PLAYING)
 					msg.SynchBegin (i, 0);
 			
 			msg.Broadcast ();
@@ -646,7 +646,7 @@ namespace Terraria_Server
 		{
 			for (int k = 0; k < 255; k++)
 			{
-				if (Netplay.slots[k].state == SlotState.PLAYING && i != k)
+				if (NetPlay.slots[k].state == SlotState.PLAYING && i != k)
 					BuildPlayerUpdate (k);
 				else if (i != k)
 					SynchBegin (k, 0);

@@ -6,7 +6,6 @@ using Terraria_Server.Events;
 using Terraria_Server.Commands;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
-using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
@@ -31,15 +30,15 @@ namespace Terraria_Server.WorldMod
 			Main.maxSectionsY = Main.maxTilesY / 150;
 		}
 
-		public static void saveAndPlayCallBack(object threadContext)
-		{
-			saveWorld(Program.server.World.SavePath, false);
-		}
+        public static void SaveWorldCallback(object threadContext)
+        {
+            saveWorld(Server.World.SavePath, false);
+        }
 
-		public static void saveAndPlay()
-		{
-			ThreadPool.QueueUserWorkItem(new WaitCallback(saveAndPlayCallBack), 1);
-		}
+        public static void SaveWorldThreaded()
+        {
+            ThreadPool.QueueUserWorkItem(new WaitCallback(SaveWorldCallback), 1);
+        }
 
 		public static void clearWorld()
 		{
@@ -79,12 +78,12 @@ namespace Terraria_Server.WorldMod
 			}
 			WorldModify.lastMaxTilesX = Main.maxTilesX;
 			WorldModify.lastMaxTilesY = Main.maxTilesY;
-			
-			if (Server.tile == null || Server.tile.SizeX != Main.maxTilesX || Server.tile.SizeY != Main.maxTilesY)
+
+            if (Main.tile == null || Main.tile.SizeX != Main.maxTilesX || Main.tile.SizeY != Main.maxTilesY)
 			{
-				Server.tile = null;
+                Main.tile = null;
 				GC.Collect ();
-				Server.tile = new TileCollection(Main.maxTilesX, Main.maxTilesY);
+                Main.tile = new TileCollection(Main.maxTilesX, Main.maxTilesY);
 			}
 			else
 			{
@@ -404,9 +403,9 @@ namespace Terraria_Server.WorldMod
 			return success;
 		}
 
-		public static void loadWorld()
+		public static void loadWorld(string LoadPath)
 		{
-			using (FileStream fileStream = new FileStream(Program.server.World.SavePath, FileMode.Open))
+			using (FileStream fileStream = new FileStream(LoadPath, FileMode.Open))
 			{
 				using (BinaryReader binaryReader = new BinaryReader(fileStream))
 				{
@@ -631,7 +630,7 @@ namespace Terraria_Server.WorldMod
 			
 			if (Main.worldName == null || Main.worldName == "")
 			{
-				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (Program.server.World.SavePath);
+				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (LoadPath);
 			}
 		}
 	}

@@ -10,21 +10,30 @@ namespace Terraria_Server
     ///<Summary>
     /// Provides access to the majority of Server Data
     ///</Summary>
-    public class Server : Main
+    public class Server
     {
-        private PluginManager pluginManager = null;
-        public List<String> RejectedItems = null;
+        public static PluginManager PluginManager { get; set; }
+        public static List<String> RejectedItems { get; set; }
+
+        public static World World { get; set; }
         
-        private World world = null;
+        // Summary:
+        //      Gets the White list 
+        public static DataRegister WhiteList { get; set; }
 
-        public Server() { }
+        // Summary:
+        //       Gets the Ban list
+        public static DataRegister BanList { get; set; }
 
-        public Server(World World, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
+        // Summary:
+        //       Gets the OP list
+        public static DataRegister OpList { get; set; }
+        
+        public static void InitializeData(World NewWorld, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
         {
             Main.maxNetplayers = PlayerCap;
-            world = World;
-            world.Server = this;
-            pluginManager = new PluginManager(Statics.PluginPath, Statics.LibrariesPath, this);
+            World = NewWorld;
+            PluginManager = new PluginManager(Statics.PluginPath, Statics.LibrariesPath);
             WhiteList = new DataRegister(myWhiteList);
             WhiteList.Load();
             BanList = new DataRegister(myBanList);
@@ -46,7 +55,7 @@ namespace Terraria_Server
         // Summary:
         //       Gets a specified Online Player
         //       Input name must already be cleaned of spaces
-        public Player GetPlayerByName(string name)
+        public static Player GetPlayerByName(string name)
         {
             string lowercaseName = name.ToLower();
             foreach (Player player in Main.players)
@@ -58,86 +67,10 @@ namespace Terraria_Server
             }
             return null;
         }
-
-        // Summary:
-        //       Gets the Plugin Manager
-        public PluginManager PluginManager
-        {
-            get
-            {
-                return pluginManager;
-            }
-        }
-
-        // Summary:
-        //       Gets the World Loaded for the Server
-        public World World
-        {
-            get
-            {
-                return world;
-            }
-        }
-
-        // Summary:
-        //       Gets/Sets the Server Password
-        public string OpPassword
-        {
-            get 
-            {
-                return Netplay.password;
-            } 
-            set 
-            {
-                Netplay.password = value;
-            }
-        }
-
-        // Summary:
-        //       Gets/Sets the Terraria Binding Port
-        public int Port
-        {
-            get
-            {
-                return Netplay.serverPort;
-            }
-            set
-            {
-                Netplay.serverPort = value;
-            }
-        }
-
-        // Summary:
-        //       Gets/Sets the Terraria Binding IP
-        public string ServerIP
-        {
-            get 
-            {
-                return Netplay.serverSIP;
-            } 
-            set 
-            {
-                Netplay.serverSIP = value;
-            }
-        }
-
-        // Summary:
-        //       Stops the Terraria Server
-        public void StopServer()
-        {
-            Netplay.StopServer();
-        }
-
-        // Summary:
-        //       Starts the Terraria Server
-        public void StartServer()
-        {
-            Netplay.StartServer();
-        }
-
+        
         // Summary:
         //       Send a message to all online OPs
-        public void notifyOps(string Message, bool writeToConsole = true)
+        public static void notifyOps(string Message, bool writeToConsole = true)
         {
             if (Statics.cmdMessages)
             {
@@ -157,7 +90,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Sends a Message to all Connected Clients
-        public void notifyAll(string Message, bool writeToConsole = true)
+        public static void notifyAll(string Message, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, 238f, 130f, 238f);
             if (writeToConsole)
@@ -168,7 +101,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Sends a Message to all Connected Clients
-        public void notifyAll(string Message, Color ChatColour, bool writeToConsole = true)
+        public static void notifyAll(string Message, Color ChatColour, bool writeToConsole = true)
         {
             NetMessage.SendData((int)Packet.PLAYER_CHAT, -1, -1, Message, 255, ChatColour.R, ChatColour.G, ChatColour.B);
             if (writeToConsole)
@@ -178,30 +111,8 @@ namespace Terraria_Server
         }
 
         // Summary:
-        //       Gets the Servers Player List
-        public Player[] PlayerList
-        {
-            get
-            {
-                return Main.players;
-            }
-        }
-
-        // Summary:
-        //      Gets the White list 
-        public DataRegister WhiteList { get; set; }
-
-        // Summary:
-        //       Gets the Ban list
-        public DataRegister BanList { get; set; }
-
-        // Summary:
-        //       Gets the OP list
-        public DataRegister OpList { get; set; }
-
-        // Summary:
         //       Get the array of Active NPCs
-        public NPC[] ActiveNPCs()
+        public static NPC[] ActiveNPCs()
         {
             NPC[] npcs = null;
 
@@ -233,7 +144,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets the total of all active NPCs
-        public int ActiveNPCCount()
+        public static int ActiveNPCCount()
         {
             int npcCount = 0;
             for (int i = 0; i < Main.npcs.Length - 1; i++)
@@ -248,7 +159,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets/Sets the maximum allowed NPCs
-        public int MaxNPCs
+        public static int MaxNPCs
         {
             get
             {
@@ -263,7 +174,7 @@ namespace Terraria_Server
 
         // Summary:
         //       Gets/Sets the max spawn rate of NPCs\
-        public int SpawnRate
+        public static int SpawnRate
         {
             get
             {
@@ -276,7 +187,7 @@ namespace Terraria_Server
             }
         }
 
-        public bool isValidLocation(Vector2 point, bool defaultResist = true)
+        public static bool isValidLocation(Vector2 point, bool defaultResist = true)
         {
             if (point != null && (defaultResist) ? (point != default(Vector2)) : true)
                 if (point.X <= Main.maxTilesX && point.X >= 0)
@@ -290,7 +201,7 @@ namespace Terraria_Server
             return false;
         }
 
-        public bool RejectedItemsContains(string item)
+        public static bool RejectedItemsContains(string item)
         {
             if (item != null)
             {

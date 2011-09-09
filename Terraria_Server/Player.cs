@@ -6,7 +6,6 @@ using System.Text;
 using System.IO;
 using System.Security.Cryptography;
 using Terraria_Server.Misc;
-using Terraria_Server.Shops;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
@@ -2377,8 +2376,8 @@ namespace Terraria_Server
             }
             catch (Exception e)
             {
-                Program.tConsole.WriteLine("Error In UpdatePlayer: " + e.Message);
-                Program.tConsole.WriteLine("Stack: " + e.StackTrace);
+                ProgramLog.Log("Error In UpdatePlayer: " + e.Message);
+                ProgramLog.Log("Stack: " + e.StackTrace);
             }
 		}
 		
@@ -3159,7 +3158,7 @@ namespace Terraria_Server
                 PlayerHurtEvent playerEvent = new PlayerHurtEvent();
                 playerEvent.Sender = this;
                 playerEvent.Damage = Damage;
-                Program.server.PluginManager.processHook(Hooks.PLAYER_HURT, playerEvent);
+                Server.PluginManager.processHook(Hooks.PLAYER_HURT, playerEvent);
                 if (playerEvent.Cancelled)
                 {
                     return 0.0;
@@ -4948,7 +4947,7 @@ namespace Terraria_Server
 			{
 				var whoAmi = this.whoAmi;
 				if (whoAmi >= 0)
-					return Netplay.slots [whoAmi];
+					return NetPlay.slots [whoAmi];
 				else
 					return null;
 			}
@@ -5105,7 +5104,7 @@ namespace Terraria_Server
 			playerEvent.ToLocation = new Vector2 (tx * 16, ty * 16);
 			playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
 			playerEvent.Sender = this;
-			Program.server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
+			Server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
 			if (playerEvent.Cancelled)
 			{
 				return false;
@@ -5128,7 +5127,7 @@ namespace Terraria_Server
 				oy = OldSpawnY;
 			}
 			
-			var slot = Netplay.slots[whoAmi];
+			var slot = NetPlay.slots[whoAmi];
 			int sx = tx / 200;
 			int sy = ty / 150;
 			
@@ -5268,7 +5267,7 @@ namespace Terraria_Server
 		/// <param name="PlayerName">Player's name</param>
 		/// <param name="Server">Current server instance</param>
 		/// <returns>Password string</returns>
-        public static string GetPlayerPassword(string PlayerName, Server Server)
+        public static string GetPlayerPassword(string PlayerName)
         {
             foreach (string listee in Server.OpList.WhiteList)
             {
@@ -5294,7 +5293,7 @@ namespace Terraria_Server
         {
             get
             {
-                return Player.GetPlayerPassword(this.Name, Program.server);
+                return Player.GetPlayerPassword(this.Name);
             }
         }
 
@@ -5304,7 +5303,7 @@ namespace Terraria_Server
 		/// <param name="Name">Player's name</param>
 		/// <param name="Server">Server instance to check</param>
 		/// <returns>True if op, false if not</returns>
-        public static bool isInOpList(string Name, Server Server)
+        public static bool isInOpList(string Name)
         {
             foreach (string listee in Server.OpList.WhiteList)
             {
@@ -5329,7 +5328,7 @@ namespace Terraria_Server
 		/// <returns>True if op, false if not</returns>
         public bool isInOpList()
         {
-            return Player.isInOpList(this.Name, Program.server);            
+            return Player.isInOpList(this.Name);            
         }
 
 		/// <summary>

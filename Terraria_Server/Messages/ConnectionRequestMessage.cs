@@ -25,7 +25,7 @@ namespace Terraria_Server.Messages
 //            PlayerLoginEvent loginEvent = new PlayerLoginEvent();
 //            loginEvent.Slot = slot;
 //            loginEvent.Sender = Main.players[whoAmI];
-//            Program.server.PluginManager.processHook(Plugin.Hooks.PLAYER_PRELOGIN, loginEvent);
+//            Server.PluginManager.processHook(Plugin.Hooks.PLAYER_PRELOGIN, loginEvent);
 //            if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (slot.state & SlotState.DISCONNECTING) == 0)
 //            {
 //                slot.Kick ("Disconnected by server.");
@@ -34,13 +34,13 @@ namespace Terraria_Server.Messages
 
             string clientName = conn.RemoteAddress.Split(':')[0];
 //
-//            if (Program.server.BanList.containsException(clientName))
+//            if (Server.BanList.containsException(clientName))
 //            {
 //                slot.Kick ("You are banned from this Server.");
 //                return;
 //            }
 
-            if (Program.properties.UseWhiteList && !Program.server.WhiteList.containsException(clientName))
+            if (Program.properties.UseWhiteList && !Server.WhiteList.containsException(clientName))
             {
                 conn.Kick ("You are not on the WhiteList.");
                 return;
@@ -73,7 +73,7 @@ namespace Terraria_Server.Messages
 			
 			var msg = NetMessage.PrepareThreadInstance ();
 			
-			if (ctx.Result == HookResult.ASK_PASS || (Netplay.password != null && Netplay.password != ""))
+			if (ctx.Result == HookResult.ASK_PASS || (NetPlay.password != null && NetPlay.password != ""))
 			{
 				conn.State = SlotState.SERVER_AUTH;
 				msg.PasswordRequest ();

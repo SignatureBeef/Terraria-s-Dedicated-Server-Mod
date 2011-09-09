@@ -47,7 +47,7 @@ namespace Terraria_Server.Messages
 					msg.PasswordRequest ();
 					conn.Send (msg.Output);
 				}
-				else if (ctx.Result == HookResult.CONTINUE || password == Netplay.password)
+				else if (ctx.Result == HookResult.CONTINUE || password == NetPlay.password)
 				{
 					conn.State = SlotState.ACCEPTED;
 					

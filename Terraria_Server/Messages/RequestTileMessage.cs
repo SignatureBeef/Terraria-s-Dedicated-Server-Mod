@@ -35,7 +35,7 @@ namespace Terraria_Server.Messages
                 num10 *= 2;
             }
 
-            ServerSlot serverSock = Netplay.slots[whoAmI];
+            ServerSlot serverSock = NetPlay.slots[whoAmI];
             if (serverSock.state == SlotState.SENDING_WORLD)
             {
                 serverSock.state = SlotState.SENDING_TILES;
@@ -46,8 +46,8 @@ namespace Terraria_Server.Messages
             NetMessage.SendData(9, whoAmI, -1, "Receiving tile data", num10);
             serverSock.statusText2 = "is receiving tile data";
             serverSock.statusMax += num10;
-            int sectionX = Netplay.GetSectionX(Main.spawnTileX);
-            int sectionY = Netplay.GetSectionY(Main.spawnTileY);
+            int sectionX = NetPlay.GetSectionX(Main.spawnTileX);
+            int sectionY = NetPlay.GetSectionY(Main.spawnTileY);
 
             for (int x = sectionX - 1; x < sectionX + 2; x++)
             {
@@ -59,8 +59,8 @@ namespace Terraria_Server.Messages
 
             if (flag3)
             {
-                num8 = Netplay.GetSectionX(num8);
-                num9 = Netplay.GetSectionY(num9);
+                num8 = NetPlay.GetSectionX(num8);
+                num9 = NetPlay.GetSectionY(num9);
                 for (int num11 = num8 - 1; num11 < num8 + 2; num11++)
                 {
                     for (int num12 = num9 - 1; num12 < num9 + 2; num12++)

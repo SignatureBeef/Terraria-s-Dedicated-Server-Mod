@@ -10,6 +10,7 @@ using Terraria_Server.Definitions;
 using Terraria_Server.Logging;
 using Terraria_Server.WorldMod;
 using System.Security.Policy;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server
 {
@@ -20,7 +21,6 @@ namespace Terraria_Server
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
-		public static TConsole tConsole = null;
 
 		public static Server server;
 
@@ -55,7 +55,6 @@ namespace Terraria_Server
 				}
 				
 				Platform.InitPlatform();
-				tConsole = new TConsole (null, Platform.Type); //dummy
 
 				ProgramLog.Log ("Setting up Properties.");
 				bool propertiesExist = File.Exists("server.properties");
@@ -198,11 +197,11 @@ namespace Terraria_Server
 						ProgramLog.Log ("Generating world with custom map size: {0}x{1}", worldX, worldY);
 					}
 
-					Server.maxTilesX = worldX;
-					Server.maxTilesY = worldY;
+                    Terraria_Server.Main.maxTilesX = worldX;
+                    Terraria_Server.Main.maxTilesY = worldY;
 
 					WorldIO.clearWorld();
-					(new Server()).Initialize();
+                    Terraria_Server.Main.Initialize();
 					if (properties.UseCustomGenOpts)
 					{
 						WorldGen.numDungeons = properties.DungeonAmount;
@@ -211,7 +210,7 @@ namespace Terraria_Server
 					else
 					{
 						WorldGen.numDungeons = 1;
-						WorldModify.ficount = (int)((double)Server.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
+                        WorldModify.ficount = (int)((double)Terraria_Server.Main.maxTilesX * 0.0008); //The Statics one was generating with default values, We want it to use the actual tileX for the world
 					}
                     WorldGen.GenerateWorld(seed);
 					WorldIO.saveWorld(worldFile, true);
@@ -244,51 +243,58 @@ namespace Terraria_Server
 				World world = new World(worldXtiles, worldYtiles);
 				world.SavePath = worldFile;
 
-				server = new Server(world, properties.MaxPlayers,
+				Server.InitializeData(world, properties.MaxPlayers,
 					Statics.DataPath + Path.DirectorySeparatorChar + "whitelist.txt",
 					Statics.DataPath + Path.DirectorySeparatorChar + "banlist.txt",
 					Statics.DataPath + Path.DirectorySeparatorChar + "oplist.txt");
-				server.OpPassword = properties.Password;
-				server.Port = properties.Port;
-				server.ServerIP = properties.ServerIP;
-				server.Initialize();
+				NetPlay.password = properties.Password;
+                NetPlay.serverPort = properties.Port;
+                NetPlay.serverSIP = properties.ServerIP;
+				Terraria_Server.Main.Initialize();
 				
-				Server.maxTilesX = worldXtiles;
-				Server.maxTilesY = worldYtiles;
-				Server.maxSectionsX = worldXtiles / 200;
-				Server.maxSectionsY = worldYtiles / 150;
+				Terraria_Server.Main.maxTilesX = worldXtiles;
+				Terraria_Server.Main.maxTilesY = worldYtiles;
+                Terraria_Server.Main.maxSectionsX = worldXtiles / 200;
+				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
-                WorldIO.loadWorld();
+                WorldIO.loadWorld(Server.World.SavePath);
 
 				updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 
 				ProgramLog.Log ("Starting the Server");
-				server.StartServer();
+				NetPlay.StartServer();
 				
-				Statics.IsActive = true;
-				while (!Statics.serverStarted) { }
+				while (!NetPlay.ServerUp) { }
 
-                commandParser = new CommandParser(server);
+                commandParser = new CommandParser();
 				ProgramLog.Console.Print ("You can now insert Commands.");
-				
-				while (Statics.IsActive)
+
+                while (NetPlay.ServerUp)
 				{
 					try
 					{
-                        string line = Console.ReadLine().Trim();
+                        string line = Console.ReadLine();
 						if (line.Length > 0)
 						{
-							commandParser.ParseConsoleCommand(line, server);
+							commandParser.ParseConsoleCommand(line);
 						}
-					}
+                    }
+                    catch (ExitException e)
+                    {
+                        ProgramLog.Log(e.Message);
+                        break;
+                    }
 					catch (Exception e)
 					{
 						ProgramLog.Log (e, "Issue parsing console command");
 					}
 				}
-				while (Statics.serverStarted) { Thread.Sleep(10); }
-				ProgramLog.Log ("Exiting...");
-				Program.tConsole.Close();
+
+                while(WorldModify.saveLock || NetPlay.ServerUp)
+                    Thread.Sleep(100);
+
+                ProgramLog.Log("Exiting...");
+                Thread.Sleep(1000);
             }
             catch (UpdateCompleted)
             {
@@ -318,10 +324,6 @@ namespace Terraria_Server
                 File.Delete(properties.PIDFile.Trim());
             }
 
-			if (Program.tConsole != null)
-			{
-				Program.tConsole.Close();
-			}
 			ProgramLog.Log ("Log end.");
 			ProgramLog.Close();
 			
@@ -662,15 +664,10 @@ namespace Terraria_Server
 		{
 			try
 			{
-				if (server == null)
+
+                if (Terraria_Server.Main.rand == null)
 				{
-					ProgramLog.Log ("Issue in UpdateLoop thread!");
-					return;
-				}
-	
-				if (Server.rand == null)
-				{
-					Server.rand = new Random((int)DateTime.Now.Ticks);
+                    Terraria_Server.Main.rand = new Random((int)DateTime.Now.Ticks);
 				}
 				
 				bool hibernate = properties.StopUpdatesWhenEmpty;
@@ -683,7 +680,7 @@ namespace Terraria_Server
 					double updateTime = 16.66666666666667;
 					double nextUpdate = s.ElapsedMilliseconds + updateTime;
 	
-					while (!Netplay.disconnect)
+					while (!NetPlay.disconnect)
 					{
 						double now = s.ElapsedMilliseconds;
 						double left = nextUpdate - now;
@@ -700,10 +697,10 @@ namespace Terraria_Server
 						else
 							nextUpdate = now + updateTime;
 	
-						if (Netplay.anyClients || (hibernate == false))
+						if (NetPlay.anyClients || (hibernate == false))
 						{
 							var start = s.Elapsed;
-							server.Update (s);
+                            Terraria_Server.Main.Update(s);
 							LastUpdateTime = s.Elapsed - start;
 						}
 					}
@@ -717,7 +714,7 @@ namespace Terraria_Server
 				Stopwatch stopwatch = new Stopwatch();
 				stopwatch.Start();
 	
-				while (!Netplay.disconnect)
+				while (!NetPlay.disconnect)
 				{
 					double elapsed = (double)stopwatch.ElapsedMilliseconds;
 					if (elapsed + leftOver >= serverProcessAverage)
@@ -730,9 +727,9 @@ namespace Terraria_Server
 						{
 							leftOver = 1000.0;
 						}
-						if (Netplay.anyClients || (hibernate == false))
+						if (NetPlay.anyClients || (hibernate == false))
 						{
-							server.Update (stopwatch);
+                            Terraria_Server.Main.Update(stopwatch);
 						}
 						double num9 = (double)stopwatch.ElapsedMilliseconds + leftOver;
 						if (num9 < serverProcessAverage)
@@ -741,7 +738,7 @@ namespace Terraria_Server
 							if (num10 > 1)
 							{
 								Thread.Sleep(num10);
-								if (hibernate && !Netplay.anyClients)
+								if (hibernate && !NetPlay.anyClients)
 								{
 									leftOver = 0.0;
 									Thread.Sleep(10);

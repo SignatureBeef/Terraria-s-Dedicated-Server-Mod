@@ -23,9 +23,7 @@ namespace Terraria_Server
         private int maxTilesX;
         private int maxTilesY;
 
-        public World(int MaxTilesX, int MaxTilesY) : this(null, MaxTilesX, MaxTilesY){}
-
-        public World(Server server, int MaxTilesX, int MaxTilesY)
+        public World(int MaxTilesX, int MaxTilesY)
         {
             BottomWorld = DEFAULT_BOTTOM_WORLD;
             TopWorld = DEFAULT_TOP_WORLD;
@@ -34,14 +32,10 @@ namespace Terraria_Server
             maxTilesY = MaxTilesY;
             maxTilesX = MaxTilesX;
 
-            Server = server;
-
             UpdateWorldCoords(false);
         }
 
         public string Name { get; set; }
-
-        public Server Server { get; set; }
 
         public int Seed { get; set; }
 
@@ -162,8 +156,8 @@ namespace Terraria_Server
                 {
                     tileLocation.X = TileX + ((Main.rand.Next(RangeX * -1, RangeX)) / 2);
                     tileLocation.Y = TileY + ((Main.rand.Next(RangeY * -1, RangeY)) / 2);
-                    if ((Program.server.World.isTileValid((int)tileLocation.X, (int)tileLocation.Y) && 
-                        Program.server.World.isTileClear((int)tileLocation.X, (int)tileLocation.Y)))
+                    if ((Server.World.isTileValid((int)tileLocation.X, (int)tileLocation.Y) && 
+                        Server.World.isTileClear((int)tileLocation.X, (int)tileLocation.Y)))
                     {
                         break;
                     }

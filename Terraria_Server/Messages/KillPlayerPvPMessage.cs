@@ -20,7 +20,7 @@ namespace Terraria_Server.Messages
             
             if (playerIndex != whoAmI)
             {
-                Netplay.slots[whoAmI].Kick ("Cheating detected (KILL_PLAYER forgery).");
+                NetPlay.slots[whoAmI].Kick ("Cheating detected (KILL_PLAYER forgery).");
                 return;
             }
 
@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
 			
 			var ctx = new HookContext
 			{
-				Connection = Netplay.slots[whoAmI].conn,
+				Connection = NetPlay.slots[whoAmI].conn,
 				Sender = player,
 				Player = player,
 			};
