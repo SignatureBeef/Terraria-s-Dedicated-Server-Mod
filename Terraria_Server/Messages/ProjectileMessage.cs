@@ -1,6 +1,6 @@
 using System;
 using Terraria_Server.Events;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Definitions;
 using Terraria_Server.Collections;
 using Terraria_Server.Logging;
@@ -34,36 +34,74 @@ namespace Terraria_Server.Messages
             byte projectileOwner = readBuffer[num++];
             byte type = readBuffer[num++];
             
-            if (type > 55)
-            {
-                Netplay.slots[whoAmI].Kick ("Invalid projectile.");
-                return;
-            }
-            else if (type == (int)ProjectileType.FEATHER_HARPY || type == (int)ProjectileType.STINGER || type == (int)ProjectileType.SICKLE_DEMON)
-            {
-                Netplay.slots[whoAmI].Kick ("Projectile cheat detected.");
-                return;
-            }
-            else if (type == (int)ProjectileType.HARPOON)
-            {
-                if (Math.Abs (vX) + Math.Abs (vY) < 1e-4) // ideally, we'd want to figure out all projectiles that never have 0 velocity
-                {
-                    Netplay.slots[whoAmI].Kick ("Harpoon cheat detected.");
-                    return;
-                }
-            }
-
-            float[] aiInfo = new float[Projectile.MAX_AI];
-            for (int i = 0; i < Projectile.MAX_AI; i++)
-            {
-                aiInfo[i] = BitConverter.ToSingle(readBuffer, num);
-                num += 4;
-            }
+			var player = Main.players[whoAmI];
+			
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.ProjectileReceived
+			{
+				X = x, Y = y, VX = vX, VY = vY,
+				Id = projectileIdentity,
+				Owner = projectileOwner,
+				Knockback = knockBack,
+				Damage = damage,
+				TypeByte = type,
+			};
+			
+			HookPoints.ProjectileReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return;
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return;
+			
+			if (ctx.Result == HookResult.ERASE)
+			{
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.EraseProjectile (projectileIdentity, projectileOwner);
+				msg.Send (whoAmI);
+				return;
+			}
+			
+			if (ctx.Result != HookResult.CONTINUE)
+			{
+				if (type > 55)
+				{
+					Netplay.slots[whoAmI].Kick ("Invalid projectile.");
+					return;
+				}
+				else if (type == (int)ProjectileType.FEATHER_HARPY || type == (int)ProjectileType.STINGER || type == (int)ProjectileType.SICKLE_DEMON)
+				{
+					Netplay.slots[whoAmI].Kick ("Projectile cheat detected.");
+					return;
+				}
+				else if (type == (int)ProjectileType.HARPOON)
+				{
+					if (Math.Abs (vX) + Math.Abs (vY) < 1e-4) // ideally, we'd want to figure out all projectiles that never have 0 velocity
+					{
+						Netplay.slots[whoAmI].Kick ("Harpoon cheat detected.");
+						return;
+					}
+				}
+			}
+			
+			var projectile = Registries.Projectile.Create(type);
+			
+			for (int i = 0; i < Projectile.MAX_AI; i++)
+			{
+				projectile.ai[i] = BitConverter.ToSingle(readBuffer, num);
+				num += 4;
+			}
             
             int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);
             Projectile oldProjectile = Main.projectile[projectileIndex];
-            Projectile projectile = Registries.Projectile.Create(type);
-            if (!projectile.Active || projectile.type != oldProjectile.type)
+            if (!oldProjectile.Active || projectile.type != oldProjectile.type)
             {
                 Netplay.slots[whoAmI].spamProjectile += 1f;
             }
@@ -80,7 +118,7 @@ namespace Terraria_Server.Messages
             PlayerProjectileEvent playerEvent = new PlayerProjectileEvent();
             playerEvent.Sender = Main.players[whoAmI];
             playerEvent.Projectile = projectile;
-            Program.server.PluginManager.processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
+            //Program.server.PluginManager.processHook(Hooks.PLAYER_PROJECTILE, playerEvent);
             if (playerEvent.Cancelled || (!Program.properties.AllowExplosions && 
                 (   type == (int)ProjectileType.BOMB        /* 28 */ || 
                     type == (int)ProjectileType.DYNAMITE    /* 29 */ ||
@@ -101,10 +139,6 @@ namespace Terraria_Server.Messages
 
             Main.projectile[projectileIndex] = projectile;
 
-            for (int i = 0; i < Projectile.MAX_AI; i++)
-            {
-                projectile.ai[i] = aiInfo[i];
-            }
             NetMessage.SendData(27, -1, whoAmI, "", projectileIndex);
         }
 

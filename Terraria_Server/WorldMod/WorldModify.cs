@@ -3,7 +3,7 @@ using System.IO;
 using System.Diagnostics;
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
 using Terraria_Server.Shops;
 using Terraria_Server.Collections;
@@ -1290,27 +1290,39 @@ namespace Terraria_Server.WorldMod
 			return result;
 		}
 
-		public static bool CloseDoor(int x, int y, bool forced = false, DoorOpener opener = DoorOpener.SERVER, ISender sender = null)
+		public static bool CloseDoor(int x, int y, bool forced, ISender sender)
 		{
 			if (sender == null)
 			{
 				sender = new ConsoleSender ();
 			}
 
-            if (Program.properties.NPCDoorOpenCancel && opener == DoorOpener.NPC)
+            if (Program.properties.NPCDoorOpenCancel && sender is NPC)
                 return false;
 
-			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
-			doorEvent.Sender = sender;
-			doorEvent.X = x;
-			doorEvent.Y = y;
-			doorEvent.Direction = 1;
-			doorEvent.Opener = opener;
-			doorEvent.isOpened = forced;
-			Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
-			if (doorEvent.Cancelled)
+			var ctx = new HookContext
 			{
-                NetMessage.SendData(19, -1, -1, "", 0, (float)x, (float)y, 0); //Inform the client of the update
+				Sender = sender,
+			};
+			
+			var args = new HookArgs.DoorStateChanged
+			{
+				X = x, Y = y,
+				Direction = 1,
+				Open = false,
+			};
+			
+			HookPoints.DoorStateChanged.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return false;
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return false;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				NetMessage.SendData(19, -1, -1, "", 0, (float)x, (float)y, 0); //Inform the client of the update
 				return false;
 			}
 
@@ -1392,27 +1404,39 @@ namespace Terraria_Server.WorldMod
 			return true;
 		}
 
-		public static bool OpenDoor(int x, int y, int direction, bool state = false, DoorOpener opener = DoorOpener.SERVER, ISender sender = null)
+		public static bool OpenDoor(int x, int y, int direction, ISender sender)
 		{
 			if (sender == null)
 			{
 				sender = new ConsoleSender();
             }
 
-            if (Program.properties.NPCDoorOpenCancel && opener == DoorOpener.NPC)
+            if (Program.properties.NPCDoorOpenCancel && sender is NPC)
                 return false;
-
-			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
-			doorEvent.Sender = sender;
-			doorEvent.X = x;
-			doorEvent.Y = y;
-			doorEvent.Direction = direction;
-			doorEvent.Opener = opener;
-			doorEvent.isOpened = state;
-			Program.server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
-			if (doorEvent.Cancelled)
+			
+			var ctx = new HookContext
 			{
-                NetMessage.SendData(19, -1, -1, "", 1, (float)x, (float)y, 0); //Inform the client of the update
+				Sender = sender,
+			};
+			
+			var args = new HookArgs.DoorStateChanged
+			{
+				X = x, Y = y,
+				Direction = direction,
+				Open = true,
+			};
+			
+			HookPoints.DoorStateChanged.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return false;
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return false;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				NetMessage.SendData(19, -1, -1, "", 1, (float)x, (float)y, 0); //Inform the client of the update
 				return false;
 			}
 

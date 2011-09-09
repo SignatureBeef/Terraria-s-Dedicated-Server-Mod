@@ -159,7 +159,7 @@ namespace Terraria_Server
         /// <summary>
         /// Any immune players
         /// </summary>
-        public int[] playerImmune = new int[255];
+        public byte[] playerImmune = new byte[255];
         /// <summary>
         /// Miscellaneous text associated with the projectile.  Only used in hardcore deaths and sign edits?
         /// </summary>
@@ -201,6 +201,8 @@ namespace Terraria_Server
             var cloned = (Projectile) base.MemberwiseClone();
             cloned.ai = new float [Projectile.MAX_AI];
             Array.Copy (ai, cloned.ai, Projectile.MAX_AI);
+            cloned.playerImmune = new byte [playerImmune.Length];
+            Array.Copy (playerImmune, cloned.playerImmune, playerImmune.Length);
             return cloned;
         }
 
@@ -245,6 +247,7 @@ namespace Terraria_Server
             Main.projectile[num].damage = Damage;
             Main.projectile[num].knockBack = KnockBack;
             Main.projectile[num].identity = num;
+            Main.projectile[num].whoAmI = num;
             Main.projectile[num].wet = Collision.WetCollision(Main.projectile[num].Position, Main.projectile[num].Width, Main.projectile[num].Height);
             if (Owner == Main.myPlayer)
             {

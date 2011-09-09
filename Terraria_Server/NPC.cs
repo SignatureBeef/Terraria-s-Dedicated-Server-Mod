@@ -14,8 +14,19 @@ namespace Terraria_Server
 	/// <summary>
 	/// Basic NPC class
 	/// </summary>
-    public class NPC : BaseEntity
+    public class NPC : BaseEntity, ISender
     {
+		
+		bool ISender.Op
+		{
+			get { return false; }
+			set { }
+		}
+		
+		void ISender.sendMessage (string a, int b, float c, float d, float e)
+		{
+		}
+		
         private const int active_TIME = 750;
 		/// <summary>
 		/// Total allowable active NPCs.
@@ -157,7 +168,7 @@ namespace Terraria_Server
 		[DontClone] public Vector2 oldVelocity;
         
 		[DeepClone] public float[] ai = new float[NPC.MAX_AI];
-		[DeepClone] public int[] immune = new int[256];
+		[DeepClone] public ushort[] immune = new ushort[256];
 		[DeepClone] public int[] buffType = new int[5];
 		[DeepClone] public int[] buffTime = new int[5];
 		[DeepClone] public bool[] buffImmune = new bool[27];
@@ -7350,7 +7361,7 @@ namespace Terraria_Server
             
             cloned.ai = new float[NPC.MAX_AI];
             Array.Copy(ai, cloned.ai, NPC.MAX_AI);
-            cloned.immune = new int[256];
+            cloned.immune = new ushort[256];
             Array.Copy(immune, cloned.immune, 256);
             cloned.buffType = new int[5];
             Array.Copy (buffType, cloned.buffType, 5);
@@ -7954,7 +7965,7 @@ namespace Terraria_Server
                         }
                         else
                         {
-                            bool flag5 = WorldModify.OpenDoor(num4, num5, npc.direction, false, DoorOpener.NPC);
+                            bool flag5 = WorldModify.OpenDoor(num4, num5, npc.direction, npc);
                             if (!flag5)
                             {
                                 npc.ai[3] = (float)num3;
@@ -9410,7 +9421,7 @@ namespace Terraria_Server
                     }
                     if (npc.closeDoor && ((npc.Position.X + (float)(npc.Width / 2)) / 16f > (float)(npc.doorX + 2) || (npc.Position.X + (float)(npc.Width / 2)) / 16f < (float)(npc.doorX - 2)))
                     {
-                        bool flag12 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false, DoorOpener.NPC);
+                        bool flag12 = WorldModify.CloseDoor(npc.doorX, npc.doorY, false, npc);
                         if (flag12)
                         {
                             npc.closeDoor = false;
@@ -9462,7 +9473,7 @@ namespace Terraria_Server
 
                         if (npc.townNPC && Main.tile.At(num80, num81 - 2).Active && Main.tile.At(num80, num81 - 2).Type == 10 && (Main.rand.Next(10) == 0 || !Main.dayTime))
                         {
-                            bool flag13 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction, false, DoorOpener.NPC);
+                            bool flag13 = WorldModify.OpenDoor(num80, num81 - 2, npc.direction, npc);
                             if (flag13)
                             {
                                 npc.closeDoor = true;
@@ -9473,7 +9484,7 @@ namespace Terraria_Server
                                 npc.ai[1] += 80f;
                                 return;
                             }
-                            if (WorldModify.OpenDoor(num80, num81 - 2, -npc.direction, false, DoorOpener.NPC))
+                            if (WorldModify.OpenDoor(num80, num81 - 2, -npc.direction, npc))
                             {
                                 npc.closeDoor = true;
                                 npc.doorX = num80;

@@ -662,6 +662,29 @@ namespace Terraria_Server
 			End ();
 		}
 		
+		public void EraseProjectile (int id, int owner)
+		{
+			Begin (Packet.PROJECTILE);
+			
+			Short (id);
+			
+			Float (-1000);
+			Float (-1000);
+			Float (1);
+			Float (1);
+			Float (0);
+			
+			Short (0);
+			
+			Byte (owner);
+			Byte (0);
+			
+			for (int i = 0; i < Terraria_Server.Projectile.MAX_AI; i++)
+				Float (0.0f);
+			
+			End ();
+		}
+		
 		public void DamageNPC (int npcId, int damage, float knockback, int direction, bool crit = false)
 		{
 			Header (Packet.DAMAGE_NPC, 10);

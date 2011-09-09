@@ -3,6 +3,7 @@ using System.Text;
 using Terraria_Server.Events;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -45,32 +46,44 @@ namespace Terraria_Server.Messages
                 return;
             }
 
-            if (conn.State == SlotState.CONNECTED)
-            {
-                string version = Encoding.ASCII.GetString(readBuffer, num, length - 1);
-                if (!(version == "Terraria" + Statics.CURRENT_TERRARIA_RELEASE))
-                {
-                    if (version.Length > 30) version = version.Substring (0, 30);
-                    ProgramLog.Debug.Log ("Client version string: {0}", version);
-                    conn.Kick (string.Concat ("This server requires Terraria ", Program.VERSION_NUMBER));
-                    return;
-                }
-				
-				var msg = NetMessage.PrepareThreadInstance ();
-				
-                if (Netplay.password == null || Netplay.password == "")
-                {
-                    conn.State = SlotState.ACCEPTED;
-                    
-                    msg.ConnectionResponse (253);
-                    conn.Send (msg.Output);
-                    return;
-                }
-
-                conn.State = SlotState.SERVER_AUTH;
-                msg.PasswordRequest ();
-                conn.Send (msg.Output);
-            }
+			string version = Networking.StringCache.FindOrMake (new ArraySegment<byte> (readBuffer, num, length - 1));
+			
+			var ctx = new HookContext
+			{
+				Connection = conn,
+			};
+			
+			var args = new HookArgs.ConnectionRequestReceived
+			{
+				Version = version,
+			};
+			
+			HookPoints.ConnectionRequestReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return;
+			
+			if (ctx.Result == HookResult.DEFAULT && !(version == "Terraria" + Statics.CURRENT_TERRARIA_RELEASE))
+			{
+				if (version.Length > 30) version = version.Substring (0, 30);
+				ProgramLog.Debug.Log ("Client version string: {0}", version);
+				conn.Kick (string.Concat ("This server requires Terraria ", Program.VERSION_NUMBER));
+				return;
+			}
+			
+			var msg = NetMessage.PrepareThreadInstance ();
+			
+			if (ctx.Result == HookResult.ASK_PASS || (Netplay.password != null && Netplay.password != ""))
+			{
+				conn.State = SlotState.SERVER_AUTH;
+				msg.PasswordRequest ();
+				conn.Send (msg.Output);
+				return;
+			}
+			
+			conn.State = SlotState.ACCEPTED;
+			msg.ConnectionResponse (253 /* arbitrary fake value, true slot assigned later */);
+			conn.Send (msg.Output);
         }
     }
 }

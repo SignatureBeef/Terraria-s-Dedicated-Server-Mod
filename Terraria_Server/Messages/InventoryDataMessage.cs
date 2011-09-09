@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using Terraria_Server.Collections;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -26,36 +27,56 @@ namespace Terraria_Server.Messages
                 Netplay.slots[whoAmI].Kick ("Cheating detected (INVENTORY_DATA forgery).");
                 return;
             }
-        
-            playerIndex = whoAmI;
-
-            if (playerIndex != Main.myPlayer)
-            {
-                Player player = Main.players[playerIndex];
-                lock (player)
-                {
-                    int inventorySlot = (int)readBuffer[num++];
-                    int stack = (int)readBuffer[num++];
-                    string itemName = Encoding.ASCII.GetString(readBuffer, num, length - 4);
-                    Item item = Registries.Item.Create(itemName, stack);
-                    if (inventorySlot < 44)
-                    {
-                        player.inventory[inventorySlot] = item;
-                    }
-                    else
-                    {
-                        player.armor[inventorySlot - 44] = item;
-                    }
-
-                    if (Program.server.RejectedItemsContains(itemName) ||
-                        Program.server.RejectedItemsContains(item.Type.ToString()))
-                    {
-                        player.Kick(((itemName.Length > 0) ? itemName : item.Type.ToString()) + " is not allowed on this server.");
-                    }
-
-                    NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);
-                }
-            }
+            
+			var player = Main.players[whoAmI];
+			
+			var ctx = new HookContext
+			{
+				Connection = Netplay.slots[whoAmI].conn,
+				Sender = player,
+				Player = player,
+			};
+			
+			var args = new HookArgs.InventoryItemReceived
+			{
+				InventorySlot = readBuffer[num++],
+				Amount = readBuffer[num++],
+				Name = Networking.StringCache.FindOrMake (new ArraySegment<byte> (readBuffer, num, length - 4)),
+			};
+			
+			HookPoints.InventoryItemReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return;
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return;
+			
+			var itemName = args.Name;
+			var inventorySlot = args.InventorySlot;
+			var stack = args.Amount;
+			
+			var item = Registries.Item.Create (itemName, stack);
+			
+			if (inventorySlot < 44)
+			{
+				player.inventory[inventorySlot] = item;
+			}
+			else
+			{
+				player.armor[inventorySlot - 44] = item;
+			}
+			
+			if (ctx.Result != HookResult.CONTINUE)
+			{
+				if (Program.server.RejectedItemsContains(itemName) ||
+					Program.server.RejectedItemsContains(item.Type.ToString()))
+				{
+					player.Kick(((itemName.Length > 0) ? itemName : item.Type.ToString()) + " is not allowed on this server.");
+				}
+			}
+			
+			NetMessage.SendData(5, -1, whoAmI, itemName, playerIndex, (float)inventorySlot);
         }
     }
 }

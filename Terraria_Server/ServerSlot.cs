@@ -32,6 +32,14 @@ namespace Terraria_Server
 		
 		ALL = 4095,
 	}
+	
+	public static class SlotStateExtensions
+	{
+		public static bool DisconnectInProgress (this SlotState state)
+		{
+			return (state & SlotState.DISCONNECTING) != 0;
+		}
+	}
 
 	public class ServerSlot
 	{

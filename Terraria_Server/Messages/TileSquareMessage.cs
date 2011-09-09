@@ -126,6 +126,7 @@ namespace Terraria_Server.Messages
 			}
 			else if (setting == "ignore")
 			{
+				if (size == 1) Logging.ProgramLog.Debug.Log ("{0}: TileSquare({1}) from {2}", whoAmI, size, Main.players[whoAmI].Name);
 				return;
 			}
                         

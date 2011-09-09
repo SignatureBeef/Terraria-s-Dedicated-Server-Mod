@@ -7,6 +7,7 @@ using Terraria_Server;
 using Terraria_Server.Events;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -93,55 +94,54 @@ namespace Terraria_Server.Messages
 			conn.Player = player;
 			player.Connection = conn;
 			player.IPAddress = conn.RemoteAddress;
-            
-            int hairId = (int)readBuffer[start + 2];
-            if (hairId >= MAX_HAIR_ID)
-            {
-                hairId = 0;
-            }
-
-            player.whoAmi = -1;
-            player.hair = hairId;
-            player.Male = readBuffer[start + 3] == 1;
-            
-            num += 3;
-
-            num = setColor(player.hairColor, num, readBuffer);
-            num = setColor(player.skinColor, num, readBuffer);
-            num = setColor(player.eyeColor, num, readBuffer);
-            num = setColor(player.shirtColor, num, readBuffer);
-            num = setColor(player.underShirtColor, num, readBuffer);
-            num = setColor(player.pantsColor, num, readBuffer);
-            num = setColor(player.shoeColor, num, readBuffer);
-
-            player.Difficulty = readBuffer[num++];
-            
-			string name = GetName (conn, readBuffer, num, length - num + start);
-			if (name == null) return;
+			player.whoAmi = conn.SlotIndex;
 			
-			player.Name = name;
+			var data = new HookArgs.PlayerDataReceived ();
 			
-			string address = conn.RemoteAddress.Split(':')[0];
-			
-			if (Program.server.BanList.containsException (address) || Program.server.BanList.containsException (player.Name))
+			data.Parse (readBuffer, num + 1, length);
+            
+			if (data.Hair >= MAX_HAIR_ID)
 			{
-				ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", name);
-				conn.Kick ("You are banned from this server.");
-				return;
+			    data.Hair = 0;
 			}
-
-			var loginEvent = new PlayerLoginEvent();
-			//loginEvent.Slot = slot;
-			loginEvent.Sender = player;
-			Program.server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_QUERY, loginEvent);
 			
-			if (loginEvent.Action == PlayerLoginAction.REJECT)
+			var ctx = new HookContext
 			{
-				if ((conn.State & SlotState.DISCONNECTING) == 0)
-					conn.Kick ("Rejected by server.");
+				Connection = conn,
+				Player = player,
+				Sender = player,
+			};
+			
+			HookPoints.PlayerDataReceived.Invoke (ref ctx, ref data);
+			
+			if (ctx.CheckForKick ())
 				return;
+			
+			if (! data.NameChecked)
+			{
+				string error;
+				if (! data.CheckName (out error))
+				{
+					conn.Kick (error);
+					return;
+				}
 			}
-			else if (loginEvent.Action == PlayerLoginAction.ASK_PASS)
+			
+			if (! data.BansChecked)
+			{
+				string address = conn.RemoteAddress.Split(':')[0];
+				
+				if (Program.server.BanList.containsException (address) || Program.server.BanList.containsException (data.Name))
+				{
+					ProgramLog.Admin.Log ("Prevented user {0} from accessing the server.", data.Name);
+					conn.Kick ("You are banned from this server.");
+					return;
+				}
+			}
+			
+			data.Apply (player);
+
+			if (ctx.Result == HookResult.ASK_PASS)
 			{
 				conn.State = SlotState.PLAYER_AUTH;
 				
@@ -151,7 +151,7 @@ namespace Terraria_Server.Messages
 
 				return;
 			}
-			else // PlayerLoginAction.ACCEPT
+			else // HookResult.DEFAULT
 			{
 				// don't allow replacing connections for guests, but do for registered users
 				if (conn.State < SlotState.PLAYING)
@@ -169,7 +169,7 @@ namespace Terraria_Server.Messages
 					}
 				}
 				
-				conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
+				//conn.Queue = (int)loginEvent.Priority; // actual queueing done on world request message
 				
 				// and now decide whether to queue the connection
 				//SlotManager.Schedule (conn, (int)loginEvent.Priority);

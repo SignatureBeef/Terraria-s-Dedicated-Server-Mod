@@ -271,6 +271,9 @@
     <Compile Include="Misc\ArrayDeque.cs" />
     <Compile Include="Messages\MessageDispatcher.cs" />
     <Compile Include="Networking\LiquidUpdateBuffer.cs" />
+    <Compile Include="Plugins\HookPoint.cs" />
+    <Compile Include="Plugins\Hooks.cs" />
+    <Compile Include="Networking\StringCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -321,4 +324,8 @@
   -->
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Plugins\" />
+    <Folder Include="Plugin\" />
+  </ItemGroup>
 </Project>

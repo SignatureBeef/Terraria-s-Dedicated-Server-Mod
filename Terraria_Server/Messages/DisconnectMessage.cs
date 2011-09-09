@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using Terraria_Server.Networking;
 using Terraria_Server.Logging;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -35,6 +36,21 @@ namespace Terraria_Server.Messages
 					ProgramLog.Log ("{0} supports TDSM compression version 1.", conn.RemoteAddress);
 				}
 			}
+			
+			var ctx = new HookContext
+			{
+				Connection = conn,
+			};
+			
+			var args = new HookArgs.DisconnectReceived
+			{
+				Content = data,
+				Lines   = lines,
+			};
+			
+			HookPoints.DisconnectReceived.Invoke (ref ctx, ref args);
+			
+			ctx.CheckForKick ();
 		}
 	}
 }

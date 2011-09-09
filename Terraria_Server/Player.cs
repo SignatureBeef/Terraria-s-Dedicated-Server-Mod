@@ -848,19 +848,21 @@ namespace Terraria_Server
 						
 						case 19:
 							this.lightOrb = true;
-							bool flag4 = true;
-							for (int m = 0; m < 1000; m++)
-							{
-								if (Main.projectile[m].Active && Main.projectile[m].Owner == this.whoAmi && Main.projectile[m].Type == 18)
-								{
-									flag4 = false;
-									break;
-								}
-							}
-							if (flag4)
-							{
-								Projectile.NewProjectile(this.Position.X + (float)(this.Width / 2), this.Position.Y + (float)(this.Height / 2), 0f, 0f, 18, 0, 0f, this.whoAmi);
-							}
+							
+// I'm sure the client sends us the projectile anyway
+//							bool flag4 = true;
+//							for (int m = 0; m < 1000; m++)
+//							{
+//								if (Main.projectile[m].Active && Main.projectile[m].Owner == this.whoAmi && Main.projectile[m].Type == 18)
+//								{
+//									flag4 = false;
+//									break;
+//								}
+//							}
+//							if (flag4)
+//							{
+//								Projectile.NewProjectile(this.Position.X + (float)(this.Width / 2), this.Position.Y + (float)(this.Height / 2), 0f, 0f, 18, 0, 0f, this.whoAmi);
+//							}
 							break;
 						
 						case 20:
@@ -4396,7 +4398,7 @@ namespace Terraria_Server
 											int dmggg = Main.DamageVar(dmgg);
 											this.StatusNPC (selectedItem.Type, npc);
                                             npc.StrikeNPC (dmggg, selectedItem.KnockBack, this.direction, crit);
-                                            npc.immune[i] = this.itemAnimation;
+                                            npc.immune[i] = (ushort) this.itemAnimation;
                                             this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
                                         }
                                     }
