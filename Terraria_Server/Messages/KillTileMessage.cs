@@ -1,7 +1,7 @@
 using System;
 using Terraria_Server.Events;
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
@@ -18,24 +18,47 @@ namespace Terraria_Server.Messages
             int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             int y = BitConverter.ToInt32(readBuffer, num);
-            if (Main.tile.At(x, y).Type == 21)
-            {
-                PlayerChestBreakEvent playerEvent = new PlayerChestBreakEvent();
-                playerEvent.Sender = Main.players[whoAmI];
-                playerEvent.Location = new Vector2(x, y);
-                Server.PluginManager.processHook(Hooks.PLAYER_CHESTBREAK, playerEvent);
-                if (playerEvent.Cancelled)
-                {
-                    NetMessage.SendTileSquare(whoAmI, x, y, 1);
-                    return;
-                }
-
-                WorldModify.KillTile(x, y);
-                if (!Main.tile.At(x, y).Active)
-                {
-                    NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
-                }
-            }
+            
+			if (Main.tile.At(x, y).Type != 21)
+				return;
+			
+			var player = Main.players[whoAmI];
+			                
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.ChestBreakReceived
+			{
+				X = x, Y = y,
+			};
+			
+			HookPoints.ChestBreakReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.IGNORE)
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				NetMessage.SendTileSquare(whoAmI, x, y, 3);
+				return;
+			}
+			
+			WorldModify.KillTile(x, y, false, false, false, player);
+			if (!Main.tile.At(x, y).Active || Main.tile.At(x, y).Type != 21)
+			{
+				NetMessage.SendData(17, -1, -1, "", 0, (float)x, (float)y);
+			}
         }
     }
 }

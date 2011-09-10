@@ -26,9 +26,14 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.LiquidFlowReceived>        LiquidFlowReceived;
 		public static readonly HookPoint<HookArgs.ProjectileReceived>        ProjectileReceived;
 		public static readonly HookPoint<HookArgs.KillProjectileReceived>    KillProjectileReceived;
+		public static readonly HookPoint<HookArgs.ChestBreakReceived>        ChestBreakReceived;
 		
 		public static readonly HookPoint<HookArgs.PvpSettingReceived>        PvpSettingReceived;
 		public static readonly HookPoint<HookArgs.PartySettingReceived>      PartySettingReceived;
+		
+		public static readonly HookPoint<HookArgs.PlayerEnteringGame>        PlayerEnteringGame;
+		public static readonly HookPoint<HookArgs.PlayerEnteredGame>         PlayerEnteredGame;
+		public static readonly HookPoint<HookArgs.PlayerLeftGame>            PlayerLeftGame;
 		
 		static HookPoints ()
 		{
@@ -46,8 +51,12 @@ namespace Terraria_Server.Plugins
 			LiquidFlowReceived        = new HookPoint<HookArgs.LiquidFlowReceived> ("liquid-flow-received");
 			ProjectileReceived        = new HookPoint<HookArgs.ProjectileReceived> ("projectile-received");
 			KillProjectileReceived    = new HookPoint<HookArgs.KillProjectileReceived> ("kill-projectile-received");
+			ChestBreakReceived        = new HookPoint<HookArgs.ChestBreakReceived> ("cheat-break-received");
 			PvpSettingReceived        = new HookPoint<HookArgs.PvpSettingReceived> ("pvp-setting-received");
 			PartySettingReceived      = new HookPoint<HookArgs.PartySettingReceived> ("party-setting-received");
+			PlayerEnteringGame        = new HookPoint<HookArgs.PlayerEnteringGame> ("player-entering-game");
+			PlayerEnteredGame         = new HookPoint<HookArgs.PlayerEnteredGame> ("player-entered-game");
+			PlayerLeftGame            = new HookPoint<HookArgs.PlayerLeftGame> ("player-left-game");
 		}
 	}
 	
@@ -426,7 +435,26 @@ namespace Terraria_Server.Plugins
 			public byte  Owner { get; set; }
 		}
 		
+		public struct ChestBreakReceived
+		{
+			public int X { get; set; }
+			public int Y { get; set; }
+		}
 		
+		public struct PlayerEnteringGame
+		{
+			public int Slot { get; set; }
+		}
+		
+		public struct PlayerEnteredGame
+		{
+			public int Slot { get; set; }
+		}
+		
+		public struct PlayerLeftGame
+		{
+			public int Slot { get; set; }
+		}
 	}
 }
 
