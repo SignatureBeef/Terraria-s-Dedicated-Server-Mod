@@ -1,11 +1,13 @@
-
 using System;
+using System.Collections.Generic;
+
 using Terraria_Server.Events;
 using Terraria_Server.Plugin;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions;
 using Terraria_Server.Collections;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
@@ -225,15 +227,7 @@ namespace Terraria_Server
         /// <returns>New projectile's index</returns>
         public static int NewProjectile(float X, float Y, float SpeedX, float SpeedY, ProjectileType Type, int Damage, float KnockBack, int Owner = 255)
         {
-            int num = 1000;
-            for (int i = 0; i < 1000; i++)
-            {
-                if (!Main.projectile[i].Active)
-                {
-                    num = i;
-                    break;
-                }
-            }
+            int num = ReserveSlot (Owner);
             if (num == 1000)
             {
                 return num;
@@ -697,6 +691,7 @@ namespace Terraria_Server
                 if (this.Position.X <= Main.leftWorld || this.Position.X + (float)this.Width >= Main.rightWorld || this.Position.Y <= Main.topWorld || this.Position.Y + (float)this.Height >= Main.bottomWorld)
                 {
                     this.Active = false;
+                    Reset (i);
                     return;
                 }
                 this.whoAmI = i;
@@ -733,6 +728,7 @@ namespace Terraria_Server
                     catch
                     {
                         this.Active = false;
+                        Reset (i);
                         return;
                     }
                     if (flag2)
@@ -2477,49 +2473,139 @@ namespace Terraria_Server
                 }
             }
             this.Active = false;
+            Reset (whoAmI);
         }
+        
+		static Dictionary<int, int> identityMap = new Dictionary<int, int> ();
+		static Stack<int> freeSlots = new Stack<int> ();
+		
+		internal static void ResetProjectiles ()
+		{
+			lock (identityMap)
+			{
+				identityMap.Clear ();
+				freeSlots.Clear ();
+				
+				for (int i = 999; i >= 0; i--)
+				{
+					freeSlots.Push (i);
+					Main.projectile[i] = new Projectile ();
+					Main.projectile[i].whoAmI = i;
+				}
+			}
+		}
+		
+		internal static void Reset (int i)
+		{
+			var proj = Main.projectile[i];
+			int owner = proj.Owner;
+			int id = proj.identity;
+			var key = (id << 8) | owner;
+			
+			lock (identityMap)
+			{
+				int slot;
+				if (identityMap.TryGetValue (key, out slot))
+				{
+					identityMap.Remove (key);
+					freeSlots.Push (i);
+					
+					if (slot != i)
+						ProgramLog.Error.Log ("Mismatch in projectile slot assignment.");
+				}
+			}
+		}
+		
+		public static void Register (int identity, int owner, int whoAmI)
+		{
+			lock (identityMap)
+			{
+				identityMap[(identity << 8) | owner] = whoAmI;
+			}
+		}
+		
+		public static int FindExisting (int identity, int owner)
+		{
+			int key = (identity << 8) | owner;
+			
+			lock (identityMap)
+			{
+				int index;
+				if (identityMap.TryGetValue (key, out index))
+				{
+					return index;
+				}
+				return 1000;
+			}
+		}
+		
+		public static int ReserveSlot (int owner)
+		{
+			lock (identityMap)
+			{
+				if (freeSlots.Count == 0) return 1000;
+				
+				int i = freeSlots.Pop();
+				identityMap[(i << 8) | owner] = i;
+				
+				return i;
+				
+//				for (int i = 0; i < 1000; i++)
+//				{
+//					if (Main.projectile[i].Active == false)
+//					{
+//						identityMap[(i << 8) | owner] = i;
+//						return i;
+//					}
+//				}
+//				
+//				return 1000;
+			}
+		}
+		
+		public static int ReserveSlot (int identity, int owner) //TODO: make it faster
+		{
+			lock (identityMap)
+			{
+				if (freeSlots.Count == 0) return 1000;
+				
+				int i = freeSlots.Pop();
+				identityMap[(identity << 8) | owner] = i;
+				
+				return i;
 
-        /// <summary>
-        /// Creates a new color by combining newColor with the projectiles alpha value
-        /// </summary>
-        /// <param name="newColor">New color to combine</param>
-        /// <returns>Combined color</returns>
-        public Color GetAlpha(Color newColor)
-        {
-            int r;
-            int g;
-            int b;
-            if (this.type == ProjectileType.STARFURY || this.type == ProjectileType.BALL_OF_FIRE || this.type == ProjectileType.FLAMELASH || this.type == ProjectileType.GLOWSTICK || this.type == ProjectileType.GLOWSTICK_STICKY)
-            {
-                r = (int)newColor.R - this.alpha / 3;
-                g = (int)newColor.G - this.alpha / 3;
-                b = (int)newColor.B - this.alpha / 3;
-            }
-            else
-            {
-                if (this.type == ProjectileType.MISSILE_MAGIC || this.type == ProjectileType.ORB_OF_LIGHT || this.type == ProjectileType.SICKLE_DEMON || this.type == ProjectileType.SCYTHE_DEMON)
-                {
-                    r = (int)newColor.R;
-                    g = (int)newColor.G;
-                    b = (int)newColor.B;
-                }
-                else
-                {
-                    r = (int)newColor.R - this.alpha;
-                    g = (int)newColor.G - this.alpha;
-                    b = (int)newColor.B - this.alpha;
-                }
-            }
-            int num = (int)newColor.A - this.alpha;
-            if (num < 0)
-            {
-                num = 0;
-            }
-            if (num > 255)
-            {
-                num = 255;
-            }
-            return new Color(r, g, b, num);
-        }
+//				for (int i = 0; i < 1000; i++)
+//				{
+//					if (Main.projectile[i].Active == false)
+//					{
+//						identityMap[(identity << 8) | owner] = i;
+//						return i;
+//					}
+//				}
+//				
+//				return 1000;
+			}
+		}
+		
+		public static void FreeSlot (int id, int owner, int slot)
+		{
+			int key = (id << 8) | owner;
+			
+			lock (identityMap)
+			{
+				int index;
+				if (identityMap.TryGetValue (key, out index))
+				{
+					if (index != slot)
+						ProgramLog.Error.Log ("Mismatch in projectile slot assignment.");
+					
+					freeSlots.Push (slot);
+				}
+				else
+				{
+					ProgramLog.Error.Log ("Double free in projectile slot assignment.");
+				}
+			}
+		}
     }
 }

@@ -1021,7 +1021,8 @@ namespace Terraria_Server
 						var proj = Main.projectile[i];
 						ProgramLog.Log (e, String.Format ("Projectile update error, i={0}, id={1}, owner={2}, type={3}",
 							i, proj.identity, proj.Owner, proj.Type));
-						Main.projectile[i] = new Projectile();
+						//Main.projectile[i] = new Projectile();
+						Projectile.Reset (i);
 					}
 				}
 				

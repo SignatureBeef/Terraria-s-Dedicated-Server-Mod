@@ -146,11 +146,13 @@ namespace Terraria_Server.WorldMod
 					Main.npcs[num4] = new NPC();
 					prog.Value++;
 				}
-				for (int num5 = 0; num5 < 1000; num5++)
-				{
-					Main.projectile[num5] = new Projectile();
-					prog.Value++;
-				}
+//				for (int num5 = 0; num5 < 1000; num5++)
+//				{
+//					Main.projectile[num5] = new Projectile();
+//					prog.Value++;
+//				}
+				Projectile.ResetProjectiles ();
+				prog.Value += 1000;
 				for (int num8 = 0; num8 < Liquid.resLiquid; num8++)
 				{
 					Main.liquid[num8] = new Liquid();

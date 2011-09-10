@@ -1,5 +1,5 @@
 using System;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Events;
 
 namespace Terraria_Server.Messages
@@ -21,23 +21,41 @@ namespace Terraria_Server.Messages
                 return;
             }
             
-            playerIndex = whoAmI;
-
-            Player player = (Player)Main.players[playerIndex].Clone();
-            player.hostile = (readBuffer[num + 1] == 1);
-
-            PlayerPvPChangeEvent playerEvent = new PlayerPvPChangeEvent();
-            playerEvent.Sender = player;
-            Server.PluginManager.processHook(Hooks.PLAYER_PVPCHANGE, playerEvent);
-            if (playerEvent.Cancelled)
-            {
-                return;
-            }
-
-            Main.players[playerIndex] = player;
-
-            NetMessage.SendData(30, -1, whoAmI, "", playerIndex);
-
+			var pvp = readBuffer[num + 1] == 1;
+			var player = Main.players[whoAmI];
+			
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.PvpSettingReceived
+			{
+				PvpFlag = pvp,
+			};
+			
+			HookPoints.PvpSettingReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.IGNORE)
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				NetMessage.SendData(30, whoAmI, -1, "", whoAmI);
+				return;
+			}
+			
+			player.hostile = pvp;
+			
             string message;
             if(player.hostile)
             {

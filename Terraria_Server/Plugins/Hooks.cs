@@ -3,6 +3,7 @@ using System;
 using Terraria_Server.Networking;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server.Plugins
 {
@@ -24,6 +25,10 @@ namespace Terraria_Server.Plugins
 		
 		public static readonly HookPoint<HookArgs.LiquidFlowReceived>        LiquidFlowReceived;
 		public static readonly HookPoint<HookArgs.ProjectileReceived>        ProjectileReceived;
+		public static readonly HookPoint<HookArgs.KillProjectileReceived>    KillProjectileReceived;
+		
+		public static readonly HookPoint<HookArgs.PvpSettingReceived>        PvpSettingReceived;
+		public static readonly HookPoint<HookArgs.PartySettingReceived>      PartySettingReceived;
 		
 		static HookPoints ()
 		{
@@ -40,6 +45,9 @@ namespace Terraria_Server.Plugins
 			DoorStateChanged          = new HookPoint<HookArgs.DoorStateChanged> ("door-state-changed");
 			LiquidFlowReceived        = new HookPoint<HookArgs.LiquidFlowReceived> ("liquid-flow-received");
 			ProjectileReceived        = new HookPoint<HookArgs.ProjectileReceived> ("projectile-received");
+			KillProjectileReceived    = new HookPoint<HookArgs.KillProjectileReceived> ("kill-projectile-received");
+			PvpSettingReceived        = new HookPoint<HookArgs.PvpSettingReceived> ("pvp-setting-received");
+			PartySettingReceived      = new HookPoint<HookArgs.PartySettingReceived> ("party-setting-received");
 		}
 	}
 	
@@ -274,6 +282,16 @@ namespace Terraria_Server.Plugins
 			public string Obituary  { get; set; }
 		}
 		
+		public struct PvpSettingReceived
+		{
+			public bool   PvpFlag   { get; set; }
+		}
+		
+		public struct PartySettingReceived
+		{
+			public byte   Party     { get; set; }
+		}
+		
 		public struct TileChangeReceived
 		{
 			public int    X         { get; set; }
@@ -350,6 +368,49 @@ namespace Terraria_Server.Plugins
 			public short Damage    { get; set; }
 			public byte  Owner     { get; set; }
 			public byte  TypeByte  { get; set; }
+			public float AI_0      { get; set; }
+			public float AI_1      { get; set; }
+			
+			public int   ExistingIndex     { get; set; }
+			
+			internal Projectile projectile;
+			
+			public Projectile CreateProjectile ()
+			{
+				if (projectile != null) return projectile;
+				
+				var index = Projectile.ReserveSlot (Id, Owner);
+				
+				if (index == 1000) return null;
+				
+				projectile = Registries.Projectile.Create (TypeByte);
+				
+				projectile.whoAmI = index;
+				Apply (projectile);
+				
+				return projectile;
+			}
+			
+			public void Apply (Projectile projectile)
+			{
+				projectile.identity = Id;
+				projectile.Owner = Owner;
+				projectile.damage = Damage;
+				projectile.knockBack = Knockback;
+				projectile.Position = new Vector2 (X, Y);
+				projectile.Velocity = new Vector2 (VX, VY);
+				projectile.ai[0] = AI_0;
+				projectile.ai[1] = AI_1;
+			}
+			
+			internal void CleanupProjectile ()
+			{
+				if (projectile != null)
+				{
+					Projectile.FreeSlot (projectile.identity, projectile.Owner, projectile.whoAmI);
+					projectile = null;
+				}
+			}
 			
 			public ProjectileType Type
 			{
@@ -357,6 +418,15 @@ namespace Terraria_Server.Plugins
 				set { TypeByte = (byte) value; }
 			}
 		}
+		
+		public struct KillProjectileReceived
+		{
+			public short Index { get; set; }
+			public short Id    { get; set; }
+			public byte  Owner { get; set; }
+		}
+		
+		
 	}
 }
 
