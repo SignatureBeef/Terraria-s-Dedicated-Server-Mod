@@ -36,7 +36,10 @@ namespace Terraria_Server.Messages
             
 			if (projectileOwner != whoAmI)
 			{
+#if DEBUG_PROJECTILES
 				ProgramLog.Debug.Log ("Ignoring unowned projectile from {0} ({1})", whoAmI, projectileOwner);
+#endif
+				return;
 			}
 			
 			if (Projectile.MAX_AI != 2)
@@ -69,6 +72,19 @@ namespace Terraria_Server.Messages
 				AI_0 = ai0, AI_1 = ai1,
 				ExistingIndex = projectileIndex < 1000 ? projectileIndex : -1,
 			};
+			
+			if (projectileIndex == 1000 && args.Type.IsHighExplosive() && ai0 > 0.0)
+			{
+				// probably a lagged update from a repossessed projectile
+#if DEBUG_PROJECTILES
+				ProgramLog.Debug.Log ("Ignoring old update for repossessed projectile.");
+#endif
+				
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.EraseProjectile (projectileIdentity, projectileOwner);
+				msg.Send (whoAmI);
+				return;
+			}
 			
 			HookPoints.ProjectileReceived.Invoke (ref ctx, ref args);
 			
@@ -140,7 +156,9 @@ namespace Terraria_Server.Messages
 			
 			if (args.ExistingIndex >= 0)
 			{
-				//ProgramLog.Debug.Log ("Updated projectile {0} ({1}/{2}/{3})", projectileIndex, projectileOwner, projectileIdentity, args.Type);
+#if DEBUG_PROJECTILES
+				ProgramLog.Debug.Log ("Updated projectile {0} ({1}/{2}/{3}) ({4}/{5})", projectileIndex, projectileOwner, projectileIdentity, args.Type, ai0, ai1);
+#endif
 				args.CleanupProjectile ();
 				projectile = Main.projectile[args.ExistingIndex];
 				args.Apply (projectile);
@@ -156,7 +174,22 @@ namespace Terraria_Server.Messages
 				}
 				
 				projectileIndex = projectile.whoAmI;
-				//ProgramLog.Debug.Log ("Created projectile {0} ({1}/{2}/{3})", projectileIndex, projectileOwner, projectileIdentity, args.Type);
+#if DEBUG_PROJECTILES
+				ProgramLog.Debug.Log ("Created projectile {0} ({1}/{2}/{3}) ({4}/{5})", projectileIndex, projectileOwner, projectileIdentity, args.Type, ai0, ai1);
+#endif
+			}
+			
+			if (args.Type.IsHighExplosive())
+			{
+#if DEBUG_PROJECTILES
+				ProgramLog.Debug.Log ("Repossessing projectile ({0}, {1}, {2}, {3}).", vX, vY, ai0, ai1);
+#endif
+				// transfer ownership
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.EraseProjectile (projectileIdentity, projectileOwner);
+				projectile.Repossess ();
+				msg.Projectile (projectile);
+				msg.Send (whoAmI);
 			}
 			
 //            int projectileIndex = getProjectileIndex(projectileOwner, projectileIdentity);

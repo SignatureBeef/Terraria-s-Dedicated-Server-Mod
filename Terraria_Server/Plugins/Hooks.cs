@@ -19,13 +19,17 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.StateUpdateReceived>       StateUpdateReceived;
 		public static readonly HookPoint<HookArgs.InventoryItemReceived>     InventoryItemReceived;
 		public static readonly HookPoint<HookArgs.ObituaryReceived>          ObituaryReceived;
-		public static readonly HookPoint<HookArgs.TileChangeReceived>        TileChangeReceived;
+		
+		public static readonly HookPoint<HookArgs.PlayerWorldAlteration>     PlayerWorldAlteration;
 		
 		public static readonly HookPoint<HookArgs.DoorStateChanged>          DoorStateChanged;
 		
 		public static readonly HookPoint<HookArgs.LiquidFlowReceived>        LiquidFlowReceived;
 		public static readonly HookPoint<HookArgs.ProjectileReceived>        ProjectileReceived;
 		public static readonly HookPoint<HookArgs.KillProjectileReceived>    KillProjectileReceived;
+		
+		public static readonly HookPoint<HookArgs.Explosion>                 Explosion;
+		
 		public static readonly HookPoint<HookArgs.ChestBreakReceived>        ChestBreakReceived;
 		
 		public static readonly HookPoint<HookArgs.PvpSettingReceived>        PvpSettingReceived;
@@ -46,7 +50,7 @@ namespace Terraria_Server.Plugins
 			StateUpdateReceived       = new HookPoint<HookArgs.StateUpdateReceived> ("state-update-received");
 			InventoryItemReceived     = new HookPoint<HookArgs.InventoryItemReceived> ("inventory-item-received");
 			ObituaryReceived          = new HookPoint<HookArgs.ObituaryReceived> ("obituary-received");
-			TileChangeReceived        = new HookPoint<HookArgs.TileChangeReceived> ("tile-change-received");
+			PlayerWorldAlteration     = new HookPoint<HookArgs.PlayerWorldAlteration> ("player-world-alteration");
 			DoorStateChanged          = new HookPoint<HookArgs.DoorStateChanged> ("door-state-changed");
 			LiquidFlowReceived        = new HookPoint<HookArgs.LiquidFlowReceived> ("liquid-flow-received");
 			ProjectileReceived        = new HookPoint<HookArgs.ProjectileReceived> ("projectile-received");
@@ -57,6 +61,7 @@ namespace Terraria_Server.Plugins
 			PlayerEnteringGame        = new HookPoint<HookArgs.PlayerEnteringGame> ("player-entering-game");
 			PlayerEnteredGame         = new HookPoint<HookArgs.PlayerEnteredGame> ("player-entered-game");
 			PlayerLeftGame            = new HookPoint<HookArgs.PlayerLeftGame> ("player-left-game");
+			Explosion                 = new HookPoint<HookArgs.Explosion> ("explosion");
 		}
 	}
 	
@@ -301,7 +306,7 @@ namespace Terraria_Server.Plugins
 			public byte   Party     { get; set; }
 		}
 		
-		public struct TileChangeReceived
+		public struct PlayerWorldAlteration
 		{
 			public int    X         { get; set; }
 			public int    Y         { get; set; }
@@ -313,7 +318,25 @@ namespace Terraria_Server.Plugins
 			
 			public bool TileWasRemoved
 			{
-				get { return Action == 0 || Action == 4; }
+				get { return Action == 0 || Action == 4 || Action == 100; }
+			}
+			
+			public bool NoItem
+			{
+				get { return Action == 4 || Action == 101; }
+				set
+				{
+					if (value)
+					{
+						if (Action == 0) Action = 4;
+						else if (Action == 100) Action = 101;
+					}
+					else
+					{
+						if (Action == 4) Action = 0;
+						else if (Action == 101) Action = 100;
+					}
+				}
 			}
 			
 			public bool TileWasPlaced
@@ -323,7 +346,7 @@ namespace Terraria_Server.Plugins
 			
 			public bool WallWasRemoved
 			{
-				get { return Action == 2; }
+				get { return Action == 2 || Action == 100 || Action == 101; }
 			}
 			
 			public bool WallWasPlaced
@@ -402,6 +425,8 @@ namespace Terraria_Server.Plugins
 			
 			public void Apply (Projectile projectile)
 			{
+				if (Owner < 255)
+					projectile.Creator = Main.players[Owner];
 				projectile.identity = Id;
 				projectile.Owner = Owner;
 				projectile.damage = Damage;
@@ -433,6 +458,11 @@ namespace Terraria_Server.Plugins
 			public short Index { get; set; }
 			public short Id    { get; set; }
 			public byte  Owner { get; set; }
+		}
+		
+		public struct Explosion
+		{
+			public Projectile Source { get; set; }
 		}
 		
 		public struct ChestBreakReceived

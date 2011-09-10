@@ -124,4 +124,12 @@ namespace Terraria_Server.Definitions
         [XmlEnum(Name = "55")]
         STINGER,
     }
+    
+	public static class ProjectileTypeExtensions
+	{
+		public static bool IsHighExplosive (this ProjectileType type)
+		{
+			return type == ProjectileType.DYNAMITE || type == ProjectileType.BOMB || type == ProjectileType.BOMB_STICKY;
+		}
+	}
 }

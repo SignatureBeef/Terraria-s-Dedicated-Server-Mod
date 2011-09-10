@@ -46,7 +46,7 @@ namespace Terraria_Server.Messages
 				Player = player,
 			};
 			
-			var args = new HookArgs.TileChangeReceived
+			var args = new HookArgs.PlayerWorldAlteration
 			{
 				X = x, Y = y,
 				Action = tileAction,
@@ -54,7 +54,7 @@ namespace Terraria_Server.Messages
 				Style = style,
 			};
 			
-			HookPoints.TileChangeReceived.Invoke (ref ctx, ref args);
+			HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
 			
 			if (ctx.CheckForKick ())
 				return;

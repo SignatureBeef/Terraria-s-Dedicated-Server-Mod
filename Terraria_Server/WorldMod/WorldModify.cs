@@ -85,6 +85,40 @@ namespace Terraria_Server.WorldMod
 		public static int bestY = 0;
 		public static int hiScore = 0;
 		public static int ficount;
+		
+		public static bool InvokeAlterationHook (ISender sender, Player player, int x, int y, byte action, byte type = 0, byte style = 0)
+		{
+			var ctx = new HookContext
+			{
+				Sender = sender,
+				Player = player,
+			};
+			
+			var args = new HookArgs.PlayerWorldAlteration
+			{
+				X = x, Y = y,
+				Action = action,
+				Type = type,
+				Style = style,
+			};
+			
+			HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return false;
+				
+			if (ctx.Result == HookResult.IGNORE)
+				return false;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				if (player.whoAmi >= 0)
+					NetMessage.SendTileSquare(player.whoAmi, x, y, 1); // FIXME
+				return false;
+			}
+			
+			return true;
+		}
 
 		public static void SpawnNPC(int x, int y)
 		{
