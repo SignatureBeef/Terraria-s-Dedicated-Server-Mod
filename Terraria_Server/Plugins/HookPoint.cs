@@ -6,7 +6,7 @@ using Terraria_Server.Commands;
 
 namespace Terraria_Server.Plugins
 {
-	public delegate bool HookAction<T> (ref HookContext context, ref T argument);
+	public delegate void HookAction<T> (ref HookContext context, ref T argument);
 	
 	public struct HookContext
 	{
@@ -16,6 +16,7 @@ namespace Terraria_Server.Plugins
 		
 		public object                      ResultParam { get; private set; }
 		public HookResult                  Result      { get; private set; }
+		public bool                        Conclude    { get; set; }
 		
 		public bool CheckForKick ()
 		{
@@ -36,16 +37,18 @@ namespace Terraria_Server.Plugins
 			return false;
 		}
 		
-		public void SetResult (HookResult result)
+		public void SetResult (HookResult result, bool conclude = true)
 		{
 			Result = result;
 			ResultParam = null;
+			Conclude = conclude;
 		}
 		
-		public void SetKick (string reason)
+		public void SetKick (string reason, bool conclude = true)
 		{
 			Result = HookResult.KICK;
 			ResultParam = reason;
+			Conclude = conclude;
 		}
 	}
 	
@@ -219,7 +222,9 @@ namespace Terraria_Server.Plugins
 				{
 					try
 					{
-						if (hooks[i].callback (ref context, ref arg))
+						hooks[i].callback (ref context, ref arg);
+						
+						if (context.Conclude)
 						{
 							return;
 						}

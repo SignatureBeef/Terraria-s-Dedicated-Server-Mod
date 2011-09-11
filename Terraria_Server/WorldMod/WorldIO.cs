@@ -4,7 +4,7 @@ using System.IO;
 using System.Threading;
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
@@ -405,7 +405,7 @@ namespace Terraria_Server.WorldMod
 			return success;
 		}
 
-		public static void loadWorld(string LoadPath)
+		public static void LoadWorld (string LoadPath)
 		{
 			using (FileStream fileStream = new FileStream(LoadPath, FileMode.Open))
 			{
@@ -626,6 +626,7 @@ namespace Terraria_Server.WorldMod
 						catch
 						{
 						}
+						return;
 					}
 				}
 			}
@@ -634,6 +635,18 @@ namespace Terraria_Server.WorldMod
 			{
 				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (LoadPath);
 			}
+			
+			var ctx = new HookContext
+			{
+			};
+			
+			var args = new HookArgs.WorldLoaded
+			{
+				Height = Main.maxTilesY,
+				Width  = Main.maxTilesX,
+			};
+			
+			HookPoints.WorldLoaded.Invoke (ref ctx, ref args);
 		}
 	}
 }

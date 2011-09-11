@@ -263,7 +263,7 @@ namespace Terraria_Server
                 Terraria_Server.Main.maxSectionsX = worldXtiles / 200;
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
-                WorldIO.loadWorld(Server.World.SavePath);
+                WorldIO.LoadWorld(Server.World.SavePath);
 
 				updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 

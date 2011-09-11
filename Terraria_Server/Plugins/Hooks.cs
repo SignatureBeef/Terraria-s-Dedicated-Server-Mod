@@ -43,6 +43,9 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.SignTextSet>               SignTextSet;
 		public static readonly HookPoint<HookArgs.SignTextGet>               SignTextGet;
 		
+		public static readonly HookPoint<HookArgs.PluginsLoaded>             PluginsLoaded;
+		public static readonly HookPoint<HookArgs.WorldLoaded>               WorldLoaded;
+		
 		static HookPoints ()
 		{
 			NewConnection             = new HookPoint<HookArgs.NewConnection> ("new-connection");
@@ -69,6 +72,8 @@ namespace Terraria_Server.Plugins
 			Explosion                 = new HookPoint<HookArgs.Explosion> ("explosion");
 			SignTextSet               = new HookPoint<HookArgs.SignTextSet> ("sign-text-set");
 			SignTextGet               = new HookPoint<HookArgs.SignTextGet> ("sign-text-get");
+			PluginsLoaded             = new HookPoint<HookArgs.PluginsLoaded> ("plugins-loaded");
+			WorldLoaded               = new HookPoint<HookArgs.WorldLoaded> ("world-loaded");
 		}
 	}
 	
@@ -515,6 +520,16 @@ namespace Terraria_Server.Plugins
 			public short  SignIndex { get; set; } 
 			public string Text      { get; set; }
 			public Sign   OldSign   { get; set; }
+		}
+		
+		public struct PluginsLoaded
+		{
+		}
+		
+		public struct WorldLoaded
+		{
+			public int Width  { get; set; }
+			public int Height { get; set; }
 		}
 	}
 }

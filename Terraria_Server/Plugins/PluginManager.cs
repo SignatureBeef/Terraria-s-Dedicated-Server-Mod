@@ -47,10 +47,16 @@ namespace Terraria_Server.Plugins
 			LoadPlugins();
 
 			CheckPlugins();
-
-//			ServerPluginsLoaded tdsmEvent = new ServerPluginsLoaded();
-//			tdsmEvent.PluginManager = this;
-//			processHook(Hooks.PLUGINS_LOADED, tdsmEvent);
+			
+			var ctx = new HookContext
+			{
+			};
+			
+			var args = new HookArgs.PluginsLoaded
+			{
+			};
+			
+			HookPoints.PluginsLoaded.Invoke (ref ctx, ref args);
 		}
 
 		public static void CheckPlugins()
@@ -158,8 +164,15 @@ namespace Terraria_Server.Plugins
 			par.GenerateInMemory = true;
 			par.IncludeDebugInformation = true;
 			par.CompilerOptions = "/optimize";
-			par.ReferencedAssemblies.Add (Assembly.GetExecutingAssembly().Location);
 			par.TreatWarningsAsErrors = false;
+			
+			var us = Assembly.GetExecutingAssembly();
+			par.ReferencedAssemblies.Add (us.Location);
+			
+			foreach (var asn in us.GetReferencedAssemblies())
+			{
+				par.ReferencedAssemblies.Add (asn.Name);
+			}
 			
 			var result = cp.CompileAssemblyFromFile (par, path);
 			
@@ -168,9 +181,12 @@ namespace Terraria_Server.Plugins
 			{
 				if (errors.HasErrors)
 					ProgramLog.Error.Log ("Failed to compile source plugin:");
-				foreach (var error in errors)
+				foreach (System.CodeDom.Compiler.CompilerError error in errors)
 				{
-					ProgramLog.BareLog (error.ToString());
+					if (error.IsWarning)
+						ProgramLog.BareLog (ProgramLog.Debug, error.ToString());
+					else
+						ProgramLog.BareLog (ProgramLog.Error, error.ToString());
 				}
 				if (errors.HasErrors)
 					return null;

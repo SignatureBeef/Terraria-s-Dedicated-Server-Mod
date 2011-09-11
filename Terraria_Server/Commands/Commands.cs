@@ -1097,7 +1097,7 @@ namespace Terraria_Server.Commands
 
 			ProgramLog.Log("Starting the Server");
 			Main.Initialize();
-			WorldIO.loadWorld(Server.World.SavePath);
+			WorldIO.LoadWorld(Server.World.SavePath);
 			Program.updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
             NetPlay.StartServer();
 			//Statics.keepRunning = false;

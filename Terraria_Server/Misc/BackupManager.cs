@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +20,7 @@ namespace Terraria_Server.Misc
 
         public static BackupIOReturn LoadWorld(string Name)
         {
-            WorldIO.loadWorld(Statics.WorldPath + Path.DirectorySeparatorChar + Name);
+            WorldIO.LoadWorld(Statics.WorldPath + Path.DirectorySeparatorChar + Name);
 
             if (WorldModify.loadFailed && !WorldModify.loadSuccess)
             {

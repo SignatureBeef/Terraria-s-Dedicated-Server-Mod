@@ -22,7 +22,11 @@ namespace Terraria_Server.Messages
             int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
 
-            string SignText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+			short existing = (short)Sign.ReadSign (x, y);
+			if (existing >= 0)
+				signIndex = existing;
+			
+			string SignText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
 			
 			var player = Main.players[whoAmI];
 			
