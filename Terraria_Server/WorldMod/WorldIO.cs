@@ -64,18 +64,18 @@ namespace Terraria_Server.WorldMod
 			Liquid.numLiquid = 0;
 			LiquidBuffer.numLiquidBuffer = 0;
 
-			if (WorldModify.lastMaxTilesX > Main.maxTilesX || WorldModify.lastMaxTilesY > Main.maxTilesY)
-			{
-				using (var prog = new ProgressLogger(WorldModify.lastMaxTilesX - 1, "Freeing unused resources"))
-					for (int i = 0; i < WorldModify.lastMaxTilesX; i++)
-					{
-						prog.Value = i;
-						for (int j = 0; j < WorldModify.lastMaxTilesY; j++)
-						{
-							Main.tile.CreateTileAt(i, j);
-						}
-					}
-			}
+//			if (WorldModify.lastMaxTilesX > Main.maxTilesX || WorldModify.lastMaxTilesY > Main.maxTilesY)
+//			{
+//				using (var prog = new ProgressLogger(WorldModify.lastMaxTilesX - 1, "Freeing unused resources"))
+//					for (int i = 0; i < WorldModify.lastMaxTilesX; i++)
+//					{
+//						prog.Value = i;
+//						for (int j = 0; j < WorldModify.lastMaxTilesY; j++)
+//						{
+//							Main.tile.CreateTileAt(i, j);
+//						}
+//					}
+//			}
 			WorldModify.lastMaxTilesX = Main.maxTilesX;
 			WorldModify.lastMaxTilesY = Main.maxTilesY;
 

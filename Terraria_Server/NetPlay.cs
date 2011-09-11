@@ -68,6 +68,7 @@ namespace Terraria_Server
 //                Netplay.slots[i].whoAmI = i;
 //				Netplay.slots[i].Reset();
 //			}
+			Init ();
 			
 			NetPlay.tcpListener = new TcpListener(NetPlay.serverListenIP, NetPlay.serverPort);
 			
@@ -84,7 +85,7 @@ namespace Terraria_Server
 			if (!NetPlay.disconnect)
 			{
 				if (! Program.updateThread.IsAlive) Program.updateThread.Start();
-				ProgramLog.Log("Server started on " + serverSIP + ":" + serverPort.ToString());
+				ProgramLog.Admin.Log("Server started on " + serverSIP + ":" + serverPort.ToString());
 //                ProgramLog.Log("Loading Plugins...");
 //				PluginManager.LoadAllPlugins();
 //                ProgramLog.Log("Plugins Loaded: " + PluginManager.Plugins.Count.ToString());

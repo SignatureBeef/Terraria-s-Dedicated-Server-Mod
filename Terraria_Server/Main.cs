@@ -41,8 +41,8 @@ namespace Terraria_Server
 		public static float rightWorld = 134400f;
 		public static float topWorld = 0f;
 		public static float bottomWorld = 38400f;
-		public static int maxTilesX = (int)Main.rightWorld / 16 + 1;
-		public static int maxTilesY = (int)Main.bottomWorld / 16 + 1;
+		public static int maxTilesX = -1; //(int)Main.rightWorld / 16 + 1;
+		public static int maxTilesY = -1; //(int)Main.bottomWorld / 16 + 1;
 		public static int maxSectionsX = Main.maxTilesX / 200;
 		public static int maxSectionsY = Main.maxTilesY / 150;
 		[Obsolete("Replaced by SlotManager.MaxSlots")]

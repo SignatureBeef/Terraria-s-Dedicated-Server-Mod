@@ -34,6 +34,8 @@ namespace Terraria_Server.Plugins
 		/// Latest compatible TDSM build
 		/// </summary>
 		public int TDSMBuild { get; set; }
+		
+		internal string Path { get; set; }
 
 		/// <summary>
 		/// Whether this plugin is enabled or not

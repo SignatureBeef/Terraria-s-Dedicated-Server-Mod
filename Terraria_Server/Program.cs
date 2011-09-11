@@ -275,7 +275,7 @@ namespace Terraria_Server
                 commandParser = new CommandParser();
 				ProgramLog.Console.Print ("You can now insert Commands.");
 
-                while (NetPlay.ServerUp)
+                while (!Statics.Exit)
 				{
 					try
 					{

@@ -16,7 +16,8 @@ namespace Terraria_Server
 
         public static bool cmdMessages = false;
         //public static bool keepRunning = false;
-
+		
+		public static volatile bool Exit = false;
         //public static volatile bool IsActive = false;
         //public static volatile bool serverStarted = false;
 

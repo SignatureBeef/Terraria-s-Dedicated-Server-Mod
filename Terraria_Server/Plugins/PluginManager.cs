@@ -195,31 +195,39 @@ namespace Terraria_Server.Plugins
 			return LoadPluginAssembly (result.CompiledAssembly);
 		}
 		
+		public static BasePlugin LoadPluginFromPath (string file)
+		{
+			FileInfo fileInfo = new FileInfo(file);
+			var ext = fileInfo.Extension.ToLower();
+			BasePlugin plugin = null;
+			
+			if (ext == ".dll")
+			{
+				ProgramLog.Plugin.Log ("Loading plugin from {0}", fileInfo.Name);
+				plugin = LoadPluginFromDLL(file);
+			}
+			else if (ext == ".cs")
+			{
+				ProgramLog.Plugin.Log ("Compiling and loading plugin from {0}", fileInfo.Name);
+				plugin = LoadSourcePlugin(file);
+			}
+			
+			if (plugin != null)
+			{
+				plugin.Path = file;
+				if (plugin.Name == null) plugin.Name = Path.GetFileNameWithoutExtension (file);
+				
+				plugins.Add (plugin.Name.ToLower().Trim(), plugin);
+			}
+			
+			return plugin;
+		}
+		
 		public static void LoadPlugins()
 		{
 			foreach (string file in Directory.GetFiles(pluginPath))
 			{
-				FileInfo fileInfo = new FileInfo(file);
-				var ext = fileInfo.Extension.ToLower();
-				BasePlugin plugin = null;
-				
-				if (ext == ".dll")
-				{
-					ProgramLog.Plugin.Log ("Loading plugin from {0}", fileInfo.Name);
-					plugin = LoadPluginFromDLL(file);
-				}
-				else if (ext == ".cs")
-				{
-					ProgramLog.Plugin.Log ("Compiling and loading plugin from {0}", fileInfo.Name);
-					plugin = LoadSourcePlugin(file);
-				}
-				
-				if (plugin != null)
-				{
-					if (plugin.Name == null) plugin.Name = Path.GetFileNameWithoutExtension (file);
-					
-					plugins.Add (plugin.Name.ToLower().Trim(), plugin);
-				}
+				LoadPluginFromPath (file);
 			}
 
 			EnablePlugins();
@@ -288,6 +296,19 @@ namespace Terraria_Server.Plugins
 			{
 				BasePlugin plugin = plugins[cleanedName];
 				plugin.Disable();
+				return true;
+			}
+			return false;
+		}
+
+		public static bool DisposeOfPlugin (string name)
+		{
+			string cleanedName = name.ToLower().Trim();
+			if(plugins.ContainsKey(cleanedName))
+			{
+				BasePlugin plugin = plugins[cleanedName];
+				plugin.Dispose();
+				plugins.Remove (cleanedName);
 				return true;
 			}
 			return false;

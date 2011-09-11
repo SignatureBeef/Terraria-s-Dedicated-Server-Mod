@@ -49,8 +49,9 @@ namespace Terraria_Server.Commands
 
 			Server.notifyOps("Exiting on request.", false);
 			NetPlay.StopServer();
+			Statics.Exit = true;
 
-            throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
+            //throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
 		}
 
 		/// <summary>
@@ -1402,7 +1403,7 @@ namespace Terraria_Server.Commands
 							}
 							break;
 						}
-					case "enable":
+					case "reload":
 						{
 							if (!(args.Count > 1 && args[1] != null && args[0].Trim().Length > 0))
 							{
@@ -1416,20 +1417,18 @@ namespace Terraria_Server.Commands
                                 var fplugin = PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
-									if (!fplugin.Enabled)
+									var path = fplugin.Path;
+									PluginManager.DisposeOfPlugin (pluginName);
+									fplugin = PluginManager.LoadPluginFromPath (path);
+									
+									if (fplugin != null)
 									{
-                                        if (PluginManager.EnablePlugin(fplugin.Name))
-										{
-											sender.sendMessage(args[1] + " was enabled!");
-										}
-										else
-										{
-											sender.sendMessage("There was an issue enabling plugin \"" + pluginName + "\".");
-										}
+										fplugin.Enable ();
+										sender.sendMessage(pluginName + " was reloaded!");
 									}
 									else
 									{
-										sender.sendMessage("The plugin \"" + pluginName + "\" is already enabled.");
+										sender.sendMessage("Error reloading " + pluginName);
 									}
 								}
 								else
