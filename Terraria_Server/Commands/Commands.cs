@@ -11,7 +11,7 @@ using Terraria_Server.Logging;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Definitions;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Networking;
 using System.IO;
 
@@ -145,7 +145,7 @@ namespace Terraria_Server.Commands
 			bool parseData = args.TryPop("-data");
 
 			Server.notifyOps("Reloading plugins.", true);
-			Server.PluginManager.ReloadPlugins();
+			PluginManager.ReloadPlugins();
 
             if (parseData)
             {
@@ -1263,11 +1263,11 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void ListPlugins(ISender sender, ArgumentList args)
 		{
-            if (Server.PluginManager.PluginList.Count > 0)
+            if (PluginManager.Plugins.Count > 0)
 			{
                 string plugins = "";
 
-                foreach (Plugin.Plugin plugin in Server.PluginManager.PluginList.Values)
+                foreach (var plugin in PluginManager.Plugins.Values)
 				{
 					if (!plugin.Enabled || plugin.Name.Trim().Length > 0)
 					{
@@ -1308,11 +1308,11 @@ namespace Terraria_Server.Commands
 				{
 					case "list":
 						{
-                            if (Server.PluginManager.PluginList.Count > 0)
+                            if (PluginManager.Plugins.Count > 0)
 							{
                                 string plugins = "";
 
-                                foreach (Plugin.Plugin plugin in Server.PluginManager.PluginList.Values)
+                                foreach (var plugin in PluginManager.Plugins.Values)
 								{
 									if (plugin.Name.Trim().Length > 0)
 									{
@@ -1340,9 +1340,9 @@ namespace Terraria_Server.Commands
 
                             string pluginName = String.Join(" ", args);
 
-                            if (Server.PluginManager.PluginList.Count > 0)
+                            if (PluginManager.Plugins.Count > 0)
 							{
-                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
+                                var fplugin = PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
 									sender.sendMessage("Plugin Name: " + fplugin.Name);
@@ -1370,14 +1370,14 @@ namespace Terraria_Server.Commands
 
                             string pluginName = String.Join(" ", args);
 
-                            if (Server.PluginManager.PluginList.Count > 0)
+                            if (PluginManager.Plugins.Count > 0)
 							{
-                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
+                                var fplugin = PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
 									if (fplugin.Enabled)
 									{
-                                        if (Server.PluginManager.DisablePlugin(fplugin.Name))
+                                        if (PluginManager.DisablePlugin(fplugin.Name))
 										{
 											sender.sendMessage(pluginName + " was disabled!");
 										}
@@ -1411,14 +1411,14 @@ namespace Terraria_Server.Commands
 
                             string pluginName = String.Join(" ", args);
 
-                            if (Server.PluginManager.PluginList.Count > 0)
+                            if (PluginManager.Plugins.Count > 0)
 							{
-                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
+                                var fplugin = PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
 									if (!fplugin.Enabled)
 									{
-                                        if (Server.PluginManager.EnablePlugin(fplugin.Name))
+                                        if (PluginManager.EnablePlugin(fplugin.Name))
 										{
 											sender.sendMessage(args[1] + " was enabled!");
 										}

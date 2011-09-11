@@ -8,6 +8,6 @@ namespace Terraria_Server.Events
 {
     public class ServerPluginsLoaded : Event
     {
-        public PluginManager PluginManager { get; set; }
+        //public PluginManager PluginManager { get; set; }
     }
 }

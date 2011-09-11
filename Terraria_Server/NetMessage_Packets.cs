@@ -888,6 +888,19 @@ namespace Terraria_Server
 			End ();
 		}
 		
+		public void WriteSign (int signId, int x, int y, string text)
+		{
+			Begin (Packet.WRITE_SIGN);
+			
+			Short (signId);
+			Int (x);
+			Int (y);
+			
+			String (text);
+			
+			End ();
+		}
+		
 		public void FlowLiquid (int x, int y)
 		{
 			var tile = Main.tile.At(x, y);

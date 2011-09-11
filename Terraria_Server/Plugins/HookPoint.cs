@@ -6,12 +6,6 @@ using Terraria_Server.Commands;
 
 namespace Terraria_Server.Plugins
 {
-	public abstract class BasePlugin : Terraria_Server.Plugin.Plugin
-	{
-		//public string Name { get; protected set; }
-		//public bool Enabled { get; internal set; }
-	}
-	
 	public delegate bool HookAction<T> (ref HookContext context, ref T argument);
 	
 	public struct HookContext
@@ -65,19 +59,21 @@ namespace Terraria_Server.Plugins
 		RECTIFY,
 		ERASE
 	}
-
+	
+	public enum HookOrder
+	{
+		FIRST,
+		EARLY,
+		NORMAL,
+		LATE,
+		TERMINAL
+	}
+	
 	public abstract class HookPoint
 	{
-		public enum Order
-		{
-			FIRST,
-			EARLY,
-			NORMAL,
-			LATE,
-			TERMINAL
-		}
-		
 		public string Name { get; private set; }
+		
+		internal abstract Type DelegateType { get; }
 		
 		public HookPoint (string name)
 		{
@@ -86,9 +82,9 @@ namespace Terraria_Server.Plugins
 		
 		public abstract int Count { get; }
 		
-		public abstract void HookBase (BasePlugin plugin, Delegate callback, Order order = Order.NORMAL);
+		public abstract void HookBase (BasePlugin plugin, Delegate callback, HookOrder order = HookOrder.NORMAL);
 		
-		public void HookBase (Delegate callback, Order order = Order.NORMAL)
+		public void HookBase (Delegate callback, HookOrder order = HookOrder.NORMAL)
 		{
 			var plugin = callback.Target as BasePlugin;
 			
@@ -111,7 +107,7 @@ namespace Terraria_Server.Plugins
 	{
 		struct Entry
 		{
-			public Order         order;
+			public HookOrder         order;
 			public BasePlugin    plugin;
 			public HookAction<T> callback;
 		}
@@ -124,11 +120,16 @@ namespace Terraria_Server.Plugins
 			get { return entries.Length; }
 		}
 		
+		internal override Type DelegateType
+		{
+			get { return typeof(HookAction<T>); }
+		}
+		
 		public HookPoint (string name) : base(name)
 		{
 		}
 		
-		public void Hook (BasePlugin plugin, HookAction<T> callback, Order order = Order.NORMAL)
+		public void Hook (BasePlugin plugin, HookAction<T> callback, HookOrder order = HookOrder.NORMAL)
 		{
 			lock (editLock)
 			{
@@ -141,10 +142,15 @@ namespace Terraria_Server.Plugins
 				Array.Sort (copy, (Entry x, Entry y) => x.order.CompareTo (y.order));
 				
 				entries = copy;
+				
+				lock (plugin.hooks)
+				{
+					plugin.hooks.Add (this);
+				}
 			}
 		}
 		
-		public void Hook (HookAction<T> callback, Order order = Order.NORMAL)
+		public void Hook (HookAction<T> callback, HookOrder order = HookOrder.NORMAL)
 		{
 			var plugin = callback.Target as BasePlugin;
 			
@@ -153,7 +159,7 @@ namespace Terraria_Server.Plugins
 			Hook (plugin, callback, order);
 		}
 		
-		public override void HookBase (BasePlugin plugin, Delegate callback, Order order = Order.NORMAL)
+		public override void HookBase (BasePlugin plugin, Delegate callback, HookOrder order = HookOrder.NORMAL)
 		{
 			var cb = callback as HookAction<T>;
 			
@@ -189,6 +195,18 @@ namespace Terraria_Server.Plugins
 				}
 				
 				entries = copy;
+				
+				lock (plugin.hooks)
+				{
+					try
+					{
+						plugin.hooks.Remove (this);
+					}
+					catch (Exception e)
+					{
+						ProgramLog.Log (e, "Exception removing hook from plugin's hook list");
+					}
+				}
 			}
 		}
 		

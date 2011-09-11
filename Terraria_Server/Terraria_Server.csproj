@@ -269,6 +269,9 @@
     <Compile Include="Plugins\HookPoint.cs" />
     <Compile Include="Plugins\Hooks.cs" />
     <Compile Include="Networking\StringCache.cs" />
+    <Compile Include="Plugins\BasePlugin.cs" />
+    <Compile Include="Plugins\HookAttribute.cs" />
+    <Compile Include="Plugins\PluginManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

@@ -16,8 +16,17 @@ namespace Terraria_Server.Messages
             int x = BitConverter.ToInt32(readBuffer, num);
             num += 4;
             int y = BitConverter.ToInt32(readBuffer, num);
-
-            Main.players[whoAmI].chest = inventoryIndex;
+			
+			var player = Main.players[whoAmI];
+			
+			if (Math.Abs (player.Position.X/16 - x) < 7 && Math.Abs (player.Position.Y/16 - y) < 7)
+			{
+				Main.players[whoAmI].chest = inventoryIndex;
+			}
+			else
+			{
+				Main.players[whoAmI].chest = -1;
+			}
         }
     }
 }

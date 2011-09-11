@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Diagnostics;
 
+using Terraria_Server.Plugins;
 using Terraria_Server.Messages;
 using Terraria_Server.Logging;
 using Terraria_Server.WorldMod;
@@ -84,9 +85,9 @@ namespace Terraria_Server
 			{
 				if (! Program.updateThread.IsAlive) Program.updateThread.Start();
 				ProgramLog.Log("Server started on " + serverSIP + ":" + serverPort.ToString());
-                ProgramLog.Log("Loading Plugins...");
-				Server.PluginManager.LoadAllPlugins();
-                ProgramLog.Log("Plugins Loaded: " + Server.PluginManager.PluginList.Count.ToString());
+//                ProgramLog.Log("Loading Plugins...");
+//				PluginManager.LoadAllPlugins();
+//                ProgramLog.Log("Plugins Loaded: " + PluginManager.Plugins.Count.ToString());
 				//Statics.serverStarted = true;
 			}
 			else
@@ -238,7 +239,7 @@ namespace Terraria_Server
 		{
 			//Statics.IsActive = Statics.keepRunning; //To keep console active & program alive upon restart;
             ProgramLog.Log("Disabling Plugins");
-			Server.PluginManager.DisablePlugins();
+			PluginManager.DisablePlugins();
             ProgramLog.Log("Closing Connections...");
 			disconnect = true;
 		}

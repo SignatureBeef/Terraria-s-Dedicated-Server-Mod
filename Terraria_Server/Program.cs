@@ -11,6 +11,7 @@ using Terraria_Server.Logging;
 using Terraria_Server.WorldMod;
 using System.Security.Policy;
 using Terraria_Server.Misc;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server
 {
@@ -149,7 +150,12 @@ namespace Terraria_Server
 					Collections.Registries.NPC.Load (Collections.Registries.NPC_FILE);
 				using (var prog = new ProgressLogger (1, "Loading projectile definitions"))
 					Collections.Registries.Projectile.Load (Collections.Registries.PROJECTILE_FILE);
-
+				
+				ProgramLog.Log("Loading plugins...");
+				Terraria_Server.Plugins.PluginManager.Initialize (Statics.PluginPath, Statics.LibrariesPath);
+				PluginManager.LoadAllPlugins();
+				ProgramLog.Log("Plugins loaded: " + PluginManager.Plugins.Count.ToString());
+				
                 string worldFile = properties.WorldPath;
 				FileInfo file = new FileInfo(worldFile);
 
@@ -166,7 +172,7 @@ namespace Terraria_Server
 						Console.ReadKey(true);
 						return;
 					}
-					ProgramLog.Log ("Generating World '{0}'", worldFile);
+					ProgramLog.Log ("Generating world '{0}'", worldFile);
 
                     string seed = properties.Seed;
 					if (seed == "-1")
@@ -324,6 +330,7 @@ namespace Terraria_Server
                 File.Delete(properties.PIDFile.Trim());
             }
 
+			Thread.Sleep (500);
 			ProgramLog.Log ("Log end.");
 			ProgramLog.Close();
 			

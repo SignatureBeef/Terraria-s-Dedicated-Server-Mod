@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Events;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.Logging;
@@ -370,7 +370,7 @@ namespace Terraria_Server.Commands
 			var ev = new ConsoleCommandEvent ();
 			ev.Sender = sender;
 			ev.Message = line;
-            Server.PluginManager.processHook(Hooks.CONSOLE_COMMAND, ev);
+            //Server.PluginManager.processHook(Hooks.CONSOLE_COMMAND, ev);
 			if (ev.Cancelled)
 			{
 				return;
@@ -411,7 +411,7 @@ namespace Terraria_Server.Commands
         {
             info = null;
 
-            foreach (var plugin in Server.PluginManager.Plugins.Values)
+            foreach (var plugin in PluginManager.Plugins.Values)
             {
                 if (plugin.commands.TryGetValue (prefix, out info) && info.stringCallback != null)
                     return true;
@@ -427,7 +427,7 @@ namespace Terraria_Server.Commands
         {
             info = null;
 
-            foreach (var plugin in Server.PluginManager.Plugins.Values)
+            foreach (var plugin in PluginManager.Plugins.Values)
             {
                 if (plugin.commands.TryGetValue (prefix, out info) && info.tokenCallback != null)
                     return true;

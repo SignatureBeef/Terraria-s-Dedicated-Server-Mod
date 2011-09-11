@@ -51,18 +51,26 @@ namespace Terraria_Server
 
         public static int UsingChest(int i)
         {
-            if (Main.chest[i] != null)
-            {
-                int index = 0;
-                foreach(Player player in Main.players)
-                {
-                    if (player.Active && player.chest == i)
-                    {
-                        return index;
-                    }
-                    index++;
-                }
-            }
+			var chest = Main.chest[i];
+			if (chest != null)
+			{
+				int index = 0;
+				foreach(Player player in Main.players)
+				{
+					if (player.Active && player.chest == i)
+					{
+						if (Math.Abs (player.Position.X/16 - chest.x) < 7 && Math.Abs (player.Position.Y/16 - chest.y) < 7)
+						{
+							return index;
+						}
+						else
+						{
+							player.chest = -1;
+						}
+					}
+					index++;
+				}
+			}
             return -1;
         }
 

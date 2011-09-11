@@ -53,7 +53,7 @@ namespace Terraria_Server.Messages
 					
 					if (handler != null)
 					{
-						//ProgramLog.Debug.Log ("{2}, packet {0}, len {1}", (Packet)readBuffer[start], length, conn.State);
+						ProgramLog.Debug.Log ("{2}, packet {0}, len {1}", (Packet)readBuffer[start], length, conn.State);
 						
 						if ((state & handler.IgnoredStates) != 0)
 						{

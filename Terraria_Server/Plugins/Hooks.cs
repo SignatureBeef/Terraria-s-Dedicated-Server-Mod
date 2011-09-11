@@ -31,6 +31,7 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.Explosion>                 Explosion;
 		
 		public static readonly HookPoint<HookArgs.ChestBreakReceived>        ChestBreakReceived;
+		public static readonly HookPoint<HookArgs.ChestOpenReceived>         ChestOpenReceived;
 		
 		public static readonly HookPoint<HookArgs.PvpSettingReceived>        PvpSettingReceived;
 		public static readonly HookPoint<HookArgs.PartySettingReceived>      PartySettingReceived;
@@ -38,6 +39,9 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.PlayerEnteringGame>        PlayerEnteringGame;
 		public static readonly HookPoint<HookArgs.PlayerEnteredGame>         PlayerEnteredGame;
 		public static readonly HookPoint<HookArgs.PlayerLeftGame>            PlayerLeftGame;
+		
+		public static readonly HookPoint<HookArgs.SignTextSet>               SignTextSet;
+		public static readonly HookPoint<HookArgs.SignTextGet>               SignTextGet;
 		
 		static HookPoints ()
 		{
@@ -56,12 +60,15 @@ namespace Terraria_Server.Plugins
 			ProjectileReceived        = new HookPoint<HookArgs.ProjectileReceived> ("projectile-received");
 			KillProjectileReceived    = new HookPoint<HookArgs.KillProjectileReceived> ("kill-projectile-received");
 			ChestBreakReceived        = new HookPoint<HookArgs.ChestBreakReceived> ("cheat-break-received");
+			ChestOpenReceived         = new HookPoint<HookArgs.ChestOpenReceived> ("cheat-open-received");
 			PvpSettingReceived        = new HookPoint<HookArgs.PvpSettingReceived> ("pvp-setting-received");
 			PartySettingReceived      = new HookPoint<HookArgs.PartySettingReceived> ("party-setting-received");
 			PlayerEnteringGame        = new HookPoint<HookArgs.PlayerEnteringGame> ("player-entering-game");
 			PlayerEnteredGame         = new HookPoint<HookArgs.PlayerEnteredGame> ("player-entered-game");
 			PlayerLeftGame            = new HookPoint<HookArgs.PlayerLeftGame> ("player-left-game");
 			Explosion                 = new HookPoint<HookArgs.Explosion> ("explosion");
+			SignTextSet               = new HookPoint<HookArgs.SignTextSet> ("sign-text-set");
+			SignTextGet               = new HookPoint<HookArgs.SignTextGet> ("sign-text-get");
 		}
 	}
 	
@@ -471,6 +478,13 @@ namespace Terraria_Server.Plugins
 			public int Y { get; set; }
 		}
 		
+		public struct ChestOpenReceived
+		{
+			public int    X          { get; set; }
+			public int    Y          { get; set; }
+			public short  ChestIndex { get; set; } 
+		}
+		
 		public struct PlayerEnteringGame
 		{
 			public int Slot { get; set; }
@@ -484,6 +498,23 @@ namespace Terraria_Server.Plugins
 		public struct PlayerLeftGame
 		{
 			public int Slot { get; set; }
+		}
+		
+		public struct SignTextGet
+		{
+			public int    X         { get; set; }
+			public int    Y         { get; set; }
+			public short  SignIndex { get; set; } 
+			public string Text      { get; set; }
+		}
+		
+		public struct SignTextSet
+		{
+			public int    X         { get; set; }
+			public int    Y         { get; set; }
+			public short  SignIndex { get; set; } 
+			public string Text      { get; set; }
+			public Sign   OldSign   { get; set; }
 		}
 	}
 }
