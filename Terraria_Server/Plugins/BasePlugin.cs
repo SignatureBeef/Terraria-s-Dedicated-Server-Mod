@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Reflection;
+using System.Linq;
 
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
@@ -40,12 +41,35 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// Whether this plugin is enabled or not
 		/// </summary>
-		public bool Enabled
+		public bool IsEnabled
 		{
 			get { return enabled == 1; }
 		}
 		
+		internal bool HasRunningCommands
+		{
+			get { return (runningCommands - pausedCommands) > 0; }
+		}
+		
+		internal volatile bool initialized;
 		internal int enabled;
+		internal int informedOfWorld;
+		internal object savedState;
+		internal int runningCommands;
+		internal int pausedCommands;
+		internal ManualResetEvent commandPauseSignal;
+		
+		internal Dictionary<string, CommandInfo> commands = new Dictionary<string, CommandInfo> ();
+		internal HashSet<HookPoint> hooks = new HashSet<HookPoint> ();
+		
+		internal struct HookEntry
+		{
+			public HookPoint hookPoint;
+			public Delegate  callback;
+			public HookOrder order;
+		}
+		
+		internal List<HookEntry> desiredHooks = new List<HookEntry> ();
 		
 		protected BasePlugin ()
 		{
@@ -55,30 +79,84 @@ namespace Terraria_Server.Plugins
 		}
 		
 		/// <summary>
-		/// Load routines, typically setting up plugin instances, initial values, etc; called before Enable() in startup
+		/// A callback for initializing the plugin's resources and subscribing to hooks.
+		/// <param name='state'>
+		/// A state object returned from OnDispose by a previous instance of the plugin, or null otherwise.
+		/// </param>
 		/// </summary>
-		protected virtual void OnInitialize () { }
+		protected virtual void Initialized (object state) { }
 		
-		protected virtual void OnDispose () { }
+		/// <summary>
+		/// A callback for disposing of any resources held by the plugin.
+		/// </summary>
+		/// <param name='state'>
+		/// A state object previously returned from SaveState to be disposed of as well.
+		/// </param>
+		protected virtual void Disposed (object state) { }
 		
-		//public void abstract UnLoad(); //I have high hopes :3
+		protected virtual object SaveState ()
+		{
+			return null;
+		}
 		
 		/// <summary>
 		/// Enable routines, usually no more than enabled announcement and registering hooks
 		/// </summary>
-		protected virtual void OnEnable () { }
+		protected virtual void Enabled () { }
 		
 		/// <summary>
 		/// Disabling the plugin, usually announcement
 		/// </summary>
-		protected virtual void OnDisable () { }
+		protected virtual void Disabled () { }
+		
+		protected virtual void WorldLoaded () { }
+		
+		public void Hook<T> (HookPoint<T> hookPoint, HookAction<T> callback)
+		{
+			Hook<T> (hookPoint, HookOrder.NORMAL, callback);
+		}
+		
+		public void Hook<T> (HookPoint<T> hookPoint, HookOrder order, HookAction<T> callback)
+		{
+			HookBase (hookPoint, order, callback);
+		}
+		
+		public void HookBase (HookPoint hookPoint, HookOrder order, Delegate callback)
+		{
+			if (initialized)
+				hookPoint.HookBase (this, callback);
+			else
+			{
+				lock (desiredHooks)
+					desiredHooks.Add (new HookEntry { hookPoint = hookPoint, callback = callback, order = order });
+			}
+		}
+		
+		public void Unhook (HookPoint hookPoint)
+		{
+			if (initialized)
+				hookPoint.Unhook (this);
+			else
+			{
+				lock (desiredHooks)
+				{
+					int i = 0;
+					foreach (var h in desiredHooks)
+					{
+						if (h.hookPoint == hookPoint)
+						{
+							desiredHooks.RemoveAt (i);
+							break;
+						}
+						i++;
+					}
+				}
+			}
+		}
 		
 		/// <summary>
 		/// Plugin's internal command list
 		/// </summary>
-		internal Dictionary<string, CommandInfo> commands = new Dictionary<string, CommandInfo> ();
-		
-		internal HashSet<HookPoint> hooks = new HashSet<HookPoint> ();
 		
 		/// <summary>
 		/// Adds new command to the server's command list
@@ -90,8 +168,14 @@ namespace Terraria_Server.Plugins
 			if (commands.ContainsKey (prefix)) throw new ApplicationException ("AddCommand: duplicate command: " + prefix);
 			
 			var cmd = new CommandInfo ();
-			commands[prefix] = cmd;
-			commands[string.Concat (Name.ToLower(), ".", prefix)] = cmd;
+			cmd.BeforeEvent += NotifyBeforeCommand;
+			cmd.AfterEvent += NotifyAfterCommand;
+			
+			lock (commands)
+			{
+				commands[prefix] = cmd;
+				commands[string.Concat (Name.ToLower(), ".", prefix)] = cmd;
+			}
 			
 			return cmd;
 		}
@@ -102,7 +186,7 @@ namespace Terraria_Server.Plugins
 			{
 				try
 				{
-					OnEnable ();
+					Enabled ();
 				}
 				catch (Exception e)
 				{
@@ -119,7 +203,7 @@ namespace Terraria_Server.Plugins
 			{
 				try
 				{
-					OnDisable ();
+					Disabled ();
 				}
 				catch (Exception e)
 				{
@@ -130,8 +214,39 @@ namespace Terraria_Server.Plugins
 			return true;
 		}
 		
-		internal bool Initialize ()
+		internal bool InitializeAndHookUp (object state = null)
 		{
+			if (! Initialize (state)) return false;
+			
+			foreach (var h in desiredHooks)
+			{
+				h.hookPoint.HookBase (this, h.callback, h.order);
+			}
+			
+			return true;
+		}
+		
+		internal bool Initialize (object state = null)
+		{
+			if (initialized)
+			{
+				ProgramLog.Error.Log ("Double initialize of plugin {0}.", Name);
+				return true;
+			}
+			
+			try
+			{
+				Initialized (state);
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, "Exception in initialization handler of plugin " + Name);
+				return false;
+			}
+			
+			if (! NotifyWorldLoaded ())
+				return false;
+			
 			var methods = this.GetType().GetMethods (BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Instance);
 			
 			foreach (var method in methods)
@@ -145,25 +260,16 @@ namespace Terraria_Server.Plugins
 					var hookPoint = typeof(HookPoints).GetField(hpName).GetValue(null) as HookPoint;
 					
 					Delegate callback;
-					if (method.IsStatic)
+					if (method.IsStatic) // TODO: exception handling
 						callback = Delegate.CreateDelegate (hookPoint.DelegateType, method);
 					else
 						callback = Delegate.CreateDelegate (hookPoint.DelegateType, this, method);
 					
-					hookPoint.HookBase (this, callback, ha.order);
-					//ha.hookPoint.Hook (new Hook
+					HookBase (hookPoint, ha.order, callback);
 				}
 			}
 			
-			try
-			{
-				OnInitialize ();
-			}
-			catch (Exception e)
-			{
-				ProgramLog.Log (e, "Exception in initialization handler of plugin " + Name);
-				return false;
-			}
+			initialized = true;
 			
 			return true;
 		}
@@ -174,7 +280,7 @@ namespace Terraria_Server.Plugins
 			
 			try
 			{
-				OnDispose ();
+				Disposed (savedState);
 			}
 			catch (Exception e)
 			{
@@ -199,6 +305,216 @@ namespace Terraria_Server.Plugins
 			}
 			
 			return result;
+		}
+		
+		// newPlugin should not have been initialized at this point!
+		internal bool ReplaceWith (BasePlugin newPlugin)
+		{
+			var result = true;
+			var paused = new LinkedList<HookPoint> ();
+			
+			lock (HookPoint.editLock)
+			{
+				Server.notifyAll ("<Server> Reloading plugin " + Name + ", you may experience lag...", Misc.ChatColor.White, true);
+				
+				var signal = new ManualResetEvent (false);
+				
+				try
+				{
+					// commands or hooks that begin running after this get paused
+					commandPauseSignal = signal;
+					
+					foreach (var hook in hooks)
+					{
+						hook.Pause (signal);
+					}
+					
+					// wait for commands that may have already been running to finish
+					while (HasRunningCommands)
+					{
+						Thread.Sleep (10);
+					}
+					
+					ProgramLog.Debug.Log ("Plugin's commands paused...");
+					
+					// wait for hooks that may have already been running to finish
+					var pausing = new LinkedList<HookPoint> (hooks);
+					
+					// pausing hooks is more disruptive than pausing commands,
+					// so we spinwait instead of sleeping
+					var wait = new SpinWait ();
+					while (pausing.Count > 0)
+					{
+						wait.SpinOnce ();
+						var link = pausing.First;
+						while (link != null)
+						{
+							if (link.Value.AllPaused)
+							{
+								var x = link;
+								link = link.Next;
+								pausing.Remove (x);
+								paused.AddFirst (x);
+							}
+							else
+							{
+								link = link.Next;
+							}
+						}
+					}
+					
+					ProgramLog.Debug.Log ("Plugin's hooks paused...");
+					
+					//Thread.Sleep (10000);
+					
+					// initialize new instance with saved state
+					savedState = SaveState ();
+					ProgramLog.Debug.Log ("Initializing new plugin instance...");
+					if (! newPlugin.Initialize (savedState))
+						return false;
+					
+					savedState = null;
+					
+					// point of no return, if the new plugin fails now,
+					// blame the author
+					// because it's time to dispose the old plugin
+					
+					
+					// use command objects from the old plugin, because command invocations
+					// may be paused inside them, this way when they unpause
+					// they run the new plugin's methods
+					lock (commands)
+					{
+						ProgramLog.Debug.Log ("Replacing commands...");
+						
+						var prefixes = newPlugin.commands.Keys.ToArray();
+						
+						var done = new HashSet<CommandInfo> ();
+						
+						foreach (var prefix in prefixes)
+						{
+							CommandInfo oldCmd;
+							if (commands.TryGetValue (prefix, out oldCmd))
+							{
+//								ProgramLog.Debug.Log ("Replacing command {0}.", prefix);
+								var newCmd = newPlugin.commands[prefix];
+								
+								newPlugin.commands[prefix] = oldCmd;
+								commands.Remove (prefix);
+								
+								if (done.Contains (oldCmd)) continue;
+								
+								oldCmd.InitFrom (newCmd);
+								done.Add (oldCmd);
+								
+								oldCmd.AfterEvent += newPlugin.NotifyAfterCommand;
+								oldCmd.BeforeEvent += newPlugin.NotifyBeforeCommand;
+								
+								// garbage
+								newCmd.ClearCallbacks ();
+								newCmd.ClearEvents ();
+							}
+						}
+						
+						foreach (var kv in commands)
+						{
+							var cmd = kv.Value;
+							ProgramLog.Debug.Log ("Clearing command {0}.", kv.Key);
+							cmd.ClearCallbacks ();
+						}
+						commands.Clear ();
+					}
+					
+					// replace hook subscriptions from the old plugin with new ones
+					// in the exact same spots in the invocation chains
+					lock (newPlugin.desiredHooks)
+					{
+						ProgramLog.Debug.Log ("Replacing hooks...");
+						
+						foreach (var h in newPlugin.desiredHooks)
+						{
+							if (hooks.Contains (h.hookPoint))
+							{
+								h.hookPoint.Replace (this, newPlugin, h.callback, h.order);
+								hooks.Remove (h.hookPoint);
+								newPlugin.hooks.Add (h.hookPoint);
+							}
+							else
+							{
+								// this adds the hook to newPlugin.hooks
+								h.hookPoint.HookBase (newPlugin, h.callback, h.order);
+							}
+						}
+					}
+					
+					ProgramLog.Debug.Log ("Disabling old plugin instance...");
+					Disable ();
+					
+					ProgramLog.Debug.Log ("Enabling new plugin instance...");
+					if (! newPlugin.Enable ())
+					{
+						result = false;
+					}
+				}
+				finally // unpause
+				{
+					ProgramLog.Debug.Log ("Unpausing everything...");
+					
+					commandPauseSignal = null;
+					
+					foreach (var hook in paused)
+					{
+						hook.CancelPause ();
+					}
+					
+					signal.Set ();
+					
+					Server.notifyAll ("<Server> Done.", Misc.ChatColor.White, true);
+				}
+			}
+			
+			ProgramLog.Debug.Log ("Disposing of old plugin instance...");
+			// clean up remaining hooks
+			Dispose ();
+			
+			return result;
+		}
+		
+		internal bool NotifyWorldLoaded ()
+		{
+			if (! Statics.WorldLoaded) return true;
+			
+			if (Interlocked.CompareExchange (ref informedOfWorld, 1, 0) != 0) return true;
+			
+			try
+			{
+				WorldLoaded ();
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, "Exception in world load handler of plugin " + Name);
+				return false;
+			}
+			
+			return true;
+		}
+		
+		internal void NotifyBeforeCommand (CommandInfo cmd)
+		{
+			Interlocked.Increment (ref runningCommands);
+			
+			var signal = commandPauseSignal;
+			if (signal != null)
+			{
+				Interlocked.Increment (ref pausedCommands);
+				signal.WaitOne ();
+				Interlocked.Decrement (ref pausedCommands);
+			}
+		}
+		
+		internal void NotifyAfterCommand (CommandInfo cmd)
+		{
+			Interlocked.Decrement (ref runningCommands);
 		}
 	}
 }

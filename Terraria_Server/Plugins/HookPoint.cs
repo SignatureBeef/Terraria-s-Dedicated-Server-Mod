@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
@@ -85,9 +86,9 @@ namespace Terraria_Server.Plugins
 		
 		public abstract int Count { get; }
 		
-		public abstract void HookBase (BasePlugin plugin, Delegate callback, HookOrder order = HookOrder.NORMAL);
+		internal protected abstract void HookBase (BasePlugin plugin, Delegate callback, HookOrder order = HookOrder.NORMAL);
 		
-		public void HookBase (Delegate callback, HookOrder order = HookOrder.NORMAL)
+		internal protected void HookBase (Delegate callback, HookOrder order = HookOrder.NORMAL)
 		{
 			var plugin = callback.Target as BasePlugin;
 			
@@ -96,13 +97,50 @@ namespace Terraria_Server.Plugins
 			HookBase (plugin, callback, order);
 		}
 		
-		public abstract void Unhook (BasePlugin plugin);
+		internal protected abstract void Unhook (BasePlugin plugin);
+		
+		internal abstract void Replace (BasePlugin oldPlugin, BasePlugin newPlugin, Delegate callback, HookOrder order);
 		
 		static PropertiesFile hookprop = new PropertiesFile ("hooks.properties");
 		
 		static HookPoint ()
 		{
 			hookprop.Load ();
+		}
+		
+		internal int currentlyExecuting;
+		internal int currentlyPaused;
+		internal ManualResetEvent pauseSignal;
+		
+		internal protected static object editLock = new object(); //we use it recursively
+		
+		internal void Pause (ManualResetEvent signal) //.Set() the signal to unpause
+		{
+			lock (editLock)
+			{
+				if (pauseSignal != null)
+				{
+					throw new ApplicationException ("Attempt to pause hook invocation twice.");
+				}
+				
+				pauseSignal = signal;
+			}
+		}
+		
+		internal void CancelPause ()
+		{
+			pauseSignal = null;
+		}
+		
+		internal bool AllPaused
+		{
+			get
+			{
+				var num = currentlyExecuting - currentlyPaused;
+				if (num < 0)
+					ProgramLog.Debug.Log ("Oops, currentlyExecuting < currentlyPaused!?");
+				return num <= 0;
+			}
 		}
 	}
 	
@@ -115,7 +153,6 @@ namespace Terraria_Server.Plugins
 			public HookAction<T> callback;
 		}
 		
-		object editLock = new object();
 		Entry[] entries = new Entry[0];
 		
 		public override int Count
@@ -132,7 +169,7 @@ namespace Terraria_Server.Plugins
 		{
 		}
 		
-		public void Hook (BasePlugin plugin, HookAction<T> callback, HookOrder order = HookOrder.NORMAL)
+		internal protected void Hook (BasePlugin plugin, HookAction<T> callback, HookOrder order = HookOrder.NORMAL)
 		{
 			lock (editLock)
 			{
@@ -146,14 +183,14 @@ namespace Terraria_Server.Plugins
 				
 				entries = copy;
 				
-				lock (plugin.hooks)
+//				lock (plugin.hooks) //disabled as long as editLock is static
 				{
 					plugin.hooks.Add (this);
 				}
 			}
 		}
 		
-		public void Hook (HookAction<T> callback, HookOrder order = HookOrder.NORMAL)
+		internal protected void Hook (HookAction<T> callback, HookOrder order = HookOrder.NORMAL)
 		{
 			var plugin = callback.Target as BasePlugin;
 			
@@ -162,7 +199,7 @@ namespace Terraria_Server.Plugins
 			Hook (plugin, callback, order);
 		}
 		
-		public override void HookBase (BasePlugin plugin, Delegate callback, HookOrder order = HookOrder.NORMAL)
+		internal protected override void HookBase (BasePlugin plugin, Delegate callback, HookOrder order = HookOrder.NORMAL)
 		{
 			var cb = callback as HookAction<T>;
 			
@@ -171,7 +208,7 @@ namespace Terraria_Server.Plugins
 			Hook (plugin, cb, order);
 		}
 		
-		public override void Unhook (BasePlugin plugin)
+		internal protected override void Unhook (BasePlugin plugin)
 		{
 			lock (editLock)
 			{
@@ -199,7 +236,7 @@ namespace Terraria_Server.Plugins
 				
 				entries = copy;
 				
-				lock (plugin.hooks)
+//				lock (plugin.hooks) //disabled as long as editLock is static
 				{
 					try
 					{
@@ -213,27 +250,85 @@ namespace Terraria_Server.Plugins
 			}
 		}
 		
+		internal override void Replace (BasePlugin oldPlugin, BasePlugin newPlugin, Delegate callback, HookOrder order)
+		{
+			lock (editLock)
+			{
+				var count = entries.Length;
+				
+				int k = -1;
+				for (int i = 0; i < count; i++)
+				{
+					if (entries[i].plugin == oldPlugin)
+					{
+						k = i;
+						break;
+					}
+				}
+				
+				if (k == -1) return;
+				
+				var copy = new Entry [count];
+				
+				copy[k] = new Entry { plugin = newPlugin, callback = (HookAction<T>) callback, order = order };
+				
+				entries = copy;
+			}
+		}
+		
 		public void Invoke (ref HookContext context, ref T arg)
 		{
 			var hooks = entries;
-			for (int i = 0; i < hooks.Length; i++)
+			var len = hooks.Length;
+			bool locked;
+			
+			if (len > 0)
 			{
-				if (hooks[i].plugin.Enabled)
+				locked = true;
+				Interlocked.Increment (ref currentlyExecuting);
+			}
+			else
+				locked = false;
+			
+			var signal = pauseSignal;
+			if (signal != null)
+			{
+				pauseSignal = null;
+				ProgramLog.Debug.Log ("Paused hook point {0}.", Name);
+				//Interlocked.Decrement (ref currentlyExecuting);
+				Interlocked.Increment (ref currentlyPaused);
+				signal.WaitOne ();
+				Interlocked.Decrement (ref currentlyPaused);
+				//Interlocked.Increment (ref currentlyExecuting);
+				ProgramLog.Debug.Log ("Unpaused hook point {0}.", Name);
+			}
+			
+			try
+			{
+				for (int i = 0; i < len; i++)
 				{
-					try
+					if (hooks[i].plugin.IsEnabled)
 					{
-						hooks[i].callback (ref context, ref arg);
-						
-						if (context.Conclude)
+						try
 						{
-							return;
+							hooks[i].callback (ref context, ref arg);
+							
+							if (context.Conclude)
+							{
+								return;
+							}
+						}
+						catch (Exception e)
+						{
+							ProgramLog.Log (e, string.Format ("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name));
 						}
 					}
-					catch (Exception e)
-					{
-						ProgramLog.Log (e, string.Format ("Plugin {0} crashed in hook {1}", hooks[i].plugin.Name, Name));
-					}
 				}
+			}
+			finally
+			{
+				if (locked)
+					Interlocked.Decrement (ref currentlyExecuting);
 			}
 		}
 		

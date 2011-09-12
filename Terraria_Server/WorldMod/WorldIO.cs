@@ -42,7 +42,9 @@ namespace Terraria_Server.WorldMod
 
 		public static void clearWorld()
 		{
-            Main.trashItem = new Item();
+			Statics.WorldLoaded = false;
+			
+			Main.trashItem = new Item();
 			WorldModify.spawnEye = false;
 			WorldModify.spawnNPC = 0;
 			WorldModify.shadowOrbCount = 0;
@@ -635,6 +637,10 @@ namespace Terraria_Server.WorldMod
 			{
 				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (LoadPath);
 			}
+			
+			Statics.WorldLoaded = true;
+			
+			PluginManager.NotifyWorldLoaded ();
 			
 			var ctx = new HookContext
 			{

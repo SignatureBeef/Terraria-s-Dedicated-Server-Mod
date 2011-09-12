@@ -24,6 +24,24 @@ namespace Terraria_Server.Commands
         internal AccessLevel accessLevel = AccessLevel.OP;
         internal Action<ISender, ArgumentList> tokenCallback;
         internal Action<ISender, string> stringCallback;
+        internal event Action<CommandInfo> BeforeEvent;
+        internal event Action<CommandInfo> AfterEvent;
+        
+		internal void InitFrom (CommandInfo other)
+		{
+			description = other.description;
+			helpText = other.helpText;
+			accessLevel = other.accessLevel;
+			tokenCallback = other.tokenCallback;
+			stringCallback = other.stringCallback;
+			ClearEvents ();
+		}
+		
+		internal void ClearCallbacks ()
+		{
+			tokenCallback = null;
+			stringCallback = null;
+		}
         
         public CommandInfo WithDescription (string desc)
         {
@@ -60,6 +78,62 @@ namespace Terraria_Server.Commands
             foreach (var line in helpText)
                 sender.sendMessage (line);
         }
+		
+		internal void Run (ISender sender, string args)
+		{
+			if (BeforeEvent != null)
+				BeforeEvent (this);
+			
+			try
+			{
+				if (! CommandParser.CheckAccessLevel (this, sender))
+				{
+					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					return;
+				}
+				
+				if (stringCallback != null)
+					stringCallback (sender, args);
+				else
+					sender.sendMessage ("This command is no longer available.", 255, 238, 130, 238);
+			}
+			finally
+			{
+				if (AfterEvent != null)
+					AfterEvent (this);
+			}
+		}
+		
+		internal void Run (ISender sender, ArgumentList args)
+		{
+			if (BeforeEvent != null)
+				BeforeEvent (this);
+				
+			try
+			{
+				if (! CommandParser.CheckAccessLevel (this, sender))
+				{
+					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					return;
+				}
+				
+				if (tokenCallback != null)
+					tokenCallback (sender, args);
+				else
+					sender.sendMessage ("This command is no longer available.", 255, 238, 130, 238);
+			}
+			finally
+			{
+				if (AfterEvent != null)
+					AfterEvent (this);
+			}
+		}
+		
+		internal void ClearEvents ()
+		{
+			AfterEvent = null;
+			BeforeEvent = null;
+		}
     }
 
     public class CommandParser
@@ -407,37 +481,43 @@ namespace Terraria_Server.Commands
             throw new NotImplementedException("Unexpected ISender implementation");
         }
         
-        bool FindStringCommand (string prefix, out CommandInfo info)
-        {
-            info = null;
-
-            foreach (var plugin in PluginManager.Plugins.Values)
-            {
-                if (plugin.commands.TryGetValue (prefix, out info) && info.stringCallback != null)
-                    return true;
-            }
-            
-            if (serverCommands.TryGetValue (prefix, out info) && info.stringCallback != null)
-                return true;
-            
-            return false;
-        }
+		bool FindStringCommand (string prefix, out CommandInfo info)
+		{
+			info = null;
+			
+			foreach (var plugin in PluginManager.EnumeratePlugins)
+			{
+				lock (plugin.commands)
+				{
+					if (plugin.IsEnabled && plugin.commands.TryGetValue (prefix, out info) && info.stringCallback != null)
+						return true;
+				}
+			}
+			
+			if (serverCommands.TryGetValue (prefix, out info) && info.stringCallback != null)
+				return true;
+			
+			return false;
+		}
         
-        bool FindTokenCommand (string prefix, out CommandInfo info)
-        {
-            info = null;
-
-            foreach (var plugin in PluginManager.Plugins.Values)
-            {
-                if (plugin.commands.TryGetValue (prefix, out info) && info.tokenCallback != null)
-                    return true;
-            }
-            
-            if (serverCommands.TryGetValue (prefix, out info) && info.tokenCallback != null)
-                return true;
-            
-            return false;
-        }
+		bool FindTokenCommand (string prefix, out CommandInfo info)
+		{
+			info = null;
+			
+			foreach (var plugin in PluginManager.EnumeratePlugins)
+			{
+				lock (plugin.commands)
+				{
+					if (plugin.IsEnabled && plugin.commands.TryGetValue (prefix, out info) && info.tokenCallback != null)
+						return true;
+				}
+			}
+			
+			if (serverCommands.TryGetValue (prefix, out info) && info.tokenCallback != null)
+				return true;
+			
+			return false;
+		}
 
         public void ParseAndProcess (ISender sender, string line)
         {
@@ -461,7 +541,7 @@ namespace Terraria_Server.Commands
                     try
                     {
                         var rest = firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : ""; 
-                        info.stringCallback (sender, rest.Trim());
+                        info.Run (sender, rest.Trim());
                     }
                     catch (ExitException e)
                     {
@@ -490,7 +570,7 @@ namespace Terraria_Server.Commands
 
                         try
                         {
-                            info.tokenCallback(sender, args);
+                            info.Run (sender, args);
                         }
                         catch (ExitException e)
                         {

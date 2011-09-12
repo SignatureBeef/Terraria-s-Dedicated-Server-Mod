@@ -2,8 +2,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 
 using Terraria_Server.Logging;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace Terraria_Server.Plugins
@@ -24,6 +26,94 @@ namespace Terraria_Server.Plugins
 		public static Dictionary<String, BasePlugin> Plugins
 		{
 			get { return plugins; }
+		}
+		
+		public static PluginRecordEnumerator EnumeratePluginsRecords
+		{
+			get
+			{
+				Monitor.Enter (plugins);
+				return new PluginRecordEnumerator { inner = plugins.GetEnumerator() };
+			}
+		}
+		
+		public static PluginEnumerator EnumeratePlugins
+		{
+			get
+			{
+				Monitor.Enter (plugins);
+				return new PluginEnumerator { inner = plugins.Values.GetEnumerator() };
+			}
+		}
+		
+		public struct PluginRecordEnumerator : IDisposable, IEnumerator<KeyValuePair<string, BasePlugin>>, IEnumerator
+		{
+			internal Dictionary<string, BasePlugin>.Enumerator inner;
+			
+			public void Dispose ()
+			{
+				inner.Dispose ();
+				Monitor.Exit (plugins);
+			}
+			
+			public KeyValuePair<string, BasePlugin> Current
+			{
+				get { return inner.Current; }
+			}
+			
+			object IEnumerator.Current
+			{
+				get { return inner.Current; }
+			}
+			
+			public PluginRecordEnumerator GetEnumerator ()
+			{
+				return this;
+			}
+			
+			public bool MoveNext ()
+			{
+				return inner.MoveNext ();
+			}
+			
+			public void Reset ()
+			{
+			}
+		}
+		
+		public struct PluginEnumerator : IDisposable, IEnumerator<BasePlugin>, IEnumerator
+		{
+			internal Dictionary<string, BasePlugin>.ValueCollection.Enumerator inner;
+			
+			public void Dispose ()
+			{
+				inner.Dispose ();
+				Monitor.Exit (plugins);
+			}
+			
+			public BasePlugin Current
+			{
+				get { return inner.Current; }
+			}
+			
+			object IEnumerator.Current
+			{
+				get { return inner.Current; }
+			}
+			
+			public PluginEnumerator GetEnumerator ()
+			{
+				return this;
+			}
+			
+			public bool MoveNext ()
+			{
+				return inner.MoveNext ();
+			}
+			
+			public void Reset ()
+			{
+			}
 		}
 		
 		/// <summary>
@@ -106,7 +196,6 @@ namespace Terraria_Server.Plugins
 					SetPluginProperty<string> (plugin, "VERSION", "Version");
 					SetPluginProperty<int> (plugin, "BUILD", "TDSMBuild");
 					
-					plugin.Initialize ();
 					return plugin;
 				}
 			}
@@ -158,12 +247,13 @@ namespace Terraria_Server.Plugins
 		
 		public static BasePlugin LoadSourcePlugin (string path)
 		{
+			
 			var cp = new Microsoft.CSharp.CSharpCodeProvider (compilerOptions);
 			var par = new System.CodeDom.Compiler.CompilerParameters ();
 			par.GenerateExecutable = false;
 			par.GenerateInMemory = true;
 			par.IncludeDebugInformation = true;
-			par.CompilerOptions = "/optimize";
+			//par.CompilerOptions = "/optimize";
 			par.TreatWarningsAsErrors = false;
 			
 			var us = Assembly.GetExecutingAssembly();
@@ -216,18 +306,42 @@ namespace Terraria_Server.Plugins
 			{
 				plugin.Path = file;
 				if (plugin.Name == null) plugin.Name = Path.GetFileNameWithoutExtension (file);
-				
-				plugins.Add (plugin.Name.ToLower().Trim(), plugin);
 			}
 			
 			return plugin;
+		}
+		
+		public static bool ReplacePlugin (BasePlugin oldPlugin, BasePlugin newPlugin)
+		{
+			lock (plugins)
+			{
+				if (oldPlugin.ReplaceWith (newPlugin))
+				{
+					string oldName = oldPlugin.Name.ToLower().Trim();
+					string newName = newPlugin.Name.ToLower().Trim();
+					
+					if (plugins.ContainsKey (oldName))
+						plugins.Remove (oldName);
+					
+					plugins.Add (newName, newPlugin);
+					
+					return true;
+				}
+			}
+			
+			return false;
 		}
 		
 		public static void LoadPlugins()
 		{
 			foreach (string file in Directory.GetFiles(pluginPath))
 			{
-				LoadPluginFromPath (file);
+				var plugin = LoadPluginFromPath (file);
+				if (plugin != null)
+				{
+					if (plugin.InitializeAndHookUp ())
+						plugins.Add (plugin.Name.ToLower().Trim(), plugin);
+				}
 			}
 
 			EnablePlugins();
@@ -327,6 +441,14 @@ namespace Terraria_Server.Plugins
 				return plugins[cleanedName];
 			}
 			return null;
+		}
+		
+		internal static void NotifyWorldLoaded ()
+		{
+			foreach (var kv in plugins)
+			{
+				kv.Value.NotifyWorldLoaded ();
+			}
 		}
 	}
 }

@@ -13,6 +13,12 @@ namespace Terraria_Server
         private const string PLUGINS = "Plugins";
         private const string DATA = "Data";
         private const string LIBRARIES = "Libs";
+        
+		public static bool WorldLoaded
+		{
+			get;
+			internal set;
+		}
 
         public static bool cmdMessages = false;
         //public static bool keepRunning = false;

@@ -213,7 +213,7 @@ namespace Terraria_Server.Networking
 		
 		bool CheckQuota ()
 		{
-			if (queueSize >= Program.properties.SendQueueQuota * 1024)
+			if (QueueSize >= Program.properties.SendQueueQuota * 1024)
 			{
 				// this is an awful hack but I was in a hurry
 				var cc = (ClientConnection) this;
@@ -708,16 +708,20 @@ namespace Terraria_Server.Networking
 					return;
 				}
 				
-				if (args.conn == null)
+				lock (this)
 				{
-					ProgramLog.Error.Log ("{0} freed twice.", typeof(T).Name);
-					return;
+					if (args.conn == null)
+					{
+						ProgramLog.Error.Log ("{0} freed twice.", typeof(T).Name);
+						return;
+					}
+					
+					args.BufferList = null;
+					
+					args.conn = null;
+					
+					Push ((T) args);
 				}
-				
-				args.BufferList = null;
-				
-				args.conn = null;
-				lock (this) Push ((T) args);
 			}
 		}
 		

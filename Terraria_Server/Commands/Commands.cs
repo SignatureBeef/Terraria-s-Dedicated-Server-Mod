@@ -1270,7 +1270,7 @@ namespace Terraria_Server.Commands
 
                 foreach (var plugin in PluginManager.Plugins.Values)
 				{
-					if (!plugin.Enabled || plugin.Name.Trim().Length > 0)
+					if (!plugin.IsEnabled || plugin.Name.Trim().Length > 0)
 					{
 						plugins += ", " + plugin.Name.Trim();
 					}
@@ -1317,7 +1317,7 @@ namespace Terraria_Server.Commands
 								{
 									if (plugin.Name.Trim().Length > 0)
 									{
-										plugins += ", " + plugin.Name.Trim() + ((!plugin.Enabled) ? "[DISABLED] " : " ");
+										plugins += ", " + plugin.Name.Trim() + ((!plugin.IsEnabled) ? "[DISABLED] " : " ");
 									}
 								}
 								if (plugins.StartsWith(","))
@@ -1349,7 +1349,7 @@ namespace Terraria_Server.Commands
 									sender.sendMessage("Plugin Name: " + fplugin.Name);
 									sender.sendMessage("Plugin Author: " + fplugin.Author);
 									sender.sendMessage("Plugin Description: " + fplugin.Description);
-									sender.sendMessage("Plugin Enabled: " + fplugin.Enabled.ToString());
+									sender.sendMessage("Plugin Enabled: " + fplugin.IsEnabled.ToString());
 								}
 								else
 								{
@@ -1376,7 +1376,7 @@ namespace Terraria_Server.Commands
                                 var fplugin = PluginManager.GetPlugin(pluginName);
 								if (fplugin != null)
 								{
-									if (fplugin.Enabled)
+									if (fplugin.IsEnabled)
 									{
                                         if (PluginManager.DisablePlugin(fplugin.Name))
 										{
@@ -1418,17 +1418,21 @@ namespace Terraria_Server.Commands
 								if (fplugin != null)
 								{
 									var path = fplugin.Path;
-									PluginManager.DisposeOfPlugin (pluginName);
-									fplugin = PluginManager.LoadPluginFromPath (path);
+									//PluginManager.DisposeOfPlugin (pluginName);
+									//fplugin = PluginManager.LoadPluginFromPath (path);
+									var nplugin = PluginManager.LoadPluginFromPath (path);
 									
-									if (fplugin != null)
+									if (nplugin == null)
 									{
-										fplugin.Enable ();
-										sender.sendMessage(pluginName + " was reloaded!");
+										sender.Message (255, "There was an error loading the new plugin version.");
+									}
+									else if (! PluginManager.ReplacePlugin (fplugin, nplugin))
+									{
+										sender.Message (255, "There was an issue replacing the old plugin version.");
 									}
 									else
 									{
-										sender.sendMessage("Error reloading " + pluginName);
+										sender.Message (255, "Plugin successfully reloaded.");
 									}
 								}
 								else
