@@ -183,23 +183,32 @@ namespace Terraria_Server.Plugins
 		{
 			foreach (var type in assembly.GetTypes().Where(x => typeof(BasePlugin).IsAssignableFrom(x) && !x.IsAbstract))
 			{
-				var plugin = (BasePlugin) Activator.CreateInstance (type);
+				var plugin = CreatePluginInstance (type);
 				if (plugin == null)
 				{
 					throw new Exception("Could not create plugin instance");
 				}
 				else
 				{
-					SetPluginProperty<string> (plugin, "NAME", "Name");
-					SetPluginProperty<string> (plugin, "AUTHOR", "Author");
-					SetPluginProperty<string> (plugin, "DESCRIPTION", "Description");
-					SetPluginProperty<string> (plugin, "VERSION", "Version");
-					SetPluginProperty<int> (plugin, "BUILD", "TDSMBuild");
-					
 					return plugin;
 				}
 			}
 			return null;
+		}
+		
+		static BasePlugin CreatePluginInstance (System.Type type)
+		{
+			var plugin = (BasePlugin) Activator.CreateInstance (type);
+			
+			if (plugin == null) return null;
+			
+			SetPluginProperty<string> (plugin, "NAME", "Name");
+			SetPluginProperty<string> (plugin, "AUTHOR", "Author");
+			SetPluginProperty<string> (plugin, "DESCRIPTION", "Description");
+			SetPluginProperty<string> (plugin, "VERSION", "Version");
+			SetPluginProperty<int> (plugin, "BUILD", "TDSMBuild");
+			
+			return plugin;
 		}
 		
 		/// <summary>
@@ -293,18 +302,19 @@ namespace Terraria_Server.Plugins
 			
 			if (ext == ".dll")
 			{
-				ProgramLog.Plugin.Log ("Loading plugin from {0}", fileInfo.Name);
+				ProgramLog.Plugin.Log ("Loading plugin from {0}.", fileInfo.Name);
 				plugin = LoadPluginFromDLL(file);
 			}
 			else if (ext == ".cs")
 			{
-				ProgramLog.Plugin.Log ("Compiling and loading plugin from {0}", fileInfo.Name);
+				ProgramLog.Plugin.Log ("Compiling and loading plugin from {0}.", fileInfo.Name);
 				plugin = LoadSourcePlugin(file);
 			}
 			
 			if (plugin != null)
 			{
 				plugin.Path = file;
+				plugin.PathTimestamp = fileInfo.LastWriteTimeUtc;
 				if (plugin.Name == null) plugin.Name = Path.GetFileNameWithoutExtension (file);
 			}
 			
@@ -332,6 +342,30 @@ namespace Terraria_Server.Plugins
 			return false;
 		}
 		
+		public static bool ReloadPlugin (BasePlugin oldPlugin)
+		{
+			var fi = new FileInfo (oldPlugin.Path);
+			
+			BasePlugin newPlugin;
+			
+			if (fi.LastWriteTimeUtc > oldPlugin.PathTimestamp)
+			{
+				// plugin updated
+				ProgramLog.Plugin.Log ("Plugin {0} is being updated from file.", oldPlugin.Name);
+				newPlugin = LoadPluginFromPath (oldPlugin.Path);
+			}
+			else
+			{
+				ProgramLog.Plugin.Log ("Plugin {0} not updated, reinitializing.", oldPlugin.Name);
+				newPlugin = CreatePluginInstance (oldPlugin.GetType());
+			}
+			
+			if (newPlugin == null)
+				return false;
+			
+			return ReplacePlugin (oldPlugin, newPlugin);
+		}
+		
 		public static void LoadPlugins()
 		{
 			foreach (string file in Directory.GetFiles(pluginPath))
@@ -350,11 +384,17 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// Reloads all plugins currently running on the server
 		/// </summary>
-		public static void ReloadPlugins()
+		public static void ReloadPlugins ()
 		{
-			DisablePlugins();
-
-			LoadAllPlugins();
+			lock (plugins)
+			{
+				var list = plugins.Values.ToArray ();
+				
+				foreach (var plugin in list)
+				{
+					ReloadPlugin (plugin);
+				}
+			}
 		}
 
 		/// <summary>

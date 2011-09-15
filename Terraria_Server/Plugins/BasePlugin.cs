@@ -37,6 +37,7 @@ namespace Terraria_Server.Plugins
 		public int TDSMBuild { get; set; }
 		
 		internal string Path { get; set; }
+		internal DateTime PathTimestamp { get; set; }
 
 		/// <summary>
 		/// Whether this plugin is enabled or not
@@ -54,7 +55,6 @@ namespace Terraria_Server.Plugins
 		internal volatile bool initialized;
 		internal int enabled;
 		internal int informedOfWorld;
-		internal object savedState;
 		internal int runningCommands;
 		internal int pausedCommands;
 		internal ManualResetEvent commandPauseSignal;
@@ -94,10 +94,12 @@ namespace Terraria_Server.Plugins
 		/// </param>
 		protected virtual void Disposed (object state) { }
 		
-		protected virtual object SaveState ()
+		protected virtual object SuspendedAndSaved ()
 		{
 			return null;
 		}
+		
+		protected virtual void Resumed (object state) { }
 		
 		/// <summary>
 		/// Enable routines, usually no more than enabled announcement and registering hooks
@@ -274,13 +276,40 @@ namespace Terraria_Server.Plugins
 			return true;
 		}
 		
-		internal bool Dispose ()
+		internal object Suspend ()
+		{
+			try
+			{
+				return SuspendedAndSaved ();
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, "Exception while saving plugin state of " + Name);
+				return null;
+			}
+		}
+		
+		internal bool Resume (object state)
+		{
+			try
+			{
+				Resumed (state);
+				return true;
+			}
+			catch (Exception e)
+			{
+				ProgramLog.Log (e, "Exception while saving plugin state of " + Name);
+				return false;
+			}
+		}
+		
+		internal bool Dispose (object state = null)
 		{
 			var result = Disable ();
 			
 			try
 			{
-				Disposed (savedState);
+				Disposed (state);
 			}
 			catch (Exception e)
 			{
@@ -310,8 +339,10 @@ namespace Terraria_Server.Plugins
 		// newPlugin should not have been initialized at this point!
 		internal bool ReplaceWith (BasePlugin newPlugin)
 		{
-			var result = true;
+			var result = false;
+			var noreturn = false;
 			var paused = new LinkedList<HookPoint> ();
+			object savedState = null;
 			
 			lock (HookPoint.editLock)
 			{
@@ -368,17 +399,19 @@ namespace Terraria_Server.Plugins
 					//Thread.Sleep (10000);
 					
 					// initialize new instance with saved state
-					savedState = SaveState ();
+					savedState = Suspend ();
+					
 					ProgramLog.Debug.Log ("Initializing new plugin instance...");
 					if (! newPlugin.Initialize (savedState))
+					{
+						Resume (savedState);
 						return false;
-					
-					savedState = null;
+					}
 					
 					// point of no return, if the new plugin fails now,
 					// blame the author
 					// because it's time to dispose the old plugin
-					
+					noreturn = true;
 					
 					// use command objects from the old plugin, because command invocations
 					// may be paused inside them, this way when they unpause
@@ -451,9 +484,9 @@ namespace Terraria_Server.Plugins
 					Disable ();
 					
 					ProgramLog.Debug.Log ("Enabling new plugin instance...");
-					if (! newPlugin.Enable ())
+					if (newPlugin.Enable ())
 					{
-						result = false;
+						result = true;
 					}
 				}
 				finally // unpause
@@ -470,12 +503,15 @@ namespace Terraria_Server.Plugins
 					signal.Set ();
 					
 					Server.notifyAll ("<Server> Done.", Misc.ChatColor.White, true);
+					
+					// clean up remaining hooks
+					if (noreturn)
+					{
+						ProgramLog.Debug.Log ("Disposing of old plugin instance...");
+						Dispose ();
+					}
 				}
 			}
-			
-			ProgramLog.Debug.Log ("Disposing of old plugin instance...");
-			// clean up remaining hooks
-			Dispose ();
 			
 			return result;
 		}

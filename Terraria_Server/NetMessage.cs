@@ -812,10 +812,10 @@ namespace Terraria_Server
 		{
 			foreach (char c in data)
 			{
-				if (c < 128)
-					sink.WriteByte ((byte) c);
-				else
+				if (c < 32 || c > 126)
 					sink.WriteByte ((byte) '?');
+				else
+					sink.WriteByte ((byte) c);
 			}
 		}
 		
