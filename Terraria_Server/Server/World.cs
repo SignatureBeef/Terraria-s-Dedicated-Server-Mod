@@ -1,10 +1,13 @@
 ﻿using System;
 using Terraria_Server.Misc;
+using Terraria_Server.Commands;
+
 namespace Terraria_Server
 {
     public class World
     {
-
+		public static readonly ISender Sender = new WorldSender ();
+		
         public enum MAP_SIZE : int
         {
             SMALL_X = 4200,

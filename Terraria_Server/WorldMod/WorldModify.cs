@@ -6334,7 +6334,7 @@ namespace Terraria_Server.WorldMod
 														float num14 = (float)(num11 * 16);
 														float num15 = -1f;
 														int plr = 0;
-														for (int k = 0; k < 255; k++)
+														for (int k = 0; k < 255; k++) //FIXME: propage player here
 														{
 															float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
 															if (num16 < num15 || num15 == -1f)
@@ -6343,7 +6343,32 @@ namespace Terraria_Server.WorldMod
 																num15 = num16;
 															}
 														}
-														NPC.SpawnOnPlayer(Main.players[plr], plr, 13); //Check me
+														
+														var player = Main.players[plr];
+														
+														var ctx = new HookContext
+														{
+															Connection = player.Connection,
+															Sender = player,
+															Player = player,
+														};
+														
+														var args = new HookArgs.PlayerTriggeredEvent
+														{
+															X = (int) (player.Position.X/16), 
+															Y = (int) (player.Position.Y/16), 
+															Type = WorldEventType.BOSS,
+															Name = "Eater of Worlds",
+														};
+														
+														HookPoints.PlayerTriggeredEvent.Invoke (ref ctx, ref args);
+														
+														if (!ctx.CheckForKick () && ctx.Result != HookResult.IGNORE)
+														{
+															ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", player.IPAddress, plr, player.Name);
+															NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
+															NPC.SpawnOnPlayer(player, plr, 13);
+														}
 													}
 													else
 													{

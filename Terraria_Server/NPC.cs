@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Events;
 using Terraria_Server.Commands;
 using Terraria_Server.Collections;
@@ -5743,16 +5743,6 @@ namespace Terraria_Server
             }
             if (flag)
             {
-                //Boss summon?
-                NPCBossSummonEvent npcEvent = new NPCBossSummonEvent();
-                npcEvent.BossType = Type;
-                npcEvent.Sender = Main.players[playerIndex];
-                Server.PluginManager.processHook(Hooks.NPC_BOSSSUMMON, npcEvent);
-                if (npcEvent.Cancelled)
-                {
-                    return;
-                }
-
                 int npcIndex = NPC.NewNPC(num * 16 + 8, num2 * 16, Type, 1);
                 Main.npcs[npcIndex].target = playerIndex;
                 string str = Main.npcs[npcIndex].Name;
@@ -5773,6 +5763,33 @@ namespace Terraria_Server
             }
         }
 		
+		static bool InvokeNpcCreationHook (int x, int y, string type, out NPC npc)
+		{
+			npc = null;
+			
+			if (!WorldModify.gen)
+			{
+				var ctx = new HookContext
+				{
+				};
+				
+				var args = new HookArgs.NpcCreation
+				{
+					X = x, Y = y,
+					Name = type,
+				};
+				
+				HookPoints.NpcCreation.Invoke (ref ctx, ref args);
+				
+				if (ctx.Result == HookResult.IGNORE)
+					return false;
+				
+				npc = args.CreatedNpc;
+			}
+			
+			return true;
+		}
+		
 		/// <summary>
 		/// Creates new instance of specified NPC at specified
 		/// </summary>
@@ -5783,10 +5800,14 @@ namespace Terraria_Server
 		/// <returns>Main.npcs[] index value</returns>
 		public static int NewNPC (int x, int y, int type, int start = 0)
 		{
+			NPC hnpc;
+			if (! InvokeNpcCreationHook (x, y, Registries.NPC.GetTemplate(type).Name, out hnpc))
+				return MAX_NPCS;
+			
 			int id = FindNPCSlot (start);
 			if (id >= 0)
 			{
-				var npc = Registries.NPC.Create (type);
+				var npc = hnpc ?? Registries.NPC.Create (type);
 				id = NewNPC (x, y, npc, id);
 				
 				if (id >= 0 && type == 50)
@@ -5802,10 +5823,14 @@ namespace Terraria_Server
 		
 		public static int NewNPC (int x, int y, string name, int start = 0)
 		{
+			NPC hnpc;
+			if (! InvokeNpcCreationHook (x, y, name, out hnpc))
+				return MAX_NPCS;
+			
 			int id = FindNPCSlot (start);
 			if (id >= 0)
 			{
-				NewNPC (x, y, Registries.NPC.Create (name), id);
+				NewNPC (x, y, hnpc ?? Registries.NPC.Create (name), id);
 				return id;
 			}
 			return MAX_NPCS;
@@ -5830,20 +5855,6 @@ namespace Terraria_Server
             npc.Active = true;
             npc.timeLeft = (int)((double)NPC.active_TIME * 1.25);
             npc.wet = Collision.WetCollision(npc.Position, npc.Width, npc.Height);
-
-            if (!WorldModify.gen)
-            {
-                NPCSpawnEvent npcEvent = new NPCSpawnEvent();
-                npcEvent.NPC = npc;
-                Sender sender = new Sender();
-                sender.Op = true;
-                npcEvent.Sender = sender;
-                Server.PluginManager.processHook(Hooks.NPC_SPAWN, npcEvent);
-                if (npcEvent.Cancelled)
-                {
-                    return MAX_NPCS;
-                }
-            }
 
             Main.npcs[npcIndex] = npc;
             
@@ -5919,7 +5930,43 @@ namespace Terraria_Server
         /// <param name="hitDirection">Direction of strike</param>
         /// <param name="crit">If the hit was critical</param>
 		/// <returns>Amount of damage actually done</returns>
-        public double StrikeNPC(int Damage, float knockBack, int hitDirection, bool crit = false)
+		public bool StrikeNPC (ISender aggressor, int Damage, float knockBack, int hitDirection, bool crit = false)
+		{
+			if (!this.Active || this.life <= 0)
+			{
+				return false;
+			}
+			
+			var proj = aggressor as Projectile;
+			
+			var ctx = new HookContext
+			{
+				Sender = aggressor,
+				Player = proj != null ? (proj.Creator as Player) : (aggressor as Player),
+			};
+			
+			ctx.Connection = ctx.Player != null ? ctx.Player.Connection : null;
+			
+			var args = new HookArgs.NpcHurt
+			{
+				Victim = this,
+				Damage = Damage,
+				HitDirection = hitDirection,
+				Knockback = knockBack,
+				Critical = crit,
+			};
+			
+			HookPoints.NpcHurt.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick () || ctx.Result == HookResult.IGNORE)
+				return false;
+			
+			StrikeNPCInternal (args.Damage, args.Knockback, args.HitDirection, args.Critical);
+			
+			return true;
+		}
+		
+        public double StrikeNPCInternal (int Damage, float knockBack, int hitDirection, bool crit = false)
         {
             if (!this.Active || this.life <= 0)
             {
@@ -6023,17 +6070,6 @@ namespace Terraria_Server
                     if (this.townNPC && this.homeless && WorldModify.spawnNPC == this.Type)
                     {
                         WorldModify.spawnNPC = 0;
-                    }
-
-                    NPCDeathEvent Event = new NPCDeathEvent();
-                    Event.Npc = this;
-                    Event.Damage = Damage;
-                    Event.KnockBack = knockBack;
-                    Event.HitDirection = hitDirection;
-                    Server.PluginManager.processHook(Plugin.Hooks.NPC_DEATH, Event);
-                    if (Event.Cancelled)
-                    {
-                        return 0.0;
                     }
 
                     this.NPCLoot();
@@ -6317,12 +6353,12 @@ namespace Terraria_Server
 
                 NetMessage.SendData(25, -1, -1, this.Name + " has been defeated!", 255, 175f, 75f, 255f);
 
-                NPCBossDeathEvent npcEvent = new NPCBossDeathEvent();
-                npcEvent.Boss = BossType;
-                Sender sender = new Sender();
-                sender.Op = true;
-                npcEvent.Sender = sender;
-                Server.PluginManager.processHook(Hooks.NPC_BOSSDEATH, npcEvent);
+//                NPCBossDeathEvent npcEvent = new NPCBossDeathEvent();
+//                npcEvent.Boss = BossType;
+//                Sender sender = new Sender();
+//                sender.Op = true;
+//                npcEvent.Sender = sender;
+                //Server.PluginManager.processHook(Hooks.NPC_BOSSDEATH, npcEvent);
             }
             if (Main.rand.Next(6) == 0 && this.lifeMax > 1)
             {
@@ -6640,7 +6676,7 @@ namespace Terraria_Server
 					if (npc.life <= 0)
 					{
 						npc.life = 1;
-						npc.StrikeNPC(9999, 0f, 0, false);
+						npc.StrikeNPC (World.Sender, 9999, 0f, 0, false);
 						NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 9999f, 0f, 0f, 0);
 					}
 				}
@@ -6723,10 +6759,12 @@ namespace Terraria_Server
                                     {
                                         num5 = -1;
                                     }
-                                    Main.npcs[i].StrikeNPC(num3, (float)num4, num5);
-                                    NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5);
-                                    npc.netUpdate = true;
-                                    npc.immune[255] = 30;
+									if (Main.npcs[i].StrikeNPC (Main.npcs[k], num3, (float)num4, num5))
+									{
+										NetMessage.SendData(28, -1, -1, "", i, (float)num3, (float)num4, (float)num5);
+										npc.netUpdate = true;
+										npc.immune[255] = 30;
+									}
                                 }
                             }
                         }
@@ -6740,11 +6778,12 @@ namespace Terraria_Server
                         npc.lavaWet = true;
                         if (!npc.lavaImmune && npc.immune[255] == 0)
                         {
-                            npc.AddBuff(24, 420, false);
-                            npc.immune[255] = 30;
-                            npc.StrikeNPC(50, 0f, 0);
-
-                            NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 50f);
+							if (npc.StrikeNPC (World.Sender, 50, 0f, 0))
+							{
+								npc.AddBuff(24, 420, false);
+								npc.immune[255] = 30;
+								NetMessage.SendData(28, -1, -1, "", npc.whoAmI, 50f);
+							}
                         }
                     }
                     

@@ -430,7 +430,7 @@ namespace Terraria_Server
 								int dmg = Main.DamageVar ((float)this.damage);
 								this.StatusPlayer (player);
 								
-								player.Hurt(dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
+								player.Hurt (this, dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
 								NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), playerIndex, (float)this.direction, (float)dmg, 1f);
                             }
                         }
@@ -537,11 +537,12 @@ namespace Terraria_Server
                                         }
                                         int dmg = Main.DamageVar (this.damage);
                                         
-                                        this.StatusNPC (npc);
-                                        npc.StrikeNPC (dmg, this.knockBack, this.direction, crit);
-                                        
-                                        NetMessage.SendData(28, -1, -1, "", i, (float)dmg, this.knockBack, (float)this.direction, crit ? 1 : 0);
-
+										if (npc.StrikeNPC (this, dmg, this.knockBack, this.direction, crit))
+										{
+											this.StatusNPC (npc);
+											NetMessage.SendData(28, -1, -1, "", i, (float)dmg, this.knockBack, (float)this.direction, crit ? 1 : 0);
+										}
+										
                                         if (this.penetrate != 1)
                                         {
                                             npc.immune[this.Owner] = 10;
@@ -625,7 +626,7 @@ namespace Terraria_Server
                                     int dmg = Main.DamageVar (this.damage);
                                     
                                     if (!playerIt.immune) this.StatusPvP (playerIt);
-                                    playerIt.Hurt (dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), crit);
+                                    playerIt.Hurt (this, dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), crit);
                                                                         
                                     NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), i, (float)this.direction, (float)dmg, 1f, crit ? 1 : 0);
 
@@ -686,6 +687,7 @@ namespace Terraria_Server
                     }
                 }
             }
+#if CLIENT_CODE
             if (this.hostile && Main.myPlayer < 255 && this.damage > 0) // client-only, but we may use it later
             {
                 if (player.Active && !player.dead && !player.immune)
@@ -711,6 +713,7 @@ namespace Terraria_Server
                     }
                 }
             }
+#endif //CLIENT_CODE
         }
 
         /// <summary>

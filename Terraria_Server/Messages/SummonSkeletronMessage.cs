@@ -1,5 +1,7 @@
 ﻿using System;
+
 using Terraria_Server.Logging;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -17,6 +19,25 @@ namespace Terraria_Server.Messages
             if (action == 1)
             {
 				var player = Main.players[whoAmI];
+				
+				var ctx = new HookContext
+				{
+					Connection = player.Connection,
+					Sender = player,
+					Player = player,
+				};
+				
+				var args = new HookArgs.PlayerTriggeredEvent
+				{
+					Type = WorldEventType.BOSS,
+					Name = "Skeletron",
+				};
+				
+				HookPoints.PlayerTriggeredEvent.Invoke (ref ctx, ref args);
+				
+				if (ctx.CheckForKick () || ctx.Result == HookResult.IGNORE)
+					return;
+				
 				ProgramLog.Users.Log ("{0} @ {1}: Skeletron summoned by {2}.", player.IPAddress, whoAmI, player.Name);
 				NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned Skeletron!"), 255, 255, 128, 150);
                 NPC.SpawnSkeletron();

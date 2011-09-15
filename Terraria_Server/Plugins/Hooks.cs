@@ -48,6 +48,11 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.PluginsLoaded>             PluginsLoaded;
 		public static readonly HookPoint<HookArgs.WorldLoaded>               WorldLoaded;
 		
+		public static readonly HookPoint<HookArgs.PlayerHurt>                PlayerHurt;
+		public static readonly HookPoint<HookArgs.NpcHurt>                   NpcHurt;
+		public static readonly HookPoint<HookArgs.NpcCreation>               NpcCreation;
+		public static readonly HookPoint<HookArgs.PlayerTriggeredEvent>      PlayerTriggeredEvent;
+		
 		static HookPoints ()
 		{
 			NewConnection             = new HookPoint<HookArgs.NewConnection> ("new-connection");
@@ -77,6 +82,10 @@ namespace Terraria_Server.Plugins
 			SignTextGet               = new HookPoint<HookArgs.SignTextGet> ("sign-text-get");
 			PluginsLoaded             = new HookPoint<HookArgs.PluginsLoaded> ("plugins-loaded");
 			WorldLoaded               = new HookPoint<HookArgs.WorldLoaded> ("world-loaded");
+			PlayerHurt                = new HookPoint<HookArgs.PlayerHurt> ("player-hurt");
+			NpcHurt                   = new HookPoint<HookArgs.NpcHurt> ("npc-hurt");
+			NpcCreation               = new HookPoint<HookArgs.NpcCreation> ("npc-creation");
+			PlayerTriggeredEvent      = new HookPoint<HookArgs.PlayerTriggeredEvent> ("player-triggered-event");
 		}
 	}
 	
@@ -540,6 +549,50 @@ namespace Terraria_Server.Plugins
 			public int Width  { get; set; }
 			public int Height { get; set; }
 		}
+		
+		public struct PlayerHurt
+		{
+			public Player Victim       { get; internal set; }
+			public int    Damage       { get; set; }
+			public int    HitDirection { get; set; }
+			public bool   Pvp          { get; set; }
+			public bool   Quiet        { get; set; }
+			public string Obituary     { get; set; }
+			public bool   Critical     { get; set; }
+		}
+		
+		public struct NpcHurt
+		{
+			public NPC    Victim       { get; set; }
+			public int    Damage       { get; set; }
+			public int    HitDirection { get; set; }
+			public float  Knockback    { get; set; }
+			public bool   Critical     { get; set; }
+		}
+		
+		public struct NpcCreation
+		{
+			public int    X          { get; set; }
+			public int    Y          { get; set; }
+			public string Name       { get; set; }
+			public NPC    CreatedNpc { get; set; }
+		}
+		
+		public struct PlayerTriggeredEvent
+		{
+			public int    X { get; set; }
+			public int    Y { get; set; }
+			
+			public WorldEventType Type { get; set; }
+			public string         Name { get; internal set; }
+		}
+	}
+	
+	public enum WorldEventType
+	{
+		BOSS,
+		INVASION,
+		SHADOW_ORB,
 	}
 }
 

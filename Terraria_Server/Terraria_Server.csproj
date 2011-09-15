@@ -186,7 +186,6 @@
     <Compile Include="Permissions\Node.cs" />
     <Compile Include="Server\LoadMonitor.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
-    <Compile Include="Commands\Sender.cs" />
     <Compile Include="Events\PlayerChestOpenEvent.cs" />
     <Compile Include="Events\BasePlayerEvent.cs" />
     <Compile Include="Events\DoorStateChangeEvent.cs" />
@@ -272,6 +271,8 @@
     <Compile Include="Plugins\BasePlugin.cs" />
     <Compile Include="Plugins\HookAttribute.cs" />
     <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Server\WorldSender.cs" />
+    <Compile Include="Commands\Sender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">

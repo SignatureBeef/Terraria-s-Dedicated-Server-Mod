@@ -11,6 +11,8 @@ namespace Terraria_Server
 	[Flags]
 	public enum SlotState : int
 	{
+		NONE = 0,
+		
 		SHUTDOWN = 1,        // the client's socket is being shut down unconditionally
 		KICK = 2,            // the client is being kicked, disconnect him after sending him all remaining data
 
