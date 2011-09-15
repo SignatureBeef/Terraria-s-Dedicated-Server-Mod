@@ -35,6 +35,14 @@ namespace Terraria_Server.Plugins
 		/// Latest compatible TDSM build
 		/// </summary>
 		public int TDSMBuild { get; set; }
+		/// <summary>
+		/// Whether to enable the plugin right after loading, so it could intercept the PluginLoadRequest hook for other plugins
+		/// </summary>
+		public bool EnableEarly { get; set; }
+		/// <summary>
+		/// Status text displayed by some of the /plugin commands
+		/// </summary>
+		public string Status { get; set; }
 		
 		internal string Path { get; set; }
 		internal DateTime PathTimestamp { get; set; }
@@ -47,12 +55,18 @@ namespace Terraria_Server.Plugins
 			get { return enabled == 1; }
 		}
 		
+		public bool IsDisposed
+		{
+			get { return disposed == 1; }
+		}
+		
 		internal bool HasRunningCommands
 		{
 			get { return (runningCommands - pausedCommands) > 0; }
 		}
 		
 		internal volatile bool initialized;
+		internal int disposed;
 		internal int enabled;
 		internal int informedOfWorld;
 		internal int runningCommands;
@@ -305,6 +319,8 @@ namespace Terraria_Server.Plugins
 		
 		internal bool Dispose (object state = null)
 		{
+			if (Interlocked.CompareExchange (ref disposed, 1, 0) == 1) return true;
+			
 			var result = Disable ();
 			
 			try
@@ -337,7 +353,7 @@ namespace Terraria_Server.Plugins
 		}
 		
 		// newPlugin should not have been initialized at this point!
-		internal bool ReplaceWith (BasePlugin newPlugin)
+		internal bool ReplaceWith (BasePlugin newPlugin, bool saveState = true)
 		{
 			var result = false;
 			var noreturn = false;
@@ -399,12 +415,14 @@ namespace Terraria_Server.Plugins
 					//Thread.Sleep (10000);
 					
 					// initialize new instance with saved state
-					savedState = Suspend ();
+					if (saveState)
+						savedState = Suspend ();
 					
 					ProgramLog.Debug.Log ("Initializing new plugin instance...");
 					if (! newPlugin.Initialize (savedState))
 					{
-						Resume (savedState);
+						if (saveState)
+							Resume (savedState);
 						return false;
 					}
 					

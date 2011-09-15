@@ -143,18 +143,8 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Reload(ISender sender, ArgumentList args)
 		{
-			bool parseData = args.TryPop("-data");
-
-			Server.notifyOps("Reloading plugins.", true);
-			PluginManager.ReloadPlugins();
-
-            if (parseData)
-            {
-                Server.notifyOps("Reloading properties.", true);
-                Program.properties.Load();
-            }
-
-			return;
+			Server.notifyOps("Reloading server.properties.", true);
+			Program.properties.Load();
 		}
 
 		/// <summary>
@@ -1264,11 +1254,11 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void ListPlugins(ISender sender, ArgumentList args)
 		{
-            if (PluginManager.Plugins.Count > 0)
+            if (PluginManager.PluginCount > 0)
 			{
                 string plugins = "";
 
-                foreach (var plugin in PluginManager.Plugins.Values)
+                foreach (var plugin in PluginManager.EnumeratePlugins)
 				{
 					if (!plugin.IsEnabled || plugin.Name.Trim().Length > 0)
 					{
@@ -1284,174 +1274,6 @@ namespace Terraria_Server.Commands
 			else
 			{
 				sender.sendMessage("There are no loaded plugins.");
-			}
-		}
-
-		/// <summary>
-		/// Enable/disable and get details about specific plugins.
-		/// </summary>
-		/// <param name="sender">Sending player</param>
-		/// <param name="args">Arguments sent with command</param>
-		public static void ManagePlugins(ISender sender, ArgumentList args)
-		{
-			/*
-			 * Commands:
-			 *      list    - shows all plugins
-			 *      info    - shows a plugin's author & description etc
-			 *      disable - disables a plugin
-			 *      enable  - enables a plugin
-			 */
-			if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
-			{
-                string command = args[0].Trim();
-				args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
-				switch (command)
-				{
-					case "list":
-						{
-                            if (PluginManager.Plugins.Count > 0)
-							{
-                                string plugins = "";
-
-                                foreach (var plugin in PluginManager.Plugins.Values)
-								{
-									if (plugin.Name.Trim().Length > 0)
-									{
-										plugins += ", " + plugin.Name.Trim() + ((!plugin.IsEnabled) ? "[DISABLED] " : " ");
-									}
-								}
-								if (plugins.StartsWith(","))
-								{
-									plugins = plugins.Remove(0, 1).Trim(); //Remove the ', ' from the start and trim the ends
-								}
-								sender.sendMessage("Plugins: " + plugins + ".");
-							}
-							else
-							{
-								sender.sendMessage("There are no installed plugins.");
-							}
-							break;
-						}
-					case "info":
-						{
-							if (!(args.Count > 1 && args[1] != null && args[0].Trim().Length > 0))
-							{
-								sender.sendMessage("Please review your argument count.");
-							}
-
-                            string pluginName = String.Join(" ", args);
-
-                            if (PluginManager.Plugins.Count > 0)
-							{
-                                var fplugin = PluginManager.GetPlugin(pluginName);
-								if (fplugin != null)
-								{
-									sender.sendMessage("Plugin Name: " + fplugin.Name);
-									sender.sendMessage("Plugin Author: " + fplugin.Author);
-									sender.sendMessage("Plugin Description: " + fplugin.Description);
-									sender.sendMessage("Plugin Enabled: " + fplugin.IsEnabled.ToString());
-								}
-								else
-								{
-									sender.sendMessage("The plugin \"" + args[1] + "\" was not found.");
-								}
-							}
-							else
-							{
-								sender.sendMessage("There are no plugins loaded.");
-							}
-							break;
-						}
-					case "disable":
-						{
-							if (!(args.Count > 1 && args[1] != null && args[1].Trim().Length > 0))
-							{
-								sender.sendMessage("Please review your argument count.");
-							}
-
-                            string pluginName = String.Join(" ", args);
-
-                            if (PluginManager.Plugins.Count > 0)
-							{
-                                var fplugin = PluginManager.GetPlugin(pluginName);
-								if (fplugin != null)
-								{
-									if (fplugin.IsEnabled)
-									{
-                                        if (PluginManager.DisablePlugin(fplugin.Name))
-										{
-											sender.sendMessage(pluginName + " was disabled!");
-										}
-										else
-										{
-											sender.sendMessage("There was an issue disabling plugin \"" + pluginName + "\".");
-										}
-									}
-									else
-									{
-										sender.sendMessage("The plugin \"" + pluginName + "\" is already disabled.");
-									}
-								}
-								else
-								{
-									sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
-								}
-							}
-							else
-							{
-								sender.sendMessage("There are no plugins loaded.");
-							}
-							break;
-						}
-					case "reload":
-						{
-							if (!(args.Count > 1 && args[1] != null && args[0].Trim().Length > 0))
-							{
-								sender.sendMessage("Please review your argument count.");
-							}
-
-                            string pluginName = String.Join(" ", args);
-
-                            if (PluginManager.Plugins.Count > 0)
-							{
-                                var fplugin = PluginManager.GetPlugin(pluginName);
-								if (fplugin != null)
-								{
-									var path = fplugin.Path;
-									//PluginManager.DisposeOfPlugin (pluginName);
-									//fplugin = PluginManager.LoadPluginFromPath (path);
-									var nplugin = PluginManager.LoadPluginFromPath (path);
-									
-									if (nplugin == null)
-									{
-										sender.Message (255, "There was an error loading the new plugin version.");
-									}
-									else if (! PluginManager.ReplacePlugin (fplugin, nplugin))
-									{
-										sender.Message (255, "There was an issue replacing the old plugin version.");
-									}
-									else
-									{
-										sender.Message (255, "Plugin successfully reloaded.");
-									}
-								}
-								else
-								{
-									sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
-								}
-							}
-							else
-							{
-								sender.sendMessage("There are no plugins loaded.");
-							}
-							break;
-						}
-					default:
-						{
-							sender.sendMessage("Please review your argument count");
-							break;
-						}
-				}
 			}
 		}
 

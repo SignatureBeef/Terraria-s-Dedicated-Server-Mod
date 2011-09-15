@@ -153,8 +153,8 @@ namespace Terraria_Server
 				
 				ProgramLog.Log("Loading plugins...");
 				Terraria_Server.Plugins.PluginManager.Initialize (Statics.PluginPath, Statics.LibrariesPath);
-				PluginManager.LoadAllPlugins();
-				ProgramLog.Log("Plugins loaded: " + PluginManager.Plugins.Count.ToString());
+				PluginManager.LoadPlugins ();
+				ProgramLog.Log("Plugins loaded: " + PluginManager.PluginCount);
 				
                 string worldFile = properties.WorldPath;
 				FileInfo file = new FileInfo(worldFile);

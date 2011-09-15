@@ -11,6 +11,8 @@ namespace Terraria_Server.Plugins
 	{
 		public static readonly HookPoint<HookArgs.NewConnection>             NewConnection;
 		
+		public static readonly HookPoint<HookArgs.PluginLoadRequest>         PluginLoadRequest;
+		
 		public static readonly HookPoint<HookArgs.ConnectionRequestReceived> ConnectionRequestReceived;
 		public static readonly HookPoint<HookArgs.DisconnectReceived>        DisconnectReceived;
 		public static readonly HookPoint<HookArgs.ServerPassReceived>        ServerPassReceived;
@@ -49,6 +51,7 @@ namespace Terraria_Server.Plugins
 		static HookPoints ()
 		{
 			NewConnection             = new HookPoint<HookArgs.NewConnection> ("new-connection");
+			PluginLoadRequest         = new HookPoint<HookArgs.PluginLoadRequest> ("plugin-load-request");
 			ConnectionRequestReceived = new HookPoint<HookArgs.ConnectionRequestReceived> ("connection-request-received");
 			DisconnectReceived        = new HookPoint<HookArgs.DisconnectReceived> ("disconnect-received");
 			ServerPassReceived        = new HookPoint<HookArgs.ServerPassReceived> ("server-pass-received");
@@ -81,6 +84,12 @@ namespace Terraria_Server.Plugins
 	{
 		public struct NewConnection
 		{
+		}
+		
+		public struct PluginLoadRequest
+		{
+			public string     Path         { get; set; }
+			public BasePlugin LoadedPlugin { get; set; }
 		}
 		
 		public struct ConnectionRequestReceived

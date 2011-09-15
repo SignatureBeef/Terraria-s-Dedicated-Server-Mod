@@ -1,12 +1,15 @@
 using System;
 using System.IO;
+using System.Text;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-
-using Terraria_Server.Logging;
 using System.Collections;
 using System.Collections.Generic;
+
+using Terraria_Server.Logging;
+using Terraria_Server.Commands;
+using Terraria_Server.Misc;
 
 namespace Terraria_Server.Plugins
 {
@@ -19,15 +22,12 @@ namespace Terraria_Server.Plugins
 		private static string pluginPath = String.Empty;
 		private static string libraryPath = String.Empty;
 		private static Dictionary<String, BasePlugin> plugins;
-
+		
+		public static int PluginCount { get { return plugins.Count; } }
+		
 		/// <summary>
 		/// Server's plugin list
 		/// </summary>
-		public static Dictionary<String, BasePlugin> Plugins
-		{
-			get { return plugins; }
-		}
-		
 		public static PluginRecordEnumerator EnumeratePluginsRecords
 		{
 			get
@@ -132,11 +132,21 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// Initializes Plugin (Loads) and Checks for Out of Date Plugins.
 		/// </summary>
-		public static void LoadAllPlugins()
+		public static void LoadPlugins ()
 		{
-			LoadPlugins();
-
-			CheckPlugins();
+			lock (plugins)
+			{
+				LoadPluginsInternal ();
+				
+				foreach (var kv in plugins)
+				{
+					var plugin = kv.Value;
+					if (plugin.TDSMBuild != Statics.BUILD)
+					{
+						ProgramLog.Error.Log("[WARNING] Plugin build incorrect: " + plugin.Name);
+					}
+				}
+			}
 			
 			var ctx = new HookContext
 			{
@@ -151,13 +161,6 @@ namespace Terraria_Server.Plugins
 
 		public static void CheckPlugins()
 		{
-			foreach (var plugin in plugins.Values)
-			{
-				if (plugin.TDSMBuild != Statics.BUILD)
-				{
-					ProgramLog.Error.Log("[WARNING] Plugin build incorrect: " + plugin.Name); //Admin's responsibility.
-				}
-			}
 		}
 		
 		static void SetPluginProperty<T> (BasePlugin plugin, string name, string target)
@@ -300,15 +303,32 @@ namespace Terraria_Server.Plugins
 			var ext = fileInfo.Extension.ToLower();
 			BasePlugin plugin = null;
 			
-			if (ext == ".dll")
+			var ctx = new HookContext
 			{
-				ProgramLog.Plugin.Log ("Loading plugin from {0}.", fileInfo.Name);
-				plugin = LoadPluginFromDLL(file);
-			}
-			else if (ext == ".cs")
+			};
+			
+			var args = new HookArgs.PluginLoadRequest
 			{
-				ProgramLog.Plugin.Log ("Compiling and loading plugin from {0}.", fileInfo.Name);
-				plugin = LoadSourcePlugin(file);
+				Path = file,
+			};
+			
+			HookPoints.PluginLoadRequest.Invoke (ref ctx, ref args);
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return null;
+			
+			if (args.LoadedPlugin == null)
+			{
+				if (ext == ".dll")
+				{
+					ProgramLog.Plugin.Log ("Loading plugin from {0}.", fileInfo.Name);
+					plugin = LoadPluginFromDLL (file);
+				}
+				else if (ext == ".cs")
+				{
+					ProgramLog.Plugin.Log ("Compiling and loading plugin from {0}.", fileInfo.Name);
+					plugin = LoadSourcePlugin (file);
+				}
 			}
 			
 			if (plugin != null)
@@ -321,13 +341,14 @@ namespace Terraria_Server.Plugins
 			return plugin;
 		}
 		
-		public static bool ReplacePlugin (BasePlugin oldPlugin, BasePlugin newPlugin)
+		public static bool ReplacePlugin (BasePlugin oldPlugin, BasePlugin newPlugin, bool saveState = true)
 		{
 			lock (plugins)
 			{
-				if (oldPlugin.ReplaceWith (newPlugin))
+				string oldName = oldPlugin.Name.ToLower().Trim();
+				
+				if (oldPlugin.ReplaceWith (newPlugin, saveState))
 				{
-					string oldName = oldPlugin.Name.ToLower().Trim();
 					string newName = newPlugin.Name.ToLower().Trim();
 					
 					if (plugins.ContainsKey (oldName))
@@ -337,12 +358,17 @@ namespace Terraria_Server.Plugins
 					
 					return true;
 				}
+				else if (oldPlugin.IsDisposed)
+				{
+					if (plugins.ContainsKey (oldName))
+						plugins.Remove (oldName);
+				}
 			}
 			
 			return false;
 		}
 		
-		public static bool ReloadPlugin (BasePlugin oldPlugin)
+		public static BasePlugin ReloadPlugin (BasePlugin oldPlugin, bool saveState = true)
 		{
 			var fi = new FileInfo (oldPlugin.Path);
 			
@@ -358,23 +384,43 @@ namespace Terraria_Server.Plugins
 			{
 				ProgramLog.Plugin.Log ("Plugin {0} not updated, reinitializing.", oldPlugin.Name);
 				newPlugin = CreatePluginInstance (oldPlugin.GetType());
+				newPlugin.Path = oldPlugin.Path;
+				newPlugin.PathTimestamp = oldPlugin.PathTimestamp;
+				newPlugin.Name = oldPlugin.Name;
 			}
 			
 			if (newPlugin == null)
-				return false;
+				return oldPlugin;
 			
-			return ReplacePlugin (oldPlugin, newPlugin);
+			if (ReplacePlugin (oldPlugin, newPlugin, saveState))
+			{
+				return newPlugin;
+			}
+			else if (oldPlugin.IsDisposed)
+			{
+				return null;
+			}
+			
+			return oldPlugin;
 		}
 		
-		public static void LoadPlugins()
+		internal static void LoadPluginsInternal ()
 		{
-			foreach (string file in Directory.GetFiles(pluginPath))
+			var files = Directory.GetFiles (pluginPath);
+			Array.Sort (files);
+			
+			foreach (string file in files)
 			{
 				var plugin = LoadPluginFromPath (file);
 				if (plugin != null)
 				{
 					if (plugin.InitializeAndHookUp ())
+					{
 						plugins.Add (plugin.Name.ToLower().Trim(), plugin);
+						
+						if (plugin.EnableEarly)
+							plugin.Enable ();
+					}
 				}
 			}
 
@@ -384,7 +430,7 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// Reloads all plugins currently running on the server
 		/// </summary>
-		public static void ReloadPlugins ()
+		public static void ReloadPlugins (bool saveState = true)
 		{
 			lock (plugins)
 			{
@@ -392,7 +438,7 @@ namespace Terraria_Server.Plugins
 				
 				foreach (var plugin in list)
 				{
-					ReloadPlugin (plugin);
+					ReloadPlugin (plugin, saveState);
 				}
 			}
 		}
@@ -400,9 +446,9 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// Enables all plugins available to the server
 		/// </summary>
-		public static void EnablePlugins()
+		public static void EnablePlugins ()
 		{
-			foreach (var plugin in plugins.Values)
+			foreach (var plugin in EnumeratePlugins)
 			{
 				plugin.Enable();
 			}
@@ -411,14 +457,12 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// Disables all plugins currently running on the server
 		/// </summary>
-		public static void DisablePlugins()
+		public static void DisablePlugins ()
 		{
-			foreach (var plugin in plugins.Values)
+			foreach (var plugin in EnumeratePlugins)
 			{
 				plugin.Disable();
 			}
-
-			plugins.Clear();
 		}
 		
 		/// <summary>
@@ -426,16 +470,19 @@ namespace Terraria_Server.Plugins
 		/// </summary>
 		/// <param name="name">Plugin name</param>
 		/// <returns>Returns true on plugin successfully Enabling</returns>
-		public static bool EnablePlugin(string name)
+		public static bool EnablePlugin (string name)
 		{
-			string cleanedName = name.ToLower().Trim();
-			if(plugins.ContainsKey(cleanedName))
+			lock (plugins)
 			{
-				BasePlugin plugin = plugins[cleanedName];
-				plugin.Enable();
-				return true;
+				string cleanedName = name.ToLower().Trim();
+				if(plugins.ContainsKey(cleanedName))
+				{
+					BasePlugin plugin = plugins[cleanedName];
+					plugin.Enable();
+					return true;
+				}
+				return false;
 			}
-			return false;
 		}
 
 		/// <summary>
@@ -445,29 +492,33 @@ namespace Terraria_Server.Plugins
 		/// <returns>Returns true on plugin successfully Disabling</returns>
 		public static bool DisablePlugin (string name)
 		{
-			string cleanedName = name.ToLower().Trim();
-			if(plugins.ContainsKey(cleanedName))
+			lock (plugins)
 			{
-				BasePlugin plugin = plugins[cleanedName];
-				plugin.Disable();
-				return true;
+				string cleanedName = name.ToLower().Trim();
+				if(plugins.ContainsKey(cleanedName))
+				{
+					BasePlugin plugin = plugins[cleanedName];
+					plugin.Disable();
+					return true;
+				}
+				return false;
 			}
-			return false;
 		}
-
-		public static bool DisposeOfPlugin (string name)
+		
+		public static bool UnloadPlugin (BasePlugin plugin)
 		{
-			string cleanedName = name.ToLower().Trim();
-			if(plugins.ContainsKey(cleanedName))
+			lock (plugins)
 			{
-				BasePlugin plugin = plugins[cleanedName];
-				plugin.Dispose();
-				plugins.Remove (cleanedName);
-				return true;
+				bool result = plugin.Dispose ();
+				
+				string cleanedName = plugin.Name.ToLower().Trim();
+				if (plugins.ContainsKey (cleanedName))
+					plugins.Remove (cleanedName);
+				
+				return result;
 			}
-			return false;
 		}
-
+		
 		/// <summary>
 		/// Gets plugin instance by name.
 		/// </summary>
@@ -475,19 +526,341 @@ namespace Terraria_Server.Plugins
 		/// <returns>Returns found plugin if successful, otherwise returns null</returns>
 		public static BasePlugin GetPlugin (string name)
 		{
-			string cleanedName = name.ToLower().Trim();
-			if(plugins.ContainsKey(cleanedName))
+			lock (plugins)
 			{
-				return plugins[cleanedName];
+				string cleanedName = name.ToLower().Trim();
+				if(plugins.ContainsKey(cleanedName))
+				{
+					return plugins[cleanedName];
+				}
+				return null;
 			}
-			return null;
 		}
 		
 		internal static void NotifyWorldLoaded ()
 		{
-			foreach (var kv in plugins)
+			foreach (var plugin in EnumeratePlugins)
 			{
-				kv.Value.NotifyWorldLoaded ();
+				plugin.NotifyWorldLoaded ();
+			}
+		}
+		
+		public static void PluginCommand (ISender sender, ArgumentList args)
+		{
+			/*
+			 * Commands:
+			 *      list    - shows all plugins
+			 *      info    - shows a plugin's author & description etc
+			 *      disable - disables a plugin
+			 *      enable  - enables a plugin
+			 *      reload
+			 *      unload
+			 *      status
+			 *      load
+			 */
+			
+			if (args.Count == 0) throw new CommandError ("Subcommand expected.");
+			
+			string command = args[0];
+			args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
+			
+			lock (plugins)
+			switch (command)
+			{
+				case "-l":
+				case "ls":
+				case "list":
+				{
+					if (PluginCount == 0)
+					{
+						sender.Message (255, "No plugins loaded.");
+						return;
+					}
+					
+					var msg = new StringBuilder ();
+					msg.Append ("Plugins: ");
+					
+					int i = 0;
+					foreach (var plugin in EnumeratePlugins)
+					{
+						if (i > 0)
+							msg.Append (", ");
+						msg.Append (plugin.Name);
+						if (! plugin.IsEnabled)
+							msg.Append ("[OFF]");
+						i++;
+					}
+					msg.Append (".");
+					
+					sender.Message (255, ChatColor.DodgerBlue, msg.ToString());
+					
+					break;
+				}
+				
+				case "-s":
+				case "stat":
+				case "status":
+				{
+					if (PluginCount == 0)
+					{
+						sender.Message (255, "No plugins loaded.");
+						return;
+					}
+					
+					var msg = new StringBuilder ();
+					
+					foreach (var plugin in EnumeratePlugins)
+					{
+						msg.Clear ();
+						msg.Append (plugin.IsDisposed ? "[DISPOSED] " : (plugin.IsEnabled ? "[ON]  " : "[OFF] "));
+						msg.Append (plugin.Name);
+						msg.Append (" ");
+						msg.Append (plugin.Version);
+						if (plugin.Status != null && plugin.Status.Length > 0)
+						{
+							msg.Append (" : ");
+							msg.Append (plugin.Status);
+						}
+						sender.Message (255, ChatColor.DodgerBlue, msg.ToString());
+					}
+					
+					break;
+				}
+				
+				case "-i":
+				case "info":
+				{
+					string name;
+					args.ParseOne (out name);
+					
+					var fplugin = GetPlugin (name);
+					if (fplugin != null)
+					{
+						var path = Path.GetFileName (fplugin.Path);
+						sender.Message (255, ChatColor.DodgerBlue, fplugin.Name);
+						sender.Message (255, ChatColor.DodgerBlue, "Filename: " + path);
+						sender.Message (255, ChatColor.DodgerBlue, "Version:  " + fplugin.Version);
+						sender.Message (255, ChatColor.DodgerBlue, "Author:   " + fplugin.Author);
+						if (fplugin.Description != null && fplugin.Description.Length > 0)
+							sender.Message (255, ChatColor.DodgerBlue, fplugin.Description);
+						sender.Message (255, ChatColor.DodgerBlue, "Status:   " + (fplugin.IsEnabled ? "[ON] " : "[OFF] ") + fplugin.Status);
+					}
+					else
+					{
+						sender.sendMessage("The plugin \"" + args[1] + "\" was not found.");
+					}
+					
+					break;
+				}
+				
+				case "-d":
+				case "disable":
+				{
+					string name;
+					args.ParseOne (out name);
+					
+					var fplugin = GetPlugin (name);
+					if (fplugin != null)
+					{
+						if (fplugin.Disable ())
+							sender.Message (255, ChatColor.DodgerBlue, fplugin.Name + " was disabled.");
+						else
+							sender.Message (255, ChatColor.DodgerBlue, fplugin.Name + " was disabled, errors occured during the process.");
+					}
+					else
+						sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+					
+					break;
+				}
+				
+				case "-e":
+				case "enable":
+				{
+					string name;
+					args.ParseOne (out name);
+					
+					var fplugin = GetPlugin (name);
+					if (fplugin != null)
+					{
+						if (fplugin.Enable ())
+							sender.Message (255, ChatColor.DodgerBlue, fplugin.Name + " was enabled.");
+						else
+							sender.Message (255, ChatColor.DodgerBlue, fplugin.Name + " was enabled, errors occured during the process.");
+					}
+					else
+						sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+					
+					break;
+				}
+				
+				case "-u":
+				case "-ua":
+				case "unload":
+				{
+					string name;
+					
+					if (command == "-ua" || command == "-uca")
+						name = "all";
+					else
+						args.ParseOne (out name);
+					
+					BasePlugin[] plugs;
+					if (name == "all" || name == "-a")
+					{
+						plugs = plugins.Values.ToArray();
+					}
+					else
+					{
+						var splugin = PluginManager.GetPlugin (name);
+						
+						if (splugin == null)
+						{
+							sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+							return;
+						}
+						
+						plugs = new BasePlugin [] { splugin };
+					}
+					
+					foreach (var fplugin in plugs)
+					{
+						if (UnloadPlugin (fplugin))
+							sender.Message (255, ChatColor.DodgerBlue, fplugin.Name + " was unloaded.");
+						else
+							sender.Message (255, ChatColor.DodgerBlue, fplugin.Name + " was unloaded, errors occured during the process.");
+					}
+					
+					break;
+				}
+				
+				case "-r":
+				case "-rc":
+				case "-ra":
+				case "-rca":
+				case "reload":
+				{
+					bool save = true;
+					if (command == "-rc" || command == "-rca" || args.TryPop ("-c") || args.TryPop ("-clean"))
+						save = false;
+					
+					string name;
+					
+					if (command == "-ra" || command == "-rca")
+						name = "all";
+					else
+						args.ParseOne (out name);
+					
+					BasePlugin[] plugs;
+					if (name == "all" || name == "-a")
+					{
+						plugs = plugins.Values.ToArray();
+					}
+					else
+					{
+						var splugin = PluginManager.GetPlugin (name);
+						
+						if (splugin == null)
+						{
+							sender.Message(255, "The plugin \"" + name + "\" could not be found.");
+							return;
+						}
+						
+						plugs = new BasePlugin [] { splugin };
+					}
+					
+					foreach (var fplugin in plugs)
+					{
+						var nplugin = PluginManager.ReloadPlugin (fplugin, save);
+						if (nplugin == fplugin)
+						{
+							sender.Message (255, ChatColor.DodgerBlue, "Errors occured while reloading plugin " + fplugin.Name + ", old instance kept.");
+						}
+						else if (nplugin == null)
+						{
+							sender.Message (255, ChatColor.DodgerBlue, "Errors occured while reloading plugin " + fplugin.Name + ", it has been unloaded.");
+						}
+					}
+					
+					break;
+				}
+				
+				case "-L":
+				case "-LR":
+				case "load":
+				{
+					bool replace = command == "-LR" || args.TryPop ("-R") || args.TryPop ("-replace");
+					bool save = command != "-LRc" && !args.TryPop ("-c") && !args.TryPop ("-clean");
+					
+					var fname = string.Join (" ", args);
+					string path;
+					
+					if (fname == "") throw new CommandError ("File name expected");
+					
+					if (Path.IsPathRooted (fname))
+						path = Path.GetFullPath (fname);
+					else
+						path = Path.Combine (pluginPath, fname);
+					
+					var fi = new FileInfo (path);
+					
+					if (! fi.Exists)
+					{
+						sender.Message (255, "Specified file doesn't exist.");
+						return;
+					}
+					
+					var newPlugin = LoadPluginFromPath (path);
+					
+					if (newPlugin == null)
+					{
+						sender.Message (255, "Unable to load plugin.");
+						return;
+					}
+					
+					var oldPlugin = GetPlugin (newPlugin.Name);
+					if (oldPlugin != null)
+					{
+						if (! replace)
+						{
+							sender.Message (255, "A plugin named {0} is already loaded, use -replace to replace it.", oldPlugin.Name);
+							return;
+						}
+						
+						if (ReplacePlugin (oldPlugin, newPlugin, save))
+						{
+							sender.Message (255, ChatColor.DodgerBlue, "Plugin {0} has been replaced.", oldPlugin.Name);
+						}
+						else if (oldPlugin.IsDisposed)
+						{
+							sender.Message (255, ChatColor.DodgerBlue, "Replacement of plugin {0} failed, it has been unloaded.", oldPlugin.Name);
+						}
+						else
+						{
+							sender.Message (255, ChatColor.DodgerBlue, "Replacement of plugin {0} failed, old instance kept.", oldPlugin.Name);
+						}
+						
+						return;
+					}
+					
+					if (! newPlugin.InitializeAndHookUp ())
+					{
+						sender.Message (255, ChatColor.DodgerBlue, "Failed to initialize new plugin instance.");
+					}
+					
+					plugins.Add (newPlugin.Name.ToLower().Trim(), newPlugin);
+					
+					if (! newPlugin.Enable ())
+					{
+						sender.Message (255, ChatColor.DodgerBlue, "Failed to enable new plugin instance.");
+					}
+					
+					break;
+				}
+				
+				default:
+				{
+					throw new CommandError ("Subcommand not recognized.");
+				}
 			}
 		}
 	}

@@ -364,10 +364,14 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Enable/disable and get details about specific plugins.")
                 .WithHelpText("Usage:    plugin list")
+                .WithHelpText("          plugin stat")
                 .WithHelpText("          plugin info <plugin>")
                 .WithHelpText("          plugin enable <plugin>")
                 .WithHelpText("          plugin disable <plugin>")
-                .Calls(Commands.ManagePlugins);
+                .WithHelpText("          plugin reload [-clean] all|<plugin>")
+                .WithHelpText("          plugin unload all|<plugin>")
+                .WithHelpText("          plugin load [-replace] <file>")
+                .Calls(PluginManager.PluginCommand);
 
             AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
