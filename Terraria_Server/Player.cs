@@ -4956,7 +4956,7 @@ namespace Terraria_Server
 		/// <summary>
 		/// Kicks player
 		/// </summary>
-		/// <param name="Reason">Reason for kick</param>
+		/// <param name="reason">Reason for kick</param>
 		public void Kick (string reason = null)
 		{
 			var conn = Connection;
@@ -5265,7 +5265,6 @@ namespace Terraria_Server
 		/// Gets a player's server password
 		/// </summary>
 		/// <param name="PlayerName">Player's name</param>
-		/// <param name="Server">Current server instance</param>
 		/// <returns>Password string</returns>
         public static string GetPlayerPassword(string PlayerName)
         {
@@ -5301,7 +5300,6 @@ namespace Terraria_Server
 		/// Checks player's op status
 		/// </summary>
 		/// <param name="Name">Player's name</param>
-		/// <param name="Server">Server instance to check</param>
 		/// <returns>True if op, false if not</returns>
         public static bool isInOpList(string Name)
         {
