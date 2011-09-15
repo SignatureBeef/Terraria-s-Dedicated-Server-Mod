@@ -72,7 +72,6 @@ namespace Terraria_Server.Commands
         /// <summary>
         /// CommandParser constructor
         /// </summary>
-        /// <param name="Server">Current Server instance</param>
         public CommandParser()
         {
             serverCommands = new Dictionary<string, CommandInfo> ();
@@ -356,8 +355,7 @@ namespace Terraria_Server.Commands
         /// Parses new console command
         /// </summary>
         /// <param name="line">Command to parse</param>
-        /// <param name="server">Current Server instance</param>
-        /// <param name="sender">Sender of the Command</param>
+        /// <param name="sender">Sending entity</param>
 		public void ParseConsoleCommand (string line, ConsoleSender sender = null)
 		{
 			line = line.Trim();
