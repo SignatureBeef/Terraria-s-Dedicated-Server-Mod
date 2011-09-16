@@ -600,7 +600,7 @@ namespace Terraria_Server
         {
             Main.time += 1.0;
             
-            Server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
+            //Server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
 
             if (!Main.dayTime)
             {

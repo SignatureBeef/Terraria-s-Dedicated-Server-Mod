@@ -4,6 +4,7 @@ using Terraria_Server.Networking;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions;
 using Terraria_Server.Collections;
+using Terraria_Server.Commands;
 
 namespace Terraria_Server.Plugins
 {
@@ -29,6 +30,7 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.LiquidFlowReceived>        LiquidFlowReceived;
 		public static readonly HookPoint<HookArgs.ProjectileReceived>        ProjectileReceived;
 		public static readonly HookPoint<HookArgs.KillProjectileReceived>    KillProjectileReceived;
+		public static readonly HookPoint<HookArgs.TileSquareReceived>        TileSquareReceived;
 		
 		public static readonly HookPoint<HookArgs.Explosion>                 Explosion;
 		
@@ -53,6 +55,9 @@ namespace Terraria_Server.Plugins
 		public static readonly HookPoint<HookArgs.NpcCreation>               NpcCreation;
 		public static readonly HookPoint<HookArgs.PlayerTriggeredEvent>      PlayerTriggeredEvent;
 		
+		public static readonly HookPoint<HookArgs.PlayerChat>                PlayerChat;
+		public static readonly HookPoint<HookArgs.Command>                   Command;
+		
 		static HookPoints ()
 		{
 			NewConnection             = new HookPoint<HookArgs.NewConnection> ("new-connection");
@@ -70,6 +75,7 @@ namespace Terraria_Server.Plugins
 			LiquidFlowReceived        = new HookPoint<HookArgs.LiquidFlowReceived> ("liquid-flow-received");
 			ProjectileReceived        = new HookPoint<HookArgs.ProjectileReceived> ("projectile-received");
 			KillProjectileReceived    = new HookPoint<HookArgs.KillProjectileReceived> ("kill-projectile-received");
+			TileSquareReceived        = new HookPoint<HookArgs.TileSquareReceived> ("tile-square-received");
 			ChestBreakReceived        = new HookPoint<HookArgs.ChestBreakReceived> ("cheat-break-received");
 			ChestOpenReceived         = new HookPoint<HookArgs.ChestOpenReceived> ("cheat-open-received");
 			PvpSettingReceived        = new HookPoint<HookArgs.PvpSettingReceived> ("pvp-setting-received");
@@ -86,6 +92,8 @@ namespace Terraria_Server.Plugins
 			NpcHurt                   = new HookPoint<HookArgs.NpcHurt> ("npc-hurt");
 			NpcCreation               = new HookPoint<HookArgs.NpcCreation> ("npc-creation");
 			PlayerTriggeredEvent      = new HookPoint<HookArgs.PlayerTriggeredEvent> ("player-triggered-event");
+			PlayerChat                = new HookPoint<HookArgs.PlayerChat> ("player-chat");
+			Command                   = new HookPoint<HookArgs.Command> ("command");
 		}
 	}
 	
@@ -586,7 +594,108 @@ namespace Terraria_Server.Plugins
 			public WorldEventType Type { get; set; }
 			public string         Name { get; internal set; }
 		}
+		
+		public struct PlayerChat
+		{
+			public string Message { get; set; }
+			public Color  Color   { get; set; }
+		}
+		
+		public struct Command
+		{
+			public string       Prefix           { get; internal set; }
+			public ArgumentList Arguments        { get; set; }
+			public string       ArgumentString   { get; set; }
+		}
+		
+		public struct TileSquareReceived
+		{
+			public int  X    { get; internal set; }
+			public int  Y    { get; internal set; }
+			public int  Size { get; internal set; }
+			
+			internal byte[] readBuffer;
+			internal int    start;
+			internal int    applied;
+			
+			public void ForEach (object state, TileSquareForEachFunc func)
+			{
+				int num = start;
+				
+				for (int x = X; x < X + Size; x++)
+				{
+					for (int y = Y; y < Y + Size; y++)
+					{
+						TileData tile = Main.tile.At(x, y).Data;
+						
+						byte b9 = readBuffer[num++];
+						
+						bool wasActive = tile.Active;
+						
+						tile.Active = ((b9 & 1) == 1);
+						
+						if ((b9 & 2) == 2)
+						{
+							tile.Lighted = true;
+						}
+						
+						if (tile.Active)
+						{
+							int wasType = (int)tile.Type;
+							tile.Type = readBuffer[num++];
+							
+							if (tile.Type < Main.MAX_TILE_SETS && Main.tileFrameImportant[(int)tile.Type])
+							{
+								tile.FrameX = BitConverter.ToInt16 (readBuffer, num);
+								num += 2;
+								tile.FrameY = BitConverter.ToInt16 (readBuffer, num);
+								num += 2;
+							}
+							else if (!wasActive || (int)tile.Type != wasType)
+							{
+								tile.FrameX = -1;
+								tile.FrameY = -1;
+							}
+						}
+						
+						if ((b9 & 4) == 4)
+							tile.Wall = readBuffer[num++];
+						else
+							tile.Wall = 0;
+						
+						if ((b9 & 8) == 8)
+						{
+							tile.Liquid = readBuffer[num++];
+							byte b10 = readBuffer[num++];
+							tile.Lava = (b10 == 1);
+						}
+						else
+							tile.Liquid = 0;
+						
+						var result = func (x, y, ref tile, state);
+						if (result == TileSquareForEachResult.ACCEPT)
+						{
+							applied += 1;
+							Main.tile.At(x, y).SetData (tile);
+						}
+						else if (result == TileSquareForEachResult.BREAK)
+						{
+							return;
+						}
+					}
+				}
+			}
+		}
 	}
+	
+	public enum TileSquareForEachResult
+	{
+		ACCEPT,
+		IGNORE,
+		BREAK,
+	}
+	
+	public delegate TileSquareForEachResult TileSquareForEachFunc (int x, int y, ref TileData tile, object state);
 	
 	public enum WorldEventType
 	{

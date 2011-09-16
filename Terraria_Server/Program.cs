@@ -23,8 +23,6 @@ namespace Terraria_Server
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
 
-		public static Server server;
-
         public static void Main(string[] args)
 		{
 			Thread.CurrentThread.Name = "Main";

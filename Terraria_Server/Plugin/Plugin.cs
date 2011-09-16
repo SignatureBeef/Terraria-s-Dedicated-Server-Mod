@@ -40,10 +40,6 @@ namespace Terraria_Server.Plugin
         /// Whether this plugin is enabled or not
         /// </summary>
         public bool Enabled { get; set; }
-        /// <summary>
-        /// Pointer to current server instance
-        /// </summary>
-        public Server Server { get; set; }
 
         /// <summary>
         /// Load routines, typically setting up plugin instances, initial values, etc; called before Enable() in startup

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin;
 using Terraria_Server.Logging;
 
 namespace Terraria_Server
@@ -10,9 +9,8 @@ namespace Terraria_Server
     ///<Summary>
     /// Provides access to the majority of Server Data
     ///</Summary>
-    public class Server
+    public static class Server
     {
-        public static PluginManager PluginManager { get; set; }
         public static List<String> RejectedItems { get; set; }
 
         public static World World { get; set; }
@@ -33,7 +31,7 @@ namespace Terraria_Server
         {
             Main.maxNetplayers = PlayerCap;
             World = NewWorld;
-            PluginManager = new PluginManager(Statics.PluginPath, Statics.LibrariesPath);
+            //PluginManager = new PluginManager(Statics.PluginPath, Statics.LibrariesPath);
             
             WhiteList = new DataRegister(myWhiteList);
             WhiteList.Load();

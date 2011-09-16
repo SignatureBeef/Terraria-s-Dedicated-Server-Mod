@@ -139,11 +139,6 @@ namespace Terraria_Server.Commands
     public class CommandParser
     {
         /// <summary>
-        /// Server instance current CommandParser runs on
-        /// </summary>
-        public Server server = null;
-
-        /// <summary>
         /// CommandParser constructor
         /// </summary>
         public CommandParser()
@@ -443,15 +438,6 @@ namespace Terraria_Server.Commands
 				sender = consoleSender;
 			}
 			
-			var ev = new ConsoleCommandEvent ();
-			ev.Sender = sender;
-			ev.Message = line;
-            //Server.PluginManager.processHook(Hooks.CONSOLE_COMMAND, ev);
-			if (ev.Cancelled)
-			{
-				return;
-			}
-			
 			ParseAndProcess (sender, line);
 		}
 
@@ -520,86 +506,112 @@ namespace Terraria_Server.Commands
 			
 			return false;
 		}
+		
+		public void ParseAndProcess (ISender sender, string line)
+		{
+			var ctx = new HookContext
+			{
+				Sender = sender,
+				Player = sender as Player,
+			};
+			
+			ctx.Connection = ctx.Player != null ? ctx.Player.Connection : null;
+			
+			var hargs = new HookArgs.Command ();
+			
+			try
+			{
+				CommandInfo info;
+				
+				var firstSpace = line.IndexOf (' ');
+				
+				if (firstSpace < 0) firstSpace = line.Length;
+				
+				var prefix = line.Substring (0, firstSpace);
+				
+				hargs.Prefix = prefix;
+				
+				if (FindStringCommand (prefix, out info))
+				{
+					hargs.ArgumentString = (firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : "").Trim();
+					
+					HookPoints.Command.Invoke (ref ctx, ref hargs);
+					
+					if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+						return;
+					
+					if (ctx.Result != HookResult.CONTINUE && ! CheckAccessLevel (info, sender))
+					{
+						sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+						return;
+					}
+					
+					try
+					{
+						info.Run (sender, hargs.ArgumentString);
+					}
+					catch (ExitException e)
+					{
+						throw e;
+					}
+					catch (CommandError e)
+					{
+						sender.sendMessage (prefix + ": " + e.Message);
+						info.ShowHelp (sender);
+					}
+					return;
+				}
+				
+				var args = new ArgumentList();
+				var command = Tokenize (line, args);
 
-        public void ParseAndProcess (ISender sender, string line)
-        {
-            try
-            {
-                CommandInfo info;
-                
-                var firstSpace = line.IndexOf (' ');
-                
-                if (firstSpace < 0) firstSpace = line.Length;
-                
-                var prefix = line.Substring (0, firstSpace);
-                if (FindStringCommand (prefix, out info))
-                {
-                    if (! CheckAccessLevel (info, sender))
-                    {
-                        sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
-                        return;
-                    }
-                    
-                    try
-                    {
-                        var rest = firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : ""; 
-                        info.Run (sender, rest.Trim());
-                    }
-                    catch (ExitException e)
-                    {
-                        throw e;
-                    }
-                    catch (CommandError e)
-                    {
-                        sender.sendMessage (prefix + ": " + e.Message);
-                        info.ShowHelp (sender);
-                    }
-                    return;
-                }
-                
-                var args = new ArgumentList();
-                var command = Tokenize (line, args);
+				if (command != null)
+				{
+					if (FindTokenCommand(command, out info))
+					{
+						hargs.Arguments = args;
+						
+						HookPoints.Command.Invoke (ref ctx, ref hargs);
+						
+						if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+							return;
+						
+						if (ctx.Result != HookResult.CONTINUE && ! CheckAccessLevel(info, sender))
+						{
+							sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+							return;
+						}
 
-                if (command != null)
-                {
-                    if (FindTokenCommand(command, out info))
-                    {
-                        if (!CheckAccessLevel(info, sender))
-                        {
-                            sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
-                            return;
-                        }
-
-                        try
-                        {
-                            info.Run (sender, args);
-                        }
-                        catch (ExitException e)
-                        {
-                            throw e;
-                        }
-                        catch (CommandError e)
-                        {
-                            sender.sendMessage(command + ": " + e.Message);
-                            info.ShowHelp(sender);
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        sender.sendMessage("No such command.");
-                    }
-                }
-            }
-            catch (ExitException e)
-            {
-                throw e;
-            }
-            catch (TokenizerException e)
-            {
-                sender.sendMessage (e.Message);
-            }
-        }
+						try
+						{
+							info.Run (sender, hargs.Arguments);
+						}
+						catch (ExitException e)
+						{
+							throw e;
+						}
+						catch (CommandError e)
+						{
+							sender.sendMessage(command + ": " + e.Message);
+							info.ShowHelp(sender);
+						}
+						return;
+					}
+					else
+					{
+						sender.sendMessage("No such command.");
+					}
+				}
+			}
+			catch (ExitException e)
+			{
+				throw e;
+			}
+			catch (TokenizerException e)
+			{
+				sender.sendMessage (e.Message);
+			}
+		}
 		
 		class TokenizerException : Exception
 		{
