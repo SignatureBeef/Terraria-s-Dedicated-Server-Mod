@@ -18,9 +18,6 @@ namespace TDSMPlugin.Commands
             if (args.TryParseOne<int>("-test", out arg)) 
             {
                 sender.sendMessage(sender.Name + " Argument: " + arg);
-                sender.sendMessage(
-                        String.Join("    {0} v{1}", TDSM_Plugin.tdsmPlugin.Name, TDSM_Plugin.tdsmPlugin.Version)
-                    );
             }
             else
             {

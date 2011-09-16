@@ -5,41 +5,35 @@ using System.Text;
 
 using System.IO;
 using Terraria_Server;
-using Terraria_Server.Plugin;
 using Terraria_Server.Commands;
-using Terraria_Server.Events;
 using Terraria_Server.Logging;
 using TDSMPlugin.Commands;
 using Terraria_Server.Definitions;
+using Terraria_Server.Plugins;
 
 namespace TDSMExamplePlugin
 {
-    public class TDSM_Plugin : Plugin
+    public class TDSM_Plugin : BasePlugin
     {
         /*
          * @Developers
          * 
          * Plugins need to be in .NET 4.0
-         * Otherwise TDSM will be unable to load it. 
-         * 
-         * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
+         * Otherwise TDSM will be unable to load it.
          */
 
         public Properties properties;
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
-        public static TDSM_Plugin tdsmPlugin;
 
-        public override void Load()
+        protected override void Initialized(object state)
         {
             Name = "TDSMPlugin Example";
             Description = "Plugin Example for TDSM.";
             Author = "DeathCradle";
             Version = "1";
-            TDSMBuild = 33; //You put here the release this plugin was made/build for.
-
-            tdsmPlugin = this;
+            TDSMBuild = 36; //You put here the release this plugin was made/build for.
 
             string pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSM";
             //Create folder if it doesn't exist
@@ -57,12 +51,13 @@ namespace TDSMExamplePlugin
             explosivesAllowed = properties.ExplosivesAllowed;
         }
 
-        public override void Enable()
+        protected override void Enabled()
         {
             ProgramLog.Plugin.Log(base.Name + " enabled.");
-            //Register Hooks
-            this.registerHook(Hooks.PLAYER_TILECHANGE);
-            this.registerHook(Hooks.PLAYER_PROJECTILE);
+
+            //Register Hooks            
+            Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
+            Hook(HookPoints.ProjectileReceived, HookOrder.FIRST, OnReceiveProjectile); //Priorites
 
             //Add Commands
             AddCommand("tdsmpluginexample")
@@ -78,7 +73,7 @@ namespace TDSMExamplePlugin
             }
         }
 
-        public override void Disable()
+        protected override void Disabled()
         {
             ProgramLog.Plugin.Log(base.Name + " disabled.");
         }
@@ -90,25 +85,24 @@ namespace TDSMExamplePlugin
 
 #region Events
 
-        public override void onPlayerTileChange(PlayerTileChangeEvent Event)
+        void OnPlayerWorldAlteration(ref HookContext ctx, ref HookArgs.PlayerWorldAlteration args)
         {
-            if (Event.Cancelled || !Enabled || tileBreakageAllowed == false) { return; }
-            Log("Cancelled Tile change of Player: " + ((Player)Event.Sender).Name);
-            Event.Cancelled = true;
+            if (!tileBreakageAllowed) { return; }
+            Log("Cancelled Tile change of Player: " + ctx.Player.Name);
+            ctx.SetResult(HookResult.IGNORE);
         }
 
-        public override void onPlayerProjectileUse(PlayerProjectileEvent Event)
+        void OnReceiveProjectile(ref HookContext ctx, ref HookArgs.ProjectileReceived args)
         {
-            if (!Event.Cancelled && Enabled && !explosivesAllowed)
+            if (!explosivesAllowed)
             {
-
-                int type = Event.Projectile.Type;
+                int type = (int)args.Type;
                 if (type == (int)ProjectileType.BOMB /* 28 */ || 
                     type == (int)ProjectileType.DYNAMITE /* 29 */ ||
                     type == (int)ProjectileType.BOMB_STICKY /* 37 */)
                 {
-                    Event.Cancelled = true;
-                    Log("Cancelled Explosive usage of Player: " + ((Player)Event.Sender).Name);
+                    Log("Cancelled Explosive usage of Player: " + ctx.Player.Name);
+                    ctx.SetResult(HookResult.ERASE);
                 }
             }
         }
