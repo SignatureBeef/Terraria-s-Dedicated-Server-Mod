@@ -6,6 +6,11 @@ using Terraria_Server.Definitions;
 using Terraria_Server.Collections;
 using Terraria_Server.Commands;
 
+//
+// TODO: split this file into one per hook with partial HookPoints and HookArgs classes,
+//       or at least a couple per hook, grouped somehow
+//
+
 namespace Terraria_Server.Plugins
 {
 	public static class HookPoints
