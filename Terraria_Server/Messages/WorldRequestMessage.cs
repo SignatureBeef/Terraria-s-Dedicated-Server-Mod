@@ -24,7 +24,7 @@ namespace Terraria_Server.Messages
         {
             if (conn.State == SlotState.ACCEPTED)
             {
-                SlotManager.Schedule (conn, conn.Queue);
+                SlotManager.Schedule (conn, conn.DesiredQueue);
                 return;
             }
             

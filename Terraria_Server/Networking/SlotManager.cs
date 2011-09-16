@@ -217,7 +217,9 @@ namespace Terraria_Server.Networking
 		static int AssignSlotOrQueue (ClientConnection conn, int queue)
 		{
 			int id = -1;
-
+			
+			conn.Queue = queue;
+			
 			if (queue == 3)
 			{
 				if (privFreeSlots.Count > 0)

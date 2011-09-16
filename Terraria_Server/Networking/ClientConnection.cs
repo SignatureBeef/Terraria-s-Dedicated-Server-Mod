@@ -70,6 +70,14 @@ namespace Terraria_Server.Networking
 			get { return assignedSlot; }
 		}
 		
+		/// <summary>
+		/// Gets or sets the desired queue.
+		/// </summary>
+		/// <value>
+		/// 0, 1, 2 - queue number (higher number is higher priority)
+		/// 3 - bypass queues and use privileged slot
+		/// </value>
+		public int DesiredQueue { get; set; }
 		public int Queue { get; internal set; }
 		public int IndexInQueue { get; internal set; }
 		

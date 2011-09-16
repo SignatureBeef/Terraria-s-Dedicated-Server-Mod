@@ -114,7 +114,7 @@ namespace Terraria_Server.Messages
 					
 					if (! reserved) // reserved slots get assigned immediately during the kick
 					{
-						SlotManager.Schedule (conn, conn.Queue);
+						SlotManager.Schedule (conn, conn.DesiredQueue);
 					}
 					
 					//NetMessage.SendData (4, -1, whoAmI, name, whoAmI); // broadcast player data now
