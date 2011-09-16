@@ -3,7 +3,6 @@ using System.Text;
 using System.IO;
 
 using Terraria_Server.Commands;
-using Terraria_Server.Events;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;

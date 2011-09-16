@@ -1,6 +1,5 @@
 using System;
 using System.Text;
-using Terraria_Server.Events;
 using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages

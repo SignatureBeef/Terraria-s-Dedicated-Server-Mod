@@ -2,7 +2,6 @@
 using System.Text;
 using System.Collections.Generic;
 using Terraria_Server.Plugins;
-using Terraria_Server.Events;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;

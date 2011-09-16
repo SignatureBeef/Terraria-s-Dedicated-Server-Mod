@@ -1,5 +1,4 @@
-﻿using Terraria_Server.Events;
-using Terraria_Server.Logging;
+﻿using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {

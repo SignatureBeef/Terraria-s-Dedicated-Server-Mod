@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using Terraria_Server.Misc;
 using Terraria_Server;
-using Terraria_Server.Events;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
 using Terraria_Server.Plugins;

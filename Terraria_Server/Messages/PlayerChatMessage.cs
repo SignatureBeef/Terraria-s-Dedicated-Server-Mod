@@ -1,7 +1,6 @@
 using System;
 using System.Text;
 using System.Linq;
-using Terraria_Server.Events;
 using Terraria_Server.Plugins;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;

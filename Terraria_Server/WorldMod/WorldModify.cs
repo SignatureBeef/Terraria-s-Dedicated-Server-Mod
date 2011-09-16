@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Diagnostics;
-using Terraria_Server.Events;
 using Terraria_Server.Commands;
 using Terraria_Server.Plugins;
 using Terraria_Server.Misc;

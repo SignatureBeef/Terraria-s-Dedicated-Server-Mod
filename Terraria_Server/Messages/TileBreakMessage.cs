@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terraria_Server.Events;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugins;
 using Terraria_Server.Definitions.Tile;

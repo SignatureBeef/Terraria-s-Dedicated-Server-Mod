@@ -292,6 +292,5 @@
   <ItemGroup />
   <ItemGroup>
     <Folder Include="Plugins\" />
-    <Folder Include="Plugin\" />
   </ItemGroup>
 </Project>

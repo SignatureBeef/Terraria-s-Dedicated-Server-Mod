@@ -1,6 +1,5 @@
 using Terraria_Server.Commands;
 using System;
-using Terraria_Server.Events;
 using Terraria_Server.Plugins;
 using System.Text;
 using System.IO;

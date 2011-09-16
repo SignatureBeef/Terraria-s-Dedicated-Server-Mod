@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using Terraria_Server.Events;
 using Terraria_Server.Commands;
 using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
