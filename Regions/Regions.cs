@@ -130,7 +130,7 @@ namespace Regions
 
                 if (args.TileWasPlaced && args.Type == SelectorItem && Selection.isInSelectionlist(ctx.Player))
                 {
-                    ctx.SetResult(HookResult.ERASE);
+                    ctx.SetResult(HookResult.RECTIFY);
                     SelectorPos = !SelectorPos;
 
                     Vector2[] mousePoints = Selection.GetSelection(ctx.Player);
@@ -153,7 +153,7 @@ namespace Regions
                     {
                         if (IsRestrictedForUser(ctx.Player, rgn, ((args.TileWasRemoved || args.WallWasRemoved) ? TileBreak : TilePlace)))
                         {
-                            ctx.SetResult(HookResult.ERASE);
+                            ctx.SetResult(HookResult.RECTIFY);
                             ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                             return;
                         }
@@ -208,23 +208,23 @@ namespace Regions
                 {
                     if (rgn.HasPoint(new Vector2(args.X, args.Y)))
                     {
-                        //if (Event.Opener == DoorOpener.PLAYER)
+                        if (ctx.Sender is Player)
                         {
                             if (IsRestrictedForUser(ctx.Player, rgn, DoorChange))
                             {
-                                ctx.SetResult(HookResult.ERASE);
+                                ctx.SetResult(HookResult.RECTIFY);
                                 ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                                 return;
                             }
                         }
-                        /*else if (Event.Opener == DoorOpener.NPC)
+                        else if (ctx.Sender is NPC)
                         {
                             if (rgn.RestrictedNPCs)
                             {
-                                Event.Cancelled = true;
+                                ctx.SetResult(HookResult.RECTIFY); //[TODO] look into RECIFYing for NPC's, They don't need to be resent, only cancelled, IGRNORE?
                                 return;
                             }
-                        } */
+                        } 
                     }
                 }  
             }

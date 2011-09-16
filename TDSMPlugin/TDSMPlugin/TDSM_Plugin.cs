@@ -89,7 +89,7 @@ namespace TDSMExamplePlugin
         {
             if (!tileBreakageAllowed) { return; }
             Log("Cancelled Tile change of Player: " + ctx.Player.Name);
-            ctx.SetResult(HookResult.IGNORE);
+            ctx.SetResult(HookResult.RECTIFY);
         }
 
         void OnReceiveProjectile(ref HookContext ctx, ref HookArgs.ProjectileReceived args)
