@@ -13,92 +13,98 @@ using YaTools.Yaml;
 
 namespace TDSMPermissions
 {
-    public class TDSMPermissions : Plugin
-    {
-        /*
-         * @Developers
-         * 
-         * Plugins need to be in .NET 4.0
-         * Otherwise TDSM will be unable to load it. 
-         * 
-         * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
-         */
+	public class TDSMPermissions : Plugin
+	{
+		/*
+		 * @Developers
+		 * 
+		 * Plugins need to be in .NET 4.0
+		 * Otherwise TDSM will be unable to load it. 
+		 * 
+		 * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
+		 */
 
-        public Properties properties;
-        public string pluginFolder;
-        public string permissionsYML;
+		public Properties properties;
+		public string pluginFolder;
+		public string permissionsYML;
 
-        public bool spawningAllowed = false;
-        public bool tileBreakageAllowed = false;
-        public bool explosivesAllowed = false;
-        public static TDSMPermissions plugin;
+		public bool spawningAllowed = false;
+		public bool tileBreakageAllowed = false;
+		public bool explosivesAllowed = false;
+		public static TDSMPermissions plugin;
 		private List<Group> groups = new List<Group>();
-		private Dictionary<String, List<String>> users;
+		private Dictionary<string, User> users = new Dictionary<string, User>();
+		private User currentUser = new User();
 		private Group currentGroup;
 		public string defaultGroup;
-        private YamlScanner sc;
+		private YamlScanner sc;
 		private bool inUsers;
-		private String currentUser;
-		private List<String> userNodes;
+		private String currentUserName = null;
 
 		private bool inGroups = false;
 
-        public override void Load()
-        {
-            Name = "TDSMPermissions";
-            Description = "Permissions for TDSM.";
-            Author = "Malkierian";
-            Version = "1";
-            TDSMBuild = 32;
+		public override void Load()
+		{
+			Name = "TDSMPermissions";
+			Description = "Permissions for TDSM.";
+			Author = "Malkierian";
+			Version = "1";
+			TDSMBuild = 32;
 
-            plugin = this;
+			plugin = this;
 
-            pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSMPermissions";
-            permissionsYML = pluginFolder + Path.DirectorySeparatorChar + "permissions.yml";
+			pluginFolder = Statics.PluginPath + Path.DirectorySeparatorChar + "TDSMPermissions";
+			permissionsYML = pluginFolder + Path.DirectorySeparatorChar + "permissions.yml";
 
-            //Create folder if it doesn't exist
-            CreateDirectory(pluginFolder);
+			//Create folder if it doesn't exist
+			CreateDirectory(pluginFolder);
 
-            if (!File.Exists(permissionsYML))
-                File.Create(permissionsYML).Close();
+			if (!File.Exists(permissionsYML))
+				File.Create(permissionsYML).Close();
 
-            //setup a new properties file
+			//setup a new properties file
 			//properties = new Properties(pluginFolder + Path.DirectorySeparatorChar + "tdsmplugin.properties");
 			//properties.Load();
 			//properties.pushData(); //Creates default values if needed. [Out-Dated]
 			//properties.Save();
 
-            //read properties data
+			//read properties data
 			Node.isPermittedImpl = this.isPermitted;
-			LoadPerms();
-        }
+		}
 
-        public override void Enable()
-        {
-            ProgramLog.Log(base.Name + " enabled.");
-            //Register Hooks
+		public override void Enable()
+		{
+			ProgramLog.Log(base.Name + " enabled.");
+			//Register Hooks
 			registerHook(Hooks.PLAYER_PRELOGIN);
+			registerHook(Hooks.PLUGINS_LOADED);
 
-            //Add Commands
-        }
+			//Add Commands
+		}
 
-        public override void Disable()
-        {
-            ProgramLog.Log(base.Name + " disabled.");
-        }
+		public override void Disable()
+		{
+			ProgramLog.Log(base.Name + " disabled.");
+		}
+
+		public override void onServerPluginsLoaded(Terraria_Server.Events.ServerPluginsLoaded Event)
+		{
+			LoadPerms();
+		}
 
 		//public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
 		//{
-		//    base.onPlayerPreLogin(Event);
+		//	base.onPlayerPreLogin(Event);
 		//}
 
 		public void LoadPerms()
 		{
+			ProgramLog.Debug.Log("Loading Permissions");
 			Token to;
-            TextReader re = File.OpenText(permissionsYML);
-            
-            sc = new YamlScanner();
-            sc.SetSource(re);
+			TextReader re = File.OpenText(permissionsYML);
+			
+			sc = new YamlScanner();
+			sc.SetSource(re);
 
 			inUsers = false;
 
@@ -117,7 +123,14 @@ namespace TDSMPermissions
 									}
 								case "permissions":
 									{
-										ProcessPermissions();
+										//if (inUsers)
+										//{
+										//    ProcessUserPermissions();
+										//}
+										//else
+										//{
+											ProcessPermissions();
+										//}
 										break;
 									}
 								case "inheritance":
@@ -127,6 +140,16 @@ namespace TDSMPermissions
 									}
 								case "groups":
 									{
+										if (inUsers)
+										{
+											ProcessGroups();
+										}
+										break;
+									}
+								case "users":
+									{
+										inUsers = true;
+										ProgramLog.Debug.Log("Now parsing users");
 										break;
 									}
 								default:
@@ -153,11 +176,44 @@ namespace TDSMPermissions
 						break;
 				}
 			}
+			ProgramLog.Debug.Log("Permissions file loaded.");
+		}
+
+		private void ProcessGroups()
+		{
+			while (sc.NextToken() != Token.Outdent)
+			{
+				while (sc.NextToken() != Token.TextContent)
+				{
+					if (sc.Token == Token.Outdent)
+						return;
+				}
+				foreach (Group group in groups)
+				{
+					if (group.Name == sc.TokenText)
+					{
+						foreach (string node in group.permissions.Keys)
+						{
+							bool toggle = false;
+							group.permissions.TryGetValue(node, out toggle);
+							if (toggle)
+							{
+								currentUser.hasPerm.Add(node);
+							}
+							else
+							{
+								currentUser.notHasPerm.Add(node);
+							}
+						}
+					}
+				}
+				currentUser.group.Add(sc.TokenText);
+			}
 		}
 
 		private void ProcessIndent()
 		{
-            string tokenText = sc.TokenText;
+			string tokenText = sc.TokenText;
 			if (sc.NextToken() == Token.IndentSpaces)
 				tokenText += sc.TokenText;
 			if (tokenText == "    ")
@@ -171,7 +227,8 @@ namespace TDSMPermissions
 				}
 				else
 				{
-					currentUser = sc.TokenText;
+					currentUserName = sc.TokenText;
+					currentUser = new User();
 				}
 			}
 		}
@@ -179,8 +236,8 @@ namespace TDSMPermissions
 		private void ProcessInfo()
 		{
 			bool Default;
-            string Prefix;
-            string Suffix;
+			string Prefix;
+			string Suffix;
 			Color color;
 			while (sc.TokenText != "default")
 			{
@@ -207,15 +264,13 @@ namespace TDSMPermissions
 			while (sc.NextToken() != Token.TextContent)
 			{ }
 			Suffix = sc.TokenText;
-			//while (sc.TokenText != "color")
-			//{
-			//    sc.NextToken();
-			//}
-			//ProgramLog.Debug.Log("Color token found");
-			//while (sc.NextToken() != Token.TextContent)
-			//{ }
-			//color = GetChatColor(sc.TokenText);
-			currentGroup.SetGroupInfo(Default, Prefix, Suffix, ChatColor.Tan);
+			while (sc.TokenText != "color")
+			{
+				sc.NextToken();
+			}
+			while (sc.NextToken() != Token.TextContent)
+			{ }
+			Color.TryParseRGB(sc.TokenText, out color);
 		}
 
 		private void ProcessInheritance()
@@ -249,7 +304,7 @@ namespace TDSMPermissions
 						return;
 				}
 				bool toggle;
-                string tokenText;
+				string tokenText;
 				if (sc.TokenText.Contains("-"))
 				{
 					toggle = false;
@@ -262,15 +317,76 @@ namespace TDSMPermissions
 				}
 				if (!inUsers)
 				{
+					if (toggle)
+					{
+						if (tokenText == "*")
+						{
+							foreach (string s in Node.ActiveNodes)
+							{
+								currentGroup.permissions.Add(s, toggle);
+							}
+						}
+						else if (tokenText.Contains("*"))
+						{
+							string temp = tokenText.Remove(tokenText.Length - 2);
+							foreach (string s in Node.ActiveNodes)
+							{
+								if (s.Contains(temp))
+								{
+									currentGroup.permissions.Add(s, toggle);
+								}
+							}
+						}
+					}
 					currentGroup.permissions.Add(tokenText, toggle);
 				}
 				else
 				{
-					userNodes.Add(tokenText);
+					if (toggle)
+					{
+						if (tokenText == "*")
+						{
+							foreach (string s in Node.ActiveNodes)
+							{
+								currentUser.hasPerm.Add(s);
+							}
+						}
+						else if (tokenText.Contains("*"))
+						{
+							string temp = tokenText.Remove(tokenText.Length - 2);
+							foreach (string s in Node.ActiveNodes)
+							{
+								if (s.Contains(temp))
+								{
+									currentUser.hasPerm.Add(s);
+								}
+							}
+						}
+					}
+					else
+					{
+						currentUser.notHasPerm.Add(tokenText);
+					}
 				}
-				ProgramLog.Debug.Log("Node " + tokenText + " added with " + toggle + " status");
 			}
-			groups.Add(currentGroup);
+			if (!inUsers)
+			{
+				groups.Add(currentGroup);
+			}
+			else
+			{
+				ProgramLog.Debug.Log("Player " + currentUserName + " has permissions:");
+				currentUser.hasPerm.ForEach(delegate(string name)
+				{
+					ProgramLog.Debug.Log(name);
+				});
+				users.Add(currentUserName, currentUser);
+			}
+		}
+
+		private void ProcessUserPermissions()
+		{
+
 		}
 
 		public bool isPermitted(Node node, Player player)
@@ -278,13 +394,13 @@ namespace TDSMPermissions
 			return false;
 		}
 
-        private static void CreateDirectory(string dirPath)
-        {
-            if (!Directory.Exists(dirPath))
-            {
-                Directory.CreateDirectory(dirPath);
-            }
-        }
+		private static void CreateDirectory(string dirPath)
+		{
+			if (!Directory.Exists(dirPath))
+			{
+				Directory.CreateDirectory(dirPath);
+			}
+		}
 
-    }
+	}
 }

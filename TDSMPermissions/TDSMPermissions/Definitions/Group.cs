@@ -26,6 +26,10 @@ namespace TDSMPermissions.Definitions
 		{
 			Name = name;
 			permissions = new Dictionary<String, Boolean>();
+			GroupInfo.Prefix = null;
+			GroupInfo.Suffix = null;
+			GroupInfo.color = ChatColor.Aqua;
+			GroupInfo.Default = false;
 		}
 
         public void SetGroupInfo(bool Default, string prefix, string suffix, Color color)
