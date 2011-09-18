@@ -29,7 +29,7 @@ namespace Terraria_Server
         
         public static void InitializeData(World NewWorld, int PlayerCap, string myWhiteList, string myBanList, string myOpList)
         {
-            Main.maxNetplayers = PlayerCap;
+            //Main.maxNetplayers = PlayerCap;
             World = NewWorld;
             //PluginManager = new PluginManager(Statics.PluginPath, Statics.LibrariesPath);
             

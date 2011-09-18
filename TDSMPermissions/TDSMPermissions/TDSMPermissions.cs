@@ -31,7 +31,7 @@ namespace TDSMPermissions
         public bool explosivesAllowed = false;
         public static TDSMPermissions plugin;
 		private List<Group> groups = new List<Group>();
-		private Dictionary<String, List<String>> users;
+		//private Dictionary<String, List<String>> users;
 		private Group currentGroup;
 		public string defaultGroup;
         private YamlScanner sc;
@@ -39,7 +39,7 @@ namespace TDSMPermissions
 		private String currentUser;
 		private List<String> userNodes;
 
-		private bool inGroups = false;
+		//private bool inGroups = false;
 
         protected override void Initialized(object state)
         {
@@ -65,6 +65,8 @@ namespace TDSMPermissions
 			//properties.Load();
 			//properties.pushData(); //Creates default values if needed. [Out-Dated]
 			//properties.Save();
+
+            userNodes = new List<String>();
 
             //read properties data
 			Node.isPermittedImpl = this.isPermitted;
@@ -179,7 +181,7 @@ namespace TDSMPermissions
 			bool Default;
             string Prefix;
             string Suffix;
-			Color color;
+			//Color color;
 			while (sc.TokenText != "default")
 			{
 				sc.NextToken();

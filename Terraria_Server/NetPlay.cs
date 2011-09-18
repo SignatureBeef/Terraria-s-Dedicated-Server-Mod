@@ -94,7 +94,7 @@ namespace Terraria_Server
 			else
 				return;
 			
-			SlotManager.Initialize (Main.maxNetplayers, Program.properties.OverlimitSlots);
+			SlotManager.Initialize(Program.properties.MaxPlayers, Program.properties.OverlimitSlots);
 
             ServerUp = true;
 			var serverSock = NetPlay.tcpListener.Server;

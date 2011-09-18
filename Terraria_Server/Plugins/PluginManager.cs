@@ -119,8 +119,8 @@ namespace Terraria_Server.Plugins
 		/// <summary>
 		/// PluginManager class constructor
 		/// </summary>
-		/// <param name="pluginPath">Path to plugin directory</param>
-		/// <param name="libraryPath">Path to library directory</param>
+		/// <param name="_pluginPath">Path to plugin directory</param>
+		/// <param name="_libraryPath">Path to library directory</param>
 		public static void Initialize (string _pluginPath, string _libraryPath)
 		{
 			pluginPath = _pluginPath;

@@ -7,7 +7,7 @@ using Terraria_Server.Misc;
 
 namespace TDSMPermissions.Definitions
 {
-	class Group
+	public class Group
 	{
 		public struct _GroupInfo
 		{
@@ -26,6 +26,7 @@ namespace TDSMPermissions.Definitions
 		{
 			Name = name;
 			permissions = new Dictionary<String, Boolean>();
+            Inherits = new List<String>();
 		}
 
         public void SetGroupInfo(bool Default, string prefix, string suffix, Color color)

@@ -16,7 +16,10 @@ using Terraria_Server.Plugins;
 namespace Terraria_Server
 {
 	public class Program
-	{
+    {
+
+#pragma warning disable 618
+
         public const string VERSION_NUMBER = "v1.0.6.1";
 
 		public static ProgramThread updateThread = null;
@@ -335,7 +338,7 @@ namespace Terraria_Server
 			RemoteConsole.RConServer.Stop ();
 		}
 
-		private static bool SetupPaths()
+        private static bool SetupPaths()
 		{
             try
             {

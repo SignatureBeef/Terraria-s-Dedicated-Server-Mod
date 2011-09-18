@@ -3144,8 +3144,9 @@ namespace Terraria_Server
 
 		/// <summary>
 		/// Hurts player
-		/// </summary>
-		/// <param name="Damage">Damage to do</param>
+        /// </summary>
+        /// <param name="aggressor">Sender who hurt the Player</param>
+        /// <param name="Damage">Damage to do</param>
 		/// <param name="hitDirection">Direction of attack</param>
 		/// <param name="pvp">Whether attack is PvP</param>
 		/// <param name="quiet">Whether to announce</param>

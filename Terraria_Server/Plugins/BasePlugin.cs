@@ -170,10 +170,6 @@ namespace Terraria_Server.Plugins
 		}
 		
 		/// <summary>
-		/// Plugin's internal command list
-		/// </summary>
-		
-		/// <summary>
 		/// Adds new command to the server's command list
 		/// </summary>
 		/// <param name="prefix">Command text</param>
