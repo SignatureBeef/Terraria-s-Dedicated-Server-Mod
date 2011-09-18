@@ -112,6 +112,16 @@ namespace Terraria_Server.Logging
 			Write (new LogEntry { message = format, args = args, thread = Thread.CurrentThread });
 		}
 
+		public static void BareLog (LogChannel channel, string text)
+		{
+			Write (new LogEntry { message = text, thread = Thread.CurrentThread, channel = channel });
+		}
+
+		public static void BareLog (LogChannel channel, string format, params object[] args)
+		{
+			Write (new LogEntry { message = format, args = args, thread = Thread.CurrentThread, channel = channel });
+		}
+
 		public static void Log (string text)
 		{
 			Write (new LogEntry (text, null));

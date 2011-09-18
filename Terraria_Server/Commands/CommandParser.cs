@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
-using Terraria_Server.Plugin;
-using Terraria_Server.Events;
+using Terraria_Server.Plugins;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
@@ -24,6 +23,24 @@ namespace Terraria_Server.Commands
         internal AccessLevel accessLevel = AccessLevel.OP;
         internal Action<ISender, ArgumentList> tokenCallback;
         internal Action<ISender, string> stringCallback;
+        internal event Action<CommandInfo> BeforeEvent;
+        internal event Action<CommandInfo> AfterEvent;
+        
+		internal void InitFrom (CommandInfo other)
+		{
+			description = other.description;
+			helpText = other.helpText;
+			accessLevel = other.accessLevel;
+			tokenCallback = other.tokenCallback;
+			stringCallback = other.stringCallback;
+			ClearEvents ();
+		}
+		
+		internal void ClearCallbacks ()
+		{
+			tokenCallback = null;
+			stringCallback = null;
+		}
         
         public CommandInfo WithDescription (string desc)
         {
@@ -60,15 +77,66 @@ namespace Terraria_Server.Commands
             foreach (var line in helpText)
                 sender.sendMessage (line);
         }
+		
+		internal void Run (ISender sender, string args)
+		{
+			if (BeforeEvent != null)
+				BeforeEvent (this);
+			
+			try
+			{
+				if (! CommandParser.CheckAccessLevel (this, sender))
+				{
+					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					return;
+				}
+				
+				if (stringCallback != null)
+					stringCallback (sender, args);
+				else
+					sender.sendMessage ("This command is no longer available.", 255, 238, 130, 238);
+			}
+			finally
+			{
+				if (AfterEvent != null)
+					AfterEvent (this);
+			}
+		}
+		
+		internal void Run (ISender sender, ArgumentList args)
+		{
+			if (BeforeEvent != null)
+				BeforeEvent (this);
+				
+			try
+			{
+				if (! CommandParser.CheckAccessLevel (this, sender))
+				{
+					sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+					return;
+				}
+				
+				if (tokenCallback != null)
+					tokenCallback (sender, args);
+				else
+					sender.sendMessage ("This command is no longer available.", 255, 238, 130, 238);
+			}
+			finally
+			{
+				if (AfterEvent != null)
+					AfterEvent (this);
+			}
+		}
+		
+		internal void ClearEvents ()
+		{
+			AfterEvent = null;
+			BeforeEvent = null;
+		}
     }
 
     public class CommandParser
     {
-        /// <summary>
-        /// Server instance current CommandParser runs on
-        /// </summary>
-        public Server server = null;
-
         /// <summary>
         /// CommandParser constructor
         /// </summary>
@@ -289,10 +357,14 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Enable/disable and get details about specific plugins.")
                 .WithHelpText("Usage:    plugin list")
+                .WithHelpText("          plugin stat")
                 .WithHelpText("          plugin info <plugin>")
                 .WithHelpText("          plugin enable <plugin>")
                 .WithHelpText("          plugin disable <plugin>")
-                .Calls(Commands.ManagePlugins);
+                .WithHelpText("          plugin reload [-clean] all|<plugin>")
+                .WithHelpText("          plugin unload all|<plugin>")
+                .WithHelpText("          plugin load [-replace] <file>")
+                .Calls(PluginManager.PluginCommand);
 
             AddCommand("spawnboss")
                 .WithAccessLevel(AccessLevel.OP)
@@ -365,15 +437,6 @@ namespace Terraria_Server.Commands
 				sender = consoleSender;
 			}
 			
-			var ev = new ConsoleCommandEvent ();
-			ev.Sender = sender;
-			ev.Message = line;
-            Server.PluginManager.processHook(Hooks.CONSOLE_COMMAND, ev);
-			if (ev.Cancelled)
-			{
-				return;
-			}
-			
 			ParseAndProcess (sender, line);
 		}
 
@@ -405,117 +468,149 @@ namespace Terraria_Server.Commands
             throw new NotImplementedException("Unexpected ISender implementation");
         }
         
-        bool FindStringCommand (string prefix, out CommandInfo info)
-        {
-            info = null;
-
-            foreach (var plugin in Server.PluginManager.Plugins.Values)
-            {
-                if (plugin.commands.TryGetValue (prefix, out info) && info.stringCallback != null)
-                    return true;
-            }
-            
-            if (serverCommands.TryGetValue (prefix, out info) && info.stringCallback != null)
-                return true;
-            
-            return false;
-        }
+		bool FindStringCommand (string prefix, out CommandInfo info)
+		{
+			info = null;
+			
+			foreach (var plugin in PluginManager.EnumeratePlugins)
+			{
+				lock (plugin.commands)
+				{
+					if (plugin.IsEnabled && plugin.commands.TryGetValue (prefix, out info) && info.stringCallback != null)
+						return true;
+				}
+			}
+			
+			if (serverCommands.TryGetValue (prefix, out info) && info.stringCallback != null)
+				return true;
+			
+			return false;
+		}
         
-        bool FindTokenCommand (string prefix, out CommandInfo info)
-        {
-            info = null;
+		bool FindTokenCommand (string prefix, out CommandInfo info)
+		{
+			info = null;
+			
+			foreach (var plugin in PluginManager.EnumeratePlugins)
+			{
+				lock (plugin.commands)
+				{
+					if (plugin.IsEnabled && plugin.commands.TryGetValue (prefix, out info) && info.tokenCallback != null)
+						return true;
+				}
+			}
+			
+			if (serverCommands.TryGetValue (prefix, out info) && info.tokenCallback != null)
+				return true;
+			
+			return false;
+		}
+		
+		public void ParseAndProcess (ISender sender, string line)
+		{
+			var ctx = new HookContext
+			{
+				Sender = sender,
+				Player = sender as Player,
+			};
+			
+			ctx.Connection = ctx.Player != null ? ctx.Player.Connection : null;
+			
+			var hargs = new HookArgs.Command ();
+			
+			try
+			{
+				CommandInfo info;
+				
+				var firstSpace = line.IndexOf (' ');
+				
+				if (firstSpace < 0) firstSpace = line.Length;
+				
+				var prefix = line.Substring (0, firstSpace);
+				
+				hargs.Prefix = prefix;
+				
+				if (FindStringCommand (prefix, out info))
+				{
+					hargs.ArgumentString = (firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : "").Trim();
+					
+					HookPoints.Command.Invoke (ref ctx, ref hargs);
+					
+					if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+						return;
+					
+					if (ctx.Result != HookResult.CONTINUE && ! CheckAccessLevel (info, sender))
+					{
+						sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
+						return;
+					}
+					
+					try
+					{
+						info.Run (sender, hargs.ArgumentString);
+					}
+					catch (ExitException e)
+					{
+						throw e;
+					}
+					catch (CommandError e)
+					{
+						sender.sendMessage (prefix + ": " + e.Message);
+						info.ShowHelp (sender);
+					}
+					return;
+				}
+				
+				var args = new ArgumentList();
+				var command = Tokenize (line, args);
 
-            foreach (var plugin in Server.PluginManager.Plugins.Values)
-            {
-                if (plugin.commands.TryGetValue (prefix, out info) && info.tokenCallback != null)
-                    return true;
-            }
-            
-            if (serverCommands.TryGetValue (prefix, out info) && info.tokenCallback != null)
-                return true;
-            
-            return false;
-        }
+				if (command != null)
+				{
+					if (FindTokenCommand(command, out info))
+					{
+						hargs.Arguments = args;
+						
+						HookPoints.Command.Invoke (ref ctx, ref hargs);
+						
+						if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+							return;
+						
+						if (ctx.Result != HookResult.CONTINUE && ! CheckAccessLevel(info, sender))
+						{
+							sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
+							return;
+						}
 
-        public void ParseAndProcess (ISender sender, string line)
-        {
-            try
-            {
-                CommandInfo info;
-                
-                var firstSpace = line.IndexOf (' ');
-                
-                if (firstSpace < 0) firstSpace = line.Length;
-                
-                var prefix = line.Substring (0, firstSpace);
-                if (FindStringCommand (prefix, out info))
-                {
-                    if (! CheckAccessLevel (info, sender))
-                    {
-                        sender.sendMessage ("You cannot perform that action.", 255, 238, 130, 238);
-                        return;
-                    }
-                    
-                    try
-                    {
-                        var rest = firstSpace < line.Length - 1 ? line.Substring (firstSpace + 1, line.Length - firstSpace - 1) : ""; 
-                        info.stringCallback (sender, rest.Trim());
-                    }
-                    catch (ExitException e)
-                    {
-                        throw e;
-                    }
-                    catch (CommandError e)
-                    {
-                        sender.sendMessage (prefix + ": " + e.Message);
-                        info.ShowHelp (sender);
-                    }
-                    return;
-                }
-                
-                var args = new ArgumentList();
-                var command = Tokenize (line, args);
-
-                if (command != null)
-                {
-                    if (FindTokenCommand(command, out info))
-                    {
-                        if (!CheckAccessLevel(info, sender))
-                        {
-                            sender.sendMessage("You cannot perform that action.", 255, 238, 130, 238);
-                            return;
-                        }
-
-                        try
-                        {
-                            info.tokenCallback(sender, args);
-                        }
-                        catch (ExitException e)
-                        {
-                            throw e;
-                        }
-                        catch (CommandError e)
-                        {
-                            sender.sendMessage(command + ": " + e.Message);
-                            info.ShowHelp(sender);
-                        }
-                        return;
-                    }
-                    else
-                    {
-                        sender.sendMessage("No such command.");
-                    }
-                }
-            }
-            catch (ExitException e)
-            {
-                throw e;
-            }
-            catch (TokenizerException e)
-            {
-                sender.sendMessage (e.Message);
-            }
-        }
+						try
+						{
+							info.Run (sender, hargs.Arguments);
+						}
+						catch (ExitException e)
+						{
+							throw e;
+						}
+						catch (CommandError e)
+						{
+							sender.sendMessage(command + ": " + e.Message);
+							info.ShowHelp(sender);
+						}
+						return;
+					}
+					else
+					{
+						sender.sendMessage("No such command.");
+					}
+				}
+			}
+			catch (ExitException e)
+			{
+				throw e;
+			}
+			catch (TokenizerException e)
+			{
+				sender.sendMessage (e.Message);
+			}
+		}
 		
 		class TokenizerException : Exception
 		{

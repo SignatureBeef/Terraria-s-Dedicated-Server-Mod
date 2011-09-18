@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 using Terraria_Server;
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin;
-using Terraria_Server.Events;
 using Terraria_Server.Logging;
 using Terraria_Server.Commands;
 using Terraria_Server.Definitions;
@@ -15,11 +13,19 @@ using Terraria_Server.Permissions;
 using Terraria_Server.Definitions.Tile;
 
 using Regions.RegionWork;
+using Terraria_Server.Plugins;
 
 namespace Regions
 {
-    public class Regions : Plugin
+    public class Regions : BasePlugin
     {
+        /*
+         * @Developers
+         * 
+         * Plugins need to be in .NET 4.0
+         * Otherwise TDSM will be unable to load it. 
+         */
+
         public static int SelectorItem = 0;
         public static bool UsingPermissions = false;
 
@@ -47,14 +53,14 @@ namespace Regions
         public Node TileBreak;
         public Node TilePlace;
         public Node ProjectileUse;
-        
-        public override void Load()
+
+        protected override void Initialized(object state)
         {
             base.Name = "Regions";
             base.Description = "A region plugin for TDSM";
             base.Author = "DeathCradle";
             base.Version = "1";
-            base.TDSMBuild = 33;
+            base.TDSMBuild = 36;
 
             if (!Directory.Exists(RegionsFolder))
                 Directory.CreateDirectory(RegionsFolder);
@@ -79,11 +85,11 @@ namespace Regions
                 .WithHelpText("Usage:    regions [select, create, user, list, npcres, opres]")
                 .WithDescription("Region Management.")
                 .Calls(Commands.Region);
-
-            registerHook(Hooks.PLAYER_TILECHANGE);
-            registerHook(Hooks.PLAYER_FLOWLIQUID);
-            registerHook(Hooks.PLAYER_PROJECTILE);
-            registerHook(Hooks.DOOR_STATECHANGE);
+            
+            Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
+            Hook(HookPoints.LiquidFlowReceived, OnLiquidFlowReceived);
+            Hook(HookPoints.ProjectileReceived, OnProjectileReceived);
+            Hook(HookPoints.DoorStateChanged,   OnDoorStateChange);
 
             UsingPermissions = isRunningPermissions();
             if (UsingPermissions)
@@ -92,7 +98,7 @@ namespace Regions
                 Log("No Permissions Found\nUsing Internal User System");
         }
 
-        public override void Enable()
+        protected override void Enabled()
         {            
             DoorChange      = new Node().FromPath("regions.doorchange");
             LiquidFlow      = new Node().FromPath("regions.liquidflow");
@@ -103,7 +109,7 @@ namespace Regions
             ProgramLog.Plugin.Log("Regions for TDSM #{0} enabled.", base.TDSMBuild);
         }
 
-        public override void Disable()
+        protected override void Disabled()
         {
             ProgramLog.Plugin.Log("Regions disabled.");
         }
@@ -117,88 +123,78 @@ namespace Regions
         }
         
         #region Events
-        
-            public override void onPlayerTileChange(PlayerTileChangeEvent Event)
+
+            void OnPlayerWorldAlteration(ref HookContext ctx, ref HookArgs.PlayerWorldAlteration args)
             {
-                if (Event.Cancelled)
+                Vector2 Position = new Vector2(args.X, args.Y);
+
+                if (args.TileWasPlaced && args.Type == SelectorItem && Selection.isInSelectionlist(ctx.Player))
+                {
+                    ctx.SetResult(HookResult.RECTIFY);
+                    SelectorPos = !SelectorPos;
+
+                    Vector2[] mousePoints = Selection.GetSelection(ctx.Player);
+
+                    if (!SelectorPos)
+                        mousePoints[0] = Position;
+                    else
+                        mousePoints[1] = Position;
+
+                    Selection.SetSelection(ctx.Player, mousePoints);
+
+                    ctx.Player.sendMessage(String.Format("You have selected block at {0},{1}, {2} position",
+                        Position.X, Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColor.Green);
                     return;
-
-                if(Event.Sender is Player) {
-
-                    var player = Event.Sender as Player;
-
-                    if (Event.Action == TileAction.PLACED && Event.TileType == TileType.BLOCK && (int)Event.Tile.Type == SelectorItem
-                        && Selection.isInSelectionlist(player))
-                    {
-                        Event.Cancelled = true;
-                        SelectorPos = !SelectorPos;
-
-                        Vector2[] mousePoints = Selection.GetSelection(player);
-                        if (!SelectorPos)
-                            mousePoints[0] = Event.Position;
-                        else
-                            mousePoints[1] = Event.Position;
-
-                        Selection.SetSelection(player, mousePoints);
-
-                        player.sendMessage(String.Format("You have selected block at {0},{1}, {2} position", 
-                            Event.Position.X, Event.Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColor.Green);
-                        return;
-                    }
-
-
-                    foreach (Region rgn in regionManager.Regions)
-                    {
-                        if (rgn.HasPoint(Event.Position))
-                        {
-                            if (IsRestrictedForUser(player, rgn, ((Event.Action == TileAction.BREAK) ? TileBreak : TilePlace)))
-                            {
-                                Event.Cancelled = true;
-                                player.sendMessage("You cannot edit this area!", ChatColor.Red);
-                                return;
-                            }
-                        }
-                    }
-
                 }
-            }
-
-            public override void onPlayerFlowLiquid(PlayerFlowLiquidEvent Event)
-            {
-                if (Event.Cancelled)
-                    return;
 
                 foreach (Region rgn in regionManager.Regions)
                 {
-                    if (rgn.HasPoint(Event.Position))
+                    if (rgn.HasPoint(Position))
                     {
-                        if (IsRestrictedForUser(Event.Player, rgn, LiquidFlow))
+                        if (IsRestrictedForUser(ctx.Player, rgn, ((args.TileWasRemoved || args.WallWasRemoved) ? TileBreak : TilePlace)))
                         {
-                            Event.Cancelled = true;
-                            Event.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
+                            ctx.SetResult(HookResult.RECTIFY);
+                            ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                             return;
                         }
                     }
                 }
             }
 
-            public override void onPlayerProjectileUse(PlayerProjectileEvent Event)
+            void OnLiquidFlowReceived(ref HookContext ctx, ref HookArgs.LiquidFlowReceived args)
             {
-                if (Event.Cancelled)
-                    return;
+                Vector2 Position = new Vector2(args.X, args.Y);
 
                 foreach (Region rgn in regionManager.Regions)
                 {
-                    if (rgn.HasPoint(Event.Projectile.Position / 16))
+                    if (rgn.HasPoint(Position))
                     {
-                        if( rgn.ProjectileList.Contains("*") ||
-                            rgn.ProjectileList.Contains(Event.Projectile.Type.ToString()) ||
-                            rgn.ProjectileList.Contains(Event.Projectile.Name.ToLower().Replace(" ", "")))
+                        if (IsRestrictedForUser(ctx.Player, rgn, LiquidFlow))
                         {
-                            if (IsRestrictedForUser(Event.Player, rgn, ProjectileUse))
+                            ctx.SetResult(HookResult.ERASE);
+                            ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
+                            return;
+                        }
+                    }
+                }
+            }
+
+            void OnProjectileReceived(ref HookContext ctx, ref HookArgs.ProjectileReceived args)
+            {
+                Vector2 Position = new Vector2(args.X, args.Y);
+
+                foreach (Region rgn in regionManager.Regions)
+                {
+                    if (rgn.HasPoint(Position / 16))
+                    {
+                        if (rgn.ProjectileList.Contains("*") ||
+                            rgn.ProjectileList.Contains(args.Type.ToString()))// ||
+                            //rgn.ProjectileList.Contains(args.Projectile.Name.ToLower().Replace(" ", "")))
+                        {
+                            if (IsRestrictedForUser(ctx.Player, rgn, ProjectileUse))
                             {
-                                Event.Cancelled = true;
-                                Event.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
+                                ctx.SetResult(HookResult.ERASE);
+                                ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                                 return;
                             }
                         }
@@ -206,35 +202,31 @@ namespace Regions
                 }
             }
 
-            public override void onDoorStateChange(DoorStateChangeEvent Event)
+            void OnDoorStateChange(ref HookContext ctx, ref HookArgs.DoorStateChanged args)
             {
-                if (Event.Cancelled)
-                    return;
-
-                var player = Event.Sender as Player;
                 foreach (Region rgn in regionManager.Regions)
                 {
-                    if (rgn.HasPoint(new Vector2(Event.X, Event.Y)))
+                    if (rgn.HasPoint(new Vector2(args.X, args.Y)))
                     {
-                        if (Event.Opener == DoorOpener.PLAYER)
+                        if (ctx.Sender is Player)
                         {
-                            if (IsRestrictedForUser(player, rgn, DoorChange))
+                            if (IsRestrictedForUser(ctx.Player, rgn, DoorChange))
                             {
-                                Event.Cancelled = true;
-                                player.sendMessage("You cannot edit this area!", ChatColor.Red);
+                                ctx.SetResult(HookResult.RECTIFY);
+                                ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                                 return;
                             }
                         }
-                        else if (Event.Opener == DoorOpener.NPC)
+                        else if (ctx.Sender is NPC)
                         {
                             if (rgn.RestrictedNPCs)
                             {
-                                Event.Cancelled = true;
+                                ctx.SetResult(HookResult.RECTIFY); //[TODO] look into RECIFYing for NPC's, They don't need to be resent, only cancelled, IGRNORE?
                                 return;
                             }
-                        }
+                        } 
                     }
-                }            
+                }  
             }
 
         #endregion

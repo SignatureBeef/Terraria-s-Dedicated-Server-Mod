@@ -11,6 +11,8 @@ namespace Terraria_Server
 	[Flags]
 	public enum SlotState : int
 	{
+		NONE = 0,
+		
 		SHUTDOWN = 1,        // the client's socket is being shut down unconditionally
 		KICK = 2,            // the client is being kicked, disconnect him after sending him all remaining data
 
@@ -31,6 +33,14 @@ namespace Terraria_Server
 		UNASSIGNED = KICK | SHUTDOWN | VACANT | CONNECTED | SERVER_AUTH | ACCEPTED | PLAYER_AUTH | QUEUED,
 		
 		ALL = 4095,
+	}
+	
+	public static class SlotStateExtensions
+	{
+		public static bool DisconnectInProgress (this SlotState state)
+		{
+			return (state & SlotState.DISCONNECTING) != 0;
+		}
 	}
 
 	public class ServerSlot
@@ -54,7 +64,7 @@ namespace Terraria_Server
 		public int statusCount;
 		public int statusMax;
 		public volatile string remoteAddress;
-		public bool[,] tileSection = new bool[Main.maxTilesX / 200, Main.maxTilesY / 150];
+		public bool[,] tileSection;
         public string statusText = "";
 		public bool announced;
         public string name = "Anonymous";
@@ -150,13 +160,9 @@ namespace Terraria_Server
 		
 		public void Reset()
 		{
-            tileSection = new bool[Main.maxTilesX / 200, Main.maxTilesY / 150];
-			
-			if (tileSection.GetLength(0) >= Main.maxSectionsX && tileSection.GetLength(1) >= Main.maxSectionsY)
+			if (tileSection != null && tileSection.GetLength(0) >= Main.maxSectionsX && tileSection.GetLength(1) >= Main.maxSectionsY)
 			{
-				for (int i = 0; i < Main.maxSectionsX; i++)
-					for (int j = 0; j < Main.maxSectionsY; j++)
-						tileSection[i, j] = false;
+				Array.Clear (tileSection, 0, tileSection.GetLength(0) * tileSection.GetLength(1));
 			}
 			else
 			{

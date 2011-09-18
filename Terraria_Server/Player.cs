@@ -1,7 +1,6 @@
 using Terraria_Server.Commands;
 using System;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using System.Text;
 using System.IO;
 using System.Security.Cryptography;
@@ -847,19 +846,21 @@ namespace Terraria_Server
 						
 						case 19:
 							this.lightOrb = true;
-							bool flag4 = true;
-							for (int m = 0; m < 1000; m++)
-							{
-								if (Main.projectile[m].Active && Main.projectile[m].Owner == this.whoAmi && Main.projectile[m].Type == 18)
-								{
-									flag4 = false;
-									break;
-								}
-							}
-							if (flag4)
-							{
-								Projectile.NewProjectile(this.Position.X + (float)(this.Width / 2), this.Position.Y + (float)(this.Height / 2), 0f, 0f, 18, 0, 0f, this.whoAmi);
-							}
+							
+// I'm sure the client sends us the projectile anyway
+//							bool flag4 = true;
+//							for (int m = 0; m < 1000; m++)
+//							{
+//								if (Main.projectile[m].Active && Main.projectile[m].Owner == this.whoAmi && Main.projectile[m].Type == 18)
+//								{
+//									flag4 = false;
+//									break;
+//								}
+//							}
+//							if (flag4)
+//							{
+//								Projectile.NewProjectile(this.Position.X + (float)(this.Width / 2), this.Position.Y + (float)(this.Height / 2), 0f, 0f, 18, 0, 0f, this.whoAmi);
+//							}
 							break;
 						
 						case 20:
@@ -1371,7 +1372,7 @@ namespace Terraria_Server
 						{
 							this.lifeRegenCount += 120;
 							this.statLife--;
-#if FALSE
+#if CLIENT_CODE
 							if (this.statLife <= 0)
 							{
 								// I think this is meant to be client-side
@@ -1392,7 +1393,7 @@ namespace Terraria_Server
 							}
 #else
 							if (statLife < 0) statLife = 0;
-#endif
+#endif //CLIENT_CODE
 						}
 						this.manaRegenCount += this.manaRegen;
 						while (this.manaRegenCount >= 120)
@@ -2129,6 +2130,7 @@ namespace Terraria_Server
                             }
                         }
 						//FIXME if (this.gills) flag6 = !flag6;
+#if CLIENT_CODE
 						if (Main.myPlayer == i)
 						{
 							if (flag6)
@@ -2171,6 +2173,7 @@ namespace Terraria_Server
 								this.breathCD = 0;
 							}
 						}
+#endif //CLIENT_CODE
 						int num82 = this.Height;
 //						if (this.waterWalk) //FIXME
 //						{
@@ -2179,12 +2182,14 @@ namespace Terraria_Server
 						bool flag10 = Collision.LavaCollision(this.Position, this.Width, num82);
 						if (flag10)
 						{
+#if CLIENT_CODE
 							if (/*!this.lavaImmune && */Main.myPlayer == i && !this.immune)
 							{
 								this.AddBuff(24, 420, true);
 								this.Hurt(80, 0, false, false, Player.getDeathMessage(-1, -1, -1, 2), false);
 							}
 							this.lavaWet = true;
+#endif //CLIENT_CODE
 						}
                         bool flag8 = Collision.WetCollision(this.Position, this.Width, this.Height);
                         if (flag8)
@@ -3147,23 +3152,57 @@ namespace Terraria_Server
 		/// <param name="deathText">Text to display upon death</param>
 		/// <param name="crit">Whether the hit is critical</param>
 		/// <returns>Damage done</returns>
-        public double Hurt(int Damage, int hitDirection, bool pvp = false, bool quiet = false, string deathText = " was slain...", bool crit = false)
+		public double Hurt (ISender aggressor, int Damage, int hitDirection, bool pvp = false, bool quiet = false, string deathText = " was slain...", bool crit = false)
+		{
+			if (this.immune) return 0.0;
+			
+			var proj = aggressor as Projectile;
+			
+			var ctx = new HookContext
+			{
+				Sender = aggressor,
+				Player = proj != null ? (proj.Creator as Player) : (aggressor as Player),
+			};
+			
+			ctx.Connection = ctx.Player != null ? ctx.Player.Connection : null;
+			
+			var args = new HookArgs.PlayerHurt
+			{
+				Victim = this,
+				Damage = Damage,
+				HitDirection = hitDirection,
+				Pvp = pvp,
+				Quiet = quiet,
+				Obituary = deathText,
+				Critical = crit,
+			};
+			
+			HookPoints.PlayerHurt.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick () || ctx.Result == HookResult.IGNORE)
+				return 0.0;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				var conn = ctx.Connection;
+				if (conn != null)
+				{
+					var msg = NetMessage.PrepareThreadInstance ();
+					msg.PlayerHealthUpdate (whoAmi);
+					msg.Send (conn);
+				}
+				return 0.0;
+			}
+			
+			return HurtInternal (args.Damage, args.HitDirection, args.Pvp, args.Quiet, args.Obituary, args.Critical);
+		}
+		
+		public double HurtInternal (int Damage, int hitDirection, bool pvp = false, bool quiet = false, string deathText = " was slain...", bool crit = false)
         {
             if (!this.immune)
             {
                 int num = Damage;
-
-                PlayerHurtEvent playerEvent = new PlayerHurtEvent();
-                playerEvent.Sender = this;
-                playerEvent.Damage = Damage;
-                Server.PluginManager.processHook(Hooks.PLAYER_HURT, playerEvent);
-                if (playerEvent.Cancelled)
-                {
-                    return 0.0;
-                }
-
-                num = playerEvent.Damage;
-
+                
                 if (pvp)
                 {
                     num *= 2;
@@ -4360,6 +4399,7 @@ namespace Terraria_Server
                     }
                     if (!flag5)
                     {
+#if CLIENT_CODE
                         if (Main.myPlayer == i)
                         {
                             int dmgg = (int) (selectedItem.Damage * this.meleeDamage);
@@ -4395,7 +4435,7 @@ namespace Terraria_Server
 											int dmggg = Main.DamageVar(dmgg);
 											this.StatusNPC (selectedItem.Type, npc);
                                             npc.StrikeNPC (dmggg, selectedItem.KnockBack, this.direction, crit);
-                                            npc.immune[i] = this.itemAnimation;
+                                            npc.immune[i] = (ushort) this.itemAnimation;
                                             this.attackCD = (int)((double)this.itemAnimationMax * 0.33);
                                         }
                                     }
@@ -4432,6 +4472,7 @@ namespace Terraria_Server
                                 }
                             }
                         }
+#endif //CLIENT_CODE
                     }
                 }
             }
@@ -4469,10 +4510,29 @@ namespace Terraria_Server
 				this.itemTime = selectedItem.UseTime;
 				if (Main.invasionType == 0)
 				{
-					ProgramLog.Users.Log ("{0} @ {1}: Invasion triggered by {2}.", IPAddress, whoAmi, Name);
-					NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned an invasion!"), 255, 255, 128, 150);
-					Main.invasionDelay = 0;
-					Main.StartInvasion();
+					var ctx = new HookContext
+					{
+						Connection = Connection,
+						Sender = this,
+						Player = this,
+					};
+					
+					var args = new HookArgs.PlayerTriggeredEvent
+					{
+						Type = WorldEventType.INVASION,
+					};
+					
+					HookPoints.PlayerTriggeredEvent.Invoke (ref ctx, ref args);
+					
+					if (ctx.CheckForKick ())
+						return;
+					else if (ctx.Result != HookResult.IGNORE)
+					{
+						ProgramLog.Users.Log ("{0} @ {1}: Invasion triggered by {2}.", IPAddress, whoAmi, Name);
+						NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned an invasion!"), 255, 255, 128, 150);
+						Main.invasionDelay = 0;
+						Main.StartInvasion();
+					}
 				}
 			}
             if (this.itemTime == 0 && this.itemAnimation > 0 && (selectedItem.Type == 43 || selectedItem.Type == 70))
@@ -4501,25 +4561,49 @@ namespace Terraria_Server
                 }
                 if (flag6)
                 {
+#if CLIENT_CODE
                     if (Main.myPlayer == this.whoAmi)
                     {
                         this.Hurt(this.statLife * (this.statDefense + 1), -this.direction, false, false);
                     }
+#endif //CLIENT_CODE
                 }
-                else
+                else if ( (selectedItem.Type == 43 && !Main.dayTime) || (selectedItem.Type == 70 && zoneEvil) )
                 {
-                    if (selectedItem.Type == 43 && !Main.dayTime)
-                    {
-						ProgramLog.Users.Log ("{0} @ {1}: Eye of Cthulhu summoned by {2}.", IPAddress, whoAmi, Name);
-						NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned the Eye of Cthulhu!"), 255, 255, 128, 150);
-                        NPC.SpawnOnPlayer(Main.players[i], i, 4);
-                    }
-                    else if (selectedItem.Type == 70 && zoneEvil)
-                    {
-						ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", IPAddress, whoAmi, Name);
-						NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
-                        NPC.SpawnOnPlayer(Main.players[i], i, 13);
-                    }
+					var ctx = new HookContext
+					{
+						Connection = Connection,
+						Sender = this,
+						Player = this,
+					};
+					
+					var args = new HookArgs.PlayerTriggeredEvent
+					{
+						X = (int) (Position.X/16), 
+						Y = (int) (Position.Y/16), 
+						Type = WorldEventType.BOSS,
+						Name = selectedItem.Type == 43 ? "Eye of Cthulhu" : "Eater of Worlds",
+					};
+					
+					HookPoints.PlayerTriggeredEvent.Invoke (ref ctx, ref args);
+					
+					if (ctx.CheckForKick ())
+						return;
+					else if (ctx.Result != HookResult.IGNORE)
+					{
+						if (selectedItem.Type == 43)
+						{
+							ProgramLog.Users.Log ("{0} @ {1}: Eye of Cthulhu summoned by {2}.", IPAddress, whoAmi, Name);
+							NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned the Eye of Cthulhu!"), 255, 255, 128, 150);
+							NPC.SpawnOnPlayer(Main.players[i], i, 4);
+						}
+						else if (selectedItem.Type == 70)
+						{
+							ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", IPAddress, whoAmi, Name);
+							NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
+							NPC.SpawnOnPlayer(Main.players[i], i, 13);
+						}
+					}
                 }
             }
 
@@ -5098,16 +5182,6 @@ namespace Terraria_Server
 				return false;
 			}
 			
-			PlayerTeleportEvent playerEvent = new PlayerTeleportEvent();
-			playerEvent.ToLocation = new Vector2 (tx * 16, ty * 16);
-			playerEvent.FromLocation = new Vector2(this.Position.X, this.Position.Y);
-			playerEvent.Sender = this;
-			Server.PluginManager.processHook(Hooks.PLAYER_TELEPORT, playerEvent);
-			if (playerEvent.Cancelled)
-			{
-				return false;
-			}
-            
 			bool changeSpawn = false;
 			
 			int ox = Main.spawnTileX;

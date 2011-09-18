@@ -4,24 +4,22 @@ using System.Collections.Generic;
 
 using Terraria_Server;
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin;
 using Terraria_Server.Logging;
 using Terraria_Server.Permissions;
 using TDSMPermissions.Definitions;
 
 using YaTools.Yaml;
+using Terraria_Server.Plugins;
 
 namespace TDSMPermissions
 {
-	public class TDSMPermissions : Plugin
+	public class TDSMPermissions : BasePlugin
 	{
 		/*
 		 * @Developers
 		 * 
 		 * Plugins need to be in .NET 4.0
 		 * Otherwise TDSM will be unable to load it. 
-		 * 
-		 * As of June 16, 1:15 AM, TDSM should now load Plugins Dynamically.
 		 */
 
 		public Properties properties;
@@ -43,7 +41,7 @@ namespace TDSMPermissions
 
 		private bool inGroups = false;
 
-		public override void Load()
+		protected override void Initialized(object state)
 		{
 			Name = "TDSMPermissions";
 			Description = "Permissions for TDSM.";
@@ -72,17 +70,17 @@ namespace TDSMPermissions
 			Node.isPermittedImpl = this.isPermitted;
 		}
 
-		public override void Enable()
+		protected override void Enabled()
 		{
 			ProgramLog.Log(base.Name + " enabled.");
 			//Register Hooks
-			registerHook(Hooks.PLAYER_PRELOGIN);
+			//registerHook(Hooks.PLAYER_PRELOGIN);
 			registerHook(Hooks.PLUGINS_LOADED);
 
 			//Add Commands
 		}
 
-		public override void Disable()
+		protected override void Disabled()
 		{
 			ProgramLog.Log(base.Name + " disabled.");
 		}

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Terraria_Server.Logging;
+using Terraria_Server.Plugins;
+
 namespace Terraria_Server.Messages
 {
     public class KillProjectileMessage : SlotMessageHandler
@@ -19,19 +22,53 @@ namespace Terraria_Server.Messages
             byte owner = readBuffer[num];
             
             owner = (byte)whoAmI;
-
-            Projectile projectile;
-            for (int i = 0; i < 1000; i++)
-            {
-                projectile = Main.projectile[i];
-                if (projectile.Owner == (int)owner && projectile.identity == (int)identity && projectile.Active)
-                {
-                    projectile.Kill();
-                    break;
-                }
-            }
-
-            NetMessage.SendData(29, -1, whoAmI, "", (int)identity, (float)owner);
+            
+			int index = Projectile.FindExisting (identity, owner);
+			if (index == 1000) return;
+			
+			var player = Main.players[whoAmI];
+			
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.KillProjectileReceived
+			{
+				Id = identity,
+				Owner = owner,
+				Index = (short)index,
+			};
+			
+			HookPoints.KillProjectileReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.IGNORE)
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.Projectile (Main.projectile[index]);
+				msg.Send (whoAmI);
+				return;
+			}
+			
+			var projectile = Main.projectile[index];
+			
+			if (projectile.Owner == owner && projectile.identity == identity)
+			{
+				projectile.Kill ();
+				NetMessage.SendData(29, -1, whoAmI, "", (int)identity, (float)owner);
+			}
         }
     }
 }

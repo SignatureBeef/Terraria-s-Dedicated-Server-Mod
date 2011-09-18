@@ -152,6 +152,7 @@ namespace Terraria_Server.Misc
 		T PopFrontInternal ()
 		{
 			var item = array[head];
+			array[head] = default(T);
 			head = (head + 1) % array.Length;
 			count -= 1;
 			
@@ -162,6 +163,7 @@ namespace Terraria_Server.Misc
 		{
 			var tail = (head + count - 1) % array.Length;
 			var item = array[tail];
+			array[tail] = default(T);
 			count -= 1;
 			
 			return item;

@@ -28,7 +28,7 @@ namespace Terraria_Server.Messages
             num += 4;
             byte stackSize = readBuffer[num++];
 
-            string String4 = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
+            string String4 = Networking.StringCache.FindOrMake (new ArraySegment<byte> (readBuffer, num, length - num + start));
 
             Item item = Main.item[(int)itemIndex];
             

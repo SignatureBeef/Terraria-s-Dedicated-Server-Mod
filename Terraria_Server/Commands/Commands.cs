@@ -11,7 +11,7 @@ using Terraria_Server.Logging;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Definitions;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Networking;
 using System.IO;
 
@@ -49,8 +49,9 @@ namespace Terraria_Server.Commands
 
 			Server.notifyOps("Exiting on request.", false);
 			NetPlay.StopServer();
+			Statics.Exit = true;
 
-            throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
+            //throw new ExitException(String.Format("{0} requested that TDSM is to shutdown.", sender.Name));
 		}
 
 		/// <summary>
@@ -142,18 +143,8 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Reload(ISender sender, ArgumentList args)
 		{
-			bool parseData = args.TryPop("-data");
-
-			Server.notifyOps("Reloading plugins.", true);
-			Server.PluginManager.ReloadPlugins();
-
-            if (parseData)
-            {
-                Server.notifyOps("Reloading properties.", true);
-                Program.properties.Load();
-            }
-
-			return;
+			Server.notifyOps("Reloading server.properties.", true);
+			Program.properties.Load();
 		}
 
 		/// <summary>
@@ -1097,7 +1088,7 @@ namespace Terraria_Server.Commands
 
 			ProgramLog.Log("Starting the Server");
 			Main.Initialize();
-			WorldIO.loadWorld(Server.World.SavePath);
+			WorldIO.LoadWorld(Server.World.SavePath);
 			Program.updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
             NetPlay.StartServer();
 			//Statics.keepRunning = false;
@@ -1263,13 +1254,13 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void ListPlugins(ISender sender, ArgumentList args)
 		{
-            if (Server.PluginManager.PluginList.Count > 0)
+            if (PluginManager.PluginCount > 0)
 			{
                 string plugins = "";
 
-                foreach (Plugin.Plugin plugin in Server.PluginManager.PluginList.Values)
+                foreach (var plugin in PluginManager.EnumeratePlugins)
 				{
-					if (!plugin.Enabled || plugin.Name.Trim().Length > 0)
+					if (!plugin.IsEnabled || plugin.Name.Trim().Length > 0)
 					{
 						plugins += ", " + plugin.Name.Trim();
 					}
@@ -1283,172 +1274,6 @@ namespace Terraria_Server.Commands
 			else
 			{
 				sender.sendMessage("There are no loaded plugins.");
-			}
-		}
-
-		/// <summary>
-		/// Enable/disable and get details about specific plugins.
-		/// </summary>
-		/// <param name="sender">Sending player</param>
-		/// <param name="args">Arguments sent with command</param>
-		public static void ManagePlugins(ISender sender, ArgumentList args)
-		{
-			/*
-			 * Commands:
-			 *      list    - shows all plugins
-			 *      info    - shows a plugin's author & description etc
-			 *      disable - disables a plugin
-			 *      enable  - enables a plugin
-			 */
-			if (args.Count > 0 && args[0] != null && args[0].Trim().Length > 0)
-			{
-                string command = args[0].Trim();
-				args.RemoveAt(0); //Allow the commands to use any additional arguments without also getting the command
-				switch (command)
-				{
-					case "list":
-						{
-                            if (Server.PluginManager.PluginList.Count > 0)
-							{
-                                string plugins = "";
-
-                                foreach (Plugin.Plugin plugin in Server.PluginManager.PluginList.Values)
-								{
-									if (plugin.Name.Trim().Length > 0)
-									{
-										plugins += ", " + plugin.Name.Trim() + ((!plugin.Enabled) ? "[DISABLED] " : " ");
-									}
-								}
-								if (plugins.StartsWith(","))
-								{
-									plugins = plugins.Remove(0, 1).Trim(); //Remove the ', ' from the start and trim the ends
-								}
-								sender.sendMessage("Plugins: " + plugins + ".");
-							}
-							else
-							{
-								sender.sendMessage("There are no installed plugins.");
-							}
-							break;
-						}
-					case "info":
-						{
-							if (!(args.Count > 1 && args[1] != null && args[0].Trim().Length > 0))
-							{
-								sender.sendMessage("Please review your argument count.");
-							}
-
-                            string pluginName = String.Join(" ", args);
-
-                            if (Server.PluginManager.PluginList.Count > 0)
-							{
-                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
-								if (fplugin != null)
-								{
-									sender.sendMessage("Plugin Name: " + fplugin.Name);
-									sender.sendMessage("Plugin Author: " + fplugin.Author);
-									sender.sendMessage("Plugin Description: " + fplugin.Description);
-									sender.sendMessage("Plugin Enabled: " + fplugin.Enabled.ToString());
-								}
-								else
-								{
-									sender.sendMessage("The plugin \"" + args[1] + "\" was not found.");
-								}
-							}
-							else
-							{
-								sender.sendMessage("There are no plugins loaded.");
-							}
-							break;
-						}
-					case "disable":
-						{
-							if (!(args.Count > 1 && args[1] != null && args[1].Trim().Length > 0))
-							{
-								sender.sendMessage("Please review your argument count.");
-							}
-
-                            string pluginName = String.Join(" ", args);
-
-                            if (Server.PluginManager.PluginList.Count > 0)
-							{
-                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
-								if (fplugin != null)
-								{
-									if (fplugin.Enabled)
-									{
-                                        if (Server.PluginManager.DisablePlugin(fplugin.Name))
-										{
-											sender.sendMessage(pluginName + " was disabled!");
-										}
-										else
-										{
-											sender.sendMessage("There was an issue disabling plugin \"" + pluginName + "\".");
-										}
-									}
-									else
-									{
-										sender.sendMessage("The plugin \"" + pluginName + "\" is already disabled.");
-									}
-								}
-								else
-								{
-									sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
-								}
-							}
-							else
-							{
-								sender.sendMessage("There are no plugins loaded.");
-							}
-							break;
-						}
-					case "enable":
-						{
-							if (!(args.Count > 1 && args[1] != null && args[0].Trim().Length > 0))
-							{
-								sender.sendMessage("Please review your argument count.");
-							}
-
-                            string pluginName = String.Join(" ", args);
-
-                            if (Server.PluginManager.PluginList.Count > 0)
-							{
-                                Plugin.Plugin fplugin = Server.PluginManager.GetPlugin(pluginName);
-								if (fplugin != null)
-								{
-									if (!fplugin.Enabled)
-									{
-                                        if (Server.PluginManager.EnablePlugin(fplugin.Name))
-										{
-											sender.sendMessage(args[1] + " was enabled!");
-										}
-										else
-										{
-											sender.sendMessage("There was an issue enabling plugin \"" + pluginName + "\".");
-										}
-									}
-									else
-									{
-										sender.sendMessage("The plugin \"" + pluginName + "\" is already enabled.");
-									}
-								}
-								else
-								{
-									sender.sendMessage("The plugin \"" + pluginName + "\" could not be found.");
-								}
-							}
-							else
-							{
-								sender.sendMessage("There are no plugins loaded.");
-							}
-							break;
-						}
-					default:
-						{
-							sender.sendMessage("Please review your argument count");
-							break;
-						}
-				}
 			}
 		}
 

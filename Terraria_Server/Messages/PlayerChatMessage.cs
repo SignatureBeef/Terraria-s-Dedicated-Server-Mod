@@ -1,8 +1,7 @@
 using System;
 using System.Text;
 using System.Linq;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
 using Terraria_Server.Networking;
@@ -54,59 +53,56 @@ namespace Terraria_Server.Messages
             }
             
             int whoAmI = conn.SlotIndex;
-            int playerIndex = whoAmI;
-            //var slot = Netplay.slots[whoAmI];
+            var player = Main.players[whoAmI];
 
-            if (chat.Length > 0)
-            {
-                if (chat.Substring(0, 1).Equals("/"))
-                {
-                    if (Main.players[playerIndex].Op)
-                        ProgramLog.Admin.Log (Main.players[playerIndex].Name + " sent command: " + chat);
-                    else
-                        ProgramLog.Users.Log (Main.players[playerIndex].Name + " sent command: " + chat);
-                    
-                    if (!ProcessMessage(new PlayerCommandEvent(), chat, Hooks.PLAYER_COMMAND, whoAmI))
-                    {
-                        return;
-                    }
-                    
-                    Program.commandParser.ParsePlayerCommand(Main.players[playerIndex], chat);
-                    return;
-                }
-                else
-                {
-                    if (!ProcessMessage(new MessageEvent(), chat, Hooks.PLAYER_CHAT, playerIndex))
-                    {
-                        return;
-                    }
-                }
-
-                Color chatColour = ChatColor.White;
-                if (Main.players[playerIndex].Op)
-                {
-                    chatColour = ChatColor.SteelBlue;
-                }
-                else if (Main.players[playerIndex].Difficulty == 1)
-                {
-                    chatColour = ChatColor.BlanchedAlmond;
-                }
-                else if (Main.players[playerIndex].Difficulty == 2)
-                {
-                    chatColour = ChatColor.Tomato;
-                }
-                NetMessage.SendData(Packet.PLAYER_CHAT, -1, -1, chat, playerIndex, chatColour.R, chatColour.G, chatColour.B);
-                ProgramLog.Chat.Log ("<" + Main.players[playerIndex].Name + "> " + chat);
-            }
-        }
-
-        private bool ProcessMessage(MessageEvent messageEvent, string text, Hooks hook, int whoAmI)
-        {
-            messageEvent.Message = text;
-            messageEvent.Sender = Main.players[whoAmI];
-            Server.PluginManager.processHook(hook, messageEvent);
-
-            return !messageEvent.Cancelled;
+			if (chat.Length == 0) //TODO: check for undetectable spam
+				return;
+				
+			if (chat.Substring(0, 1).Equals("/"))
+			{
+				if (Main.players[whoAmI].Op)
+					ProgramLog.Admin.Log (player.Name + " sent command: " + chat);
+				else
+					ProgramLog.Users.Log (player.Name + " sent command: " + chat);
+				
+				Program.commandParser.ParsePlayerCommand (player, chat);
+				return;
+			}
+			
+			Color color = ChatColor.White;
+			if (player.Op)
+			{
+				color = ChatColor.DeepSkyBlue;
+			}
+			else if (player.Difficulty == 1)
+			{
+				color = ChatColor.Khaki;
+			}
+			else if (player.Difficulty == 2)
+			{
+				color = ChatColor.Tomato;
+			}
+			
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Sender = player,
+				Player = player,
+			};
+			
+			var args = new HookArgs.PlayerChat
+			{
+				Message = chat,
+				Color = color,
+			};
+			
+			HookPoints.PlayerChat.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+				return;
+			
+			NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, chat, whoAmI, args.Color.R, args.Color.G, args.Color.B);
+			ProgramLog.Chat.Log ("<" + player.Name + "> " + chat);
         }
     }
 }

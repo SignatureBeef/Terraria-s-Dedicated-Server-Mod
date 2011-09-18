@@ -70,7 +70,6 @@ namespace Terraria_Server.Misc
 				
 				return true;
 			}
-			return false;
 		}
 
     }

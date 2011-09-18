@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Terraria_Server.Plugin;
-using Terraria_Server.Events;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -20,19 +19,46 @@ namespace Terraria_Server.Messages
             num += 4;
             int y = BitConverter.ToInt32(readBuffer, num);
             num += 4;
+            
+			var player = Main.players[whoAmI];
+			
+			if (Math.Abs (player.Position.X/16 - x) >= 7 || Math.Abs (player.Position.Y/16 - y) >= 7)
+			{
+				return;
+			}
+            
             int chestIndex = Chest.FindChest(x, y);
 
-            var chestEvent = new PlayerChestOpenEvent();
-            chestEvent.Sender = Main.players[whoAmI];
-            chestEvent.ID = chestIndex;
-            Server.PluginManager.processHook(Hooks.PLAYER_CHEST, chestEvent);
-            if (chestEvent.Cancelled)
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.ChestOpenReceived
+			{
+				X = x, Y = y,
+				ChestIndex = (short)chestIndex,
+			};
+			
+			HookPoints.ChestOpenReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.IGNORE)
+			{
+				return;
+			}
+			
+            if (ctx.Result == HookResult.DEFAULT && chestIndex > -1)
             {
-                return;
-            }
-
-            if (chestIndex > -1 && Chest.UsingChest(chestIndex) == -1)
-            {
+                var user = Chest.UsingChest(chestIndex);
+                if (user >= 0 && user != whoAmI) return;
+                
                 for (int i = 0; i < Chest.MAX_ITEMS; i++)
                 {
                     NetMessage.SendData(32, whoAmI, -1, "", chestIndex, (float)i);

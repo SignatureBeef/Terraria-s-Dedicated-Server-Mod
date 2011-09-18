@@ -1,19 +1,45 @@
-
 using System;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
+using System.Collections.Generic;
+
+using Terraria_Server.Commands;
+using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions;
 using Terraria_Server.Collections;
 using Terraria_Server.WorldMod;
+using Terraria_Server.Logging;
 
 namespace Terraria_Server
 {
     /// <summary>
     /// Projectile includes things like bullets, arrows, knives, explosives, boomerangs, and possibly ball/chain, orbs, and flamelash/spells.
     /// </summary>
-    public class Projectile : BaseEntity
+    public class Projectile : BaseEntity, ISender
     {
+		[System.Xml.Serialization.XmlIgnore]
+		public ISender Creator { get; set; }
+		
+		bool ISender.Op
+		{
+			get
+			{
+				var creator = Creator;
+				if (creator == null)
+					return true;
+				else
+					return creator.Op;
+			}
+			
+			set { }
+		}
+		
+		void ISender.sendMessage (string a, int b, float c, float d, float e)
+		{
+			var creator = Creator;
+			if (creator != null)
+				creator.sendMessage (a, b, c, d, e);
+		}
+		
         /// <summary>
         /// Whether the projectile is currently wet
         /// </summary>
@@ -159,7 +185,7 @@ namespace Terraria_Server
         /// <summary>
         /// Any immune players
         /// </summary>
-        public int[] playerImmune = new int[255];
+        public byte[] playerImmune = new byte[255];
         /// <summary>
         /// Miscellaneous text associated with the projectile.  Only used in hardcore deaths and sign edits?
         /// </summary>
@@ -201,6 +227,8 @@ namespace Terraria_Server
             var cloned = (Projectile) base.MemberwiseClone();
             cloned.ai = new float [Projectile.MAX_AI];
             Array.Copy (ai, cloned.ai, Projectile.MAX_AI);
+            cloned.playerImmune = new byte [playerImmune.Length];
+            Array.Copy (playerImmune, cloned.playerImmune, playerImmune.Length);
             return cloned;
         }
 
@@ -223,52 +251,48 @@ namespace Terraria_Server
         /// <returns>New projectile's index</returns>
         public static int NewProjectile(float X, float Y, float SpeedX, float SpeedY, ProjectileType Type, int Damage, float KnockBack, int Owner = 255)
         {
-            int num = 1000;
-            for (int i = 0; i < 1000; i++)
-            {
-                if (!Main.projectile[i].Active)
-                {
-                    num = i;
-                    break;
-                }
-            }
+            int num = ReserveSlot (Owner);
             if (num == 1000)
             {
                 return num;
             }
-            Main.projectile[num] = Registries.Projectile.Create((int)Type);
-            Main.projectile[num].Position.X = X - (float)Main.projectile[num].Width * 0.5f;
-            Main.projectile[num].Position.Y = Y - (float)Main.projectile[num].Height * 0.5f;
-            Main.projectile[num].Owner = Owner;
-            Main.projectile[num].Velocity.X = SpeedX;
-            Main.projectile[num].Velocity.Y = SpeedY;
-            Main.projectile[num].damage = Damage;
-            Main.projectile[num].knockBack = KnockBack;
-            Main.projectile[num].identity = num;
-            Main.projectile[num].wet = Collision.WetCollision(Main.projectile[num].Position, Main.projectile[num].Width, Main.projectile[num].Height);
+			var projectile = Registries.Projectile.Create((int)Type);
+			if (Owner < 255)
+				projectile.Creator = Main.players[Owner];
+			projectile.Position.X = X - (float)Main.projectile[num].Width * 0.5f;
+			projectile.Position.Y = Y - (float)Main.projectile[num].Height * 0.5f;
+			projectile.Owner = Owner;
+			projectile.Velocity.X = SpeedX;
+			projectile.Velocity.Y = SpeedY;
+			projectile.damage = Damage;
+			projectile.knockBack = KnockBack;
+			projectile.identity = num;
+			projectile.whoAmI = num;
+			projectile.wet = Collision.WetCollision(Main.projectile[num].Position, Main.projectile[num].Width, Main.projectile[num].Height);
+			Main.projectile[num] = projectile;
             if (Owner == Main.myPlayer)
             {
                 NetMessage.SendData(27, -1, -1, "", num);
             }
-            if (Owner == Main.myPlayer)
-            {
-                if (Type == ProjectileType.BOMB)
-                {
-                    Main.projectile[num].timeLeft = 180;
-                }
-                if (Type == ProjectileType.DYNAMITE)
-                {
-                    Main.projectile[num].timeLeft = 300;
-                }
-                if (Type == ProjectileType.GRENADE)
-                {
-                    Main.projectile[num].timeLeft = 180;
-                }
-                if (Type == ProjectileType.BOMB_STICKY)
-                {
-                    Main.projectile[num].timeLeft = 180;
-                }
-            }
+//            if (Owner == Main.myPlayer)
+//            {
+//                if (Type == ProjectileType.BOMB)
+//                {
+//                    Main.projectile[num].timeLeft = 180;
+//                }
+//                if (Type == ProjectileType.DYNAMITE)
+//                {
+//                    Main.projectile[num].timeLeft = 300;
+//                }
+//                if (Type == ProjectileType.GRENADE)
+//                {
+//                    Main.projectile[num].timeLeft = 180;
+//                }
+//                if (Type == ProjectileType.BOMB_STICKY)
+//                {
+//                    Main.projectile[num].timeLeft = 180;
+//                }
+//            }
             return num;
         }
 
@@ -384,8 +408,10 @@ namespace Terraria_Server
             Rectangle rectangle = new Rectangle((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height);
             if (this.friendly && this.type != ProjectileType.ORB_OF_LIGHT)
             {
-                if (this.Owner == playerIndex)
+                var creat = Creator as Player;
+                if (this.Owner == playerIndex)// || (Owner == 255 && creat != null && creat.whoAmi == playerIndex))
                 {
+                    if (creat != null) player = creat;
                     if ((this.aiStyle == 16 || this.type == ProjectileType.ARROW_HELLFIRE) && this.timeLeft <= 1)
                     {
                         if (player.Active && !player.dead && !player.immune && (!this.ownerHitCheck || Collision.CanHit(Main.players[this.Owner].Position, Main.players[this.Owner].Width, Main.players[this.Owner].Height, player.Position, player.Width, player.Height)))
@@ -403,7 +429,7 @@ namespace Terraria_Server
 								int dmg = Main.DamageVar ((float)this.damage);
 								this.StatusPlayer (player);
 								
-								player.Hurt(dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
+								player.Hurt (this, dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1));
 								NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), playerIndex, (float)this.direction, (float)dmg, 1f);
                             }
                         }
@@ -434,8 +460,12 @@ namespace Terraria_Server
                         {
                             if (Main.tile.At(i, j + 1).Exists && Main.tileCut[(int)Main.tile.At(i, j).Type] && Main.tile.At(i, j + 1).Type != 78)
                             {
-                                WorldModify.KillTile(i, j, false, false, false);
-                                NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
+								var plr = Creator as Player;
+								if (plr == null || WorldModify.InvokeAlterationHook (this, plr, i, j, 0))
+								{
+									WorldModify.KillTile(i, j, false, false, false);
+									NetMessage.SendData(17, -1, -1, "", 0, (float)i, (float)j);
+								}
                             }
                         }
                     }
@@ -506,11 +536,12 @@ namespace Terraria_Server
                                         }
                                         int dmg = Main.DamageVar (this.damage);
                                         
-                                        this.StatusNPC (npc);
-                                        npc.StrikeNPC (dmg, this.knockBack, this.direction, crit);
-                                        
-                                        NetMessage.SendData(28, -1, -1, "", i, (float)dmg, this.knockBack, (float)this.direction, crit ? 1 : 0);
-
+										if (npc.StrikeNPC (this, dmg, this.knockBack, this.direction, crit))
+										{
+											this.StatusNPC (npc);
+											NetMessage.SendData(28, -1, -1, "", i, (float)dmg, this.knockBack, (float)this.direction, crit ? 1 : 0);
+										}
+										
                                         if (this.penetrate != 1)
                                         {
                                             npc.immune[this.Owner] = 10;
@@ -594,7 +625,7 @@ namespace Terraria_Server
                                     int dmg = Main.DamageVar (this.damage);
                                     
                                     if (!playerIt.immune) this.StatusPvP (playerIt);
-                                    playerIt.Hurt (dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), crit);
+                                    playerIt.Hurt (this, dmg, this.direction, true, false, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), crit);
                                                                         
                                     NetMessage.SendData(26, -1, -1, Player.getDeathMessage(this.Owner, -1, this.whoAmI, -1), i, (float)this.direction, (float)dmg, 1f, crit ? 1 : 0);
 
@@ -655,6 +686,7 @@ namespace Terraria_Server
                     }
                 }
             }
+#if CLIENT_CODE
             if (this.hostile && Main.myPlayer < 255 && this.damage > 0) // client-only, but we may use it later
             {
                 if (player.Active && !player.dead && !player.immune)
@@ -680,6 +712,7 @@ namespace Terraria_Server
                     }
                 }
             }
+#endif //CLIENT_CODE
         }
 
         /// <summary>
@@ -694,6 +727,7 @@ namespace Terraria_Server
                 if (this.Position.X <= Main.leftWorld || this.Position.X + (float)this.Width >= Main.rightWorld || this.Position.Y <= Main.topWorld || this.Position.Y + (float)this.Height >= Main.bottomWorld)
                 {
                     this.Active = false;
+                    Reset (i);
                     return;
                 }
                 this.whoAmI = i;
@@ -712,7 +746,7 @@ namespace Terraria_Server
                 this.AI();
                 if (this.Owner < 255 && !Main.players[this.Owner].Active)
                 {
-                    this.Kill();
+                    this.Kill(); // FIXME!
                 }
                 if (!this.ignoreWater)
                 {
@@ -730,6 +764,7 @@ namespace Terraria_Server
                     catch
                     {
                         this.Active = false;
+                        Reset (i);
                         return;
                     }
                     if (flag2)
@@ -1424,7 +1459,11 @@ namespace Terraria_Server
                                                             Main.projectile[num24].Kill();
                                                         }
                                                     }
-                                                    WorldModify.KillTile(n, num22, true, true, false);
+													var plr = Creator as Player;
+													if (plr == null || WorldModify.InvokeAlterationHook (this, plr, n, num22, 0))
+													{
+														WorldModify.KillTile(n, num22, true, true, false);
+													}
                                                     this.Velocity.X = 0f;
                                                     this.Velocity.Y = 0f;
                                                     this.ai[0] = 2f;
@@ -2280,7 +2319,28 @@ namespace Terraria_Server
             }
             if (this.Owner == Main.myPlayer)
             {
+                bool explode = false;
                 if (this.type == ProjectileType.BOMB || this.type == ProjectileType.DYNAMITE || this.type == ProjectileType.BOMB_STICKY)
+                {
+					var ctx = new HookContext
+					{
+						Sender = this,
+					};
+					
+					var args = new HookArgs.Explosion
+					{
+						Source = this,
+					};
+					
+					HookPoints.Explosion.Invoke (ref ctx, ref args);
+					
+					if (ctx.Result != HookResult.IGNORE)
+					{
+						explode = true;
+					}
+                }
+                
+                if (explode)
                 {
                     int num38 = 3;
                     if (this.type == ProjectileType.DYNAMITE)
@@ -2329,6 +2389,7 @@ namespace Terraria_Server
                             float num50 = Math.Abs((float)num48 - this.Position.X / 16f);
                             float num51 = Math.Abs((float)num49 - this.Position.Y / 16f);
                             double num52 = Math.Sqrt((double)(num50 * num50 + num51 * num51));
+                            int alter = -1;
                             if (num52 < (double)num38)
                             {
                                 bool flag2 = true;
@@ -2355,13 +2416,30 @@ namespace Terraria_Server
                                     }
                                     if (flag2)
                                     {
-                                        WorldModify.KillTile(num48, num49, false, false, false);
+                                        alter = 0;
                                     }
                                 }
                                 if (flag2 && Main.tile.At(num48, num49).Exists && Main.tile.At(num48, num49).Wall > 0 && flag)
                                 {
-                                    WorldModify.KillWall(num48, num49, false);
+                                    alter = alter == 0 ? 100 : 2;
                                 }
+								if (alter >= 0)
+								{
+									var plr = Creator as Player;
+									if (plr == null || WorldModify.InvokeAlterationHook (this, plr, num48, num49, (byte)alter))
+									{
+										if (alter == 0 || alter == 100)
+										{
+											WorldModify.KillTile(num48, num49, false, false, false);
+											NetMessage.SendData(17, -1, -1, "", 0, (float)num48, (float)num49, 0f, 0);
+										}
+										if (alter == 2 || alter == 100)
+										{
+											WorldModify.KillWall(num48, num49, false);
+											NetMessage.SendData(17, -1, -1, "", 2, (float)num48, (float)num49, 0f, 0);
+										}
+									}
+								}
                             }
                         }
                     }
@@ -2474,49 +2552,166 @@ namespace Terraria_Server
                 }
             }
             this.Active = false;
+            Reset (whoAmI);
         }
+        
+		static Dictionary<int, int> identityMap = new Dictionary<int, int> ();
+		static Stack<int> freeSlots = new Stack<int> ();
+		
+		internal static void ResetProjectiles ()
+		{
+			lock (identityMap)
+			{
+				identityMap.Clear ();
+				freeSlots.Clear ();
+				
+				for (int i = 999; i >= 0; i--)
+				{
+					freeSlots.Push (i);
+					Main.projectile[i] = new Projectile ();
+					Main.projectile[i].whoAmI = i;
+				}
+			}
+		}
+		
+		internal static void Reset (int i)
+		{
+			var proj = Main.projectile[i];
+			int owner = proj.Owner;
+			int id = proj.identity;
+			var key = (id << 8) | owner;
+			
+			lock (identityMap)
+			{
+				int slot;
+				if (identityMap.TryGetValue (key, out slot))
+				{
+					identityMap.Remove (key);
+					freeSlots.Push (i);
+					
+					if (slot != i)
+						ProgramLog.Error.Log ("Mismatch in projectile slot assignment.");
+				}
+			}
+		}
+		
+		public static void Register (int identity, int owner, int whoAmI)
+		{
+			lock (identityMap)
+			{
+				identityMap[(identity << 8) | owner] = whoAmI;
+			}
+		}
+		
+		public static int FindExisting (int identity, int owner)
+		{
+			int key = (identity << 8) | owner;
+			
+			lock (identityMap)
+			{
+				int index;
+				if (identityMap.TryGetValue (key, out index))
+				{
+					return index;
+				}
+				return 1000;
+			}
+		}
+		
+		public static int ReserveSlot (int owner)
+		{
+			lock (identityMap)
+			{
+				if (freeSlots.Count == 0) return 1000;
+				
+				int i = freeSlots.Pop();
+				identityMap[(i << 8) | owner] = i;
+				
+				return i;
+				
+//				for (int i = 0; i < 1000; i++)
+//				{
+//					if (Main.projectile[i].Active == false)
+//					{
+//						identityMap[(i << 8) | owner] = i;
+//						return i;
+//					}
+//				}
+//				
+//				return 1000;
+			}
+		}
+		
+		public static int ReserveSlot (int identity, int owner)
+		{
+			lock (identityMap)
+			{
+				if (freeSlots.Count == 0) return 1000;
+				
+				int i = freeSlots.Pop();
+				identityMap[(identity << 8) | owner] = i;
+				
+				return i;
 
-        /// <summary>
-        /// Creates a new color by combining newColor with the projectiles alpha value
-        /// </summary>
-        /// <param name="newColor">New color to combine</param>
-        /// <returns>Combined color</returns>
-        public Color GetAlpha(Color newColor)
-        {
-            int r;
-            int g;
-            int b;
-            if (this.type == ProjectileType.STARFURY || this.type == ProjectileType.BALL_OF_FIRE || this.type == ProjectileType.FLAMELASH || this.type == ProjectileType.GLOWSTICK || this.type == ProjectileType.GLOWSTICK_STICKY)
-            {
-                r = (int)newColor.R - this.alpha / 3;
-                g = (int)newColor.G - this.alpha / 3;
-                b = (int)newColor.B - this.alpha / 3;
-            }
-            else
-            {
-                if (this.type == ProjectileType.MISSILE_MAGIC || this.type == ProjectileType.ORB_OF_LIGHT || this.type == ProjectileType.SICKLE_DEMON || this.type == ProjectileType.SCYTHE_DEMON)
-                {
-                    r = (int)newColor.R;
-                    g = (int)newColor.G;
-                    b = (int)newColor.B;
-                }
-                else
-                {
-                    r = (int)newColor.R - this.alpha;
-                    g = (int)newColor.G - this.alpha;
-                    b = (int)newColor.B - this.alpha;
-                }
-            }
-            int num = (int)newColor.A - this.alpha;
-            if (num < 0)
-            {
-                num = 0;
-            }
-            if (num > 255)
-            {
-                num = 255;
-            }
-            return new Color(r, g, b, num);
-        }
+//				for (int i = 0; i < 1000; i++)
+//				{
+//					if (Main.projectile[i].Active == false)
+//					{
+//						identityMap[(identity << 8) | owner] = i;
+//						return i;
+//					}
+//				}
+//				
+//				return 1000;
+			}
+		}
+		
+		public static void FreeSlot (int id, int owner, int slot)
+		{
+			int key = (id << 8) | owner;
+			
+			lock (identityMap)
+			{
+				int index;
+				if (identityMap.TryGetValue (key, out index))
+				{
+					if (index != slot)
+						ProgramLog.Error.Log ("Mismatch in projectile slot assignment.");
+					
+					freeSlots.Push (slot);
+				}
+				else
+				{
+					ProgramLog.Error.Log ("Double free in projectile slot assignment.");
+				}
+			}
+		}
+		
+		// transfer ownership to the server
+		public void Repossess ()
+		{
+			int id = identity;
+			int slot = whoAmI;
+			int oldowner = Owner;
+			
+			int key = (id << 8) | oldowner;
+			int nkey = (slot << 8) | 255;
+			
+			lock (identityMap)
+			{
+				int index;
+				if (identityMap.TryGetValue (key, out index))
+				{
+					if (index != slot)
+						ProgramLog.Error.Log ("Mismatch in projectile slot assignment.");
+					
+					identity = slot;
+					Owner = 255;
+					
+					identityMap.Remove (key);
+					identityMap[nkey] = slot;
+				}
+			}
+		}
     }
 }

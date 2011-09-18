@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -123,19 +123,6 @@
     <Compile Include="Collections\ItemRegistry.cs" />
     <Compile Include="Collections\Registries.cs" />
     <Compile Include="Definitions\Time.cs" />
-    <Compile Include="Events\CancellableEvent.cs" />
-    <Compile Include="Events\MessageEvent.cs" />
-    <Compile Include="Events\NPCBossDeathEvent.cs" />
-    <Compile Include="Events\NPCBossSummonEvent.cs" />
-    <Compile Include="Events\NPCDeathEvent.cs" />
-    <Compile Include="Events\NPCSpawnEvent.cs" />
-    <Compile Include="Events\PlayerChestBreakEvent.cs" />
-    <Compile Include="Events\PlayerKeyPressEvent.cs" />
-    <Compile Include="Events\PlayerMoveEvent.cs" />
-    <Compile Include="Events\PlayerPvPChangeEvent.cs" />
-    <Compile Include="Events\PlayerTeleportEvent.cs" />
-    <Compile Include="Events\ServerPluginsLoaded.cs" />
-    <Compile Include="Events\TimeChangedEvent.cs" />
     <Compile Include="Messages\ChestItemMessage.cs" />
     <Compile Include="Messages\ConnectionRequestMessage.cs" />
     <Compile Include="Messages\ClientModMessage.cs" />
@@ -186,26 +173,10 @@
     <Compile Include="Permissions\Node.cs" />
     <Compile Include="Server\LoadMonitor.cs" />
     <Compile Include="Commands\ConsoleSender.cs" />
-    <Compile Include="Commands\Sender.cs" />
-    <Compile Include="Events\PlayerChestOpenEvent.cs" />
-    <Compile Include="Events\BasePlayerEvent.cs" />
-    <Compile Include="Events\DoorStateChangeEvent.cs" />
-    <Compile Include="Events\PlayerEditSignEvent.cs" />
-    <Compile Include="Events\PlayerLoginEvent.cs" />
-    <Compile Include="Events\PlayerLogoutEvent.cs" />
-    <Compile Include="Events\PartyChangeEvent.cs" />
-    <Compile Include="Events\PlayerCommandEvent.cs" />
     <Compile Include="Collision.cs" />
-    <Compile Include="Events\PlayerDeathEvent.cs" />
-    <Compile Include="Events\PlayerProjectileEvent.cs" />
     <Compile Include="Misc\Color.cs" />
     <Compile Include="Commands\Commands.cs" />
     <Compile Include="Commands\CommandParser.cs" />
-    <Compile Include="Events\ConsoleCommandEvent.cs" />
-    <Compile Include="Events\Event.cs" />
-    <Compile Include="Events\PlayerHurtEvent.cs" />
-    <Compile Include="Events\PlayerStateUpdateEvent.cs" />
-    <Compile Include="Events\PlayerTileChangeEvent.cs" />
     <Compile Include="Item.cs" />
     <Compile Include="Liquid.cs" />
     <Compile Include="LiquidBuffer.cs" />
@@ -214,10 +185,6 @@
     <Compile Include="NPC.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Definitions\DoorOpener.cs" />
-    <Compile Include="Plugin\Hooks.cs" />
-    <Compile Include="Plugin\Party.cs" />
-    <Compile Include="Plugin\Plugin.cs" />
-    <Compile Include="Plugin\PluginManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />
     <Compile Include="Definitions\Platform.cs" />
@@ -242,7 +209,6 @@
     <Compile Include="NetMessage_Packets.cs" />
     <Compile Include="TileCollection.cs" />
     <Compile Include="Tile.cs" />
-    <Compile Include="Events\PlayerFlowLiquidEvent.cs" />
     <Compile Include="Commands\ArgumentList.cs" />
     <Compile Include="Misc\ProducerConsumerSignal.cs" />
     <Compile Include="Logging\LogTarget.cs" />
@@ -266,6 +232,14 @@
     <Compile Include="Misc\ArrayDeque.cs" />
     <Compile Include="Messages\MessageDispatcher.cs" />
     <Compile Include="Networking\LiquidUpdateBuffer.cs" />
+    <Compile Include="Plugins\HookPoint.cs" />
+    <Compile Include="Plugins\Hooks.cs" />
+    <Compile Include="Networking\StringCache.cs" />
+    <Compile Include="Plugins\BasePlugin.cs" />
+    <Compile Include="Plugins\HookAttribute.cs" />
+    <Compile Include="Plugins\PluginManager.cs" />
+    <Compile Include="Server\WorldSender.cs" />
+    <Compile Include="Commands\Sender.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
@@ -316,4 +290,7 @@
   -->
   <ItemGroup />
   <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Plugins\" />
+  </ItemGroup>
 </Project>

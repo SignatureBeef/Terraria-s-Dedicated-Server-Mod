@@ -355,7 +355,7 @@
     <Width>22</Width>
     <Height>22</Height>
     <aiStyle>16</aiStyle>
-    <timeLeft>3600</timeLeft>
+    <timeLeft>180</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
@@ -366,7 +366,7 @@
     <Width>10</Width>
     <Height>10</Height>
     <aiStyle>16</aiStyle>
-    <timeLeft>3600</timeLeft>
+    <timeLeft>300</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
@@ -377,7 +377,7 @@
     <Width>14</Width>
     <Height>14</Height>
     <aiStyle>16</aiStyle>
-    <timeLeft>3600</timeLeft>
+    <timeLeft>180</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
     <tileCollide>true</tileCollide>
@@ -468,7 +468,7 @@
     <Width>22</Width>
     <Height>22</Height>
     <aiStyle>16</aiStyle>
-    <timeLeft>3600</timeLeft>
+    <timeLeft>180</timeLeft>
     <friendly>true</friendly>
     <penetrate>-1</penetrate>
   </Projectile>

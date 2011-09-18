@@ -1,7 +1,6 @@
 using System;
 using System.Text;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Logging;
 
 namespace Terraria_Server.Messages
@@ -24,33 +23,36 @@ namespace Terraria_Server.Messages
                 return;
             }
 
-            playerIndex = whoAmI;
-
-            int direction = (int)(readBuffer[num++] - 1);
-
-            short damage = BitConverter.ToInt16(readBuffer, num);
-            num += 2;
-            byte pvpFlag = readBuffer[num++];
-
-            string deathText = Encoding.ASCII.GetString(readBuffer, num, length - num + start);
-            bool pvp = (pvpFlag != 0);
-
-            var player = Main.players[playerIndex];
-            
-            PlayerDeathEvent pDeath = new PlayerDeathEvent();
-            pDeath.DeathMessage = deathText;
-            pDeath.Sender = player;
-            Server.PluginManager.processHook(Hooks.PLAYER_DEATH, pDeath);
-            if (pDeath.Cancelled)
-            {
-                return;
-            }
-            
-            ProgramLog.Death.Log ("{0} @ {1}: [Death] {2}{3}", player.IPAddress, whoAmI, player.Name ?? "<null>", deathText);
-
-            Main.players[playerIndex].KillMe((double)damage, direction, pvp, deathText);
-
-            NetMessage.SendData(44, -1, whoAmI, deathText, playerIndex, (float)direction, (float)damage, (float)pvpFlag);
+			var player = Main.players[whoAmI];
+			
+			var ctx = new HookContext
+			{
+				Connection = NetPlay.slots[whoAmI].conn,
+				Sender = player,
+				Player = player,
+			};
+			
+			var args = new HookArgs.ObituaryReceived
+			{
+				Direction = (int)readBuffer[num++] - 1,
+				Damage = BitConverter.ToInt16 (readBuffer, num++),
+				PvpFlag = readBuffer[++num],
+				Obituary = Encoding.ASCII.GetString (readBuffer, num + 1, length - num - 1 + start),
+			};
+			
+			HookPoints.ObituaryReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return;
+				
+			if (ctx.Result == HookResult.IGNORE)
+				return;
+			
+			ProgramLog.Death.Log ("{0} @ {1}: [Death] {2}{3}", player.IPAddress, whoAmI, player.Name ?? "<null>", args.Obituary);
+			
+			player.KillMe (args.Damage, args.Direction, args.PvpFlag == 1, args.Obituary);
+			
+			NetMessage.SendData(44, -1, whoAmI, args.Obituary, whoAmI, args.Direction, args.Damage, args.PvpFlag);
         }
     }
 }

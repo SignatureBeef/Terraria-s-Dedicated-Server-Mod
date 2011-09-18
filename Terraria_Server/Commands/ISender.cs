@@ -5,7 +5,7 @@ using System.Text;
 
 using Terraria_Server.Misc;
 
-namespace Terraria_Server.Commands
+namespace Terraria_Server
 {
     public interface ISender
     {

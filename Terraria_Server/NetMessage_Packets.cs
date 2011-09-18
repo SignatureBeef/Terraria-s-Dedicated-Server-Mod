@@ -3,7 +3,6 @@ using System.Text;
 using System.IO;
 
 using Terraria_Server.Commands;
-using Terraria_Server.Events;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
 using Terraria_Server.WorldMod;
@@ -662,6 +661,29 @@ namespace Terraria_Server
 			End ();
 		}
 		
+		public void EraseProjectile (int id, int owner)
+		{
+			Begin (Packet.PROJECTILE);
+			
+			Short (id);
+			
+			Float (-1000);
+			Float (-1000);
+			Float (1);
+			Float (1);
+			Float (0);
+			
+			Short (0);
+			
+			Byte (owner);
+			Byte (0);
+			
+			for (int i = 0; i < Terraria_Server.Projectile.MAX_AI; i++)
+				Float (0.0f);
+			
+			End ();
+		}
+		
 		public void DamageNPC (int npcId, int damage, float knockback, int direction, bool crit = false)
 		{
 			Header (Packet.DAMAGE_NPC, 10);
@@ -861,6 +883,19 @@ namespace Terraria_Server
 			Int (sign.y);
 			
 			String (sign.text);
+			
+			End ();
+		}
+		
+		public void WriteSign (int signId, int x, int y, string text)
+		{
+			Begin (Packet.WRITE_SIGN);
+			
+			Short (signId);
+			Int (x);
+			Int (y);
+			
+			String (text);
 			
 			End ();
 		}

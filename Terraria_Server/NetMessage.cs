@@ -3,11 +3,11 @@ using System.Text;
 using System.IO;
 
 using Terraria_Server.Commands;
-using Terraria_Server.Events;
 using Terraria_Server.Messages;
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
 using Terraria_Server.Networking;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server
 {
@@ -448,6 +448,27 @@ namespace Terraria_Server
 		
 		public static void OnPlayerJoined (int plr)
 		{
+			var player = Main.players[plr];
+			
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.PlayerEnteringGame
+			{
+				Slot = plr,
+			};
+			
+			HookPoints.PlayerEnteringGame.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+			{
+				return;
+			}
+
 			var msg = NetMessage.PrepareThreadInstance ();
 
 			var motd = Program.properties.Greeting.Split('@');
@@ -475,37 +496,37 @@ namespace Terraria_Server
 			msg.Send (plr); // send these before the login event, so messages from plugins come after
 			
 			var slot = NetPlay.slots[plr];
-			var player = Main.players[plr];
 			
-			PlayerLoginEvent loginEvent = new PlayerLoginEvent();
-			loginEvent.Slot = slot;
-			loginEvent.Sender = player;
-			Server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGIN, loginEvent);
+			slot.announced = true;
 			
-			if ((loginEvent.Cancelled || loginEvent.Action == PlayerLoginAction.REJECT) && (slot.state & SlotState.DISCONNECTING) == 0)
-			{
-				slot.Kick ("Disconnected by server.");
-			}
-			else
-			{
-				slot.announced = true;
-				
-				// to player
-				msg.Clear();
-				msg.SendSyncOthersForPlayer (plr);
-				
-				ProgramLog.Users.Log ("{0} @ {1}: ENTER {2}", slot.remoteAddress, plr, player.Name);
+			// to player
+			msg.Clear();
+			msg.SendSyncOthersForPlayer (plr);
+			
+			ProgramLog.Users.Log ("{0} @ {1}: ENTER {2}", slot.remoteAddress, plr, player.Name);
 
-                if (player.HasHackedData())
-                {
-                    player.Kick("No Hacked Health or Mana is allowed.");
-                }
-				
-				// to other players
-				msg.Clear();
-				msg.PlayerChat (255, player.Name + " has joined.", 255, 240, 20);
-				msg.ReceivingPlayerJoined (plr);
-				msg.SendSyncPlayerForOthers (plr); // broadcasts the preceding message too
+            if (player.HasHackedData())
+            {
+                player.Kick("No Hacked Health or Mana is allowed.");
+            }
+			
+			// to other players
+			msg.Clear();
+			msg.PlayerChat (255, player.Name + " has joined.", 255, 240, 20);
+			msg.ReceivingPlayerJoined (plr);
+			msg.SendSyncPlayerForOthers (plr); // broadcasts the preceding message too
+			
+			var args2 = new HookArgs.PlayerEnteredGame
+			{
+				Slot = plr,
+			};
+			
+			ctx.SetResult (HookResult.DEFAULT);
+			HookPoints.PlayerEnteredGame.Invoke (ref ctx, ref args2);
+			
+			if (ctx.CheckForKick ())
+			{
+				return;
 			}
 		}
 		
@@ -529,10 +550,18 @@ namespace Terraria_Server
 				msg.BroadcastExcept (player.whoAmi);
 			}
 			
-			PlayerLogoutEvent Event = new PlayerLogoutEvent();
-			Event.Slot = null;
-			Event.Sender = player;
-			Server.PluginManager.processHook(Plugin.Hooks.PLAYER_LOGOUT, Event);
+			var ctx = new HookContext
+			{
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.PlayerLeftGame
+			{
+				Slot = slot.whoAmI,
+			};
+			
+			HookPoints.PlayerLeftGame.Invoke (ref ctx, ref args);
 		}
 		
 		[ThreadStatic]
@@ -782,10 +811,10 @@ namespace Terraria_Server
 		{
 			foreach (char c in data)
 			{
-				if (c < 128)
-					sink.WriteByte ((byte) c);
-				else
+				if (c < 32 || c > 126)
 					sink.WriteByte ((byte) '?');
+				else
+					sink.WriteByte ((byte) c);
 			}
 		}
 		

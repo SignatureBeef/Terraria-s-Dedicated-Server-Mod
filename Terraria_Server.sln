@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Terraria_Server", "Terraria_Server\Terraria_Server.csproj", "{6B42E70C-75CD-410B-9D4A-3EA75B6F5176}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "Utility\Utility.csproj", "{AE8F1723-09C6-484D-9582-7DF6AC0E75C2}"

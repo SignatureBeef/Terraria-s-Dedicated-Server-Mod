@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 using Terraria_Server;
-using Terraria_Server.Events;
+using Terraria_Server.Plugins;
 using Terraria_Server.Networking;
 
 namespace Terraria_Server.Messages
@@ -25,44 +25,73 @@ namespace Terraria_Server.Messages
             
 			if (conn.State == SlotState.SERVER_AUTH)
 			{
-				if (password == NetPlay.password)
+				var ctx = new HookContext
 				{
-					conn.State = SlotState.ACCEPTED;
-					
-					var msg = NetMessage.PrepareThreadInstance ();
-					msg.ConnectionResponse (253);
-					conn.Send (msg.Output);
-					
-					return;
-				}
-				conn.Kick ("Incorrect server password.");
-			}
-			else if (conn.State == SlotState.PLAYER_AUTH)
-			{
-				var name = conn.Player.Name ?? "";
-
-				var loginEvent = new PlayerLoginEvent();
-				loginEvent.Sender = conn.Player;
-				loginEvent.Password = password;
-				Server.PluginManager.processHook (Plugin.Hooks.PLAYER_AUTH_REPLY, loginEvent);
+					Connection = conn,
+				};
 				
-				if (loginEvent.Action == PlayerLoginAction.REJECT)
+				var args = new HookArgs.ServerPassReceived
 				{
-					if ((conn.State & SlotState.DISCONNECTING) == 0)
-						conn.Kick ("Incorrect password for user: " + (name ?? ""));
-				}
-				else if (loginEvent.Action == PlayerLoginAction.ASK_PASS)
+					Password = password,
+				};
+				
+				HookPoints.ServerPassReceived.Invoke (ref ctx, ref args);
+				
+				if (ctx.CheckForKick ())
+					return;
+				
+				if (ctx.Result == HookResult.ASK_PASS)
 				{
 					var msg = NetMessage.PrepareThreadInstance ();
 					msg.PasswordRequest ();
 					conn.Send (msg.Output);
 				}
-				else // PlayerLoginAction.ACCEPT
+				else if (ctx.Result == HookResult.CONTINUE || password == NetPlay.password)
+				{
+					conn.State = SlotState.ACCEPTED;
+					
+					var msg = NetMessage.PrepareThreadInstance ();
+					msg.ConnectionResponse (253 /* dummy value, real slot assigned later */);
+					conn.Send (msg.Output);
+					
+					return;
+				}
+				
+				conn.Kick ("Incorrect server password.");
+			}
+			else if (conn.State == SlotState.PLAYER_AUTH)
+			{
+				var name = conn.Player.Name ?? "";
+				
+				var ctx = new HookContext
+				{
+					Connection = conn,
+					Player = conn.Player,
+					Sender = conn.Player,
+				};
+				
+				var args = new HookArgs.PlayerPassReceived
+				{
+					Password = password,
+				};
+				
+				HookPoints.PlayerPassReceived.Invoke (ref ctx, ref args);
+				
+				if (ctx.CheckForKick ())
+					return;
+				
+				if (ctx.Result == HookResult.ASK_PASS)
+				{
+					var msg = NetMessage.PrepareThreadInstance ();
+					msg.PasswordRequest ();
+					conn.Send (msg.Output);
+				}
+				else // HookResult.DEFAULT
 				{
 					var lower = name.ToLower();
 					bool reserved = false;
 					
-					conn.Queue = (int)loginEvent.Priority;
+					//conn.Queue = (int)loginEvent.Priority;
 					
 					foreach (var otherPlayer in Main.players)
 					{
@@ -85,7 +114,7 @@ namespace Terraria_Server.Messages
 					
 					if (! reserved) // reserved slots get assigned immediately during the kick
 					{
-						SlotManager.Schedule (conn, conn.Queue);
+						SlotManager.Schedule (conn, conn.DesiredQueue);
 					}
 					
 					//NetMessage.SendData (4, -1, whoAmI, name, whoAmI); // broadcast player data now

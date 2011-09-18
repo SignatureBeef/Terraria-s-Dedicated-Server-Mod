@@ -5,6 +5,7 @@ using System.Threading;
 using System.Diagnostics;
 
 using Terraria_Server.Logging;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Networking
 {
@@ -28,6 +29,12 @@ namespace Terraria_Server.Networking
 			get { return state; }
 			set
 			{
+				if ((state & SlotState.DISCONNECTING) != 0 && (value & SlotState.DISCONNECTING) == 0)
+				{
+					ProgramLog.Debug.Log (Environment.StackTrace);
+					return;
+				}
+				
 				state = value;
 				if (state == SlotState.PLAYING)
 				{
@@ -63,6 +70,14 @@ namespace Terraria_Server.Networking
 			get { return assignedSlot; }
 		}
 		
+		/// <summary>
+		/// Gets or sets the desired queue.
+		/// </summary>
+		/// <value>
+		/// 0, 1, 2 - queue number (higher number is higher priority)
+		/// 3 - bypass queues and use privileged slot
+		/// </value>
+		public int DesiredQueue { get; set; }
 		public int Queue { get; internal set; }
 		public int IndexInQueue { get; internal set; }
 		
@@ -93,11 +108,24 @@ namespace Terraria_Server.Networking
 			
 			socket.LingerState = new LingerOption (true, 10);
 			
+			var ctx = new Terraria_Server.Plugins.HookContext
+			{
+				Connection = this,
+			};
+			
+			var args = new Terraria_Server.Plugins.HookArgs.NewConnection ();
+			
+			Terraria_Server.Plugins.HookPoints.NewConnection.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return;
+			
 			lock (All)
 			{
 				indexInAll = All.Count;
 				All.Add (this);
 			}
+			
 			StartReceiving (new byte [4192]);
 		}
 		
@@ -171,12 +199,13 @@ namespace Terraria_Server.Networking
 				{
 					All.RemoveAt (All.Count - 1);
 				}
-				else
+				else if (indexInAll >= 0)
 				{
 					var other = All[All.Count - 1];
 					other.indexInAll = indexInAll;
 					All[indexInAll] = other;
 					All.RemoveAt (All.Count - 1);
+					indexInAll = -1;
 				}
 			}
 		}

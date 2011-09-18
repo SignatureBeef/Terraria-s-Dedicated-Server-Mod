@@ -38,7 +38,11 @@ namespace Terraria_Server.Collections
 					var t = (T) ser.Deserialize (rdr);
 					
 					//ProgramLog.Debug.Log ("Created entity {0}, {1}", t.Type, t.Name);
-				
+					
+					t.Name = String.Intern (t.Name);
+					//Networking.StringCache.Add (System.Text.Encoding.ASCII.GetBytes (t.Name), t.Name);
+					Networking.StringCache.Add (t.Name);
+					
 					if (typeLookup.ContainsKey(t.Type))
 					{
 						List<T> values;

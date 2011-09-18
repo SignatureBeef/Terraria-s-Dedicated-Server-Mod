@@ -1,4 +1,5 @@
 using System;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -17,10 +18,34 @@ namespace Terraria_Server.Messages
             num += 4;
 
             int signIndex = Sign.ReadSign(x, y);
-            if (signIndex >= 0)
-            {
-                NetMessage.SendData(47, whoAmI, -1, "", signIndex);
-            }
+            
+			var player = Main.players[whoAmI];
+			
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Sender = player,
+				Player = player,
+			};
+			
+			var args = new HookArgs.SignTextGet
+			{
+				X = x, Y = y,
+				SignIndex = (short)signIndex,
+				Text = (signIndex >= 0 && Main.sign[signIndex] != null) ? Main.sign[signIndex].text : null,
+			};
+			
+			HookPoints.SignTextGet.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick () || ctx.Result == HookResult.IGNORE)
+				return;
+			
+			if (args.Text != null)
+			{
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.WriteSign (signIndex, x, y, args.Text);
+				msg.Send (whoAmI);
+			}
         }
     }
 }

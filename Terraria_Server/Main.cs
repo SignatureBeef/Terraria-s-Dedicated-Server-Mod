@@ -9,8 +9,7 @@ using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
 using Terraria_Server.WorldMod;
 using Terraria_Server.Logging;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server
 {
@@ -41,8 +40,8 @@ namespace Terraria_Server
 		public static float rightWorld = 134400f;
 		public static float topWorld = 0f;
 		public static float bottomWorld = 38400f;
-		public static int maxTilesX = (int)Main.rightWorld / 16 + 1;
-		public static int maxTilesY = (int)Main.bottomWorld / 16 + 1;
+		public static int maxTilesX = -1; //(int)Main.rightWorld / 16 + 1;
+		public static int maxTilesY = -1; //(int)Main.bottomWorld / 16 + 1;
 		public static int maxSectionsX = Main.maxTilesX / 200;
 		public static int maxSectionsY = Main.maxTilesY / 150;
 		[Obsolete("Replaced by SlotManager.MaxSlots")]
@@ -595,12 +594,12 @@ namespace Terraria_Server
             }
         }
 
-        static TimeChangedEvent timeEvent = new TimeChangedEvent();
+        //static TimeChangedEvent timeEvent = new TimeChangedEvent();
         private static void UpdateTime()
         {
             Main.time += 1.0;
             
-            Server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
+            //Server.PluginManager.processHook(Hooks.TIME_CHANGED, timeEvent);
 
             if (!Main.dayTime)
             {
@@ -1021,7 +1020,8 @@ namespace Terraria_Server
 						var proj = Main.projectile[i];
 						ProgramLog.Log (e, String.Format ("Projectile update error, i={0}, id={1}, owner={2}, type={3}",
 							i, proj.identity, proj.Owner, proj.Type));
-						Main.projectile[i] = new Projectile();
+						//Main.projectile[i] = new Projectile();
+						Projectile.Reset (i);
 					}
 				}
 				

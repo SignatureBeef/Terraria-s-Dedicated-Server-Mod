@@ -1,6 +1,4 @@
 using System;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
 
 namespace Terraria_Server
 {

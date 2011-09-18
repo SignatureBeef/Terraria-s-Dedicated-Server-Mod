@@ -344,6 +344,7 @@ namespace Terraria_Server
 					{
 						this.Velocity = Collision.TileCollision(this.Position, this.Velocity, this.Width, this.Height, false, false);
 					}
+					
 					if (this.Owner == Main.myPlayer && this.LavaWet && this.Type != 312 && this.Type != 318 && this.Type != 173 && this.Type != 174 && this.Type != 175 && this.Rare == 0)
 					{
 						if (this.Type == 267)
@@ -352,8 +353,8 @@ namespace Terraria_Server
 							{
 								if (Main.npcs[l].Active && Main.npcs[l].type == NPCType.N22_GUIDE)
 								{
-									NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
-									Main.npcs[l].StrikeNPC(9999, 10f, -Main.npcs[l].direction);
+									if (Main.npcs[l].StrikeNPC (World.Sender, 9999, 10f, -Main.npcs[l].direction))
+										NetMessage.SendData(28, -1, -1, "", l, 9999f, 10f, (float)(-(float)Main.npcs[l].direction));
 								}
 							}
 						}

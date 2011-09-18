@@ -1,7 +1,6 @@
 using System;
-using Terraria_Server.Events;
 using Terraria_Server.Misc;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.WorldMod;
 
 namespace Terraria_Server.Messages
@@ -21,11 +20,11 @@ namespace Terraria_Server.Messages
             num += 4;
             byte liquid = readBuffer[num++];
             byte lavaFlag = readBuffer[num]++;
+            
+            var player = Main.players[whoAmI];
 
-            if (NetPlay.spamCheck)
+            if (NetPlay.spamCheck) // dead code...
             {
-                int playerIndex = whoAmI;
-                Player player = Main.players[playerIndex];
                 int centerX = (int)(player.Position.X + (float)(player.Width / 2));
                 int centerY = (int)(player.Position.Y + (float)(player.Height / 2));
                 int disperseDistance = 10;
@@ -40,19 +39,35 @@ namespace Terraria_Server.Messages
                 }
             }
             
-            var ev = new PlayerFlowLiquidEvent ();
-            ev.Sender = Main.players[whoAmI];
-            ev.Position = new Vector2(x, y);
-            ev.Liquid = liquid;
-            ev.Lava = lavaFlag == 1;
-            Server.PluginManager.processHook(Hooks.PLAYER_FLOWLIQUID, ev);
-            if (ev.Cancelled)
-            {
-                var msg = NetMessage.PrepareThreadInstance ();
-                msg.FlowLiquid (x, y);
-                msg.Send (whoAmI);
-                return;
-            }
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.LiquidFlowReceived
+			{
+				X = x, Y = y,
+				Amount = liquid,
+				Lava = lavaFlag == 1,
+			};
+			
+			HookPoints.LiquidFlowReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return;
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				var msg = NetMessage.PrepareThreadInstance ();
+				msg.FlowLiquid (x, y);
+				msg.Send (whoAmI);
+				return;
+			}
             
             TileRef tile = Main.tile.At(x, y);
             {

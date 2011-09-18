@@ -11,6 +11,7 @@ using Terraria_Server.Logging;
 using Terraria_Server.WorldMod;
 using System.Security.Policy;
 using Terraria_Server.Misc;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server
 {
@@ -21,8 +22,6 @@ namespace Terraria_Server
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
-
-		public static Server server;
 
         public static void Main(string[] args)
 		{
@@ -149,7 +148,12 @@ namespace Terraria_Server
 					Collections.Registries.NPC.Load (Collections.Registries.NPC_FILE);
 				using (var prog = new ProgressLogger (1, "Loading projectile definitions"))
 					Collections.Registries.Projectile.Load (Collections.Registries.PROJECTILE_FILE);
-
+				
+				ProgramLog.Log("Loading plugins...");
+				Terraria_Server.Plugins.PluginManager.Initialize (Statics.PluginPath, Statics.LibrariesPath);
+				PluginManager.LoadPlugins ();
+				ProgramLog.Log("Plugins loaded: " + PluginManager.PluginCount);
+				
                 string worldFile = properties.WorldPath;
 				FileInfo file = new FileInfo(worldFile);
 
@@ -166,7 +170,7 @@ namespace Terraria_Server
 						Console.ReadKey(true);
 						return;
 					}
-					ProgramLog.Log ("Generating World '{0}'", worldFile);
+					ProgramLog.Log ("Generating world '{0}'", worldFile);
 
                     string seed = properties.Seed;
 					if (seed == "-1")
@@ -257,7 +261,7 @@ namespace Terraria_Server
                 Terraria_Server.Main.maxSectionsX = worldXtiles / 200;
 				Terraria_Server.Main.maxSectionsY = worldYtiles / 150;
 
-                WorldIO.loadWorld(Server.World.SavePath);
+                WorldIO.LoadWorld(Server.World.SavePath);
 
 				updateThread = new ProgramThread ("Updt", Program.UpdateLoop);
 
@@ -269,7 +273,7 @@ namespace Terraria_Server
                 commandParser = new CommandParser();
 				ProgramLog.Console.Print ("You can now insert Commands.");
 
-                while (NetPlay.ServerUp)
+                while (!Statics.Exit)
 				{
 					try
 					{
@@ -324,6 +328,7 @@ namespace Terraria_Server
                 File.Delete(properties.PIDFile.Trim());
             }
 
+			Thread.Sleep (500);
 			ProgramLog.Log ("Log end.");
 			ProgramLog.Close();
 			

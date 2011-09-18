@@ -1,6 +1,5 @@
 using System;
-using Terraria_Server.Events;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
 using Terraria_Server.Definitions.Tile;
 using Terraria_Server.WorldMod;
@@ -25,7 +24,9 @@ namespace Terraria_Server.Messages
             num += 10;
             var slot = NetPlay.slots[whoAmI];
             
-            var setting = Program.properties.TileSquareMessages;
+			var start = num;
+			
+			var setting = Program.properties.TileSquareMessages;
 			if (setting == "rectify")
 			{
 				if (size > 7)
@@ -126,107 +127,45 @@ namespace Terraria_Server.Messages
 			}
 			else if (setting == "ignore")
 			{
+				//if (size == 1) Logging.ProgramLog.Debug.Log ("{0}: TileSquare({1}) from {2}", whoAmI, size, Main.players[whoAmI].Name);
 				return;
 			}
-                        
-            for (int x = left; x < left + (int)size; x++)
-            {
-                for (int y = top; y < top + (int)size; y++)
-                {
-                    TileData tile = Main.tile.At(x, y).Data;
-
-                    byte b9 = readBuffer[num++];
-
-                    bool wasActive = tile.Active;
-
-                    tile.Active = ((b9 & 1) == 1);
-
-                    if ((b9 & 2) == 2)
-                    {
-                        tile.Lighted = true;
-                    }
-
-                    if ((b9 & 4) == 4)
-                    {
-                        tile.Wall = 1;
-                    }
-                    else
-                    {
-                        tile.Wall = 0;
-                    }
-
-                    if ((b9 & 8) == 8)
-                    {
-                        tile.Liquid = 1;
-                    }
-                    else
-                    {
-                        tile.Liquid = 0;
-                    }
-
-                    if (tile.Active)
-                    {
-                        int wasType = (int)tile.Type;
-                        tile.Type = readBuffer[num++];
-
-                        if (tile.Type >= Main.MAX_TILE_SETS)
-                        {
-                            slot.Kick ("Invalid tile received from client.");
-                            return;
-                        }
-                        
-                        if (Main.tileFrameImportant[(int)tile.Type])
-                        {
-                            tile.FrameX = BitConverter.ToInt16(readBuffer, num);
-                            num += 2;
-                            tile.FrameY = BitConverter.ToInt16(readBuffer, num);
-                            num += 2;
-                        }
-                        else if (!wasActive || (int)tile.Type != wasType)
-                        {
-                            tile.FrameX = -1;
-                            tile.FrameY = -1;
-                        }
-                    }
-
-                    if (tile.Wall > 0)
-                    {
-                        tile.Wall = readBuffer[num++];
-                        
-                        if (tile.Wall >= Main.MAX_WALL_SETS)
-                        {
-                            slot.Kick ("Invalid tile received from client.");
-                            return;
-                        }
-                    }
-
-                    if (tile.Liquid > 0)
-                    {
-                        // TODO: emit a liquid event
-                        tile.Liquid = readBuffer[num++];
-                        byte b10 = readBuffer[num++];
-                        tile.Lava = (b10 == 1);
-                    }
-
-                    PlayerTileChangeEvent tileEvent = new PlayerTileChangeEvent();
-                    tileEvent.Sender = Main.players[whoAmI];
-                    tileEvent.Tile = tile;
-                    tileEvent.Action = (tile.Active) ? TileAction.PLACED : TileAction.BREAK; //Not sure of this
-                    tileEvent.TileType = (tile.wall == 1) ? TileType.WALL : TileType.BLOCK;
-                    tileEvent.Position = new Vector2(x, y);
-                    Server.PluginManager.processHook(Hooks.PLAYER_TILECHANGE, tileEvent);
-                    if (tileEvent.Cancelled)
-                    {
-                        NetMessage.SendTileSquare(whoAmI, x, y, 1);
-                        return;
-                    }
-                    
-                    Main.tile.At(x, y).SetData(tile);
-                }
-            }
-
-            WorldModify.RangeFrame(left, top, left + (int)size, top + (int)size);
-            NetMessage.SendData(Packet.TILE_SQUARE, -1, whoAmI, "", (int)size, (float)left, (float)top);
-        }
+			
+			var player = Main.players[whoAmI];
+			
+			var ctx = new HookContext
+			{
+				Sender = player,
+				Player = player,
+				Connection = player.Connection
+			};
+			
+			var args = new HookArgs.TileSquareReceived
+			{
+				X = left, Y = top, Size = size,
+				readBuffer = readBuffer,
+				start = start,
+			};
+			
+			HookPoints.TileSquareReceived.Invoke (ref ctx, ref args);
+			
+			if (args.applied > 0)
+			{
+				WorldModify.RangeFrame(left, top, left + (int)size, top + (int)size);
+				NetMessage.SendData(Packet.TILE_SQUARE, -1, whoAmI, "", (int)size, (float)left, (float)top);
+			}
+			
+			if (ctx.CheckForKick() || ctx.Result == HookResult.IGNORE)
+				return;
+			
+			args.ForEach (player, this.EachTile);
+		}
+		
+		TileSquareForEachResult EachTile (int x, int y, ref TileData tile, object state)
+		{
+			if ((tile.Active && tile.Type >= Main.MAX_TILE_SETS) || (tile.Wall >= Main.MAX_WALL_SETS))
+				return TileSquareForEachResult.IGNORE;
+			return TileSquareForEachResult.ACCEPT;
+		}
     }
 }

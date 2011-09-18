@@ -1,6 +1,5 @@
 ﻿using System;
-using Terraria_Server.Plugin;
-using Terraria_Server.Events;
+using Terraria_Server.Plugins;
 
 namespace Terraria_Server.Messages
 {
@@ -21,44 +20,58 @@ namespace Terraria_Server.Messages
                 return;
             }
             
-            playerIndex = whoAmI;
-
-            int teamIndex = (int)readBuffer[num + 1];
-            Player player = Main.players[playerIndex];
-            int currentTeam = player.team;
+			var teamIndex = readBuffer[num + 1];
+			var player = Main.players[whoAmI];
+			int currentTeam = player.team;
+			
+			var ctx = new HookContext
+			{
+				Connection = player.Connection,
+				Player = player,
+				Sender = player,
+			};
+			
+			var args = new HookArgs.PartySettingReceived
+			{
+				Party = teamIndex,
+			};
+			
+			HookPoints.PartySettingReceived.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.IGNORE)
+			{
+				return;
+			}
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				NetMessage.SendData(45, whoAmI, -1, "", whoAmI);
+				return;
+			}
             
-            Party party = Party.NONE;
             string joinMessage = "";
             switch (teamIndex)
             {
                 case 1:
                     joinMessage = " has joined the red party.";
-                    party = Party.RED;
                     break;
                 case 2:
                     joinMessage = " has joined the green party.";
-                    party = Party.GREEN;
                     break;
                 case 3:
                     joinMessage = " has joined the blue party.";
-                    party = Party.BLUE;
                     break;
                 case 4:
                     joinMessage = " has joined the yellow party.";
-                    party = Party.YELLOW;
                     break;
                 default:
                     joinMessage = " is no longer in a party.";
                     break;
-            }
-
-            PartyChangeEvent changeEvent = new PartyChangeEvent();
-            changeEvent.PartyType = party;
-            changeEvent.Sender = Main.players[whoAmI];
-            Server.PluginManager.processHook(Hooks.PLAYER_PARTYCHANGE, changeEvent);
-            if (changeEvent.Cancelled)
-            {
-                return;
             }
 
             player.team = teamIndex;

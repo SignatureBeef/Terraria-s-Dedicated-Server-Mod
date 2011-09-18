@@ -2,9 +2,8 @@
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
-using Terraria_Server.Events;
 using Terraria_Server.Commands;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
@@ -42,7 +41,9 @@ namespace Terraria_Server.WorldMod
 
 		public static void clearWorld()
 		{
-            Main.trashItem = new Item();
+			Statics.WorldLoaded = false;
+			
+			Main.trashItem = new Item();
 			WorldModify.spawnEye = false;
 			WorldModify.spawnNPC = 0;
 			WorldModify.shadowOrbCount = 0;
@@ -64,18 +65,18 @@ namespace Terraria_Server.WorldMod
 			Liquid.numLiquid = 0;
 			LiquidBuffer.numLiquidBuffer = 0;
 
-			if (WorldModify.lastMaxTilesX > Main.maxTilesX || WorldModify.lastMaxTilesY > Main.maxTilesY)
-			{
-				using (var prog = new ProgressLogger(WorldModify.lastMaxTilesX - 1, "Freeing unused resources"))
-					for (int i = 0; i < WorldModify.lastMaxTilesX; i++)
-					{
-						prog.Value = i;
-						for (int j = 0; j < WorldModify.lastMaxTilesY; j++)
-						{
-							Main.tile.CreateTileAt(i, j);
-						}
-					}
-			}
+//			if (WorldModify.lastMaxTilesX > Main.maxTilesX || WorldModify.lastMaxTilesY > Main.maxTilesY)
+//			{
+//				using (var prog = new ProgressLogger(WorldModify.lastMaxTilesX - 1, "Freeing unused resources"))
+//					for (int i = 0; i < WorldModify.lastMaxTilesX; i++)
+//					{
+//						prog.Value = i;
+//						for (int j = 0; j < WorldModify.lastMaxTilesY; j++)
+//						{
+//							Main.tile.CreateTileAt(i, j);
+//						}
+//					}
+//			}
 			WorldModify.lastMaxTilesX = Main.maxTilesX;
 			WorldModify.lastMaxTilesY = Main.maxTilesY;
 
@@ -146,11 +147,13 @@ namespace Terraria_Server.WorldMod
 					Main.npcs[num4] = new NPC();
 					prog.Value++;
 				}
-				for (int num5 = 0; num5 < 1000; num5++)
-				{
-					Main.projectile[num5] = new Projectile();
-					prog.Value++;
-				}
+//				for (int num5 = 0; num5 < 1000; num5++)
+//				{
+//					Main.projectile[num5] = new Projectile();
+//					prog.Value++;
+//				}
+				Projectile.ResetProjectiles ();
+				prog.Value += 1000;
 				for (int num8 = 0; num8 < Liquid.resLiquid; num8++)
 				{
 					Main.liquid[num8] = new Liquid();
@@ -403,7 +406,7 @@ namespace Terraria_Server.WorldMod
 			return success;
 		}
 
-		public static void loadWorld(string LoadPath)
+		public static void LoadWorld (string LoadPath)
 		{
 			using (FileStream fileStream = new FileStream(LoadPath, FileMode.Open))
 			{
@@ -624,6 +627,7 @@ namespace Terraria_Server.WorldMod
 						catch
 						{
 						}
+						return;
 					}
 				}
 			}
@@ -632,6 +636,22 @@ namespace Terraria_Server.WorldMod
 			{
 				Main.worldName = System.IO.Path.GetFileNameWithoutExtension (LoadPath);
 			}
+			
+			Statics.WorldLoaded = true;
+			
+			PluginManager.NotifyWorldLoaded ();
+			
+			var ctx = new HookContext
+			{
+			};
+			
+			var args = new HookArgs.WorldLoaded
+			{
+				Height = Main.maxTilesY,
+				Width  = Main.maxTilesX,
+			};
+			
+			HookPoints.WorldLoaded.Invoke (ref ctx, ref args);
 		}
 	}
 }

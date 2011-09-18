@@ -1,9 +1,8 @@
 using System;
 using System.IO;
 using System.Diagnostics;
-using Terraria_Server.Events;
 using Terraria_Server.Commands;
-using Terraria_Server.Plugin;
+using Terraria_Server.Plugins;
 using Terraria_Server.Misc;
 using Terraria_Server.Collections;
 using Terraria_Server.Definitions;
@@ -85,6 +84,40 @@ namespace Terraria_Server.WorldMod
 		public static int bestY = 0;
 		public static int hiScore = 0;
 		public static int ficount;
+		
+		public static bool InvokeAlterationHook (ISender sender, Player player, int x, int y, byte action, byte type = 0, byte style = 0)
+		{
+			var ctx = new HookContext
+			{
+				Sender = sender,
+				Player = player,
+			};
+			
+			var args = new HookArgs.PlayerWorldAlteration
+			{
+				X = x, Y = y,
+				Action = action,
+				Type = type,
+				Style = style,
+			};
+			
+			HookPoints.PlayerWorldAlteration.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return false;
+				
+			if (ctx.Result == HookResult.IGNORE)
+				return false;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				if (player.whoAmi >= 0)
+					NetMessage.SendTileSquare(player.whoAmi, x, y, 1); // FIXME
+				return false;
+			}
+			
+			return true;
+		}
 
 		public static void SpawnNPC(int x, int y)
 		{
@@ -1289,27 +1322,39 @@ namespace Terraria_Server.WorldMod
 			return result;
 		}
 
-		public static bool CloseDoor(int x, int y, bool forced = false, DoorOpener opener = DoorOpener.SERVER, ISender sender = null)
+		public static bool CloseDoor(int x, int y, bool forced, ISender sender)
 		{
 			if (sender == null)
 			{
 				sender = new ConsoleSender ();
 			}
 
-            if (Program.properties.NPCDoorOpenCancel && opener == DoorOpener.NPC)
+            if (Program.properties.NPCDoorOpenCancel && sender is NPC)
                 return false;
 
-			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
-			doorEvent.Sender = sender;
-			doorEvent.X = x;
-			doorEvent.Y = y;
-			doorEvent.Direction = 1;
-			doorEvent.Opener = opener;
-			doorEvent.isOpened = forced;
-			Server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
-			if (doorEvent.Cancelled)
+			var ctx = new HookContext
 			{
-                NetMessage.SendData(19, -1, -1, "", 0, (float)x, (float)y, 0); //Inform the client of the update
+				Sender = sender,
+			};
+			
+			var args = new HookArgs.DoorStateChanged
+			{
+				X = x, Y = y,
+				Direction = 1,
+				Open = false,
+			};
+			
+			HookPoints.DoorStateChanged.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return false;
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return false;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				NetMessage.SendData(19, -1, -1, "", 0, (float)x, (float)y, 0); //Inform the client of the update
 				return false;
 			}
 
@@ -1391,27 +1436,39 @@ namespace Terraria_Server.WorldMod
 			return true;
 		}
 
-		public static bool OpenDoor(int x, int y, int direction, bool state = false, DoorOpener opener = DoorOpener.SERVER, ISender sender = null)
+		public static bool OpenDoor(int x, int y, int direction, ISender sender)
 		{
 			if (sender == null)
 			{
 				sender = new ConsoleSender();
             }
 
-            if (Program.properties.NPCDoorOpenCancel && opener == DoorOpener.NPC)
+            if (Program.properties.NPCDoorOpenCancel && sender is NPC)
                 return false;
-
-			DoorStateChangeEvent doorEvent = new DoorStateChangeEvent();
-			doorEvent.Sender = sender;
-			doorEvent.X = x;
-			doorEvent.Y = y;
-			doorEvent.Direction = direction;
-			doorEvent.Opener = opener;
-			doorEvent.isOpened = state;
-			Server.PluginManager.processHook(Hooks.DOOR_STATECHANGE, doorEvent);
-			if (doorEvent.Cancelled)
+			
+			var ctx = new HookContext
 			{
-                NetMessage.SendData(19, -1, -1, "", 1, (float)x, (float)y, 0); //Inform the client of the update
+				Sender = sender,
+			};
+			
+			var args = new HookArgs.DoorStateChanged
+			{
+				X = x, Y = y,
+				Direction = direction,
+				Open = true,
+			};
+			
+			HookPoints.DoorStateChanged.Invoke (ref ctx, ref args);
+			
+			if (ctx.CheckForKick ())
+				return false;
+			
+			if (ctx.Result == HookResult.IGNORE)
+				return false;
+			
+			if (ctx.Result == HookResult.RECTIFY)
+			{
+				NetMessage.SendData(19, -1, -1, "", 1, (float)x, (float)y, 0); //Inform the client of the update
 				return false;
 			}
 
@@ -6276,7 +6333,7 @@ namespace Terraria_Server.WorldMod
 														float num14 = (float)(num11 * 16);
 														float num15 = -1f;
 														int plr = 0;
-														for (int k = 0; k < 255; k++)
+														for (int k = 0; k < 255; k++) //FIXME: propage player here
 														{
 															float num16 = Math.Abs(Main.players[k].Position.X - num13) + Math.Abs(Main.players[k].Position.Y - num14);
 															if (num16 < num15 || num15 == -1f)
@@ -6285,7 +6342,32 @@ namespace Terraria_Server.WorldMod
 																num15 = num16;
 															}
 														}
-														NPC.SpawnOnPlayer(Main.players[plr], plr, 13); //Check me
+														
+														var player = Main.players[plr];
+														
+														var ctx = new HookContext
+														{
+															Connection = player.Connection,
+															Sender = player,
+															Player = player,
+														};
+														
+														var args = new HookArgs.PlayerTriggeredEvent
+														{
+															X = (int) (player.Position.X/16), 
+															Y = (int) (player.Position.Y/16), 
+															Type = WorldEventType.BOSS,
+															Name = "Eater of Worlds",
+														};
+														
+														HookPoints.PlayerTriggeredEvent.Invoke (ref ctx, ref args);
+														
+														if (!ctx.CheckForKick () && ctx.Result != HookResult.IGNORE)
+														{
+															ProgramLog.Users.Log ("{0} @ {1}: Eater of Worlds summoned by {2}.", player.IPAddress, plr, player.Name);
+															NetMessage.SendData (Packet.PLAYER_CHAT, -1, -1, string.Concat (player.Name, " has summoned the Eater of Worlds!"), 255, 255, 128, 150);
+															NPC.SpawnOnPlayer(player, plr, 13);
+														}
 													}
 													else
 													{
