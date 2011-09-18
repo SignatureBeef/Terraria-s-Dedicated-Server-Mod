@@ -75,7 +75,7 @@ namespace TDSMPermissions
             ProgramLog.Log(base.Name + " enabled.");
             //Register Hooks
             //registerHook(Hooks.PLAYER_PRELOGIN);
-            registerHook(Hooks.PLUGINS_LOADED);
+            //registerHook(Hooks.PLUGINS_LOADED);
 
             //Add Commands
         }
@@ -85,10 +85,10 @@ namespace TDSMPermissions
             ProgramLog.Log(base.Name + " disabled.");
         }
 
-        public override void onServerPluginsLoaded(Terraria_Server.Events.ServerPluginsLoaded Event)
-        {
-            LoadPerms();
-        }
+        //public override void onServerPluginsLoaded(Terraria_Server.Events.ServerPluginsLoaded Event)
+        //{
+        //    LoadPerms();
+        //}
 
         //public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
         //{

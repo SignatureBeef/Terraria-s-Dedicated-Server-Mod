@@ -4123,20 +4123,20 @@ namespace Terraria_Server
             }
             while (num == -1)
             {
-                int num2 = -1;
+                int buffId = -1;
                 for (int j = 0; j < 5; j++)
                 {
                     if (!Main.debuff[this.buffType[j]])
                     {
-                        num2 = j;
+                        buffId = j;
                         break;
                     }
                 }
-                if (num2 == -1)
+                if (buffId == -1)
                 {
                     return;
                 }
-                for (int k = num2; k < 5; k++)
+                for (int k = buffId; k < 5; k++)
                 {
                     if (this.buffType[k] == 0)
                     {
@@ -4146,7 +4146,7 @@ namespace Terraria_Server
                 }
                 if (num == -1)
                 {
-                    this.DelBuff(num2);
+                    this.DelBuff(buffId);
                 }
             }
             this.buffType[num] = type;
