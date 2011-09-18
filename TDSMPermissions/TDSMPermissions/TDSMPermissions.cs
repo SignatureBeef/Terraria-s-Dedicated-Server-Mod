@@ -30,16 +30,16 @@ namespace TDSMPermissions
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
         public static TDSMPermissions plugin;
-		private List<Group> groups = new List<Group>();
-		//private Dictionary<String, List<String>> users;
-		private Group currentGroup;
-		public string defaultGroup;
+        private List<Group> groups = new List<Group>();
+        private Dictionary<string, User> users = new Dictionary<string, User>();
+        private User currentUser = new User();
+        private Group currentGroup;
+        public string defaultGroup;
         private YamlScanner sc;
-		private bool inUsers;
-		private String currentUser;
-		private List<String> userNodes;
+        private bool inUsers;
+        private String currentUserName = null;
 
-		//private bool inGroups = false;
+        private bool inGroups = false;
 
         protected override void Initialized(object state)
         {
@@ -61,23 +61,21 @@ namespace TDSMPermissions
                 File.Create(permissionsYML).Close();
 
             //setup a new properties file
-			//properties = new Properties(pluginFolder + Path.DirectorySeparatorChar + "tdsmplugin.properties");
-			//properties.Load();
-			//properties.pushData(); //Creates default values if needed. [Out-Dated]
-			//properties.Save();
-
-            userNodes = new List<String>();
+            //properties = new Properties(pluginFolder + Path.DirectorySeparatorChar + "tdsmplugin.properties");
+            //properties.Load();
+            //properties.pushData(); //Creates default values if needed. [Out-Dated]
+            //properties.Save();
 
             //read properties data
-			Node.isPermittedImpl = this.isPermitted;
-			LoadPerms();
+            Node.isPermittedImpl = this.isPermitted;
         }
 
         protected override void Enabled()
         {
             ProgramLog.Log(base.Name + " enabled.");
             //Register Hooks
-			//registerHook(Hooks.PLAYER_PRELOGIN);
+            //registerHook(Hooks.PLAYER_PRELOGIN);
+            registerHook(Hooks.PLUGINS_LOADED);
 
             //Add Commands
         }
@@ -87,196 +85,312 @@ namespace TDSMPermissions
             ProgramLog.Log(base.Name + " disabled.");
         }
 
-		//public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
-		//{
-		//    base.onPlayerPreLogin(Event);
-		//}
+        public override void onServerPluginsLoaded(Terraria_Server.Events.ServerPluginsLoaded Event)
+        {
+            LoadPerms();
+        }
 
-		public void LoadPerms()
-		{
-			Token to;
+        //public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
+        //{
+        //	base.onPlayerPreLogin(Event);
+        //}
+
+        public void LoadPerms()
+        {
+            ProgramLog.Debug.Log("Loading Permissions");
+            Token to;
             TextReader re = File.OpenText(permissionsYML);
-            
+
             sc = new YamlScanner();
             sc.SetSource(re);
 
-			inUsers = false;
+            inUsers = false;
 
-			while ((to = sc.NextToken()) != Token.EndOfStream)
-			{
-				switch (to)
-				{
-					case Token.TextContent:
-						{
-							switch (sc.TokenText)
-							{
-								case "info":
-									{
-										ProcessInfo();
-										break;
-									}
-								case "permissions":
-									{
-										ProcessPermissions();
-										break;
-									}
-								case "inheritance":
-									{
-										ProcessInheritance();
-										break;
-									}
-								case "groups":
-									{
-										break;
-									}
-								default:
-									break;
-							}
-							break;
-						}
-					case Token.IndentSpaces:
-						{
-							ProcessIndent();
-							break;
-						}
-					case Token.Outdent:
-					case Token.ValueIndicator:
-					case Token.BlockSeqNext:
-					case Token.Comma:
-					case Token.Escape:
-					case Token.InconsistentIndent:
-					case Token.Unexpected:
-					case Token.DoubleQuote:
-					case Token.SingleQuote:
-					case Token.EscapedLineBreak:
-					default:
-						break;
-				}
-			}
-		}
+            while ((to = sc.NextToken()) != Token.EndOfStream)
+            {
+                switch (to)
+                {
+                    case Token.TextContent:
+                        {
+                            switch (sc.TokenText)
+                            {
+                                case "info":
+                                    {
+                                        ProcessInfo();
+                                        break;
+                                    }
+                                case "permissions":
+                                    {
+                                        //if (inUsers)
+                                        //{
+                                        //    ProcessUserPermissions();
+                                        //}
+                                        //else
+                                        //{
+                                        ProcessPermissions();
+                                        //}
+                                        break;
+                                    }
+                                case "inheritance":
+                                    {
+                                        ProcessInheritance();
+                                        break;
+                                    }
+                                case "groups":
+                                    {
+                                        if (inUsers)
+                                        {
+                                            ProcessGroups();
+                                        }
+                                        break;
+                                    }
+                                case "users":
+                                    {
+                                        inUsers = true;
+                                        ProgramLog.Debug.Log("Now parsing users");
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
+                            break;
+                        }
+                    case Token.IndentSpaces:
+                        {
+                            ProcessIndent();
+                            break;
+                        }
+                    case Token.Outdent:
+                    case Token.ValueIndicator:
+                    case Token.BlockSeqNext:
+                    case Token.Comma:
+                    case Token.Escape:
+                    case Token.InconsistentIndent:
+                    case Token.Unexpected:
+                    case Token.DoubleQuote:
+                    case Token.SingleQuote:
+                    case Token.EscapedLineBreak:
+                    default:
+                        break;
+                }
+            }
+            ProgramLog.Debug.Log("Permissions file loaded.");
+        }
 
-		private void ProcessIndent()
-		{
+        private void ProcessGroups()
+        {
+            while (sc.NextToken() != Token.Outdent)
+            {
+                while (sc.NextToken() != Token.TextContent)
+                {
+                    if (sc.Token == Token.Outdent)
+                        return;
+                }
+                foreach (Group group in groups)
+                {
+                    if (group.Name == sc.TokenText)
+                    {
+                        foreach (string node in group.permissions.Keys)
+                        {
+                            bool toggle = false;
+                            group.permissions.TryGetValue(node, out toggle);
+                            if (toggle)
+                            {
+                                currentUser.hasPerm.Add(node);
+                            }
+                            else
+                            {
+                                currentUser.notHasPerm.Add(node);
+                            }
+                        }
+                    }
+                }
+                currentUser.group.Add(sc.TokenText);
+            }
+        }
+
+        private void ProcessIndent()
+        {
             string tokenText = sc.TokenText;
-			if (sc.NextToken() == Token.IndentSpaces)
-				tokenText += sc.TokenText;
-			if (tokenText == "    ")
-			{
-				while (sc.NextToken() != Token.TextContent)
-				{
-				}
-				if (!inUsers)
-				{
-					currentGroup = new Group(sc.TokenText);
-				}
-				else
-				{
-					currentUser = sc.TokenText;
-				}
-			}
-		}
+            if (sc.NextToken() == Token.IndentSpaces)
+                tokenText += sc.TokenText;
+            if (tokenText == "    ")
+            {
+                while (sc.NextToken() != Token.TextContent)
+                {
+                }
+                if (!inUsers)
+                {
+                    currentGroup = new Group(sc.TokenText);
+                }
+                else
+                {
+                    currentUserName = sc.TokenText;
+                    currentUser = new User();
+                }
+            }
+        }
 
-		private void ProcessInfo()
-		{
-			bool Default;
+        private void ProcessInfo()
+        {
+            bool Default;
             string Prefix;
             string Suffix;
-			//Color color;
-			while (sc.TokenText != "default")
-			{
-				sc.NextToken();
-			}
-			while (sc.NextToken() != Token.TextContent)
-			{ }
-			Default = Convert.ToBoolean(sc.TokenText);
-			if (Default)
-			{
-				defaultGroup = currentGroup.Name;
-			}
-			while (sc.TokenText != "prefix")
-			{
-				sc.NextToken();
-			}
-			while (sc.NextToken() != Token.TextContent)
-			{ }
-			Prefix = sc.TokenText;
-			while (sc.TokenText != "suffix")
-			{
-				sc.NextToken();
-			}
-			while (sc.NextToken() != Token.TextContent)
-			{ }
-			Suffix = sc.TokenText;
-			//while (sc.TokenText != "color")
-			//{
-			//    sc.NextToken();
-			//}
-			//ProgramLog.Debug.Log("Color token found");
-			//while (sc.NextToken() != Token.TextContent)
-			//{ }
-			//color = GetChatColor(sc.TokenText);
-			currentGroup.SetGroupInfo(Default, Prefix, Suffix, ChatColor.Tan);
-		}
+            Color color;
+            while (sc.TokenText != "default")
+            {
+                sc.NextToken();
+            }
+            while (sc.NextToken() != Token.TextContent)
+            { }
+            Default = Convert.ToBoolean(sc.TokenText);
+            if (Default)
+            {
+                defaultGroup = currentGroup.Name;
+            }
+            while (sc.TokenText != "prefix")
+            {
+                sc.NextToken();
+            }
+            while (sc.NextToken() != Token.TextContent)
+            { }
+            Prefix = sc.TokenText;
+            while (sc.TokenText != "suffix")
+            {
+                sc.NextToken();
+            }
+            while (sc.NextToken() != Token.TextContent)
+            { }
+            Suffix = sc.TokenText;
+            while (sc.TokenText != "color")
+            {
+                sc.NextToken();
+            }
+            while (sc.NextToken() != Token.TextContent)
+            { }
+            Color.TryParseRGB(sc.TokenText, out color);
+        }
 
-		private void ProcessInheritance()
-		{
-			while (sc.NextToken() != Token.TextContent)
-			{
-				if (sc.Token == Token.Outdent)
-					return;
-			}
-			if (sc.TokenText == "permissions")
-			{
-				ProcessPermissions();
-				return;
-			}
-			while (sc.Token != Token.Outdent)
-			{
-				if (sc.Token == Token.TextContent)
-				{
-					currentGroup.Inherits.Add(sc.TokenText);
-				}
-			}
-		}
+        private void ProcessInheritance()
+        {
+            while (sc.NextToken() != Token.TextContent)
+            {
+                if (sc.Token == Token.Outdent)
+                    return;
+            }
+            if (sc.TokenText == "permissions")
+            {
+                ProcessPermissions();
+                return;
+            }
+            while (sc.Token != Token.Outdent)
+            {
+                if (sc.Token == Token.TextContent)
+                {
+                    currentGroup.Inherits.Add(sc.TokenText);
+                }
+            }
+        }
 
-		private void ProcessPermissions()
-		{
-			while (sc.NextToken() != Token.Outdent)
-			{
-				while (sc.NextToken() != Token.TextContent)
-				{
-					if (sc.Token == Token.Outdent)
-						return;
-				}
-				bool toggle;
+        private void ProcessPermissions()
+        {
+            while (sc.NextToken() != Token.Outdent)
+            {
+                while (sc.NextToken() != Token.TextContent)
+                {
+                    if (sc.Token == Token.Outdent)
+                        return;
+                }
+                bool toggle;
                 string tokenText;
-				if (sc.TokenText.Contains("-"))
-				{
-					toggle = false;
-					tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
-				}
-				else
-				{
-					toggle = true;
-					tokenText = sc.TokenText;
-				}
-				if (!inUsers)
-				{
-					currentGroup.permissions.Add(tokenText, toggle);
-				}
-				else
-				{
-					userNodes.Add(tokenText);
-				}
-				ProgramLog.Debug.Log("Node " + tokenText + " added with " + toggle + " status");
-			}
-			groups.Add(currentGroup);
-		}
+                if (sc.TokenText.Contains("-"))
+                {
+                    toggle = false;
+                    tokenText = sc.TokenText.Substring(1, sc.TokenText.Length - 1);
+                }
+                else
+                {
+                    toggle = true;
+                    tokenText = sc.TokenText;
+                }
+                if (!inUsers)
+                {
+                    if (toggle)
+                    {
+                        if (tokenText == "*")
+                        {
+                            foreach (string s in Node.ActiveNodes)
+                            {
+                                currentGroup.permissions.Add(s, toggle);
+                            }
+                        }
+                        else if (tokenText.Contains("*"))
+                        {
+                            string temp = tokenText.Remove(tokenText.Length - 2);
+                            foreach (string s in Node.ActiveNodes)
+                            {
+                                if (s.Contains(temp))
+                                {
+                                    currentGroup.permissions.Add(s, toggle);
+                                }
+                            }
+                        }
+                    }
+                    currentGroup.permissions.Add(tokenText, toggle);
+                }
+                else
+                {
+                    if (toggle)
+                    {
+                        if (tokenText == "*")
+                        {
+                            foreach (string s in Node.ActiveNodes)
+                            {
+                                currentUser.hasPerm.Add(s);
+                            }
+                        }
+                        else if (tokenText.Contains("*"))
+                        {
+                            string temp = tokenText.Remove(tokenText.Length - 2);
+                            foreach (string s in Node.ActiveNodes)
+                            {
+                                if (s.Contains(temp))
+                                {
+                                    currentUser.hasPerm.Add(s);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        currentUser.notHasPerm.Add(tokenText);
+                    }
+                }
+            }
+            if (!inUsers)
+            {
+                groups.Add(currentGroup);
+            }
+            else
+            {
+                ProgramLog.Debug.Log("Player " + currentUserName + " has permissions:");
+                currentUser.hasPerm.ForEach(delegate(string name)
+                {
+                    ProgramLog.Debug.Log(name);
+                });
+                users.Add(currentUserName, currentUser);
+            }
+        }
 
-		public bool isPermitted(Node node, Player player)
-		{
-			return false;
-		}
+        private void ProcessUserPermissions()
+        {
+
+        }
+
+        public bool isPermitted(Node node, Player player)
+        {
+            return false;
+        }
 
         private static void CreateDirectory(string dirPath)
         {

@@ -7,34 +7,37 @@ using Terraria_Server.Misc;
 
 namespace TDSMPermissions.Definitions
 {
-	public class Group
-	{
-		public struct _GroupInfo
-		{
-			public bool Default;
+    class Group
+    {
+        public struct _GroupInfo
+        {
+            public bool Default;
             public string Prefix;
             public string Suffix;
-			public Color color;
-		}
+            public Color color;
+        }
 
-		public List<String> Inherits;
-		public _GroupInfo GroupInfo;
+        public List<String> Inherits;
+        public _GroupInfo GroupInfo;
         public string Name;
-		public Dictionary<String, Boolean> permissions;
+        public Dictionary<String, Boolean> permissions;
 
         public Group(string name)
-		{
-			Name = name;
-			permissions = new Dictionary<String, Boolean>();
-            Inherits = new List<String>();
-		}
+        {
+            Name = name;
+            permissions = new Dictionary<String, Boolean>();
+            GroupInfo.Prefix = null;
+            GroupInfo.Suffix = null;
+            GroupInfo.color = ChatColor.Aqua;
+            GroupInfo.Default = false;
+        }
 
         public void SetGroupInfo(bool Default, string prefix, string suffix, Color color)
-		{
-			GroupInfo.Default = Default;
-			GroupInfo.Prefix = prefix;
-			GroupInfo.Suffix = suffix;
-			GroupInfo.color = color;
-		}
-	}
+        {
+            GroupInfo.Default = Default;
+            GroupInfo.Prefix = prefix;
+            GroupInfo.Suffix = suffix;
+            GroupInfo.color = color;
+        }
+    }
 }
