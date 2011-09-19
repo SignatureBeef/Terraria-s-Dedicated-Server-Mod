@@ -254,25 +254,14 @@ namespace Terraria_Server.Plugins
 		{
 			lock (editLock)
 			{
-				var count = entries.Length;
-				
-				int k = -1;
-				for (int i = 0; i < count; i++)
+				for (int i = 0; i < entries.Length; i++)
 				{
 					if (entries[i].plugin == oldPlugin)
 					{
-						k = i;
+						entries[i] = new Entry { plugin = newPlugin, callback = (HookAction<T>) callback, order = order };
 						break;
 					}
 				}
-				
-				if (k == -1) return;
-				
-				var copy = new Entry [count];
-				
-				copy[k] = new Entry { plugin = newPlugin, callback = (HookAction<T>) callback, order = order };
-				
-				entries = copy;
 			}
 		}
 		
