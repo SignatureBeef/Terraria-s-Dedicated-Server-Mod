@@ -85,7 +85,7 @@ namespace TDSMPermissions
             ProgramLog.Log(base.Name + " disabled.");
         }
 
-        //public override void onServerPluginsLoaded(Terraria_Server.Events.ServerPluginsLoaded Event)
+        //public override void onServerPluginsLoaded(Terraria_Server.Plugins. Event)
         //{
         //    LoadPerms();
         //}
