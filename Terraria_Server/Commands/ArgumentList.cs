@@ -218,6 +218,13 @@ namespace Terraria_Server.Commands
 			
 			if (val != null)
 				return true;
+
+            var matches = Server.FindPlayerByPart(this[at]);
+            if (matches.Count == 1)
+            {
+                val = matches.ToArray()[0];
+                return true;
+            }
 			
 			return false;
 		}

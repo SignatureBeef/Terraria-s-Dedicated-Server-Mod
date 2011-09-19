@@ -214,5 +214,28 @@ namespace Terraria_Server
             }
             return false;
         }
+
+        public static List<Player> FindPlayerByPart(string partName, bool ignoreCase = true)
+        {
+            List<Player> matches = new List<Player>();
+
+            foreach (var player in Main.players)
+            {
+                if (player.Name == null)
+                    continue;
+
+                string playerName = player.Name;
+
+                if (ignoreCase)
+                    playerName = playerName.ToLower();
+
+                if (playerName.StartsWith((ignoreCase) ? partName : partName.ToLower()))
+                {
+                    matches.Add(player);
+                }
+            }
+
+            return matches;
+        }
     }
 }
