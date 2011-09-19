@@ -229,7 +229,7 @@ namespace Terraria_Server
                 if (ignoreCase)
                     playerName = playerName.ToLower();
 
-                if (playerName.StartsWith((ignoreCase) ? partName : partName.ToLower()))
+                if (playerName.StartsWith((ignoreCase) ? partName.ToLower() : partName))
                 {
                     matches.Add(player);
                 }
