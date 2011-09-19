@@ -20,7 +20,7 @@ namespace Terraria_Server
 			internal set;
 		}
 
-        public static bool cmdMessages = false;
+        public static bool cmdMessages = true;
         //public static bool keepRunning = false;
 		
 		public static volatile bool Exit = false;
