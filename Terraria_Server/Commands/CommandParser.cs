@@ -142,7 +142,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         public CommandParser()
         {
-            serverCommands = new Dictionary<string, CommandInfo> ();
+            serverCommands = new Dictionary<String, CommandInfo> ();
 
             AddCommand("exit")
                 .WithDescription("Stop the save the world then exit program.")
@@ -196,8 +196,9 @@ namespace Terraria_Server.Commands
                 .Calls (Commands.Action);
                 
             AddCommand("say")
-                .WithAccessLevel (AccessLevel.PLAYER)
-                .WithDescription ("Broadcast a message in first person.")
+                .WithAccessLevel (AccessLevel.OP)
+                //.WithDescription ("Broadcast a message in first person.")
+                .WithDescription("Broadcast a message as the Server.")
                 .Calls (Commands.Say);
                 
             AddCommand("slots")

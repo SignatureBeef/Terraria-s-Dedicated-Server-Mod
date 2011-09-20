@@ -214,11 +214,16 @@ namespace Terraria_Server.Commands
 		/// <param name="message">Message to send</param>
 		public static void Say(ISender sender, string message)
 		{
-			ProgramLog.Chat.Log("<" + sender.Name + "> " + message);
+			/*ProgramLog.Chat.Log("<" + sender.Name + "> " + message);
 			if (sender is Player)
 				NetMessage.SendData(25, -1, -1, "<" + sender.Name + "> " + message, 255, 255, 255, 255);
 			else
-				NetMessage.SendData(25, -1, -1, "<" + sender.Name + "> " + message, 255, 238, 180, 238);
+				NetMessage.SendData(25, -1, -1, "<" + sender.Name + "> " + message, 255, 238, 180, 238);*/
+
+            // 'Say' should be used for Server Messages, OP's only. This is used on many large servers to notify
+            // Users for a quick restart (example), So the OP will most likely be in game, unless it's major.
+            ProgramLog.Chat.Log("<" + sender.Name + "> " + ((sender is ConsoleSender) ? "" : "SERVER: ") + message);
+            NetMessage.SendData(25, -1, -1, "SERVER: " + message, 255, 238, 130, 238);
 		}
 
 		/// <summary>
@@ -240,6 +245,7 @@ namespace Terraria_Server.Commands
 
 			Server.BanList.Save();
 			Server.WhiteList.Save();
+            Server.OpList.Save();
 
 			Server.notifyOps("Saving Complete.", true);
 		}
