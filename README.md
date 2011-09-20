@@ -39,7 +39,8 @@ Developers
 =============
 TDSM is developed in C# so you will find it reasonably easy to manipulate.
 Plugins HAVE to be developed on the .Net 4.0 framework (In Visual Studio you have multiple choices, Choose 4.0) otherwise TDSM will not be able to load your plugin! (Sometimes it may work, Mono?).
-When developing a Plugin it is no longer needed for the Namespace & Class to be the same, It is now Dynamic.
+
+Usually when the TDSM Team has an upcoming release which changes a lot of code, We will post a prerelease for Developers to update prior to release; Located in the PreRelease directory on this GitHub page.
 
 On a side note, 
 I would love for you to assist in the Development TDSM, you may fully well do so; It's why there is a GitHub :D
