@@ -233,6 +233,7 @@ namespace Terraria_Server.Commands
 			WorldIO.saveWorld(Server.World.SavePath, false);
 			while (WorldModify.saveLock)
 			{
+                Thread.Sleep(100);
 			}
 
 			Server.notifyOps("Saving Data...", true);

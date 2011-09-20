@@ -77,6 +77,8 @@ namespace TDSMPermissions
             //registerHook(Hooks.PLAYER_PRELOGIN);
             //registerHook(Hooks.PLUGINS_LOADED);
 
+            Hook(HookPoints.PluginsLoaded, OnPluginsLoaded);
+
             //Add Commands
         }
 
@@ -85,10 +87,10 @@ namespace TDSMPermissions
             ProgramLog.Log(base.Name + " disabled.");
         }
 
-        //public override void onServerPluginsLoaded(Terraria_Server.Plugins. Event)
-        //{
-        //    LoadPerms();
-        //}
+        void OnPluginsLoaded(ref HookContext ctx, ref HookArgs.PluginsLoaded args)
+        {
+            LoadPerms();
+        }
 
         //public override void onPlayerPreLogin(Terraria_Server.Events.PlayerLoginEvent Event)
         //{
@@ -265,10 +267,17 @@ namespace TDSMPermissions
             while (sc.TokenText != "color")
             {
                 sc.NextToken();
+                if (sc.TokenText == "")
+                    break;
             }
+
+            if (sc.TokenText == "")
+                color = ChatColor.White; 
+            else
+                Color.TryParseRGB(sc.TokenText, out color);
+
             while (sc.NextToken() != Token.TextContent)
             { }
-            Color.TryParseRGB(sc.TokenText, out color);
         }
 
         private void ProcessInheritance()
@@ -283,7 +292,7 @@ namespace TDSMPermissions
                 ProcessPermissions();
                 return;
             }
-            while (sc.Token != Token.Outdent)
+            while (sc.NextToken() != Token.Outdent)
             {
                 if (sc.Token == Token.TextContent)
                 {

@@ -30,6 +30,6 @@ namespace Terraria_Server.Permissions
 			ActiveNodes.Add(node);
 		}
 
-		public static List<String> ActiveNodes;
+        public static List<String> ActiveNodes = new List<String>();
 	}
 }

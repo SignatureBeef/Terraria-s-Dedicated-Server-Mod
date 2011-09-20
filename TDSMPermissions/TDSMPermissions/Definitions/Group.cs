@@ -25,6 +25,7 @@ namespace TDSMPermissions.Definitions
         public Group(string name)
         {
             Name = name;
+            Inherits = new List<String>();
             permissions = new Dictionary<String, Boolean>();
             GroupInfo.Prefix = null;
             GroupInfo.Suffix = null;
