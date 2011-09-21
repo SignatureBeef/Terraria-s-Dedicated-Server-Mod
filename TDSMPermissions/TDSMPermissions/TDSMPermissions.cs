@@ -99,7 +99,6 @@ namespace TDSMPermissions
 
         public void LoadPerms()
         {
-            ProgramLog.Debug.Log("Loading Permissions");
             Token to;
             TextReader re = File.OpenText(permissionsYML);
 
@@ -123,14 +122,7 @@ namespace TDSMPermissions
                                     }
                                 case "permissions":
                                     {
-                                        //if (inUsers)
-                                        //{
-                                        //    ProcessUserPermissions();
-                                        //}
-                                        //else
-                                        //{
-                                        ProcessPermissions();
-                                        //}
+										ProcessPermissions();
                                         break;
                                     }
                                 case "inheritance":
@@ -176,7 +168,6 @@ namespace TDSMPermissions
                         break;
                 }
             }
-            ProgramLog.Debug.Log("Permissions file loaded.");
         }
 
         private void ProcessGroups()
@@ -267,17 +258,27 @@ namespace TDSMPermissions
             while (sc.TokenText != "color")
             {
                 sc.NextToken();
-                if (sc.TokenText == "")
+                if (sc.Token == Token.Outdent)
+				{
+					color = ChatColor.White;
                     break;
+				}
             }
 
-            if (sc.TokenText == "")
-                color = ChatColor.White; 
-            else
-                Color.TryParseRGB(sc.TokenText, out color);
+			if (sc.Token == Token.TextContent && sc.TokenText == "color")
+			{
+				while (sc.NextToken() != Token.TextContent)
+				{
+					if (sc.Token == Token.Outdent)
+						break;
+				}
+				if (sc.Token == Token.TextContent)
+					Color.TryParseRGB(sc.TokenText, out color);
+				else
+					color = ChatColor.White;
+			}
 
-            while (sc.NextToken() != Token.TextContent)
-            { }
+            
         }
 
         private void ProcessInheritance()
