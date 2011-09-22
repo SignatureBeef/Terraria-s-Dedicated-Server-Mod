@@ -20,6 +20,8 @@ namespace Terraria_Server
 			internal set;
 		}
 
+		public static bool PermissionsEnabled = false;
+
         public static bool cmdMessages = true;
         //public static bool keepRunning = false;
 		

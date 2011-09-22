@@ -17,17 +17,25 @@ namespace Terraria_Server.Permissions
 			return new Node { stringNode = node };
 		}
 
-		public bool IsPermitted(Player player)
+		public static bool IsPermitted(string node, Player player)
 		{
-			return isPermittedImpl(this, player);
+			return isPermittedImpl(node, player);
 		}
 
 		// this is only for the permissions plugin to set
-		public static Func<Node, Player, bool> isPermittedImpl;
+		public static Func<string, Player, bool> isPermittedImpl;
 
-        public void AddNode(string node)
+        public static void AddNodes(string[] nodes)
 		{
-			ActiveNodes.Add(node);
+			foreach (string node in nodes)
+				ActiveNodes.Add(node);
+		}
+
+		public static void RemoveNode(string[] nodes)
+		{
+			foreach (string node in nodes)
+				if (ActiveNodes.Contains(node))
+					ActiveNodes.Remove(node);
 		}
 
         public static List<String> ActiveNodes = new List<String>();

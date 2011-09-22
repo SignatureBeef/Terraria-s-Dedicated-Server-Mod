@@ -7,6 +7,7 @@ using Terraria_Server.Misc;
 using Terraria_Server.Logging;
 using Terraria_Server.Permissions;
 using TDSMPermissions.Definitions;
+using Terraria_Server.Commands;
 
 using YaTools.Yaml;
 using Terraria_Server.Plugins;
@@ -30,16 +31,17 @@ namespace TDSMPermissions
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
         public static TDSMPermissions plugin;
-        private List<Group> groups = new List<Group>();
-        private Dictionary<string, User> users = new Dictionary<string, User>();
+        private static List<Group> groups = new List<Group>();
+        private static Dictionary<string, User> users = new Dictionary<string, User>();
         private User currentUser = new User();
         private Group currentGroup;
-        public string defaultGroup;
+        public static string defaultGroup;
         private YamlScanner sc;
         private bool inUsers;
         private String currentUserName = null;
-
-        private bool inGroups = false;
+		private string[] nodesToAdd = {
+									  "permissions.test"
+								  };
 
         protected override void Initialized(object state)
         {
@@ -66,8 +68,9 @@ namespace TDSMPermissions
             //properties.pushData(); //Creates default values if needed. [Out-Dated]
             //properties.Save();
 
-            //read properties data
-            Node.isPermittedImpl = this.isPermitted;
+            //set internal permission check method to plugins handler
+            Node.isPermittedImpl = isPermitted;
+			Statics.PermissionsEnabled = true;
         }
 
         protected override void Enabled()
@@ -78,9 +81,21 @@ namespace TDSMPermissions
             //registerHook(Hooks.PLUGINS_LOADED);
 
             Hook(HookPoints.PluginsLoaded, OnPluginsLoaded);
+			Hook(HookPoints.PlayerEnteringGame, onPlayerJoin);
 
             //Add Commands
+			AddCommand("permissions")
+				.WithAccessLevel(AccessLevel.PLAYER)
+				.WithDescription("Test command")
+				.Calls(Commands.PluginCommands.PermissionsCommand);
+
+			Node.AddNodes(nodesToAdd);
         }
+
+		void onPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteringGame args)
+		{
+			//ctx.Player.A = AccessLevel.OP;
+		}
 
         protected override void Disabled()
         {
@@ -199,6 +214,7 @@ namespace TDSMPermissions
                     }
                 }
                 currentUser.group.Add(sc.TokenText);
+				ProgramLog.Debug.Log("User " + currentUserName + " is part of group " + sc.TokenText);
             }
         }
 
@@ -218,6 +234,7 @@ namespace TDSMPermissions
                 }
                 else
                 {
+					ProgramLog.Debug.Log("Creating new user: " + sc.TokenText);
                     currentUserName = sc.TokenText;
                     currentUser = new User();
                 }
@@ -308,8 +325,8 @@ namespace TDSMPermissions
             {
                 while (sc.NextToken() != Token.TextContent)
                 {
-                    if (sc.Token == Token.Outdent)
-                        return;
+					if (sc.Token == Token.Outdent)
+						return;
                 }
                 bool toggle;
                 string tokenText;
@@ -380,26 +397,22 @@ namespace TDSMPermissions
             if (!inUsers)
             {
                 groups.Add(currentGroup);
+				ProgramLog.Debug.Log("Group added: " + currentGroup.Name);
             }
             else
             {
-                ProgramLog.Debug.Log("Player " + currentUserName + " has permissions:");
-                currentUser.hasPerm.ForEach(delegate(string name)
-                {
-                    ProgramLog.Debug.Log(name);
-                });
                 users.Add(currentUserName, currentUser);
             }
         }
 
-        private void ProcessUserPermissions()
+        public static bool isPermitted(string node, Player player)
         {
-
-        }
-
-        public bool isPermitted(Node node, Player player)
-        {
-            return false;
+			User user;
+			users.TryGetValue(player.Name, out user);
+			if (user.hasPerm.Contains(node))
+				return true;
+			else
+				return false;
         }
 
         private static void CreateDirectory(string dirPath)
