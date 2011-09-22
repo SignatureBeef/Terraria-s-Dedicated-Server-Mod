@@ -150,7 +150,7 @@ namespace Terraria_Server.Commands
         /// </summary>
         public CommandParser()
         {
-            serverCommands = new Dictionary<String, CommandInfo> ();
+			serverCommands = new Dictionary<String, CommandInfo> ();
 
             AddCommand("exit")
                 .WithDescription("Stop the save the world then exit program.")
@@ -523,8 +523,8 @@ namespace Terraria_Server.Commands
              *  is enabled and allow the normal OP system work or no access at all?
              */
 
-            if (sender is Player && Node.isPermittedImpl != null && Statics.PermissionsEnabled)
-                return Node.isPermittedImpl(cmd.node, sender as Player);
+            if (sender is Player && Program.permissionManager.isPermittedImpl != null && Statics.PermissionsEnabled)
+				return Program.permissionManager.isPermittedImpl(cmd.node, sender as Player);
             
             return false;
         }

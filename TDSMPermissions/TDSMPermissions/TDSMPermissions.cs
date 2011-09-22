@@ -69,7 +69,7 @@ namespace TDSMPermissions
             //properties.Save();
 
             //set internal permission check method to plugins handler
-            Node.isPermittedImpl = isPermitted;
+            Program.permissionManager.isPermittedImpl = isPermitted;
 			Statics.PermissionsEnabled = true;
         }
 
@@ -89,7 +89,7 @@ namespace TDSMPermissions
 				.WithDescription("Test command")
 				.Calls(Commands.PluginCommands.PermissionsCommand);
 
-			Node.AddNodes(nodesToAdd);
+			Program.permissionManager.AddNodes(nodesToAdd);
         }
 
 		void onPlayerJoin(ref HookContext ctx, ref HookArgs.PlayerEnteringGame args)
@@ -346,7 +346,7 @@ namespace TDSMPermissions
                     {
                         if (tokenText == "*")
                         {
-                            foreach (string s in Node.ActiveNodes)
+							foreach (string s in Program.permissionManager.ActiveNodes)
                             {
                                 currentGroup.permissions.Add(s, toggle);
                             }
@@ -354,7 +354,7 @@ namespace TDSMPermissions
                         else if (tokenText.Contains("*"))
                         {
                             string temp = tokenText.Remove(tokenText.Length - 2);
-                            foreach (string s in Node.ActiveNodes)
+							foreach (string s in Program.permissionManager.ActiveNodes)
                             {
                                 if (s.Contains(temp))
                                 {
@@ -371,7 +371,7 @@ namespace TDSMPermissions
                     {
                         if (tokenText == "*")
                         {
-                            foreach (string s in Node.ActiveNodes)
+							foreach (string s in Program.permissionManager.ActiveNodes)
                             {
                                 currentUser.hasPerm.Add(s);
                             }
@@ -379,7 +379,7 @@ namespace TDSMPermissions
                         else if (tokenText.Contains("*"))
                         {
                             string temp = tokenText.Remove(tokenText.Length - 2);
-                            foreach (string s in Node.ActiveNodes)
+							foreach (string s in Program.permissionManager.ActiveNodes)
                             {
                                 if (s.Contains(temp))
                                 {

@@ -12,6 +12,7 @@ using Terraria_Server.WorldMod;
 using System.Security.Policy;
 using Terraria_Server.Misc;
 using Terraria_Server.Plugins;
+using Terraria_Server.Permissions;
 
 namespace Terraria_Server
 {
@@ -25,6 +26,7 @@ namespace Terraria_Server
 		public static ProgramThread updateThread = null;
 		public static ServerProperties properties = null;
 		public static CommandParser commandParser = null;
+		public static PermissionManager permissionManager = null;
 
         public static void Main(string[] args)
 		{
@@ -142,6 +144,9 @@ namespace Terraria_Server
 				
 				ProgramLog.Log ("Starting remote console server");
 				RemoteConsole.RConServer.Start ("rcon_logins.properties");
+
+				ProgramLog.Log("Starting permissions manager");
+				permissionManager = new PermissionManager();
 				
 				ProgramLog.Log ("Preparing Server Data...");
 				
