@@ -240,7 +240,7 @@ namespace Regions
         {
             if (UsingPermissions)
             {
-                return Terraria_Server.Permissions.Node.isPermittedImpl(node, player);
+                //return Terraria_Server.Permissions.Node.isPermittedImpl(node, player);
             }
 
             return region.IsRestrictedForUser(player);

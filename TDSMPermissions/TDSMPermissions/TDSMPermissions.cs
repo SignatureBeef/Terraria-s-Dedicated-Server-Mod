@@ -319,7 +319,7 @@ namespace TDSMPermissions
 					{
 						if (!inUsers)
 						{
-							groups.Add(currentGroup);
+							 groups.Add(currentGroup);
 						}
 						else
 						{
@@ -327,7 +327,7 @@ namespace TDSMPermissions
 						}
 						return;
 					}
-                }
+                 }
                 bool toggle;
                 string tokenText;
                 if (sc.TokenText.Contains("-"))
@@ -399,11 +399,12 @@ namespace TDSMPermissions
         public static bool isPermitted(string node, Player player)
         {
 			User user;
-			users.TryGetValue(player.Name, out user);
-			if (user.hasPerm.Contains(node))
-				return true;
-			else
-				return false;
+            if (users.TryGetValue(player.Name, out user))
+            {
+                if (user.hasPerm.Contains(node))
+                    return true;
+            }
+            return false;
         }
 
         private static void CreateDirectory(string dirPath)

@@ -5,6 +5,7 @@ using Terraria_Server.Plugins;
 using Terraria_Server.RemoteConsole;
 using Terraria_Server.Logging;
 using Terraria_Server.Misc;
+using Terraria_Server.Permissions;
 
 namespace Terraria_Server.Commands
 {
@@ -467,7 +468,7 @@ namespace Terraria_Server.Commands
 
         public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
-           return  CheckAccessLevel(cmd.accessLevel, sender);
+            return CheckPermissions(sender, cmd) ? true : CheckAccessLevel(cmd.accessLevel, sender);
         }
 
         public static bool CheckAccessLevel(AccessLevel acc, ISender sender)
@@ -476,6 +477,19 @@ namespace Terraria_Server.Commands
             if (sender is RConSender) return acc <= AccessLevel.REMOTE_CONSOLE;
             if (sender is ConsoleSender) return true;
             throw new NotImplementedException("Unexpected ISender implementation");
+        }
+
+        public static bool CheckPermissions(ISender sender, CommandInfo cmd)
+        {
+            /*
+             *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
+             *  is enabled and allow the normal OP system work or no access at all?
+             */
+
+            if (sender is Player && Node.isPermittedImpl != null && Statics.PermissionsEnabled)
+                return Node.isPermittedImpl(cmd.node, sender as Player);
+            
+            return false;
         }
         
 		bool FindStringCommand (string prefix, out CommandInfo info)
