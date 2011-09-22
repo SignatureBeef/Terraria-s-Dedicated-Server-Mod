@@ -20,6 +20,7 @@ namespace Terraria_Server.Commands
     {
         internal string description;
         internal List<string> helpText = new List<string> ();
+		internal string node;
         internal AccessLevel accessLevel = AccessLevel.OP;
         internal Action<ISender, ArgumentList> tokenCallback;
         internal Action<ISender, string> stringCallback;
@@ -59,6 +60,12 @@ namespace Terraria_Server.Commands
             this.accessLevel = accessLevel;
             return this;
         }
+
+		public CommandInfo WithPermissionNode(string node)
+		{
+			this.node = node;
+			return this;
+		}
         
         public CommandInfo Calls (Action<ISender, ArgumentList> callback)
         {
@@ -147,11 +154,13 @@ namespace Terraria_Server.Commands
             AddCommand("exit")
                 .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
+				.WithPermissionNode("tdsm.exit")
                 .Calls(Commands.Exit);
 
             AddCommand("stop")
                 .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
+				.WithPermissionNode("tdsm.stop")
                 .Calls(Commands.Exit);
 
             AddCommand("save-all")
