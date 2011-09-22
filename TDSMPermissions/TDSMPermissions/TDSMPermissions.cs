@@ -326,7 +326,19 @@ namespace TDSMPermissions
                 while (sc.NextToken() != Token.TextContent)
                 {
 					if (sc.Token == Token.Outdent)
+					{
+						if (!inUsers)
+						{
+							groups.Add(currentGroup);
+							ProgramLog.Debug.Log("Group added: " + currentGroup.Name);
+						}
+						else
+						{
+							users.Add(currentUserName, currentUser);
+							ProgramLog.Debug.Log("Number of users: " + users.Count);
+						}
 						return;
+					}
                 }
                 bool toggle;
                 string tokenText;
@@ -393,15 +405,6 @@ namespace TDSMPermissions
                         currentUser.notHasPerm.Add(tokenText);
                     }
                 }
-            }
-            if (!inUsers)
-            {
-                groups.Add(currentGroup);
-				ProgramLog.Debug.Log("Group added: " + currentGroup.Name);
-            }
-            else
-            {
-                users.Add(currentUserName, currentUser);
             }
         }
 
