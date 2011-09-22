@@ -30,12 +30,12 @@ namespace TDSMPermissions
         public bool spawningAllowed = false;
         public bool tileBreakageAllowed = false;
         public bool explosivesAllowed = false;
-        public static TDSMPermissions plugin;
-        private static List<Group> groups = new List<Group>();
-        private static Dictionary<string, User> users = new Dictionary<string, User>();
+        public TDSMPermissions plugin;
+        private List<Group> groups = new List<Group>();
+        private Dictionary<string, User> users = new Dictionary<string, User>();
         private User currentUser = new User();
         private Group currentGroup;
-        public static string defaultGroup;
+        public string defaultGroup;
         private YamlScanner sc;
         private bool inUsers;
         private String currentUserName = null;
@@ -396,7 +396,7 @@ namespace TDSMPermissions
             }
         }
 
-        public static bool isPermitted(string node, Player player)
+        public bool isPermitted(string node, Player player)
         {
 			User user;
             if (users.TryGetValue(player.Name, out user))
