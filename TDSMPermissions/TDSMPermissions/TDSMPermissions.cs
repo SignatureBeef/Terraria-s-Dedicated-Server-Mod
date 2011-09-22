@@ -127,7 +127,7 @@ namespace TDSMPermissions
                 switch (to)
                 {
                     case Token.TextContent:
-                        {
+						{
                             switch (sc.TokenText)
                             {
                                 case "info":
@@ -156,7 +156,6 @@ namespace TDSMPermissions
                                 case "users":
                                     {
                                         inUsers = true;
-                                        ProgramLog.Debug.Log("Now parsing users");
                                         break;
                                     }
                                 default:
@@ -190,10 +189,10 @@ namespace TDSMPermissions
             while (sc.NextToken() != Token.Outdent)
             {
                 while (sc.NextToken() != Token.TextContent)
-                {
+				{
                     if (sc.Token == Token.Outdent)
                         return;
-                }
+				}
                 foreach (Group group in groups)
                 {
                     if (group.Name == sc.TokenText)
@@ -214,7 +213,6 @@ namespace TDSMPermissions
                     }
                 }
                 currentUser.group.Add(sc.TokenText);
-				ProgramLog.Debug.Log("User " + currentUserName + " is part of group " + sc.TokenText);
             }
         }
 
@@ -234,7 +232,6 @@ namespace TDSMPermissions
                 }
                 else
                 {
-					ProgramLog.Debug.Log("Creating new user: " + sc.TokenText);
                     currentUserName = sc.TokenText;
                     currentUser = new User();
                 }
@@ -294,8 +291,6 @@ namespace TDSMPermissions
 				else
 					color = ChatColor.White;
 			}
-
-            
         }
 
         private void ProcessInheritance()
@@ -304,11 +299,6 @@ namespace TDSMPermissions
             {
                 if (sc.Token == Token.Outdent)
                     return;
-            }
-            if (sc.TokenText == "permissions")
-            {
-                ProcessPermissions();
-                return;
             }
             while (sc.NextToken() != Token.Outdent)
             {
@@ -330,12 +320,10 @@ namespace TDSMPermissions
 						if (!inUsers)
 						{
 							groups.Add(currentGroup);
-							ProgramLog.Debug.Log("Group added: " + currentGroup.Name);
 						}
 						else
 						{
 							users.Add(currentUserName, currentUser);
-							ProgramLog.Debug.Log("Number of users: " + users.Count);
 						}
 						return;
 					}
