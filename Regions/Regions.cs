@@ -78,12 +78,14 @@ namespace Regions
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:    region [select, create, user, list, npcres, opres]")
                 .WithDescription("Region Management.")
+                .WithPermissionNode("regions")
                 .Calls(Commands.Region);
 
             AddCommand("regions")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:    regions [select, create, user, list, npcres, opres]")
                 .WithDescription("Region Management.")
+                .WithPermissionNode("regions") //Need another method to split the commands up.
                 .Calls(Commands.Region);
             
             Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);

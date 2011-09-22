@@ -64,6 +64,7 @@ namespace TDSMExamplePlugin
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("A Command Example for TDSM")
                 .WithHelpText("Usage:   /tdsmpluginexample")
+                .WithPermissionNode("tdsm.examplecommand")
                 .Calls(PluginCommands.ExampleCommand);
 
             Main.stopSpawns = !spawningAllowed;
