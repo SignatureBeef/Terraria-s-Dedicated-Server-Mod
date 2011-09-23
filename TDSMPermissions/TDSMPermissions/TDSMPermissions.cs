@@ -142,7 +142,7 @@ namespace TDSMPermissions
                                     }
                                 case "inheritance":
                                     {
-                                        ProcessInheritance();
+                                        ParseInheritance();
                                         break;
                                     }
                                 case "groups":
@@ -156,6 +156,7 @@ namespace TDSMPermissions
                                 case "users":
                                     {
                                         inUsers = true;
+										ProcessInheritance();
                                         break;
                                     }
                                 default:
@@ -209,10 +210,10 @@ namespace TDSMPermissions
                             {
                                 currentUser.notHasPerm.Add(node);
                             }
-                        }
+						}
+						currentUser.group.Add(group.Name);
                     }
-                }
-                currentUser.group.Add(sc.TokenText);
+				}
             }
         }
 
@@ -293,7 +294,7 @@ namespace TDSMPermissions
 			}
         }
 
-        private void ProcessInheritance()
+        private void ParseInheritance()
         {
             while (sc.NextToken() != Token.TextContent)
             {
@@ -308,6 +309,28 @@ namespace TDSMPermissions
                 }
             }
         }
+
+		private void ProcessInheritance()
+		{
+			foreach (Group group in groups)
+			{
+				foreach (string s in group.Inherits)
+				{
+					foreach (Group groupIn in groups)
+					{
+						if (groupIn.Name == s)
+						{
+							foreach (string node in groupIn.permissions.Keys)
+							{
+								bool toggle = false;
+								groupIn.permissions.TryGetValue(node, out toggle);
+								group.permissions.Add(node, toggle);
+							}
+						}
+					}
+				}
+			}
+		}
 
         private void ProcessPermissions()
         {
@@ -376,17 +399,21 @@ namespace TDSMPermissions
                                 currentUser.hasPerm.Add(s);
                             }
                         }
-                        else if (tokenText.Contains("*"))
-                        {
-                            string temp = tokenText.Remove(tokenText.Length - 2);
+						else if (tokenText.Contains("*"))
+						{
+							string temp = tokenText.Remove(tokenText.Length - 2);
 							foreach (string s in Program.permissionManager.ActiveNodes)
-                            {
-                                if (s.Contains(temp))
-                                {
-                                    currentUser.hasPerm.Add(s);
-                                }
-                            }
-                        }
+							{
+								if (s.Contains(temp))
+								{
+									currentUser.hasPerm.Add(s);
+								}
+							}
+						}
+						else
+						{
+							currentUser.hasPerm.Add(tokenText);
+						}
                     }
                     else
                     {
