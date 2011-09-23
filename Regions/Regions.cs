@@ -44,9 +44,12 @@ namespace Regions
             }
         }
 
-        public static Properties rProperties { get; set; }
-        public static RegionManager regionManager { get; set; }
-        private static bool SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
+        public Properties rProperties { get; set; }
+        public RegionManager regionManager { get; set; }
+        private bool SelectorPos = true; //false for 1st (mousePoints[0]), true for 2nd
+        public Selection selection;
+
+        public Commands commands;
 
         public Node DoorChange;
         public Node LiquidFlow;
@@ -67,6 +70,10 @@ namespace Regions
 
             rProperties = new Properties(RegionsFolder + Path.DirectorySeparatorChar + "regions.properties");
             rProperties.Load();
+
+            rProperties.AddHeaderLine("Use 'rectify=true' to ignore world alterations from");
+            rProperties.AddHeaderLine("players who are blocked; Possibly saving bandwidth.");
+
             rProperties.pushData();
             rProperties.Save();
 
@@ -74,19 +81,27 @@ namespace Regions
 
             regionManager = new RegionManager(DataFolder);
 
+            selection = new Selection();
+
+            commands = new Commands();
+            commands.regionManager = regionManager;
+            commands.RegionsPlugin = this;
+            commands.selection = selection;
+
+
             AddCommand("region")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:    region [select, create, user, list, npcres, opres]")
                 .WithDescription("Region Management.")
                 .WithPermissionNode("regions")
-                .Calls(Commands.Region);
+                .Calls(commands.Region);
 
             AddCommand("regions")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithHelpText("Usage:    regions [select, create, user, list, npcres, opres]")
                 .WithDescription("Region Management.")
                 .WithPermissionNode("regions") //Need another method to split the commands up.
-                .Calls(Commands.Region);
+                .Calls(commands.Region);
             
             Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
             Hook(HookPoints.LiquidFlowReceived, OnLiquidFlowReceived);
@@ -102,11 +117,11 @@ namespace Regions
 
         protected override void Enabled()
         {            
-            DoorChange      = new Node().FromPath("regions.doorchange");
-            LiquidFlow      = new Node().FromPath("regions.liquidflow");
-            TileBreak       = new Node().FromPath("regions.tilebreak");
-            TilePlace       = new Node().FromPath("regions.tileplace");
-            ProjectileUse   = new Node().FromPath("regions.projectileuse");
+            DoorChange      = Node.FromPath("regions.doorchange");
+            LiquidFlow      = Node.FromPath("regions.liquidflow");
+            TileBreak       = Node.FromPath("regions.tilebreak");
+            TilePlace       = Node.FromPath("regions.tileplace");
+            ProjectileUse   = Node.FromPath("regions.projectileuse");
 
             ProgramLog.Plugin.Log("Regions for TDSM #{0} enabled.", base.TDSMBuild);
         }
@@ -116,7 +131,7 @@ namespace Regions
             ProgramLog.Plugin.Log("Regions disabled.");
         }
 
-        public static void Log(string fmt, params object[] args)
+        public void Log(string fmt, params object[] args)
         {
             foreach (string line in String.Format(fmt, args).Split('\n'))
             {
@@ -130,19 +145,19 @@ namespace Regions
             {
                 Vector2 Position = new Vector2(args.X, args.Y);
 
-                if (args.TileWasPlaced && args.Type == SelectorItem && Selection.isInSelectionlist(ctx.Player))
+                if (args.TileWasPlaced && args.Type == SelectorItem && selection.isInSelectionlist(ctx.Player))
                 {
-                    ctx.SetResult(HookResult.RECTIFY);
+                    ctx.SetResult(HookResult.ERASE);
                     SelectorPos = !SelectorPos;
 
-                    Vector2[] mousePoints = Selection.GetSelection(ctx.Player);
+                    Vector2[] mousePoints = selection.GetSelection(ctx.Player);
 
                     if (!SelectorPos)
                         mousePoints[0] = Position;
                     else
                         mousePoints[1] = Position;
 
-                    Selection.SetSelection(ctx.Player, mousePoints);
+                    selection.SetSelection(ctx.Player, mousePoints);
 
                     ctx.Player.sendMessage(String.Format("You have selected block at {0},{1}, {2} position",
                         Position.X, Position.Y, (!SelectorPos) ? "First" : "Second"), ChatColor.Green);
@@ -155,7 +170,7 @@ namespace Regions
                     {
                         if (IsRestrictedForUser(ctx.Player, rgn, ((args.TileWasRemoved || args.WallWasRemoved) ? TileBreak : TilePlace)))
                         {
-                            ctx.SetResult(HookResult.RECTIFY);
+                            ctx.SetResult(HookResult.ERASE);
                             ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                             return;
                         }
@@ -233,16 +248,16 @@ namespace Regions
 
         #endregion
 
-        public static bool isRunningPermissions()
+        public bool isRunningPermissions()
         {
-            return Terraria_Server.Permissions.Node.isPermittedImpl != null;
+            return Program.permissionManager.isPermittedImpl != null;
         }
 
-        public static bool IsRestrictedForUser(Player player, Region region, Node node)
+        public bool IsRestrictedForUser(Player player, Region region, Node node)
         {
             if (UsingPermissions)
             {
-                //return Terraria_Server.Permissions.Node.isPermittedImpl(node, player);
+                return Program.permissionManager.isPermittedImpl(node.Path, player);
             }
 
             return region.IsRestrictedForUser(player);

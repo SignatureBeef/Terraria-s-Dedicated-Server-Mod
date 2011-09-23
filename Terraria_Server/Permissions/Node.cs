@@ -12,10 +12,11 @@ namespace Terraria_Server.Permissions
 		// these are stable APIs
 		public string Path { get { return stringNode; } }
 
-        public Node FromPath(string node)
+        public static Node FromPath(string node)
 		{
 			return new Node(node);
 		}
+
 		public Node(string node)
 		{
 			stringNode = node;

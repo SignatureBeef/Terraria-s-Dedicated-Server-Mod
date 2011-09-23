@@ -32,7 +32,7 @@ namespace TDSMPermissions
         public bool explosivesAllowed = false;
         public TDSMPermissions plugin;
         private List<Group> groups = new List<Group>();
-        private Dictionary<string, User> users = new Dictionary<string, User>();
+        private Dictionary<String, User> users = new Dictionary<String, User>();
         private User currentUser = new User();
         private Group currentGroup;
         public string defaultGroup;
@@ -40,8 +40,8 @@ namespace TDSMPermissions
         private bool inUsers;
         private String currentUserName = null;
 		private string[] nodesToAdd = {
-									  "permissions.test"
-								  };
+                                          "permissions.test"
+                                      };
 
         protected override void Initialized(object state)
         {

@@ -14,7 +14,8 @@ namespace Terraria_Server.Permissions
 							"tdsm.spawnnpc", "tdsm.tp", "tdsm.tphere", "tdsm.settle", "tdsm.op", "tdsm.deop", "tdsm.oplogin",
 							"tdsm.oplogout", "tdsm.npcspanws", "tdsm.restart", "tdsm.purge", "tdsm.plugins", "tdsm.plugin",
 							"tdsm.spawnboss", "tdsm.itemrej", "tdsm.explostions", "tdsm.maxplayers", "tdsm.q", "tdsm.refresh"
-						};
+		};
+
 		// these are stable APIs
 		public bool IsPermitted(string node, Player player)
 		{
@@ -22,7 +23,7 @@ namespace Terraria_Server.Permissions
 		}
 
 		// this is only for the permissions plugin to set
-		public Func<string, Player, bool> isPermittedImpl;
+		public Func<String, Player, Boolean> isPermittedImpl;
 
 		public void AddNodes(string[] nodes)
 		{
@@ -41,7 +42,7 @@ namespace Terraria_Server.Permissions
 
 		public PermissionManager()
 		{
-			ActiveNodes = new List<string>();
+			ActiveNodes = new List<String>();
 			AddNodes(TDSMnodes);
 		}
 	}

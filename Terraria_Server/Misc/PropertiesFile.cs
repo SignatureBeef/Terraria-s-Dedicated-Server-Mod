@@ -9,10 +9,13 @@ namespace Terraria_Server.Misc
     public class PropertiesFile
     {
         private const char EQUALS = '=';
+        private const char HEADER = '#';
 
         private Dictionary<String, String> propertiesMap;
 
         private string propertiesPath = String.Empty;
+
+        private List<String> header = new List<String>();
 		
 		public int Count
 		{
@@ -41,9 +44,13 @@ namespace Terraria_Server.Misc
                 {
                     line = line.Trim();
                     int setterIndex = line.IndexOf(EQUALS);
-                    if (setterIndex > 0 && setterIndex < line.Length)
+                    if (setterIndex > 0 && setterIndex < line.Length && !line.StartsWith(HEADER.ToString()))
                     {
                         propertiesMap.Add(line.Substring(0, setterIndex), line.Substring(setterIndex + 1));
+                    }
+                    else if (line.StartsWith(HEADER.ToString()))
+                    {
+                        header.Add(line.Substring(1, line.Length - 1));
                     }
                 }
             }
@@ -59,6 +66,12 @@ namespace Terraria_Server.Misc
             var writer = new StreamWriter (tmpName);
             try
             {
+                foreach (string line in header)
+                {
+                    if (line.Trim().Length > 0)
+                        writer.WriteLine(HEADER + line);
+                }
+
                 foreach (KeyValuePair<String, String> pair in propertiesMap)
                 {
                     if (pair.Value != null)
@@ -151,6 +164,17 @@ namespace Terraria_Server.Misc
         protected void setValue(string key, bool value)
         {
             setValue(key, value.ToString());
+        }
+
+        public void AddHeaderLine(string Line)
+        {
+            if (!header.Contains(Line))
+                header.Add(Line);
+        }
+
+        public bool RemoveHeaderLine(string Line)
+        {
+            return header.Remove(Line);
         }
     }
 }
