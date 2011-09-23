@@ -57,6 +57,8 @@ namespace Regions
         public Node TilePlace;
         public Node ProjectileUse;
 
+        public HookResult WorldAlter = HookResult.ERASE;
+
         protected override void Initialized(object state)
         {
             base.Name = "Regions";
@@ -77,6 +79,9 @@ namespace Regions
             rProperties.pushData();
             rProperties.Save();
 
+            if (rProperties.RectifyChanges)
+                WorldAlter = HookResult.RECTIFY;
+            
             SelectorItem = rProperties.SelectionToolID;
 
             regionManager = new RegionManager(DataFolder);
@@ -170,7 +175,7 @@ namespace Regions
                     {
                         if (IsRestrictedForUser(ctx.Player, rgn, ((args.TileWasRemoved || args.WallWasRemoved) ? TileBreak : TilePlace)))
                         {
-                            ctx.SetResult(HookResult.ERASE);
+                            ctx.SetResult(WorldAlter);
                             ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
                             return;
                         }
