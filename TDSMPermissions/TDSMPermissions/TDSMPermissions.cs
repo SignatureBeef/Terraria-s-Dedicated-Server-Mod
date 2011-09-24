@@ -301,34 +301,35 @@ namespace TDSMPermissions
                 if (sc.Token == Token.Outdent)
                     return;
             }
-            while (sc.NextToken() != Token.Outdent)
-            {
-                if (sc.Token == Token.TextContent)
-                {
-                    currentGroup.Inherits.Add(sc.TokenText);
-                }
-            }
+            currentGroup.Inherits.Add(sc.TokenText);
         }
 
 		private void ProcessInheritance()
 		{
+			ProgramLog.Debug.Log("Processing group inheritances");
 			foreach (Group group in groups)
 			{
-				foreach (string s in group.Inherits)
+				ProgramLog.Debug.Log("Processing " + group.Name + "'s inheritance");
+				group.Inherits.ForEach(delegate (string s)
 				{
+					ProgramLog.Debug.Log("Group " + group.Name + " inherits from " + s);
 					foreach (Group groupIn in groups)
 					{
 						if (groupIn.Name == s)
 						{
 							foreach (string node in groupIn.permissions.Keys)
 							{
-								bool toggle = false;
-								groupIn.permissions.TryGetValue(node, out toggle);
-								group.permissions.Add(node, toggle);
+								if (!group.permissions.ContainsKey(node))
+								{
+									ProgramLog.Debug.Log("Adding node " + node + " from " + s + " to " + group.Name);
+									bool toggle = false;
+									groupIn.permissions.TryGetValue(node, out toggle);
+									group.permissions.Add(node, toggle);
+								}
 							}
 						}
 					}
-				}
+				});
 			}
 		}
 
