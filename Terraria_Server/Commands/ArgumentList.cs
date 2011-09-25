@@ -204,6 +204,12 @@ namespace Terraria_Server.Commands
 			
 			if (player != null)
 				return player;
+
+            var matches = Server.FindPlayerByPart(this[at]);
+            if (matches.Count == 1)
+            {
+                return matches.ToArray()[0];
+            }
 			
 			throw new CommandError ("A connected player's name was expected for argument {0}.", at + 1);
 		}

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using Terraria_Server.Misc;
 using Terraria_Server.Logging;
+using Terraria_Server.Collections;
 
 namespace Terraria_Server
 {
@@ -237,5 +238,70 @@ namespace Terraria_Server
 
             return matches;
         }
+
+        public static bool TryFindItem<T>(T ItemIdOrName, out List<Int32> ItemList)
+        {
+            ItemList = new List<Int32>();
+
+            Item[] items = new Item[Main.maxItemTypes];
+            for (int i = 0; i < Main.maxItemTypes; i++)
+            {
+                items[i] = Registries.Item.Create(i);
+            }
+
+            string cleanedName = ItemIdOrName.ToString();
+            int itemID = -1;
+            if (ItemIdOrName is String)
+            {
+                cleanedName = cleanedName.Replace(" ", "").ToLower();
+            }
+            else if (ItemIdOrName is Int32)
+            {
+                itemID = Int32.Parse(ItemIdOrName.ToString());
+            }
+
+            for (int i = 0; i < Main.maxItemTypes; i++)
+            {
+                if (ItemIdOrName is String)
+                {
+                    if (items[i].Name != null)
+                    {
+                        string fndItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
+                        if (fndItemName == cleanedName)
+                        {
+                            ItemList.Add(items[i].Type);
+                        }
+                    }
+                }
+                else if (ItemIdOrName is Int32)
+                {
+                    if (items[i].Type == itemID)
+                    {
+                        ItemList.Add(items[i].Type);
+                    }
+                }
+                
+            }
+
+            //Clear Data
+            for (int i = 0; i < Main.maxItemTypes; i++)
+            {
+                items[i] = null;
+            }
+            items = null;
+
+            return ItemList.Count > 0;
+        }
+
+        public static bool TryFindItemByType(int ItemID, out List<Int32> ItemList)
+        {
+            return TryFindItem(ItemID, out ItemList);
+        }
+
+        public static bool TryFindItemByName(string ItemName, out List<Int32> ItemList)
+        {
+            return TryFindItem(ItemName, out ItemList);
+        }
+
     }
 }

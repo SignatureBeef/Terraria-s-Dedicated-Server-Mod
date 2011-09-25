@@ -382,43 +382,28 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void Ban(ISender sender, ArgumentList args)
 		{
-			if (args != null && args.Count > 0)
-			{
-				//We now should check to make sure they are off the server...
-				Player banee = Server.GetPlayerByName(args[0]);
+            Player banee;
+            string playerName = null;
 
-				if (banee == null)
-				{
-					foreach (Player player in Main.players)
-					{
-						var ip = NetPlay.slots[player.whoAmi].remoteAddress.Split(':')[0];
-						if (ip == args[0])
-						{
-							banee = player;
-						}
-					}
-				}
+            if (args.TryGetOnlinePlayer(0, out banee))
+            {
+                playerName = banee.Name;
+                banee.Kick("You have been banned from this Server.");
+                Server.BanList.addException(NetPlay.slots[banee.whoAmi].
+                        remoteAddress.Split(':')[0]);
+            }
+            else if(!args.TryGetString(0, out playerName))
+            {
+                throw new CommandError("A player or IP was expected.");
+            }
 
-				Server.BanList.addException(args[0]);
+            Server.BanList.addException(playerName);
 
-				if (banee != null)
-				{
-					banee.Kick("You have been banned from this Server.");
-					Server.BanList.addException(NetPlay.slots[banee.whoAmi].
-						remoteAddress.Split(':')[0]);
-				}
-
-
-				Server.notifyOps(args[0] + " has been banned {" + sender.Name + "}", true);
-				if (!Server.BanList.Save())
-				{
-					Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            Server.notifyOps(playerName + " has been banned {" + sender.Name + "}", true);
+            if (!Server.BanList.Save())
+            {
+                Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+            }
 		}
 
 		/// <summary>
@@ -428,21 +413,20 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void UnBan(ISender sender, ArgumentList args)
 		{
-			if (args != null && args.Count > 0)
-			{
-				Server.BanList.removeException(args[0]);
+            string playerName;
+            if (!args.TryGetString(0, out playerName))
+            {
+                throw new CommandError("A player or IP was expected.");
+            }
 
-				Server.notifyOps(args[0] + " has been unbanned {" + sender.Name + "}", true);
+            Server.BanList.removeException(playerName);
 
-				if (!Server.BanList.Save())
-				{
-					Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            Server.notifyOps(playerName + " has been unbanned {" + sender.Name + "}", true);
+
+            if (!Server.BanList.Save())
+            {
+                Server.notifyOps("BanList Failed to Save due to " + sender.Name + "'s command", true);
+            }
 		}
 
 		/// <summary>
@@ -544,115 +528,48 @@ namespace Terraria_Server.Commands
 		/// </summary>
 		/// <param name="sender">Sending player</param>
 		/// <param name="args">Arguments sent with command</param>
-		public static void Give(ISender sender, ArgumentList args)
+        public static void Give(ISender sender, ArgumentList args)
 		{
 			// /give <player> <stack> <name> 
-			if (args.Count > 2 && args[0] != null && args[1] != null && args[2] != null &&
-				args[0].Trim().Length > 0 && args[1].Trim().Length > 0 && args[2].Trim().Length > 0)
-			{
-                string playerName = args[0].Trim();
-                string itemName = String.Join(" ", args);
-				itemName = itemName.Remove(0, itemName.IndexOf(" " + args[2]));
 
-				Player player = Server.GetPlayerByName(playerName);
-				if (player != null)
-				{
-					Item[] items = new Item[Main.maxItemTypes];
-					for (int i = 0; i < Main.maxItemTypes; i++)
-					{
-						items[i] = Registries.Item.Create(i);
-					}
+            Player receiver = args.GetOnlinePlayer(0);
+            int stack = args.GetInt(1);
+            string NameOrId = args.GetString(2);
 
-					Item item = null;
-					itemName = itemName.Replace(" ", "").ToLower();
-					for (int i = 0; i < Main.maxItemTypes; i++)
-					{
-						if (items[i].Name != null)
-						{
-                            string genItemName = items[i].Name.Replace(" ", "").Trim().ToLower();
-							if (genItemName == itemName)
-							{
-								item = items[i];
-							}
-						}
-					}
+            List<Int32> itemlist;
+            if (Server.TryFindItemByName(NameOrId, out itemlist) && itemlist.Count > 0)
+            {
+                if (itemlist.Count > 1)
+                    throw new CommandError("There were {0} Items found regarding the specified name", itemlist.Count);
 
-					int itemType = -1;
-					bool assumed = false;
-					if (item != null)
-					{
-						itemType = item.Type;
-					}
-					else
-					{
-						int assumedItem;
-						try
-						{
-							assumedItem = Int32.Parse(itemName);
-						}
-						catch (Exception)
-						{
-							sender.sendMessage("Item '" + itemName + "' not found!");
-							return;
-						}
+                foreach (int id in itemlist)
+                    receiver.GiveItem(id, stack, sender);
+            }
+            else
+            {
+                int Id = -1;
+                try
+                {
+                    Id = Int32.Parse(NameOrId);
+                }
+                catch
+                {
+                    throw new CommandError("There were {0} Items found regarding the specified Item Id/Name", itemlist.Count);
+                }
 
-						for (int i = 0; i < Main.maxItemTypes; i++)
-						{
-							if (items[i].Type == assumedItem)
-							{
-								itemType = items[i].Type;
-								assumed = true;
-								break;
-							}
-						}
+                if (Server.TryFindItemByType(Id, out itemlist) && itemlist.Count > 0)
+                {
+                    if (itemlist.Count > 1)
+                        throw new CommandError("There were {0} Items found regarding the specified Type Id", itemlist.Count);
 
-						if (!assumed)
-						{
-							sender.sendMessage("Item '" + itemName + "' not found!");
-							return;
-						}
-					}
-
-					//Clear Data
-					for (int i = 0; i < Main.maxItemTypes; i++)
-					{
-						items[i] = null;
-					}
-					items = null;
-
-					if (itemType != -1)
-					{
-
-						int stackSize;
-						try
-						{
-							stackSize = Int32.Parse(args[1]);
-						}
-						catch (Exception)
-						{
-							stackSize = 1;
-						}
-
-						Item.NewItem((int)player.Position.X, (int)player.Position.Y, player.Width, player.Height, itemType, stackSize, false);
-
-						Server.notifyOps("Giving " + player.Name + " some " + itemType.ToString() + " {" + sender.Name + "}", true);
-
-						return;
-					}
-				}
-				else
-				{
-					sender.sendMessage("Player '" + playerName + "' not found!");
-					return;
-				}
-			}
-			else
-			{
-				goto ERROR;
-			}
-
-		ERROR:
-			sender.sendMessage("Command Error!");
+                    foreach (int id in itemlist)
+                        receiver.GiveItem(id, stack, sender);
+                }
+                else
+                {
+                    throw new CommandError("There were no Items found regarding the specified Item Id/Name");
+                }
+            }            
 		}
 
 		/// <summary>

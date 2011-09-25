@@ -5433,5 +5433,12 @@ namespace Terraria_Server
             }
             return false;
         }
+
+        public void GiveItem(int ItemId, int Stack, ISender sender, bool NotifyOps = true)
+        {
+            Item.NewItem((int)this.Position.X, (int)this.Position.Y, this.Width, this.Height, ItemId, Stack, false);
+
+            Server.notifyOps("Giving " + this.Name + " some " + ItemId.ToString() + " {" + sender.Name + "}", true);
+        }
     }
 }
