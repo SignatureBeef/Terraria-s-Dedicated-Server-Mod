@@ -88,6 +88,11 @@ namespace Terraria_Server
             }
         }
 
+        public static void notifyOps(string format, bool writeToConsole = true, params object[] args)
+        {
+            notifyOps(String.Format(format, args), writeToConsole);
+        }
+
         // Summary:
         //       Sends a Message to all Connected Clients
         public static void notifyAll(string Message, bool writeToConsole = true)

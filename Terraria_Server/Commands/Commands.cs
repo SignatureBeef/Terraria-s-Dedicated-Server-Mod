@@ -797,36 +797,29 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void OpPlayer(ISender sender, ArgumentList args)
 		{
-			if (args.Count > 1)
-			{
-                string Password = args[args.Count - 1];
-                string player = String.Join(" ", args);
-				player = player.Remove(player.IndexOf(Password), Password.Length).Trim().ToLower();
+            var playerName = args.GetString(0);
+            var password = args.GetString(1);
+            Player player;
+            if (args.TryGetOnlinePlayer(0, out player))
+            {
+                playerName = player.Name;
 
-                Server.notifyOps("Opping " + player + " {" + sender.Name + "}", true);
-                Server.OpList.addException(player + ":" + Password, true, player.Length + 1);
+                player.sendMessage("You are now OP!", ChatColor.Green);
+                player.Op = true;
+                if (player.HasClientMod)
+                {
+                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+                }
+            }
 
-                if (!Server.OpList.Save())
-				{
-                    Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
-					return;
-				}
+            Server.notifyOps("Opping " + playerName + " {" + sender.Name + "}", true);
+            Server.OpList.addException(playerName + ":" + password, true, playerName.Length + 1);
 
-                Player playerInstance = Server.GetPlayerByName(player);
-				if (playerInstance != null)
-				{
-					playerInstance.sendMessage("You are now OP!", ChatColor.Green);
-                    playerInstance.Op = true;
-                    if (playerInstance.HasClientMod)
-                    {
-                        NetMessage.SendData(Packet.CLIENT_MOD, playerInstance.whoAmi);
-                    }
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            if (!Server.OpList.Save())
+            {
+                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                return;
+            }
 		}
 
 		/// <summary>
@@ -836,47 +829,35 @@ namespace Terraria_Server.Commands
 		/// <param name="args">Arguments sent with command</param>
 		public static void DeopPlayer(ISender sender, ArgumentList args)
 		{
-			if (args.Count > 0)
-			{
-                string player = String.Join(" ", args).Trim();
+            var playerName = args.GetString(0);
+            Player player;
+            if (args.TryGetOnlinePlayer(0, out player))
+            {
+                playerName = player.Name;
 
-                Server.notifyOps("De-Opping " + player + " {" + sender.Name + "}", true);
-
-				if (Player.isInOpList(player))
-				{
-					Server.OpList.removeException(player + ":" + Player.GetPlayerPassword(player));
-				}
-
-                if (!Server.OpList.Save())
-				{
-                    Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
-					return;
-				}
-
-                Player playerInstance = Server.GetPlayerByName(player);
-				if (playerInstance != null)
+                if (Player.isInOpList(playerName))
                 {
+                    player.sendMessage("You have been De-Opped!.", ChatColor.Green);
+                }
 
-                    if (playerInstance.Op && playerInstance.HasClientMod) //Deop the client too
-                    {
-                        playerInstance.Op = false;
-                        if (playerInstance.HasClientMod)
-                        {
-                            NetMessage.SendData(Packet.CLIENT_MOD, playerInstance.whoAmi);
-                        }
-                    }
-                    else
-                    {
-                        playerInstance.Op = false;
-                    }
+                player.Op = false;
+                if (player.HasClientMod)
+                {
+                    NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
+                }
+            }
 
-					playerInstance.sendMessage("You have been De-Opped!.", ChatColor.Green);
-				}
-			}
-			else
-			{
-				sender.sendMessage("Please review that command");
-			}
+            if (Player.isInOpList(playerName))
+            {
+                Server.notifyOps("De-Opping " + playerName + " {" + sender.Name + "}", true);
+                Server.OpList.removeException(playerName + ":" + Player.GetPlayerPassword(playerName));
+            }
+
+            if (!Server.OpList.Save())
+            {
+                Server.notifyOps("OpList Failed to Save due. {" + sender.Name + "}", true);
+                return;
+            }
 		}
 
 		/// <summary>
@@ -894,16 +875,18 @@ namespace Terraria_Server.Commands
 				{
 					if (player.Password.Equals(Password))
 					{
+                        Server.notifyOps("{0} Logged in as OP.", true, player.Name);
 						player.Op = true;
 						player.sendMessage("Successfully Logged in as OP.", ChatColor.DarkGreen);
-
+                        
                         if (player.HasClientMod)
                         {
                             NetMessage.SendData(Packet.CLIENT_MOD, player.whoAmi);
                         }
 					}
 					else
-					{
+                    {
+                        Server.notifyOps("{0} Failed to log in as OP due to incorrect password.", true, player.Name);
 						player.sendMessage("Incorrect OP Password.", ChatColor.DarkRed);
 					}
 				}
@@ -928,6 +911,8 @@ namespace Terraria_Server.Commands
 				{
                     player.Op = false;
                     player.sendMessage("Successfully Logged Out.", ChatColor.DarkRed);
+
+                    Server.notifyOps("{0} logged out.", true, player.Name);
 
                     if (player.HasClientMod)
                     {
