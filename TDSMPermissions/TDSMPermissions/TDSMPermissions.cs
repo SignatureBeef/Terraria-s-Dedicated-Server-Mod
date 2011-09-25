@@ -142,7 +142,7 @@ namespace TDSMPermissions
                                     }
                                 case "inheritance":
                                     {
-                                        ProcessInheritance();
+                                        ParseInheritance();
                                         break;
                                     }
                                 case "groups":
@@ -156,6 +156,7 @@ namespace TDSMPermissions
                                 case "users":
                                     {
                                         inUsers = true;
+										ProcessInheritance();
                                         break;
                                     }
                                 default:
@@ -209,10 +210,10 @@ namespace TDSMPermissions
                             {
                                 currentUser.notHasPerm.Add(node);
                             }
-                        }
+						}
+						currentUser.group.Add(group.Name);
                     }
-                }
-                currentUser.group.Add(sc.TokenText);
+				}
             }
         }
 
@@ -293,21 +294,44 @@ namespace TDSMPermissions
 			}
         }
 
-        private void ProcessInheritance()
+        private void ParseInheritance()
         {
             while (sc.NextToken() != Token.TextContent)
             {
                 if (sc.Token == Token.Outdent)
                     return;
             }
-            while (sc.NextToken() != Token.Outdent)
-            {
-                if (sc.Token == Token.TextContent)
-                {
-                    currentGroup.Inherits.Add(sc.TokenText);
-                }
-            }
+            currentGroup.Inherits.Add(sc.TokenText);
         }
+
+		private void ProcessInheritance()
+		{
+			ProgramLog.Debug.Log("Processing group inheritances");
+			foreach (Group group in groups)
+			{
+				ProgramLog.Debug.Log("Processing " + group.Name + "'s inheritance");
+				group.Inherits.ForEach(delegate (string s)
+				{
+					ProgramLog.Debug.Log("Group " + group.Name + " inherits from " + s);
+					foreach (Group groupIn in groups)
+					{
+						if (groupIn.Name == s)
+						{
+							foreach (string node in groupIn.permissions.Keys)
+							{
+								if (!group.permissions.ContainsKey(node))
+								{
+									ProgramLog.Debug.Log("Adding node " + node + " from " + s + " to " + group.Name);
+									bool toggle = false;
+									groupIn.permissions.TryGetValue(node, out toggle);
+									group.permissions.Add(node, toggle);
+								}
+							}
+						}
+					}
+				});
+			}
+		}
 
         private void ProcessPermissions()
         {
@@ -376,17 +400,21 @@ namespace TDSMPermissions
                                 currentUser.hasPerm.Add(s);
                             }
                         }
-                        else if (tokenText.Contains("*"))
-                        {
-                            string temp = tokenText.Remove(tokenText.Length - 2);
+						else if (tokenText.Contains("*"))
+						{
+							string temp = tokenText.Remove(tokenText.Length - 2);
 							foreach (string s in Program.permissionManager.ActiveNodes)
-                            {
-                                if (s.Contains(temp))
-                                {
-                                    currentUser.hasPerm.Add(s);
-                                }
-                            }
-                        }
+							{
+								if (s.Contains(temp))
+								{
+									currentUser.hasPerm.Add(s);
+								}
+							}
+						}
+						else
+						{
+							currentUser.hasPerm.Add(tokenText);
+						}
                     }
                     else
                     {
