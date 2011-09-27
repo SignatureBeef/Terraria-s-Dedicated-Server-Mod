@@ -338,7 +338,7 @@ namespace Terraria_Server.Commands
             AddCommand("op")
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Op a player")
-                .WithHelpText("Usage:   op <password> <player>")
+                .WithHelpText("Usage:   op <player> <password>")
                 .WithPermissionNode("tdsm.op")
                 .Calls(Commands.OpPlayer);
 
