@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Terraria_Server.Permissions
 {
+	/// <summary>
+	/// Permission node class.  Currently unused.
+	/// </summary>
 	public class Node
 	{
         private string stringNode;
@@ -17,6 +20,10 @@ namespace Terraria_Server.Permissions
 			return new Node(node);
 		}
 
+		/// <summary>
+		/// Node class constructor.
+		/// </summary>
+		/// <param name="node">New text path to create node from</param>
 		public Node(string node)
 		{
 			stringNode = node;

@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Terraria_Server.Permissions
 {
+	/// <summary>
+	/// Permission manager 
+	/// </summary>
 	public class PermissionManager
 	{
 		string[] TDSMnodes = {
@@ -17,20 +20,37 @@ namespace Terraria_Server.Permissions
 		};
 
 		// these are stable APIs
+		/// <summary>
+		/// Permission check function.  Use this to check player permissions.
+		/// </summary>
+		/// <param name="node">Permission node to check</param>
+		/// <param name="player">Player to check for permission node</param>
+		/// <returns>True if player is permitted.  False if not.</returns>
 		public bool IsPermitted(string node, Player player)
 		{
 			return isPermittedImpl(node, player);
 		}
-
+		
 		// this is only for the permissions plugin to set
+		/// <summary>
+		/// Permission check delegate.  Set only by permissions plugin.  Do no use this to check.
+		/// </summary>
 		public Func<String, Player, Boolean> isPermittedImpl;
 
+		/// <summary>
+		/// Add permission nodes to the server's list of active nodes.  Global permission purposes.
+		/// </summary>
+		/// <param name="nodes">String array containing nodes to add.</param>
 		public void AddNodes(string[] nodes)
 		{
 			foreach (string node in nodes)
 				ActiveNodes.Add(node);
 		}
 
+		/// <summary>
+		/// Remove nodes from the server's list of active nodes.  Global permission purposes, may not be necessary.
+		/// </summary>
+		/// <param name="nodes">String array of nodes to remove.</param>
 		public void RemoveNode(string[] nodes)
 		{
 			foreach (string node in nodes)
@@ -38,8 +58,14 @@ namespace Terraria_Server.Permissions
 					ActiveNodes.Remove(node);
 		}
 
+		/// <summary>
+		/// List of active permission nodes.  Global permission purposes.
+		/// </summary>
 		public List<String> ActiveNodes;
 
+		/// <summary>
+		/// Permission manager constructor.  Also adds internal TDSM nodes to ActiveNodes.
+		/// </summary>
 		public PermissionManager()
 		{
 			ActiveNodes = new List<String>();
