@@ -155,56 +155,56 @@ namespace Terraria_Server.Commands
             AddCommand("exit")
                 .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
-				.WithPermissionNode("tdsm.exit")
+				.WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Exit);
 
             AddCommand("stop")
                 .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
-				.WithPermissionNode("tdsm.stop")
+				.WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Exit);
 
             AddCommand("save-all")
                 .WithDescription("Save all world data and backup.")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithPermissionNode("tdsm.saveall")
+                .WithPermissionNode("tdsm.admin")
                 .Calls(Commands.SaveAll);
             
             AddCommand("reload")
                 .WithDescription ("Reload plugins.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
-                .WithPermissionNode("tdsm.reload")
+                .WithPermissionNode("tdsm.plugin")
                 .Calls (Commands.Reload);
                 
             AddCommand("list")
                 .WithAccessLevel (AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.list")
+                .WithDescription("List active players (also: who, players, playing, online).")
+                .WithPermissionNode("tdsm.who")
                 .Calls (Commands.List);
                 
             AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
+                .WithDescription("List active players (also: list, players, playing, online).")
                 .WithPermissionNode("tdsm.who")
                 .Calls(Commands.List);
 
             AddCommand("players")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.players")
+                .WithDescription("List active players (also: list, who, playing, online).")
+                .WithPermissionNode("tdsm.who")
                 .Calls(Commands.OldList);
 
             // this is what the server crawler expects
             AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.playing")
+                .WithDescription("List active players (also: list, who, players, online).")
+                .WithPermissionNode("tdsm.who")
                 .Calls(Commands.OldList);
 
             AddCommand("online")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.online")
+                .WithDescription("List active players (also: list, who, players, playing).")
+                .WithPermissionNode("tdsm.who")
                 .Calls(Commands.List);
                 
             AddCommand("me")
@@ -353,7 +353,7 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("OP Login System.")
                 .WithHelpText("Usage:   oplogin <password>")
-                .WithPermissionNode("tdsm.exit")
+                .WithPermissionNode("tdsm.oplogin")
                 .Calls(Commands.OpLogin);
 
             AddCommand("oplogout")
@@ -374,7 +374,7 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Restart the Server.")
                 .WithHelpText("Usage:   restart")
-                .WithPermissionNode("tdsm.restart")
+                .WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Restart);
             
             AddCommand("purge")

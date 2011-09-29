@@ -11,11 +11,11 @@ namespace Terraria_Server.Permissions
 	public class PermissionManager
 	{
 		string[] TDSMnodes = {
-							"tdsm.exit",	"tdsm.stop", "tdsm.saveall", "tdsm.reload", "tdsm.list", "tdsm.who", "tdsm.players",
-							"tdsm.playing", "tdsm.online", "tdsm.me", "tdsm.say", "tdsm.slots", "tdsm.kick", "tdsm.ban",
+							"tdsm.admin", "tdsm.plugin", "tdsm.who",
+							"tdsm.me", "tdsm.say", "tdsm.slots", "tdsm.kick", "tdsm.ban",
 							"tdsm.unban", "tdsm.whitelist", "tdsm.rcon", "tdsm.status", "tdsm.time", "tdsm.help", "tdsm.give",
 							"tdsm.spawnnpc", "tdsm.tp", "tdsm.tphere", "tdsm.settle", "tdsm.op", "tdsm.deop", "tdsm.oplogin",
-							"tdsm.oplogout", "tdsm.npcspanws", "tdsm.restart", "tdsm.purge", "tdsm.plugins", "tdsm.plugin",
+							"tdsm.oplogout", "tdsm.npcspanws", "tdsm.restart", "tdsm.purge", "tdsm.plugins",
 							"tdsm.spawnboss", "tdsm.itemrej", "tdsm.explostions", "tdsm.maxplayers", "tdsm.q", "tdsm.refresh"
 		};
 
