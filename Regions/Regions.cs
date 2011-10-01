@@ -108,10 +108,12 @@ namespace Regions
                 .WithPermissionNode("regions") //Need another method to split the commands up.
                 .Calls(commands.Region);
             
-            Hook(HookPoints.PlayerWorldAlteration, OnPlayerWorldAlteration);
-            Hook(HookPoints.LiquidFlowReceived, OnLiquidFlowReceived);
-            Hook(HookPoints.ProjectileReceived, OnProjectileReceived);
-            Hook(HookPoints.DoorStateChanged,   OnDoorStateChange);
+            Hook(HookPoints.PlayerWorldAlteration,  OnPlayerWorldAlteration);
+            Hook(HookPoints.LiquidFlowReceived,     OnLiquidFlowReceived);
+            Hook(HookPoints.ProjectileReceived,     OnProjectileReceived);
+            Hook(HookPoints.DoorStateChanged,       OnDoorStateChange);
+            Hook(HookPoints.ChestBreakReceived,     OnChestBreak);
+            Hook(HookPoints.SignTextSet,            OnSignEdit);
 
             UsingPermissions = isRunningPermissions();
             if (UsingPermissions)
@@ -251,6 +253,43 @@ namespace Regions
                 }  
             }
 
+            void OnChestBreak(ref HookContext ctx, ref HookArgs.ChestBreakReceived args)
+            {
+                foreach (Region rgn in regionManager.Regions)
+                {
+                    if (rgn.HasPoint(new Vector2(args.X, args.Y)))
+                    {
+                        if (ctx.Sender is Player)
+                        {
+                            if (IsRestrictedForUser(ctx.Player, rgn, DoorChange))
+                            {
+                                ctx.SetResult(HookResult.RECTIFY);
+                                ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
+                                return;
+                            }
+                        }
+                    }
+                }  
+            }
+
+            void OnSignEdit(ref HookContext ctx, ref HookArgs.SignTextSet args)
+            {
+                foreach (Region rgn in regionManager.Regions)
+                {
+                    if (rgn.HasPoint(new Vector2(args.X, args.Y)))
+                    {
+                        if (ctx.Sender is Player)
+                        {
+                            if (IsRestrictedForUser(ctx.Player, rgn, DoorChange))
+                            {
+                                ctx.SetResult(HookResult.RECTIFY);
+                                ctx.Player.sendMessage("You cannot edit this area!", ChatColor.Red);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
         #endregion
 
         public bool isRunningPermissions()
