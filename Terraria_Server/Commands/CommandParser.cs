@@ -155,56 +155,56 @@ namespace Terraria_Server.Commands
             AddCommand("exit")
                 .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
-				.WithPermissionNode("tdsm.exit")
+				.WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Exit);
 
             AddCommand("stop")
                 .WithDescription("Stop the save the world then exit program.")
                 .WithAccessLevel(AccessLevel.CONSOLE)
-				.WithPermissionNode("tdsm.stop")
+				.WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Exit);
 
             AddCommand("save-all")
                 .WithDescription("Save all world data and backup.")
                 .WithAccessLevel(AccessLevel.OP)
-                .WithPermissionNode("tdsm.saveall")
+                .WithPermissionNode("tdsm.admin")
                 .Calls(Commands.SaveAll);
             
             AddCommand("reload")
                 .WithDescription ("Reload plugins.")
                 .WithAccessLevel(AccessLevel.REMOTE_CONSOLE)
-                .WithPermissionNode("tdsm.reload")
+                .WithPermissionNode("tdsm.plugin")
                 .Calls (Commands.Reload);
                 
             AddCommand("list")
                 .WithAccessLevel (AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.list")
+                .WithDescription("List active players (also: who, players, playing, online).")
+                .WithPermissionNode("tdsm.who")
                 .Calls (Commands.List);
                 
             AddCommand("who")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
+                .WithDescription("List active players (also: list, players, playing, online).")
                 .WithPermissionNode("tdsm.who")
                 .Calls(Commands.List);
 
             AddCommand("players")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.players")
+                .WithDescription("List active players (also: list, who, playing, online).")
+                .WithPermissionNode("tdsm.who")
                 .Calls(Commands.OldList);
 
             // this is what the server crawler expects
             AddCommand("playing")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.playing")
+                .WithDescription("List active players (also: list, who, players, online).")
+                .WithPermissionNode("tdsm.who")
                 .Calls(Commands.OldList);
 
             AddCommand("online")
                 .WithAccessLevel(AccessLevel.PLAYER)
-                .WithDescription("List active players (also: who, players, online).")
-                .WithPermissionNode("tdsm.online")
+                .WithDescription("List active players (also: list, who, players, playing).")
+                .WithPermissionNode("tdsm.who")
                 .Calls(Commands.List);
                 
             AddCommand("me")
@@ -353,7 +353,7 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel(AccessLevel.PLAYER)
                 .WithDescription("OP Login System.")
                 .WithHelpText("Usage:   oplogin <password>")
-                .WithPermissionNode("tdsm.exit")
+                .WithPermissionNode("tdsm.oplogin")
                 .Calls(Commands.OpLogin);
 
             AddCommand("oplogout")
@@ -374,7 +374,7 @@ namespace Terraria_Server.Commands
                 .WithAccessLevel(AccessLevel.OP)
                 .WithDescription("Restart the Server.")
                 .WithHelpText("Usage:   restart")
-                .WithPermissionNode("tdsm.restart")
+                .WithPermissionNode("tdsm.admin")
                 .Calls(Commands.Restart);
             
             AddCommand("purge")
@@ -458,7 +458,12 @@ namespace Terraria_Server.Commands
         }
        
         public readonly Dictionary<string, CommandInfo> serverCommands;
-        
+
+		/// <summary>
+		/// Registers new command
+		/// </summary>
+		/// <param name="prefix">The text attached to the / that will be registered as the command.</param>
+		/// <returns>CommandInfo for new command</returns>
         public CommandInfo AddCommand (string prefix)
         {
             if (serverCommands.ContainsKey (prefix)) throw new ApplicationException ("AddCommand: duplicate command: " + prefix);
@@ -503,11 +508,23 @@ namespace Terraria_Server.Commands
             }
         }
 
+		/// <summary>
+		/// Determines entity's ability to use command.  YUsed when permissions plugin is running.
+		/// </summary>
+		/// <param name="cmd">Command to check</param>
+		/// <param name="sender">Sender entity to check against</param>
+		/// <returns>True if sender can use command, false if not</returns>
         public static bool CheckAccessLevel(CommandInfo cmd, ISender sender)
         {
             return CheckPermissions(sender, cmd) ? true : CheckAccessLevel(cmd.accessLevel, sender);
         }
 
+		/// <summary>
+		/// Determines the access level of the sender.  Used when no permissions plugin is found.
+		/// </summary>
+		/// <param name="acc">Access level to check against</param>
+		/// <param name="sender">Sender to check</param>
+		/// <returns>True if sender has access level equal to or greater than acc</returns>
         public static bool CheckAccessLevel(AccessLevel acc, ISender sender)
         {
             if (sender is Player) return acc == AccessLevel.PLAYER || (acc == AccessLevel.OP && sender.Op);
@@ -516,12 +533,20 @@ namespace Terraria_Server.Commands
             throw new NotImplementedException("Unexpected ISender implementation");
         }
 
+		/// <summary>
+		/// Permissions checking for registered commands.
+		/// </summary>
+		/// <param name="sender">Entity to check permissions for</param>
+		/// <param name="cmd">Command to check for permissions on</param>
+		/// <returns>True if entity can use command.  False if not.</returns>
         public static bool CheckPermissions(ISender sender, CommandInfo cmd)
         {
             /*
              *  [TODO] Should a node return false, Since there is three possibilites, should it return false if permissions 
              *  is enabled and allow the normal OP system work or no access at all?
              */
+			if (cmd.node == null || sender is ConsoleSender || sender.Op)
+				return true;
 
             if (sender is Player && Program.permissionManager.isPermittedImpl != null && Statics.PermissionsEnabled)
 				return Program.permissionManager.isPermittedImpl(cmd.node, sender as Player);
