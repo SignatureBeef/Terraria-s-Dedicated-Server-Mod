@@ -38,7 +38,7 @@ namespace Terraria_Server
         {
             get
             {
-                return System.Net.IPAddress.Parse(ipAddress);
+                return System.Net.IPAddress.Parse(ipAddress.Split(':')[0]);
             }
         }
 
